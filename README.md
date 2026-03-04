@@ -41,9 +41,9 @@ https://console.cloud.google.com/auth/clients
 https://nexty.dev/docs/integration/auth#configure-google-oauth
 
 http://localhost:3000
-https://cf.1000aitools.com
+https://cf-demo1.1000aitools.com
 http://localhost:3000/api/auth/callback/google
-https://cf.1000aitools.com/api/auth/callback/google
+https://cf-demo1.1000aitools.com/api/auth/callback/google
 ```
 NEXT_PUBLIC_GOOGLE_CLIENT_ID=364893323217-m7qisfv3p482t3v3e6dbr3ckhpdir308.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=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
@@ -74,4 +74,11 @@ Caching: false
 <YOUR_POOLER_CONNECTION_STRING>:postgresql://user_demo1:tN6wN9cE4wQ0eX9k@31.97.65.98:9876/db_demo1
 
 ### 创建 worker
+node scripts/sync-env-to-cloudflare.mjs .env
+会自动创建 worker
+pnpm cf:deploy
 
+### 自动部署，提交 github 自动
+cf -> worker -> setting -> Build
+把所有生产环境的环境变量添加进来，这一步只能手动操作；NEXT_PUBLIC_ 开头的环境变量直接添加，其他环境变量要点击 Encrypt 按钮加密。添加环境变量时，不要把引号复制进去。
+Build cache 设置成 Disabled
