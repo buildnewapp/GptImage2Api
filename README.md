@@ -82,3 +82,4 @@ pnpm cf:deploy
 cf -> worker -> setting -> Build
 把所有生产环境的环境变量添加进来，这一步只能手动操作；NEXT_PUBLIC_ 开头的环境变量直接添加，其他环境变量要点击 Encrypt 按钮加密。添加环境变量时，不要把引号复制进去。
 Build cache 设置成 Disabled
+注意：Variables and Secrets + Build 运行时、编译时 变量需要手动一个一个添加进去
