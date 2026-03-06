@@ -11,7 +11,7 @@ export const revalidate = false;
 export async function generateMetadata(): Promise<Metadata> {
   return constructMetadata({
     title: "Refund Policy",
-    description: `Refund policy and guidelines for ${siteConfig.name} services.`,
+    description: `Refund policy and guidelines for ${siteConfig.name} AI video generation services, credits, and subscriptions.`,
     path: `/refund-policy`,
     locale: "en",
     availableLocales: ["en"],
@@ -23,96 +23,97 @@ export default function RefundPolicyPage() {
     <div className="bg-secondary/20 py-8 sm:py-12">
       <div className="container mx-auto max-w-4xl px-4">
         <div className="bg-background rounded-xl border p-6 shadow-xs sm:p-8 dark:border-zinc-800">
-          <h1 className="mb-6 text-2xl font-bold sm:text-3xl">
-            Refund Policy(Template)
+          <h1 className="mb-2 text-2xl font-bold sm:text-3xl">
+            Refund Policy
           </h1>
+          <p className="mb-6 text-sm text-muted-foreground">
+            Last Updated: February 15, 2026
+          </p>
 
           <div className="space-y-6">
             <section>
-              <h2 className="mb-3 text-xl font-semibold">Introduction</h2>
+              <h2 className="mb-3 text-xl font-semibold">1. Introduction</h2>
               <p className="mb-3">
-                At {siteConfig.name}, we strive to provide high-quality services
-                and ensure customer satisfaction. This Refund Policy outlines
-                the terms and conditions for refunds of payments made for our
-                services. By purchasing our services, you agree to the terms set
-                forth in this policy.
+                At {siteConfig.name}, we are committed to providing
+                high-quality AI video generation services powered by Seedance
+                2.0. This Refund Policy outlines the terms and conditions under
+                which refunds may be granted for purchases made on our platform,
+                including credit purchases, subscription plans, and API service
+                fees.
+              </p>
+              <p className="mb-3">
+                By making a purchase on {siteConfig.name}, you agree to the
+                terms set forth in this policy. We encourage you to read this
+                policy carefully before making a purchase.
               </p>
             </section>
 
             <section>
-              <h2 className="mb-3 text-xl font-semibold">Refund Eligibility</h2>
+              <h2 className="mb-3 text-xl font-semibold">
+                2. Credit Purchases
+              </h2>
+              <p className="mb-3">
+                Our platform uses a credit-based system where credits are
+                consumed when generating AI videos. The following policies apply
+                to credit purchases:
+              </p>
 
               <div className="mb-6">
                 <h3 className="mb-3 text-lg font-medium">
-                  1. Subscription Services
+                  2.1 Refundable Scenarios
                 </h3>
-                <p className="mb-3">
-                  For our subscription-based services, refunds may be available
-                  under the following circumstances:
-                </p>
                 <ul className="mb-3 list-disc space-y-1 pl-6">
                   <li>
-                    <strong>Service Downtime</strong>: If our service is down
-                    for more than 24 continuous hours due to technical issues on
-                    our end
+                    <strong>Unused Credits</strong>: If you have not used any
+                    purchased credits, you may request a full refund within 7
+                    days of purchase
+                  </li>
+                  <li>
+                    <strong>Technical Failures</strong>: If credits were consumed
+                    due to technical errors on our platform (e.g., the video
+                    generation failed but credits were deducted), we will
+                    restore the credits to your account or issue a refund
                   </li>
                   <li>
                     <strong>Billing Errors</strong>: If you were charged
                     incorrectly due to a system error or payment processing
-                    mistake
+                    mistake, we will issue a full correction or refund
                   </li>
                   <li>
                     <strong>Unauthorized Charges</strong>: If charges were made
-                    without your authorization (subject to verification)
-                  </li>
-                  <li>
-                    <strong>Service Not as Described</strong>: If the service
-                    fundamentally differs from what was advertised (determined
-                    on a case-by-case basis)
+                    without your authorization (subject to verification), we
+                    will issue a refund
                   </li>
                 </ul>
               </div>
 
               <div className="mb-6">
                 <h3 className="mb-3 text-lg font-medium">
-                  2. Credit-Based Services
+                  2.2 Non-Refundable Scenarios
                 </h3>
-                <p className="mb-3">
-                  For services that use a credit or usage-based billing model:
-                </p>
                 <ul className="mb-3 list-disc space-y-1 pl-6">
                   <li>
-                    <strong>Unused Credits</strong>: Credits that have not been
-                    used may be eligible for refund within 30 days of purchase
+                    <strong>Used Credits</strong>: Credits that have been
+                    consumed through successful video generation are
+                    non-refundable, as the AI processing resources have been
+                    utilized
                   </li>
                   <li>
-                    <strong>Technical Failures</strong>: If credits were
-                    consumed due to technical errors on our platform, we will
-                    restore the credits or provide a refund
+                    <strong>Dissatisfaction with AI Output</strong>: Since AI
+                    video generation results may vary and are influenced by
+                    input quality and prompts, we generally cannot offer refunds
+                    based on subjective dissatisfaction with the output quality.
+                    However, we encourage you to contact support for guidance
+                    on improving results
                   </li>
                   <li>
-                    <strong>Service Quality Issues</strong>: If the service
-                    output does not meet basic quality standards due to system
-                    issues
-                  </li>
-                </ul>
-              </div>
-
-              <div className="mb-6">
-                <h3 className="mb-3 text-lg font-medium">
-                  3. One-Time Purchases
-                </h3>
-                <p className="mb-3">
-                  For one-time purchases or single transactions:
-                </p>
-                <ul className="mb-3 list-disc space-y-1 pl-6">
-                  <li>
-                    Refunds are available within 14 days of purchase if the
-                    service was not delivered as promised
+                    <strong>Expired Credits</strong>: Credits that have expired
+                    according to their terms are not eligible for refund
                   </li>
                   <li>
-                    Digital products or services that have been successfully
-                    delivered and used are generally not eligible for refunds
+                    <strong>Promotional or Free Credits</strong>: Credits
+                    received through promotions, referral programs, or for free
+                    are non-refundable
                   </li>
                 </ul>
               </div>
@@ -120,182 +121,274 @@ export default function RefundPolicyPage() {
 
             <section>
               <h2 className="mb-3 text-xl font-semibold">
-                Non-Refundable Items
+                3. Subscription Plans
               </h2>
               <p className="mb-3">
-                The following items are generally not eligible for refunds:
+                For subscription-based plans, the following terms apply:
+              </p>
+
+              <div className="mb-6">
+                <h3 className="mb-3 text-lg font-medium">
+                  3.1 Cancellation
+                </h3>
+                <p className="mb-3">
+                  You may cancel your subscription at any time through your
+                  account settings or by contacting{" "}
+                  <a
+                    href="mailto:support@sdanceai.com"
+                    className="hover:underline text-blue-500"
+                  >
+                    support@sdanceai.com
+                  </a>
+                  . Upon cancellation:
+                </p>
+                <ul className="mb-3 list-disc space-y-1 pl-6">
+                  <li>
+                    Your subscription will remain active until the end of the
+                    current billing period
+                  </li>
+                  <li>
+                    You will continue to have access to subscription benefits
+                    until the period ends
+                  </li>
+                  <li>
+                    No further charges will be applied after the current billing
+                    cycle
+                  </li>
+                  <li>
+                    Unused subscription credits may expire at the end of the
+                    billing period, depending on plan terms
+                  </li>
+                </ul>
+              </div>
+
+              <div className="mb-6">
+                <h3 className="mb-3 text-lg font-medium">
+                  3.2 Subscription Refunds
+                </h3>
+                <ul className="mb-3 list-disc space-y-1 pl-6">
+                  <li>
+                    <strong>First-Time Subscribers</strong>: If you are
+                    subscribing for the first time and are unsatisfied, you may
+                    request a refund within 3 days of your initial subscription
+                    purchase:
+                    <ul className="mt-1 list-circle space-y-1 pl-6">
+                      <li>
+                        If you have <strong>not used</strong> any credits or
+                        services, you are eligible for a <strong>full refund</strong>
+                      </li>
+                      <li>
+                        If you have <strong>already used</strong> a portion of
+                        the included credits, you are eligible for a{" "}
+                        <strong>prorated partial refund</strong> based on the
+                        unused portion
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <strong>Service Downtime</strong>: If our service
+                    experiences significant downtime (more than 24 continuous
+                    hours) during your billing period, you may be eligible for a
+                    prorated refund or account credit for the affected period
+                  </li>
+                  <li>
+                    <strong>Renewal Charges</strong>: If you forgot to cancel
+                    before an auto-renewal and have not used any of the
+                    renewed plan&apos;s credits, you may request a refund within
+                    48 hours of the renewal charge
+                  </li>
+                </ul>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="mb-3 text-xl font-semibold">
+                4. API Service Fees
+              </h2>
+              <p className="mb-3">
+                For API service purchases:
               </p>
               <ul className="mb-3 list-disc space-y-1 pl-6">
                 <li>
-                  <strong>Consumed Services</strong>: Services that have been
-                  fully used or consumed (e.g., API calls, processing credits)
+                  <strong>Unused API Credits</strong>: Refundable within 7 days
+                  of purchase if no API calls have been made
                 </li>
                 <li>
-                  <strong>Change of Mind</strong>: Refunds due to change of mind
-                  or no longer needing the service
+                  <strong>Failed API Requests</strong>: If API requests fail due
+                  to our server errors (5xx errors), the consumed credits will
+                  be automatically restored to your account
                 </li>
                 <li>
-                  <strong>User Error</strong>: Issues arising from user error,
-                  misuse, or failure to follow service guidelines
+                  <strong>API Rate Limit Issues</strong>: Credits consumed due
+                  to rate limiting or system-imposed restrictions are generally
+                  not refundable, as these are part of normal service operations
                 </li>
                 <li>
-                  <strong>Third-Party Issues</strong>: Problems caused by
-                  third-party services, internet connectivity, or user's
-                  equipment
-                </li>
-                <li>
-                  <strong>Expired Services</strong>: Services or credits that
-                  have expired according to their terms
-                </li>
-                <li>
-                  <strong>Promotional Offers</strong>: Services purchased at
-                  discounted rates or through promotional offers (unless
-                  required by law)
+                  <strong>Integration Issues</strong>: Refunds for API service
+                  issues arising from incorrect integration or client-side
+                  errors are not available
                 </li>
               </ul>
             </section>
 
             <section>
-              <h2 className="mb-3 text-xl font-semibold">Refund Process</h2>
-
-              <div className="mb-6">
-                <h3 className="mb-3 text-lg font-medium">
-                  1. How to Request a Refund
-                </h3>
-                <p className="mb-3">
-                  To request a refund, please contact us with the following
-                  information:
-                </p>
-                <ul className="mb-3 list-disc space-y-1 pl-6">
-                  <li>Your account email address</li>
-                  <li>Transaction ID or payment reference</li>
-                  <li>Date of purchase</li>
-                  <li>Detailed reason for the refund request</li>
-                  <li>
-                    Any supporting documentation (screenshots, error messages,
-                    etc.)
-                  </li>
-                </ul>
-              </div>
-
-              <div className="mb-6">
-                <h3 className="mb-3 text-lg font-medium">
-                  2. Refund Review Process
-                </h3>
-                <p className="mb-3">Our refund review process includes:</p>
-                <ul className="mb-3 list-disc space-y-1 pl-6">
-                  <li>
-                    <strong>Initial Review</strong>: We will acknowledge your
-                    request within 2 business days
-                  </li>
-                  <li>
-                    <strong>Investigation</strong>: Our team will investigate
-                    your case within 5-7 business days
-                  </li>
-                  <li>
-                    <strong>Decision</strong>: You will receive a decision
-                    within 10 business days of your initial request
-                  </li>
-                  <li>
-                    <strong>Processing</strong>: If approved, refunds are
-                    processed within 3-5 business days
-                  </li>
-                </ul>
-              </div>
-
-              <div className="mb-6">
-                <h3 className="mb-3 text-lg font-medium">3. Refund Methods</h3>
-                <p className="mb-3">
-                  Refunds will be processed using the following methods:
-                </p>
-                <ul className="mb-3 list-disc space-y-1 pl-6">
-                  <li>
-                    <strong>Original Payment Method</strong>: Refunds are
-                    typically processed back to the original payment method used
-                    for the purchase
-                  </li>
-                  <li>
-                    <strong>Account Credit</strong>: In some cases, we may offer
-                    account credit instead of a cash refund
-                  </li>
-                  <li>
-                    <strong>Alternative Methods</strong>: For certain
-                    situations, alternative refund methods may be discussed on a
-                    case-by-case basis
-                  </li>
-                </ul>
-              </div>
+              <h2 className="mb-3 text-xl font-semibold">
+                5. How to Request a Refund
+              </h2>
+              <p className="mb-3">
+                To request a refund, please contact us at{" "}
+                <a
+                  href="mailto:support@sdanceai.com"
+                  className="hover:underline text-blue-500"
+                >
+                  support@sdanceai.com
+                </a>{" "}
+                with the following information:
+              </p>
+              <ul className="mb-3 list-disc space-y-1 pl-6">
+                <li>Your account email address</li>
+                <li>Transaction ID or payment reference number</li>
+                <li>Date and amount of the purchase</li>
+                <li>Detailed reason for the refund request</li>
+                <li>
+                  Any supporting evidence (screenshots, error messages, failed
+                  generation IDs, etc.)
+                </li>
+              </ul>
             </section>
 
             <section>
               <h2 className="mb-3 text-xl font-semibold">
-                Special Circumstances
+                6. Refund Review Process
+              </h2>
+              <p className="mb-3">
+                Once we receive your refund request, we will follow this
+                process:
+              </p>
+              <ul className="mb-3 list-disc space-y-1 pl-6">
+                <li>
+                  <strong>Acknowledgment</strong>: We will acknowledge your
+                  refund request within 2 business days
+                </li>
+                <li>
+                  <strong>Investigation</strong>: Our team will review your
+                  case, including account activity, usage logs, and technical
+                  data, within 5-7 business days
+                </li>
+                <li>
+                  <strong>Decision</strong>: You will receive a decision via
+                  email within 10 business days of your initial request
+                </li>
+                <li>
+                  <strong>Processing</strong>: If approved, the refund will be
+                  processed within 5-10 business days. The actual timing
+                  depends on your payment method and financial institution
+                </li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="mb-3 text-xl font-semibold">
+                7. Refund Methods
+              </h2>
+              <ul className="mb-3 list-disc space-y-1 pl-6">
+                <li>
+                  <strong>Original Payment Method</strong>: Refunds are
+                  typically processed back to the original payment method (e.g.,
+                  credit card, debit card, or other payment method used)
+                </li>
+                <li>
+                  <strong>Account Credit</strong>: In some cases, particularly
+                  for technical failures, we may offer account credit
+                  (additional credits) instead of a monetary refund. Account
+                  credits are issued immediately and may offer a greater value
+                </li>
+                <li>
+                  <strong>Partial Refunds</strong>: For partially consumed
+                  purchases, we may issue a prorated refund based on unused
+                  portions
+                </li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="mb-3 text-xl font-semibold">
+                8. Credit Restoration vs. Monetary Refund
+              </h2>
+              <p className="mb-3">
+                In cases of technical failures during video generation, we
+                generally prefer to restore credits to your account rather than
+                issue monetary refunds, as this allows you to immediately retry
+                the generation. Credit restoration is typically processed within
+                24 hours. If you prefer a monetary refund instead, please
+                specify this in your request.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="mb-3 text-xl font-semibold">
+                9. Dispute Resolution
               </h2>
 
               <div className="mb-6">
                 <h3 className="mb-3 text-lg font-medium">
-                  1. Emergency Situations
-                </h3>
-                <p className="mb-3">
-                  In case of emergency situations such as natural disasters,
-                  health emergencies, or other unforeseen circumstances, we may
-                  offer special refund considerations. Please contact us to
-                  discuss your specific situation.
-                </p>
-              </div>
-
-              <div className="mb-6">
-                <h3 className="mb-3 text-lg font-medium">
-                  2. Legal Requirements
-                </h3>
-                <p className="mb-3">
-                  In jurisdictions where local laws provide additional consumer
-                  protection or mandatory refund rights, those laws will take
-                  precedence over this policy. We comply with all applicable
-                  consumer protection laws.
-                </p>
-              </div>
-
-              <div className="mb-6">
-                <h3 className="mb-3 text-lg font-medium">
-                  3. Subscription Cancellations
-                </h3>
-                <p className="mb-3">
-                  You may cancel your subscription at any time. Cancellations
-                  will take effect at the end of the current billing cycle.
-                  Unless eligible under this refund policy, no refund will be
-                  provided for the remaining portion of the billing period.
-                </p>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="mb-3 text-xl font-semibold">Dispute Resolution</h2>
-
-              <div className="mb-6">
-                <h3 className="mb-3 text-lg font-medium">
-                  1. Internal Resolution
+                  9.1 Internal Review
                 </h3>
                 <p className="mb-3">
                   If you disagree with our refund decision, you may request a
-                  review by a senior team member. Please provide additional
-                  information or documentation that supports your case.
+                  review by contacting us at{" "}
+                  <a
+                    href="mailto:xian@sdanceai.com"
+                    className="hover:underline text-blue-500"
+                  >
+                    xian@sdanceai.com
+                  </a>
+                  . Please provide additional information or documentation that
+                  supports your case.
                 </p>
               </div>
 
               <div className="mb-6">
-                <h3 className="mb-3 text-lg font-medium">2. Chargebacks</h3>
+                <h3 className="mb-3 text-lg font-medium">
+                  9.2 Chargebacks
+                </h3>
                 <p className="mb-3">
-                  We encourage you to contact us directly before initiating a
-                  chargeback with your payment provider. Chargebacks may result
-                  in the suspension of your account and additional fees.
+                  We strongly encourage you to contact us directly before
+                  initiating a chargeback with your payment provider. We are
+                  committed to resolving issues fairly and promptly. Please
+                  note that filing a chargeback may result in the suspension of
+                  your account pending investigation, and may incur additional
+                  processing fees.
                 </p>
               </div>
             </section>
 
             <section>
               <h2 className="mb-3 text-xl font-semibold">
-                Changes to This Policy
+                10. Special Circumstances
+              </h2>
+              <ul className="mb-3 list-disc space-y-1 pl-6">
+                <li>
+                  <strong>Service Discontinuation</strong>: If we discontinue a
+                  service or feature that you have paid for, we will provide a
+                  prorated refund for the unused portion
+                </li>
+                <li>
+                  <strong>Legal Requirements</strong>: In jurisdictions where
+                  local consumer protection laws provide additional or mandatory
+                  refund rights, those laws take precedence over this policy
+                </li>
+                <li>
+                  <strong>Force Majeure</strong>: In case of events beyond our
+                  reasonable control (natural disasters, pandemic, etc.), we
+                  will work with affected users on a case-by-case basis
+                </li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="mb-3 text-xl font-semibold">
+                11. Changes to This Policy
               </h2>
               <p className="mb-3">
                 We may update this Refund Policy from time to time to reflect
@@ -311,34 +404,42 @@ export default function RefundPolicyPage() {
             </section>
 
             <section>
-              <h2 className="mb-3 text-xl font-semibold">Contact Us</h2>
+              <h2 className="mb-3 text-xl font-semibold">
+                12. Contact Us
+              </h2>
               <p className="mb-3">
                 If you have any questions about this Refund Policy or need to
-                request a refund, please contact us through:
+                request a refund, please contact us:
               </p>
               <ul className="mb-3 list-disc space-y-1 pl-6">
-                {siteConfig.socialLinks?.discord && (
-                  <li>
-                    <strong>Discord</strong>:{" "}
-                    <a
-                      href={siteConfig.socialLinks.discord}
-                      className="text-primary hover:underline"
-                    >
-                      Join our Discord server
-                    </a>
-                  </li>
-                )}
-                {siteConfig.socialLinks?.email && (
-                  <li>
-                    <strong>Email</strong>:{" "}
-                    <a
-                      href={`mailto:${siteConfig.socialLinks.email}`}
-                      className="hover:underline text-blue-500"
-                    >
-                      {siteConfig.socialLinks.email}
-                    </a>
-                  </li>
-                )}
+                <li>
+                  <strong>Support Email</strong>:{" "}
+                  <a
+                    href="mailto:support@sdanceai.com"
+                    className="hover:underline text-blue-500"
+                  >
+                    support@sdanceai.com
+                  </a>
+                </li>
+                <li>
+                  <strong>Founder</strong>:{" "}
+                  <a
+                    href="mailto:xian@sdanceai.com"
+                    className="hover:underline text-blue-500"
+                  >
+                    xian@sdanceai.com
+                  </a>{" "}
+                  (for escalation)
+                </li>
+                <li>
+                  <strong>Website</strong>:{" "}
+                  <a
+                    href="https://sdanceai.com"
+                    className="text-primary hover:underline"
+                  >
+                    https://sdanceai.com
+                  </a>
+                </li>
               </ul>
               <p className="mb-3">
                 We are committed to providing fair and transparent refund

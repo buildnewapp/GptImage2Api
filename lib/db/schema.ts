@@ -494,3 +494,47 @@ export const apikeys = pgTable(
         statusIdx: index("idx_apikeys_status").on(table.status),
     }),
 );
+
+
+// Video generation tasks
+export const videoGenerationStatusEnum = pgEnum(
+    "video_generation_status",
+    ["pending", "success", "failed"],
+);
+
+export const videoGenerations = pgTable(
+    "video_generations",
+    {
+        id: uuid("id").primaryKey().defaultRandom(),
+        userId: uuid("user_id")
+            .references(() => user.id, { onDelete: "cascade" })
+            .notNull(),
+        taskId: varchar("task_id", { length: 255 }).notNull().unique(),
+        model: varchar("model", { length: 100 }).notNull(),
+        status: videoGenerationStatusEnum("status").default("pending").notNull(),
+        isPublic: boolean("is_public").default(true).notNull(),
+        creditsUsed: integer("credits_used").notNull(),
+        creditsRefunded: boolean("credits_refunded").default(false).notNull(),
+        inputParams: jsonb("input_params").notNull(),
+        resultUrls: jsonb("result_urls"),
+        failCode: varchar("fail_code", { length: 100 }),
+        failMsg: text("fail_msg"),
+        costTime: integer("cost_time"),
+        completedAt: timestamp("completed_at", { withTimezone: true }),
+        createdAt: timestamp("created_at", { withTimezone: true })
+            .defaultNow()
+            .notNull(),
+        updatedAt: timestamp("updated_at", { withTimezone: true })
+            .defaultNow()
+            .notNull()
+            .$onUpdate(() => new Date()),
+    },
+    (table) => ({
+        userIdIdx: index("idx_video_generations_user_id").on(table.userId),
+        taskIdIdx: index("idx_video_generations_task_id").on(table.taskId),
+        statusIdx: index("idx_video_generations_status").on(table.status),
+        isPublicIdx: index("idx_video_generations_is_public").on(table.isPublic),
+        modelIdx: index("idx_video_generations_model").on(table.model),
+        createdAtIdx: index("idx_video_generations_created_at").on(table.createdAt),
+    }),
+);

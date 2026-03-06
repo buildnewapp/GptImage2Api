@@ -169,6 +169,13 @@
       "when": 1772779777094,
       "tag": "0023_productive_mole_man",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1772792966647,
+      "tag": "0024_wise_dracula",
+      "breakpoints": true
     }
   ]
 }

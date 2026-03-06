@@ -1,8 +1,8 @@
 {
   "Home": {
-    "title": "NEXTY.DEV v1",
-    "tagLine": "A Modern Next.js Full-Stack SaaS Template",
-    "description": "A production-ready Next.js and Supabase starter template for building modern SaaS applications. Launch your content, AI, or subscription service faster."
+    "title": "SdanceAI",
+    "tagLine": "Seedance 2.0 Online Experience & API Service",
+    "description": "Experience Seedance 2.0 on SdanceAI. Create high-quality AI videos with native audio sync. We provide stable API access for developers to integrate AI video."
   },
   "Login": {
     "title": "Welcome back",
@@ -76,6 +76,11 @@
         "name": "Credit History",
         "href": "/dashboard/credit-history",
         "icon": "Coins"
+      },
+      {
+        "name": "My Videos",
+        "href": "/dashboard/video-generations",
+        "icon": "Video"
       }
     ],
     "AdminMenus": [
@@ -118,6 +123,11 @@
         "name": "R2 Files",
         "href": "/dashboard/r2-resources",
         "icon": "FileBox"
+      },
+      {
+        "name": "Video Generations",
+        "href": "/dashboard/admin-video-generations",
+        "icon": "Video"
       }
     ]
   },
@@ -341,44 +351,17 @@
         "href": "/#features"
       },
       {
+        "name": "Prompts",
+        "href": "/prompts"
+      },
+      {
         "id": "pricing",
         "name": "Pricing",
         "href": "/#pricing"
       },
       {
-        "name": "AI Demo",
-        "href": "/ai-demo"
-      },
-      {
         "name": "Blog",
         "href": "/blog"
-      },
-      {
-        "name": "Demo",
-        "href": "#",
-        "items": [
-          {
-            "name": "Nexty Demo",
-            "href": "https://demo.nexty.dev/",
-            "target": "_blank",
-            "rel": "noopener noreferrer nofollow",
-            "description": "Next.js SaaS Boilerplate"
-          },
-          {
-            "name": "AI Image Generator Demo",
-            "href": "https://flux-kontext.nexty.dev/",
-            "target": "_blank",
-            "rel": "noopener noreferrer nofollow",
-            "description": "AI Image Generator Demo Based on NEXTY.DEV"
-          },
-          {
-            "name": "Directory Boilerplate Demo",
-            "href": "https://dofollow.tools/",
-            "target": "_blank",
-            "rel": "noopener noreferrer nofollow",
-            "description": "Directory Boilerplate Demo Based on NEXTY.DEV"
-          }
-        ]
       }
     ]
   },
@@ -388,37 +371,6 @@
     "PrivacyPolicy": "Privacy Policy",
     "TermsOfService": "Terms of Service",
     "RefundPolicy": "Refund Policy",
-    "Newsletter": {
-      "title": "Subscribe to our newsletter",
-      "description": "Stay up to date with our latest news.",
-      "subscribe": {
-        "invalidEmail": "Please enter a valid email address",
-        "defaultErrorMessage": "Subscription failed. Please try again later",
-        "successMessage": "Successfully subscribed!",
-        "multipleSubmissions": "Too many requests. Please try again tomorrow"
-      },
-      "unsubscribe": {
-        "title": "Newsletter Unsubscription",
-        "success": "You have successfully unsubscribed from Nexty newsletters.",
-        "emailPrefix": "Email:",
-        "regretMessage": "You can resubscribe anytime to receive the latest Nexty updates and tutorials.",
-        "errorGeneric": "An error occurred while processing your unsubscribe request",
-        "errorNoToken": "No unsubscribe token provided",
-        "errorMessage": "Please make sure you're using the correct unsubscribe link. If the problem persists, contact our support team for assistance.",
-        "contactPrefix": "Contact us at:",
-        "contactPrefixSuccess": "If you have any questions, feel free to contact us at:",
-        "backToHome": "Back to Home",
-        "invalidEmail": "Invalid email address",
-        "notInNewsletter": "This email is not in our subscription list",
-        "confirmTitle": "Confirm Unsubscription",
-        "confirmMessage": "Are you sure you want to unsubscribe from our newsletter? You won't receive updates about new features and content anymore.",
-        "confirmButton": "Yes, Unsubscribe",
-        "cancelButton": "Cancel",
-        "processing": "Processing...",
-        "finalWarning": "This action cannot be undone. You can always resubscribe later.",
-        "errorInvalidToken": "Invalid unsubscribe link. The link may be corrupted or expired."
-      }
-    },
     "Links": {
       "groups": [
         {
@@ -432,14 +384,6 @@
               "id": "pricing",
               "href": "/#pricing",
               "name": "Pricing"
-            },
-            {
-              "href": "/blog",
-              "name": "Blog"
-            },
-            {
-              "href": "/glossary",
-              "name": "Glossary"
             }
           ]
         },
@@ -447,13 +391,12 @@
           "title": "Support",
           "links": [
             {
-              "name": "Docs",
-              "href": "https://docs.nexty.dev/docs",
-              "target": "_blank"
+              "href": "/blog",
+              "name": "Blog"
             },
             {
-              "name": "Roadmap",
-              "href": "https://nexty.dev/roadmap"
+              "href": "/prompts",
+              "name": "Prompts"
             }
           ]
         },
@@ -479,5 +422,22 @@
         }
       ]
     }
+  },
+  "Navigation": {
+    "product": "Product",
+    "resources": "Resources",
+    "legal": "Legal",
+    "generate": "Generate",
+    "features": "Features",
+    "prompts": "Prompts",
+    "pricing": "Pricing",
+    "showcase": "Showcase",
+    "blog": "Blog",
+    "docs": "Documentation",
+    "help": "Help Center",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "signIn": "Sign In",
+    "footerAbout": "The advanced controllable multi-modal AI video generation platform."
   }
 }

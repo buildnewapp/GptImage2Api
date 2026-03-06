@@ -1,0 +1,31 @@
+{
+  "title": "マイビデオ",
+  "description": "動画生成の履歴と結果を確認",
+  "columns": {
+    "model": "モデル",
+    "status": "ステータス",
+    "credits": "クレジット",
+    "createdAt": "作成日時",
+    "actions": "操作"
+  },
+  "status": {
+    "pending": "処理中",
+    "success": "完了",
+    "failed": "失敗"
+  },
+  "credits_refunded": "返金済み",
+  "empty": "まだ動画生成の履歴がありません。トップページで最初の動画を作成しましょう！",
+  "view_video": "動画を見る",
+  "load_error": "動画履歴の読み込みに失敗しました",
+  "pagination": {
+    "previous": "前へ",
+    "next": "次へ",
+    "page_of": "{current} / {total} ページ",
+    "total_records": "{count} 件"
+  },
+  "filter": {
+    "all": "すべて",
+    "status_filter": "ステータスで絞り込み",
+    "model_filter": "モデルで絞り込み"
+  }
+}

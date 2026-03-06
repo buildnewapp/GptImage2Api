@@ -12,7 +12,7 @@ import { Turnstile } from "@marsidev/react-turnstile";
 import { Github, Link as LinkIcon, Loader2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface LoginFormProps {
@@ -25,6 +25,9 @@ export default function LoginForm({ className = "" }: LoginFormProps) {
   const t = useTranslations("Login");
   const locale = useLocale();
 
+  const showGithub = !!process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
+  const showEmail = process.env.NEXT_PUBLIC_EMAIL_LOGIN === "true";
+
   const [lastMethod, setLastMethod] = useState<string | null>(null);
 
   const [mode, setMode] = useState<LoginMode>("otp");
@@ -34,7 +37,6 @@ export default function LoginForm({ className = "" }: LoginFormProps) {
   const [isGithubLoading, setIsGithubLoading] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string>("");
   const [showTurnstile, setShowTurnstile] = useState(false);
-  const turnstileRef = useRef<any>(null);
 
   // OTP specific state
   const [otpCode, setOtpCode] = useState("");
@@ -122,10 +124,10 @@ export default function LoginForm({ className = "" }: LoginFormProps) {
         fetchOptions:
           captchaToken && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
             ? {
-                headers: {
-                  "x-captcha-response": captchaToken,
-                },
-              }
+              headers: {
+                "x-captcha-response": captchaToken,
+              },
+            }
             : undefined,
       });
 
@@ -170,10 +172,10 @@ export default function LoginForm({ className = "" }: LoginFormProps) {
         fetchOptions:
           captchaToken && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
             ? {
-                headers: {
-                  "x-captcha-response": captchaToken,
-                },
-              }
+              headers: {
+                "x-captcha-response": captchaToken,
+              },
+            }
             : undefined,
       });
 
@@ -275,157 +277,148 @@ export default function LoginForm({ className = "" }: LoginFormProps) {
             </Badge>
           )}
         </Button>
-        <Button
-          variant="outline"
-          onClick={() => signInSocial("github")}
-          disabled={isGoogleLoading || isGithubLoading}
-          className="relative"
-        >
-          {isGithubLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Github className="h-4 w-4" />
-          )}
-          {t("signInMethods.signInWithGithub")}
-          {lastMethod === "github" && (
-            <Badge
-              variant="secondary"
-              className="absolute right-2 text-[10px] px-1.5 py-0.5 pointer-events-none"
-            >
-              Last used
-            </Badge>
-          )}
-        </Button>
-      </div>
-
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            {t("signInMethods.or")}
-          </span>
-        </div>
-      </div>
-
-      <div className="grid gap-2">
-        <div className="grid">
-          <div className="text-sm font-medium">Email</div>
-          <Input
-            type="email"
-            placeholder="name@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={isLoading || isOtpLoading}
-            onMouseEnter={() => setShowTurnstile(true)}
-          />
-        </div>
-
-        {mode === "otp" && (
-          <div className="grid">
-            <div className="text-sm font-medium">
-              {t("signInMethods.otpMethod")}
-            </div>
-            <div className="flex gap-2">
-              <Input
-                type="text"
-                maxLength={6}
-                placeholder="123456"
-                value={otpCode}
-                onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
-                disabled={isLoading || isOtpLoading}
-                className="flex-1"
-              />
-              <Button
-                type="button"
-                variant="outline"
-                className="min-w-[120px]"
-                onClick={handleSendOTP}
-                disabled={
-                  !email ||
-                  isOtpLoading ||
-                  countdown > 0 ||
-                  (!!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY &&
-                    !captchaToken)
-                }
-              >
-                {isOtpLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : countdown > 0 ? (
-                  `${countdown}s`
-                ) : (
-                  t("signInMethods.sendOTP")
-                )}
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && showTurnstile && (
-          <Turnstile
-            ref={turnstileRef}
-            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-            onSuccess={(token: string) => {
-              console.log("[Turnstile] Success, token received");
-              setCaptchaToken(token);
-            }}
-            onError={(error: any) => {
-              console.error("[Turnstile] Error:", error);
-              setCaptchaToken("");
-              toast.error("Verification failed", {
-                description: "Please try again or refresh the page",
-              });
-            }}
-            onExpire={() => {
-              console.log("[Turnstile] Token expired, resetting...");
-              setCaptchaToken("");
-              // Auto-reset the widget to get a new token
-              turnstileRef.current?.reset?.();
-            }}
-            options={{
-              size: "flexible",
-              theme: "auto",
-              language: locale,
-            }}
-          />
-        )}
-
-        <Button
-          onClick={mode === "otp" ? handleVerifyOTP : handleEmailLogin}
-          disabled={
-            !email ||
-            isLoading ||
-            isOtpLoading ||
-            (mode === "otp" && otpCode.length !== 6) ||
-            (!!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && !captchaToken)
-          }
-          className="w-full bg-primary/90 hover:bg-primary"
-        >
-          {isLoading || isOtpLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : mode === "otp" ? (
-            t("Button.signIn")
-          ) : (
-            <>
-              <LinkIcon className="h-4 w-4" />
-              {t("signInMethods.magicLinkMethod")}
-            </>
-          )}
-        </Button>
-
-        <div className="text-center">
+        {showGithub && (
           <Button
-            variant="link"
-            className="text-xs font-normal text-muted-foreground hover:text-primary"
-            onClick={toggleMode}
+            variant="outline"
+            onClick={() => signInSocial("github")}
+            disabled={isGoogleLoading || isGithubLoading}
+            className="relative"
           >
-            {mode === "otp"
-              ? `Or ${t("signInMethods.magicLinkMethod")}`
-              : `Or ${t("signInMethods.otpMethod")}`}
+            {isGithubLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Github className="h-4 w-4" />
+            )}
+            {t("signInMethods.signInWithGithub")}
+            {lastMethod === "github" && (
+              <Badge
+                variant="secondary"
+                className="absolute right-2 text-[10px] px-1.5 py-0.5 pointer-events-none"
+              >
+                Last used
+              </Badge>
+            )}
           </Button>
-        </div>
+        )}
       </div>
+
+      {showEmail && (
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              {t("signInMethods.or")}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {showEmail && (
+        <div className="grid gap-2">
+          <div className="grid">
+            <div className="text-sm font-medium">Email</div>
+            <Input
+              type="email"
+              placeholder="name@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isLoading || isOtpLoading}
+              onMouseEnter={() => setShowTurnstile(true)}
+            />
+          </div>
+
+          {mode === "otp" && (
+            <div className="grid">
+              <div className="text-sm font-medium">
+                {t("signInMethods.otpMethod")}
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  type="text"
+                  maxLength={6}
+                  placeholder="123456"
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
+                  disabled={isLoading || isOtpLoading}
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="min-w-[120px]"
+                  onClick={handleSendOTP}
+                  disabled={
+                    !email ||
+                    isOtpLoading ||
+                    countdown > 0 ||
+                    (!!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY &&
+                      !captchaToken)
+                  }
+                >
+                  {isOtpLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : countdown > 0 ? (
+                    `${countdown}s`
+                  ) : (
+                    t("signInMethods.sendOTP")
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && showTurnstile && (
+            <Turnstile
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+              onSuccess={(token: string) => {
+                setCaptchaToken(token);
+              }}
+              onError={() => setCaptchaToken("")}
+              onExpire={() => setCaptchaToken("")}
+              options={{
+                size: "flexible",
+              }}
+            />
+          )}
+
+          <Button
+            onClick={mode === "otp" ? handleVerifyOTP : handleEmailLogin}
+            disabled={
+              !email ||
+              isLoading ||
+              isOtpLoading ||
+              (mode === "otp" && otpCode.length !== 6) ||
+              (!!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && !captchaToken)
+            }
+            className="w-full bg-primary/90 hover:bg-primary"
+          >
+            {isLoading || isOtpLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : mode === "otp" ? (
+              t("Button.signIn")
+            ) : (
+              <>
+                <LinkIcon className="h-4 w-4" />
+                {t("signInMethods.magicLinkMethod")}
+              </>
+            )}
+          </Button>
+
+          <div className="text-center">
+            <Button
+              variant="link"
+              className="text-xs font-normal text-muted-foreground hover:text-primary"
+              onClick={toggleMode}
+            >
+              {mode === "otp"
+                ? `Or ${t("signInMethods.magicLinkMethod")}`
+                : `Or ${t("signInMethods.otpMethod")}`}
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

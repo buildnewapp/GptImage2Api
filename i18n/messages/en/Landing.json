@@ -1,397 +1,409 @@
 {
   "Hero": {
-    "badge": {
-      "label": "NEW",
-      "text": "Next.js SaaS Full Stack Template",
-      "href": "https://nexty.dev/#pricing"
-    },
-    "title": "A Modern Next.js Full Stack SaaS Boilerplate",
-    "description": "Our Next.js boilerplate includes authentication, Stripe payments, AI integration, CMS, and everything you need to start earning immediately.",
-    "getStarted": "Get Started",
-    "getStartedLink": "https://nexty.dev/#pricing",
-    "viewDocs": "View Documentation",
-    "viewDocsLink": "https://nexty.dev/docs"
+    "title": "Seedance 2.0",
+    "description": "Experience true multi-modal AI video creation. Combine images, videos, audio, and text to generate cinematic content with precise reference capabilities, seamless video extension, and natural language control.",
+    "form": {
+      "imageToVideo": "Image to Video",
+      "textToVideo": "Text to Video",
+      "aiModel": "AI Model",
+      "selectModel": "Select a model to start generating",
+      "images": "Images",
+      "uploadTitle": "Click to upload or drag & drop",
+      "uploadFormats": "PNG, JPG, JPEG, WEBP",
+      "prompt": "Prompt",
+      "promptPlaceholder": "Describe how you want your image to animate...",
+      "resolution": "Resolution",
+      "duration": "Duration",
+      "aspectRatio": "Aspect Ratio",
+      "auto": "Auto",
+      "advanced": "Advanced",
+      "generate": "Generate",
+      "generating": "Generating...",
+      "loginRequired": "Please sign in to generate videos",
+      "insufficientCredits": "Insufficient credits",
+      "creditsRequired": "{count} credits",
+      "generationSuccess": "Video generation started!",
+      "generationFailed": "Generation failed, please try again",
+      "viewResult": "View in My Videos",
+      "addEndFrame": "Add end frame",
+      "useUrl": "Use URL",
+      "seed": "Seed",
+      "randomSeed": "Random (-1)",
+      "fixCamera": "Fix Camera",
+      "modelVersion": "Model Version",
+      "soraDisclaimer": "Sora service is experiencing high demand and may fail. We recommend using other models for more reliable results.",
+      "sora2": {
+        "name": "Sora 2",
+        "description": "Standard quality, fast generation"
+      },
+      "sora2pro": {
+        "name": "Sora 2 Pro",
+        "description": "Premium quality with advanced features"
+      }
+    }
   },
   "Features": {
-    "badge": {
-      "label": "FEATURES",
-      "text": "Production-ready SaaS Development Kit"
-    },
-    "title": "Production-ready Next.js SaaS Boilerplate",
-    "description": "The Next.js boilerplate includes every essential feature modern SaaS applications require, letting you focus on your unique business logic and customer value.",
+    "titlePrefix": "Key Capabilities of ",
+    "titleSuffix": "Seedance 2.0",
+    "description": "From basic stability to complex multi-modal references, experience the next evolution in AI video generation.",
     "items": [
       {
-        "title": "3 Powerful Boilerplates",
-        "description": "Purchase once, get 3 powerful boilerplates.",
-        "details": [
-          {
-            "title": "Boilerplate 1: Nexty",
-            "description": "Universal SaaS boilerplate with every feature you need.",
-            "href": "https://demo.nexty.dev"
-          },
-          {
-            "title": "Boilerplate 2: nexty-flux-kontext",
-            "description": "AI Image Generation SaaS boilerplate.",
-            "href": "https://flux-kontext.nexty.dev"
-          },
-          {
-            "title": "Boilerplate 3: nexty-directory",
-            "description": "Directory & listing website boilerplate.",
-            "href": "https://dofollow.tools"
-          }
-        ],
-        "images": [
-          "/images/features/template1.webp",
-          "/images/features/template2.webp",
-          "/images/features/template3.webp"
-        ]
+        "title": "Enhanced Basic Capabilities",
+        "description": "More stable, smoother, and realistic. Better physical laws, natural movement, precise instruction following, and stable style retention."
       },
       {
-        "title": "Authentication",
-        "description": "Integrated Better Auth with multiple sign-in options.",
-        "details": [
-          {
-            "title": "Social Sign-in",
-            "description": "Google, GitHub, and more."
-          },
-          {
-            "title": "Magic Links",
-            "description": "Email verification with magic links."
-          },
-          {
-            "title": "Bot Protection",
-            "description": "Protect your app from bots with Cloudflare Turnstile."
-          }
-        ],
-        "images": [
-          "/images/features/login.png"
-        ]
+        "title": "Multi-Modal & Free Combination",
+        "description": "Supports text, image, video, and audio inputs. Combine reference objects freely (up to 9 images, 3 videos, 3 audio files)."
       },
       {
-        "title": "Database",
-        "description": "Integrated Drizzle ORM with multiple database options, such as Supabase, Neon, and Self-hosted PostgreSQL.",
-        "details": [
-          {
-            "title": "One Line Configuration",
-            "description": "Just fill in DATABASE_URL, and the best configuration will be automatically completed."
-          },
-          {
-            "title": "Comprehensive Built-in Tables",
-            "description": "Comprehensive set of tables for user management, pricing plans, orders, content management, and more."
-          },
-          {
-            "title": "Multiple Database Options",
-            "description": "Supabase, Neon, and Self-hosted PostgreSQL."
-          }
-        ],
-        "images": [
-          "/images/features/database-config.webp",
-          "/images/features/database-tables.webp"
-        ]
+        "title": "Superior Consistency",
+        "description": "Solves common issues like face shifting, detail loss, or scene jumping. Maintains character, clothing, and item details throughout the video."
       },
       {
-        "title": "Payment System",
-        "description": "Complete billing solution with Stripe Checkout and Stripe's Billing Portal.",
-        "details": [
-          {
-            "title": "All Payment Methods",
-            "description": "Nexty supports monthly and annual subscriptions, and one-time payments."
-          },
-          {
-            "title": "Usage-based Billing",
-            "description": "Nexty supports usage-based billing for apps that need to charge users based on their usage."
-          },
-          {
-            "title": "Smart Admin Management",
-            "description": "Nexty's pricing plans are managed through the admin dashboard, bound to Stripe Price IDs for intelligent, secure, and real-time preview capabilities."
-          }
-        ],
-        "images": [
-          "/images/features/payment-1.png",
-          "/images/features/payment-2.png"
-        ]
+        "title": "Precise Camera & Motion Copy",
+        "description": "Replicate Hollywood-grade camera movements (dolly, pan, zoom) and complex character actions just by uploading a reference video."
       },
       {
-        "title": "AI Capabilities",
-        "description": "Complete AI integration toolkit with interactive demos, multi-provider support, and ready-to-deploy AI image generation website template.",
-        "details": [
-          {
-            "title": "AI Demo Hub",
-            "description": "Nexty includes built-in demos for chat, text-to-image, image-to-image, and video generation to help developers learn AI workflows and test models quickly."
-          },
-          {
-            "title": "Universal AI Provider Support",
-            "description": "Nexty offers AI SDK integration supporting GPT, Claude, Gemini, DeepSeek, Grok, OpenRouter, and Replicate for maximum flexibility."
-          },
-          {
-            "title": "Bonus:  AI Image Generation Website",
-            "description": "Nexty paid users receive a complete Flux Kontext AI image generation website template for rapid deployment of AI art platforms."
-          }
-        ],
-        "images": [
-          "/images/features/ai-1.png",
-          "/images/features/ai-2.png"
-        ]
+        "title": "Creative Effects & Templates",
+        "description": "Replicate transitions, advertising templates, and complex editing effects. Model identifies visual structure and rhythm from reference videos."
       },
       {
-        "title": "CMS",
-        "description": "Advanced CMS going beyond basic content management with paywall protection, AI translation, and multi-purpose publishing capabilities.",
-        "details": [
-          {
-            "title": "Content Access Control",
-            "description": "Nexty's CMS supports public, logged-in users, and subscriber-only content with paywall protection for monetized content sites."
-          },
-          {
-            "title": "AI-Powered Translation",
-            "description": "Nexty's CMS includes built-in AI translation for multilingual content creation, plus duplicate feature for efficient content production workflows."
-          },
-          {
-            "title": "Multi-Purpose Publishing",
-            "description": "Nexty's CMS enables both free blog sites and paid content platforms with advanced status management (draft, published, archived)."
-          }
-        ],
-        "images": [
-          "/images/features/cms-1.png",
-          "/images/features/admin-3.png",
-          "/images/features/cms-3.png",
-          "/images/features/cms-4.png",
-          "/images/features/cms-5.png"
-        ]
+        "title": "Storytelling & Plot Completion",
+        "description": "Interpret comic strips or storyboards in order. Generate videos that follow a narrative sequence with consistent characters."
       },
       {
-        "title": "File Storage",
-        "description": "Enterprise-grade file management powered by Cloudflare R2 with admin dashboard, automatic CDN distribution, and optimized upload workflows.",
-        "details": [
-          {
-            "title": "Admin File Management",
-            "description": "Nexty provides a dedicated admin dashboard for comprehensive file management with upload, delete, and organization capabilities."
-          },
-          {
-            "title": "Cloudflare R2 Integration",
-            "description": "Nexty leverages Cloudflare R2 for cost-effective, high-performance file storage with automatic CDN distribution worldwide."
-          },
-          {
-            "title": "Optimized Upload Experience",
-            "description": "Nexty features drag-and-drop uploads, preview functionality, and automatic file processing for seamless user experience."
-          }
-        ],
-        "images": [
-          "/images/features/admin-4.png"
-        ]
+        "title": "Video Extension",
+        "description": "Smoothly extend videos (forward or backward). Create longer sequences while maintaining the original style and flow."
       },
       {
-        "title": "Visual Pricing Management",
-        "description": "Nexty introduces dashboard pricing management that's secure and convenient, update your pricing without touching code.",
-        "details": [
-          {
-            "title": "Real-Time Preview",
-            "description": "Nexty's pricing card editor includes real-time preview, enabling you to see how pricing cards will look before saving."
-          },
-          {
-            "title": "Stripe Integration",
-            "description": "Nexty fetches pricing data from Stripe with one-click verification for accurate billing setup."
-          },
-          {
-            "title": "Multi-language Support",
-            "description": "Nexty supports AI-powered translation for pricing cards, enabling easy management of multilingual pricing content."
-          }
-        ],
-        "images": [
-          "/images/features/admin-2.png",
-          "/images/features/prices-1.png",
-          "/images/features/prices-2.png",
-          "/images/features/prices-3.png",
-          "/images/features/prices-4.png",
-          "/images/features/prices-5.png"
-        ]
+        "title": "Audio Generation & Voice",
+        "description": "Improved sound realism and accuracy. Generate matching sound effects, Dubbing, and atmospheric music."
       },
       {
-        "title": "Email System",
-        "description": "Complete email solution with Cloudflare domain email and Resend integration for professional communications and subscriber management.",
-        "details": [
-          {
-            "title": "Professional Domain Email",
-            "description": "Nexty implements domain email through Cloudflare, making your brand appear more professional and helping build trust with users."
-          },
-          {
-            "title": "Advanced Email Marketing",
-            "description": "Nexty includes Resend integration for subscriber management and email campaigns, with built-in newsletter subscription module in the footer."
-          },
-          {
-            "title": "Built-in Email Automation",
-            "description": "Nexty includes newsletter subscription and payment failure notification emails, plus pre-built templates for essential user communications."
-          }
-        ],
-        "images": [
-          "/images/features/email-2.png",
-          "/images/features/email-1.png"
-        ]
+        "title": "Consistent Long Shot (One Shot)",
+        "description": "Generate 'One Shot' continuous videos without cuts, maintaining visual logic and stability across a longer timeframe."
       },
       {
-        "title": "User Dashboard",
-        "description": "Complete user dashboard that provides a seamless experience for users.",
-        "details": [
-          {
-            "title": "Profile Management",
-            "description": "Nexty includes comprehensive profile settings."
-          },
-          {
-            "title": "Subscription Management",
-            "description": "Nexty provides subscription management with billing history and plan upgrades through Stripe integration."
-          },
-          {
-            "title": "Credit History & Usage",
-            "description": "Nexty tracks credit grants and usage with detailed history, supporting both one-time and subscription-based credit systems."
-          }
-        ],
-        "images": [
-          "/images/features/user-1.png",
-          "/images/features/user-2.png",
-          "/images/features/user-3.png"
-        ]
+        "title": "Video Editing",
+        "description": "Modify specific parts of an existing video (e.g., change a character, extend a clip) without regenerating the entire sequence."
       },
       {
-        "title": "Admin Dashboard",
-        "description": "Comprehensive admin dashboard providing full control over users, pricing, content, and files for complete SaaS management.",
-        "details": [
-          {
-            "title": "User Management",
-            "description": "Nexty provides complete user management with role control, Stripe customer integration, and account administration."
-          },
-          {
-            "title": "Pricing Management",
-            "description": "Nexty offers visual pricing plan management with environment separation, Stripe integration, and real-time preview."
-          },
-          {
-            "title": "CMS & File Management",
-            "description": "Nexty includes blog management with multilingual support, access control, and R2 file management with preview capabilities."
-          }
-        ],
-        "images": [
-          "/images/features/admin-1.png",
-          "/images/features/admin-2.png",
-          "/images/features/admin-3.png",
-          "/images/features/admin-4.png"
-        ]
+        "title": "Music Rhythm Sync",
+        "description": "Card point capability. Generate video edits that perfectly sync with the rhythm and beats of uploaded music."
       },
       {
-        "title": "Marketing & Growth",
-        "description": "Complete growth toolkit with internationalization, analytics, advertising, and SEO optimization for global reach and business success.",
-        "details": [
-          {
-            "title": "i18n",
-            "description": "Nexty supports multiple languages out-of-the-box with easy expansion for worldwide market reach."
-          },
-          {
-            "title": "Analytics & AdSense",
-            "description": "Nexty includes Google Analytics, Plausible tracking, and AdSense integration for insights and revenue generation."
-          },
-          {
-            "title": "SEO Optimization",
-            "description": "Nexty provides comprehensive SEO optimization with meta tags and sitemaps for better rankings."
-          }
-        ],
-        "images": [
-          "/images/features/other-1.png",
-          "/images/features/other-2.png",
-          "/images/features/other-3.png"
-        ]
+        "title": "Emotional Expression",
+        "description": "Rich emotional performance. Characters can transition between emotions (e.g., calm to collapse) realistically."
       }
     ]
   },
   "UseCases": {
-    "badge": {
-      "label": "USE CASES",
-      "text": "Multiple Solution Scenarios"
-    },
-    "title": "One Boilerplate, Multiple Solutions",
-    "description": "Whether you're building AI tools, content platforms, or other SaaS products, our Next.js SaaS boilerplate adapts to your specific needs with minimal configuration required.",
-    "cases": [
+    "badge": "Use Cases",
+    "titlePrefix": "Endless Possibilities ",
+    "titleSuffix": "For Every Creator",
+    "description": "From viral content to professional productions, Seedance 2.0 empowers creators across industries to bring their multi-modal visions to life.",
+    "button": "Get Started Now",
+    "items": [
       {
-        "title": "AI-Powered SaaS Tools",
-        "description": "Launch production-ready AI applications in days, not months. Built-in integrations with OpenRouter, Replicate, and leading AI providers. Includes smart usage tracking, automated billing, and everything you need to monetize AI workflows.",
-        "image": "/placeholder.webp",
-        "icon": "Bot"
+        "title": "Advertising & Marketing",
+        "description": "Create compelling promotional content by referencing successful ad templates. Replicate proven creative formats with your own products and branding.",
+        "tags": [
+          "Product Videos",
+          "Brand Content",
+          "Commercial Ads",
+          "Template Replication"
+        ]
       },
       {
-        "title": "Content & Blog Platforms",
-        "description": "Launch SEO-optimized content websites with advanced CMS capabilities. Features include Markdown editing, multilingual support, paywall protection, AI translation, and AdSense integration. Perfect for building premium content platforms, newsletters, or content-driven SaaS applications.",
-        "image": "/placeholder.webp",
-        "icon": "FileText"
+        "title": "Education & Training",
+        "description": "Bring lessons to life with engaging visual content. Create animated explanations, historical reconstructions, and interactive learning materials.",
+        "tags": [
+          "Course Content",
+          "Tutorials",
+          "Demos",
+          "Visual Lessons"
+        ]
       },
       {
-        "title": "Subscription & Marketplace Platforms",
-        "description": "Build recurring revenue businesses with automated billing, customer management, and payment processing. Features include subscription management, usage-based pricing, customer portals, and comprehensive analytics. Perfect for SaaS marketplaces, subscription services, or premium tool platforms.",
-        "image": "/placeholder.webp",
-        "icon": "CreditCard"
+        "title": "Creative Storytelling",
+        "description": "Craft unique narratives using multi-modal inputs. Reference film techniques, replicate cinematic styles, and extend your story across seamless scenes.",
+        "tags": [
+          "Short Films",
+          "Art Projects",
+          "Music Videos",
+          "Visual Poetry"
+        ]
       },
       {
-        "title": "Free Tools & Lead Magnets",
-        "description": "Create viral free tools that drive massive organic traffic. Lightning-fast performance and SEO optimization. Perfect for building your email list, generating leads, or creating the next viral calculator/converter tool.",
-        "image": "/placeholder.webp",
-        "icon": "Wrench"
+        "title": "Social Media Content",
+        "description": "Generate scroll-stopping content by referencing trending templates and effects. Replicate viral formats with your own creative twist.",
+        "tags": [
+          "Instagram Reels",
+          "TikTok Videos",
+          "YouTube Shorts",
+          "Trending Effects"
+        ]
+      },
+      {
+        "title": "Motion & Dance Videos",
+        "description": "Upload reference choreography or motion clips and apply them to any character. Perfect for dance covers, motion replication, and action sequences.",
+        "tags": [
+          "Dance Covers",
+          "Action Sequences",
+          "Motion Capture",
+          "Choreography"
+        ]
+      },
+      {
+        "title": "Video Editing & Extension",
+        "description": "Extend existing videos, merge multiple clips, or edit specific segments without regenerating everything from scratch.",
+        "tags": [
+          "Video Extension",
+          "Scene Merging",
+          "Content Editing",
+          "Clip Connection"
+        ]
+      },
+      {
+        "title": "Film Pre-Visualization",
+        "description": "Reference film clips to replicate camera movements, transitions, and visual effects. Test cinematography before production.",
+        "tags": [
+          "Storyboarding",
+          "Camera Planning",
+          "Effect Testing",
+          "Concept Proofing"
+        ]
+      },
+      {
+        "title": "Real Estate & Architecture",
+        "description": "Transform property photos into immersive virtual tours. Showcase architectural designs with dynamic walkthroughs and atmospheric presentations.",
+        "tags": [
+          "Property Tours",
+          "Architecture Viz",
+          "Interior Design",
+          "Virtual Staging"
+        ]
+      },
+      {
+        "title": "Music & Audio Sync",
+        "description": "Upload audio tracks and create perfectly beat-synced videos. Generate sound effects and background music that match your visual content.",
+        "tags": [
+          "Beat Sync",
+          "Music Videos",
+          "Sound Design",
+          "Audio-Visual Art"
+        ]
+      }
+    ]
+  },
+  "HowItWorks": {
+    "titlePrefix": "How to Create AI Videos with ",
+    "titleSuffix": "Seedance 2.0",
+    "button": "Start Creating Now",
+    "items": [
+      {
+        "title": "Upload Your Assets",
+        "description": "Upload images, videos, or audio files as references. You can combine up to 12 files across different modalities to express your vision."
+      },
+      {
+        "title": "Describe Your Vision",
+        "description": "Use natural language to describe what you want. Reference specific assets by tagging them, like 'Use @image1 as the first frame with @video1's camera movement.'"
+      },
+      {
+        "title": "Generate & Iterate",
+        "description": "Generate your video in 4-15 seconds length. Extend, edit, or refine your creation by uploading the result and making targeted adjustments."
       }
     ]
   },
   "Testimonials": {
-    "badge": {
-      "label": "TESTIMONIALS"
-    },
-    "title": "What Our Customers Say",
-    "description": "Don't just take our word for it"
-  },
-  "FAQ": {
-    "title": "Frequently Asked Questions",
-    "description": "Common questions about our Next.js SaaS boilerplate and how it can help you build better applications faster",
+    "badge": "Testimonials",
+    "title": "Loved by Creators Worldwide",
+    "description": "See what our customers have to say about Seedance 2.0 and how it's transforming their creative workflows.",
     "items": [
       {
-        "question": "Can I use this boilerplate as a non-technical person?",
-        "answer": "Absolutely! Nexty is specifically designed to work seamlessly with AI assistants, allowing even those with zero programming experience to develop products through AI-assisted development. Our code structure and documentation are AI-friendly, making it easier for AI to understand and modify the code. Technical teams will benefit from even greater development efficiency."
+        "quote": "Seedance 2.0's multi-modal input is a game-changer. I can finally reference a dance video and apply it to any character I want. The motion replication is incredibly accurate!",
+        "name": "Sarah Chen",
+        "role": "Content Creator"
       },
       {
-        "question": "What makes this the best Next.js SaaS boilerplate?",
-        "answer": "Nexty is the most comprehensive Next.js SaaS starter kit available. Unlike other templates that only provide basic components, we include complete business workflows: authentication, payments, AI integration, content management, and monetization features. Everything is production-ready and battle-tested in real applications."
+        "quote": "The reference capability is mind-blowing. I uploaded a film clip and the model perfectly replicated the camera movement and pacing. This is what AI video should be.",
+        "name": "Marcus Rodriguez",
+        "role": "Filmmaker"
       },
       {
-        "question": "How quickly can I launch my SaaS with this boilerplate?",
-        "answer": "Your first project will take 3-5 days as you learn the boilerplate's features, but the learning curve pays off quickly. Our customers who've mastered the system now launch complete SaaS applications in just 1-2 days. The boilerplate handles all the complex infrastructure, so you can focus on what makes your product unique."
+        "quote": "Finally, character consistency that actually works! Faces, clothing, even small text - everything stays consistent throughout the video. Seedance 2.0 solved our biggest problem.",
+        "name": "Emily Watson",
+        "role": "Creative Director"
       },
       {
-        "question": "Is this suitable for AI-powered SaaS applications?",
-        "answer": "Absolutely! Our boilerplate includes comprehensive AI SDK integration with working examples for text generation, image creation, and video processing. It's compatible with OpenAI, Claude, Gemini, Grok, DeepSeek, and other popular AI models. Perfect for building AI tools or content generation platforms."
+        "quote": "The video extension feature is seamless. I can extend clips naturally and even merge different scenes together. It's like having an AI editor that understands continuity.",
+        "name": "David Kim",
+        "role": "Video Producer"
       },
       {
-        "question": "What payment methods and billing models are supported?",
-        "answer": "The boilerplate includes complete Stripe integration supporting one-time payments, subscriptions, usage-based billing, and automated renewals. You can start monetizing immediately."
+        "quote": "Being able to reference trending video templates and recreate them with my own style has 10x'd my content output. The multi-modal approach just makes sense.",
+        "name": "Priya Sharma",
+        "role": "Social Media Manager"
       },
       {
-        "question": "How does the content management system work?",
-        "answer": "Our built-in CMS supports Markdown and rich text editing, multilingual content, SEO optimization, paywall protection, and AI translation. You can manage articles, pages, and premium content through an intuitive admin dashboard with role-based access control."
+        "quote": "The built-in audio generation is fantastic. Sound effects match the action perfectly, and the music beat sync feature is incredibly useful for dance and music content.",
+        "name": "Alex Turner",
+        "role": "Music Video Director"
       },
       {
-        "question": "Is the boilerplate SEO-optimized?",
-        "answer": "Yes! The boilerplate includes comprehensive SEO features: automatic meta tags, structured data, XML sitemaps, OpenGraph support, and performance optimization. It's built with Next.js best practices for search engine visibility and faster loading times."
+        "quote": "I reference complex action sequences from films and Seedance 2.0 replicates them with my own characters. The motion precision is unlike anything I've seen in AI video.",
+        "name": "Jessica Liu",
+        "role": "Animation Director"
       },
       {
-        "question": "What kind of support do you provide?",
-        "answer": "We provide comprehensive documentation, code examples, and email support. We also have a public Discord community where you can get help from other developers and share your projects."
+        "quote": "The natural language control is so intuitive. I just describe what I want to reference and how, and the model understands perfectly. No more struggling with complex prompts.",
+        "name": "Mohammed Hassan",
+        "role": "Digital Artist"
       },
       {
-        "question": "How do I manage pricing cards?",
-        "answer": "This is a key selling point of Nexty. You can manage pricing cards in the Dashboard, including adding, editing, and deleting pricing cards with AI multilingual translation support, eliminating complex multilingual file configuration."
+        "quote": "Video editing in Seedance 2.0 is revolutionary. I can modify specific segments, replace characters, or extend scenes without regenerating the entire video. Huge time saver!",
+        "name": "Olivia Martinez",
+        "role": "Video Editor"
+      }
+    ]
+  },
+  "Pricing": {
+    "badge": "Pricing",
+    "title": "Simple, Transparent Pricing",
+    "titleOnetime": "One-Time Credit Packs",
+    "description": "Choose the plan that works best for you. All plans include access to our core features.",
+    "descriptionOnetime": "One-time purchase • Credits never expire",
+    "monthly": "Monthly",
+    "annually": "Annually",
+    "onetime": "One-Time",
+    "discount": "-50%",
+    "limitedOffer": "Limited Time Offer!",
+    "saveOffer": "Save 50% with Annual Billing",
+    "billedYearly": "Billed ${amount} yearly",
+    "monthShort": "/mo",
+    "subscribe": "Subscribe",
+    "buyNow": "Buy Now",
+    "mostPopular": "Most Popular",
+    "bestValue": "Best Value",
+    "contactSales": "Need a custom plan? Contact our sales team.",
+    "checkOnetime": "Looking for one-time credits? Check out our Credit Packs",
+    "packs": {
+      "standard": {
+        "name": "Standard Pack",
+        "desc": "Perfect for trying out.",
+        "features": [
+          "1,000 Credits",
+          "Never expire"
+        ]
+      },
+      "pro": {
+        "name": "Pro Pack",
+        "desc": "Most popular choice.",
+        "features": [
+          "3,750 Credits",
+          "Never expire",
+          "Priority Generation"
+        ]
+      },
+      "max": {
+        "name": "Max Pack",
+        "desc": "For heavy users.",
+        "features": [
+          "12,000 Credits",
+          "Never expire",
+          "Priority Generation"
+        ]
+      }
+    },
+    "plans": {
+      "standard": {
+        "name": "Standard",
+        "desc": "For individuals just getting started.",
+        "features": [
+          "{credits} Credits / month",
+          "Standard Queue",
+          "Commercial Use"
+        ]
+      },
+      "pro": {
+        "name": "Pro",
+        "desc": "For creators who need more power.",
+        "features": [
+          "{credits} Credits / month",
+          "Fast Generation Queue",
+          "Priority Support"
+        ]
+      },
+      "max": {
+        "name": "Max",
+        "desc": "For studios and professionals.",
+        "features": [
+          "{credits} Credits / month",
+          "Instant Queue",
+          "API Access"
+        ]
+      }
+    }
+  },
+  "FAQ": {
+    "titlePrefix": "Frequently Asked ",
+    "titleSuffix": "Questions",
+    "description": "Everything you need to know about Seedance 2.0 and how to get started.",
+    "items": [
+      {
+        "question": "What inputs does Seedance 2.0 support?",
+        "answer": "Seedance 2.0 supports four input modalities: up to 9 images, up to 3 videos (total duration ≤15s), up to 3 audio files (MP3, total duration ≤15s), and text prompts in natural language. You can combine up to 12 files total across different modalities for maximum creative flexibility."
+      },
+      {
+        "question": "What can I reference with Seedance 2.0?",
+        "answer": "You can reference virtually anything from your uploaded content: motion and choreography, visual effects and transitions, camera movements and angles, character appearances and styles, scene compositions, and even audio/sound. Simply describe in your prompt what you want to reference, like 'Use the camera movement from @video1 with the character style from @image1.'"
+      },
+      {
+        "question": "How does video extension work?",
+        "answer": "Seedance 2.0 can smoothly extend existing videos. Upload your video and specify how many seconds you want to add (the generation length should match your extension length, e.g., extend 5s with 5s generation). The model maintains continuity in motion, style, and content for seamless results."
+      },
+      {
+        "question": "Can I edit existing videos with Seedance 2.0?",
+        "answer": "Yes! Seedance 2.0 supports video editing capabilities. You can replace characters, modify specific actions or segments, add new elements, or remove unwanted content - all while preserving the rest of your video. This means you can make targeted adjustments without regenerating everything from scratch."
+      },
+      {
+        "question": "How does the audio feature work?",
+        "answer": "Seedance 2.0 includes built-in audio generation that creates context-aware sound effects and background music. You can also upload your own audio files to sync video content to specific beats or rhythms, perfect for music videos and dance content."
+      },
+      {
+        "question": "What video lengths and resolutions are supported?",
+        "answer": "Seedance 2.0 generates videos from 4 to 15 seconds in length. Multiple aspect ratios are supported including 16:9, 9:16, 4:3, 3:4, 21:9, and 1:1. The model supports various resolutions up to 1080p for production-ready output."
+      },
+      {
+        "question": "How is character consistency maintained?",
+        "answer": "Seedance 2.0 features significantly improved consistency for faces, clothing, and styles. By referencing character images, the model can maintain identity across longer videos and complex movements."
+      },
+      {
+        "question": "How can I upgrade my subscription?",
+        "answer": "Our system currently allows only one active subscription at a time. Contact us to cancel your current subscription immediately, then you can subscribe to your desired plan. Email us at support@sdanceai.com with your upgrade request."
+      },
+      {
+        "question": "How can I purchase more credits?",
+        "answer": "There are several ways to get additional credits: Purchase our one-time payment packages to get credits instantly, or upgrade your subscription plan."
+      },
+      {
+        "question": "How do I cancel my subscription?",
+        "answer": "You can cancel your subscription at any time through your subscription page. If you have any questions or need assistance, please contact our support team at support@sdanceai.com."
+      },
+      {
+        "question": "Are there any content restrictions?",
+        "answer": "Yes. Due to compliance requirements, we do not support uploading realistic real human faces (images or videos). Uploading such content will be blocked for safety reasons."
       }
     ]
   },
   "CTA": {
-    "title": "Launch Your Product Fast, and Earn Money Fast",
-    "description": "Stop starting from scratch! Use Nexty templates to focus on your core idea, rapidly build, validate, and start earning.",
-    "button": "Get Template Now",
-    "trustText": "Trusted by developers worldwide",
+    "title": "Ready to Experience Multi-Modal AI Video Creation?",
+    "description": "Join thousands of creators using Seedance 2.0 to bring their visions to life. Reference anything, edit anything, create anything - with natural language control.",
+    "button": "Start Creating Now",
     "features": {
-      "deploy": "🚀 Quick Deploy",
-      "production": "🔧 Production Ready",
-      "updates": "💎 Lifetime Updates",
-      "i18n": "🌍 Internationalization"
+      "multimodal": "Multi-modal input support",
+      "watermark": "Watermark-free downloads",
+      "reference": "Reference any content"
     }
   }
 }

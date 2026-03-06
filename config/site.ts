@@ -1,8 +1,8 @@
 import { SiteConfig } from "@/types/siteConfig";
 
-export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nexty.dev";
+export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://sdanceai.com";
 
-const GITHUB_URL = ''
+const GITHUB_URL = 'https://github.com/sdanceai/awesome_seedance2_prompt'
 const TWITTER_URL = ''
 const YOUTUBE_URL = ''
 const INSTAGRAM_URL = ''
@@ -11,15 +11,17 @@ const DISCORD_URL = process.env.NEXT_PUBLIC_DISCORD_INVITE_URL
 const EMAIL_URL = ''
 
 export const siteConfig: SiteConfig = {
-  name: "NEXTY.DEV",
+  name: "Sdance AI",
+  tagLine:"Bring Any Character to Life with Seedance 2.0",
+  description:"Unleash your creativity with SdanceAI. Powered by the breakthrough Seedance 2.0 model, you can now turn ordinary photos into extraordinary performances. Whether for social media or digital art, create stunning, rhythmic videos in seconds—no motion capture suit required.",
   url: BASE_URL,
   authors: [
     {
-      name: "your-name",
+      name: "sdanceai",
       url: BASE_URL,
     }
   ],
-  creator: '@your-handle',
+  creator: '@sdanceai',
   socialLinks: {
     github: GITHUB_URL,
     twitter: TWITTER_URL,

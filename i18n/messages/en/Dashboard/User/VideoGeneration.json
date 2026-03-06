@@ -1,0 +1,31 @@
+{
+  "title": "My Videos",
+  "description": "View your video generation history and results",
+  "columns": {
+    "model": "Model",
+    "status": "Status",
+    "credits": "Credits",
+    "createdAt": "Created",
+    "actions": "Actions"
+  },
+  "status": {
+    "pending": "Processing",
+    "success": "Completed",
+    "failed": "Failed"
+  },
+  "credits_refunded": "Refunded",
+  "empty": "No video generations yet. Go to the homepage to create your first video!",
+  "view_video": "View Video",
+  "load_error": "Failed to load video history",
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page_of": "Page {current} of {total}",
+    "total_records": "{count} records"
+  },
+  "filter": {
+    "all": "All",
+    "status_filter": "Filter by status",
+    "model_filter": "Filter by model"
+  }
+}

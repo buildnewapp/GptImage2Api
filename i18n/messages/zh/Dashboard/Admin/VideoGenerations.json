@@ -1,0 +1,23 @@
+{
+  "title": "视频生成记录",
+  "description": "查看所有用户的视频生成记录",
+  "columns": {
+    "id": "ID",
+    "user": "用户",
+    "model": "模型",
+    "status": "状态",
+    "credits": "积分",
+    "refunded": "已退还",
+    "createdAt": "创建时间"
+  },
+  "filters": {
+    "search": "搜索用户邮箱、任务 ID...",
+    "all_statuses": "全部状态",
+    "all_models": "全部模型"
+  },
+  "pagination": {
+    "previous": "上一页",
+    "next": "下一页",
+    "page_info": "第 {current} / {total} 页（共 {count} 条）"
+  }
+}

@@ -1,5 +1,5 @@
-import HomeComponent from "@/components/home";
+import SeedanceHome from "@/components/home/SeedanceHome";
 
 export default function Home() {
-  return <HomeComponent />;
+  return <SeedanceHome />;
 }

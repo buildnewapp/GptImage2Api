@@ -1,8 +1,8 @@
 {
   "Home": {
-    "title": "NEXTY.DEV",
-    "tagLine": "最新の Next.js フルスタック SaaS テンプレート",
-    "description": "Next.js と Supabase を活用した本格的な SaaS 開発キット。コンテンツ配信、AI ツール、サブスクリプションサービスを迅速に構築できます。"
+    "title": "SdanceAI",
+    "tagLine": "Seedance 2.0 オンライン体験版 & API サービス",
+    "description": "SdanceAI は Seedance 2.0 動画生成モデルを提供。音声同期と 1080p 生成に対応。開発者向けに安定した API を提供し、次世代の AI ビデオ制作をサポートします。"
   },
   "Login": {
     "title": "おかえりなさい",
@@ -76,6 +76,11 @@
         "name": "クレジット履歴",
         "href": "/dashboard/credit-history",
         "icon": "Coins"
+      },
+      {
+        "name": "マイビデオ",
+        "href": "/dashboard/video-generations",
+        "icon": "Video"
       }
     ],
     "AdminMenus": [
@@ -118,6 +123,11 @@
         "name": "R2リソース",
         "href": "/dashboard/r2-resources",
         "icon": "FileBox"
+      },
+      {
+        "name": "動画生成履歴",
+        "href": "/dashboard/admin-video-generations",
+        "icon": "Video"
       }
     ]
   },
@@ -341,45 +351,17 @@
         "href": "/#features"
       },
       {
+        "name": "プロンプト",
+        "href": "/prompts"
+      },
+      {
         "id": "pricing",
         "name": "料金プラン",
         "href": "/#pricing"
       },
       {
-        "name": "AI Demo",
-        "href": "/ai-demo"
-      },
-      {
         "name": "ブログ",
         "href": "/blog"
-      },
-      {
-        "id": "demo",
-        "name": "Demo",
-        "href": "#",
-        "items": [
-          {
-            "name": "Nexty Demo",
-            "href": "https://demo.nexty.dev/",
-            "target": "_blank",
-            "rel": "noopener noreferrer nofollow",
-            "description": "Next.js SaaS Boilerplate"
-          },
-          {
-            "name": "AI Image Generator Demo",
-            "href": "https://flux-kontext.nexty.dev/",
-            "target": "_blank",
-            "rel": "noopener noreferrer nofollow",
-            "description": "AI Image Generator Demo Based on NEXTY.DEV"
-          },
-          {
-            "name": "Directory Boilerplate Demo",
-            "href": "https://dofollow.tools/",
-            "target": "_blank",
-            "rel": "noopener noreferrer nofollow",
-            "description": "Directory Boilerplate Demo Based on NEXTY.DEV"
-          }
-        ]
       }
     ]
   },
@@ -389,37 +371,6 @@
     "PrivacyPolicy": "プライバシーポリシー",
     "TermsOfService": "利用規約",
     "RefundPolicy": "返金ポリシー",
-    "Newsletter": {
-      "title": "ニュースレターのご案内",
-      "description": "最新情報を定期的にお届けいたします",
-      "subscribe": {
-        "invalidEmail": "メールアドレスの形式が正しくありません",
-        "defaultErrorMessage": "登録処理に失敗しました。恐れ入りますが、時間をおいて再度お試しください",
-        "successMessage": "ニュースレターの登録が完了いたしました",
-        "multipleSubmissions": "アクセスが集中しております。24時間後に再度お試しください"
-      },
-      "unsubscribe": {
-        "title": "ニュースレター配信停止",
-        "success": "Nextyニュースレターの配信停止が完了しました。",
-        "emailPrefix": "メールアドレス：",
-        "regretMessage": "いつでも再登録して、Nextyの最新アップデートやチュートリアルを受け取ることができます。",
-        "errorGeneric": "配信停止の処理中にエラーが発生しました",
-        "errorNoToken": "配信停止トークンが提供されていません",
-        "errorMessage": "正しい配信停止リンクを使用していることをご確認ください。問題が解決しない場合は、サポートチームまでお問い合わせください。",
-        "contactPrefix": "お問い合わせ先：",
-        "contactPrefixSuccess": "ご質問がございましたら、お気軽にお問い合わせください：",
-        "backToHome": "ホームに戻る",
-        "invalidEmail": "無効なメールアドレスです",
-        "notInNewsletter": "このメールアドレスは配信リストに登録されていません",
-        "confirmTitle": "配信停止の確認",
-        "confirmMessage": "ニュースレターの配信を停止してもよろしいですか？新機能やコンテンツの更新情報が届かなくなります。",
-        "confirmButton": "配信停止する",
-        "cancelButton": "キャンセル",
-        "processing": "処理中...",
-        "finalWarning": "この操作は取り消すことができません。後でいつでも再登録できます。",
-        "errorInvalidToken": "無効な配信停止リンクです。リンクが破損しているか、期限切れの可能性があります。"
-      }
-    },
     "Links": {
       "groups": [
         {
@@ -433,14 +384,6 @@
               "id": "pricing",
               "href": "/#pricing",
               "name": "料金プラン"
-            },
-            {
-              "href": "/blog",
-              "name": "ブログ"
-            },
-            {
-              "href": "/glossary",
-              "name": "用語集"
             }
           ]
         },
@@ -448,13 +391,12 @@
           "title": "サポート",
           "links": [
             {
-              "name": "Docs",
-              "href": "https://docs.nexty.dev/ja/docs",
-              "target": "_blank"
+              "href": "/blog",
+              "name": "ブログ"
             },
             {
-              "name": "Roadmap",
-              "href": "https://nexty.dev/ja/roadmap"
+              "href": "/prompts",
+              "name": "プロンプト"
             }
           ]
         },
@@ -480,5 +422,22 @@
         }
       ]
     }
+  },
+  "Navigation": {
+    "product": "製品",
+    "resources": "リソース",
+    "legal": "法的事項",
+    "generate": "生成",
+    "features": "機能",
+    "prompts": "プロンプト",
+    "pricing": "料金",
+    "showcase": "ショーケース",
+    "blog": "ブログ",
+    "docs": "ドキュメント",
+    "help": "ヘルプセンター",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約",
+    "signIn": "サインイン",
+    "footerAbout": "高度に制御可能なマルチモーダルAI動画生成プラットフォーム。"
   }
 }

@@ -1,0 +1,23 @@
+{
+  "title": "動画生成履歴",
+  "description": "全ユーザーの動画生成記録を閲覧",
+  "columns": {
+    "id": "ID",
+    "user": "ユーザー",
+    "model": "モデル",
+    "status": "ステータス",
+    "credits": "クレジット",
+    "refunded": "返金済み",
+    "createdAt": "作成日時"
+  },
+  "filters": {
+    "search": "メール、タスクIDで検索...",
+    "all_statuses": "すべてのステータス",
+    "all_models": "すべてのモデル"
+  },
+  "pagination": {
+    "previous": "前へ",
+    "next": "次へ",
+    "page_info": "{current} / {total} ページ（{count} 件）"
+  }
+}

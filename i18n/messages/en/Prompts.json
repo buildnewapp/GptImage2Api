@@ -1,0 +1,157 @@
+{
+  "hero": {
+    "badge": "Prompt Gallery",
+    "title": "Seedance 2.0",
+    "titleHighlight": "Prompts",
+    "description": "Explore real-world examples showcasing Seedance 2.0's multi-modal AI video creation capabilities. Each prompt demonstrates input references and generated results."
+  },
+  "nav": {
+    "all": "All"
+  },
+  "card": {
+    "prompt": "Prompt",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "duration": "Duration",
+    "image": "Image",
+    "images": "Images",
+    "video": "Video",
+    "videos": "Videos",
+    "generatedResult": "Generated Result",
+    "note": "Note: realistic human faces are not currently supported as input material"
+  },
+  "categories": {
+    "basic": {
+      "title": "Enhanced Fundamentals",
+      "description": "More realistic physics, smoother motion, more precise instruction understanding, more stable style"
+    },
+    "consistency": {
+      "title": "Consistency Enhancement",
+      "description": "From faces to clothing and font details, overall consistency is more stable and accurate"
+    },
+    "camera-motion": {
+      "title": "Camera & Motion Replication",
+      "description": "Upload a reference video to precisely replicate film movements, camera work and complex actions"
+    },
+    "creative-template": {
+      "title": "Creative Templates & Effects",
+      "description": "Creative transitions, ad productions, film clips, complex editing — precisely replicated"
+    },
+    "creativity": {
+      "title": "Creative Story Completion",
+      "description": "The model's creativity and storyline completion capabilities"
+    },
+    "video-extend": {
+      "title": "Video Extension",
+      "description": "Smooth video extension and seamless transitions, generating continuous shots based on user prompts"
+    },
+    "audio": {
+      "title": "Audio & Voice Precision",
+      "description": "Voice reference, dialogue generation, narration, and sound effect matching — all upgraded"
+    },
+    "one-shot": {
+      "title": "One-Shot Continuity",
+      "description": "Stronger shot continuity, achieving smooth one-take effects"
+    },
+    "video-edit": {
+      "title": "Video Editing",
+      "description": "Use existing videos as input, target specific segments, actions or rhythms for focused modifications"
+    },
+    "music-sync": {
+      "title": "Music Beat Sync",
+      "description": "Upload audio tracks, create precisely beat-synced videos"
+    },
+    "emotion": {
+      "title": "Emotional Performance",
+      "description": "Richer and more realistic character emotional expression"
+    }
+  },
+  "prompts": {
+    "basic": {
+      "0": "A girl is elegantly hanging clothes to dry, picks another piece from the basket, and vigorously shakes it out.",
+      "1": "The character in the painting has a guilty expression, glances left and right, then reaches out of the frame to grab a cola and takes a sip with a satisfied look. Hearing footsteps, the character quickly puts the cola back. A cowboy picks up the cola and walks away. The camera pushes forward to a pure black background with a spotlight on the canned cola, with artistic subtitles: \"Yikou Cola, a must-try!\"",
+      "2": "Camera slowly zooms out (revealing the full street view) and follows the heroine. Wind blows her skirt as she walks through a 19th-century London street. A steam locomotive rushes past her from the right, the wind lifts her skirt, and she frantically holds it down with both hands in shock. Background sounds include footsteps, crowd noise, and vehicle sounds.",
+      "3": "Camera follows a man in black fleeing rapidly, a group of people chasing behind. Camera switches to side tracking shot. The character panics and crashes into a roadside fruit stand, gets up and continues running. Sounds of chaotic crowd."
+    },
+    "consistency": {
+      "0": "The man (@Image1) walks wearily down a corridor after work, his pace slowing. He stops at his front door, close-up shot of his face as he takes a deep breath, adjusts his emotions, puts on a relaxed expression. Close-up of him finding his keys, inserting the lock. After entering, his little daughter and pet dog run joyfully to greet and hug him. The interior is very warm and cozy, with natural dialogue throughout.",
+      "1": "Replace the girl in @Video1 with a Chinese opera actress on an elegant stage. Reference @Video1's camera movement and transitions, match the character's movements with the lens, extreme stage aesthetics, enhanced visual impact.",
+      "2": "Reference all transitions and camera movements from @Video1, one continuous shot. Starting from a chess game, camera pans left to show yellow sand on the floor, pans up to a beach with footprints. A girl in white walks further away on the beach. Aerial overhead shot of waves washing the shore (no people). Seamless transition from ocean waves to flowing curtains. Camera pulls back to show the girl's close-up face. All in one continuous shot.",
+      "3": "0-2s: Quick four-frame flash cuts, red, pink, purple, and leopard print bows shown in sequence, close-up of satin sheen and \"chéri\" brand text. 3-6s: Close-up of silver magnetic clasp clicking together then smoothly pulling apart. 7-12s: Quick-cut wearing scenes. 13-15s: Four bows arranged side by side.",
+      "4": "Create a commercial-style video showcase of the handbag in @Image2. Reference @Image1 for the side view, @Image3 for the surface material texture. Show all the bag's details. Background music should be grand and majestic.",
+      "5": "Use @Image1 as the opening frame with a first-person perspective. Reference @Video1 for camera movements. Reference @Image2 for the scene above, @Image3 for the scene on the left, @Image4 for the scene on the right."
+    },
+    "camera-motion": {
+      "0": "Reference @Image1 for the man's appearance, he's in an elevator from @Image2. Fully reference @Video1's camera movements and the protagonist's facial expressions. Hitchcock zoom during the panic moment, then several orbiting shots showing the elevator interior. Elevator doors open, tracking shot following out. Exit scene references @Image3.",
+      "1": "Reference @Image1 for the man's appearance, in the corridor of @Image2. Fully reference @Video1's camera movements and the protagonist's facial expressions. Camera follows the protagonist running around the corner in @Image2, then in the long corridor of @Image3. Camera transitions from a rear tracking angle through a low-angle orbit to the protagonist's front.",
+      "2": "The tablet from @Image1 as the main subject. Reference @Video1 for camera movements. Push in to the screen close-up, camera rotates as the tablet flips to show the full view. Data streams on the screen keep changing, while the surrounding environment gradually transforms into a sci-fi style data space.",
+      "3": "The actress from @Image1 as the main subject. Reference @Video1 for rhythmic push-pull-pan-tilt camera work. The actress mirrors the dance movements from @Video1's female dancer, performing energetically on stage.",
+      "4": "Reference @Image1 @Image2 for the spear character, @Image3 @Image4 for the dual-blade character. Mimic the actions from @Video1, fighting in the maple leaf forest of @Image5.",
+      "5": "Reference Video1 for character movements, Reference Video2 for orbital camera language. Generate a fighting scene between Character 1 and Character 2 under a starry night sky, with white dust rising during the battle. The fight scene is spectacular with intense atmosphere.",
+      "6": "Reference Video1's camera movements and scene transition rhythm. Replicate using the red supercar from Image1."
+    },
+    "creative-template": {
+      "0": "Replace @Video1's character with @Image1. @Image1 as the opening frame. The character puts on virtual sci-fi glasses. Reference @Video1's camera work, extreme close-up orbital shots. Transition from third-person to the character's subjective POV, traveling through the AI virtual glasses.",
+      "1": "Reference the model's facial features from the first image. The model wears the outfits from reference images 2-6, approaching the camera with playful, cool, cute, surprised, and stylish poses.",
+      "2": "Reference the video's ad concept. Use the provided down jacket images with goose feather and swan reference images, with the ad copy: \"This is goose down, this is a warm swan, this is a wearable polar velvet down jacket.\" Generate a new down jacket commercial video.",
+      "3": "Black and white ink wash style. The character from @Image1 references @Video1's special effects and movements, performing an ink wash style Tai Chi martial arts sequence.",
+      "4": "Replace @Video1's opening character with @Image1. Fully reference @Video1's effects and movements. Flower buds in hand grow into rose petals, cracks extend upward on the face, gradually covered by weeds. The character brushes both hands across the face, weeds dissolve into particles, finally transforming into @Image2's appearance.",
+      "5": "Starting from @Image1's ceiling, reference @Video1's puzzle shattering effect for transitions. Replace \"BELIEVE\" text with \"Seedance\", referencing @Image2's font style.",
+      "6": "Opening with a black screen. Reference Video1's particle effects and materials, golden gilt sand particles drift from the left and cover to the right. Reference @Video1's particle dispersion effect. @Image1's text gradually appears in the center of the frame.",
+      "7": "The character from @Image1 references @Video1's movements and expression changes, demonstrating abstract noodle-eating behavior."
+    },
+    "creativity": {
+      "0": "Animate @Image1 as a comic strip from left to right, top to bottom. Keep the character dialogue consistent with the text in the image. Add special sound effects for scene transitions and key plot points. Overall style should be humorous. Reference @Video1 for the animation approach.",
+      "1": "Reference @Image1's documentary storyboard script — its framing, shot types, camera movements, visuals and copy. Create a 15-second healing-style intro about \"Childhood Through the Four Seasons\".",
+      "2": "Reference Video1's audio, using Image1-5 as inspiration to create an emotionally-driven video. Background music references @Video1."
+    },
+    "video-extend": {
+      "0": "Extend the video by 15 seconds. Reference @Image1 and @Image2's donkey-on-motorcycle character for a wild ad sequence.",
+      "1": "Extend the video by 6 seconds. Feature intense electric guitar music, with \"JUST DO IT\" ad text appearing in the center then gradually fading out.",
+      "2": "Extend @Video1 by 15 seconds. 1-5s: Light and shadows slowly glide across a wooden table and cup through venetian blinds. 6-10s: A coffee bean gently floats down from the top of the frame. 11-15s: English text gradually appears: \"Lucky Coffee\".",
+      "3": "Extend forward by 10 seconds. In warm afternoon light, the camera starts from the row of awnings gently fluttering in the breeze at a street corner, then slowly moves down to a few daisies peeking out at the wall base."
+    },
+    "audio": {
+      "0": "Fixed camera. Central fisheye lens peering down through a circular opening. Reference Video1's fisheye lens effect, have the horse from @Video2 look at the fisheye lens. Reference @Video1's speaking movements. Background BGM references @Video3's sound effects.",
+      "1": "Using the provided office building promotional photos, generate a 15-second cinematic documentary-style real estate film. Reference @Video1 for the narrator's voice tone.",
+      "2": "A roast dialogue at the \"Cat & Dog Comedy Club\", requiring rich emotional expression befitting a stand-up performance.",
+      "3": "Yu Opera prelude from \"The Case of Chen Shimei\" begins. The black-robed Bao Zheng on the left points at the red-robed Chen Shimei on the right, singing Yu Opera through gritted teeth.",
+      "4": "Generate a 15-second MV video. Keywords: steady composition / gentle push-pull / low-angle heroic feel / documentary yet premium.",
+      "5": "The girl in the hat in the center sweetly sings \"I'm so proud of my family!\", then turns to hug the girl in the middle. Multi-character dialogue and interaction scene.",
+      "6": "Fixed camera. The standing muscular man (captain) swings his fist and commands in Spanish: \"Raid in three minutes!\" Multi-character military scene dialogue.",
+      "7": "0-3s: Alarm clock rings at the beginning. 3-10s: Quick pan to close-up of the man's face, the man reluctantly tries to wake the girl. Voice and tone reference @Video1.",
+      "8": "The monkey from @Image1 walks to the milk tea shop counter. The monkey orders from the server in Sichuan dialect: \"Hey miss, do you have Farewell My Concubine tea?\"",
+      "9": "Using a science-education style and voice tone, animate the content from Image1, including the story of Sun Wukong going to Cuiyun Mountain to borrow the Banana Leaf Fan from Princess Iron Fan."
+    },
+    "one-shot": {
+      "0": "@Image1 @Image2 @Image3 @Image4 @Image5, one continuous tracking shot following a runner up stairs, through corridors, onto the rooftop, finally overlooking the city.",
+      "1": "Starting with @Image1, the frame zooms into the airplane window. Clouds slowly drift into view, one decorated with colorful candy dots. It gradually morphs into the ice cream from @Image2.",
+      "2": "Spy thriller style. @Image1 as the opening frame. Camera tracks the female spy in a red trench coat walking forward from the front. Passersby continuously block the red-clad woman. No cuts, one continuous shot throughout.",
+      "3": "From @Image1's exterior shot, first-person POV pushing into the cabin interior. A deer (@Image2) and a sheep (@Image3) are chatting and drinking tea by the fireplace. Camera pushes into a close-up of the teacup style referencing @Image4.",
+      "4": "@Image1 @Image2 @Image3 @Image4 @Image5, subjective POV one-shot of a thrilling roller coaster ride, the coaster going faster and faster."
+    },
+    "video-edit": {
+      "0": "Subvert the plot of @Video1. The man's gaze shifts from tender to cold and ruthless in an instant. In a moment when the heroine is completely off guard, he shoves her off the bridge.",
+      "1": "Completely subvert @Video1's plot. The suited man sits at a bar, then suddenly pulls out a comically oversized snack gift pack from under the table.",
+      "2": "Replace the female lead singer in Video1 with the male singer from Image1. Actions completely mimicking the original video, no cuts, band performing the song.",
+      "3": "Change Video1 woman's hairstyle to long red hair. The great white shark from Image1 slowly surfaces with half its head behind her.",
+      "4": "Video1 camera pans right. The fried chicken shop owner busily hands fried chicken to queued customers. Close-up showing the owner grabbing paper bags printed with Image1's design."
+    },
+    "music-sync": {
+      "0": "The girl in the poster keeps changing outfits, clothing references @Image1 @Image2 styles, carrying @Image3's bag. Video rhythm references @Video.",
+      "1": "Images from @Image1-7 are synced to @Video's keyframe positions and overall rhythm. Characters should be more dynamic, overall visual style more dreamlike.",
+      "2": "Landscape scene images from @Image1-6, synced to @Video's visual rhythm. Transitions and visual style matched to the music beat.",
+      "3": "An 8-second intellectual battle anime clip fitting a revenge theme. Storyboard panels 1-5 unfold in sequence."
+    },
+    "emotion": {
+      "0": "The woman from @Image1 walks to the mirror, looks at herself, pose referencing @Image2. After a moment of reflection, she suddenly breaks down screaming. The mirror-grabbing breakdown emotions and expressions fully reference @Video1.",
+      "1": "A range hood advertisement. @Image1 as the opening frame, woman cooking elegantly with no smoke. Camera quickly pans right to film @Image2's man sweating profusely while cooking amid thick smoke.",
+      "2": "@Image1 as the opening frame. Camera rotates and pushes in, the character suddenly looks up, facial features reference @Image2. Starts roaring loudly with dramatic comedy flair, referencing @Image3's expressions. Then the character's body transforms into a bear, referencing @Image4."
+    }
+  },
+  "cta": {
+    "title": "Ready to Create Your Own?",
+    "description": "Start generating stunning videos with Seedance 2.0's multi-modal AI capabilities.",
+    "button": "Get Started"
+  }
+}

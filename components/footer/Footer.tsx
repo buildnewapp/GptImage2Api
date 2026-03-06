@@ -25,7 +25,7 @@ export default async function Footer() {
   });
 
   return (
-    <div className="bg-gray-900 text-gray-300 border-t border-gray-700">
+    <div className="bg-gray-900 text-gray-300 border-gray-700">
       <footer className="py-2 container max-w-8xl mx-auto">
         <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 py-12 lg:grid-cols-6">
@@ -39,7 +39,7 @@ export default async function Footer() {
                       width={32}
                       height={32}
                     />
-                    {t("title")}
+                    <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">{t("title")}</span>
                   </div>
                 </div>
 

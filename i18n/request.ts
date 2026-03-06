@@ -17,11 +17,13 @@ export default getRequestConfig(async ({ requestLocale }) => {
       Pricing: (await import(`./messages/${locale}/Pricing.json`)).default,
       NotFound: (await import(`./messages/${locale}/NotFound.json`)).default,
       Glossary: (await import(`./messages/${locale}/Glossary.json`)).default,
+      Prompts: (await import(`./messages/${locale}/Prompts.json`)).default,
 
       // Dashboard - User
       Settings: (await import(`./messages/${locale}/Dashboard/User/Settings.json`)).default,
       CreditHistory: (await import(`./messages/${locale}/Dashboard/User/CreditHistory.json`)).default,
       ApiKeys: (await import(`./messages/${locale}/Dashboard/User/ApiKeys.json`)).default,
+      VideoGeneration: (await import(`./messages/${locale}/Dashboard/User/VideoGeneration.json`)).default,
 
       // Dashboard - Admin
       Overview: (await import(`./messages/${locale}/Dashboard/Admin/Overview.json`)).default,
@@ -32,7 +34,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       R2Files: (await import(`./messages/${locale}/Dashboard/Admin/R2Files.json`)).default,
       Prices: (await import(`./messages/${locale}/Dashboard/Admin/Prices.json`)).default,
       AdminApiKeys: (await import(`./messages/${locale}/Dashboard/Admin/ApiKeys.json`)).default,
-
+      AdminVideoGenerations: (await import(`./messages/${locale}/Dashboard/Admin/VideoGenerations.json`)).default,
       // common
       ...common
     }

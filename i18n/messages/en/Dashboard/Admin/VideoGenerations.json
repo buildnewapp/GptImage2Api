@@ -1,0 +1,23 @@
+{
+  "title": "Video Generations",
+  "description": "View all user video generation records",
+  "columns": {
+    "id": "ID",
+    "user": "User",
+    "model": "Model",
+    "status": "Status",
+    "credits": "Credits",
+    "refunded": "Refunded",
+    "createdAt": "Created At"
+  },
+  "filters": {
+    "search": "Search by user email, task ID...",
+    "all_statuses": "All Statuses",
+    "all_models": "All Models"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page_info": "Page {current} of {total} ({count} records)"
+  }
+}
