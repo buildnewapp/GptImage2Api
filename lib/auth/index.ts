@@ -1,4 +1,5 @@
 import { sendEmail } from "@/actions/resend";
+import { grantConfiguredSignupBonusCredits } from "@/lib/credits/signup-bonus";
 import { siteConfig } from "@/config/site";
 import MagicLinkEmail from '@/emails/magic-link-email';
 import OTPCodeEmail from '@/emails/otp-code-email';
@@ -99,6 +100,11 @@ function createAuthConfig(databaseInstance: ReturnType<typeof getDb>): BetterAut
                 console.error('Failed to save user source data:', error);
               }
             }
+            try {
+              await grantConfiguredSignupBonusCredits(createdUser.id);
+            } catch (error) {
+              console.error('Failed to grant signup bonus credits:', error);
+            }
             if (createdUser.email) {
               try {
                 const unsubscribeToken = Buffer.from(createdUser.email).toString('base64');
@@ -169,4 +175,3 @@ export const getAuth = cache(() => betterAuth(createAuthConfig(getDb())));
 
 // Re-export types
 export type { BetterAuthOptions };
-
