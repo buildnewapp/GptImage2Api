@@ -162,6 +162,13 @@
       "when": 1772616799308,
       "tag": "0022_spicy_juggernaut",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1772779777094,
+      "tag": "0023_productive_mole_man",
+      "breakpoints": true
     }
   ]
 }

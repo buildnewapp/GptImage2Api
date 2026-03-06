@@ -476,3 +476,21 @@ export const postTags = pgTable(
     }
   }
 )
+
+export const apikeys = pgTable(
+    "apikeys",
+    {
+        id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+        apiKey: varchar("api_key", { length: 255 }).notNull().unique(),
+        title: varchar("title", { length: 100 }),
+        userUuid: varchar("user_uuid", { length: 255 }).notNull(),
+        createdAt: timestamp("created_at", { withTimezone: true })
+            .defaultNow()
+            .notNull(),
+        status: varchar("status", { length: 50 }).default("active").notNull(),
+    },
+    (table) => ({
+        userUuidIdx: index("idx_apikeys_user_uuid").on(table.userUuid),
+        statusIdx: index("idx_apikeys_status").on(table.status),
+    }),
+);

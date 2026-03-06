@@ -63,6 +63,11 @@
         "icon": "ShoppingCart"
       },
       {
+        "name": "API Key 管理",
+        "href": "/dashboard/apikeys",
+        "icon": "Key"
+      },
+      {
         "name": "管理订阅",
         "href": "/dashboard/subscription",
         "icon": "WalletCards"
@@ -83,6 +88,11 @@
         "name": "用户管理",
         "href": "/dashboard/users",
         "icon": "Users"
+      },
+      {
+        "name": "API Key 管理",
+        "href": "/dashboard/apikeys-admin",
+        "icon": "Key"
       },
       {
         "name": "订单管理",

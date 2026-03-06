@@ -1,5 +1,5 @@
-import { getRequestConfig } from 'next-intl/server';
-import { routing } from './routing';
+import { getRequestConfig } from "next-intl/server";
+import { routing } from "./routing";
 
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
@@ -21,6 +21,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       // Dashboard - User
       Settings: (await import(`./messages/${locale}/Dashboard/User/Settings.json`)).default,
       CreditHistory: (await import(`./messages/${locale}/Dashboard/User/CreditHistory.json`)).default,
+      ApiKeys: (await import(`./messages/${locale}/Dashboard/User/ApiKeys.json`)).default,
 
       // Dashboard - Admin
       Overview: (await import(`./messages/${locale}/Dashboard/Admin/Overview.json`)).default,
@@ -30,6 +31,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       Orders: (await import(`./messages/${locale}/Dashboard/Admin/Orders.json`)).default,
       R2Files: (await import(`./messages/${locale}/Dashboard/Admin/R2Files.json`)).default,
       Prices: (await import(`./messages/${locale}/Dashboard/Admin/Prices.json`)).default,
+      AdminApiKeys: (await import(`./messages/${locale}/Dashboard/Admin/ApiKeys.json`)).default,
 
       // common
       ...common

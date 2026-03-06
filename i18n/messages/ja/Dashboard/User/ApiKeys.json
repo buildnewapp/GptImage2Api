@@ -1,0 +1,47 @@
+{
+  "title": "APIキー管理",
+  "description": "Authorization: Bearer 認証に使う API キーを作成・管理します。",
+  "generate": {
+    "title": "APIキーを生成",
+    "description": "用途を区別しやすいようにタイトルを付けられます。",
+    "placeholder": "本番連携",
+    "button": "生成",
+    "creating": "生成中...",
+    "hint": "リクエストヘッダー形式: Authorization: Bearer YOUR_API_KEY"
+  },
+  "table": {
+    "title": "タイトル",
+    "key": "APIキー",
+    "status": "状態",
+    "createdAt": "作成日時",
+    "actions": "操作",
+    "untitled": "無題",
+    "empty": "APIキーがありません。まずは生成してください。"
+  },
+  "status": {
+    "active": "有効",
+    "disabled": "無効"
+  },
+  "actions": {
+    "copy": "コピー",
+    "disable": "無効化",
+    "enable": "有効化",
+    "delete": "削除"
+  },
+  "dialog": {
+    "title": "新しい APIキー",
+    "description": "コピーして安全に保存してください。",
+    "copy": "キーをコピー",
+    "close": "閉じる"
+  },
+  "toasts": {
+    "createSuccess": "APIキーを生成しました",
+    "createError": "APIキーの生成に失敗しました",
+    "updateSuccess": "APIキーの状態を更新しました",
+    "updateError": "APIキーの更新に失敗しました",
+    "deleteSuccess": "APIキーを削除しました",
+    "deleteError": "APIキーの削除に失敗しました",
+    "copySuccess": "APIキーをコピーしました",
+    "copyError": "コピーに失敗しました"
+  }
+}

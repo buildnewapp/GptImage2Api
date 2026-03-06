@@ -1,0 +1,47 @@
+{
+  "title": "API Key 管理",
+  "description": "创建和管理用于 Authorization: Bearer 鉴权的 API Key。",
+  "generate": {
+    "title": "生成 API Key",
+    "description": "可填写一个标题，便于后续识别用途。",
+    "placeholder": "生产环境集成",
+    "button": "生成",
+    "creating": "生成中...",
+    "hint": "请求头格式：Authorization: Bearer YOUR_API_KEY"
+  },
+  "table": {
+    "title": "标题",
+    "key": "API Key",
+    "status": "状态",
+    "createdAt": "创建时间",
+    "actions": "操作",
+    "untitled": "未命名",
+    "empty": "暂无 API Key，先生成一个吧。"
+  },
+  "status": {
+    "active": "启用",
+    "disabled": "停用"
+  },
+  "actions": {
+    "copy": "复制",
+    "disable": "停用",
+    "enable": "启用",
+    "delete": "删除"
+  },
+  "dialog": {
+    "title": "新 API Key",
+    "description": "请复制并妥善保存该 Key。",
+    "copy": "复制 Key",
+    "close": "关闭"
+  },
+  "toasts": {
+    "createSuccess": "API Key 已生成",
+    "createError": "生成 API Key 失败",
+    "updateSuccess": "API Key 状态已更新",
+    "updateError": "更新 API Key 失败",
+    "deleteSuccess": "API Key 已删除",
+    "deleteError": "删除 API Key 失败",
+    "copySuccess": "API Key 已复制",
+    "copyError": "复制失败"
+  }
+}

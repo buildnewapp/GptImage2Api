@@ -63,6 +63,11 @@
         "icon": "ShoppingCart"
       },
       {
+        "name": "APIキー",
+        "href": "/dashboard/apikeys",
+        "icon": "Key"
+      },
+      {
         "name": "サブスクリプション",
         "href": "/dashboard/subscription",
         "icon": "WalletCards"
@@ -83,6 +88,11 @@
         "name": "ユーザー管理",
         "href": "/dashboard/users",
         "icon": "Users"
+      },
+      {
+        "name": "APIキー管理",
+        "href": "/dashboard/apikeys-admin",
+        "icon": "Key"
       },
       {
         "name": "注文管理",

@@ -1,0 +1,33 @@
+{
+  "title": "API Keys",
+  "description": "Manage all user API keys.",
+  "searchPlaceholder": "Search by email, title, key or status...",
+  "table": {
+    "user": "User",
+    "title": "Title",
+    "key": "API Key",
+    "status": "Status",
+    "createdAt": "Created At",
+    "actions": "Actions",
+    "untitled": "Untitled",
+    "empty": "No API keys found."
+  },
+  "status": {
+    "active": "Active",
+    "disabled": "Disabled"
+  },
+  "actions": {
+    "copy": "Copy",
+    "disable": "Disable",
+    "enable": "Enable",
+    "delete": "Delete"
+  },
+  "toasts": {
+    "copySuccess": "API key copied",
+    "copyError": "Failed to copy API key",
+    "updateSuccess": "API key status updated",
+    "updateError": "Failed to update API key",
+    "deleteSuccess": "API key deleted",
+    "deleteError": "Failed to delete API key"
+  }
+}
