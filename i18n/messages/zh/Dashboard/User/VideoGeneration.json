@@ -16,6 +16,10 @@
   "credits_refunded": "已退还",
   "empty": "暂无视频生成记录。前往首页创建你的第一个视频！",
   "view_video": "查看视频",
+  "make_public": "设为公开",
+  "make_private": "设为私密",
+  "visibility_updated": "可见性已更新",
+  "visibility_update_failed": "更新可见性失败",
   "load_error": "加载视频历史失败",
   "pagination": {
     "previous": "上一页",
@@ -27,5 +31,7 @@
     "all": "全部",
     "status_filter": "按状态筛选",
     "model_filter": "按模型筛选"
-  }
+  },
+  "download": "下载",
+  "copy": "复制"
 }

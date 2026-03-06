@@ -16,7 +16,7 @@ type Testimonial = {
 const testimonials: Testimonial[] = [
   {
     content:
-      "Nexty helped us launch our AI content generator in just 1 day. The authentication, payment integration, and AI capabilities were ready out of the box, saving us at least 2 weeks of development time.",
+      "SdanceAI helped us launch our AI content generator in just 1 day. Authentication, payment integration, and video generation capabilities were all available in one workflow.",
     author: {
       name: "Michael Chen",
       position: "Indie Maker",
@@ -26,7 +26,7 @@ const testimonials: Testimonial[] = [
   },
   {
     content:
-      "As a product manager with limited technical resources, Nexty was a game-changer. We built and launched our analytics dashboard with subscription tiers in 3 days instead of 4 weeks. The documentation is exceptional.",
+      "As a product manager with limited technical resources, SdanceAI was a game-changer. We launched our first subscription workflow in 3 days instead of several weeks.",
     author: {
       name: "Sarah Johnson",
       position: "CTO",
@@ -36,7 +36,7 @@ const testimonials: Testimonial[] = [
   },
   {
     content:
-      "我们团队使用 Nexty 开发了一个订阅制 AI 工具 SaaS 平台，第一个版本的开发仅用了 1天时间。内置的多语言支持和 SEO 友好的页面结构帮助我们迅速获得用户认可，投资回报率超出预期。",
+      "我们团队基于 SdanceAI 搭建了订阅制 AI 视频工具，首个版本仅用 1 天完成。多语言与支付流程都非常顺畅，项目推进速度明显提升。",
     author: {
       name: "Kang",
       position: "Product Manager",

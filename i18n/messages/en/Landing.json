@@ -10,13 +10,22 @@
       "images": "Images",
       "uploadTitle": "Click to upload or drag & drop",
       "uploadFormats": "PNG, JPG, JPEG, WEBP",
+      "uploadingImage": "Uploading...",
+      "uploadSuccess": "Image uploaded successfully.",
+      "uploadFailed": "Image upload failed.",
+      "uploadTooLarge": "Image must be 10MB or smaller.",
+      "imageOnlyError": "Only image files are allowed.",
       "prompt": "Prompt",
       "promptPlaceholder": "Describe how you want your image to animate...",
       "resolution": "Resolution",
+      "size": "Quality",
       "duration": "Duration",
       "aspectRatio": "Aspect Ratio",
       "auto": "Auto",
       "advanced": "Advanced",
+      "isPublic": "Public Visibility",
+      "public": "Public",
+      "private": "Private",
       "generate": "Generate",
       "generating": "Generating...",
       "loginRequired": "Please sign in to generate videos",
@@ -30,6 +39,13 @@
       "seed": "Seed",
       "randomSeed": "Random (-1)",
       "fixCamera": "Fix Camera",
+      "safetyChecker": "Safety Checker",
+      "shots": "Scenes",
+      "addShot": "Add Scene",
+      "shotNumber": "Scene {index}",
+      "shotScene": "Describe what happens in this scene...",
+      "shotDuration": "Duration (s)",
+      "totalDuration": "Total: {current}s / {total}s",
       "modelVersion": "Model Version",
       "soraDisclaimer": "Sora service is experiencing high demand and may fail. We recommend using other models for more reliable results.",
       "sora2": {
@@ -39,7 +55,26 @@
       "sora2pro": {
         "name": "Sora 2 Pro",
         "description": "Premium quality with advanced features"
-      }
+      },
+      "estimatedCredits": "Estimated credits",
+      "currentCredits": "Current credits balance",
+      "unsupportedCombination": "This model combination does not support current settings. Please adjust.",
+      "provider": "Provider",
+      "tasks": "Tasks",
+      "noTasks": "No tasks yet. Click Generate to start.",
+      "task": "Task #{index}",
+      "openVideo": "Open Video",
+      "downloadVideo": "Download Video",
+      "copyPrompt": "Copy Prompt",
+      "remix": "Remix",
+      "promptCopied": "Prompt copied",
+      "copyFailed": "Copy failed",
+      "remixApplied": "Parameters applied. Ready to generate.",
+      "watermark": "Watermark",
+      "watermarkPlaceholder": "Add a watermark (optional)",
+      "enableTranslation": "Auto Translate Prompt",
+      "veoQuality": "Veo 3.1 Quality",
+      "veoFast": "Veo 3.1 Fast"
     }
   },
   "Features": {
@@ -89,7 +124,7 @@
       },
       {
         "title": "Music Rhythm Sync",
-        "description": "Card point capability. Generate video edits that perfectly sync with the rhythm and beats of uploaded music."
+        "description": "Card point capability. Generate video edits that sync closely with the rhythm and beats of uploaded music."
       },
       {
         "title": "Emotional Expression",
@@ -117,22 +152,12 @@
       {
         "title": "Education & Training",
         "description": "Bring lessons to life with engaging visual content. Create animated explanations, historical reconstructions, and interactive learning materials.",
-        "tags": [
-          "Course Content",
-          "Tutorials",
-          "Demos",
-          "Visual Lessons"
-        ]
+        "tags": ["Course Content", "Tutorials", "Demos", "Visual Lessons"]
       },
       {
         "title": "Creative Storytelling",
         "description": "Craft unique narratives using multi-modal inputs. Reference film techniques, replicate cinematic styles, and extend your story across seamless scenes.",
-        "tags": [
-          "Short Films",
-          "Art Projects",
-          "Music Videos",
-          "Visual Poetry"
-        ]
+        "tags": ["Short Films", "Art Projects", "Music Videos", "Visual Poetry"]
       },
       {
         "title": "Social Media Content",
@@ -186,7 +211,7 @@
       },
       {
         "title": "Music & Audio Sync",
-        "description": "Upload audio tracks and create perfectly beat-synced videos. Generate sound effects and background music that match your visual content.",
+        "description": "Upload audio tracks and create beat-synced videos. Generate sound effects and background music that match your visual content.",
         "tags": [
           "Beat Sync",
           "Music Videos",
@@ -226,7 +251,7 @@
         "role": "Content Creator"
       },
       {
-        "quote": "The reference capability is mind-blowing. I uploaded a film clip and the model perfectly replicated the camera movement and pacing. This is what AI video should be.",
+        "quote": "The reference capability is impressive. I uploaded a film clip and the model replicated the camera movement and pacing very closely.",
         "name": "Marcus Rodriguez",
         "role": "Filmmaker"
       },
@@ -246,7 +271,7 @@
         "role": "Social Media Manager"
       },
       {
-        "quote": "The built-in audio generation is fantastic. Sound effects match the action perfectly, and the music beat sync feature is incredibly useful for dance and music content.",
+        "quote": "The built-in audio generation is excellent. Sound effects match the action well, and the music beat sync feature is very useful for dance and music content.",
         "name": "Alex Turner",
         "role": "Music Video Director"
       },
@@ -256,7 +281,7 @@
         "role": "Animation Director"
       },
       {
-        "quote": "The natural language control is so intuitive. I just describe what I want to reference and how, and the model understands perfectly. No more struggling with complex prompts.",
+        "quote": "The natural language control is intuitive. I describe what I want to reference and how, and the model follows it clearly. Prompting is much easier now.",
         "name": "Mohammed Hassan",
         "role": "Digital Artist"
       },
@@ -277,7 +302,7 @@
     "annually": "Annually",
     "onetime": "One-Time",
     "discount": "-50%",
-    "limitedOffer": "Limited Time Offer!",
+    "limitedOffer": "Annual Billing Offer",
     "saveOffer": "Save 50% with Annual Billing",
     "billedYearly": "Billed ${amount} yearly",
     "monthShort": "/mo",
@@ -291,28 +316,17 @@
       "standard": {
         "name": "Standard Pack",
         "desc": "Perfect for trying out.",
-        "features": [
-          "1,000 Credits",
-          "Never expire"
-        ]
+        "features": ["1,000 Credits", "Never expire"]
       },
       "pro": {
         "name": "Pro Pack",
         "desc": "Most popular choice.",
-        "features": [
-          "3,750 Credits",
-          "Never expire",
-          "Priority Generation"
-        ]
+        "features": ["3,750 Credits", "Never expire", "Priority Generation"]
       },
       "max": {
         "name": "Max Pack",
         "desc": "For heavy users.",
-        "features": [
-          "12,000 Credits",
-          "Never expire",
-          "Priority Generation"
-        ]
+        "features": ["12,000 Credits", "Never expire", "Priority Generation"]
       }
     },
     "plans": {
@@ -337,11 +351,7 @@
       "max": {
         "name": "Max",
         "desc": "For studios and professionals.",
-        "features": [
-          "{credits} Credits / month",
-          "Instant Queue",
-          "API Access"
-        ]
+        "features": ["{credits} Credits / month", "Instant Queue", "API Access"]
       }
     }
   },
@@ -380,7 +390,7 @@
       },
       {
         "question": "How can I upgrade my subscription?",
-        "answer": "Our system currently allows only one active subscription at a time. Contact us to cancel your current subscription immediately, then you can subscribe to your desired plan. Email us at support@sdanceai.com with your upgrade request."
+        "answer": "Our system currently allows only one active subscription at a time. Please cancel your current plan in Dashboard > Subscription first, then subscribe to the new plan. If you need help, email support@sdanceai.com."
       },
       {
         "question": "How can I purchase more credits?",
@@ -388,7 +398,7 @@
       },
       {
         "question": "How do I cancel my subscription?",
-        "answer": "You can cancel your subscription at any time through your subscription page. If you have any questions or need assistance, please contact our support team at support@sdanceai.com."
+        "answer": "You can cancel your subscription at any time in Dashboard > Subscription via the billing portal (Stripe or Creem). If needed, contact support@sdanceai.com."
       },
       {
         "question": "Are there any content restrictions?",
@@ -398,12 +408,12 @@
   },
   "CTA": {
     "title": "Ready to Experience Multi-Modal AI Video Creation?",
-    "description": "Join thousands of creators using Seedance 2.0 to bring their visions to life. Reference anything, edit anything, create anything - with natural language control.",
+    "description": "Use Seedance 2.0 to bring your ideas to life with natural language controls and flexible reference workflows.",
     "button": "Start Creating Now",
     "features": {
       "multimodal": "Multi-modal input support",
       "watermark": "Watermark-free downloads",
-      "reference": "Reference any content"
+      "reference": "Flexible reference controls"
     }
   }
 }

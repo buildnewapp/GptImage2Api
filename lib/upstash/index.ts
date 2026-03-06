@@ -11,7 +11,7 @@ if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
     token: process.env.UPSTASH_REDIS_REST_TOKEN,
   });
 } else {
-  console.log('Redis is disabled: Required environment variables are not set');
+  //console.log('Redis is disabled: Required environment variables are not set');
 }
 
 interface RateLimitConfig {

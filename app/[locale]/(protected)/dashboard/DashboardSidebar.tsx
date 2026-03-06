@@ -28,7 +28,11 @@ type Menu = {
   icon: string;
 };
 
-export function DashboardSidebar() {
+type DashboardSidebarProps = {
+  showMemberSubscription: boolean;
+};
+
+export function DashboardSidebar({ showMemberSubscription }: DashboardSidebarProps) {
   const { data: session } = authClient.useSession();
   const user = session?.user as any | undefined;
   const pathname = usePathname();
@@ -37,6 +41,9 @@ export function DashboardSidebar() {
 
   const userMenus: Menu[] = t.raw("UserMenus");
   const adminMenus: Menu[] = t.raw("AdminMenus");
+  const filteredUserMenus = showMemberSubscription
+    ? userMenus
+    : userMenus.filter((menu) => menu.href !== "/dashboard/subscription");
 
   const isActive = (href: string) => pathname === href;
 
@@ -68,7 +75,7 @@ export function DashboardSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {userMenus.map((menu) => (
+              {filteredUserMenus.map((menu) => (
                 <SidebarMenuItem key={menu.href}>
                   <SidebarMenuButton asChild isActive={isActive(menu.href)}>
                     <I18nLink

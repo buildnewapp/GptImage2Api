@@ -69,10 +69,10 @@ export default function TermsOfServicePage() {
               </p>
               <ul className="mb-3 list-disc space-y-1 pl-6">
                 <li>
-                  <strong>AI Video Generation</strong>: Using Seedance 2.0
-                  technology to create high-quality AI videos from user-provided
-                  inputs such as images and text prompts, with native audio sync
-                  capabilities
+                  <strong>AI Video Generation</strong>: An independent wrapper
+                  platform that provides a custom interface for third-party AI
+                  models (such as Seedance, Veo, and Sora) to create
+                  high-quality videos from user inputs
                 </li>
                 <li>
                   <strong>Online Experience Platform</strong>: A web-based
@@ -90,6 +90,11 @@ export default function TermsOfServicePage() {
                   resources
                 </li>
               </ul>
+              <p className="mb-3">
+                {siteConfig.name} is an independent service and is not
+                affiliated with, endorsed by, or sponsored by third-party model
+                providers. Model names are used only to describe compatibility.
+              </p>
             </section>
 
             <section>
@@ -361,8 +366,22 @@ export default function TermsOfServicePage() {
                   Subscription plans automatically renew at the end of each
                   billing cycle unless you cancel before the renewal date.
                   Cancellation takes effect at the end of the current billing
-                  period. You can manage your subscription through your account
-                  settings.
+                  period. To cancel, go to{" "}
+                  <Link
+                    href="/dashboard/subscription"
+                    className="text-primary hover:underline"
+                  >
+                    Dashboard &gt; Subscription
+                  </Link>{" "}
+                  and open the billing portal to manage or cancel your plan.
+                  If you need help, contact{" "}
+                  <a
+                    href="mailto:support@sdanceai.com"
+                    className="hover:underline text-blue-500"
+                  >
+                    support@sdanceai.com
+                  </a>
+                  .
                 </p>
               </div>
 

@@ -5,10 +5,17 @@
  * 流程：认证 → 校验模型 → 检查余额 → 扣积分 → 调 KIE → 存数据库
  */
 
-import { getModelCredits, VALID_MODELS } from "@/config/video-generation";
+import {
+  calculateCreditsForImplementation,
+  findImplementationByModelId,
+  resolveSelection,
+  type GenerationMode,
+  type ProviderKey,
+  type VideoInputPayload,
+} from "@/config/model_config";
 import { apiResponse } from "@/lib/api-response";
 import { getRequestUser } from "@/lib/auth/request-user";
-import { db } from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { videoGenerations } from "@/lib/db/schema";
 import { createTask, getCallbackUrl } from "@/lib/kie/client";
 import {
@@ -16,6 +23,10 @@ import {
   refundCreditsForGeneration,
 } from "@/lib/kie/credits";
 import { NextRequest } from "next/server";
+
+function inferModeFromInput(input: VideoInputPayload): GenerationMode {
+  return input.image_url ? "image-to-video" : "text-to-video";
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,32 +38,58 @@ export async function POST(request: NextRequest) {
 
     // 2. 解析请求
     const body = await request.json();
-    const { model, input } = body;
-
-    if (!model || typeof model !== "string") {
-      return apiResponse.badRequest("Missing or invalid 'model' parameter.");
-    }
-
-    if (!input || typeof input !== "object") {
+    const input = body?.input;
+    if (!input || typeof input !== "object" || Array.isArray(input)) {
       return apiResponse.badRequest("Missing or invalid 'input' parameter.");
     }
 
-    // 3. 校验模型
-    if (!VALID_MODELS.includes(model)) {
+    const providerKey =
+      typeof body?.providerKey === "string"
+        ? (body.providerKey as ProviderKey)
+        : undefined;
+    const modelKey =
+      typeof body?.modelKey === "string" ? body.modelKey : undefined;
+    const versionKey =
+      typeof body?.versionKey === "string" ? body.versionKey : undefined;
+    const mode =
+      typeof body?.mode === "string"
+        ? (body.mode as GenerationMode)
+        : inferModeFromInput(input);
+    const isPublic =
+      typeof body?.isPublic === "boolean" ? body.isPublic : true;
+
+    let resolved =
+      providerKey && modelKey
+        ? resolveSelection({
+          providerKey,
+          modelKey,
+          versionKey,
+          mode,
+        })
+        : null;
+
+    if (!resolved) {
       return apiResponse.badRequest(
-        `Invalid model '${model}'. Valid models: ${VALID_MODELS.join(", ")}`,
+        "Invalid model selection. Please provide valid providerKey/modelKey/versionKey.",
       );
     }
 
-    // 4. 获取积分消耗
-    const creditsRequired = getModelCredits(model)!;
+    const creditsRequired = calculateCreditsForImplementation(
+      resolved.implementation,
+      input,
+    );
+    if (!creditsRequired || creditsRequired <= 0) {
+      return apiResponse.badRequest(
+        "Unable to calculate credits for current model settings.",
+      );
+    }
 
     // 5. 扣除积分
     try {
       await deductCreditsForGeneration(
         user.id,
         creditsRequired,
-        `Video generation: ${model}`,
+        `Video generation: ${resolved.implementation.modelId}`,
       );
     } catch (err: any) {
       if (err.message === "INSUFFICIENT_CREDITS") {
@@ -69,7 +106,7 @@ export async function POST(request: NextRequest) {
     try {
       const callBackUrl = getCallbackUrl();
       const result = await createTask({
-        model,
+        model: resolved.implementation.modelId,
         input,
         callBackUrl,
       });
@@ -81,7 +118,7 @@ export async function POST(request: NextRequest) {
         await refundCreditsForGeneration(
           user.id,
           creditsRequired,
-          `Refund: KIE createTask failed for ${model}`,
+          `Refund: KIE createTask failed for ${resolved.implementation.modelId}`,
         );
       } catch (refundErr) {
         console.error("Failed to refund credits after KIE error:", refundErr);
@@ -92,14 +129,28 @@ export async function POST(request: NextRequest) {
     }
 
     // 7. 存储生成记录
-    const [record] = await db
+    const [record] = await getDb()
       .insert(videoGenerations)
       .values({
         userId: user.id,
         taskId,
-        model,
+        model: resolved.implementation.modelId,
         creditsUsed: creditsRequired,
-        inputParams: { model, input },
+        isPublic,
+        inputParams: {
+          input,
+          metadata: {
+            isPublic,
+          },
+          selection: {
+            mode: resolved.implementation.mode,
+            providerKey: resolved.implementation.providerKey,
+            modelKey: resolved.family.modelKey,
+            versionKey: resolved.version.versionKey,
+            modelId: resolved.implementation.modelId,
+            doc: resolved.implementation.doc ?? null,
+          },
+        },
       })
       .returning({
         id: videoGenerations.id,
@@ -107,15 +158,16 @@ export async function POST(request: NextRequest) {
         model: videoGenerations.model,
         status: videoGenerations.status,
         creditsUsed: videoGenerations.creditsUsed,
+        isPublic: videoGenerations.isPublic,
         createdAt: videoGenerations.createdAt,
       });
 
     return apiResponse.success({
       taskId,
       generationId: record.id,
-      model: record.model,
       status: record.status,
       creditsUsed: record.creditsUsed,
+      isPublic: record.isPublic,
       createdAt: record.createdAt,
     });
   } catch (err: any) {

@@ -5,7 +5,8 @@ import {
   CreemCustomer,
   CreemDiscount,
   CreemFullSubscription,
-  CreemProduct
+  CreemProduct,
+  CreemProductCreateParams,
 } from './types';
 
 const CREEM_API_BASE_URL =
@@ -160,6 +161,20 @@ export async function retrieveCreemProduct(
   } catch (error) {
     const message = getErrorMessage(error);
     throw new Error(`Failed to retrieve Creem product ${productId}: ${message}`);
+  }
+}
+
+export async function createCreemProduct(
+  params: CreemProductCreateParams
+): Promise<CreemProduct> {
+  try {
+    return await creemRequest<CreemProduct>('/products', {
+      method: 'POST',
+      body: params,
+    });
+  } catch (error) {
+    const message = getErrorMessage(error);
+    throw new Error(`Failed to create Creem product ${params.name}: ${message}`);
   }
 }
 

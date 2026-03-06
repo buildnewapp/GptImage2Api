@@ -8,10 +8,11 @@
 
 import { apiResponse } from "@/lib/api-response";
 import { getRequestUser } from "@/lib/auth/request-user";
-import { db } from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { videoGenerations } from "@/lib/db/schema";
 import { parseResultJson, queryTaskStatus } from "@/lib/kie/client";
 import { refundCreditsForGeneration } from "@/lib/kie/credits";
+import { ensureVideoResultUrlsUploadedToR2 } from "@/lib/video/r2-auto-upload";
 import { and, eq } from "drizzle-orm";
 import { NextRequest } from "next/server";
 
@@ -30,7 +31,7 @@ export async function GET(request: NextRequest) {
     }
 
     // 3. 查询数据库记录（确保属于当前用户）
-    const [record] = await db
+    const [record] = await getDb()
       .select()
       .from(videoGenerations)
       .where(
@@ -48,16 +49,17 @@ export async function GET(request: NextRequest) {
     // 4. 如果还是 pending，从 KIE 同步最新状态
     if (record.status === "pending") {
       try {
-        const kieResult = await queryTaskStatus(taskId);
+        const kieResult = await queryTaskStatus(taskId, record.model);
         const taskData = kieResult.data;
 
         if (taskData.state === "success") {
           const parsed = parseResultJson(taskData.resultJson);
-          await db
+          const rawResultUrls = parsed?.resultUrls ?? [];
+          await getDb()
             .update(videoGenerations)
             .set({
               status: "success",
-              resultUrls: parsed?.resultUrls ?? [],
+              resultUrls: rawResultUrls,
               costTime: taskData.costTime,
               completedAt: taskData.completeTime
                 ? new Date(taskData.completeTime)
@@ -65,11 +67,36 @@ export async function GET(request: NextRequest) {
             })
             .where(eq(videoGenerations.id, record.id));
 
+          let resultUrls = rawResultUrls;
+          let uploadingToR2 = false;
+          try {
+            const autoUploadResult = await ensureVideoResultUrlsUploadedToR2(
+              record.id,
+              rawResultUrls,
+            );
+            resultUrls = autoUploadResult.resultUrls;
+            uploadingToR2 = autoUploadResult.uploading;
+          } catch (uploadErr) {
+            console.error(
+              "Failed to auto-upload task assets to R2 in status route:",
+              uploadErr,
+            );
+          }
+
+          if (uploadingToR2) {
+            return apiResponse.success({
+              taskId: record.taskId,
+              status: "pending",
+              creditsUsed: record.creditsUsed,
+              createdAt: record.createdAt,
+              uploadingToR2: true,
+            });
+          }
+
           return apiResponse.success({
             taskId: record.taskId,
-            model: record.model,
             status: "success",
-            resultUrls: parsed?.resultUrls ?? [],
+            resultUrls,
             creditsUsed: record.creditsUsed,
             costTime: taskData.costTime,
             createdAt: record.createdAt,
@@ -78,7 +105,7 @@ export async function GET(request: NextRequest) {
 
         if (taskData.state === "fail") {
           // 更新失败状态
-          await db
+          await getDb()
             .update(videoGenerations)
             .set({
               status: "failed",
@@ -96,7 +123,7 @@ export async function GET(request: NextRequest) {
                 record.creditsUsed,
                 `Refund: ${record.model} generation failed (${taskData.failCode})`,
               );
-              await db
+              await getDb()
                 .update(videoGenerations)
                 .set({ creditsRefunded: true })
                 .where(eq(videoGenerations.id, record.id));
@@ -110,7 +137,6 @@ export async function GET(request: NextRequest) {
 
           return apiResponse.success({
             taskId: record.taskId,
-            model: record.model,
             status: "failed",
             failCode: taskData.failCode,
             failMsg: taskData.failMsg,
@@ -123,7 +149,6 @@ export async function GET(request: NextRequest) {
         // 仍在等待
         return apiResponse.success({
           taskId: record.taskId,
-          model: record.model,
           status: "pending",
           creditsUsed: record.creditsUsed,
           createdAt: record.createdAt,
@@ -133,7 +158,6 @@ export async function GET(request: NextRequest) {
         // KIE 查询失败，返回数据库中的当前状态
         return apiResponse.success({
           taskId: record.taskId,
-          model: record.model,
           status: record.status,
           creditsUsed: record.creditsUsed,
           createdAt: record.createdAt,
@@ -142,11 +166,40 @@ export async function GET(request: NextRequest) {
     }
 
     // 5. 已完成的任务，直接返回数据库记录
+    let resultUrls = Array.isArray(record.resultUrls)
+      ? (record.resultUrls as string[])
+      : [];
+    let uploadingToR2 = false;
+    if (record.status === "success") {
+      try {
+        const autoUploadResult = await ensureVideoResultUrlsUploadedToR2(
+          record.id,
+          record.resultUrls,
+        );
+        resultUrls = autoUploadResult.resultUrls;
+        uploadingToR2 = autoUploadResult.uploading;
+      } catch (uploadErr) {
+        console.error(
+          "Failed to auto-upload stored assets to R2 in status route:",
+          uploadErr,
+        );
+      }
+
+      if (uploadingToR2) {
+        return apiResponse.success({
+          taskId: record.taskId,
+          status: "pending",
+          creditsUsed: record.creditsUsed,
+          createdAt: record.createdAt,
+          uploadingToR2: true,
+        });
+      }
+    }
+
     return apiResponse.success({
       taskId: record.taskId,
-      model: record.model,
       status: record.status,
-      resultUrls: record.resultUrls,
+      resultUrls,
       failCode: record.failCode,
       failMsg: record.failMsg,
       creditsUsed: record.creditsUsed,

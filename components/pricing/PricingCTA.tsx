@@ -14,12 +14,18 @@ type PricingPlan = typeof pricingPlansSchema.$inferSelect;
 type Params = {
   plan: PricingPlan;
   localizedPlan: any;
+  theme?: "default" | "seedance";
 };
 
-export default function PricingCTA({ plan, localizedPlan }: Params) {
+export default function PricingCTA({
+  plan,
+  localizedPlan,
+  theme = "default",
+}: Params) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const locale = useLocale();
+  const isSeedanceTheme = theme === "seedance";
 
   const provider = plan.provider;
   const isCreem = provider === "creem";
@@ -87,7 +93,7 @@ export default function PricingCTA({ plan, localizedPlan }: Params) {
           return;
         }
         throw new Error(
-          result.error || "HTTP error! status: " + response.status
+          result.error || "HTTP error! status: " + response.status,
         );
       }
 
@@ -106,7 +112,9 @@ export default function PricingCTA({ plan, localizedPlan }: Params) {
     } catch (error) {
       console.error("Checkout Error:", error);
       toast.error(
-        error instanceof Error ? error.message : "An unexpected error occurred."
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred.",
       );
       setIsLoading(false);
     }
@@ -128,9 +136,13 @@ export default function PricingCTA({ plan, localizedPlan }: Params) {
         asChild={!!plan.buttonLink}
         disabled={isLoading}
         className={`w-full flex items-center justify-center gap-2 py-5 font-medium ${
-          plan.isHighlighted
-            ? ""
-            : "bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100"
+          isSeedanceTheme
+            ? plan.isHighlighted
+              ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:shadow-lg hover:shadow-purple-500/30"
+              : "bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"
+            : plan.isHighlighted
+              ? ""
+              : "bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100"
         } ${allowManualCoupon ? "mb-2" : "mb-6"}`}
         {...(!plan.buttonLink && {
           onClick: () => handleCheckout(),
@@ -145,7 +157,9 @@ export default function PricingCTA({ plan, localizedPlan }: Params) {
             prefetch={false}
           >
             {localizedPlan.buttonText || plan.buttonText}
-            {plan.isHighlighted && <MousePointerClick className="w-5 h-5" />}
+            {plan.isHighlighted && !isSeedanceTheme && (
+              <MousePointerClick className="w-5 h-5" />
+            )}
           </Link>
         ) : (
           <>
@@ -154,7 +168,7 @@ export default function PricingCTA({ plan, localizedPlan }: Params) {
             ) : (
               localizedPlan.buttonText || plan.buttonText
             )}
-            {plan.isHighlighted && !isLoading && (
+            {plan.isHighlighted && !isLoading && !isSeedanceTheme && (
               <MousePointerClick className="w-5 h-5 ml-2" />
             )}
           </>

@@ -1,0 +1,118 @@
+{
+  "Hero": {
+    "badge": "SdanceAI Platform",
+    "titlePrefix": "SdanceAI:",
+    "titleHighlight": "independent AI video studio and API",
+    "description": "Create production-ready AI videos with SdanceAI's custom workflow. We support models such as Seedance 1.5, Veo, and Sora through one unified interface.",
+    "disclaimer": "SdanceAI is an independent product and is not affiliated with, endorsed by, or sponsored by AI model providers.",
+    "wrapperDisclosure": "Our service is a custom interface layer built on top of third-party AI models.",
+    "primaryCta": "Start Creating",
+    "secondaryCta": "Explore Capabilities"
+  },
+  "Overview": {
+    "title": "Why teams choose SdanceAI",
+    "description": "Teams choose SdanceAI for synchronized audio generation, stronger prompt understanding, and cinematic output across supported models, including Seedance 1.5.",
+    "items": [
+      {
+        "title": "Native Audio Video Generation",
+        "description": "Generate dialogue, sound effects, and atmosphere directly with visuals so scenes feel naturally synchronized."
+      },
+      {
+        "title": "Multi-lingual, Multi-person Dialogue",
+        "description": "Create realistic conversations with multiple speakers and better lip-sync alignment across languages."
+      },
+      {
+        "title": "Longer Narrative Coherence",
+        "description": "Supports stable story progression and expressive camera movement suitable for drama and ad storytelling."
+      }
+    ]
+  },
+  "Capabilities": {
+    "title": "Core production capabilities on SdanceAI",
+    "description": "Capability highlights for production workflows on SdanceAI, including Seedance 1.5.",
+    "items": [
+      {
+        "title": "Text to Video with stronger instruction following",
+        "description": "Translate prompts into shots with cleaner object consistency, action timing, and visual style alignment."
+      },
+      {
+        "title": "Image to Video for controllable animation",
+        "description": "Animate still images into cinematic clips while keeping identity and scene composition stable."
+      },
+      {
+        "title": "Dynamic camera language",
+        "description": "Use references like push-in, dolly, orbit, and handheld motion to produce film-like movement."
+      },
+      {
+        "title": "Narrative-ready shot quality",
+        "description": "Built to support short-form narrative creation, from emotional close-ups to wide establishing shots."
+      },
+      {
+        "title": "Flexible output framing",
+        "description": "Prepare assets for multiple channels with controllable aspect ratio and framing expectations."
+      },
+      {
+        "title": "High-pace production workflows",
+        "description": "Designed for teams that ship frequent video iterations."
+      }
+    ]
+  },
+  "UseCases": {
+    "title": "Practical creation scenarios",
+    "description": "Designed for teams that need high-quality narrative clips at production speed.",
+    "items": [
+      {
+        "title": "Short Drama Episodes",
+        "description": "Produce emotionally coherent scenes with voice, effects, and cinematic pacing for episodic storytelling."
+      },
+      {
+        "title": "Performance Marketing Ads",
+        "description": "Generate rapid ad variants with product-centric framing and script-driven narration in multiple tones."
+      },
+      {
+        "title": "Social Clip Production",
+        "description": "Create vertical-ready clips for creators and growth teams with repeatable style and fast iteration."
+      },
+      {
+        "title": "Brand Concept Visualization",
+        "description": "Prototype campaign narratives before live shoots to validate message, rhythm, and visual identity."
+      }
+    ]
+  },
+  "FAQ": {
+    "title": "SdanceAI FAQ",
+    "description": "Common questions about SdanceAI workflows and supported models, including Seedance 1.5.",
+    "items": [
+      {
+        "question": "What does SdanceAI provide?",
+        "answer": "SdanceAI is an independent AI video platform and API service with a custom interface built on top of third-party models."
+      },
+      {
+        "question": "Which models are available on SdanceAI?",
+        "answer": "SdanceAI supports multiple models, including Seedance 1.5. Available models may vary by workflow and update over time."
+      },
+      {
+        "question": "Does SdanceAI support native audio generation?",
+        "answer": "Yes. On supported models (such as Seedance 1.5), you can generate speech, sound effects, and background audio synchronized with visuals."
+      },
+      {
+        "question": "Can I control first and last frames?",
+        "answer": "Yes. In compatible image-driven workflows, first/last frame controls can guide scene start and end while preserving composition consistency."
+      },
+      {
+        "question": "Does SdanceAI support multilingual workflows?",
+        "answer": "Yes. For compatible models, SdanceAI supports multilingual dialogue and localized voice-driven video scenarios."
+      },
+      {
+        "question": "Is SdanceAI affiliated with model providers?",
+        "answer": "No. SdanceAI is an independent product and is not affiliated with, endorsed by, or sponsored by model providers."
+      }
+    ]
+  },
+  "CTA": {
+    "title": "Ready to build with SdanceAI?",
+    "description": "Start from the generation studio above, then scale with existing pricing plans across supported models.",
+    "primary": "Generate Now",
+    "secondary": "View Pricing"
+  }
+}

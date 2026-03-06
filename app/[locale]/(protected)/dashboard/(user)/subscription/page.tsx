@@ -8,10 +8,14 @@ import { getSession } from "@/lib/auth/server";
 import { getDb } from "@/lib/db";
 import { subscriptions as subscriptionsSchema } from "@/lib/db/schema";
 import { desc, eq } from "drizzle-orm";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { PortalButton } from "./PortalButton";
 
 export default async function SubscriptionPage() {
+  if (process.env.SHOW_MEMBER_SUBSCRIPTION !== "true") {
+    notFound();
+  }
+
   const session = await getSession();
   const user = session?.user;
   if (!user) redirect("/login");

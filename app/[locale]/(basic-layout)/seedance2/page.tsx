@@ -1,9 +1,7 @@
-import Hero from "@/components/home/seedance/Hero";
+import SeedanceHome from "@/components/home/SeedanceHome";
 
 export default function Seedance2Page() {
   return (
-    <div className="min-h-screen bg-background flex flex-col w-full">
-      <Hero />
-    </div>
+      <SeedanceHome />
   );
 }

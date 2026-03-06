@@ -7,7 +7,7 @@
  */
 
 import { apiResponse } from "@/lib/api-response";
-import { db } from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { videoGenerations } from "@/lib/db/schema";
 import { parseResultJson } from "@/lib/kie/client";
 import { refundCreditsForGeneration } from "@/lib/kie/credits";
@@ -33,14 +33,8 @@ export async function POST(request: NextRequest) {
       return apiResponse.badRequest("Missing taskId in callback data.");
     }
 
-    const state: string = taskData.state;
-    if (!state || !["success", "fail"].includes(state)) {
-      // waiting 状态不需要处理
-      return apiResponse.success({ message: "Ignored non-terminal state." });
-    }
-
     // 3. 查找生成记录
-    const [record] = await db
+    const [record] = await getDb()
       .select()
       .from(videoGenerations)
       .where(eq(videoGenerations.taskId, taskId))
@@ -49,6 +43,20 @@ export async function POST(request: NextRequest) {
     if (!record) {
       console.warn(`Callback received for unknown taskId: ${taskId}`);
       return apiResponse.notFound("Generation record not found.");
+    }
+
+    const isVeo = record.model === "veo3" || record.model === "veo3_fast";
+
+    let state: string = taskData.state;
+    if (isVeo) {
+      if (taskData.successFlag === 1) state = "success";
+      else if (taskData.successFlag === 2 || taskData.successFlag === 3) state = "fail";
+      else state = "waiting";
+    }
+
+    if (!state || !["success", "fail"].includes(state)) {
+      // waiting 状态不需要处理
+      return apiResponse.success({ message: "Ignored non-terminal state." });
     }
 
     // 4. 如果已经处理过，直接返回
@@ -61,8 +69,9 @@ export async function POST(request: NextRequest) {
 
     // 5. 处理成功
     if (state === "success") {
-      const parsed = parseResultJson(taskData.resultJson);
-      await db
+      const resultJson = isVeo && taskData.response ? JSON.stringify(taskData.response) : taskData.resultJson;
+      const parsed = parseResultJson(resultJson);
+      await getDb()
         .update(videoGenerations)
         .set({
           status: "success",
@@ -83,12 +92,15 @@ export async function POST(request: NextRequest) {
 
     // 6. 处理失败 + 退积分
     if (state === "fail") {
-      await db
+      const failCode = isVeo ? String(taskData.errorCode) : taskData.failCode;
+      const failMsg = isVeo ? taskData.errorMessage : taskData.failMsg;
+
+      await getDb()
         .update(videoGenerations)
         .set({
           status: "failed",
-          failCode: taskData.failCode ?? null,
-          failMsg: taskData.failMsg ?? null,
+          failCode: failCode ?? null,
+          failMsg: failMsg ?? null,
           completedAt: new Date(),
         })
         .where(eq(videoGenerations.id, record.id));
@@ -99,9 +111,9 @@ export async function POST(request: NextRequest) {
           await refundCreditsForGeneration(
             record.userId,
             record.creditsUsed,
-            `Refund: ${record.model} generation failed via callback (${taskData.failCode ?? "unknown"})`,
+            `Refund: ${record.model} generation failed via callback (${failCode ?? "unknown"})`,
           );
-          await db
+          await getDb()
             .update(videoGenerations)
             .set({ creditsRefunded: true })
             .where(eq(videoGenerations.id, record.id));

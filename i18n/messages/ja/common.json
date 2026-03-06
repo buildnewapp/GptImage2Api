@@ -53,9 +53,9 @@
     },
     "UserMenus": [
       {
-        "name": "設定",
-        "href": "/dashboard/settings",
-        "icon": "Settings"
+        "name": "マイビデオ",
+        "href": "/dashboard/video-generations",
+        "icon": "Video"
       },
       {
         "name": "注文履歴",
@@ -78,9 +78,9 @@
         "icon": "Coins"
       },
       {
-        "name": "マイビデオ",
-        "href": "/dashboard/video-generations",
-        "icon": "Video"
+        "name": "設定",
+        "href": "/dashboard/settings",
+        "icon": "Settings"
       }
     ],
     "AdminMenus": [
@@ -133,7 +133,7 @@
   },
   "Blogs": {
     "title": "ブログ記事",
-    "description": "Next.jsエコシステムとNexty.devテンプレートの最新情報をお届けします。",
+    "description": "AI動画制作の知見、プロダクト更新、クリエイター向け実践情報をお届けします。",
     "emptyState": {
       "title": "記事がありません",
       "description": "現在コンテンツを作成中です。もうしばらくお待ちください！"
@@ -366,7 +366,7 @@
     ]
   },
   "Footer": {
-    "Copyright": "著作権所有 © {year} {name} 全著作権保有。",
+    "Copyright": "著作権所有 © {year} {name} 全著作権保有。独立した製品です。Google/OpenAI/AI モデルプロバイダーとは関係ありません。",
     "About": "サイトについて",
     "PrivacyPolicy": "プライバシーポリシー",
     "TermsOfService": "利用規約",
@@ -381,9 +381,12 @@
               "name": "機能特性"
             },
             {
-              "id": "pricing",
-              "href": "/#pricing",
-              "name": "料金プラン"
+              "href": "/seedance2",
+              "name": "Seedance 2"
+            },
+            {
+              "href": "/seedance-15",
+              "name": "Seedance 1.5"
             }
           ]
         },
@@ -397,6 +400,11 @@
             {
               "href": "/prompts",
               "name": "プロンプト"
+            },
+            {
+              "id": "pricing",
+              "href": "/#pricing",
+              "name": "料金プラン"
             }
           ]
         },

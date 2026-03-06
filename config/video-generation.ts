@@ -1,36 +1,28 @@
-/**
- * Video Generation Model Configuration
- *
- * 视频生成模型的积分消耗配置。
- * 在此修改每个模型的积分消耗量。
- */
+import {
+  calculateCreditsForImplementation,
+  findImplementationByModelId,
+  getAllModelIds,
+  type VideoInputPayload,
+} from "@/config/model_config";
 
-// 每个模型生成一次消耗的积分
-export const VIDEO_MODEL_CREDITS: Record<string, number> = {
-  // ── Bytedance 系列 ──
-  "bytedance/v1-lite-text-to-video": 10,
-  "bytedance/v1-lite-image-to-video": 10,
-  "bytedance/v1-pro-text-to-video": 20,
-  "bytedance/v1-pro-image-to-video": 20,
-  "bytedance/v1-pro-fast-image-to-video": 15,
+export const VALID_MODELS = getAllModelIds();
 
-  // ── Sora 系列 ──
-  "sora-2-text-to-video": 30,
-  "sora-2-image-to-video": 30,
-  "sora-2-text-to-video-stable": 30,
-  "sora-2-image-to-video-stable": 30,
-  "sora-2-pro-text-to-video": 50,
-  "sora-2-pro-image-to-video": 50,
-  "sora-2-pro-storyboard": 60,
-};
+// 兼容旧代码：提供一个静态映射占位（按每个模型最小档位估算）
+export const VIDEO_MODEL_CREDITS: Record<string, number> = Object.fromEntries(
+  VALID_MODELS.map((modelId) => [modelId, 10]),
+);
 
-// 所有有效的模型名列表
-export const VALID_MODELS = Object.keys(VIDEO_MODEL_CREDITS);
+export function getModelCredits(
+  model: string,
+  input?: VideoInputPayload,
+): number | null {
+  const resolved = findImplementationByModelId(model);
+  if (!resolved) return null;
 
-/**
- * 获取模型的积分消耗量。
- * @returns 积分数，如果模型不存在则返回 null
- */
-export function getModelCredits(model: string): number | null {
-  return VIDEO_MODEL_CREDITS[model] ?? null;
+  if (!input) {
+    return VIDEO_MODEL_CREDITS[model] ?? null;
+  }
+
+  return calculateCreditsForImplementation(resolved.implementation, input);
 }
+

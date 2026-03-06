@@ -4,10 +4,18 @@
   "columns": {
     "id": "ID",
     "user": "ユーザー",
+    "selectedModel": "ユーザー選択モデル",
     "model": "モデル",
+    "inputParams": "入力パラメータ",
+    "video": "動画",
+    "playVideo": "動画を再生",
+    "noVideo": "動画なし",
+    "viewJson": "JSONを表示",
     "status": "ステータス",
     "credits": "クレジット",
+    "refundStatus": "返金ステータス",
     "refunded": "返金済み",
+    "notRefunded": "未返金",
     "createdAt": "作成日時"
   },
   "filters": {

@@ -56,7 +56,6 @@ const Header = () => {
           <div className="hidden md:flex items-center gap-x-4">
             <div className="hidden md:flex flex-row items-center gap-x-2 text-sm text-muted-foreground">
               <Link href="/#features" className="rounded-xl px-4 py-2 flex items-center gap-x-1 hover:bg-accent-foreground/10 hover:text-accent-foreground">{t("features")}</Link>
-              <Link href="/prompts" className="rounded-xl px-4 py-2 flex items-center gap-x-1 hover:bg-accent-foreground/10 hover:text-accent-foreground">{t("prompts")}</Link>
               <Link href="/seedance2" className="rounded-xl px-4 py-2 flex items-center gap-x-1 hover:bg-accent-foreground/10 hover:text-accent-foreground">{t("generate")}</Link>
               <Link href="/pricing" className="rounded-xl px-4 py-2 flex items-center gap-x-1 hover:bg-accent-foreground/10 hover:text-accent-foreground">{t("pricing")}</Link>
             </div>

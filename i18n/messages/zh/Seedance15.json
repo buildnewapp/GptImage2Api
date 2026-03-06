@@ -1,0 +1,118 @@
+{
+  "Hero": {
+    "badge": "SdanceAI 平台",
+    "titlePrefix": "SdanceAI：",
+    "titleHighlight": "独立 AI 视频工作台与 API",
+    "description": "通过 SdanceAI 的自定义工作流创建生产级 AI 视频。我们在统一界面中支持 Seedance 1.5、Veo、Sora 等第三方模型。",
+    "disclaimer": "SdanceAI 是独立产品，与任何 AI 模型提供商不存在隶属、背书或赞助关系。",
+    "wrapperDisclosure": "本服务是构建在第三方 AI 模型之上的自定义交互与工作流层。",
+    "primaryCta": "开始创作",
+    "secondaryCta": "查看能力"
+  },
+  "Overview": {
+    "title": "为什么团队选择 SdanceAI",
+    "description": "团队看重 SdanceAI 在音画同步、提示词理解和电影感输出上的稳定表现，并可统一接入包括 Seedance 1.5 在内的多种模型。",
+    "items": [
+      {
+        "title": "原生音画一体生成",
+        "description": "在生成画面的同时生成对白、音效和氛围声，使场景更自然。"
+      },
+      {
+        "title": "多人多语种对话能力",
+        "description": "支持多人对话场景，在多语种语音与口型匹配上表现更稳定。"
+      },
+      {
+        "title": "更长叙事连贯性",
+        "description": "在剧情推进与运镜表达上更稳定，适合短剧与广告叙事。"
+      }
+    ]
+  },
+  "Capabilities": {
+    "title": "SdanceAI 的核心生产能力",
+    "description": "以下能力聚焦 SdanceAI 在生产工作流中的实际价值，覆盖包括 Seedance 1.5 在内的已支持模型。",
+    "items": [
+      {
+        "title": "文生视频：更强指令遵循",
+        "description": "将提示词更准确映射到镜头、动作节奏与视觉风格。"
+      },
+      {
+        "title": "图生视频：可控动画化",
+        "description": "将静态图像转为电影感片段，同时保持主体与构图稳定。"
+      },
+      {
+        "title": "动态运镜表达",
+        "description": "支持推拉摇移、环绕、手持等镜头语言，提升叙事张力。"
+      },
+      {
+        "title": "面向叙事的镜头质量",
+        "description": "从特写情绪镜头到大全景建立镜头，均可服务短叙事表达。"
+      },
+      {
+        "title": "灵活输出比例",
+        "description": "更容易适配多渠道分发的宽高比与画幅需求。"
+      },
+      {
+        "title": "高频生产工作流",
+        "description": "适合需要高频视频迭代与持续产出的内容团队。"
+      }
+    ]
+  },
+  "UseCases": {
+    "title": "落地创作场景",
+    "description": "面向需要高质量叙事短片与快节奏迭代的生产团队。",
+    "items": [
+      {
+        "title": "短剧与剧情短片",
+        "description": "生成具备情绪连贯性的叙事镜头，支持对白与音效协同。"
+      },
+      {
+        "title": "效果广告创意",
+        "description": "快速生成多版广告素材，围绕产品叙事与口播脚本高效迭代。"
+      },
+      {
+        "title": "社媒短视频生产",
+        "description": "为创作者与增长团队批量生成竖屏短片并保持统一风格。"
+      },
+      {
+        "title": "品牌概念可视化",
+        "description": "在实拍前快速预演 campaign 叙事节奏与视觉识别。"
+      }
+    ]
+  },
+  "FAQ": {
+    "title": "SdanceAI 常见问题",
+    "description": "关于 SdanceAI 工作流与支持模型（含 Seedance 1.5）的常见问题。",
+    "items": [
+      {
+        "question": "SdanceAI 提供什么能力？",
+        "answer": "SdanceAI 是独立的 AI 视频平台与 API 服务，在第三方模型之上提供统一的自定义交互与工作流能力。"
+      },
+      {
+        "question": "SdanceAI 支持哪些模型？",
+        "answer": "SdanceAI 支持多种模型，包括 Seedance 1.5。可用模型会根据工作流和版本迭代动态更新。"
+      },
+      {
+        "question": "SdanceAI 是否支持原生音频生成？",
+        "answer": "支持。在兼容模型（如 Seedance 1.5）上，可与画面同步生成语音、音效与背景音。"
+      },
+      {
+        "question": "可以控制首尾帧吗？",
+        "answer": "可以。在兼容的图生视频流程中，可通过首尾帧控制场景起止，并保持构图风格稳定。"
+      },
+      {
+        "question": "SdanceAI 支持多语言工作流吗？",
+        "answer": "支持。针对兼容模型，SdanceAI 可用于多语种对白和本地化语音视频创作。"
+      },
+      {
+        "question": "SdanceAI 与模型提供商有官方关联吗？",
+        "answer": "没有。SdanceAI 是独立产品，与模型提供商不存在隶属、背书或赞助关系。"
+      }
+    ]
+  },
+  "CTA": {
+    "title": "准备好用 SdanceAI 开始生产了吗？",
+    "description": "先在上方工作台生成，再用现有套餐体系扩展到稳定生产流程。",
+    "primary": "立即生成",
+    "secondary": "查看价格"
+  }
+}

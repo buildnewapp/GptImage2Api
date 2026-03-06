@@ -14,29 +14,54 @@ export default getRequestConfig(async ({ requestLocale }) => {
     locale,
     messages: {
       Landing: (await import(`./messages/${locale}/Landing.json`)).default,
+      Seedance15: (await import(`./messages/${locale}/Seedance15.json`)).default,
       Pricing: (await import(`./messages/${locale}/Pricing.json`)).default,
       NotFound: (await import(`./messages/${locale}/NotFound.json`)).default,
       Glossary: (await import(`./messages/${locale}/Glossary.json`)).default,
       Prompts: (await import(`./messages/${locale}/Prompts.json`)).default,
 
       // Dashboard - User
-      Settings: (await import(`./messages/${locale}/Dashboard/User/Settings.json`)).default,
-      CreditHistory: (await import(`./messages/${locale}/Dashboard/User/CreditHistory.json`)).default,
-      ApiKeys: (await import(`./messages/${locale}/Dashboard/User/ApiKeys.json`)).default,
-      VideoGeneration: (await import(`./messages/${locale}/Dashboard/User/VideoGeneration.json`)).default,
+      Settings: (
+        await import(`./messages/${locale}/Dashboard/User/Settings.json`)
+      ).default,
+      CreditHistory: (
+        await import(`./messages/${locale}/Dashboard/User/CreditHistory.json`)
+      ).default,
+      ApiKeys: (
+        await import(`./messages/${locale}/Dashboard/User/ApiKeys.json`)
+      ).default,
+      VideoGeneration: (
+        await import(`./messages/${locale}/Dashboard/User/VideoGeneration.json`)
+      ).default,
 
       // Dashboard - Admin
-      Overview: (await import(`./messages/${locale}/Dashboard/Admin/Overview.json`)).default,
-      Users: (await import(`./messages/${locale}/Dashboard/Admin/Users.json`)).default,
-      DashboardBlogs: (await import(`./messages/${locale}/Dashboard/Admin/Blogs.json`)).default,
-      DashboardGlossary: (await import(`./messages/${locale}/Dashboard/Admin/Glossary.json`)).default,
-      Orders: (await import(`./messages/${locale}/Dashboard/Admin/Orders.json`)).default,
-      R2Files: (await import(`./messages/${locale}/Dashboard/Admin/R2Files.json`)).default,
-      Prices: (await import(`./messages/${locale}/Dashboard/Admin/Prices.json`)).default,
-      AdminApiKeys: (await import(`./messages/${locale}/Dashboard/Admin/ApiKeys.json`)).default,
-      AdminVideoGenerations: (await import(`./messages/${locale}/Dashboard/Admin/VideoGenerations.json`)).default,
+      Overview: (
+        await import(`./messages/${locale}/Dashboard/Admin/Overview.json`)
+      ).default,
+      Users: (await import(`./messages/${locale}/Dashboard/Admin/Users.json`))
+        .default,
+      AdminApiKeys: (
+        await import(`./messages/${locale}/Dashboard/Admin/ApiKeys.json`)
+      ).default,
+      DashboardBlogs: (
+        await import(`./messages/${locale}/Dashboard/Admin/Blogs.json`)
+      ).default,
+      DashboardGlossary: (
+        await import(`./messages/${locale}/Dashboard/Admin/Glossary.json`)
+      ).default,
+      Orders: (await import(`./messages/${locale}/Dashboard/Admin/Orders.json`))
+        .default,
+      R2Files: (
+        await import(`./messages/${locale}/Dashboard/Admin/R2Files.json`)
+      ).default,
+      Prices: (await import(`./messages/${locale}/Dashboard/Admin/Prices.json`))
+        .default,
+      AdminVideoGenerations: (
+        await import(`./messages/${locale}/Dashboard/Admin/VideoGenerations.json`)
+      ).default,
+
       // common
-      ...common
-    }
+      ...common,
+    },
   };
 });

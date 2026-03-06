@@ -35,11 +35,17 @@ export default function RefundPolicyPage() {
               <h2 className="mb-3 text-xl font-semibold">1. Introduction</h2>
               <p className="mb-3">
                 At {siteConfig.name}, we are committed to providing
-                high-quality AI video generation services powered by Seedance
-                2.0. This Refund Policy outlines the terms and conditions under
-                which refunds may be granted for purchases made on our platform,
+                high-quality AI video generation services through our
+                independent platform and supported third-party models. This
+                Refund Policy outlines the terms and conditions under which
+                refunds may be granted for purchases made on our platform,
                 including credit purchases, subscription plans, and API service
                 fees.
+              </p>
+              <p className="mb-3">
+                {siteConfig.name} is an independent service that provides a
+                custom interface for third-party AI models. We are not
+                affiliated with, endorsed by, or sponsored by model providers.
               </p>
               <p className="mb-3">
                 By making a purchase on {siteConfig.name}, you agree to the
@@ -132,8 +138,14 @@ export default function RefundPolicyPage() {
                   3.1 Cancellation
                 </h3>
                 <p className="mb-3">
-                  You may cancel your subscription at any time through your
-                  account settings or by contacting{" "}
+                  You may cancel your subscription at any time from{" "}
+                  <Link
+                    href="/dashboard/subscription"
+                    className="text-primary hover:underline"
+                  >
+                    Dashboard &gt; Subscription
+                  </Link>{" "}
+                  by opening the billing portal. If you need help, contact{" "}
                   <a
                     href="mailto:support@sdanceai.com"
                     className="hover:underline text-blue-500"
@@ -178,10 +190,9 @@ export default function RefundPolicyPage() {
                         services, you are eligible for a <strong>full refund</strong>
                       </li>
                       <li>
-                        If you have <strong>already used</strong> a portion of
-                        the included credits, you are eligible for a{" "}
-                        <strong>prorated partial refund</strong> based on the
-                        unused portion
+                        If you have <strong>already used</strong> any included
+                        credits or services, the subscription purchase is{" "}
+                        <strong>not refundable</strong>
                       </li>
                     </ul>
                   </li>
@@ -268,21 +279,22 @@ export default function RefundPolicyPage() {
               <ul className="mb-3 list-disc space-y-1 pl-6">
                 <li>
                   <strong>Acknowledgment</strong>: We will acknowledge your
-                  refund request within 2 business days
+                  refund request within 1 business day
+                </li>
+                <li>
+                  <strong>Response SLA</strong>: We will provide an initial
+                  response on your request within 3 business days
                 </li>
                 <li>
                   <strong>Investigation</strong>: Our team will review your
                   case, including account activity, usage logs, and technical
-                  data, within 5-7 business days
+                  data, and share progress updates by email
                 </li>
                 <li>
-                  <strong>Decision</strong>: You will receive a decision via
-                  email within 10 business days of your initial request
-                </li>
-                <li>
-                  <strong>Processing</strong>: If approved, the refund will be
-                  processed within 5-10 business days. The actual timing
-                  depends on your payment method and financial institution
+                  <strong>Decision &amp; Processing</strong>: If approved, the
+                  refund will be processed within 5-10 business days. The
+                  actual timing depends on your payment method and financial
+                  institution
                 </li>
               </ul>
             </section>
@@ -338,10 +350,10 @@ export default function RefundPolicyPage() {
                   If you disagree with our refund decision, you may request a
                   review by contacting us at{" "}
                   <a
-                    href="mailto:xian@sdanceai.com"
+                    href="mailto:paidax@sdanceai.com"
                     className="hover:underline text-blue-500"
                   >
-                    xian@sdanceai.com
+                    paidax@sdanceai.com
                   </a>
                   . Please provide additional information or documentation that
                   supports your case.
@@ -424,10 +436,10 @@ export default function RefundPolicyPage() {
                 <li>
                   <strong>Founder</strong>:{" "}
                   <a
-                    href="mailto:xian@sdanceai.com"
+                    href="mailto:paidax@sdanceai.com"
                     className="hover:underline text-blue-500"
                   >
-                    xian@sdanceai.com
+                    paidax@sdanceai.com
                   </a>{" "}
                   (for escalation)
                 </li>

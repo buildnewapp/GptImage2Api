@@ -53,9 +53,9 @@
     },
     "UserMenus": [
       {
-        "name": "个人设置",
-        "href": "/dashboard/settings",
-        "icon": "Settings"
+        "name": "我的视频",
+        "href": "/dashboard/video-generations",
+        "icon": "Video"
       },
       {
         "name": "我的订单",
@@ -78,9 +78,9 @@
         "icon": "Coins"
       },
       {
-        "name": "我的视频",
-        "href": "/dashboard/video-generations",
-        "icon": "Video"
+        "name": "个人设置",
+        "href": "/dashboard/settings",
+        "icon": "Settings"
       }
     ],
     "AdminMenus": [
@@ -133,7 +133,7 @@
   },
   "Blogs": {
     "title": "博客列表",
-    "description": "分享 Next.js 生态圈和 NEXTY.DEV 模板动态。",
+    "description": "分享 AI 视频创作经验、产品更新与创作者实战内容。",
     "emptyState": {
       "title": "暂无博客文章",
       "description": "我们正在创作精彩内容，敬请期待！"
@@ -366,7 +366,7 @@
     ]
   },
   "Footer": {
-    "Copyright": "版权所有 © {year} {name} 保留所有权利。",
+    "Copyright": "版权所有 © {year} {name} 保留所有权利。独立产品，与 Google/OpenAI/AI 模型提供商无关。",
     "About": "关于",
     "PrivacyPolicy": "隐私政策",
     "TermsOfService": "条款与条件",
@@ -381,9 +381,12 @@
               "name": "功能特性"
             },
             {
-              "id": "pricing",
-              "href": "/#pricing",
-              "name": "定价"
+              "href": "/seedance2",
+              "name": "Seedance 2"
+            },
+            {
+              "href": "/seedance-15",
+              "name": "Seedance 1.5"
             }
           ]
         },
@@ -397,6 +400,11 @@
             {
               "href": "/prompts",
               "name": "提示词"
+            },
+            {
+              "id": "pricing",
+              "href": "/#pricing",
+              "name": "定价"
             }
           ]
         },

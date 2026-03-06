@@ -49,8 +49,14 @@ export default function PrivacyPolicyPage() {
                 . We are committed to protecting your privacy and personal
                 information. This Privacy Policy explains how we collect, use,
                 store, share, and protect information when you use our AI video
-                generation platform, including our online experience and API
-                services powered by Seedance 2.0.
+                generation platform, including our custom interface and API
+                services built on top of third-party AI models (such as
+                Seedance 1.5, Veo, and Sora).
+              </p>
+              <p className="mb-3">
+                {siteConfig.name} is an independent product and is not
+                affiliated with, endorsed by, or sponsored by model providers.
+                Model names are referenced only to describe compatibility.
               </p>
               <p className="mb-3">
                 By accessing or using our services, you acknowledge that you
@@ -152,8 +158,8 @@ export default function PrivacyPolicyPage() {
                 <li>
                   <strong>Providing AI Video Generation Services</strong>:
                   Processing your input content (images, text prompts) through
-                  our Seedance 2.0 model to generate videos with native audio
-                  sync
+                  integrated third-party AI models via our wrapper interface to
+                  generate videos with native audio sync
                 </li>
                 <li>
                   <strong>Account Management</strong>: Creating and managing your
@@ -208,8 +214,8 @@ export default function PrivacyPolicyPage() {
               <ul className="mb-3 list-disc space-y-1 pl-6">
                 <li>
                   <strong>Processing</strong>: Your uploaded content is processed
-                  by our AI models solely for the purpose of generating the
-                  requested video output
+                  by integrated third-party AI models via our platform solely
+                  for the purpose of generating the requested video output
                 </li>
                 <li>
                   <strong>Storage</strong>: Generated videos and associated input
@@ -220,7 +226,7 @@ export default function PrivacyPolicyPage() {
                 <li>
                   <strong>No Training Without Consent</strong>: We do not use
                   your uploaded personal content or generated videos to train our
-                  AI models without your explicit consent
+                  services or underlying AI models without your explicit consent
                 </li>
                 <li>
                   <strong>Content Moderation</strong>: We may review content to

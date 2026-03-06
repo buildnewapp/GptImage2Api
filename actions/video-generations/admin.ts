@@ -1,6 +1,7 @@
 "use server";
 
-import { db } from "@/lib/db";
+import { VIDEO_MODEL_FAMILIES, findImplementationByModelId } from "@/config/model_config";
+import { getDb } from "@/lib/db";
 import { user, videoGenerations } from "@/lib/db/schema";
 import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
 
@@ -9,6 +10,35 @@ interface AdminVideoQuery {
   limit?: number;
   status?: string;
   search?: string;
+}
+
+function resolveSelectedModelName(model: string, inputParams: unknown): string {
+  const selection = (inputParams as any)?.selection;
+  const modelKey =
+    typeof selection?.modelKey === "string" ? selection.modelKey : null;
+  const versionKey =
+    typeof selection?.versionKey === "string" ? selection.versionKey : null;
+
+  if (modelKey) {
+    const family = VIDEO_MODEL_FAMILIES.find((item) => item.modelKey === modelKey);
+    if (family) {
+      if (versionKey) {
+        const version = family.versions.find(
+          (item) => item.versionKey === versionKey,
+        );
+        if (version) return version.displayName;
+      }
+      return family.displayName;
+    }
+    return modelKey;
+  }
+
+  const resolved = findImplementationByModelId(model);
+  if (resolved) {
+    return resolved.version.displayName;
+  }
+
+  return model.includes("/") ? model.split("/").at(-1) || model : model;
 }
 
 export async function getAdminVideoGenerations({
@@ -37,7 +67,7 @@ export async function getAdminVideoGenerations({
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
   const [records, countResult] = await Promise.all([
-    db
+    getDb()
       .select({
         id: videoGenerations.id,
         taskId: videoGenerations.taskId,
@@ -46,6 +76,7 @@ export async function getAdminVideoGenerations({
         userName: user.name,
         model: videoGenerations.model,
         status: videoGenerations.status,
+        isPublic: videoGenerations.isPublic,
         creditsUsed: videoGenerations.creditsUsed,
         creditsRefunded: videoGenerations.creditsRefunded,
         inputParams: videoGenerations.inputParams,
@@ -58,7 +89,7 @@ export async function getAdminVideoGenerations({
       .orderBy(desc(videoGenerations.createdAt))
       .limit(limit)
       .offset(offset),
-    db
+    getDb()
       .select({ count: sql<number>`count(*)` })
       .from(videoGenerations)
       .leftJoin(user, eq(videoGenerations.userId, user.id))
@@ -74,6 +105,7 @@ export async function getAdminVideoGenerations({
 
     return {
       ...record,
+      selectedModel: resolveSelectedModelName(record.model, record.inputParams),
       prompt,
       resultUrl: Array.isArray(resultUrls) && resultUrls.length > 0 ? resultUrls[0] : null,
       createdAt: record.createdAt.toISOString(),

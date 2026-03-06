@@ -35,8 +35,7 @@ const Footer = () => {
             <h4 className="font-semibold text-gray-900 dark:text-white mb-4">{t("resources")}</h4>
             <ul className="space-y-2">
               <li><Link href="/blog" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">{t("blog")}</Link></li>
-              <li><Link href="/prompts" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">{t("prompts")}</Link></li>
-              <li><a href="https://docs.nexty.dev/zh/docs" target="_blank" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">{t("docs")}</a></li>
+              <li><Link href="/prompts" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">{t("docs")}</Link></li>
               <li><Link href="/help" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">{t("help")}</Link></li>
             </ul>
           </div>

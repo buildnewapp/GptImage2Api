@@ -53,9 +53,9 @@
     },
     "UserMenus": [
       {
-        "name": "Settings",
-        "href": "/dashboard/settings",
-        "icon": "Settings"
+        "name": "My Videos",
+        "href": "/dashboard/video-generations",
+        "icon": "Video"
       },
       {
         "name": "My Orders",
@@ -78,9 +78,9 @@
         "icon": "Coins"
       },
       {
-        "name": "My Videos",
-        "href": "/dashboard/video-generations",
-        "icon": "Video"
+        "name": "Settings",
+        "href": "/dashboard/settings",
+        "icon": "Settings"
       }
     ],
     "AdminMenus": [
@@ -133,7 +133,7 @@
   },
   "Blogs": {
     "title": "Blog Posts",
-    "description": "Insights on Next.js ecosystem and NEXTY.DEV template updates.",
+    "description": "Insights on AI video creation, product updates, and creator workflows.",
     "emptyState": {
       "title": "No blog posts",
       "description": "We are creating exciting content, please stay tuned!"
@@ -366,7 +366,7 @@
     ]
   },
   "Footer": {
-    "Copyright": "Copyright © {year} {name} All rights reserved.",
+    "Copyright": "Copyright © {year} {name} All rights reserved. Independent product. Not affiliated with Google/OpenAI/AI model providers.",
     "About": "About",
     "PrivacyPolicy": "Privacy Policy",
     "TermsOfService": "Terms of Service",
@@ -381,9 +381,12 @@
               "name": "Features"
             },
             {
-              "id": "pricing",
-              "href": "/#pricing",
-              "name": "Pricing"
+              "href": "/seedance2",
+              "name": "Seedance 2"
+            },
+            {
+              "href": "/seedance-15",
+              "name": "Seedance 1.5"
             }
           ]
         },
@@ -397,6 +400,11 @@
             {
               "href": "/prompts",
               "name": "Prompts"
+            },
+            {
+              "id": "pricing",
+              "href": "/#pricing",
+              "name": "Pricing"
             }
           ]
         },

@@ -10,13 +10,22 @@
       "images": "图像",
       "uploadTitle": "点击上传或拖拽文件",
       "uploadFormats": "PNG, JPG, JPEG, WEBP",
+      "uploadingImage": "上传中...",
+      "uploadSuccess": "图片上传成功。",
+      "uploadFailed": "图片上传失败。",
+      "uploadTooLarge": "图片大小不能超过 10MB。",
+      "imageOnlyError": "仅支持上传图片文件。",
       "prompt": "提示词",
       "promptPlaceholder": "描述你希望图像如何动起来...",
       "resolution": "分辨率",
+      "size": "画质",
       "duration": "时长",
       "aspectRatio": "比例",
       "auto": "自动",
       "advanced": "高级/自定义",
+      "isPublic": "是否公开",
+      "public": "公开",
+      "private": "不公开",
       "generate": "生成视频",
       "generating": "生成中...",
       "loginRequired": "请登录后生成视频",
@@ -30,6 +39,13 @@
       "seed": "种子",
       "randomSeed": "随机 (-1)",
       "fixCamera": "固定相机",
+      "safetyChecker": "安全检查",
+      "shots": "分镜",
+      "addShot": "添加分镜",
+      "shotNumber": "分镜 {index}",
+      "shotScene": "描述这个场景中发生的事情...",
+      "shotDuration": "时长 (秒)",
+      "totalDuration": "总计: {current}s / {total}s",
       "modelVersion": "模型版本",
       "soraDisclaimer": "Sora 服务目前需求量大，可能会失败。我们建议使用其他模型以获得更可靠的结果。",
       "sora2": {
@@ -39,7 +55,26 @@
       "sora2pro": {
         "name": "Sora 2 Pro",
         "description": "优质质量，具备高级功能"
-      }
+      },
+      "estimatedCredits": "预计积分",
+      "currentCredits": "当前积分余额",
+      "unsupportedCombination": "当前模型组合不支持该参数，请调整设置",
+      "provider": "渠道",
+      "tasks": "任务列表",
+      "noTasks": "暂无任务，点击生成开始创建",
+      "task": "任务 #{index}",
+      "openVideo": "打开视频",
+      "downloadVideo": "下载视频",
+      "copyPrompt": "复制提示词",
+      "remix": "Remix",
+      "promptCopied": "提示词已复制",
+      "copyFailed": "复制失败",
+      "remixApplied": "参数已填充，可直接生成",
+      "watermark": "水印",
+      "watermarkPlaceholder": "添加水印（可选）",
+      "enableTranslation": "自动翻译提示词",
+      "veoQuality": "Veo 3.1 画质版",
+      "veoFast": "Veo 3.1 速度版"
     }
   },
   "Features": {
@@ -89,7 +124,7 @@
       },
       {
         "title": "音乐节奏同步",
-        "description": "卡点能力。生成与上传音乐的节奏和拍子完美同步的视频剪辑。"
+        "description": "卡点能力。生成与上传音乐节奏同步的视频剪辑。"
       },
       {
         "title": "情感表达",
@@ -107,92 +142,47 @@
       {
         "title": "广告与营销",
         "description": "通过参考成功的广告模板创作引人注目的宣传内容。用您自己的产品和品牌复刻经过验证的创意形式。",
-        "tags": [
-          "产品视频",
-          "品牌内容",
-          "商业广告",
-          "模板复刻"
-        ]
+        "tags": ["产品视频", "品牌内容", "商业广告", "模板复刻"]
       },
       {
         "title": "教育与培训",
         "description": "用引人入胜的视觉内容让课程生动起来。制作动画解说、历史重现和互动学习材料。",
-        "tags": [
-          "课程内容",
-          "教程",
-          "演示",
-          "视觉课程"
-        ]
+        "tags": ["课程内容", "教程", "演示", "视觉课程"]
       },
       {
         "title": "创意叙事",
         "description": "使用多模态输入构建独特的故事。参考电影技法，复刻电影风格，并在无缝衔接的场景中延展您的故事。",
-        "tags": [
-          "短片",
-          "艺术项目",
-          "音乐视频",
-          "视觉诗歌"
-        ]
+        "tags": ["短片", "艺术项目", "音乐视频", "视觉诗歌"]
       },
       {
         "title": "社交媒体内容",
         "description": "通过参考热门模板和特效生成让人停不下刷屏的内容。用您自己的创意转折复刻病毒式传播的形式。",
-        "tags": [
-          "Instagram Reels",
-          "TikTok 视频",
-          "YouTube Shorts",
-          "热门特效"
-        ]
+        "tags": ["Instagram Reels", "TikTok 视频", "YouTube Shorts", "热门特效"]
       },
       {
         "title": "动作与舞蹈视频",
         "description": "上传参考编舞或动作片段，并将其应用于任何角色。非常适合舞蹈翻拍、动作复刻和动作序列。",
-        "tags": [
-          "舞蹈翻拍",
-          "动作序列",
-          "动作捕捉",
-          "编舞"
-        ]
+        "tags": ["舞蹈翻拍", "动作序列", "动作捕捉", "编舞"]
       },
       {
         "title": "视频编辑与延展",
         "description": "无缝延展现有视频，合并多个片段，或在该特定片段进行编辑，无需从头重新生成所有内容。",
-        "tags": [
-          "视频延展",
-          "场景合并",
-          "内容编辑",
-          "片段连接"
-        ]
+        "tags": ["视频延展", "场景合并", "内容编辑", "片段连接"]
       },
       {
         "title": "电影预可视化",
         "description": "参考电影片段以复刻运镜、转场和视觉特效。在制作前测试电影摄影效果。",
-        "tags": [
-          "故事板",
-          "机位规划",
-          "特效测试",
-          "概念验证"
-        ]
+        "tags": ["故事板", "机位规划", "特效测试", "概念验证"]
       },
       {
         "title": "房地产与建筑",
         "description": "将房产照片转化为沉浸式虚拟导览。通过动态漫游和氛围展示呈现建筑设计。",
-        "tags": [
-          "房产导览",
-          "建筑可视化",
-          "室内设计",
-          "虚拟布景"
-        ]
+        "tags": ["房产导览", "建筑可视化", "室内设计", "虚拟布景"]
       },
       {
         "title": "音乐与音频同步",
-        "description": "上传音轨并创作完美节拍同步的视频。生成与您的视觉内容相匹配的音效和背景音乐。",
-        "tags": [
-          "节拍同步",
-          "音乐视频",
-          "声音设计",
-          "视听艺术"
-        ]
+        "description": "上传音轨并创作节拍同步的视频。生成与您的视觉内容相匹配的音效和背景音乐。",
+        "tags": ["节拍同步", "音乐视频", "声音设计", "视听艺术"]
       }
     ]
   },
@@ -228,7 +218,7 @@
         "role": "内容创作者"
       },
       {
-        "quote": "参考能力令人惊叹。我上传了一个电影片段，模型完美复刻了运镜和节奏。这才是 AI 视频该有的样子。",
+        "quote": "参考能力很强。我上传了一个电影片段，模型对运镜和节奏的复刻非常接近预期。",
         "name": "Marcus Rodriguez",
         "role": "电影制作人"
       },
@@ -248,7 +238,7 @@
         "role": "社交媒体经理"
       },
       {
-        "quote": "内置音频生成棒极了。音效与动作完美匹配，音乐节拍同步功能对舞蹈和音乐内容也非常有用。",
+        "quote": "内置音频生成功能表现出色。音效与动作匹配良好，音乐节拍同步功能对舞蹈和音乐内容很有帮助。",
         "name": "Alex Turner",
         "role": "音乐视频导演"
       },
@@ -258,7 +248,7 @@
         "role": "动画导演"
       },
       {
-        "quote": "自然语言控制非常直观。我只需描述我想要参考什么以及如何参考，模型完美理解。再也不用纠结复杂的提示词了。",
+        "quote": "自然语言控制非常直观。我只需描述参考目标和方式，模型就能较好理解，提示词编写轻松很多。",
         "name": "Mohammed Hassan",
         "role": "数字艺术家"
       },
@@ -279,7 +269,7 @@
     "annually": "年付",
     "onetime": "一次性",
     "discount": "-50%",
-    "limitedOffer": "限时优惠！",
+    "limitedOffer": "年付优惠",
     "saveOffer": "年付立省 50%",
     "billedYearly": "按年计费 ${amount}",
     "monthShort": "/月",
@@ -293,57 +283,34 @@
       "standard": {
         "name": "标准包",
         "desc": "适合尝鲜。",
-        "features": [
-          "1,000 积分",
-          "永不过期"
-        ]
+        "features": ["1,000 积分", "永不过期"]
       },
       "pro": {
         "name": "专业包",
         "desc": "最受欢迎的选择。",
-        "features": [
-          "3,750 积分",
-          "永不过期",
-          "优先生成"
-        ]
+        "features": ["3,750 积分", "永不过期", "优先生成"]
       },
       "max": {
         "name": "至尊包",
         "desc": "适合重度用户。",
-        "features": [
-          "12,000 积分",
-          "永不过期",
-          "优先生成"
-        ]
+        "features": ["12,000 积分", "永不过期", "优先生成"]
       }
     },
     "plans": {
       "standard": {
         "name": "标准版",
         "desc": "适合刚入门的个人。",
-        "features": [
-          "{credits} 积分 / 月",
-          "标准排队",
-          "商业授权"
-        ]
+        "features": ["{credits} 积分 / 月", "标准排队", "商业授权"]
       },
       "pro": {
         "name": "专业版",
         "desc": "适合需要更强能力的创作者。",
-        "features": [
-          "{credits} 积分 / 月",
-          "快速生成队列",
-          "优先支持"
-        ]
+        "features": ["{credits} 积分 / 月", "快速生成队列", "优先支持"]
       },
       "max": {
         "name": "至尊版",
         "desc": "适合工作室和专业人士。",
-        "features": [
-          "{credits} 积分 / 月",
-          "即时队列",
-          "API 访问"
-        ]
+        "features": ["{credits} 积分 / 月", "即时队列", "API 访问"]
       }
     }
   },
@@ -382,7 +349,7 @@
       },
       {
         "question": "如何升级我的订阅？",
-        "answer": "我们的系统目前仅允许同一时间拥有一个活跃订阅。请联系我们要取消当前订阅，然后您可以订阅您想要的方案。请发送升级请求至 support@sdanceai.com。"
+        "answer": "我们的系统目前仅允许同一时间拥有一个活跃订阅。请先在「Dashboard > 管理订阅」中取消当前订阅，再订阅新方案。如需协助，请联系 support@sdanceai.com。"
       },
       {
         "question": "如何购买更多积分？",
@@ -390,7 +357,7 @@
       },
       {
         "question": "如何取消我的订阅？",
-        "answer": "您可以随时在订阅页面取消订阅。如果您有任何问题或需要帮助，请联系我们的支持团队 support@sdanceai.com。"
+        "answer": "您可以随时在「Dashboard > 管理订阅」中通过账单门户（Stripe 或 Creem）自助取消订阅。如需协助，请联系 support@sdanceai.com。"
       },
       {
         "question": "是否有内容限制？",
@@ -400,12 +367,12 @@
   },
   "CTA": {
     "title": "准备好体验多模态 AI 视频创作了吗？",
-    "description": "加入数千名使用 Seedance 2.0 将愿景变为现实的创作者。参考万物，编辑万物，创造万物——仅需自然语言控制。",
+    "description": "使用 Seedance 2.0 将创意想法转化为视频，通过自然语言控制与灵活参考流程完成创作。",
     "button": "立即开始创作",
     "features": {
       "multimodal": "支持多模态输入",
       "watermark": "无水印下载",
-      "reference": "参考任何内容"
+      "reference": "灵活参考控制"
     }
   }
 }

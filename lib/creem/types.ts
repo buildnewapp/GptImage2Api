@@ -102,6 +102,15 @@ export interface CreemProduct extends BaseObject {
   default_success_url: string;
 }
 
+export interface CreemProductCreateParams {
+  name: string;
+  description: string;
+  price: number;
+  currency: string;
+  billing_type: 'recurring' | 'onetime';
+  billing_period?: 'every-month' | 'every-year';
+}
+
 // Checkout type
 export interface CreemCheckout extends BaseObject {
   object: 'checkout';
@@ -255,4 +264,3 @@ export type CreemWebhookEvent =
   | CreemSubscriptionTrialingEvent
   | CreemSubscriptionPausedEvent
   | CreemRefundCreatedEvent;
-

@@ -16,6 +16,10 @@
   "credits_refunded": "返金済み",
   "empty": "まだ動画生成の履歴がありません。トップページで最初の動画を作成しましょう！",
   "view_video": "動画を見る",
+  "make_public": "公開にする",
+  "make_private": "非公開にする",
+  "visibility_updated": "公開設定を更新しました",
+  "visibility_update_failed": "公開設定の更新に失敗しました",
   "load_error": "動画履歴の読み込みに失敗しました",
   "pagination": {
     "previous": "前へ",
@@ -27,5 +31,7 @@
     "all": "すべて",
     "status_filter": "ステータスで絞り込み",
     "model_filter": "モデルで絞り込み"
-  }
+  },
+  "download": "ダウンロード",
+  "copy": "コピー"
 }

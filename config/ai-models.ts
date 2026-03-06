@@ -119,7 +119,16 @@ export const IMAGE_MODELS: ImageModelConfig[] = [
   },
   // Google (special path via generateText + responseModalities)
   {
-    provider: "google", id: "gemini-3-pro-image-preview", name: "Gemini Image (Nano Banana)",
+    provider: "google", id: "gemini-3.1-flash-image-preview", name: "Nano Banana 2",
+    generationMethod: "gemini",
+    capabilities: {
+      imageToImage: true,
+      aspectRatios: ["1:1", "1:4", "1:8", "2:3", "3:2", "3:4", "4:1", "4:3", "4:5", "5:4", "8:1", "9:16", "16:9", "21:9"],
+      resolutions: ["512px", "1K", "2K", "4K"],
+    },
+  },
+  {
+    provider: "google", id: "gemini-3-pro-image-preview", name: "Nano Banana Pro",
     generationMethod: "gemini",
     capabilities: {
       imageToImage: true,

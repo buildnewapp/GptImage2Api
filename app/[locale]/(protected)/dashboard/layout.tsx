@@ -9,10 +9,12 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const showMemberSubscription = process.env.SHOW_MEMBER_SUBSCRIPTION === "true";
+
   return (
     <AuthGuard>
       <SidebarProvider>
-        <DashboardSidebar />
+        <DashboardSidebar showMemberSubscription={showMemberSubscription} />
         <SidebarInset className="min-w-0">
           <SidebarInsetHeader />
           <div className="flex flex-1 flex-col gap-4 p-4 pt-0 min-w-0">

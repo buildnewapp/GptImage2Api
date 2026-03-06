@@ -93,11 +93,11 @@ export default function HeroPromptCard({
     isLong && !expanded ? promptText.slice(0, 120) + "..." : promptText;
 
   return (
-    <div className="h-full flex flex-col group relative bg-white dark:bg-slate-800/80 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50">
+    <div className="h-full w-full min-w-0 max-w-full flex flex-col group relative bg-white dark:bg-slate-800/80 rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50">
       {/* Gradient accent top bar */}
       <div className="h-1 w-full bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 opacity-60 group-hover:opacity-100 transition-opacity duration-300 flex-shrink-0" />
 
-      <div className="flex-1 p-5 sm:p-6 overflow-y-auto custom-scrollbar">
+      <div className="flex-1 min-w-0 p-5 sm:p-6 overflow-y-auto custom-scrollbar">
         {/* Prompt text */}
         <div className="mb-4">
           <div className="flex items-start gap-2 mb-2">
@@ -106,7 +106,7 @@ export default function HeroPromptCard({
               {t("card.prompt")}
             </span>
           </div>
-          <p className="text-sm text-gray-700 dark:text-slate-300 leading-relaxed">
+          <p className="text-sm text-gray-700 dark:text-slate-300 leading-relaxed break-words [overflow-wrap:anywhere]">
             {displayText}
           </p>
           {isLong && (
@@ -159,7 +159,7 @@ export default function HeroPromptCard({
                 </div>
               )}
             </div>
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+            <div className="flex max-w-full gap-2 overflow-x-auto pb-2 scrollbar-hide">
               {promptCase.images.map((img, i) => (
                 <div key={`img-${i}`} className="flex-shrink-0 w-24 sm:w-28">
                   <MediaThumbnail

@@ -12,18 +12,17 @@
 
 import { getPublicPricingPlans } from "@/actions/prices/public";
 import { PricingCardDisplay } from "@/components/pricing/PricingCardDisplay";
-import FeatureBadge from "@/components/shared/FeatureBadge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DEFAULT_LOCALE } from "@/i18n/routing";
 import { pricingPlans as pricingPlansSchema } from "@/lib/db/schema";
 import { PricingPlanLangJsonb } from "@/types/pricing";
-import { Gift } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 
 type PricingPlan = typeof pricingPlansSchema.$inferSelect;
 
 export default async function PricingByGroup() {
-  const t = await getTranslations("Pricing");
+  const t = await getTranslations("Landing.Pricing");
 
   const locale = await getLocale();
 
@@ -41,27 +40,6 @@ export default async function PricingByGroup() {
   const monthlyPlans = allPlans.filter((plan) => plan.groupSlug === "monthly");
 
   const oneTimePlans = allPlans.filter((plan) => plan.groupSlug === "onetime");
-
-  // count the number of available plan types
-  const availablePlanTypes = [
-    monthlyPlans.length > 0,
-    annualPlans.length > 0,
-    oneTimePlans.length > 0,
-  ].filter(Boolean).length;
-
-  // dynamically generate the className for the grid columns
-  const getGridColsClass = (count: number) => {
-    switch (count) {
-      case 1:
-        return "grid-cols-1";
-      case 2:
-        return "grid-cols-2";
-      case 3:
-        return "grid-cols-3";
-      default:
-        return "grid-cols-1";
-    }
-  };
 
   // dynamically set the default value, priority: annual > monthly > one_time
   const getDefaultValue = () => {
@@ -91,7 +69,7 @@ export default async function PricingByGroup() {
             console.warn(
               `Missing localization for locale '${
                 locale || DEFAULT_LOCALE
-              }' for plan ID ${plan.id}`
+              }' for plan ID ${plan.id}`,
             );
             return null;
           }
@@ -102,6 +80,7 @@ export default async function PricingByGroup() {
               key={plan.id}
               plan={plan}
               localizedPlan={localizedPlan}
+              theme="seedance"
             />
           );
         })}
@@ -110,32 +89,34 @@ export default async function PricingByGroup() {
   };
 
   return (
-    <section id="pricing" className="py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      id="pricing"
+      className="py-20 dark:from-slate-900 dark:to-slate-950 relative overflow-hidden"
+    >
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 -right-40 w-96 h-96 bg-purple-400/5 dark:bg-purple-600/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 -left-40 w-96 h-96 bg-blue-400/5 dark:bg-blue-600/5 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
-          <FeatureBadge
-            label={t("badge.label")}
-            text={t("badge.text")}
-            className="mb-8"
-          />
-          <h2 className="text-center z-10 text-lg md:text-5xl font-sans font-semibold mb-4">
-            <span className="title-gradient">{t("title")}</span>
+          <div className="inline-flex items-center gap-2 border py-1.5 px-4 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold text-xs mb-6 tracking-wide uppercase">
+            <span>{t("badge")}</span>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-white">
+            {t("title")}
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+          <p className="text-lg text-gray-600 dark:text-slate-400 max-w-2xl mx-auto mb-8">
             {t("description")}
           </p>
         </div>
 
         <Tabs defaultValue={getDefaultValue()} className="w-full mx-auto">
-          <TabsList
-            className={`grid w-fit mx-auto ${getGridColsClass(
-              availablePlanTypes
-            )} h-12 p-1 bg-gray-100 dark:bg-gray-700 rounded-lg`}
-          >
+          <TabsList className="flex items-center justify-center p-1.5 bg-gray-100 dark:bg-slate-800 rounded-full w-fit max-w-full mx-auto overflow-x-auto">
             {monthlyPlans.length > 0 && (
               <TabsTrigger
                 value="monthly"
-                className="px-6 py-2 text-sm font-normal rounded-md data-[state=active]:bg-white data-[state=active]:shadow-xs dark:data-[state=active]:bg-gray-800 dark:text-gray-300 data-[state=active]:text-gray-900 dark:data-[state=active]:text-white"
+                className="px-4 md:px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700 data-[state=active]:text-gray-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm text-gray-500 dark:text-gray-400"
               >
                 {t("monthly")}
               </TabsTrigger>
@@ -143,13 +124,12 @@ export default async function PricingByGroup() {
             {annualPlans.length > 0 && (
               <TabsTrigger
                 value="annual"
-                className="px-6 py-2 text-sm font-normal rounded-md data-[state=active]:bg-white data-[state=active]:shadow-xs dark:data-[state=active]:bg-gray-800 dark:text-gray-300 data-[state=active]:text-gray-900 dark:data-[state=active]:text-white relative"
+                className="px-4 md:px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700 data-[state=active]:text-gray-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm text-gray-500 dark:text-gray-400"
               >
                 <span className="flex items-center gap-2">
-                  {t("annual")}
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary">
-                    <Gift className="w-4 h-4" />
-                    {t("saveTip")}
+                  {t("annually")}
+                  <span className="text-[10px] bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full font-bold">
+                    {t("discount")}
                   </span>
                 </span>
               </TabsTrigger>
@@ -157,24 +137,43 @@ export default async function PricingByGroup() {
             {oneTimePlans.length > 0 && (
               <TabsTrigger
                 value="one_time"
-                className="px-6 py-2 text-sm font-normal rounded-md data-[state=active]:bg-white data-[state=active]:shadow-xs dark:data-[state=active]:bg-gray-800 dark:text-gray-300 data-[state=active]:text-gray-900 dark:data-[state=active]:text-white"
+                className="px-4 md:px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700 data-[state=active]:text-gray-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm text-gray-500 dark:text-gray-400"
               >
                 {t("onetime")}
               </TabsTrigger>
             )}
           </TabsList>
+
           {monthlyPlans.length > 0 && (
-            <TabsContent value="monthly" className="mt-8">
+            <TabsContent value="monthly" className="mt-10">
               {renderPlans(monthlyPlans)}
             </TabsContent>
           )}
+
           {annualPlans.length > 0 && (
-            <TabsContent value="annual" className="mt-8">
+            <TabsContent value="annual" className="mt-10">
+              <div className="max-w-lg mx-auto mb-10 animate-in fade-in slide-in-from-top-4 duration-500">
+                <div className="bg-gradient-to-r from-orange-400 to-red-500 rounded-2xl p-1 shadow-lg transform -rotate-1 hover:rotate-0 transition-transform duration-300">
+                  <div className="bg-white dark:bg-slate-900 rounded-xl py-3 px-6 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Sparkles className="w-5 h-5 text-orange-500 animate-pulse" />
+                      <span className="font-bold text-gray-900 dark:text-white">
+                        {t("limitedOffer")}
+                      </span>
+                    </div>
+                    <span className="text-orange-500 font-bold">
+                      {t("saveOffer")}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
               {renderPlans(annualPlans)}
             </TabsContent>
           )}
+
           {oneTimePlans.length > 0 && (
-            <TabsContent value="one_time" className="mt-8">
+            <TabsContent value="one_time" className="mt-10">
               {renderPlans(oneTimePlans)}
             </TabsContent>
           )}

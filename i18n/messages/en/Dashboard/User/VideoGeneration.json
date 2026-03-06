@@ -16,6 +16,10 @@
   "credits_refunded": "Refunded",
   "empty": "No video generations yet. Go to the homepage to create your first video!",
   "view_video": "View Video",
+  "make_public": "Make Public",
+  "make_private": "Make Private",
+  "visibility_updated": "Visibility updated",
+  "visibility_update_failed": "Failed to update visibility",
   "load_error": "Failed to load video history",
   "pagination": {
     "previous": "Previous",
@@ -27,5 +31,7 @@
     "all": "All",
     "status_filter": "Filter by status",
     "model_filter": "Filter by model"
-  }
+  },
+  "download": "Download",
+  "copy": "Copy"
 }

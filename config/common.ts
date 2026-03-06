@@ -1,5 +1,6 @@
 export const BLOGS_IMAGE_PATH = "blog-images";
 export const GLOSSARY_IMAGE_PATH = "glossary-images";
+export const VIDEO_INPUT_IMAGE_PATH = "video-input-images";
 
 export const ADMIN_UPLOAD_IMAGE_PATH = "admin-uploaded-images";
 

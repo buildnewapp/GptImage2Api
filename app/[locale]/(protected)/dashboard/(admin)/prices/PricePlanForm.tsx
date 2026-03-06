@@ -1488,7 +1488,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                           placeholder={
                             isTranslating
                               ? "Translating..."
-                              : `{ "zh": { "cardTitle": "NEXTY.DEV 高级启动模板", ... }, "jp": { "cardTitle": "NEXTY.DEV 高級起動テンプレート", ... } }`
+                              : `{ "zh": { "cardTitle": "SdanceAI 专业版", ... }, "jp": { "cardTitle": "SdanceAI プロプラン", ... } }`
                           }
                           {...field}
                           value={field.value ?? ""}
