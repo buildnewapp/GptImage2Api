@@ -33,6 +33,9 @@ export default getRequestConfig(async ({ requestLocale }) => {
       DashboardUserReferrals: (
         await import(`./messages/${locale}/Dashboard/User/Referrals.json`)
       ).default,
+      DashboardUserTasks: (
+        await import(`./messages/${locale}/Dashboard/User/Tasks.json`)
+      ).default,
       VideoGeneration: (
         await import(`./messages/${locale}/Dashboard/User/VideoGeneration.json`)
       ).default,

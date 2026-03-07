@@ -1,0 +1,105 @@
+{
+  "meta": {
+    "title": "任务中心",
+    "description": "完成简单任务并领取额外积分。"
+  },
+  "title": "任务中心",
+  "description": "完成简单任务，领取额外积分和邀请奖励。",
+  "summary": {
+    "badge": "任务进度",
+    "title": "完成任务，继续领取积分",
+    "subtitle": "每天回来看看，完成任务后即可领取额外积分。",
+    "readyCredits": "可立即领取",
+    "readyCreditsHint": "满足条件后即可领取",
+    "completedTasks": "已完成任务",
+    "completedTasksHint": "完成越多，奖励越多",
+    "creditValue": "{credits} 积分",
+    "progressLabel": "当前进度",
+    "completedValue": "已完成 {completed} / {total} 项",
+    "progressValue": "当前还有 {claimableCredits} 积分可领取",
+    "progressPercent": "完成率"
+  },
+  "progressValue": "{current} / {required}",
+  "status": {
+    "claimable": "可领取",
+    "claimed": "已领取",
+    "incomplete": "未完成",
+    "done": "已完成",
+    "readyToCheck": "可检查"
+  },
+  "actions": {
+    "claim": "领取积分",
+    "claimed": "已领取",
+    "goComplete": "去完成",
+    "goCreate": "去创建",
+    "goPurchase": "去购买",
+    "inviteNow": "去邀请",
+    "viewReferral": "查看邀请",
+    "start": "开始",
+    "check": "Check"
+  },
+  "tasks": {
+    "daily_checkin": {
+      "title": "每日签到",
+      "description": "每天回来一次，领取当日签到积分。"
+    },
+    "checkin_3_days": {
+      "title": "连续签到 3 天",
+      "description": "连续 3 天完成每日签到后，可领取额外奖励。"
+    },
+    "first_public_generation": {
+      "title": "首次生成公开作品",
+      "description": "首次生成 1 个成功并公开的作品，即可领取这个一次性奖励。"
+    },
+    "first_purchase": {
+      "title": "首次购买积分包 / 订阅",
+      "description": "首次成功购买积分包或订阅后，可领取额外积分奖励。"
+    },
+    "invite_signup": {
+      "title": "邀请 1 位好友注册",
+      "description": "每邀请 1 位好友注册，可得 {signupCredit} 积分；好友首购后，你还可获得 {firstOrderReward} 返现奖励。"
+    },
+    "invite_first_purchase": {
+      "title": "好友完成首次付费",
+      "description": "任意 1 位你邀请的好友完成首次付费后，你可按现有邀请返现规则获得奖励。"
+    },
+    "github_star": {
+      "title": "GitHub Star 项目",
+      "description": "前往 GitHub 为项目点亮 Star，返回后点击 Check 领取奖励。"
+    },
+    "huggingface_like": {
+      "title": "Hugging Face Like Space",
+      "description": "前往 Hugging Face 为 Space 点赞，返回后点击 Check 领取奖励。"
+    }
+  },
+  "faq": {
+    "eyebrow": "常见问题",
+    "title": "先看这几个问题"
+  },
+  "quickLinks": {
+    "eyebrow": "常用入口",
+    "title": "快速前往",
+    "items": {
+      "topUp": {
+        "title": "余额不够用了？",
+        "description": "去订阅或充值获取更多积分"
+      },
+      "creditHistory": {
+        "title": "钱花到哪里去了？",
+        "description": "查看积分使用明细"
+      },
+      "referrals": {
+        "title": "还能免费拿积分？",
+        "description": "去邀请中心分享你的邀请码"
+      }
+    }
+  },
+  "toast": {
+    "claimed": "已领取 {credits} 积分。",
+    "alreadyClaimed": "该奖励已经领取过了。",
+    "notCompleted": "任务条件还未完成。",
+    "syncing": "数据同步中，请稍后再试。",
+    "externalStarted": "已为你打开页面，完成后回来点击 Check。",
+    "claimFailed": "领取任务奖励失败。"
+  }
+}

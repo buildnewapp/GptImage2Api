@@ -83,6 +83,11 @@
         "icon": "Gift"
       },
       {
+        "name": "任务中心",
+        "href": "/dashboard/tasks",
+        "icon": "ListTodo"
+      },
+      {
         "name": "个人设置",
         "href": "/dashboard/settings",
         "icon": "Settings"

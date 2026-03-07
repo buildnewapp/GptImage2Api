@@ -83,6 +83,11 @@
         "icon": "Gift"
       },
       {
+        "name": "Task Center",
+        "href": "/dashboard/tasks",
+        "icon": "ListTodo"
+      },
+      {
         "name": "Settings",
         "href": "/dashboard/settings",
         "icon": "Settings"
