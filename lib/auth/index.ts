@@ -6,6 +6,7 @@ import OTPCodeEmail from '@/emails/otp-code-email';
 import { UserWelcomeEmail } from "@/emails/user-welcome";
 import { getDb } from '@/lib/db';
 import { account, session, user, verification } from "@/lib/db/schema";
+import { resolveSocialProviders } from "@/lib/auth/social-providers";
 import {
   buildUserSourceData,
   parseTrackingCookie,
@@ -73,16 +74,7 @@ function createAuthConfig(databaseInstance: ReturnType<typeof getDb>): BetterAut
       provider: "pg",
       schema: { user, session, account, verification },
     }),
-    socialProviders: {
-      github: {
-        clientId: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID!,
-        clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-      },
-      google: {
-        clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      },
-    },
+    socialProviders: resolveSocialProviders(process.env),
     databaseHooks: {
       user: {
         create: {
