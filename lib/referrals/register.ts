@@ -1,4 +1,4 @@
-import { referralConfig } from "@/config/referral";
+import { referralConfig, resolveReferralSignupCreditAmount } from "@/config/referral";
 import { getDb } from "@/lib/db";
 import {
   creditLogs as creditLogsSchema,
@@ -132,7 +132,7 @@ export async function acceptConfiguredReferralInvite(
       store,
       inviteeUserId,
       inviteCode,
-      signupCreditAmount: referralConfig.signupInviteCredit,
+      signupCreditAmount: resolveReferralSignupCreditAmount(referralConfig),
     });
   });
 }

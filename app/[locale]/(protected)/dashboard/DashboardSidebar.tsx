@@ -16,6 +16,7 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { referralConfig } from "@/config/referral";
 import { Link as I18nLink, usePathname } from "@/i18n/routing";
 import { authClient } from "@/lib/auth/auth-client";
 import { useTranslations } from "next-intl";
@@ -44,6 +45,9 @@ export function DashboardSidebar({ showMemberSubscription }: DashboardSidebarPro
   const filteredUserMenus = showMemberSubscription
     ? userMenus
     : userMenus.filter((menu) => menu.href !== "/dashboard/subscription");
+  const visibleUserMenus = referralConfig.enabled
+    ? filteredUserMenus
+    : filteredUserMenus.filter((menu) => menu.href !== "/dashboard/referrals");
 
   const isActive = (href: string) => pathname === href;
 
@@ -75,7 +79,7 @@ export function DashboardSidebar({ showMemberSubscription }: DashboardSidebarPro
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {filteredUserMenus.map((menu) => (
+              {visibleUserMenus.map((menu) => (
                 <SidebarMenuItem key={menu.href}>
                   <SidebarMenuButton asChild isActive={isActive(menu.href)}>
                     <I18nLink

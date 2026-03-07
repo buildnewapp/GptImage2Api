@@ -139,3 +139,28 @@ test("skips when the order is not the first paid order or reward already exists"
   assert.equal(duplicate.status, "reward_exists");
   assert.equal(store.createdRewards.length, 0);
 });
+
+test("skips first-order cash rewards when referral rewards are disabled", async () => {
+  const store = new FakeFirstOrderRewardStore();
+  store.inviteeProfile = {
+    inviterUserId: "inviter-1",
+    createdAt: new Date("2026-03-01T00:00:00.000Z"),
+  };
+
+  const result = await grantFirstOrderRewardIfEligible({
+    store,
+    inviteeUserId: "invitee-1",
+    sourceOrderId: "order-1",
+    orderAmountUsd: 120,
+    paidAt: new Date("2026-03-20T00:00:00.000Z"),
+    qualificationDays: 30,
+    rewardMode: "fixed",
+    fixedUsd: 5,
+    percent: 10,
+    lockDays: 30,
+    rewardsEnabled: false,
+  });
+
+  assert.equal(result.status, "disabled");
+  assert.equal(store.createdRewards.length, 0);
+});

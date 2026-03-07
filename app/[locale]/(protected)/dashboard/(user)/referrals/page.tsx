@@ -1,3 +1,4 @@
+import { referralConfig } from "@/config/referral";
 import { getReferralDashboardData } from "@/actions/referrals/user";
 import { constructMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
@@ -29,6 +30,10 @@ export async function generateMetadata({
 }
 
 export default async function ReferralsPage() {
+  if (!referralConfig.enabled) {
+    redirect("/dashboard/settings");
+  }
+
   const result = await getReferralDashboardData();
   if (!result.success || !result.data) {
     redirect("/dashboard/settings");

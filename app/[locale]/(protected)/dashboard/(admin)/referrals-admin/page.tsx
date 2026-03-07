@@ -1,4 +1,5 @@
 import { getReferralAdminOverview } from "@/actions/referrals/admin";
+import { referralConfig } from "@/config/referral";
 import { constructMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
 import type { Locale } from "next-intl";
@@ -28,6 +29,17 @@ export async function generateMetadata({
 }
 
 export default async function AdminReferralsPage() {
+  if (!referralConfig.enabled) {
+    const t = await getTranslations("AdminReferrals");
+
+    return (
+      <div className="space-y-2">
+        <h1 className="text-2xl font-semibold">{t("title")}</h1>
+        <p className="text-muted-foreground">{t("disabled.description")}</p>
+      </div>
+    );
+  }
+
   const result = await getReferralAdminOverview();
 
   if (!result.success || !result.data) {

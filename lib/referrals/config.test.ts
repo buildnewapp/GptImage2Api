@@ -4,6 +4,8 @@ import test from "node:test";
 import {
   calculateFirstOrderCashReward,
   referralConfig,
+  resolveReferralSignupCreditAmount,
+  shouldEnableReferralRewards,
 } from "@/config/referral";
 
 test("returns configured fixed cash reward when reward mode is fixed", () => {
@@ -33,4 +35,26 @@ test("exposes qualification and lock periods from referral config", () => {
   assert.equal(referralConfig.cashRewardLockDays, 30);
   assert.equal(referralConfig.inviteCodeMinLength, 4);
   assert.equal(referralConfig.inviteCodePostCreationChangeLimit, 1);
+});
+
+test("disables referral rewards when enabled is false", () => {
+  assert.equal(shouldEnableReferralRewards({ enabled: false }), false);
+  assert.equal(
+    resolveReferralSignupCreditAmount({
+      enabled: false,
+      signupInviteCredit: 100,
+    }),
+    0
+  );
+});
+
+test("keeps configured signup credits when referral rewards are enabled", () => {
+  assert.equal(shouldEnableReferralRewards({ enabled: true }), true);
+  assert.equal(
+    resolveReferralSignupCreditAmount({
+      enabled: true,
+      signupInviteCredit: 100,
+    }),
+    100
+  );
 });

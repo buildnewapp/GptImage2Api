@@ -41,6 +41,9 @@
     "loadData": "加载邀请后台数据失败。",
     "loadOverview": "刷新概览失败。"
   },
+  "disabled": {
+    "description": "邀请奖励当前未启用。系统仍会记录邀请关系，但不会发放邀请奖励，也不能申请提现。"
+  },
   "invites": {
     "title": "邀请关系",
     "description": "查看每个注册用户的邀请来源。",

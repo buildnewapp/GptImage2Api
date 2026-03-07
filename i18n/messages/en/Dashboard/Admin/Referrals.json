@@ -41,6 +41,9 @@
     "loadData": "Failed to load referral admin data.",
     "loadOverview": "Failed to refresh overview."
   },
+  "disabled": {
+    "description": "Referral rewards are disabled. Invite relationships can still be captured, but no referral rewards or withdrawals are available."
+  },
   "invites": {
     "title": "Invite Relationships",
     "description": "Track which users invited each signup.",

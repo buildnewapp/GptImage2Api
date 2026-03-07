@@ -40,9 +40,11 @@ interface GrantFirstOrderRewardIfEligibleParams {
   fixedUsd: number;
   percent: number;
   lockDays: number;
+  rewardsEnabled?: boolean;
 }
 
 type FirstOrderRewardStatus =
+  | "disabled"
   | "missing_invitee"
   | "not_invited"
   | "reward_exists"
@@ -61,7 +63,12 @@ export async function grantFirstOrderRewardIfEligible({
   fixedUsd,
   percent,
   lockDays,
+  rewardsEnabled = true,
 }: GrantFirstOrderRewardIfEligibleParams): Promise<{ status: FirstOrderRewardStatus }> {
+  if (!rewardsEnabled) {
+    return { status: "disabled" };
+  }
+
   const inviteeProfile = await store.getInviteeProfile(inviteeUserId);
   if (!inviteeProfile) {
     return { status: "missing_invitee" };
@@ -139,6 +146,7 @@ export async function grantConfiguredFirstOrderReward(input: {
       fixedUsd: referralConfig.firstOrderRewardFixedUsd,
       percent: referralConfig.firstOrderRewardPercent,
       lockDays: referralConfig.cashRewardLockDays,
+      rewardsEnabled: referralConfig.enabled,
     });
   });
 }

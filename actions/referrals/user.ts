@@ -66,6 +66,10 @@ export interface ReferralDashboardData {
 export async function getReferralDashboardData(): Promise<
   ActionResult<ReferralDashboardData>
 > {
+  if (!referralConfig.enabled) {
+    return actionResponse.forbidden("Referral rewards are currently disabled.");
+  }
+
   const session = await getSession();
   const user = session?.user;
   if (!user) return actionResponse.unauthorized();
@@ -240,6 +244,10 @@ export async function saveReferralInviteCodeAction(
 export async function createReferralWithdrawalRequestAction(): Promise<
   ActionResult<{ message: string }>
 > {
+  if (!referralConfig.enabled) {
+    return actionResponse.error("Referral rewards are currently disabled.");
+  }
+
   const session = await getSession();
   const user = session?.user;
   if (!user) return actionResponse.unauthorized();
