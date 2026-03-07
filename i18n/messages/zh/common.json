@@ -146,6 +146,15 @@
       }
     ]
   },
+  "ClientAuth": {
+    "title": "授权登录",
+    "description": "登录后，你可以返回刚才的应用继续操作。",
+    "loading": "正在完成登录，请稍候…",
+    "successTitle": "登录成功，请关闭此页面",
+    "successDescription": "你现在可以返回刚才的应用，继续后续操作。",
+    "errorTitle": "暂时无法完成授权",
+    "errorDescription": "请返回刚才的应用并重新发起登录。"
+  },
   "Blogs": {
     "title": "博客列表",
     "description": "分享 AI 视频创作经验、产品更新与创作者实战内容。",

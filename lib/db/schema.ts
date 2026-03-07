@@ -424,6 +424,33 @@ export const taskRewardClaims = pgTable(
   }),
 );
 
+export const cacheDb = pgTable(
+  "cache_db",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    namespace: varchar("namespace", { length: 80 }).notNull(),
+    cacheKey: varchar("cache_key", { length: 128 }).notNull(),
+    valueJsonb: jsonb("value_jsonb").notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    consumedAt: timestamp("consumed_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    namespaceCacheKeyUnique: unique("cache_db_namespace_cache_key_unique").on(
+      table.namespace,
+      table.cacheKey,
+    ),
+    expiresAtIdx: index("idx_cache_db_expires_at").on(table.expiresAt),
+    consumedAtIdx: index("idx_cache_db_consumed_at").on(table.consumedAt),
+  }),
+);
+
 export const referralInviteStatusEnum = pgEnum("referral_invite_status", [
   "registered",
   "qualified_first_order",

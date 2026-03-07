@@ -17,11 +17,15 @@ import { toast } from "sonner";
 
 interface LoginFormProps {
   className?: string;
+  callbackUrl?: string;
 }
 
 type LoginMode = "otp" | "magic-link";
 
-export default function LoginForm({ className = "" }: LoginFormProps) {
+export default function LoginForm({
+  className = "",
+  callbackUrl,
+}: LoginFormProps) {
   const t = useTranslations("Login");
   const locale = useLocale();
 
@@ -64,6 +68,10 @@ export default function LoginForm({ className = "" }: LoginFormProps) {
   }, [countdown]);
 
   const getCallbackUrl = () => {
+    if (callbackUrl) {
+      return callbackUrl;
+    }
+
     return new URL(
       next || locale === DEFAULT_LOCALE ? "" : `/${locale}`,
       window.location.origin

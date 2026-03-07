@@ -204,6 +204,13 @@
       "when": 1772871599359,
       "tag": "0028_flippant_retro_girl",
       "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1772890110071,
+      "tag": "0029_right_franklin_storm",
+      "breakpoints": true
     }
   ]
 }

@@ -146,6 +146,15 @@
       }
     ]
   },
+  "ClientAuth": {
+    "title": "Sign in to continue",
+    "description": "After signing in, you can return to the app you just came from.",
+    "loading": "Finishing sign-in. Please wait…",
+    "successTitle": "Sign-in successful. You can close this page.",
+    "successDescription": "You can now return to the app and continue.",
+    "errorTitle": "We couldn't complete the sign-in",
+    "errorDescription": "Please return to the app and start the sign-in again."
+  },
   "Blogs": {
     "title": "Blog Posts",
     "description": "Insights on AI video creation, product updates, and creator workflows.",
