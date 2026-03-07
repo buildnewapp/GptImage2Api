@@ -10,6 +10,8 @@ import MicrosoftClarity from "@/components/tracking/MicrosoftClarity";
 import PlausibleAnalytics from "@/components/tracking/PlausibleAnalytics";
 import PostHogPageView from "@/components/tracking/PostHogPageView";
 import PostHogProvider from "@/components/tracking/PostHogProvider";
+import ReferralAutoAccept from "@/components/tracking/ReferralAutoAccept";
+import ReferralCapture from "@/components/tracking/ReferralCapture";
 import RybbitScript from "@/components/tracking/RybbitScript";
 import ToltScript from "@/components/tracking/ToltScript";
 import UmamiScript from "@/components/tracking/UmamiScript";
@@ -96,6 +98,8 @@ export default async function LocaleLayout({
             enableSystem
           >
             <PostHogProvider>
+              <ReferralCapture />
+              <ReferralAutoAccept />
               {messages.LanguageDetection && <LanguageDetectionAlert />}
 
               {children}

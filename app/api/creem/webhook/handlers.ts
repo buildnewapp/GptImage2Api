@@ -15,6 +15,9 @@ import {
   pricingPlans as pricingPlansSchema, subscriptions as subscriptionsSchema
 } from '@/lib/db/schema';
 import {
+  grantConfiguredFirstOrderReward,
+} from '@/lib/referrals/first-order';
+import {
   revokeOneTimeCredits,
   revokeRemainingSubscriptionCreditsOnEnd,
   revokeSubscriptionCredits,
@@ -98,6 +101,11 @@ export async function handleCreemPaymentSucceeded(
   try {
     // --- [custom] Upgrade the user's benefits---
     await upgradeOneTimeCredits(userId, planId, insertedOrder.id);
+    await grantConfiguredFirstOrderReward({
+      inviteeUserId: userId,
+      sourceOrderId: insertedOrder.id,
+      orderAmountUsd: Number(orderData.amountTotal ?? 0),
+    });
     // --- End: [custom] Upgrade the user's benefits ---
   } catch (error) {
     console.error(
@@ -195,6 +203,11 @@ export async function handleCreemInvoicePaid(
       insertedOrder.id,
       lastTransaction.period_start
     );
+    await grantConfiguredFirstOrderReward({
+      inviteeUserId: userId,
+      sourceOrderId: insertedOrder.id,
+      orderAmountUsd: Number(orderData.amountTotal ?? 0),
+    });
     // --- End: [custom] Upgrade the user's benefits ---
   } catch (error) {
     console.error(

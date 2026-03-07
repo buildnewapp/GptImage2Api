@@ -12,6 +12,7 @@
   "type_one_time_purchase": "购买积分",
   "type_subscription_grant": "订阅授予",
   "type_welcome_bonus": "注册赠送",
+  "type_referral_signup_bonus": "邀请注册奖励",
   "type_feature_usage": "功能使用",
   "type_refund_revoke": "退款回收",
   "type_subscription_ended_revoke": "订阅积分过期"

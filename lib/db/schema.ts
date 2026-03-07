@@ -1,4 +1,5 @@
 import {
+  type AnyPgColumn,
   boolean,
   index,
   integer,
@@ -25,6 +26,14 @@ export const user = pgTable('user', {
   role: userRoleEnum('role').default('user').notNull(),
   isAnonymous: boolean('is_anonymous').default(false).notNull(),
   referral: text('referral'),
+  inviteCode: text('invite_code').unique(),
+  invitedByUserId: uuid('invited_by_user_id').references((): AnyPgColumn => user.id, {
+    onDelete: 'set null',
+  }),
+  inviteCodeChangeCount: integer('invite_code_change_count').default(0).notNull(),
+  inviteCodeUpdatedAt: timestamp('invite_code_updated_at', {
+    withTimezone: true,
+  }),
   stripeCustomerId: text("stripe_customer_id").unique(),
   banned: boolean('banned'),
   banReason: text('ban_reason'),
@@ -364,6 +373,160 @@ export const creditLogs = pgTable(
       ),
     }
   }
+)
+
+export const referralInviteStatusEnum = pgEnum('referral_invite_status', [
+  'registered',
+  'qualified_first_order',
+  'expired',
+  'rewarded',
+])
+
+export const referralRewardTypeEnum = pgEnum('referral_reward_type', [
+  'signup_credit',
+  'first_order_cash',
+])
+
+export const referralRewardStatusEnum = pgEnum('referral_reward_status', [
+  'granted',
+  'locked',
+  'claimable',
+  'pending_withdraw',
+  'paid',
+  'revoked',
+  'rejected',
+])
+
+export const referralWithdrawStatusEnum = pgEnum('referral_withdraw_status', [
+  'pending',
+  'approved',
+  'paid',
+  'rejected',
+])
+
+export const referralInvites = pgTable(
+  'referral_invites',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    inviterUserId: uuid('inviter_user_id')
+      .references(() => user.id, { onDelete: 'cascade' })
+      .notNull(),
+    inviteeUserId: uuid('invitee_user_id')
+      .references(() => user.id, { onDelete: 'cascade' })
+      .notNull()
+      .unique(),
+    inviteCodeSnapshot: text('invite_code_snapshot').notNull(),
+    inviteLinkSnapshot: text('invite_link_snapshot'),
+    status: referralInviteStatusEnum('status').default('registered').notNull(),
+    registeredAt: timestamp('registered_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    qualifiedOrderId: uuid('qualified_order_id').references(() => orders.id, {
+      onDelete: 'set null',
+    }),
+    qualifiedAt: timestamp('qualified_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    inviterUserIdIdx: index('idx_referral_invites_inviter_user_id').on(
+      table.inviterUserId
+    ),
+    inviteeUserIdIdx: index('idx_referral_invites_invitee_user_id').on(
+      table.inviteeUserId
+    ),
+    statusIdx: index('idx_referral_invites_status').on(table.status),
+  })
+)
+
+export const referralRewards = pgTable(
+  'referral_rewards',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    inviterUserId: uuid('inviter_user_id')
+      .references(() => user.id, { onDelete: 'cascade' })
+      .notNull(),
+    inviteeUserId: uuid('invitee_user_id')
+      .references(() => user.id, { onDelete: 'cascade' })
+      .notNull(),
+    referralInviteId: uuid('referral_invite_id')
+      .references(() => referralInvites.id, { onDelete: 'set null' }),
+    sourceOrderId: uuid('source_order_id').references(() => orders.id, {
+      onDelete: 'set null',
+    }),
+    rewardType: referralRewardTypeEnum('reward_type').notNull(),
+    status: referralRewardStatusEnum('status').notNull(),
+    creditAmount: integer('credit_amount'),
+    cashAmountUsd: numeric('cash_amount_usd', { precision: 10, scale: 2 }),
+    cashPercentSnapshot: numeric('cash_percent_snapshot', {
+      precision: 8,
+      scale: 2,
+    }),
+    rewardConfigSnapshot: jsonb('reward_config_snapshot').default('{}').notNull(),
+    withdrawRequestId: uuid('withdraw_request_id').references(
+      (): AnyPgColumn => referralWithdrawRequests.id,
+      { onDelete: 'set null' }
+    ),
+    availableAt: timestamp('available_at', { withTimezone: true }),
+    grantedAt: timestamp('granted_at', { withTimezone: true }),
+    claimedAt: timestamp('claimed_at', { withTimezone: true }),
+    notes: text('notes'),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    inviterUserIdIdx: index('idx_referral_rewards_inviter_user_id').on(
+      table.inviterUserId
+    ),
+    inviteeUserIdIdx: index('idx_referral_rewards_invitee_user_id').on(
+      table.inviteeUserId
+    ),
+    rewardTypeIdx: index('idx_referral_rewards_reward_type').on(
+      table.rewardType
+    ),
+    statusIdx: index('idx_referral_rewards_status').on(table.status),
+    sourceOrderIdIdx: index('idx_referral_rewards_source_order_id').on(
+      table.sourceOrderId
+    ),
+  })
+)
+
+export const referralWithdrawRequests = pgTable(
+  'referral_withdraw_requests',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .references(() => user.id, { onDelete: 'cascade' })
+      .notNull(),
+    amountUsd: numeric('amount_usd', { precision: 10, scale: 2 }).notNull(),
+    status: referralWithdrawStatusEnum('status').default('pending').notNull(),
+    notes: text('notes'),
+    requestedAt: timestamp('requested_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    processedAt: timestamp('processed_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    userIdIdx: index('idx_referral_withdraw_requests_user_id').on(table.userId),
+    statusIdx: index('idx_referral_withdraw_requests_status').on(table.status),
+  })
 )
 
 export const postTypeEnum = pgEnum('post_type', [

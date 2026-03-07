@@ -12,6 +12,7 @@
   "type_one_time_purchase": "クレジット購入",
   "type_subscription_grant": "サブスク付与",
   "type_welcome_bonus": "登録特典",
+  "type_referral_signup_bonus": "招待登録特典",
   "type_feature_usage": "機能使用",
   "type_refund_revoke": "返金取消",
   "type_subscription_ended_revoke": "サブスクリプションクレジット期限切れ"

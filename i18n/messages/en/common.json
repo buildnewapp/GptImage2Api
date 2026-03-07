@@ -78,6 +78,11 @@
         "icon": "Coins"
       },
       {
+        "name": "Referrals",
+        "href": "/dashboard/referrals",
+        "icon": "Gift"
+      },
+      {
         "name": "Settings",
         "href": "/dashboard/settings",
         "icon": "Settings"
@@ -103,6 +108,11 @@
         "name": "Orders",
         "href": "/dashboard/orders",
         "icon": "ShoppingCart"
+      },
+      {
+        "name": "Referrals",
+        "href": "/dashboard/referrals-admin",
+        "icon": "Gift"
       },
       {
         "name": "Prices",

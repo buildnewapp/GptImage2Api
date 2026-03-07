@@ -78,6 +78,11 @@
         "icon": "Coins"
       },
       {
+        "name": "邀请中心",
+        "href": "/dashboard/referrals",
+        "icon": "Gift"
+      },
+      {
         "name": "个人设置",
         "href": "/dashboard/settings",
         "icon": "Settings"
@@ -103,6 +108,11 @@
         "name": "订单管理",
         "href": "/dashboard/orders",
         "icon": "ShoppingCart"
+      },
+      {
+        "name": "邀请管理",
+        "href": "/dashboard/referrals-admin",
+        "icon": "Gift"
       },
       {
         "name": "定价管理",

@@ -12,6 +12,7 @@
   "type_one_time_purchase": "Credit Purchase",
   "type_subscription_grant": "Subscription Grant",
   "type_welcome_bonus": "Welcome Bonus",
+  "type_referral_signup_bonus": "Referral Signup Bonus",
   "type_feature_usage": "Feature Usage",
   "type_refund_revoke": "Refund Revoke",
   "type_subscription_ended_revoke": "Subscription Ended Revoke"

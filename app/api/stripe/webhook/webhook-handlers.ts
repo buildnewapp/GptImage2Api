@@ -12,6 +12,9 @@ import {
   user as userSchema,
 } from '@/lib/db/schema';
 import {
+  grantConfiguredFirstOrderReward,
+} from '@/lib/referrals/first-order';
+import {
   revokeOneTimeCredits,
   revokeRemainingSubscriptionCreditsOnEnd,
   revokeSubscriptionCredits,
@@ -98,6 +101,11 @@ export async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Se
     const orderId = insertedOrder.id;
     try {
       await upgradeOneTimeCredits(userId, planId, orderId);
+      await grantConfiguredFirstOrderReward({
+        inviteeUserId: userId,
+        sourceOrderId: orderId,
+        orderAmountUsd: Number(orderData.amountTotal ?? 0),
+      });
     } catch (error) {
       console.error(`CRITICAL: Failed to upgrade one-time credits for user ${userId}, order ${orderId}:`, error);
       await sendCreditUpgradeFailedEmail({ userId, orderId, planId, error });
@@ -247,6 +255,11 @@ export async function handleInvoicePaid(invoice: Stripe.Invoice) {
       try {
         const currentPeriodStart = subscription.items.data[0].current_period_start * 1000;
         await upgradeSubscriptionCredits(userId, planId, orderId, currentPeriodStart);
+        await grantConfiguredFirstOrderReward({
+          inviteeUserId: userId,
+          sourceOrderId: orderId,
+          orderAmountUsd: Number(orderData.amountTotal ?? 0),
+        });
       } catch (error) {
         console.error(`CRITICAL: Failed to upgrade subscription credits for user ${userId}, order ${orderId}:`, error);
         await sendCreditUpgradeFailedEmail({ userId, orderId, planId, error });

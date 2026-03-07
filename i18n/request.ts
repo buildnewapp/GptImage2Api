@@ -30,6 +30,9 @@ export default getRequestConfig(async ({ requestLocale }) => {
       ApiKeys: (
         await import(`./messages/${locale}/Dashboard/User/ApiKeys.json`)
       ).default,
+      DashboardUserReferrals: (
+        await import(`./messages/${locale}/Dashboard/User/Referrals.json`)
+      ).default,
       VideoGeneration: (
         await import(`./messages/${locale}/Dashboard/User/VideoGeneration.json`)
       ).default,
@@ -51,6 +54,9 @@ export default getRequestConfig(async ({ requestLocale }) => {
       ).default,
       Orders: (await import(`./messages/${locale}/Dashboard/Admin/Orders.json`))
         .default,
+      AdminReferrals: (
+        await import(`./messages/${locale}/Dashboard/Admin/Referrals.json`)
+      ).default,
       R2Files: (
         await import(`./messages/${locale}/Dashboard/Admin/R2Files.json`)
       ).default,
