@@ -75,7 +75,7 @@ export function DashboardSidebar({ showMemberSubscription }: DashboardSidebarPro
         </I18nLink>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className={"overflow-hidden"}>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
