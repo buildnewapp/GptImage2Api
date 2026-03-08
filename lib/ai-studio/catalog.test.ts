@@ -165,3 +165,155 @@ test("matches official pricing rows onto a catalog entry using model aliases", (
   assert.equal(matches.length, 1);
   assert.equal(matches[0]?.creditPrice, "18");
 });
+
+test("narrows sora pricing rows to the same model family and mode", () => {
+  const matches = matchPricingRowsToEntry(
+    {
+      category: "video",
+      title: "Sora2 - Text to Video",
+      provider: "Sora2",
+      docUrl: "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
+      modelKeys: ["sora-2-text-to-video"],
+    },
+    [
+      {
+        modelDescription: "Open AI sora 2, text-to-video, stable-15.0s",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "40",
+        creditUnit: "per video",
+        usdPrice: "0.2",
+        falPrice: "1.0",
+        discountRate: 80,
+        anchor: "https://kie.ai/sora-2?model=sora-2-text-to-video-stable",
+        discountPrice: false,
+      },
+      {
+        modelDescription: "Open AI sora 2, text-to-video, Standard-10.0s",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "30",
+        creditUnit: "per video",
+        usdPrice: "0.15",
+        falPrice: "1.0",
+        discountRate: 85,
+        anchor: "https://kie.ai/sora-2?model=sora-2-text-to-video",
+        discountPrice: false,
+      },
+      {
+        modelDescription: "Open AI sora 2, image-to-video, stable-10.0s",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "35",
+        creditUnit: "per video",
+        usdPrice: "0.175",
+        falPrice: "1.0",
+        discountRate: 82.5,
+        anchor: "https://kie.ai/sora-2?model=sora-2-image-to-video-stable",
+        discountPrice: false,
+      },
+      {
+        modelDescription: "Open AI sora 2 pro, text-to-video, Pro High-10.0s",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "330",
+        creditUnit: "per video",
+        usdPrice: "1.65",
+        falPrice: "5.0",
+        discountRate: 67,
+        anchor: "https://kie.ai/sora-2-pro?model=sora-2-pro-text-to-video",
+        discountPrice: false,
+      },
+      {
+        modelDescription: "Open AI sora 2-watermark-remover",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "10",
+        creditUnit: "per removal",
+        usdPrice: "0.05",
+        falPrice: "",
+        discountRate: 0,
+        anchor: "https://kie.ai/sora-2?model=sora-watermark-remover",
+        discountPrice: false,
+      },
+    ],
+  );
+
+  assert.deepEqual(
+    matches.map((row) => row.modelDescription).sort(),
+    [
+      "Open AI sora 2, text-to-video, Standard-10.0s",
+      "Open AI sora 2, text-to-video, stable-15.0s",
+    ].sort(),
+  );
+});
+
+test("narrows sora pricing rows from catalog seed data using the doc slug", () => {
+  const matches = matchPricingRowsToEntry(
+    {
+      category: "video",
+      title: "Sora2 - Text to Video",
+      provider: "Sora2",
+      docUrl: "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
+    },
+    [
+      {
+        modelDescription: "Open AI sora 2, text-to-video, stable-15.0s",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "40",
+        creditUnit: "per video",
+        usdPrice: "0.2",
+        falPrice: "1.0",
+        discountRate: 80,
+        anchor: "https://kie.ai/sora-2?model=sora-2-text-to-video-stable",
+        discountPrice: false,
+      },
+      {
+        modelDescription: "Open AI sora 2, image-to-video, stable-10.0s",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "35",
+        creditUnit: "per video",
+        usdPrice: "0.175",
+        falPrice: "1.0",
+        discountRate: 82.5,
+        anchor: "https://kie.ai/sora-2?model=sora-2-image-to-video-stable",
+        discountPrice: false,
+      },
+    ],
+  );
+
+  assert.deepEqual(
+    matches.map((row) => row.modelDescription),
+    ["Open AI sora 2, text-to-video, stable-15.0s"],
+  );
+});
+
+test("keeps pricing rows for generic docs that do not expose a specific model enum", () => {
+  const matches = matchPricingRowsToEntry(
+    {
+      category: "video",
+      title: "Generate AI Video",
+      provider: "Runway API",
+      docUrl: "https://docs.kie.ai/runway-api/generate-ai-video.md",
+      modelKeys: ["api"],
+    },
+    [
+      {
+        modelDescription: "Runway, text-to-video, 5.0s-720p",
+        interfaceType: "video",
+        provider: "Runway",
+        creditPrice: "40",
+        creditUnit: "per video",
+        usdPrice: "0.2",
+        falPrice: "0.5",
+        discountRate: 60,
+        anchor: "https://kie.ai/runway?model=runway-duration-5-generate",
+        discountPrice: false,
+      },
+    ],
+  );
+
+  assert.equal(matches.length, 1);
+});

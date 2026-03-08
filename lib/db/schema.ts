@@ -738,6 +738,15 @@ export const videoGenerationStatusEnum = pgEnum("video_generation_status", [
   "failed",
 ]);
 
+export const aiStudioGenerationStatusEnum = pgEnum("ai_studio_generation_status", [
+  "created",
+  "submitted",
+  "queued",
+  "running",
+  "succeeded",
+  "failed",
+]);
+
 export const videoGenerations = pgTable(
   "video_generations",
   {
@@ -772,5 +781,55 @@ export const videoGenerations = pgTable(
     isPublicIdx: index("idx_video_generations_is_public").on(table.isPublic),
     modelIdx: index("idx_video_generations_model").on(table.model),
     createdAtIdx: index("idx_video_generations_created_at").on(table.createdAt),
+  }),
+);
+
+export const aiStudioGenerations = pgTable(
+  "ai_studio_generations",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
+    catalogModelId: varchar("catalog_model_id", { length: 255 }).notNull(),
+    category: varchar("category", { length: 32 }).notNull(),
+    titleSnapshot: varchar("title_snapshot", { length: 255 }).notNull(),
+    providerSnapshot: varchar("provider_snapshot", { length: 255 }).notNull(),
+    endpointSnapshot: varchar("endpoint_snapshot", { length: 255 }).notNull(),
+    methodSnapshot: varchar("method_snapshot", { length: 16 }).notNull(),
+    providerTaskId: varchar("provider_task_id", { length: 255 }).unique(),
+    status: aiStudioGenerationStatusEnum("status").default("created").notNull(),
+    providerState: varchar("provider_state", { length: 64 }),
+    statusReason: text("status_reason"),
+    requestPayload: jsonb("request_payload").notNull(),
+    responsePayload: jsonb("response_payload"),
+    callbackPayload: jsonb("callback_payload"),
+    resultUrls: jsonb("result_urls"),
+    officialPricingSnapshot: jsonb("official_pricing_snapshot"),
+    creditsReserved: integer("credits_reserved").default(0).notNull(),
+    creditsCaptured: integer("credits_captured").default(0).notNull(),
+    creditsRefunded: integer("credits_refunded").default(0).notNull(),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
+    failedAt: timestamp("failed_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    userIdIdx: index("idx_ai_studio_generations_user_id").on(table.userId),
+    catalogModelIdIdx: index("idx_ai_studio_generations_catalog_model_id").on(
+      table.catalogModelId,
+    ),
+    providerTaskIdIdx: index("idx_ai_studio_generations_provider_task_id").on(
+      table.providerTaskId,
+    ),
+    statusIdx: index("idx_ai_studio_generations_status").on(table.status),
+    createdAtIdx: index("idx_ai_studio_generations_created_at").on(
+      table.createdAt,
+    ),
   }),
 );

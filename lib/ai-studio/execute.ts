@@ -1,7 +1,9 @@
 import {
   type AiStudioDocDetail,
   type AiStudioPricingRow,
+  extractPricingAnchorModel,
   getCachedAiStudioCatalogDetail,
+  normalizeModelHandle,
 } from "@/lib/ai-studio/catalog";
 
 export type AiStudioNormalizedState =
@@ -29,7 +31,17 @@ export function getAiStudioCallbackUrl() {
     return null;
   }
 
-  return `${base.replace(/\/+$/, "")}/api/ai-studio/callback`;
+  const callbackUrl = new URL(
+    `${base.replace(/\/+$/, "")}/api/ai-studio/callback`,
+  );
+  const secret =
+    process.env.AI_STUDIO_CALLBACK_SECRET || process.env.KIE_CALLBACK_SECRET;
+
+  if (secret) {
+    callbackUrl.searchParams.set("secret", secret);
+  }
+
+  return callbackUrl.toString();
 }
 
 export function resolveStatusEndpoint(detail: AiStudioDocDetail) {
@@ -178,16 +190,29 @@ export function estimatePricingRow(
   }
 
   const payloadText = JSON.stringify(payload).toLowerCase();
+  const payloadModel =
+    typeof payload.model === "string" ? normalizeModelHandle(payload.model) : "";
   let bestRow: AiStudioPricingRow | null = null;
   let bestScore = -1;
 
   for (const row of pricingRows) {
+    const anchorModel = normalizeModelHandle(extractPricingAnchorModel(row.anchor));
     const tokens = row.modelDescription
       .toLowerCase()
       .split(/[^a-z0-9]+/)
       .filter((token) => token.length >= 2);
 
     let score = 0;
+    if (payloadModel) {
+      if (anchorModel === payloadModel) {
+        score += 50;
+      } else if (anchorModel.startsWith(`${payloadModel}-`)) {
+        score += 25;
+      } else if (anchorModel) {
+        score -= 10;
+      }
+    }
+
     for (const token of tokens) {
       if (payloadText.includes(token)) {
         score += 1;
@@ -203,7 +228,10 @@ export function estimatePricingRow(
   return bestRow;
 }
 
-export async function executeAiStudioModel(modelId: string, payload: Record<string, any>) {
+export async function prepareAiStudioExecution(
+  modelId: string,
+  payload: Record<string, any>,
+) {
   const detail = await getCachedAiStudioCatalogDetail(modelId);
   if (!detail) {
     throw new Error("Unknown model");
@@ -215,6 +243,17 @@ export async function executeAiStudioModel(modelId: string, payload: Record<stri
     body.callBackUrl = callbackUrl;
   }
 
+  return {
+    detail,
+    body,
+    selectedPricing: estimatePricingRow(detail.pricingRows, body),
+  };
+}
+
+export async function submitAiStudioExecution(
+  detail: AiStudioDocDetail,
+  body: Record<string, any>,
+) {
   const response = await fetch(`https://api.kie.ai${detail.endpoint}`, {
     method: detail.method,
     headers: {
@@ -241,12 +280,21 @@ export async function executeAiStudioModel(modelId: string, payload: Record<stri
   const statusEndpoint = resolveStatusEndpoint(detail);
 
   return {
-    detail,
     raw,
     taskId,
     statusEndpoint,
     mediaUrls: extractMediaUrls(raw),
-    selectedPricing: estimatePricingRow(detail.pricingRows, body),
+  };
+}
+
+export async function executeAiStudioModel(modelId: string, payload: Record<string, any>) {
+  const prepared = await prepareAiStudioExecution(modelId, payload);
+  const result = await submitAiStudioExecution(prepared.detail, prepared.body);
+
+  return {
+    detail: prepared.detail,
+    selectedPricing: prepared.selectedPricing,
+    ...result,
   };
 }
 

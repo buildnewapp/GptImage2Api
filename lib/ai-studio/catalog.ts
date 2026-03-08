@@ -73,6 +73,17 @@ function normalizeLoose(input: string): string {
   return input.toLowerCase().replace(/[^a-z0-9]+/g, "");
 }
 
+export function normalizeModelHandle(input: string) {
+  return input
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function stripApiSuffix(input: string) {
+  return input.replace(/\bapi\b/gi, " ").replace(/\s+/g, " ").trim();
+}
+
 function normalizeTokens(input: string): string[] {
   return input
     .toLowerCase()
@@ -252,10 +263,14 @@ function buildAliases(
 ) {
   const aliases = new Set<string>();
   const docSlug = entry.docUrl.split("/").pop()?.replace(/\.md$/, "") ?? "";
+  const docFamily = entry.docUrl.split("/").at(-2) ?? "";
+  const cleanedProvider = stripApiSuffix(entry.provider);
 
   aliases.add(normalizeLoose(entry.title));
   aliases.add(normalizeLoose(entry.provider));
+  aliases.add(normalizeLoose(cleanedProvider));
   aliases.add(normalizeLoose(docSlug));
+  aliases.add(normalizeLoose(stripApiSuffix(docFamily)));
 
   for (const modelKey of entry.modelKeys ?? []) {
     aliases.add(normalizeLoose(modelKey));
@@ -263,6 +278,60 @@ function buildAliases(
   }
 
   return [...aliases].filter((alias) => alias.length >= 4);
+}
+
+export function extractPricingAnchorModel(anchor: string) {
+  try {
+    const url = new URL(anchor);
+    return url.searchParams.get("model") ?? "";
+  } catch {
+    return "";
+  }
+}
+
+const GENERIC_MODEL_HANDLES = new Set([
+  "api",
+  "model",
+  "generate",
+  "create",
+  "chat",
+  "image",
+  "video",
+  "music",
+]);
+
+function isSpecificModelHandle(handle: string) {
+  if (handle.length < 4 || GENERIC_MODEL_HANDLES.has(handle)) {
+    return false;
+  }
+
+  const [firstSegment] = handle.split("-");
+  return Boolean(firstSegment && !GENERIC_MODEL_HANDLES.has(firstSegment));
+}
+
+function getEntryModelHandles(
+  entry: Pick<
+    AiStudioCatalogSeedEntry,
+    "title" | "provider" | "docUrl"
+  > & { modelKeys?: string[] },
+) {
+  const handles = new Set<string>();
+  const docSlug = normalizeModelHandle(
+    entry.docUrl.split("/").pop()?.replace(/\.md$/, "") ?? "",
+  );
+
+  for (const modelKey of entry.modelKeys ?? []) {
+    const handle = normalizeModelHandle(modelKey);
+    if (handle.length >= 2 && !GENERIC_MODEL_HANDLES.has(handle)) {
+      handles.add(handle);
+    }
+  }
+
+  if (isSpecificModelHandle(docSlug)) {
+    handles.add(docSlug);
+  }
+
+  return [...handles];
 }
 
 function scorePricingMatch(
@@ -278,9 +347,27 @@ function scorePricingMatch(
 
   const description = normalizeLoose(row.modelDescription);
   const anchor = normalizeLoose(row.anchor);
+  const anchorModel = normalizeModelHandle(extractPricingAnchorModel(row.anchor));
   const aliases = buildAliases(entry);
+  const modelHandles = getEntryModelHandles(entry);
 
   let score = 0;
+  if (modelHandles.length > 0 && anchorModel) {
+    const exactMatch = modelHandles.some((handle) => anchorModel === handle);
+    const prefixMatch = modelHandles.some(
+      (handle) =>
+        anchorModel.startsWith(`${handle}-`) || handle.startsWith(`${anchorModel}-`),
+    );
+
+    if (exactMatch) {
+      score += 120;
+    } else if (prefixMatch) {
+      score += 80;
+    } else {
+      return -1;
+    }
+  }
+
   for (const alias of aliases) {
     if (description.includes(alias) || alias.includes(description)) {
       score += alias.length >= 10 ? 6 : 4;
@@ -377,7 +464,7 @@ export function matchPricingRowsToEntry(
 ): AiStudioPricingRow[] {
   return pricingRows
     .map((row) => ({ row, score: scorePricingMatch(entry, row) }))
-    .filter((item) => item.score >= 4)
+    .filter((item) => item.score >= 8)
     .sort((left, right) => right.score - left.score)
     .map((item) => item.row);
 }

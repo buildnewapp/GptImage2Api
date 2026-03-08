@@ -96,3 +96,42 @@ test("estimates the best pricing row from the active payload", () => {
 
   assert.equal(row?.creditPrice, "18");
 });
+
+test("prefers the exact anchor model when multiple pricing rows share similar tokens", () => {
+  const row = estimatePricingRow(
+    [
+      {
+        modelDescription: "Open AI sora 2, text-to-video, stable-10.0s",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "35",
+        creditUnit: "per video",
+        usdPrice: "0.175",
+        falPrice: "1.0",
+        discountRate: 82.5,
+        anchor: "https://kie.ai/sora-2?model=sora-2-text-to-video-stable",
+        discountPrice: false,
+      },
+      {
+        modelDescription: "Open AI sora 2, text-to-video, Standard-10.0s",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "30",
+        creditUnit: "per video",
+        usdPrice: "0.15",
+        falPrice: "1.0",
+        discountRate: 85,
+        anchor: "https://kie.ai/sora-2?model=sora-2-text-to-video",
+        discountPrice: false,
+      },
+    ],
+    {
+      model: "sora-2-text-to-video",
+      input: {
+        n_frames: "10",
+      },
+    },
+  );
+
+  assert.equal(row?.creditPrice, "30");
+});

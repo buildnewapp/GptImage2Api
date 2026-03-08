@@ -1,4 +1,5 @@
 import { getCachedAiStudioCatalogDetail } from "@/lib/ai-studio/catalog";
+import { toPublicDocDetail } from "@/lib/ai-studio/public";
 import { apiResponse } from "@/lib/api-response";
 
 type Params = Promise<{ id: string }>;
@@ -13,7 +14,7 @@ export async function GET(
     if (!detail) {
       return apiResponse.notFound("Model not found");
     }
-    return apiResponse.success(detail);
+    return apiResponse.success(toPublicDocDetail(detail));
   } catch (error: any) {
     return apiResponse.serverError(
       error?.message || "Failed to load model detail",

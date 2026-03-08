@@ -1,5 +1,13 @@
 import { queryAiStudioTask } from "@/lib/ai-studio/execute";
+import {
+  getAiStudioGenerationForUserByTaskId,
+  settleAiStudioGenerationFailure,
+  settleAiStudioGenerationSuccess,
+  updateAiStudioGenerationProgress,
+} from "@/lib/ai-studio/generations";
+import { sanitizeAiStudioDebugValue } from "@/lib/ai-studio/public";
 import { apiResponse } from "@/lib/api-response";
+import { getRequestUser } from "@/lib/auth/request-user";
 import { z } from "zod";
 
 type Params = Promise<{ taskId: string }>;
@@ -13,19 +21,78 @@ export async function GET(
   context: { params: Params },
 ) {
   try {
+    const user = await getRequestUser(request);
+    if (!user) {
+      return apiResponse.unauthorized();
+    }
+
     const { taskId } = await context.params;
     const { searchParams } = new URL(request.url);
     const input = querySchema.parse({
       modelId: searchParams.get("modelId"),
     });
 
+    const generation = await getAiStudioGenerationForUserByTaskId(user.id, taskId);
+    if (!generation) {
+      return apiResponse.notFound("Generation record not found");
+    }
+
+    if (generation.status === "succeeded" || generation.status === "failed") {
+      return apiResponse.success({
+        generationId: generation.id,
+        taskId,
+        modelId: generation.catalogModelId,
+        state: generation.status === "succeeded" ? "succeeded" : "failed",
+        mediaUrls: Array.isArray(generation.resultUrls)
+          ? (generation.resultUrls as string[])
+          : [],
+        raw: sanitizeAiStudioDebugValue(
+          generation.callbackPayload ?? generation.responsePayload ?? {},
+        ),
+        reservedCredits: generation.creditsReserved,
+        refundedCredits: generation.creditsRefunded,
+      });
+    }
+
     const result = await queryAiStudioTask(input.modelId, taskId);
+
+    if (result.state === "succeeded") {
+      await settleAiStudioGenerationSuccess(generation.id, {
+        raw: result.raw,
+        mediaUrls: result.mediaUrls,
+        providerState: result.state,
+      });
+    } else if (result.state === "failed") {
+      await settleAiStudioGenerationFailure(generation.id, {
+        raw: result.raw,
+        reason:
+          typeof result.raw === "string"
+            ? result.raw
+            : (result.raw as any)?.msg ||
+              (result.raw as any)?.message ||
+              "Provider task failed",
+        providerState: result.state,
+      });
+    } else if (result.state === "queued" || result.state === "running") {
+      await updateAiStudioGenerationProgress(generation.id, {
+        raw: result.raw,
+        state: result.state,
+        mediaUrls: result.mediaUrls,
+      });
+    }
+
     return apiResponse.success({
+      generationId: generation.id,
       taskId,
       modelId: input.modelId,
       state: result.state,
       mediaUrls: result.mediaUrls,
-      raw: result.raw,
+      raw: sanitizeAiStudioDebugValue(result.raw),
+      reservedCredits: generation.creditsReserved,
+      refundedCredits:
+        result.state === "failed"
+          ? generation.creditsReserved
+          : generation.creditsRefunded,
     });
   } catch (error: any) {
     return apiResponse.serverError(
