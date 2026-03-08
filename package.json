@@ -168,6 +168,7 @@
     "tiptap-markdown": "^0.9.0",
     "use-debounce": "^10.0.4",
     "vaul": "^1.1.2",
+    "yaml": "^2.8.2",
     "zod": "^3.24.2",
     "zustand": "^5.0.3"
   },
