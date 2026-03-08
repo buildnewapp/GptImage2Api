@@ -1,24 +1,29 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { sanitizeAiStudioDebugValue, toPublicDocDetail } from "@/lib/ai-studio/public";
+import {
+  getPublicAiStudioModelId,
+  sanitizeAiStudioDebugValue,
+  toPublicCatalogEntry,
+  toPublicDocDetail,
+} from "@/lib/ai-studio/public";
 
 test("serializes public model detail without kie urls, anchors, or callback fields", () => {
   const detail = toPublicDocDetail({
-    id: "video:generate-ai-video",
+    id: "video:grok-imagine-text-to-video",
     category: "video",
-    title: "Runway - Text to Video",
-    docUrl: "https://docs.kie.ai/runway-api/generate-ai-video.md",
-    provider: "Runway",
+    title: "Grok Imagine Text to Video",
+    docUrl: "https://docs.kie.ai/market/grok-imagine/text-to-video.md",
+    provider: "Grok Imagine",
     endpoint: "/api/v1/runway/generate",
     method: "POST",
-    modelKeys: ["runway-duration-5-generate"],
+    modelKeys: ["grok-imagine/text-to-video"],
     requestSchema: {
       type: "object",
       properties: {
         model: {
           type: "string",
-          default: "runway-duration-5-generate",
+          default: "grok-imagine/text-to-video",
           description: "Generate with Kie AI",
         },
         callBackUrl: {
@@ -35,22 +40,22 @@ test("serializes public model detail without kie urls, anchors, or callback fiel
     },
     examplePayload: {
       prompt: "Create a launch trailer for Kie AI",
-      model: "runway-duration-5-generate",
+      model: "grok-imagine/text-to-video",
       waterMark: "kie.ai",
       callBackUrl: "https://api.example.com/callback",
       progressCallBackUrl: "https://api.example.com/progress",
     },
     pricingRows: [
       {
-        modelDescription: "Runway, text-to-video, 5.0s-720p",
+        modelDescription: "grok-imagine, text-to-video, 10.0s 720p",
         interfaceType: "video",
-        provider: "Runway",
+        provider: "Grok",
         creditPrice: "40",
         creditUnit: "per video",
         usdPrice: "0.2",
         falPrice: "0.5",
         discountRate: 60,
-        anchor: "https://kie.ai/runway?model=runway-duration-5-generate",
+        anchor: "https://kie.ai/grok-imagine?model=grok-imagine%2Fimage-to-video",
         discountPrice: false,
       },
     ],
@@ -63,7 +68,7 @@ test("serializes public model detail without kie urls, anchors, or callback fiel
   assert.equal("progressCallBackUrl" in detail.examplePayload, false);
   assert.equal(detail.examplePayload.waterMark, "AI Studio");
   assert.equal(detail.pricingRows[0] && "anchor" in detail.pricingRows[0], false);
-  assert.equal(detail.pricingRows[0]?.runtimeModel, "runway-duration-5-generate");
+  assert.equal(detail.pricingRows[0]?.runtimeModel, "grok-imagine/text-to-video");
   assert.equal(JSON.stringify(detail).toLowerCase().includes("kie"), false);
 });
 
@@ -77,4 +82,103 @@ test("sanitizes debug payloads before returning them to the browser", () => {
   });
 
   assert.equal(JSON.stringify(value).toLowerCase().includes("kie"), false);
+});
+
+test("replaces provider model names with alias in public detail output", () => {
+  const detail = toPublicDocDetail({
+    id: "video:sora2-text-to-video-standard",
+    category: "video",
+    title: "Sdance - Text to Video",
+    alias: "sdance-text-to-video",
+    docUrl: "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
+    provider: "Sdance",
+    endpoint: "/api/v1/jobs/createTask",
+    method: "POST",
+    modelKeys: ["sora-2-text-to-video"],
+    requestSchema: {
+      type: "object",
+      properties: {
+        model: {
+          type: "string",
+          enum: ["sora-2-text-to-video"],
+          default: "sora-2-text-to-video",
+          description: "Must be `sora-2-text-to-video`",
+          examples: ["sora-2-text-to-video"],
+        },
+      },
+    },
+    examplePayload: {
+      model: "sora-2-text-to-video",
+    },
+    pricingRows: [
+      {
+        modelDescription: "Sdance, text-to-video, Standard-10.0s",
+        interfaceType: "video",
+        provider: "Sdance",
+        creditPrice: "60",
+        creditUnit: "per video",
+        usdPrice: "0.3",
+        falPrice: "1.0",
+        discountRate: 40,
+        anchor: "https://kie.ai/sora-2?model=sora-2-text-to-video",
+        discountPrice: false,
+      },
+    ],
+  });
+
+  assert.deepEqual(detail.modelKeys, ["sdance-text-to-video"]);
+  assert.equal(detail.examplePayload.model, "sdance-text-to-video");
+  assert.deepEqual(detail.requestSchema?.properties?.model?.enum, [
+    "sdance-text-to-video",
+  ]);
+  assert.equal(detail.requestSchema?.properties?.model?.default, "sdance-text-to-video");
+  assert.equal(detail.pricingRows[0]?.runtimeModel, "sdance-text-to-video");
+  assert.equal(detail.id, "video:sdance-text-to-video");
+});
+
+test("uses alias-derived public ids when available", () => {
+  assert.equal(
+    getPublicAiStudioModelId({
+      id: "video:sora2-text-to-video-standard",
+      category: "video",
+      alias: "sdance-text-to-video",
+    }),
+    "video:sdance-text-to-video",
+  );
+  assert.equal(
+    getPublicAiStudioModelId({
+      id: "image:z-image",
+      category: "image",
+      alias: null,
+    }),
+    "image:z-image",
+  );
+});
+
+test("replaces single-runtime catalog pricing rows with alias labels", () => {
+  const entry = toPublicCatalogEntry({
+    id: "video:sora2-text-to-video-standard",
+    category: "video",
+    title: "Sdance - Text to Video",
+    alias: "sdance-text-to-video",
+    docUrl: "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
+    provider: "Sdance",
+    pricingRows: [
+      {
+        modelDescription: "Sdance, text-to-video, Standard-10.0s",
+        interfaceType: "video",
+        provider: "Sdance",
+        creditPrice: "60",
+        creditUnit: "per video",
+        usdPrice: "0.3",
+        falPrice: "1.0",
+        discountRate: 40,
+        anchor: "https://kie.ai/sora-2?model=sora-2-text-to-video",
+        discountPrice: false,
+      },
+    ],
+  });
+
+  assert.equal(entry.id, "video:sdance-text-to-video");
+  assert.equal(entry.pricingRows[0]?.runtimeModel, "sdance-text-to-video");
 });

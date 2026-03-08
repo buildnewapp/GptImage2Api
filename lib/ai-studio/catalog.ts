@@ -1,3 +1,5 @@
+import { readFile, stat } from "node:fs/promises";
+import path from "node:path";
 import YAML from "yaml";
 
 export type AiStudioCategory = "image" | "video" | "music" | "chat";
@@ -8,6 +10,7 @@ export interface AiStudioCatalogSeedEntry {
   title: string;
   docUrl: string;
   provider: string;
+  alias?: string | null;
 }
 
 export interface AiStudioPricingRow {
@@ -36,6 +39,70 @@ export interface AiStudioCatalogEntry extends AiStudioCatalogSeedEntry {
   pricingRows: AiStudioPricingRow[];
 }
 
+export interface AiStudioUpstreamCatalogFile {
+  version: number;
+  generatedAt: string;
+  items: AiStudioDocDetail[];
+}
+
+export interface AiStudioCompiledCatalogFile {
+  version: number;
+  generatedAt: string;
+  items: AiStudioDocDetail[];
+}
+
+export interface AiStudioModelOverride {
+  enabled?: boolean;
+  alias?: string | null;
+  title?: string;
+  provider?: string;
+  splitModels?: AiStudioSplitModelOverride[];
+}
+
+export interface AiStudioSplitModelOverride {
+  id: string;
+  title: string;
+  alias?: string | null;
+  provider?: string;
+  schemaModel: string;
+  pricingMatch: NonNullable<AiStudioPricingRowOverride["match"]>;
+}
+
+export interface AiStudioModelOverridesFile {
+  models: Record<string, AiStudioModelOverride>;
+}
+
+export interface AiStudioPricingRowOverride {
+  match?: {
+    runtimeModel?: string;
+    modelDescriptionIncludes?: string;
+    provider?: string;
+  };
+  enabled?: boolean;
+  modelDescription?: string;
+  provider?: string;
+  creditPrice?: string;
+  creditUnit?: string;
+  usdPrice?: string;
+  falPrice?: string;
+  discountRate?: number;
+  discountPrice?: boolean;
+}
+
+export interface AiStudioPricingOverrideBucket {
+  rows?: AiStudioPricingRowOverride[];
+}
+
+export interface AiStudioPricingOverridesFile {
+  models: Record<string, AiStudioPricingOverrideBucket>;
+}
+
+type CompileRuntimeCatalogInput = {
+  upstream: AiStudioUpstreamCatalogFile;
+  modelOverrides: AiStudioModelOverridesFile;
+  pricingOverrides: AiStudioPricingOverridesFile;
+};
+
 const LLMS_INDEX_URL = "https://docs.kie.ai/llms.txt";
 const OFFICIAL_PRICING_COUNT_URL =
   "https://api.kie.ai/client/v1/model-pricing/count";
@@ -47,20 +114,31 @@ const DOC_LINE_PATTERN =
 
 const USER_AGENT =
   "Mozilla/5.0 (compatible; Nexty AiStudio Catalog Sync/1.0; +https://nexty.dev)";
-const CATALOG_CACHE_TTL_MS = 15 * 60 * 1000;
+const DEFAULT_AI_STUDIO_DATA_DIR = path.join(process.cwd(), "config", "ai-studio");
 
-type CatalogCache = {
-  fetchedAt: number;
-  entries: AiStudioCatalogEntry[];
+type RuntimeCatalogCache = {
+  filePath: string;
+  mtimeMs: number;
+  file: AiStudioCompiledCatalogFile;
 };
+let runtimeCatalogCache: RuntimeCatalogCache | null = null;
 
-type DetailCache = {
-  fetchedAt: number;
-  detail: AiStudioDocDetail;
-};
-
-let catalogCache: CatalogCache | null = null;
-const detailCache = new Map<string, DetailCache>();
+export function getAiStudioCatalogPaths() {
+  return {
+    upstreamCatalogPath:
+      process.env.AI_STUDIO_UPSTREAM_CATALOG_PATH ??
+      path.join(DEFAULT_AI_STUDIO_DATA_DIR, "upstream", "catalog.json"),
+    modelOverridesPath:
+      process.env.AI_STUDIO_MODEL_OVERRIDES_PATH ??
+      path.join(DEFAULT_AI_STUDIO_DATA_DIR, "overrides", "models.json"),
+    pricingOverridesPath:
+      process.env.AI_STUDIO_PRICING_OVERRIDES_PATH ??
+      path.join(DEFAULT_AI_STUDIO_DATA_DIR, "overrides", "pricing.json"),
+    runtimeCatalogPath:
+      process.env.AI_STUDIO_RUNTIME_CATALOG_PATH ??
+      path.join(DEFAULT_AI_STUDIO_DATA_DIR, "runtime", "catalog.json"),
+  };
+}
 
 function slugify(input: string): string {
   return input
@@ -80,6 +158,16 @@ export function normalizeModelHandle(input: string) {
     .replace(/^-+|-+$/g, "");
 }
 
+export function getAiStudioPublicModelId(
+  entry: Pick<AiStudioCatalogSeedEntry, "id" | "category" | "alias">,
+) {
+  if (!entry.alias) {
+    return entry.id;
+  }
+
+  return `${entry.category}:${normalizeModelHandle(entry.alias)}`;
+}
+
 function stripApiSuffix(input: string) {
   return input.replace(/\bapi\b/gi, " ").replace(/\s+/g, " ").trim();
 }
@@ -96,8 +184,23 @@ function inferCategory(source: string, docUrl: string): AiStudioCategory | null 
   const sourceLower = source.toLowerCase();
   const urlLower = docUrl.toLowerCase();
 
+  if (sourceLower.startsWith("image")) {
+    return "image";
+  }
+
+  if (sourceLower.startsWith("video") || sourceLower.startsWith("veo3.1")) {
+    return "video";
+  }
+
+  if (sourceLower.startsWith("music") || sourceLower.startsWith("suno")) {
+    return "music";
+  }
+
+  if (sourceLower.startsWith("chat")) {
+    return "chat";
+  }
+
   if (
-    sourceLower.startsWith("image") ||
     urlLower.includes("/4o-image-api/") ||
     urlLower.includes("/flux-kontext-api/") ||
     urlLower.includes("/market/google/") ||
@@ -115,8 +218,6 @@ function inferCategory(source: string, docUrl: string): AiStudioCategory | null 
   }
 
   if (
-    sourceLower.startsWith("video") ||
-    sourceLower.startsWith("veo3.1") ||
     sourceLower.startsWith("runway") ||
     urlLower.includes("/veo3-api/") ||
     urlLower.includes("/runway-api/") ||
@@ -134,8 +235,6 @@ function inferCategory(source: string, docUrl: string): AiStudioCategory | null 
   }
 
   if (
-    sourceLower.startsWith("music") ||
-    sourceLower.startsWith("suno") ||
     urlLower.includes("/suno-api/") ||
     urlLower.includes("/market/elevenlabs/")
   ) {
@@ -143,7 +242,6 @@ function inferCategory(source: string, docUrl: string): AiStudioCategory | null 
   }
 
   if (
-    sourceLower.startsWith("chat") ||
     urlLower.includes("/market/chat/") ||
     urlLower.includes("/market/claude/") ||
     urlLower.includes("/market/gemini/") ||
@@ -300,13 +398,79 @@ const GENERIC_MODEL_HANDLES = new Set([
   "music",
 ]);
 
+const GENERIC_OPERATION_HANDLES = new Set([
+  "text-to-video",
+  "image-to-video",
+  "reference-to-video",
+  "video-to-video",
+  "extend",
+  "upscale",
+  "text-to-image",
+  "image-to-image",
+  "inpaint",
+  "outpaint",
+  "edit",
+  "chat",
+  "music",
+  "text-to-music",
+]);
+
 function isSpecificModelHandle(handle: string) {
   if (handle.length < 4 || GENERIC_MODEL_HANDLES.has(handle)) {
     return false;
   }
 
   const [firstSegment] = handle.split("-");
-  return Boolean(firstSegment && !GENERIC_MODEL_HANDLES.has(firstSegment));
+  return Boolean(
+    firstSegment &&
+      !GENERIC_MODEL_HANDLES.has(firstSegment) &&
+      !GENERIC_OPERATION_HANDLES.has(handle),
+  );
+}
+
+function isGenericOperationHandle(handle: string) {
+  return GENERIC_OPERATION_HANDLES.has(handle);
+}
+
+function getDocFamilyHandle(docUrl: string) {
+  const docFamily = normalizeModelHandle(docUrl.split("/").at(-2) ?? "");
+  return isSpecificModelHandle(docFamily) ? docFamily : "";
+}
+
+function getEntryFamilyHandles(
+  entry: Pick<
+    AiStudioCatalogSeedEntry,
+    "title" | "provider" | "docUrl"
+  > & { modelKeys?: string[] },
+) {
+  const handles = new Set<string>();
+  const docFamily = getDocFamilyHandle(entry.docUrl);
+
+  if (docFamily) {
+    handles.add(docFamily);
+  }
+
+  for (const source of [entry.provider, stripApiSuffix(entry.provider), entry.title]) {
+    const normalized = normalizeModelHandle(source);
+    if (isSpecificModelHandle(normalized)) {
+      handles.add(normalized);
+    }
+  }
+
+  for (const modelKey of entry.modelKeys ?? []) {
+    const normalized = normalizeModelHandle(modelKey);
+    const operationHandle = [...GENERIC_OPERATION_HANDLES].find((handle) =>
+      normalized.includes(handle),
+    );
+    if (operationHandle) {
+      const family = normalized.replace(`-${operationHandle}`, "").replace(/-+$/g, "");
+      if (isSpecificModelHandle(family)) {
+        handles.add(family);
+      }
+    }
+  }
+
+  return [...handles];
 }
 
 function getEntryModelHandles(
@@ -334,6 +498,162 @@ function getEntryModelHandles(
   return [...handles];
 }
 
+function getEntryOperationHandles(
+  entry: Pick<
+    AiStudioCatalogSeedEntry,
+    "title" | "provider" | "docUrl"
+  > & { modelKeys?: string[] },
+) {
+  const handles = new Set<string>();
+  const docSlug = normalizeModelHandle(
+    entry.docUrl.split("/").pop()?.replace(/\.md$/, "") ?? "",
+  );
+
+  if (isGenericOperationHandle(docSlug)) {
+    handles.add(docSlug);
+  }
+
+  for (const modelKey of entry.modelKeys ?? []) {
+    const normalized = normalizeModelHandle(modelKey);
+    for (const handle of GENERIC_OPERATION_HANDLES) {
+      if (normalized.includes(handle)) {
+        handles.add(handle);
+      }
+    }
+  }
+
+  for (const handle of GENERIC_OPERATION_HANDLES) {
+    if (normalizeModelHandle(entry.title).includes(handle)) {
+      handles.add(handle);
+    }
+  }
+
+  return [...handles];
+}
+
+function rowContainsAnyHandle(
+  row: AiStudioPricingRow,
+  handles: string[],
+  anchorModel: string,
+) {
+  if (handles.length === 0) {
+    return false;
+  }
+
+  const descriptionHandle = normalizeModelHandle(row.modelDescription);
+  const providerHandle = normalizeModelHandle(row.provider);
+  const anchorHandle = normalizeModelHandle(row.anchor);
+  const descriptionLoose = normalizeLoose(row.modelDescription);
+  const providerLoose = normalizeLoose(row.provider);
+  const anchorLoose = normalizeLoose(row.anchor);
+  const anchorModelLoose = normalizeLoose(anchorModel);
+
+  return handles.some(
+    (handle) => {
+      const looseHandle = normalizeLoose(handle);
+      return (
+        descriptionHandle.includes(handle) ||
+        providerHandle.includes(handle) ||
+        anchorHandle.includes(handle) ||
+        anchorModel.includes(handle) ||
+        descriptionLoose.includes(looseHandle) ||
+        providerLoose.includes(looseHandle) ||
+        anchorLoose.includes(looseHandle) ||
+        anchorModelLoose.includes(looseHandle)
+      );
+    },
+  );
+}
+
+function extractOperationHandlesFromText(value: string) {
+  const normalized = normalizeModelHandle(value);
+  return [...GENERIC_OPERATION_HANDLES].filter((handle) => normalized.includes(handle));
+}
+
+function getRowOperationHandles(row: AiStudioPricingRow, anchorModel: string) {
+  const descriptionHandles = extractOperationHandlesFromText(row.modelDescription);
+  if (descriptionHandles.length > 0) {
+    return descriptionHandles;
+  }
+
+  const anchorModelHandles = extractOperationHandlesFromText(anchorModel);
+  if (anchorModelHandles.length > 0) {
+    return anchorModelHandles;
+  }
+
+  return extractOperationHandlesFromText(row.anchor);
+}
+
+function runtimeModelMatchesEntry(
+  entry: Pick<
+    AiStudioCatalogSeedEntry,
+    "category" | "title" | "provider" | "docUrl"
+  > & { modelKeys?: string[] },
+  runtimeModel: string,
+) {
+  const normalized = normalizeModelHandle(runtimeModel);
+  const normalizedLoose = normalizeLoose(runtimeModel);
+  const modelHandles = getEntryModelHandles(entry);
+  const familyHandles = getEntryFamilyHandles(entry);
+  const operationHandles = getEntryOperationHandles(entry);
+
+  if (modelHandles.length > 0) {
+    const hasSpecificMatch = modelHandles.some(
+      (handle) =>
+        normalized === handle ||
+        normalized.startsWith(`${handle}-`) ||
+        handle.startsWith(`${normalized}-`),
+    );
+    if (!hasSpecificMatch) {
+      return false;
+    }
+  }
+
+  if (familyHandles.length > 0) {
+    const hasFamilyMatch = familyHandles.some((handle) => {
+      const looseHandle = normalizeLoose(handle);
+      return normalized.includes(handle) || normalizedLoose.includes(looseHandle);
+    });
+    if (!hasFamilyMatch) {
+      return false;
+    }
+  }
+
+  if (operationHandles.length > 0) {
+    const hasOperationMatch = operationHandles.some((handle) =>
+      normalized.includes(handle),
+    );
+    if (!hasOperationMatch) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function resolvePricingRowRuntimeModel(
+  entry: Pick<
+    AiStudioCatalogSeedEntry,
+    "category" | "title" | "provider" | "docUrl"
+  > & { modelKeys?: string[] },
+  row: AiStudioPricingRow,
+) {
+  const anchorModel = extractPricingAnchorModel(row.anchor);
+  if (!anchorModel) {
+    return entry.modelKeys?.[0] ?? null;
+  }
+
+  if (runtimeModelMatchesEntry(entry, anchorModel)) {
+    return anchorModel;
+  }
+
+  if ((entry.modelKeys?.length ?? 0) === 1) {
+    return entry.modelKeys?.[0] ?? null;
+  }
+
+  return anchorModel;
+}
+
 function scorePricingMatch(
   entry: Pick<
     AiStudioCatalogSeedEntry,
@@ -350,8 +670,28 @@ function scorePricingMatch(
   const anchorModel = normalizeModelHandle(extractPricingAnchorModel(row.anchor));
   const aliases = buildAliases(entry);
   const modelHandles = getEntryModelHandles(entry);
+  const familyHandles = getEntryFamilyHandles(entry);
+  const operationHandles = getEntryOperationHandles(entry);
+  const rowOperationHandles = getRowOperationHandles(row, anchorModel);
 
   let score = 0;
+  if (familyHandles.length > 0 && !rowContainsAnyHandle(row, familyHandles, anchorModel)) {
+    return -1;
+  }
+
+  if (operationHandles.length > 0) {
+    if (rowOperationHandles.length > 0) {
+      const hasOperationMatch = operationHandles.some((handle) =>
+        rowOperationHandles.includes(handle),
+      );
+      if (!hasOperationMatch) {
+        return -1;
+      }
+    } else if (!rowContainsAnyHandle(row, operationHandles, anchorModel)) {
+      return -1;
+    }
+  }
+
   if (modelHandles.length > 0 && anchorModel) {
     const exactMatch = modelHandles.some((handle) => anchorModel === handle);
     const prefixMatch = modelHandles.some(
@@ -392,6 +732,44 @@ function scorePricingMatch(
 
   score += shared;
   return score;
+}
+
+function canonicalizePricingDescription(input: string) {
+  return input
+    .toLowerCase()
+    .replace(/(\d+)\.0(?=s\b)/g, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function normalizeNumericString(input: string) {
+  const value = Number.parseFloat(input);
+  return Number.isFinite(value) ? String(value) : input.trim();
+}
+
+function dedupeMatchedPricingRows(rows: AiStudioPricingRow[]) {
+  const seen = new Set<string>();
+  const deduped: AiStudioPricingRow[] = [];
+
+  for (const row of rows) {
+    const key = [
+      normalizeLoose(row.provider),
+      row.interfaceType.toLowerCase(),
+      canonicalizePricingDescription(row.modelDescription),
+      normalizeModelHandle(extractPricingAnchorModel(row.anchor)),
+      normalizeNumericString(row.creditPrice),
+      row.creditUnit.toLowerCase(),
+    ].join("|");
+
+    if (seen.has(key)) {
+      continue;
+    }
+
+    seen.add(key);
+    deduped.push(row);
+  }
+
+  return deduped;
 }
 
 export function parseLlmsIndex(content: string): AiStudioCatalogSeedEntry[] {
@@ -462,11 +840,13 @@ export function matchPricingRowsToEntry(
   > & { modelKeys?: string[] },
   pricingRows: AiStudioPricingRow[],
 ): AiStudioPricingRow[] {
-  return pricingRows
+  return dedupeMatchedPricingRows(
+    pricingRows
     .map((row) => ({ row, score: scorePricingMatch(entry, row) }))
     .filter((item) => item.score >= 8)
     .sort((left, right) => right.score - left.score)
-    .map((item) => item.row);
+    .map((item) => item.row),
+  );
 }
 
 async function fetchText(url: string): Promise<string> {
@@ -560,43 +940,454 @@ export async function getAiStudioCatalogDetail(
   return detail;
 }
 
-function isFresh(timestamp: number) {
-  return Date.now() - timestamp < CATALOG_CACHE_TTL_MS;
+export async function buildAiStudioUpstreamCatalog(): Promise<AiStudioUpstreamCatalogFile> {
+  const entries = await getAiStudioCatalog();
+  const items = await Promise.all(entries.map((entry) => getAiStudioCatalogDetail(entry)));
+  return {
+    version: 1,
+    generatedAt: new Date().toISOString(),
+    items,
+  };
+}
+
+function clonePricingRow(row: AiStudioPricingRow): AiStudioPricingRow {
+  return {
+    ...row,
+  };
+}
+
+function cloneDetail(detail: AiStudioDocDetail): AiStudioDocDetail {
+  return {
+    ...detail,
+    requestSchema: detail.requestSchema
+      ? structuredClone(detail.requestSchema)
+      : detail.requestSchema,
+    examplePayload: structuredClone(detail.examplePayload),
+    pricingRows: detail.pricingRows.map(clonePricingRow),
+  };
+}
+
+function matchesPricingOverride(
+  entry: AiStudioDocDetail,
+  row: AiStudioPricingRow,
+  override: AiStudioPricingRowOverride,
+) {
+  const match = override.match;
+  if (!match) {
+    return true;
+  }
+
+  if (match.runtimeModel) {
+    const runtimeModel = resolvePricingRowRuntimeModel(entry, row) ?? "";
+    if (runtimeModel !== match.runtimeModel) {
+      return false;
+    }
+  }
+
+  if (match.provider) {
+    if (row.provider.toLowerCase() !== match.provider.toLowerCase()) {
+      return false;
+    }
+  }
+
+  if (match.modelDescriptionIncludes) {
+    if (
+      !row.modelDescription
+        .toLowerCase()
+        .includes(match.modelDescriptionIncludes.toLowerCase())
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function selectMatchingPricingRows(
+  detail: AiStudioDocDetail,
+  match: NonNullable<AiStudioPricingRowOverride["match"]>,
+) {
+  return detail.pricingRows
+    .filter((row) => matchesPricingOverride(detail, row, { match }))
+    .map(clonePricingRow);
+}
+
+function rewriteSchemaModel(detail: AiStudioDocDetail, schemaModel: string) {
+  detail.modelKeys = [schemaModel];
+  detail.examplePayload = {
+    ...detail.examplePayload,
+    model: schemaModel,
+  };
+
+  const modelSchema = detail.requestSchema?.properties?.model;
+  if (modelSchema && typeof modelSchema === "object") {
+    modelSchema.default = schemaModel;
+    modelSchema.enum = [schemaModel];
+    modelSchema.examples = [schemaModel];
+    modelSchema.description =
+      `The model name to use for generation. Required field.\n\n- Must be \`${schemaModel}\` for this endpoint`;
+  }
+
+  return detail;
+}
+
+function applyPricingOverridesToDetail(
+  detail: AiStudioDocDetail,
+  overrides: AiStudioPricingRowOverride[],
+) {
+  if (overrides.length === 0) {
+    return detail;
+  }
+
+  const nextRows: AiStudioPricingRow[] = [];
+
+  for (const row of detail.pricingRows) {
+    let currentRow = clonePricingRow(row);
+    let removed = false;
+
+    for (const override of overrides) {
+      if (!matchesPricingOverride(detail, currentRow, override)) {
+        continue;
+      }
+
+      if (override.enabled === false) {
+        removed = true;
+        break;
+      }
+
+      currentRow = {
+        ...currentRow,
+        ...(override.modelDescription !== undefined
+          ? { modelDescription: override.modelDescription }
+          : {}),
+        ...(override.provider !== undefined ? { provider: override.provider } : {}),
+        ...(override.creditPrice !== undefined
+          ? { creditPrice: override.creditPrice }
+          : {}),
+        ...(override.creditUnit !== undefined ? { creditUnit: override.creditUnit } : {}),
+        ...(override.usdPrice !== undefined ? { usdPrice: override.usdPrice } : {}),
+        ...(override.falPrice !== undefined ? { falPrice: override.falPrice } : {}),
+        ...(override.discountRate !== undefined
+          ? { discountRate: override.discountRate }
+          : {}),
+        ...(override.discountPrice !== undefined
+          ? { discountPrice: override.discountPrice }
+          : {}),
+      };
+    }
+
+    if (!removed) {
+      nextRows.push(currentRow);
+    }
+  }
+
+  detail.pricingRows = nextRows;
+  return detail;
+}
+
+function applyModelOverrideToDetail(
+  detail: AiStudioDocDetail,
+  override: AiStudioModelOverride | undefined,
+) {
+  if (!override) {
+    return detail;
+  }
+
+  if (override.alias !== undefined) {
+    detail.alias = override.alias;
+  }
+  if (override.title) {
+    detail.title = override.title;
+  }
+  if (override.provider) {
+    detail.provider = override.provider;
+  }
+
+  return detail;
+}
+
+function buildSplitModelDetails(
+  rawDetail: AiStudioDocDetail,
+  modelOverride: AiStudioModelOverride,
+) {
+  return (modelOverride.splitModels ?? []).flatMap((splitModel) => {
+    const detail = cloneDetail(rawDetail);
+    detail.id = splitModel.id;
+    detail.title = splitModel.title;
+    detail.alias = splitModel.alias ?? null;
+    detail.provider = splitModel.provider ?? detail.provider;
+    detail.pricingRows = selectMatchingPricingRows(detail, splitModel.pricingMatch);
+
+    if (detail.pricingRows.length === 0) {
+      return [];
+    }
+
+    rewriteSchemaModel(detail, splitModel.schemaModel);
+    return [detail];
+  });
+}
+
+export function compileAiStudioRuntimeCatalog({
+  upstream,
+  modelOverrides,
+  pricingOverrides,
+}: CompileRuntimeCatalogInput): AiStudioCompiledCatalogFile {
+  const items = upstream.items.flatMap((rawDetail) => {
+    const modelOverride = modelOverrides.models[rawDetail.id];
+    if (modelOverride?.enabled === false) {
+      return [];
+    }
+
+    if ((modelOverride?.splitModels?.length ?? 0) > 0) {
+      return buildSplitModelDetails(rawDetail, modelOverride!).map((detail) => {
+        const pricingOverrideBucket = pricingOverrides.models[detail.id];
+        if (pricingOverrideBucket?.rows?.length) {
+          applyPricingOverridesToDetail(detail, pricingOverrideBucket.rows);
+        }
+        return detail;
+      });
+    }
+
+    const detail = applyModelOverrideToDetail(cloneDetail(rawDetail), modelOverride);
+    const pricingOverrideBucket = pricingOverrides.models[detail.id];
+    if (pricingOverrideBucket?.rows?.length) {
+      applyPricingOverridesToDetail(detail, pricingOverrideBucket.rows);
+    }
+
+    return [detail];
+  });
+
+  return {
+    version: 1,
+    generatedAt: new Date().toISOString(),
+    items,
+  };
+}
+
+function pricingRowKey(entry: AiStudioDocDetail, row: AiStudioPricingRow) {
+  return [
+    entry.id,
+    resolvePricingRowRuntimeModel(entry, row) ?? "",
+    normalizeLoose(row.provider),
+    row.interfaceType.toLowerCase(),
+    canonicalizePricingDescription(row.modelDescription),
+    normalizeNumericString(row.creditPrice),
+    row.creditUnit.toLowerCase(),
+  ].join("|");
+}
+
+export function validateAiStudioRuntimeBuildInput({
+  upstream,
+  modelOverrides,
+  pricingOverrides,
+}: CompileRuntimeCatalogInput) {
+  const errors: string[] = [];
+  const knownModelIds = new Set<string>();
+  const compiledModelIds = new Set<string>();
+  const upstreamById = new Map<string, AiStudioDocDetail>();
+
+  for (const item of upstream.items) {
+    if (knownModelIds.has(item.id)) {
+      errors.push(`Duplicate upstream model id: ${item.id}`);
+    }
+    knownModelIds.add(item.id);
+    upstreamById.set(item.id, item);
+  }
+
+  for (const [modelId, override] of Object.entries(modelOverrides.models)) {
+    if (!knownModelIds.has(modelId)) {
+      errors.push(`Model override targets unknown model: ${modelId}`);
+      continue;
+    }
+
+    const upstreamItem = upstreamById.get(modelId)!;
+    if ((override.splitModels?.length ?? 0) > 0) {
+      for (const splitModel of override.splitModels ?? []) {
+        if (knownModelIds.has(splitModel.id) || compiledModelIds.has(splitModel.id)) {
+          errors.push(`Split model id collides with another model id: ${splitModel.id}`);
+        }
+        compiledModelIds.add(splitModel.id);
+
+        const matchedRows = selectMatchingPricingRows(upstreamItem, splitModel.pricingMatch);
+        if (matchedRows.length === 0) {
+          errors.push(`Split model does not match any pricing rows: ${splitModel.id}`);
+        }
+      }
+      continue;
+    }
+
+    compiledModelIds.add(modelId);
+  }
+
+  for (const modelId of knownModelIds) {
+    const override = modelOverrides.models[modelId];
+    if ((override?.enabled === false) || (override?.splitModels?.length ?? 0) > 0) {
+      continue;
+    }
+    compiledModelIds.add(modelId);
+  }
+
+  for (const [modelId, bucket] of Object.entries(pricingOverrides.models)) {
+    if (!compiledModelIds.has(modelId)) {
+      errors.push(`Pricing override targets unknown model: ${modelId}`);
+      continue;
+    }
+
+    const upstreamItem = upstreamById.get(modelId);
+    const splitSource = Object.entries(modelOverrides.models).find(([, override]) =>
+      override.splitModels?.some((splitModel) => splitModel.id === modelId),
+    );
+    const item = upstreamItem
+      ? cloneDetail(upstreamItem)
+      : splitSource
+          ? buildSplitModelDetails(upstreamById.get(splitSource[0])!, splitSource[1]).find(
+              (splitItem) => splitItem.id === modelId,
+            ) ?? null
+          : null;
+
+    if (!item) {
+      errors.push(`Pricing override targets unknown model: ${modelId}`);
+      continue;
+    }
+
+    for (const override of bucket.rows ?? []) {
+      const matched = item.pricingRows.some((row) =>
+        matchesPricingOverride(item, row, override),
+      );
+      if (!matched) {
+        errors.push(`Pricing override does not match any row for model: ${modelId}`);
+      }
+    }
+  }
+
+  return errors;
+}
+
+export function validateAiStudioRuntimeCatalog(file: AiStudioCompiledCatalogFile) {
+  const errors: string[] = [];
+  const ids = new Set<string>();
+  const rowKeys = new Set<string>();
+
+  for (const item of file.items) {
+    if (ids.has(item.id)) {
+      errors.push(`Duplicate runtime model id: ${item.id}`);
+    }
+    ids.add(item.id);
+
+    for (const row of item.pricingRows) {
+      const key = pricingRowKey(item, row);
+      if (rowKeys.has(key)) {
+        errors.push(`Duplicate runtime pricing row: ${item.id}`);
+      }
+      rowKeys.add(key);
+    }
+  }
+
+  return errors;
+}
+
+async function readJsonFile<T>(filePath: string): Promise<T> {
+  const raw = await readFile(filePath, "utf8");
+  return JSON.parse(raw) as T;
+}
+
+async function readJsonFileOrDefault<T>(filePath: string, fallback: T): Promise<T> {
+  try {
+    return await readJsonFile<T>(filePath);
+  } catch (error: any) {
+    if (error?.code === "ENOENT") {
+      return fallback;
+    }
+    throw error;
+  }
+}
+
+export async function loadAiStudioUpstreamCatalogFile(
+  filePath = getAiStudioCatalogPaths().upstreamCatalogPath,
+) {
+  return readJsonFile<AiStudioUpstreamCatalogFile>(filePath);
+}
+
+export async function loadAiStudioModelOverridesFile(
+  filePath = getAiStudioCatalogPaths().modelOverridesPath,
+) {
+  return readJsonFileOrDefault<AiStudioModelOverridesFile>(filePath, {
+    models: {},
+  });
+}
+
+export async function loadAiStudioPricingOverridesFile(
+  filePath = getAiStudioCatalogPaths().pricingOverridesPath,
+) {
+  return readJsonFileOrDefault<AiStudioPricingOverridesFile>(filePath, {
+    models: {},
+  });
+}
+
+export async function loadAiStudioRuntimeCatalogFile(
+  filePath = getAiStudioCatalogPaths().runtimeCatalogPath,
+) {
+  return readJsonFile<AiStudioCompiledCatalogFile>(filePath);
+}
+
+export function toAiStudioCatalogEntries(file: AiStudioCompiledCatalogFile) {
+  return file.items.map<AiStudioCatalogEntry>((item) => ({
+    id: item.id,
+    category: item.category,
+    title: item.title,
+    alias: item.alias,
+    docUrl: item.docUrl,
+    provider: item.provider,
+    pricingRows: item.pricingRows.map(clonePricingRow),
+  }));
 }
 
 export async function getCachedAiStudioCatalog() {
-  if (catalogCache && isFresh(catalogCache.fetchedAt)) {
-    return catalogCache.entries;
-  }
-
-  const entries = await getAiStudioCatalog();
-  catalogCache = {
-    fetchedAt: Date.now(),
-    entries,
-  };
-  return entries;
+  const runtimeFile = await getCachedAiStudioRuntimeCatalog();
+  return toAiStudioCatalogEntries(runtimeFile);
 }
 
 export async function getCachedAiStudioCatalogEntry(id: string) {
   const entries = await getCachedAiStudioCatalog();
-  return entries.find((entry) => entry.id === id) ?? null;
+  return (
+    entries.find(
+      (entry) => entry.id === id || getAiStudioPublicModelId(entry) === id,
+    ) ?? null
+  );
 }
 
 export async function getCachedAiStudioCatalogDetail(id: string) {
-  const cached = detailCache.get(id);
-  if (cached && isFresh(cached.fetchedAt)) {
-    return cached.detail;
-  }
-
+  const runtimeFile = await getCachedAiStudioRuntimeCatalog();
   const entry = await getCachedAiStudioCatalogEntry(id);
   if (!entry) {
     return null;
   }
 
-  const detail = await getAiStudioCatalogDetail(entry);
-  detailCache.set(id, {
-    fetchedAt: Date.now(),
-    detail,
-  });
-  return detail;
+  const detail = runtimeFile.items.find((item) => item.id === entry.id);
+  if (!detail) {
+    return null;
+  }
+
+  return cloneDetail(detail);
+}
+
+async function getCachedAiStudioRuntimeCatalog() {
+  const filePath = getAiStudioCatalogPaths().runtimeCatalogPath;
+  const stats = await stat(filePath);
+
+  if (
+    runtimeCatalogCache &&
+    runtimeCatalogCache.filePath === filePath &&
+    runtimeCatalogCache.mtimeMs === stats.mtimeMs
+  ) {
+    return runtimeCatalogCache.file;
+  }
+
+  const file = await loadAiStudioRuntimeCatalogFile(filePath);
+  runtimeCatalogCache = {
+    filePath,
+    mtimeMs: stats.mtimeMs,
+    file,
+  };
+  return file;
 }

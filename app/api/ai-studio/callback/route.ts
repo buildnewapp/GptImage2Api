@@ -1,5 +1,6 @@
 import {
   extractMediaUrls,
+  extractProviderFailureReason,
   extractTaskId,
   normalizeTaskState,
 } from "@/lib/ai-studio/execute";
@@ -49,10 +50,7 @@ export async function POST(request: NextRequest) {
       await settleAiStudioGenerationFailure(generation.id, {
         raw: body,
         reason:
-          body?.msg ||
-          body?.message ||
-          body?.data?.failMsg ||
-          body?.data?.errorMessage ||
+          extractProviderFailureReason(body) ||
           "Provider task failed",
         providerState: state,
       });

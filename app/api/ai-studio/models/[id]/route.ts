@@ -1,17 +1,29 @@
 import { getCachedAiStudioCatalogDetail } from "@/lib/ai-studio/catalog";
+import {
+  canAccessAiStudioModel,
+  loadAiStudioPolicyConfig,
+} from "@/lib/ai-studio/policy";
 import { toPublicDocDetail } from "@/lib/ai-studio/public";
 import { apiResponse } from "@/lib/api-response";
+import { getRequestUser } from "@/lib/auth/request-user";
 
 type Params = Promise<{ id: string }>;
 
 export async function GET(
-  _request: Request,
+  request: Request,
   context: { params: Params },
 ) {
   try {
     const { id } = await context.params;
-    const detail = await getCachedAiStudioCatalogDetail(id);
+    const [user, detail, policy] = await Promise.all([
+      getRequestUser(request),
+      getCachedAiStudioCatalogDetail(id),
+      loadAiStudioPolicyConfig(),
+    ]);
     if (!detail) {
+      return apiResponse.notFound("Model not found");
+    }
+    if (!canAccessAiStudioModel(detail, { role: user?.role, config: policy })) {
       return apiResponse.notFound("Model not found");
     }
     return apiResponse.success(toPublicDocDetail(detail));

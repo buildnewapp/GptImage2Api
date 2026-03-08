@@ -1,5 +1,10 @@
+import { getCachedAiStudioCatalog } from "@/lib/ai-studio/catalog";
 import { listAiStudioGenerationsForUser } from "@/lib/ai-studio/generations";
-import { sanitizeAiStudioDebugValue } from "@/lib/ai-studio/public";
+import { getAiStudioHistoryStatusReason } from "@/lib/ai-studio/history";
+import {
+  getPublicAiStudioModelId,
+  sanitizeAiStudioDebugValue,
+} from "@/lib/ai-studio/public";
 import { apiResponse } from "@/lib/api-response";
 import { getRequestUser } from "@/lib/auth/request-user";
 import { z } from "zod";
@@ -21,29 +26,43 @@ export async function GET(request: Request) {
     });
 
     const records = await listAiStudioGenerationsForUser(user.id, input.limit);
+    const catalog = await getCachedAiStudioCatalog();
+    const publicModelIds = new Map(
+      catalog.map((entry) => [entry.id, getPublicAiStudioModelId(entry)]),
+    );
+
     return apiResponse.success({
-      items: records.map((record) => ({
-        id: record.id,
-        catalogModelId: record.catalogModelId,
-        category: record.category,
-        title: record.titleSnapshot,
-        provider: record.providerSnapshot,
-        status: record.status,
-        providerTaskId: record.providerTaskId,
-        reservedCredits: record.creditsReserved,
-        capturedCredits: record.creditsCaptured,
-        refundedCredits: record.creditsRefunded,
-        resultUrls: Array.isArray(record.resultUrls)
-          ? (record.resultUrls as string[])
-          : [],
-        createdAt: record.createdAt,
-        completedAt: record.completedAt,
-        failedAt: record.failedAt,
-        statusReason: record.statusReason,
-        raw: sanitizeAiStudioDebugValue(
+      items: records.map((record) => {
+        const raw = sanitizeAiStudioDebugValue(
           record.callbackPayload ?? record.responsePayload ?? {},
-        ),
-      })),
+        );
+
+        return {
+          id: record.id,
+          catalogModelId:
+            publicModelIds.get(record.catalogModelId) ?? record.catalogModelId,
+          category: record.category,
+          title: record.titleSnapshot,
+          provider: record.providerSnapshot,
+          status: record.status,
+          providerTaskId: record.providerTaskId,
+          reservedCredits: record.creditsReserved,
+          capturedCredits: record.creditsCaptured,
+          refundedCredits: record.creditsRefunded,
+          resultUrls: Array.isArray(record.resultUrls)
+            ? (record.resultUrls as string[])
+            : [],
+          createdAt: record.createdAt,
+          completedAt: record.completedAt,
+          failedAt: record.failedAt,
+          statusReason: getAiStudioHistoryStatusReason({
+            status: record.status,
+            statusReason: record.statusReason,
+            raw,
+          }),
+          raw,
+        };
+      }),
     });
   } catch (error: any) {
     return apiResponse.serverError(

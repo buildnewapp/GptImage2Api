@@ -4,6 +4,9 @@ import test from "node:test";
 import {
   applyPricingRowToPayload,
   collectRuntimeModels,
+  getDisplayModelLabel,
+  guessPricingRow,
+  resolvePublicModelId,
   toBillableCredits,
 } from "@/lib/ai-studio/runtime";
 
@@ -51,14 +54,6 @@ test("applies the selected pricing row runtime model onto the payload", () => {
     },
     {
       modelDescription: "Open AI sora 2, text-to-video, stable-10.0s",
-      interfaceType: "video",
-      provider: "OpenAI",
-      creditPrice: "35",
-      creditUnit: "per video",
-      usdPrice: "0.175",
-      falPrice: "1.0",
-      discountRate: 82.5,
-      discountPrice: false,
       runtimeModel: "sora-2-text-to-video-stable",
     },
   );
@@ -78,14 +73,6 @@ test("applies common duration hints from the pricing description", () => {
     },
     {
       modelDescription: "Open AI sora 2, text-to-video, stable-15.0s",
-      interfaceType: "video",
-      provider: "OpenAI",
-      creditPrice: "40",
-      creditUnit: "per video",
-      usdPrice: "0.2",
-      falPrice: "1.0",
-      discountRate: 80,
-      discountPrice: false,
       runtimeModel: "sora-2-text-to-video-stable",
     },
   );
@@ -98,4 +85,82 @@ test("rounds official decimal credit prices into billable whole credits", () => 
   assert.equal(toBillableCredits("35"), 35);
   assert.equal(toBillableCredits("87.5"), 88);
   assert.equal(toBillableCredits("0"), 0);
+});
+
+test("guesses pricing rows from structured duration hints instead of url noise", () => {
+  const row = guessPricingRow(
+    [
+      {
+        modelDescription: "Open AI sora 2, image-to-video, Standard-15.0s",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "35",
+        creditUnit: "per video",
+        usdPrice: "0.175",
+        falPrice: "1.5",
+        discountRate: 88.33,
+        discountPrice: false,
+        runtimeModel: "sora-2-image-to-video",
+      },
+      {
+        modelDescription: "Open AI sora 2, image-to-video, Standard-10.0s",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "30",
+        creditUnit: "per video",
+        usdPrice: "0.15",
+        falPrice: "1.0",
+        discountRate: 85,
+        discountPrice: false,
+        runtimeModel: "sora-2-image-to-video",
+      },
+    ],
+    {
+      model: "sora-2-image-to-video",
+      input: {
+        n_frames: "10",
+        image_urls: [
+          "https://example.com/uploads/frame_15_reference.png",
+        ],
+      },
+    },
+  );
+
+  assert.equal(row?.creditPrice, "30");
+});
+
+test("uses the configured alias when rendering a single model key", () => {
+  assert.equal(
+    getDisplayModelLabel(
+      {
+        alias: "sdance-text-to-video",
+        modelKeys: ["sora-2-text-to-video"],
+      },
+      "sora-2-text-to-video",
+    ),
+    "sdance-text-to-video",
+  );
+  assert.equal(
+    getDisplayModelLabel(
+      {
+        alias: "sdance-text-to-video",
+        modelKeys: ["sora-2-text-to-video"],
+      },
+      "other-model",
+    ),
+    "other-model",
+  );
+});
+
+test("prefers the public detail id over a stale internal selected id", () => {
+  assert.equal(
+    resolvePublicModelId("video:sora2-text-to-video-standard", {
+      id: "video:sdance-text-to-video",
+    }),
+    "video:sdance-text-to-video",
+  );
+  assert.equal(
+    resolvePublicModelId("video:sdance-text-to-video", null),
+    "video:sdance-text-to-video",
+  );
 });

@@ -1,10 +1,14 @@
 import {
+  type AiStudioCatalogEntry,
   type AiStudioDocDetail,
   type AiStudioPricingRow,
   extractPricingAnchorModel,
+  getAiStudioPublicModelId,
+  getCachedAiStudioCatalog,
   getCachedAiStudioCatalogDetail,
-  normalizeModelHandle,
 } from "@/lib/ai-studio/catalog";
+import { isRenderableAssetUrl } from "@/lib/ai-studio/media";
+import { guessPricingRow } from "@/lib/ai-studio/runtime";
 
 export type AiStudioNormalizedState =
   | "queued"
@@ -107,14 +111,36 @@ export function extractTaskId(raw: unknown): string | null {
 export function extractMediaUrls(raw: unknown): string[] {
   const urls = new Set<string>();
 
+  function maybeParseJsonString(value: string) {
+    const trimmed = value.trim();
+    if (
+      !trimmed ||
+      (!trimmed.startsWith("{") &&
+        !trimmed.startsWith("["))
+    ) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(trimmed) as unknown;
+    } catch {
+      return null;
+    }
+  }
+
   function visit(value: unknown) {
     if (!value) {
       return;
     }
 
     if (typeof value === "string") {
-      if (/^https?:\/\//.test(value)) {
+      if (isRenderableAssetUrl(value)) {
         urls.add(value);
+      } else {
+        const parsed = maybeParseJsonString(value);
+        if (parsed) {
+          visit(parsed);
+        }
       }
       return;
     }
@@ -137,7 +163,91 @@ export function extractMediaUrls(raw: unknown): string[] {
   return [...urls];
 }
 
+function getNestedValue(record: Record<string, unknown>, path: string[]) {
+  let current: unknown = record;
+  for (const segment of path) {
+    if (!current || typeof current !== "object") {
+      return undefined;
+    }
+    current = (current as Record<string, unknown>)[segment];
+  }
+  return current;
+}
+
+export function extractProviderFailureReason(raw: unknown): string | null {
+  if (!raw || typeof raw !== "object") {
+    return null;
+  }
+
+  const record = raw as Record<string, unknown>;
+  const taskId = extractTaskId(raw);
+  const taskFailureMessages = [
+    getNestedValue(record, ["data", "failMsg"]),
+    getNestedValue(record, ["data", "errorMessage"]),
+    getNestedValue(record, ["data", "message"]),
+    record.error,
+    record.message,
+    record.msg,
+  ].filter((value): value is string => typeof value === "string" && value.trim().length > 0);
+
+  const genericMessages = [
+    record.msg,
+    record.message,
+    record.error,
+    getNestedValue(record, ["data", "failMsg"]),
+    getNestedValue(record, ["data", "errorMessage"]),
+    getNestedValue(record, ["data", "message"]),
+  ].filter((value): value is string => typeof value === "string" && value.trim().length > 0);
+
+  const numericCodes = [
+    record.code,
+    record.statusCode,
+    record.httpCode,
+    getNestedValue(record, ["data", "code"]),
+  ].filter((value): value is number => typeof value === "number");
+
+  const taskState = String(getNestedValue(record, ["data", "state"]) ?? "").toLowerCase();
+  const taskFailCode = getNestedValue(record, ["data", "failCode"]);
+  const successFlag = getNestedValue(record, ["data", "successFlag"]);
+  const hasTaskLevelFailure =
+    taskState === "fail" ||
+    taskState === "failed" ||
+    typeof getNestedValue(record, ["data", "failMsg"]) === "string" ||
+    typeof getNestedValue(record, ["data", "errorMessage"]) === "string" ||
+    (typeof taskFailCode === "string" && taskFailCode.trim().length > 0) ||
+    successFlag === 2 ||
+    successFlag === 3;
+
+  if (hasTaskLevelFailure) {
+    return taskFailureMessages[0] ?? "Provider task failed";
+  }
+
+  if (record.success === false || record.ok === false) {
+    return genericMessages[0] ?? "Provider request failed";
+  }
+
+  const failingCode = numericCodes.find((value) => value >= 400);
+  if (typeof failingCode === "number") {
+    return genericMessages[0] ?? `Provider request failed with code ${failingCode}`;
+  }
+
+  if (
+    record.data === null &&
+    !taskId &&
+    genericMessages.length > 0 &&
+    !genericMessages.some((value) => /success|completed?/i.test(value))
+  ) {
+    return genericMessages[0]!;
+  }
+
+  return null;
+}
+
 export function normalizeTaskState(raw: unknown): AiStudioNormalizedState {
+  if (extractProviderFailureReason(raw)) {
+    return "failed";
+  }
+
   const candidate = JSON.stringify(raw).toLowerCase();
 
   if (
@@ -185,59 +295,56 @@ export function estimatePricingRow(
   pricingRows: AiStudioPricingRow[],
   payload: Record<string, any>,
 ) {
-  if (pricingRows.length <= 1) {
-    return pricingRows[0] ?? null;
+  return guessPricingRow(
+    pricingRows.map((row) => ({
+      ...row,
+      runtimeModel: extractPricingAnchorModel(row.anchor),
+    })),
+    payload,
+  );
+}
+
+export function mapPublicModelAliasToProviderModel(
+  detail: Pick<AiStudioDocDetail, "alias" | "modelKeys">,
+  payload: Record<string, any>,
+) {
+  const body = structuredClone(payload);
+
+  if (
+    detail.alias &&
+    Array.isArray(detail.modelKeys) &&
+    detail.modelKeys.length === 1 &&
+    body.model === detail.alias
+  ) {
+    body.model = detail.modelKeys[0];
   }
 
-  const payloadText = JSON.stringify(payload).toLowerCase();
-  const payloadModel =
-    typeof payload.model === "string" ? normalizeModelHandle(payload.model) : "";
-  let bestRow: AiStudioPricingRow | null = null;
-  let bestScore = -1;
+  return body;
+}
 
-  for (const row of pricingRows) {
-    const anchorModel = normalizeModelHandle(extractPricingAnchorModel(row.anchor));
-    const tokens = row.modelDescription
-      .toLowerCase()
-      .split(/[^a-z0-9]+/)
-      .filter((token) => token.length >= 2);
+export function getCanonicalAiStudioModelId(
+  entries: Array<Pick<AiStudioCatalogEntry, "id" | "category" | "alias">>,
+  modelId: string,
+) {
+  const matched = entries.find(
+    (entry) => entry.id === modelId || getAiStudioPublicModelId(entry) === modelId,
+  );
 
-    let score = 0;
-    if (payloadModel) {
-      if (anchorModel === payloadModel) {
-        score += 50;
-      } else if (anchorModel.startsWith(`${payloadModel}-`)) {
-        score += 25;
-      } else if (anchorModel) {
-        score -= 10;
-      }
-    }
-
-    for (const token of tokens) {
-      if (payloadText.includes(token)) {
-        score += 1;
-      }
-    }
-
-    if (score > bestScore) {
-      bestScore = score;
-      bestRow = row;
-    }
-  }
-
-  return bestRow;
+  return matched?.id ?? modelId;
 }
 
 export async function prepareAiStudioExecution(
   modelId: string,
   payload: Record<string, any>,
 ) {
-  const detail = await getCachedAiStudioCatalogDetail(modelId);
+  const catalog = await getCachedAiStudioCatalog();
+  const canonicalModelId = getCanonicalAiStudioModelId(catalog, modelId);
+  const detail = await getCachedAiStudioCatalogDetail(canonicalModelId);
   if (!detail) {
     throw new Error("Unknown model");
   }
 
-  const body = structuredClone(payload);
+  const body = mapPublicModelAliasToProviderModel(detail, payload);
   const callbackUrl = getAiStudioCallbackUrl();
   if (callbackUrl && !body.callBackUrl && detail.category !== "chat") {
     body.callBackUrl = callbackUrl;
@@ -276,6 +383,11 @@ export async function submitAiStudioExecution(
     );
   }
 
+  const providerFailure = extractProviderFailureReason(raw);
+  if (providerFailure) {
+    throw new Error(providerFailure);
+  }
+
   const taskId = extractTaskId(raw);
   const statusEndpoint = resolveStatusEndpoint(detail);
 
@@ -299,7 +411,9 @@ export async function executeAiStudioModel(modelId: string, payload: Record<stri
 }
 
 export async function queryAiStudioTask(modelId: string, taskId: string) {
-  const detail = await getCachedAiStudioCatalogDetail(modelId);
+  const catalog = await getCachedAiStudioCatalog();
+  const canonicalModelId = getCanonicalAiStudioModelId(catalog, modelId);
+  const detail = await getCachedAiStudioCatalogDetail(canonicalModelId);
   if (!detail) {
     throw new Error("Unknown model");
   }

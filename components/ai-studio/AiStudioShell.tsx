@@ -25,7 +25,17 @@ import { useUserBenefits } from "@/hooks/useUserBenefits";
 import {
   applyPricingRowToPayload,
   collectRuntimeModels,
+  getDisplayModelLabel,
+  guessPricingRow,
+  resolvePublicModelId,
 } from "@/lib/ai-studio/runtime";
+import {
+  buildAiStudioQueryString,
+  collectRenderableMediaUrls,
+  parseAiStudioUrlState,
+  shouldHydrateAiStudioUrlState,
+} from "@/lib/ai-studio/shell";
+import { matchesCatalogSearch } from "@/lib/ai-studio/search";
 import { cn } from "@/lib/utils";
 import {
   AudioLines,
@@ -35,14 +45,18 @@ import {
   LoaderCircle,
   Search,
   Sparkles,
-  WandSparkles,
 } from "lucide-react";
 import {
-  startTransition,
   useDeferredValue,
   useEffect,
+  useRef,
   useState,
 } from "react";
+import {
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 
 type CatalogResponse = {
   success: boolean;
@@ -249,44 +263,7 @@ function guessSelectedPricing(
   pricingRows: AiStudioPublicPricingRow[],
   payload: Record<string, any>,
 ) {
-  if (pricingRows.length <= 1) {
-    return pricingRows[0] ?? null;
-  }
-
-  const payloadText = JSON.stringify(payload).toLowerCase();
-  const payloadModel =
-    typeof payload.model === "string" ? payload.model.toLowerCase() : "";
-  let bestRow: AiStudioPublicPricingRow | null = null;
-  let bestScore = -1;
-
-  for (const row of pricingRows) {
-    let score = 0;
-    if (payloadModel && row.runtimeModel) {
-      if (row.runtimeModel.toLowerCase() === payloadModel) {
-        score += 20;
-      } else if (row.runtimeModel.toLowerCase().startsWith(`${payloadModel}-`)) {
-        score += 10;
-      } else {
-        score -= 5;
-      }
-    }
-
-    const tokens = row.modelDescription
-      .toLowerCase()
-      .split(/[^a-z0-9]+/)
-      .filter((token) => token.length >= 2);
-    for (const token of tokens) {
-      if (payloadText.includes(token)) {
-        score += 1;
-      }
-    }
-    if (score > bestScore) {
-      bestScore = score;
-      bestRow = row;
-    }
-  }
-
-  return bestRow;
+  return guessPricingRow(pricingRows, payload);
 }
 
 function looksLikeImage(url: string) {
@@ -320,6 +297,15 @@ export default function AiStudioShell({
 }: {
   initialCategory?: AiStudioCategory;
 }) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const hasHydratedFromUrlRef = useRef(false);
+  const lastAppliedQueryRef = useRef<string | null>(null);
+  const initialUrlState = parseAiStudioUrlState(
+    new URLSearchParams(searchParams.toString()),
+    initialCategory,
+  );
   const {
     benefits,
     optimisticDeduct,
@@ -333,10 +319,10 @@ export default function AiStudioShell({
   });
   const [catalogLoading, setCatalogLoading] = useState(true);
   const [catalogError, setCatalogError] = useState<string | null>(null);
-  const [activeCategory, setActiveCategory] = useState<AiStudioCategory>(initialCategory);
-  const [search, setSearch] = useState("");
+  const [activeCategory, setActiveCategory] = useState<AiStudioCategory>(initialUrlState.category);
+  const [search, setSearch] = useState(initialUrlState.search);
   const deferredSearch = useDeferredValue(search);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(initialUrlState.modelId);
   const [detail, setDetail] = useState<AiStudioPublicDocDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [payload, setPayload] = useState<Record<string, any>>({});
@@ -360,8 +346,55 @@ export default function AiStudioShell({
   }
 
   useEffect(() => {
-    setActiveCategory(initialCategory);
-  }, [initialCategory]);
+    const incomingQuery = searchParams.toString();
+    if (
+      !shouldHydrateAiStudioUrlState({
+        hasHydrated: hasHydratedFromUrlRef.current,
+        incomingQuery,
+        lastAppliedQuery: lastAppliedQueryRef.current,
+      })
+    ) {
+      return;
+    }
+
+    const urlState = parseAiStudioUrlState(
+      new URLSearchParams(incomingQuery),
+      initialCategory,
+    );
+
+    setActiveCategory((current) =>
+      current === urlState.category ? current : urlState.category,
+    );
+    setSearch((current) => (current === urlState.search ? current : urlState.search));
+    setSelectedId((current) => {
+      if (!urlState.modelId) {
+        return current;
+      }
+
+      return current === urlState.modelId ? current : urlState.modelId;
+    });
+    hasHydratedFromUrlRef.current = true;
+    lastAppliedQueryRef.current = incomingQuery;
+  }, [initialCategory, searchParams]);
+
+  useEffect(() => {
+    const nextQuery = buildAiStudioQueryString({
+      category: activeCategory,
+      search,
+      modelId: selectedId,
+    });
+    const currentQuery = searchParams.toString();
+
+    if (nextQuery === currentQuery) {
+      lastAppliedQueryRef.current = currentQuery;
+      return;
+    }
+
+    lastAppliedQueryRef.current = nextQuery;
+    router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, {
+      scroll: false,
+    });
+  }, [activeCategory, pathname, router, search, searchParams, selectedId]);
 
   useEffect(() => {
     let mounted = true;
@@ -431,12 +464,7 @@ export default function AiStudioShell({
     if (!deferredSearch.trim()) {
       return source;
     }
-    const query = deferredSearch.toLowerCase();
-    return source.filter((entry) =>
-        `${entry.title} ${entry.provider} ${entry.pricingRows.map((row) => row.modelDescription).join(" ")}`
-          .toLowerCase()
-          .includes(query),
-    );
+    return source.filter((entry) => matchesCatalogSearch(entry, deferredSearch));
   })();
 
   useEffect(() => {
@@ -460,12 +488,13 @@ export default function AiStudioShell({
     let mounted = true;
 
     async function loadDetail() {
+      const requestedId = selectedId;
       setDetailLoading(true);
       setExecuteResult(null);
       setTaskState(null);
       setTaskRaw(null);
       try {
-        const response = await fetch(`/api/ai-studio/models/${selectedId}`);
+        const response = await fetch(`/api/ai-studio/models/${requestedId}`);
         const json = (await response.json()) as DetailResponse;
         if (!response.ok || !json.success) {
           throw new Error(json.error || "Failed to load model detail");
@@ -475,6 +504,9 @@ export default function AiStudioShell({
         }
         setDetail(json.data);
         setPayload(json.data.examplePayload || {});
+        if (json.data.id !== requestedId) {
+          setSelectedId(json.data.id);
+        }
       } catch (error) {
         if (mounted) {
           setDetail(null);
@@ -494,7 +526,7 @@ export default function AiStudioShell({
 
   useEffect(() => {
     const taskId = executeResult?.taskId;
-    const modelId = selectedId ?? "";
+    const modelId = resolvePublicModelId(selectedId, detail);
     if (!taskId || !modelId || !executeResult?.statusSupported) {
       return;
     }
@@ -547,10 +579,11 @@ export default function AiStudioShell({
         clearTimeout(timer);
       }
     };
-  }, [executeResult?.statusSupported, executeResult?.taskId, selectedId]);
+  }, [detail, executeResult?.statusSupported, executeResult?.taskId, selectedId]);
 
   async function handleRun() {
-    if (!selectedId) {
+    const modelId = resolvePublicModelId(selectedId, detail);
+    if (!modelId) {
       return;
     }
 
@@ -566,7 +599,7 @@ export default function AiStudioShell({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          modelId: selectedId,
+          modelId,
           payload,
         }),
       });
@@ -600,15 +633,11 @@ export default function AiStudioShell({
   }
 
   function updateField(path: string[], value: unknown) {
-    startTransition(() => {
-      setPayload((current) => setValueAtPath(current, path, value));
-    });
+    setPayload((current) => setValueAtPath(current, path, value));
   }
 
   function handlePricingSelection(row: AiStudioPublicPricingRow) {
-    startTransition(() => {
-      setPayload((current) => applyPricingRowToPayload(current, row));
-    });
+    setPayload((current) => applyPricingRowToPayload(current, row));
   }
 
   async function handleFileField(field: FieldDescriptor, file: File | null) {
@@ -639,105 +668,23 @@ export default function AiStudioShell({
     executeResult?.selectedPricing ||
     guessSelectedPricing(detail?.pricingRows ?? [], payload);
   const chatText = executeResult ? extractChatText(executeResult.raw) : "";
+  const renderableMediaUrls = collectRenderableMediaUrls(
+    executeResult?.mediaUrls ?? [],
+    taskRaw ?? executeResult?.raw ?? null,
+  );
+  const displayModelLabel = (modelValue: string | null | undefined) =>
+    getDisplayModelLabel(
+      {
+        alias: detail?.alias,
+        modelKeys: detail?.modelKeys,
+      },
+      modelValue,
+    );
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(15,118,110,0.15),transparent_28%),radial-gradient(circle_at_top_right,rgba(249,115,22,0.14),transparent_24%),linear-gradient(180deg,#f5f7fb_0%,#eef4ff_42%,#f6f9fc_100%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.18),transparent_26%),radial-gradient(circle_at_top_right,rgba(251,146,60,0.18),transparent_22%),linear-gradient(180deg,#020617_0%,#0f172a_42%,#111827_100%)]">
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.04)_1px,transparent_1px)] [background-size:34px_34px] dark:bg-[linear-gradient(rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.08)_1px,transparent_1px)]" />
-      <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
-        <section className="grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
-          <div className="rounded-[28px] border border-slate-200/70 bg-white/80 p-7 shadow-[0_30px_120px_rgba(15,23,42,0.08)] backdrop-blur dark:border-white/10 dark:bg-slate-950/70 dark:shadow-[0_30px_120px_rgba(2,6,23,0.45)]">
-            <Badge className="mb-4 rounded-full bg-slate-900 px-3 py-1 text-xs text-white dark:bg-white dark:text-slate-950">
-              AI Studio
-            </Badge>
-            <h1 className="max-w-3xl font-['Science_Gothic'] text-4xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-5xl">
-              One branded workspace for every official image, video, music, and chat model.
-            </h1>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300 sm:text-lg">
-              Browse the official model catalog, inspect the real credits, submit requests from generated forms,
-              and watch results arrive in one place without exposing the underlying provider brand.
-            </p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
-              {Object.entries(CATEGORY_META).map(([key, meta]) => {
-                const Icon = meta.icon;
-                return (
-                  <div
-                    key={key}
-                    className={cn(
-                      "rounded-2xl border border-slate-200/70 p-4 dark:border-white/10",
-                      "bg-gradient-to-br",
-                      meta.accent,
-                    )}
-                  >
-                    <div className="flex items-center gap-2 text-sm font-medium text-slate-900 dark:text-slate-100">
-                      <Icon className="h-4 w-4" />
-                      {meta.label}
-                    </div>
-                    <div className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
-                      {meta.blurb}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <Card className="border-slate-200/70 bg-slate-950 text-white shadow-[0_24px_90px_rgba(15,23,42,0.24)] dark:border-white/10">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-xl">
-                <WandSparkles className="h-5 w-5 text-amber-300" />
-                Official Credits
-              </CardTitle>
-              <CardDescription className="text-slate-300">
-                Credits and units come from the official pricing endpoints, not hand-maintained local constants.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4 text-sm text-slate-200">
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <div className="text-xs uppercase tracking-[0.24em] text-slate-400">
-                  Selected Rule
-                </div>
-                <div className="mt-2 text-2xl font-semibold text-white">
-                  {selectedPricing
-                    ? `${selectedPricing.creditPrice} ${selectedPricing.creditUnit}`
-                    : "Choose a model"}
-                </div>
-                <div className="mt-1 text-slate-300">
-                  {selectedPricing?.modelDescription || "We estimate the matching row from your current payload."}
-                </div>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <div className="text-xs uppercase tracking-[0.2em] text-slate-400">
-                    Available Credits
-                  </div>
-                  <div className="mt-2 text-3xl font-semibold text-white">
-                    {benefits?.totalAvailableCredits ?? "Sign in"}
-                  </div>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <div className="text-xs uppercase tracking-[0.2em] text-slate-400">
-                    Async Status
-                  </div>
-                  <div className="mt-2 text-3xl font-semibold text-white">
-                    {taskState || "Ready"}
-                  </div>
-                </div>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <div className="text-xs uppercase tracking-[0.2em] text-slate-400">
-                  Reserve On Run
-                </div>
-                <div className="mt-2 text-xl font-semibold text-white">
-                  {selectedPricing ? `${selectedPricing.creditPrice} official credits` : "Select a pricing row"}
-                </div>
-                <div className="mt-1 text-slate-300">
-                  Settlement is tracked in AI Studio history with refund on failed tasks.
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-
+      <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
         <section className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)]">
           <Card className="overflow-hidden border-slate-200/70 bg-white/80 backdrop-blur dark:border-white/10 dark:bg-slate-950/70">
             <CardHeader className="border-b border-slate-100 dark:border-white/10">
@@ -770,7 +717,7 @@ export default function AiStudioShell({
                 <Input
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Search model, provider, or price row"
+                  placeholder="Search model or provider"
                   className="pl-9"
                 />
               </div>
@@ -860,11 +807,30 @@ export default function AiStudioShell({
                         ? `${detail.provider} · ${detail.method} ${detail.endpoint}`
                         : "Choose a model from the left panel to load the official request schema and example payload."}
                     </CardDescription>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <Badge className="rounded-full bg-slate-950 text-white dark:bg-slate-100 dark:text-slate-950">
+                        {selectedPricing
+                          ? `${selectedPricing.creditPrice} ${selectedPricing.creditUnit}`
+                          : "No pricing match"}
+                      </Badge>
+                      <Badge
+                        variant="secondary"
+                        className="rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                      >
+                        Credits {benefits?.totalAvailableCredits ?? "Sign in"}
+                      </Badge>
+                      <Badge
+                        variant="secondary"
+                        className="rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                      >
+                        {taskState || "Ready"}
+                      </Badge>
+                    </div>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {detail?.modelKeys.slice(0, 4).map((modelKey) => (
                       <Badge key={modelKey} className="rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
-                        {modelKey}
+                        {displayModelLabel(modelKey)}
                       </Badge>
                     ))}
                   </div>
@@ -916,7 +882,7 @@ export default function AiStudioShell({
                           >
                             {runtimeModels.map((runtimeModel) => (
                               <option key={runtimeModel} value={runtimeModel}>
-                                {runtimeModel}
+                                {displayModelLabel(runtimeModel)}
                               </option>
                             ))}
                           </select>
@@ -969,7 +935,9 @@ export default function AiStudioShell({
                               >
                                 {enumValues.map((option) => (
                                   <option key={String(option)} value={String(option)}>
-                                    {String(option)}
+                                    {key === "model"
+                                      ? displayModelLabel(String(option))
+                                      : String(option)}
                                   </option>
                                 ))}
                               </select>
@@ -1121,7 +1089,7 @@ export default function AiStudioShell({
                         Official Pricing Rows
                       </CardTitle>
                       <CardDescription className="dark:text-slate-300">
-                        These values are sourced from the live pricing endpoints.
+                        These values are sourced from the synced pricing snapshot.
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-3">
@@ -1179,7 +1147,7 @@ export default function AiStudioShell({
                                     : "text-slate-500 dark:text-slate-400",
                                 )}
                               >
-                                model: {row.runtimeModel}
+                                model: {displayModelLabel(row.runtimeModel)}
                               </div>
                             )}
                           </button>
@@ -1229,9 +1197,9 @@ export default function AiStudioShell({
                         </div>
                       )}
 
-                      {executeResult?.mediaUrls?.length ? (
+                      {renderableMediaUrls.length ? (
                         <div className="grid gap-4">
-                          {executeResult.mediaUrls.map((url) => (
+                          {renderableMediaUrls.map((url) => (
                             <div
                               key={url}
                               className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 dark:border-white/10 dark:bg-slate-900"
@@ -1320,7 +1288,7 @@ export default function AiStudioShell({
                               Reserved {item.reservedCredits} · Refunded {item.refundedCredits}
                             </div>
                             {item.statusReason && (
-                              <div className="mt-2 text-xs text-rose-600 dark:text-rose-300">
+                              <div className="mt-2 break-words text-xs text-rose-600 dark:text-rose-300">
                                 {item.statusReason}
                               </div>
                             )}

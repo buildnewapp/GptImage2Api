@@ -1,4 +1,6 @@
+import { getCachedAiStudioCatalogEntry } from "@/lib/ai-studio/catalog";
 import { queryAiStudioTask } from "@/lib/ai-studio/execute";
+import { extractProviderFailureReason } from "@/lib/ai-studio/execute";
 import {
   getAiStudioGenerationForUserByTaskId,
   settleAiStudioGenerationFailure,
@@ -6,6 +8,7 @@ import {
   updateAiStudioGenerationProgress,
 } from "@/lib/ai-studio/generations";
 import { sanitizeAiStudioDebugValue } from "@/lib/ai-studio/public";
+import { getPublicAiStudioModelId } from "@/lib/ai-studio/public";
 import { apiResponse } from "@/lib/api-response";
 import { getRequestUser } from "@/lib/auth/request-user";
 import { z } from "zod";
@@ -37,11 +40,16 @@ export async function GET(
       return apiResponse.notFound("Generation record not found");
     }
 
+    const catalogEntry = await getCachedAiStudioCatalogEntry(generation.catalogModelId);
+    const publicModelId = catalogEntry
+      ? getPublicAiStudioModelId(catalogEntry)
+      : input.modelId;
+
     if (generation.status === "succeeded" || generation.status === "failed") {
       return apiResponse.success({
         generationId: generation.id,
         taskId,
-        modelId: generation.catalogModelId,
+        modelId: publicModelId,
         state: generation.status === "succeeded" ? "succeeded" : "failed",
         mediaUrls: Array.isArray(generation.resultUrls)
           ? (generation.resultUrls as string[])
@@ -66,11 +74,9 @@ export async function GET(
       await settleAiStudioGenerationFailure(generation.id, {
         raw: result.raw,
         reason:
-          typeof result.raw === "string"
-            ? result.raw
-            : (result.raw as any)?.msg ||
-              (result.raw as any)?.message ||
-              "Provider task failed",
+          extractProviderFailureReason(result.raw) ||
+          (typeof result.raw === "string" ? result.raw : null) ||
+          "Provider task failed",
         providerState: result.state,
       });
     } else if (result.state === "queued" || result.state === "running") {
@@ -84,7 +90,7 @@ export async function GET(
     return apiResponse.success({
       generationId: generation.id,
       taskId,
-      modelId: input.modelId,
+      modelId: publicModelId,
       state: result.state,
       mediaUrls: result.mediaUrls,
       raw: sanitizeAiStudioDebugValue(result.raw),

@@ -9,9 +9,14 @@ import {
   settleAiStudioGenerationSuccess,
 } from "@/lib/ai-studio/generations";
 import {
+  getPublicAiStudioModelId,
   sanitizeAiStudioDebugValue,
   toPublicPricingRow,
 } from "@/lib/ai-studio/public";
+import {
+  canAccessAiStudioModel,
+  loadAiStudioPolicyConfig,
+} from "@/lib/ai-studio/policy";
 import { apiResponse } from "@/lib/api-response";
 import { getRequestUser } from "@/lib/auth/request-user";
 import { z } from "zod";
@@ -31,6 +36,10 @@ export async function POST(request: Request) {
     const body = await request.json();
     const input = inputSchema.parse(body);
     const prepared = await prepareAiStudioExecution(input.modelId, input.payload);
+    const policy = await loadAiStudioPolicyConfig();
+    if (!canAccessAiStudioModel(prepared.detail, { role: user.role, config: policy })) {
+      return apiResponse.error("This model is unavailable for your account.", 403);
+    }
     const { generation, reservedCredits } = await reserveAiStudioGeneration({
       userId: user.id,
       modelId: input.modelId,
@@ -62,7 +71,7 @@ export async function POST(request: Request) {
       }
 
       return apiResponse.success({
-        modelId: input.modelId,
+        modelId: getPublicAiStudioModelId(prepared.detail),
         generationId: generation.id,
         reservedCredits,
         taskId: result.taskId,
@@ -72,9 +81,11 @@ export async function POST(request: Request) {
         raw: sanitizeAiStudioDebugValue(result.raw),
         mediaUrls: result.mediaUrls,
         selectedPricing: prepared.selectedPricing
-          ? toPublicPricingRow(prepared.selectedPricing)
+          ? toPublicPricingRow(prepared.selectedPricing, prepared.detail)
           : null,
-        pricingRows: prepared.detail.pricingRows.map(toPublicPricingRow),
+        pricingRows: prepared.detail.pricingRows.map((row) =>
+          toPublicPricingRow(row, prepared.detail),
+        ),
       });
     } catch (error: any) {
       await settleAiStudioGenerationFailure(generation.id, {

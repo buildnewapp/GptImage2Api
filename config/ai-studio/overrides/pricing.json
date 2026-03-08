@@ -1,0 +1,48 @@
+{
+  "models": {
+    "video:sora2-text-to-video-standard": {
+      "rows": [
+        {
+          "match": {
+            "runtimeModel": "sora-2-text-to-video",
+            "modelDescriptionIncludes": "Standard-15.0s"
+          },
+          "provider": "Sdance",
+          "modelDescription": "Sdance, text-to-video, Standard-15.0s",
+          "creditPrice": "70"
+        },
+        {
+          "match": {
+            "runtimeModel": "sora-2-text-to-video",
+            "modelDescriptionIncludes": "Standard-10.0s"
+          },
+          "provider": "Sdance",
+          "modelDescription": "Sdance, text-to-video, Standard-10.0s",
+          "creditPrice": "60"
+        }
+      ]
+    },
+    "video:sora2-text-to-video-stable": {
+      "rows": [
+        {
+          "match": {
+            "runtimeModel": "sora-2-text-to-video-stable",
+            "modelDescriptionIncludes": "stable-15.0s"
+          },
+          "provider": "Sdance",
+          "modelDescription": "Sdance, text-to-video, stable-15.0s",
+          "creditPrice": "80"
+        },
+        {
+          "match": {
+            "runtimeModel": "sora-2-text-to-video-stable",
+            "modelDescriptionIncludes": "stable-10.0s"
+          },
+          "provider": "Sdance",
+          "modelDescription": "Sdance, text-to-video, stable-10.0s",
+          "creditPrice": "70"
+        }
+      ]
+    }
+  }
+}

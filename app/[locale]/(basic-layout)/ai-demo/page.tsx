@@ -1,5 +1,8 @@
 import AiStudioPage from "@/components/ai-studio/AiStudioPage";
+import { getAiDemoAccessRedirect } from "@/lib/ai-studio/access";
 import type { AiStudioCategory } from "@/lib/ai-studio/catalog";
+import { isAdmin } from "@/lib/auth/server";
+import { redirect } from "next/navigation";
 
 function parseCategory(
   value: string | string[] | undefined,
@@ -22,6 +25,11 @@ export default async function AIHubPage({
 }: {
   searchParams: SearchParams;
 }) {
+  const redirectTo = getAiDemoAccessRedirect(await isAdmin());
+  if (redirectTo) {
+    redirect(redirectTo);
+  }
+
   const params = await searchParams;
   return <AiStudioPage initialCategory={parseCategory(params.category)} />;
 }

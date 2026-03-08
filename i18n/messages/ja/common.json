@@ -143,6 +143,11 @@
         "name": "動画生成履歴",
         "href": "/dashboard/admin-video-generations",
         "icon": "Video"
+      },
+      {
+        "name": "AI Studio管理",
+        "href": "/dashboard/ai-studio-admin",
+        "icon": "Bot"
       }
     ]
   },

@@ -315,6 +315,46 @@ export async function settleAiStudioGenerationFailure(
   });
 }
 
+export async function forceFailAiStudioGeneration(
+  generationId: string,
+  input: {
+    raw?: unknown;
+    reason?: string | null;
+    providerState?: string | null;
+  },
+) {
+  return getDb().transaction(async (tx) => {
+    const current = await tx
+      .select()
+      .from(aiStudioGenerations)
+      .where(eq(aiStudioGenerations.id, generationId))
+      .for("update");
+
+    let generation = current[0];
+    if (!generation) {
+      return null;
+    }
+
+    const updated = await tx
+      .update(aiStudioGenerations)
+      .set({
+        status: "failed",
+        providerState: input.providerState ?? "failed",
+        responsePayload:
+          input.raw !== undefined ? input.raw : generation.responsePayload,
+        statusReason: input.reason ?? generation.statusReason,
+        failedAt: generation.failedAt ?? new Date(),
+        completedAt: null,
+        creditsCaptured: 0,
+      })
+      .where(eq(aiStudioGenerations.id, generation.id))
+      .returning();
+
+    generation = updated[0] ?? generation;
+    return refundReservedCredits(generation, tx);
+  });
+}
+
 export async function updateAiStudioGenerationProgress(
   generationId: string,
   input: {

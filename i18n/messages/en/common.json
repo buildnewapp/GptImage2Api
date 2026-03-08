@@ -143,6 +143,11 @@
         "name": "Video Generations",
         "href": "/dashboard/admin-video-generations",
         "icon": "Video"
+      },
+      {
+        "name": "AI Studio",
+        "href": "/dashboard/ai-studio-admin",
+        "icon": "Bot"
       }
     ]
   },
