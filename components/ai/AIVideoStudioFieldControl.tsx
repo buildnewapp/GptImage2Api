@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import type { AiVideoStudioFieldDescriptor } from "@/lib/ai-video-studio/schema";
 import {
   Clock,
+  Dices,
   FileText,
   Hash,
   Image as ImageIcon,
@@ -17,13 +18,14 @@ import {
   Shield,
   Video,
 } from "lucide-react";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 type AIVideoStudioFieldControlProps = {
   field: AiVideoStudioFieldDescriptor;
   label: string;
   value: unknown;
   disabled?: boolean;
+  compact?: boolean;
   useUrlLabel?: string;
   promptPlaceholder?: string;
   onChange: (value: unknown) => void;
@@ -150,21 +152,44 @@ export function updateHorizontalDragScroll(
   return session.startScrollLeft - (currentClientX - session.startClientX);
 }
 
+const RANDOM_SEED_MAX_EXCLUSIVE = 2147483647;
+
+export function createRandomSeedValue() {
+  return Math.floor(Math.random() * RANDOM_SEED_MAX_EXCLUSIVE);
+}
+
 function renderFieldLabel(
   field: AiVideoStudioFieldDescriptor,
   label: string,
   htmlFor?: string,
+  compact = false,
 ) {
   const Icon = getFieldIcon(field);
 
   return (
     <Label
       htmlFor={htmlFor}
-      className="flex items-center gap-2 text-sm font-medium text-muted-foreground"
+      className={cn(
+        "flex items-center font-medium text-muted-foreground",
+        compact ? "gap-1.5 text-[13px]" : "gap-2 text-sm",
+      )}
     >
-      <Icon className="h-4 w-4" />
+      <Icon className={cn(compact ? "h-3.5 w-3.5" : "h-4 w-4")} />
       <span>{label}</span>
     </Label>
+  );
+}
+
+function getFieldRootClassName(compact = false) {
+  return compact ? "space-y-1" : "space-y-2";
+}
+
+function getInputClassName(compact = false, className?: string) {
+  return cn(
+    compact
+      ? "h-8 w-32 bg-transparent px-0 text-[13px] shadow-none"
+      : "rounded-xl bg-background/60",
+    className,
   );
 }
 
@@ -199,6 +224,7 @@ export default function AIVideoStudioFieldControl({
   label,
   value,
   disabled,
+  compact = false,
   useUrlLabel = "Use URL",
   promptPlaceholder,
   onChange,
@@ -216,15 +242,19 @@ export default function AIVideoStudioFieldControl({
 
   if (field.kind === "prompt") {
     return (
-      <div className="space-y-3">
-        {renderFieldLabel(field, label, field.key)}
+      <div className={getFieldRootClassName(compact)}>
+        {renderFieldLabel(field, label, field.key, compact)}
         <Textarea
           id={field.key}
           value={typeof value === "string" ? value : ""}
           onChange={(event) => onChange(event.target.value)}
           disabled={disabled}
           maxLength={field.schema.maxLength}
-          className="min-h-32 rounded-xl bg-background/60"
+          className={cn(
+            compact
+              ? "min-h-24 rounded-xl border-0 bg-muted/30 text-[13px] shadow-none focus-visible:border-transparent focus-visible:ring-0"
+              : "min-h-24 rounded-xl bg-background/60",
+          )}
           placeholder={promptPlaceholder}
         />
       </div>
@@ -233,11 +263,13 @@ export default function AIVideoStudioFieldControl({
 
   if (field.kind === "image") {
     return (
-      <div className="space-y-3">
+      <div className={getFieldRootClassName(compact)}>
         <div className="flex items-center justify-between gap-3">
-          {renderFieldLabel(field, label)}
+          {renderFieldLabel(field, label, undefined, compact)}
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">{useUrlLabel}</span>
+            <span className={cn("text-muted-foreground", compact ? "text-[13px]" : "text-sm")}>
+              {useUrlLabel}
+            </span>
             <Switch
               checked={useUrl}
               onCheckedChange={(nextChecked) => {
@@ -247,6 +279,7 @@ export default function AIVideoStudioFieldControl({
                 }
               }}
               disabled={disabled}
+              className={cn(compact && "scale-90")}
             />
           </div>
         </div>
@@ -263,7 +296,7 @@ export default function AIVideoStudioFieldControl({
               onChange(nextValue);
             }}
             disabled={disabled}
-            className="rounded-xl bg-background/60"
+            className={getInputClassName(compact)}
             placeholder="https://example.com/source-image.webp"
           />
         ) : (
@@ -291,10 +324,18 @@ export default function AIVideoStudioFieldControl({
 
     if (field.key === "aspect_ratio") {
       return (
-        <div className="space-y-3">
-          {renderFieldLabel(field, label)}
-          <div className="flex flex-row gap-3 overflow-x-auto scrollbar-thin py-2" style={{scrollbarWidth: "thin",
-            scrollbarColor: "#d1d5db transparent"}}>
+        <div className={getFieldRootClassName(compact)}>
+          {renderFieldLabel(field, label, undefined, compact)}
+          <div
+            className={cn(
+              "flex flex-row flex-nowrap overflow-x-auto py-1 scrollbar-thin",
+              compact ? "gap-1" : "gap-2",
+            )}
+            style={{
+              scrollbarWidth: "thin",
+              scrollbarColor: "#d1d5db transparent",
+            }}
+          >
             {options.map((option) => (
               <button
                 key={option}
@@ -302,10 +343,17 @@ export default function AIVideoStudioFieldControl({
                 disabled={disabled}
                 onClick={() => onChange(option)}
                 className={cn(
-                  "flex min-h-18 min-w-[72px] flex-col items-center justify-center gap-1 rounded-2xl border px-2 py-1 text-sm font-medium transition-colors",
+                  "flex min-w-[62px] flex-col items-center justify-center gap-1 font-medium transition-colors",
+                  compact
+                    ? "min-h-16 rounded-xl border-0 px-2 py-1 text-[13px]"
+                    : "min-h-18 rounded-2xl  px-2 py-1 text-sm",
                   value === option
-                    ? "border-blue-400/70 bg-blue-500/10 text-blue-700 dark:text-blue-300"
-                    : "border-border/60 bg-background/60 text-muted-foreground hover:bg-muted/40 hover:text-foreground",
+                    ? compact
+                      ? "bg-foreground text-background"
+                      : "border-blue-400/70 bg-blue-500/10 text-blue-700 dark:text-blue-300 border"
+                    : compact
+                      ? "bg-muted/40 text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                      : "border-border/60 bg-background/60 text-muted-foreground hover:bg-muted/40 hover:text-foreground",
                 )}
               >
                 {getAspectRatioPreview(option)}
@@ -318,9 +366,9 @@ export default function AIVideoStudioFieldControl({
     }
 
     return (
-      <div className="space-y-3">
-        {renderFieldLabel(field, label)}
-        <div className="flex flex-wrap gap-2">
+      <div className={getFieldRootClassName(compact)}>
+        {renderFieldLabel(field, label, undefined, compact)}
+        <div className={cn("flex flex-wrap", compact ? "gap-1.5" : "gap-2")}>
           {options.map((option) => (
             <button
               key={option}
@@ -328,10 +376,17 @@ export default function AIVideoStudioFieldControl({
               disabled={disabled}
               onClick={() => onChange(option)}
               className={cn(
-                "min-w-[72px] rounded-xl border px-4 py-2 text-sm font-medium transition-colors",
+                "min-w-[72px] font-medium transition-colors",
+                compact
+                  ? "rounded-lg border-0 px-3 py-1.5 text-[13px]"
+                  : "rounded-xl border px-4 py-2 text-sm",
                 value === option
-                  ? "border-zinc-900 bg-zinc-900 text-white dark:border-white dark:bg-white dark:text-black"
-                  : "border-border/60 bg-background/60 text-foreground hover:bg-muted/40",
+                  ? compact
+                    ? "bg-foreground text-background"
+                    : "border-zinc-900 bg-zinc-900 text-white dark:border-white dark:bg-white dark:text-black"
+                  : compact
+                    ? "bg-muted/40 text-foreground hover:bg-muted/60"
+                    : "border-border/60 bg-background/60 text-foreground hover:bg-muted/40",
               )}
             >
               {getEnumOptionLabel(field, option)}
@@ -344,13 +399,19 @@ export default function AIVideoStudioFieldControl({
 
   if (field.kind === "boolean") {
     return (
-      <div className="flex items-center justify-between rounded-xl border border-border/60 bg-background/40 px-4 py-3">
-        {renderFieldLabel(field, label, field.key)}
+      <div
+        className={cn(
+          "flex items-center justify-between rounded-xl border border-border/60 bg-background/40 px-4 py-3",
+          compact && "gap-3 rounded-none border-0 bg-transparent px-0 py-1",
+        )}
+      >
+        {renderFieldLabel(field, label, field.key, compact)}
         <Switch
           id={field.key}
           checked={Boolean(value)}
           onCheckedChange={onChange}
           disabled={disabled}
+          className={cn(compact && "scale-90")}
         />
       </div>
     );
@@ -358,8 +419,8 @@ export default function AIVideoStudioFieldControl({
 
   if (field.kind === "string-array") {
     return (
-      <div className="space-y-3">
-        {renderFieldLabel(field, label, field.key)}
+      <div className={getFieldRootClassName(compact)}>
+        {renderFieldLabel(field, label, field.key, compact)}
         <Input
           id={field.key}
           value={getStringArrayValue(value)}
@@ -372,7 +433,7 @@ export default function AIVideoStudioFieldControl({
             )
           }
           disabled={disabled}
-          className="rounded-xl bg-background/60"
+          className={getInputClassName(compact)}
           placeholder="id_1, id_2"
         />
       </div>
@@ -380,9 +441,48 @@ export default function AIVideoStudioFieldControl({
   }
 
   if (field.kind === "number") {
+    if (compact && field.key === "seed") {
+      return (
+        <div
+          className="flex items-center justify-between gap-3 py-1"
+          data-compact-seed-row="true"
+        >
+          {renderFieldLabel(field, label, field.key, true)}
+          <div className="flex min-w-0 items-center justify-end gap-2">
+            <Input
+              id={field.key}
+              type="number"
+              value={typeof value === "number" || typeof value === "string" ? value : ""}
+              onChange={(event) => {
+                const nextValue = event.target.value;
+                onChange(nextValue === "" ? "" : Number(nextValue));
+              }}
+              disabled={disabled}
+              min={field.schema.minimum}
+              max={field.schema.maximum}
+              step={field.schema.step}
+              className={getInputClassName(
+                true,
+                "max-w-[180px] text-right tabular-nums",
+              )}
+            />
+            <button
+              type="button"
+              aria-label="Randomize seed"
+              onClick={() => onChange(createRandomSeedValue())}
+              disabled={disabled}
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground disabled:pointer-events-none disabled:opacity-50"
+            >
+              <Dices className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <div className="space-y-3">
-        {renderFieldLabel(field, label, field.key)}
+      <div className={getFieldRootClassName(compact)}>
+        {renderFieldLabel(field, label, field.key, compact)}
         <Input
           id={field.key}
           type="number"
@@ -395,21 +495,21 @@ export default function AIVideoStudioFieldControl({
           min={field.schema.minimum}
           max={field.schema.maximum}
           step={field.schema.step}
-          className="rounded-xl bg-background/60"
+          className={getInputClassName(compact)}
         />
       </div>
     );
   }
 
   return (
-    <div className="space-y-3">
-      {renderFieldLabel(field, label, field.key)}
+    <div className={getFieldRootClassName(compact)}>
+      {renderFieldLabel(field, label, field.key, compact)}
       <Input
         id={field.key}
         value={typeof value === "string" ? value : ""}
         onChange={(event) => onChange(event.target.value)}
         disabled={disabled}
-        className="rounded-xl bg-background/60"
+        className={getInputClassName(compact)}
       />
     </div>
   );

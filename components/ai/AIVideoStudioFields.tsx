@@ -45,7 +45,7 @@ export default function AIVideoStudioFields({
   const [advancedOpen, setAdvancedOpen] = useState(false);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-3">
       {primary.map((field) => (
         <AIVideoStudioFieldControl
           key={field.key}
@@ -62,24 +62,24 @@ export default function AIVideoStudioFields({
       <Collapsible
         open={advancedOpen}
         onOpenChange={setAdvancedOpen}
-        className="rounded-2xl border border-border/60 bg-background/30"
+        className="rounded-xl border border-border/60 bg-background/30"
       >
         <CollapsibleTrigger
-          className="flex w-full items-center justify-between px-4 py-3 text-sm font-semibold text-foreground"
+          className="flex w-full items-center justify-between px-3 py-2.5 text-[13px] font-semibold text-foreground"
           disabled={disabled}
         >
-          <span className="flex items-center gap-2 py-1">
-            <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
+          <span className="flex items-center gap-2 py-1.5">
+            <SlidersHorizontal className="h-3.5 w-3.5 text-muted-foreground" />
             <span>{advancedLabel}</span>
           </span>
           <ChevronDown
             className={cn(
-              "h-4 w-4 text-muted-foreground transition-transform",
+              "h-3.5 w-3.5 text-muted-foreground transition-transform",
               advancedOpen && "rotate-180",
             )}
           />
         </CollapsibleTrigger>
-        <CollapsibleContent className="space-y-4 px-4 pb-4">
+        <CollapsibleContent className="space-y-2.5 px-3 pb-3">
           {advanced.map((field) => (
             <AIVideoStudioFieldControl
               key={field.key}
@@ -87,17 +87,18 @@ export default function AIVideoStudioFields({
               label={resolveLabel(field)}
               value={values[field.key]}
               disabled={disabled}
+              compact
               useUrlLabel={useUrlLabel}
               promptPlaceholder={promptPlaceholder}
               onChange={(nextValue) => onChange({ [field.key]: nextValue })}
             />
           ))}
-          <div className="flex items-center justify-between rounded-xl border border-border/60 bg-background/40 px-4 py-3">
+          <div className="flex items-center justify-between gap-3 bg-transparent px-0 py-1">
             <Label
               htmlFor="ai-video-studio-is-public"
-              className="flex items-center gap-2 text-sm font-medium text-muted-foreground"
+              className="flex items-center gap-1.5 text-[13px] font-medium text-muted-foreground"
             >
-              <Globe className="h-4 w-4" />
+              <Globe className="h-3.5 w-3.5" />
               <span>{publicLabel}</span>
             </Label>
             <Switch
@@ -105,6 +106,7 @@ export default function AIVideoStudioFields({
               checked={isPublic}
               onCheckedChange={onPublicChange}
               disabled={disabled}
+              className="scale-90"
             />
           </div>
         </CollapsibleContent>
