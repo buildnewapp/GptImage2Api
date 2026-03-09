@@ -33,5 +33,9 @@
     "model_filter": "按模型筛选"
   },
   "download": "下载",
-  "copy": "复制"
+  "copy": "复制",
+  "delete": "删除",
+  "delete_confirm": "从你的列表中删除这个视频吗？后台管理员仍然可以看到它。",
+  "delete_success": "已从你的列表中移除",
+  "delete_failed": "删除视频失败"
 }

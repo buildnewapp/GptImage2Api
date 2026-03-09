@@ -809,6 +809,8 @@ export const aiStudioGenerations = pgTable(
     creditsReserved: integer("credits_reserved").default(0).notNull(),
     creditsCaptured: integer("credits_captured").default(0).notNull(),
     creditsRefunded: integer("credits_refunded").default(0).notNull(),
+    isPublic: boolean("is_public").default(true).notNull(),
+    userDeletedAt: timestamp("user_deleted_at", { withTimezone: true }),
     completedAt: timestamp("completed_at", { withTimezone: true }),
     failedAt: timestamp("failed_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })

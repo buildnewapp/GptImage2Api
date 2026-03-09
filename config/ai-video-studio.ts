@@ -120,6 +120,25 @@ const AI_VIDEO_STUDIO_VERSIONS: AiVideoStudioVersion[] = [
   },
 ];
 
+export function getAiVideoStudioSelectionFromModelId(modelId: string) {
+  for (const version of AI_VIDEO_STUDIO_VERSIONS) {
+    for (const mode of ["text-to-video", "image-to-video"] as const) {
+      if (version.modelIds[mode] === modelId) {
+        return {
+          familyKey: version.familyKey,
+          versionKey: version.key,
+          mode,
+        };
+      }
+    }
+  }
+
+  return null;
+}
+
+export const resolveAiVideoStudioSelectionFromModelId =
+  getAiVideoStudioSelectionFromModelId;
+
 export function getAiVideoStudioVersions(
   familyKey: AiVideoStudioFamilyKey,
 ) {

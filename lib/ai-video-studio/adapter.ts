@@ -7,6 +7,7 @@ import type {
   AiVideoStudioMode,
   AiVideoStudioVersionKey,
 } from "@/config/ai-video-studio";
+import { AI_VIDEO_STUDIO_FAMILIES, getAiVideoStudioVersions } from "@/config/ai-video-studio";
 
 export const AI_VIDEO_STUDIO_FORM_STORAGE_KEY = "ai-video-studio-form";
 
@@ -96,10 +97,19 @@ export function safeParseAiVideoStudioStoredState(
 
   try {
     const parsed = JSON.parse(raw) as Partial<AiVideoStudioStoredState>;
+    const familyExists =
+      typeof parsed.familyKey === "string" &&
+      AI_VIDEO_STUDIO_FAMILIES.some((family) => family.key === parsed.familyKey);
+    const versionExists =
+      familyExists &&
+      typeof parsed.versionKey === "string" &&
+      getAiVideoStudioVersions(parsed.familyKey as string).some(
+        (version) => version.key === parsed.versionKey,
+      );
     if (
       (parsed.mode !== "text-to-video" && parsed.mode !== "image-to-video") ||
-      parsed.familyKey !== "sora2" ||
-      (parsed.versionKey !== "sora-2" && parsed.versionKey !== "sora-2-pro") ||
+      !familyExists ||
+      !versionExists ||
       typeof parsed.isPublic !== "boolean" ||
       !parsed.formValues ||
       typeof parsed.formValues !== "object"
@@ -109,8 +119,8 @@ export function safeParseAiVideoStudioStoredState(
 
     return {
       mode: parsed.mode,
-      familyKey: parsed.familyKey,
-      versionKey: parsed.versionKey,
+      familyKey: parsed.familyKey as string,
+      versionKey: parsed.versionKey as string,
       isPublic: parsed.isPublic,
       formValues: parsed.formValues as AiVideoStudioFormValues,
     };

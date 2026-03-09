@@ -33,5 +33,9 @@
     "model_filter": "モデルで絞り込み"
   },
   "download": "ダウンロード",
-  "copy": "コピー"
+  "copy": "コピー",
+  "delete": "削除",
+  "delete_confirm": "この動画をあなたの一覧から削除しますか？管理者には引き続き表示されます。",
+  "delete_success": "一覧から削除しました",
+  "delete_failed": "動画の削除に失敗しました"
 }

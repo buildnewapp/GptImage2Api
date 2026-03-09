@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   AI_VIDEO_STUDIO_FAMILIES,
   getAiVideoStudioVersions,
+  resolveAiVideoStudioSelectionFromModelId,
   resolveAiVideoStudioModelId,
 } from "@/config/ai-video-studio";
 
@@ -97,5 +98,16 @@ test("returns null when the configured version does not support the requested mo
       mode: "text-to-video",
     }),
     null,
+  );
+});
+
+test("resolves ai video studio selection metadata from a model id", () => {
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("video:bytedance-v1-pro-image-to-video"),
+    {
+      familyKey: "seedance-1.5",
+      versionKey: "seedance-1.5",
+      mode: "image-to-video",
+    },
   );
 });

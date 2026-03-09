@@ -33,5 +33,9 @@
     "model_filter": "Filter by model"
   },
   "download": "Download",
-  "copy": "Copy"
+  "copy": "Copy",
+  "delete": "Delete",
+  "delete_confirm": "Delete this video from your list? Admins will still be able to see it.",
+  "delete_success": "Video removed from your list",
+  "delete_failed": "Failed to delete video"
 }

@@ -441,3 +441,52 @@ export async function listAiStudioGenerationsForUser(userId: string, limit = 20)
     .orderBy(desc(aiStudioGenerations.createdAt))
     .limit(limit);
 }
+
+export async function updateAiStudioGenerationVisibilityForUser(
+  userId: string,
+  generationId: string,
+  isPublic: boolean,
+) {
+  const result = await getDb()
+    .update(aiStudioGenerations)
+    .set({
+      isPublic,
+      updatedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(aiStudioGenerations.id, generationId),
+        eq(aiStudioGenerations.userId, userId),
+      ),
+    )
+    .returning({
+      id: aiStudioGenerations.id,
+      isPublic: aiStudioGenerations.isPublic,
+    });
+
+  return result[0] ?? null;
+}
+
+export async function softDeleteAiStudioGenerationForUser(
+  userId: string,
+  generationId: string,
+) {
+  const result = await getDb()
+    .update(aiStudioGenerations)
+    .set({
+      userDeletedAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(aiStudioGenerations.id, generationId),
+        eq(aiStudioGenerations.userId, userId),
+        sql`${aiStudioGenerations.userDeletedAt} is null`,
+      ),
+    )
+    .returning({
+      id: aiStudioGenerations.id,
+    });
+
+  return result[0] ?? null;
+}

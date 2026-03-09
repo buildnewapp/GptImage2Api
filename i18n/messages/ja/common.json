@@ -54,7 +54,7 @@
     "UserMenus": [
       {
         "name": "マイビデオ",
-        "href": "/dashboard/video-generations",
+        "href": "/dashboard/videos",
         "icon": "Video"
       },
       {
@@ -141,7 +141,7 @@
       },
       {
         "name": "動画生成履歴",
-        "href": "/dashboard/admin-video-generations",
+        "href": "/dashboard/admin-videos",
         "icon": "Video"
       },
       {

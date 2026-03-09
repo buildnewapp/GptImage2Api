@@ -54,7 +54,7 @@
     "UserMenus": [
       {
         "name": "My Videos",
-        "href": "/dashboard/video-generations",
+        "href": "/dashboard/videos",
         "icon": "Video"
       },
       {
@@ -141,7 +141,7 @@
       },
       {
         "name": "Video Generations",
-        "href": "/dashboard/admin-video-generations",
+        "href": "/dashboard/admin-videos",
         "icon": "Video"
       },
       {
