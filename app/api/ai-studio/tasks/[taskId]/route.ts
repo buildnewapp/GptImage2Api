@@ -65,11 +65,14 @@ export async function GET(
     const result = await queryAiStudioTask(input.modelId, taskId);
 
     if (result.state === "succeeded") {
-      await settleAiStudioGenerationSuccess(generation.id, {
+      const settled = await settleAiStudioGenerationSuccess(generation.id, {
         raw: result.raw,
         mediaUrls: result.mediaUrls,
         providerState: result.state,
       });
+      if (Array.isArray(settled?.resultUrls)) {
+        result.mediaUrls = settled.resultUrls as string[];
+      }
     } else if (result.state === "failed") {
       await settleAiStudioGenerationFailure(generation.id, {
         raw: result.raw,

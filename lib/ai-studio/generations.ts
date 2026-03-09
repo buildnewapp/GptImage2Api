@@ -9,6 +9,7 @@ import type {
   AiStudioDocDetail,
   AiStudioPricingRow,
 } from "@/lib/ai-studio/catalog";
+import { persistAiStudioMediaUrls } from "@/lib/ai-studio/assets";
 import { toBillableCredits } from "@/lib/ai-studio/runtime";
 import {
   and,
@@ -254,13 +255,18 @@ export async function settleAiStudioGenerationSuccess(
       return generation;
     }
 
+    const resultUrls = await persistAiStudioMediaUrls({
+      category: generation.category,
+      mediaUrls: input.mediaUrls,
+    });
+
     const updated = await tx
       .update(aiStudioGenerations)
       .set({
         status: "succeeded",
         providerState: input.providerState ?? "succeeded",
         responsePayload: input.raw,
-        resultUrls: input.mediaUrls,
+        resultUrls,
         creditsCaptured: generation.creditsReserved,
         completedAt: generation.completedAt ?? new Date(),
         statusReason: null,

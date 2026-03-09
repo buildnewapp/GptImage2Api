@@ -54,6 +54,7 @@ export async function POST(request: Request) {
         result.taskId && result.statusEndpoint
           ? "queued"
           : "succeeded";
+      let settledMediaUrls = result.mediaUrls;
 
       await markAiStudioGenerationSubmitted(generation.id, {
         providerTaskId: result.taskId,
@@ -63,11 +64,14 @@ export async function POST(request: Request) {
       });
 
       if (state === "succeeded") {
-        await settleAiStudioGenerationSuccess(generation.id, {
+        const settled = await settleAiStudioGenerationSuccess(generation.id, {
           raw: result.raw,
           mediaUrls: result.mediaUrls,
           providerState: "succeeded",
         });
+        if (Array.isArray(settled?.resultUrls)) {
+          settledMediaUrls = settled.resultUrls as string[];
+        }
       }
 
       return apiResponse.success({
@@ -79,7 +83,7 @@ export async function POST(request: Request) {
         statusSupported: Boolean(result.statusEndpoint && result.taskId),
         statusEndpoint: result.statusEndpoint,
         raw: sanitizeAiStudioDebugValue(result.raw),
-        mediaUrls: result.mediaUrls,
+        mediaUrls: settledMediaUrls,
         selectedPricing: prepared.selectedPricing
           ? toPublicPricingRow(prepared.selectedPricing, prepared.detail)
           : null,
