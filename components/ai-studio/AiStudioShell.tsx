@@ -489,12 +489,17 @@ export default function AiStudioShell({
 
     async function loadDetail() {
       const requestedId = selectedId;
+      if (!requestedId) {
+        return;
+      }
       setDetailLoading(true);
       setExecuteResult(null);
       setTaskState(null);
       setTaskRaw(null);
       try {
-        const response = await fetch(`/api/ai-studio/models/${requestedId}`);
+        const response = await fetch(
+          `/api/ai-studio/models/${encodeURIComponent(requestedId)}`,
+        );
         const json = (await response.json()) as DetailResponse;
         if (!response.ok || !json.success) {
           throw new Error(json.error || "Failed to load model detail");

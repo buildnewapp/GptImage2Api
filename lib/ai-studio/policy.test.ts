@@ -82,3 +82,21 @@ test("hides unpriced models from non-admin users", () => {
     true,
   );
 });
+
+test("allows explicitly whitelisted unpriced models for non-admin users", () => {
+  const entry = createEntry({
+    id: "video:bytedance-v1-pro-text-to-video",
+    pricingRows: [],
+  });
+
+  assert.equal(
+    canAccessAiStudioModel(entry, {
+      role: "user",
+      config: {
+        allowedModelIds: ["video:bytedance-v1-pro-text-to-video"],
+        blockedModelIds: [],
+      },
+    }),
+    true,
+  );
+});

@@ -172,13 +172,29 @@ export default function AIVideoStudio() {
     () => getAiVideoStudioVersions(selectedFamilyKey),
     [selectedFamilyKey],
   );
+  const selectedVersion = useMemo(
+    () =>
+      availableVersions.find((version) => version.key === selectedVersionKey) ??
+      availableVersions[0] ??
+      null,
+    [availableVersions, selectedVersionKey],
+  );
+  const supportedModes = useMemo(
+    () =>
+      (["text-to-video", "image-to-video"] as const).filter(
+        (candidateMode) => typeof selectedVersion?.modelIds[candidateMode] === "string",
+      ),
+    [selectedVersion],
+  );
   const resolvedModelId = useMemo(
     () =>
-      resolveAiVideoStudioModelId({
-        familyKey: selectedFamilyKey,
-        versionKey: selectedVersionKey,
-        mode,
-      }),
+      selectedVersion
+        ? resolveAiVideoStudioModelId({
+            familyKey: selectedFamilyKey,
+            versionKey: selectedVersion.key,
+            mode,
+          })
+        : null,
     [mode, selectedFamilyKey, selectedVersionKey],
   );
 
@@ -193,6 +209,16 @@ export default function AIVideoStudio() {
   }, [availableVersions, selectedVersionKey]);
 
   useEffect(() => {
+    if (supportedModes.length === 0) {
+      return;
+    }
+
+    if (!supportedModes.includes(mode)) {
+      setMode(supportedModes[0]!);
+    }
+  }, [mode, supportedModes]);
+
+  useEffect(() => {
     if (!resolvedModelId) {
       setDetail(null);
       setDetailError(t("form.unsupportedCombination"));
@@ -202,10 +228,16 @@ export default function AIVideoStudio() {
     let mounted = true;
 
     async function loadDetail() {
+      const requestedModelId = resolvedModelId;
+      if (!requestedModelId) {
+        return;
+      }
       setDetailLoading(true);
       setDetailError(null);
       try {
-        const response = await fetch(`/api/ai-studio/models/${resolvedModelId}`);
+        const response = await fetch(
+          `/api/ai-studio/models/${encodeURIComponent(requestedModelId)}`,
+        );
         const json = (await response.json()) as DetailResponse;
         if (!response.ok || !json.success) {
           throw new Error(json.error || "Failed to load model detail");
@@ -721,6 +753,8 @@ export default function AIVideoStudio() {
         id: family.key,
         name: family.label,
         description: family.description,
+        tags: family.tags,
+        selectable: family.selectable,
       })),
     [availableFamilies],
   );
@@ -738,34 +772,34 @@ export default function AIVideoStudio() {
       <div className="w-full min-w-0 max-w-7xl mx-auto">
         <div className="flex w-full min-w-0 flex-col items-start gap-8 my-10 h-full mx-auto p-2 lg:p-6 rounded-xl lg:rounded-3xl border border-border/50 bg-card shadow-xl lg:flex-row">
           <div className="w-full lg:w-[400px] xl:w-[450px] flex-shrink-0 flex flex-col gap-5 h-fit">
-            <div className="flex w-full rounded-xl border border-border/50 bg-white dark:bg-zinc-900 p-1 mb-2">
-              <button
-                type="button"
-                onClick={() => setMode("text-to-video")}
-                className={cn(
-                  "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold transition-all",
-                  mode === "text-to-video"
-                    ? "bg-zinc-900 text-white dark:bg-white dark:text-black shadow-sm"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                )}
-              >
-                <Type className="w-4 h-4" />
-                <span>{t("form.textToVideo")}</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode("image-to-video")}
-                className={cn(
-                  "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold transition-all",
-                  mode === "image-to-video"
-                    ? "bg-zinc-900 text-white dark:bg-white dark:text-black shadow-sm"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                )}
-              >
-                <ImageIcon className="w-4 h-4" />
-                <span>{t("form.imageToVideo")}</span>
-              </button>
-            </div>
+            {supportedModes.length > 0 ? (
+              <div className="flex w-full rounded-xl border border-border/50 bg-white dark:bg-zinc-900 p-1 mb-2">
+                {supportedModes.map((supportedMode) => (
+                  <button
+                    key={supportedMode}
+                    type="button"
+                    onClick={() => setMode(supportedMode)}
+                    className={cn(
+                      "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold transition-all",
+                      mode === supportedMode
+                        ? "bg-zinc-900 text-white dark:bg-white dark:text-black shadow-sm"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
+                    )}
+                  >
+                    {supportedMode === "text-to-video" ? (
+                      <Type className="w-4 h-4" />
+                    ) : (
+                      <ImageIcon className="w-4 h-4" />
+                    )}
+                    <span>
+                      {supportedMode === "text-to-video"
+                        ? t("form.textToVideo")
+                        : t("form.imageToVideo")}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            ) : null}
 
             <ModelSelector
               selectedId={selectedFamilyKey}

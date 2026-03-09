@@ -66,18 +66,27 @@ export function canAccessAiStudioModel(
     config: AiStudioPolicyConfig;
   },
 ) {
+  const isExplicitlyAllowed = matchesModelReference(
+    entry,
+    options.config.allowedModelIds,
+  );
+
   if (matchesModelReference(entry, options.config.blockedModelIds)) {
     return false;
   }
 
   if (
     options.config.allowedModelIds.length > 0 &&
-    !matchesModelReference(entry, options.config.allowedModelIds)
+    !isExplicitlyAllowed
   ) {
     return false;
   }
 
-  if ((entry.pricingRows?.length ?? 0) === 0 && options.role !== "admin") {
+  if (
+    (entry.pricingRows?.length ?? 0) === 0 &&
+    options.role !== "admin" &&
+    !isExplicitlyAllowed
+  ) {
     return false;
   }
 

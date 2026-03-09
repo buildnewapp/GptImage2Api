@@ -1350,21 +1350,52 @@ export async function getCachedAiStudioCatalog() {
 export function findAiStudioCatalogEntryById<
   T extends Pick<AiStudioCatalogEntry, "id" | "category" | "alias">,
 >(entries: T[], id: string) {
-  const directMatch = entries.find(
-    (entry) => entry.id === id || getAiStudioPublicModelId(entry) === id,
-  );
-  if (directMatch) {
-    return directMatch;
+  const candidateIds = new Set<string>();
+
+  const addCandidate = (value: string) => {
+    if (!value) {
+      return;
+    }
+
+    candidateIds.add(value);
+
+    if (!value.endsWith("-standard")) {
+      candidateIds.add(`${value}-standard`);
+    }
+
+    const separatorIndex = value.indexOf(":");
+    if (separatorIndex <= 0) {
+      return;
+    }
+
+    const category = value.slice(0, separatorIndex);
+    const modelHandle = value.slice(separatorIndex + 1);
+    if (!modelHandle.includes("/")) {
+      return;
+    }
+
+    const normalized = `${category}:${normalizeModelHandle(modelHandle)}`;
+    candidateIds.add(normalized);
+    if (!normalized.endsWith("-standard")) {
+      candidateIds.add(`${normalized}-standard`);
+    }
+  };
+
+  addCandidate(id);
+
+  try {
+    addCandidate(decodeURIComponent(id));
+  } catch {
+    // ignore invalid percent-encoding
   }
 
-  if (!id.endsWith("-standard")) {
-    const standardId = `${id}-standard`;
-    const standardMatch = entries.find(
+  for (const candidateId of candidateIds) {
+    const match = entries.find(
       (entry) =>
-        entry.id === standardId || getAiStudioPublicModelId(entry) === standardId,
+        entry.id === candidateId || getAiStudioPublicModelId(entry) === candidateId,
     );
-    if (standardMatch) {
-      return standardMatch;
+    if (match) {
+      return match;
     }
   }
 
