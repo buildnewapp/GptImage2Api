@@ -1,5 +1,5 @@
 import { PricingByGroup } from "@/components/pricing";
-import VideoStudio from "./seedance/VideoStudio";
+import AIVideoStudio from "@/components/ai/AIVideoStudio";
 import Seedance15Capabilities from "./seedance15/Capabilities";
 import Seedance15CTA from "./seedance15/CTA";
 import Seedance15FAQ from "./seedance15/FAQ";
@@ -17,7 +17,7 @@ export default function Seedance15Home() {
       <div className="relative z-10 flex min-h-screen flex-col">
         <Seedance15Hero />
         <section id="create">
-          <VideoStudio />
+          <AIVideoStudio />
         </section>
         <Seedance15Overview />
         <Seedance15Capabilities />

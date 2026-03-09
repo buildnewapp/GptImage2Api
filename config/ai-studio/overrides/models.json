@@ -4,9 +4,7 @@
       "splitModels": [
         {
           "id": "video:sora2-text-to-video-standard",
-          "title": "Sdance - Text to Video",
-          "alias": "sdance-text-to-video",
-          "provider": "Sdance",
+          "title": "Sora2 - Text to Video",
           "schemaModel": "sora-2-text-to-video",
           "pricingMatch": {
             "runtimeModel": "sora-2-text-to-video"
@@ -14,9 +12,7 @@
         },
         {
           "id": "video:sora2-text-to-video-stable",
-          "title": "Sdance - Text to Video Stable",
-          "alias": "sdance-text-to-video-stable",
-          "provider": "Sdance",
+          "title": "Sora2 - Text to Video Stable",
           "schemaModel": "sora-2-text-to-video-stable",
           "pricingMatch": {
             "runtimeModel": "sora-2-text-to-video-stable"

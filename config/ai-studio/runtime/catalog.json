@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-03-09T03:22:59.592Z",
+  "generatedAt": "2026-03-09T05:31:46.390Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -9431,9 +9431,9 @@
     {
       "id": "video:sora2-text-to-video-standard",
       "category": "video",
-      "title": "Sdance - Text to Video",
+      "title": "Sora2 - Text to Video",
       "docUrl": "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
-      "provider": "Sdance",
+      "provider": "Sora2",
       "endpoint": "/api/v1/jobs/createTask",
       "method": "POST",
       "modelKeys": [
@@ -9598,14 +9598,14 @@
           "discountPrice": false
         }
       ],
-      "alias": "sdance-text-to-video"
+      "alias": null
     },
     {
       "id": "video:sora2-text-to-video-stable",
       "category": "video",
-      "title": "Sdance - Text to Video Stable",
+      "title": "Sora2 - Text to Video Stable",
       "docUrl": "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
-      "provider": "Sdance",
+      "provider": "Sora2",
       "endpoint": "/api/v1/jobs/createTask",
       "method": "POST",
       "modelKeys": [
@@ -9770,7 +9770,7 @@
           "discountPrice": false
         }
       ],
-      "alias": "sdance-text-to-video-stable"
+      "alias": null
     },
     {
       "id": "video:sora2-pro-image-to-video",

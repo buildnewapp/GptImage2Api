@@ -1,7 +1,7 @@
 import CTA from "./seedance/CTA";
 import FAQ from "./seedance/FAQ";
 import Features from "./seedance/Features";
-import VideoStudio from "./seedance/VideoStudio";
+import AIVideoStudio from "@/components/ai/AIVideoStudio";
 import HowItWorks from "./seedance/HowItWorks";
 import { PricingByGroup } from "@/components/pricing";
 import Testimonials from "./seedance/Testimonials";
@@ -29,7 +29,7 @@ export default function SeedanceHome() {
           </div>
         </div>
       </section>
-      <VideoStudio />
+      <AIVideoStudio />
       <VideoShowcase />
       <Features />
       <UseCases />
