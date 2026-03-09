@@ -174,20 +174,20 @@ function renderFieldLabel(
         compact ? "gap-1.5 text-[13px]" : "gap-2 text-sm",
       )}
     >
-      <Icon className={cn(compact ? "h-3.5 w-3.5" : "h-4 w-4")} />
+      <Icon className={cn(compact ? "h-3.5 w-3.5" : "h-4 w-4 ")} />
       <span>{label}</span>
     </Label>
   );
 }
 
 function getFieldRootClassName(compact = false) {
-  return compact ? "space-y-1" : "space-y-2";
+  return compact ? "space-y-1 flex flex-row justify-between" : "space-y-2";
 }
 
 function getInputClassName(compact = false, className?: string) {
   return cn(
     compact
-      ? "h-8 w-32 bg-transparent px-0 text-[13px] shadow-none"
+      ? "h-8 w-32 bg-transparent px-2 text-[13px] shadow-none"
       : "rounded-xl bg-background/60",
     className,
   );
