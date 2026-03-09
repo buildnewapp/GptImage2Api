@@ -39,14 +39,11 @@ export function buildAiVideoStudioPayload(input: {
   formValues: AiVideoStudioFormValues;
   selectedPricing?: AiStudioPublicPricingRow | null;
 }) {
-  const basePayload = structuredClone(input.detail.examplePayload ?? {});
-  const nextInput = {
-    ...(basePayload.input ?? {}),
-  } as Record<string, unknown>;
+  const basePayload = input.detail.examplePayload ?? {};
+  const nextInput = {} as Record<string, unknown>;
 
   for (const [key, value] of Object.entries(input.formValues)) {
     if (shouldOmitValue(value)) {
-      delete nextInput[key];
       continue;
     }
 
@@ -54,7 +51,7 @@ export function buildAiVideoStudioPayload(input: {
   }
 
   const payload = {
-    ...basePayload,
+    ...(typeof basePayload.model === "string" ? { model: basePayload.model } : {}),
     input: nextInput,
   } as Record<string, any>;
 

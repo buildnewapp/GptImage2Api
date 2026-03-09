@@ -1347,13 +1347,33 @@ export async function getCachedAiStudioCatalog() {
   return toAiStudioCatalogEntries(runtimeFile);
 }
 
+export function findAiStudioCatalogEntryById<
+  T extends Pick<AiStudioCatalogEntry, "id" | "category" | "alias">,
+>(entries: T[], id: string) {
+  const directMatch = entries.find(
+    (entry) => entry.id === id || getAiStudioPublicModelId(entry) === id,
+  );
+  if (directMatch) {
+    return directMatch;
+  }
+
+  if (!id.endsWith("-standard")) {
+    const standardId = `${id}-standard`;
+    const standardMatch = entries.find(
+      (entry) =>
+        entry.id === standardId || getAiStudioPublicModelId(entry) === standardId,
+    );
+    if (standardMatch) {
+      return standardMatch;
+    }
+  }
+
+  return null;
+}
+
 export async function getCachedAiStudioCatalogEntry(id: string) {
   const entries = await getCachedAiStudioCatalog();
-  return (
-    entries.find(
-      (entry) => entry.id === id || getAiStudioPublicModelId(entry) === id,
-    ) ?? null
-  );
+  return findAiStudioCatalogEntryById(entries, id);
 }
 
 export async function getCachedAiStudioCatalogDetail(id: string) {

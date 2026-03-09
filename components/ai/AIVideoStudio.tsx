@@ -679,7 +679,7 @@ export default function AIVideoStudio() {
         case "prompt":
           return t("form.prompt");
         case "image_urls":
-          return t("form.referenceImage");
+          return t("form.images");
         case "aspect_ratio":
           return t("form.aspectRatio");
         case "n_frames":
@@ -796,6 +796,10 @@ export default function AIVideoStudio() {
                 values={formValues}
                 isPublic={isPublic}
                 disabled={isSubmitting}
+                advancedLabel={t("form.advanced")}
+                publicLabel={t("form.public")}
+                useUrlLabel={t("form.useUrl")}
+                promptPlaceholder={t("form.promptPlaceholder")}
                 onChange={(patch) => setFormValues((current) => ({ ...current, ...patch }))}
                 onPublicChange={setIsPublic}
                 resolveLabel={getFieldLabel}

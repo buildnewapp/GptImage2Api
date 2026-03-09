@@ -307,3 +307,24 @@ test("resolves public model ids back to canonical runtime catalog ids", () => {
     "video:sora2-text-to-video-standard",
   );
 });
+
+test("falls back from legacy split parent ids to the standard runtime catalog id", () => {
+  assert.equal(
+    getCanonicalAiStudioModelId(
+      [
+        {
+          id: "video:sora2-text-to-video-standard",
+          category: "video",
+          alias: null,
+        },
+        {
+          id: "video:sora2-text-to-video-stable",
+          category: "video",
+          alias: null,
+        },
+      ],
+      "video:sora2-text-to-video",
+    ),
+    "video:sora2-text-to-video-standard",
+  );
+});

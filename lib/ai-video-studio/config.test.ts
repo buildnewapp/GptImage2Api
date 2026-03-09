@@ -28,7 +28,7 @@ test("resolves Sora2 standard text-to-video to the ai-studio public model id", (
       versionKey: "sora-2",
       mode: "text-to-video",
     }),
-    "video:sora2-text-to-video",
+    "video:sora2-text-to-video-standard",
   );
 });
 
@@ -39,7 +39,7 @@ test("resolves Sora2 standard image-to-video to the ai-studio public model id", 
       versionKey: "sora-2",
       mode: "image-to-video",
     }),
-    "video:sora2-image-to-video",
+    "video:sora2-image-to-video-standard",
   );
 });
 

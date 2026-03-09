@@ -6,6 +6,7 @@ import Seedance15FAQ from "./seedance15/FAQ";
 import Seedance15Hero from "./seedance15/Hero";
 import Seedance15Overview from "./seedance15/Overview";
 import Seedance15UseCases from "./seedance15/UseCases";
+import VideoStudio from "@/components/home/seedance/VideoStudio";
 
 export default function Seedance15Home() {
   return (
@@ -18,6 +19,7 @@ export default function Seedance15Home() {
         <Seedance15Hero />
         <section id="create">
           <AIVideoStudio />
+          <VideoStudio />
         </section>
         <Seedance15Overview />
         <Seedance15Capabilities />

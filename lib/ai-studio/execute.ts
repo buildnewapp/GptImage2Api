@@ -3,6 +3,7 @@ import {
   type AiStudioDocDetail,
   type AiStudioPricingRow,
   extractPricingAnchorModel,
+  findAiStudioCatalogEntryById,
   getAiStudioPublicModelId,
   getCachedAiStudioCatalog,
   getCachedAiStudioCatalogDetail,
@@ -326,9 +327,7 @@ export function getCanonicalAiStudioModelId(
   entries: Array<Pick<AiStudioCatalogEntry, "id" | "category" | "alias">>,
   modelId: string,
 ) {
-  const matched = entries.find(
-    (entry) => entry.id === modelId || getAiStudioPublicModelId(entry) === modelId,
-  );
+  const matched = findAiStudioCatalogEntryById(entries, modelId);
 
   return matched?.id ?? modelId;
 }

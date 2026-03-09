@@ -29,8 +29,8 @@ const AI_VIDEO_STUDIO_VERSIONS: AiVideoStudioVersion[] = [
     label: "sora 2",
     familyKey: "sora2",
     modelIds: {
-      "text-to-video": "video:sora2-text-to-video",
-      "image-to-video": "video:sora2-image-to-video",
+      "text-to-video": "video:sora2-text-to-video-standard",
+      "image-to-video": "video:sora2-image-to-video-standard",
     },
   },
   {

@@ -115,18 +115,12 @@ export function normalizeAiVideoStudioSchema(detail: {
       ? inputSchema.required.filter((key: unknown): key is string => typeof key === "string")
       : [],
   );
-  const exampleInput =
-    detail.examplePayload?.input && typeof detail.examplePayload.input === "object"
-      ? (detail.examplePayload.input as Record<string, unknown>)
-      : {};
-
   const fields: AiVideoStudioFieldDescriptor[] = [];
   const defaults: Record<string, unknown> = {};
 
   for (const key of getOrderedFieldKeys(properties, inputSchema ?? {})) {
     const schema = properties[key];
-    const defaultValue =
-      exampleInput[key] !== undefined ? exampleInput[key] : schema?.default;
+    const defaultValue = schema?.default;
 
     defaults[key] = defaultValue;
     fields.push({

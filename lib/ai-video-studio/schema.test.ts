@@ -124,15 +124,15 @@ test("normalizes ai-video-studio fields from the input schema in api order", () 
   assert.equal(normalized.fields[4]?.kind, "string-array");
 });
 
-test("extracts defaults from the example payload and schema metadata", () => {
+test("uses schema defaults without prefilling example input values", () => {
   const normalized = normalizeAiVideoStudioSchema(textToVideoDetail);
 
   assert.deepEqual(normalized.defaults, {
-    prompt: "A professor stands in front of the class.",
+    prompt: undefined,
     aspect_ratio: "landscape",
     n_frames: "10",
-    remove_watermark: true,
-    character_id_list: ["char_1"],
+    remove_watermark: undefined,
+    character_id_list: undefined,
   });
 });
 

@@ -65,9 +65,19 @@ test("omits empty optional fields from the submitted payload", () => {
     input: {
       prompt: "Animate this still image",
       image_urls: ["https://example.com/custom.png"],
-      n_frames: "10",
-      remove_watermark: true,
     },
+  });
+});
+
+test("does not leak example input values into the payload when the form is blank", () => {
+  const payload = buildAiVideoStudioPayload({
+    detail,
+    formValues: {},
+  });
+
+  assert.deepEqual(payload, {
+    model: "sora-2-image-to-video",
+    input: {},
   });
 });
 
@@ -77,6 +87,7 @@ test("applies selected ai-studio pricing rows onto the payload", () => {
     formValues: {
       prompt: "Animate this still image",
       image_urls: ["https://example.com/custom.png"],
+      n_frames: "10",
     },
     selectedPricing: {
       modelDescription: "Sdance, image-to-video, Standard-15.0s",
