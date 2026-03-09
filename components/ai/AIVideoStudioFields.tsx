@@ -68,7 +68,7 @@ export default function AIVideoStudioFields({
           className="flex w-full items-center justify-between px-4 py-3 text-sm font-semibold text-foreground"
           disabled={disabled}
         >
-          <span className="flex items-center gap-2">
+          <span className="flex items-center gap-2 py-1">
             <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
             <span>{advancedLabel}</span>
           </span>

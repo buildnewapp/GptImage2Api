@@ -205,10 +205,6 @@ export default function AIVideoStudioFieldControl({
 }: AIVideoStudioFieldControlProps) {
   const imageValue = getImageValue(value);
   const [useUrl, setUseUrl] = useState(() => isRemoteImageUrl(imageValue));
-  const aspectRatioScrollRef = useRef<HTMLDivElement | null>(null);
-  const aspectRatioDragSessionRef = useRef<HorizontalDragScrollSession | null>(null);
-  const aspectRatioPointerIdRef = useRef<number | null>(null);
-  const [isDraggingAspectRatio, setIsDraggingAspectRatio] = useState(false);
 
   useEffect(() => {
     if (!imageValue) {
