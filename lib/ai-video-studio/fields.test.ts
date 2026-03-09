@@ -3,7 +3,7 @@ import test from "node:test";
 
 import { partitionAiVideoStudioFields } from "@/lib/ai-video-studio/fields";
 
-test("keeps prompt, image, aspect ratio, and duration controls in the primary section", () => {
+test("keeps prompt, image, aspect ratio, resolution, and duration controls in the primary section", () => {
   const sections = partitionAiVideoStudioFields([
     {
       key: "prompt",
@@ -18,7 +18,15 @@ test("keeps prompt, image, aspect ratio, and duration controls in the primary se
       kind: "enum",
     },
     {
+      key: "resolution",
+      kind: "enum",
+    },
+    {
       key: "n_frames",
+      kind: "enum",
+    },
+    {
+      key: "duration",
       kind: "enum",
     },
     {
@@ -33,7 +41,7 @@ test("keeps prompt, image, aspect ratio, and duration controls in the primary se
 
   assert.deepEqual(
     sections.primary.map((field) => field.key),
-    ["prompt", "image_urls", "aspect_ratio", "n_frames"],
+    ["prompt", "image_urls", "aspect_ratio", "resolution", "n_frames", "duration"],
   );
   assert.deepEqual(
     sections.advanced.map((field) => field.key),

@@ -21,6 +21,7 @@ import {
   safeParseAiVideoStudioStoredState,
   serializeAiVideoStudioStoredState,
 } from "@/lib/ai-video-studio/storage";
+import { hasAiVideoStudioSignedInSession } from "@/lib/ai-video-studio/view";
 import { normalizeAiVideoStudioSchema } from "@/lib/ai-video-studio/schema";
 import type {
   AiStudioPublicDocDetail,
@@ -349,6 +350,7 @@ export default function AIVideoStudio() {
   );
 
   const availableCredits = benefits?.totalAvailableCredits ?? null;
+  const hasSignedInSession = hasAiVideoStudioSignedInSession(session);
   const requiresPrompt = normalizedSchema?.requiresPrompt ?? false;
   const requiresImage = normalizedSchema?.requiresImage ?? false;
 
@@ -759,14 +761,16 @@ export default function AIVideoStudio() {
               />
             ) : null}
 
-            <div className="rounded-xl border border-border/60 bg-background/40 px-4 py-3 flex items-center justify-between">
-              <div className="text-sm text-muted-foreground">{t("form.currentCredits")}</div>
-              <div className="text-lg font-semibold text-foreground">
-                {!session?.user || isLoadingBenefits
-                  ? "--"
-                  : t("form.creditsRequired", { count: availableCredits ?? 0 })}
+            {hasSignedInSession ? (
+              <div className="rounded-xl border border-border/60 bg-background/40 px-4 py-3 flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">{t("form.currentCredits")}</div>
+                <div className="text-lg font-semibold text-foreground">
+                  {isLoadingBenefits
+                    ? "--"
+                    : t("form.creditsRequired", { count: availableCredits ?? 0 })}
+                </div>
               </div>
-            </div>
+            ) : null}
 
             <div className="pt-4 mt-auto">
               <button

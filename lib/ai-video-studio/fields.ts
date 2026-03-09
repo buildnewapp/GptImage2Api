@@ -7,7 +7,9 @@ function isPrimaryField(field: PartitionableField) {
     field.kind === "prompt" ||
     field.kind === "image" ||
     field.key === "aspect_ratio" ||
-    field.key === "n_frames"
+    field.key === "resolution" ||
+    field.key === "n_frames" ||
+    field.key === "duration"
   );
 }
 

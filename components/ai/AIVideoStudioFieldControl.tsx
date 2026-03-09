@@ -13,10 +13,11 @@ import {
   Hash,
   Image as ImageIcon,
   List,
+  Monitor,
   Shield,
   Video,
 } from "lucide-react";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 type AIVideoStudioFieldControlProps = {
   field: AiVideoStudioFieldDescriptor;
@@ -61,32 +62,92 @@ function isRemoteImageUrl(value: string | null) {
   return Boolean(value && /^https?:\/\//i.test(value));
 }
 
-function getFieldIcon(field: AiVideoStudioFieldDescriptor) {
+type AiVideoStudioFieldIconName =
+  | "clock"
+  | "file-text"
+  | "hash"
+  | "image"
+  | "list"
+  | "monitor"
+  | "shield"
+  | "video";
+
+export function getAiVideoStudioFieldIconName(
+  field: Pick<AiVideoStudioFieldDescriptor, "key" | "kind">,
+): AiVideoStudioFieldIconName {
   if (field.kind === "image") {
-    return ImageIcon;
+    return "image";
   }
 
   if (field.kind === "prompt") {
-    return FileText;
+    return "file-text";
   }
 
-  if (field.key === "n_frames") {
-    return Clock;
+  if (field.key === "n_frames" || field.key === "duration") {
+    return "clock";
   }
 
   if (field.key === "aspect_ratio") {
-    return Video;
+    return "video";
+  }
+
+  if (field.key === "resolution") {
+    return "monitor";
   }
 
   if (field.kind === "boolean") {
-    return Shield;
+    return "shield";
   }
 
   if (field.kind === "string-array") {
-    return List;
+    return "list";
   }
 
-  return Hash;
+  return "hash";
+}
+
+function getFieldIcon(field: AiVideoStudioFieldDescriptor) {
+  switch (getAiVideoStudioFieldIconName(field)) {
+    case "image":
+      return ImageIcon;
+    case "file-text":
+      return FileText;
+    case "clock":
+      return Clock;
+    case "video":
+      return Video;
+    case "monitor":
+      return Monitor;
+    case "shield":
+      return Shield;
+    case "list":
+      return List;
+    case "hash":
+    default:
+      return Hash;
+  }
+}
+
+type HorizontalDragScrollSession = {
+  startClientX: number;
+  startScrollLeft: number;
+};
+
+export function beginHorizontalDragScroll(
+  startClientX: number,
+  startScrollLeft: number,
+): HorizontalDragScrollSession {
+  return {
+    startClientX,
+    startScrollLeft,
+  };
+}
+
+export function updateHorizontalDragScroll(
+  session: HorizontalDragScrollSession,
+  currentClientX: number,
+) {
+  return session.startScrollLeft - (currentClientX - session.startClientX);
 }
 
 function renderFieldLabel(
@@ -144,6 +205,10 @@ export default function AIVideoStudioFieldControl({
 }: AIVideoStudioFieldControlProps) {
   const imageValue = getImageValue(value);
   const [useUrl, setUseUrl] = useState(() => isRemoteImageUrl(imageValue));
+  const aspectRatioScrollRef = useRef<HTMLDivElement | null>(null);
+  const aspectRatioDragSessionRef = useRef<HorizontalDragScrollSession | null>(null);
+  const aspectRatioPointerIdRef = useRef<number | null>(null);
+  const [isDraggingAspectRatio, setIsDraggingAspectRatio] = useState(false);
 
   useEffect(() => {
     if (!imageValue) {
@@ -232,7 +297,8 @@ export default function AIVideoStudioFieldControl({
       return (
         <div className="space-y-3">
           {renderFieldLabel(field, label)}
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-row gap-3 overflow-x-auto scrollbar-thin py-2" style={{scrollbarWidth: "thin",
+            scrollbarColor: "#d1d5db transparent"}}>
             {options.map((option) => (
               <button
                 key={option}
@@ -240,7 +306,7 @@ export default function AIVideoStudioFieldControl({
                 disabled={disabled}
                 onClick={() => onChange(option)}
                 className={cn(
-                  "flex min-h-24 min-w-[96px] flex-col items-center justify-center gap-3 rounded-2xl border-2 px-4 py-3 text-sm font-medium transition-colors",
+                  "flex min-h-18 min-w-[72px] flex-col items-center justify-center gap-1 rounded-2xl border px-2 py-1 text-sm font-medium transition-colors",
                   value === option
                     ? "border-blue-400/70 bg-blue-500/10 text-blue-700 dark:text-blue-300"
                     : "border-border/60 bg-background/60 text-muted-foreground hover:bg-muted/40 hover:text-foreground",
