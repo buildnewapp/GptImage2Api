@@ -224,7 +224,7 @@ export default function AiStudioVideoHistoryClient() {
         return;
       }
 
-      router.push(`/${locale}/seedance2?remix=1`);
+      router.push(`/${locale}/seedance2`);
     },
     [locale, router],
   );

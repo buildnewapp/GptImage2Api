@@ -63,3 +63,20 @@ test("invite signup stays a referral progress card instead of a claimable credit
     required: 1,
   });
 });
+
+test("first public generation task links to the AI Studio videos page", () => {
+  const tasks = buildTaskRewardItems({
+    now: new Date("2026-03-07T08:00:00.000Z"),
+    claimLookup: new Set<string>(),
+    claimedStreakDates: new Set<string>(),
+    hasPublicGeneration: false,
+    hasPurchase: false,
+    inviteCount: 0,
+    hasInviteFirstPurchase: false,
+  });
+
+  const task = tasks.find((item) => item.taskKey === "first_public_generation");
+
+  assert.ok(task);
+  assert.equal(task.href, "/dashboard/videos");
+});

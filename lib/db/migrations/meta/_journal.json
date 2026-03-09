@@ -232,6 +232,13 @@
       "when": 1773051075177,
       "tag": "0032_brainy_menace",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1773052820942,
+      "tag": "0033_long_havok",
+      "breakpoints": true
     }
   ]
 }

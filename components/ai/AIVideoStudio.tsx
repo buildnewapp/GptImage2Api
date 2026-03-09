@@ -32,12 +32,6 @@ import {
 } from "@/lib/ai-studio/runtime";
 import { cn } from "@/lib/utils";
 import {
-  safeParseVideoRemixPayload,
-  safeParseVideoStudioFormPayload,
-  VIDEO_REMIX_STORAGE_KEY,
-  VIDEO_STUDIO_FORM_STORAGE_KEY,
-} from "@/lib/video/remix";
-import {
   Copy,
   Download,
   Image as ImageIcon,
@@ -49,7 +43,6 @@ import {
   X,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
@@ -118,19 +111,6 @@ function createLocalTaskId() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-function getLegacyVersionKey(versionKey: string | undefined): AiVideoStudioVersionKey {
-  return versionKey?.toLowerCase().includes("pro") ? "sora-2-pro" : "sora-2";
-}
-
-function normalizeLegacyDuration(value: string | undefined) {
-  if (!value) {
-    return undefined;
-  }
-
-  const match = value.match(/\d+/);
-  return match?.[0];
-}
-
 function hasImageInput(value: unknown) {
   if (Array.isArray(value)) {
     return value.some((item) => typeof item === "string" && item.length > 0);
@@ -141,7 +121,6 @@ function hasImageInput(value: unknown) {
 
 export default function AIVideoStudio() {
   const t = useTranslations("Landing.Hero");
-  const searchParams = useSearchParams();
   const { data: session } = authClient.useSession();
   const {
     benefits,
@@ -298,80 +277,20 @@ export default function AIVideoStudio() {
       return;
     }
 
-    const applyNewState = (state: ReturnType<typeof safeParseAiVideoStudioStoredState>) => {
-      if (!state) {
-        return false;
-      }
-
+    const rawNewState = window.localStorage.getItem(AI_VIDEO_STUDIO_FORM_STORAGE_KEY);
+    const state = safeParseAiVideoStudioStoredState(rawNewState);
+    if (state) {
       setMode(state.mode);
       setSelectedFamilyKey(state.familyKey);
       setSelectedVersionKey(state.versionKey);
       setFormValues(state.formValues);
       setIsPublic(state.isPublic);
-      return true;
-    };
-
-    const applyLegacyPayload = (
-      payload:
-        | ReturnType<typeof safeParseVideoRemixPayload>
-        | ReturnType<typeof safeParseVideoStudioFormPayload>,
-    ) => {
-      if (!payload) {
-        return false;
-      }
-
-      setMode(payload.mode === "image-to-video" ? "image-to-video" : "text-to-video");
-      setSelectedFamilyKey("sora2");
-      setSelectedVersionKey(getLegacyVersionKey(payload.versionKey));
-      setIsPublic(typeof payload.isPublic === "boolean" ? payload.isPublic : true);
-      setFormValues({
-        ...(payload.providerValues?.prompt
-          ? {
-              prompt: payload.providerValues.prompt,
-            }
-          : {}),
-        ...(payload.providerValues?.imageUrl
-          ? {
-              image_urls: [payload.providerValues.imageUrl],
-            }
-          : {}),
-        ...(payload.providerValues?.aspectRatio
-          ? {
-              aspect_ratio: payload.providerValues.aspectRatio,
-            }
-          : {}),
-        ...(payload.providerValues?.duration
-          ? {
-              n_frames: normalizeLegacyDuration(payload.providerValues.duration),
-            }
-          : {}),
-      });
-
-      return true;
-    };
-
-    const isRemix = searchParams.get("remix") === "1";
-    if (isRemix) {
-      const rawLegacyRemix = window.localStorage.getItem(VIDEO_REMIX_STORAGE_KEY);
-      const applied = applyLegacyPayload(safeParseVideoRemixPayload(rawLegacyRemix));
-      window.localStorage.removeItem(VIDEO_REMIX_STORAGE_KEY);
-      if (applied) {
-        toast.success(t("form.remixApplied"));
-        hasInitializedFromStorageRef.current = true;
-        return;
-      }
-    }
-
-    const rawNewState = window.localStorage.getItem(AI_VIDEO_STUDIO_FORM_STORAGE_KEY);
-    if (applyNewState(safeParseAiVideoStudioStoredState(rawNewState))) {
       hasInitializedFromStorageRef.current = true;
       return;
     }
 
-    const rawLegacyState = window.localStorage.getItem(VIDEO_STUDIO_FORM_STORAGE_KEY);
-    applyLegacyPayload(safeParseVideoStudioFormPayload(rawLegacyState));
     hasInitializedFromStorageRef.current = true;
-  }, [searchParams, t]);
+  }, []);
 
   useEffect(() => {
     if (!hasInitializedFromStorageRef.current) {

@@ -110,7 +110,7 @@ export function buildTaskRewardItems({
       taskKey: "first_public_generation",
       creditAmount: taskRewardsConfig.firstPublicGeneration.credits,
       status: claimed ? "claimed" : hasPublicGeneration ? "claimable" : "incomplete",
-      href: "/dashboard/video-generations",
+      href: "/dashboard/videos",
       progress: {
         current: claimed || hasPublicGeneration ? 1 : 0,
         required: 1,

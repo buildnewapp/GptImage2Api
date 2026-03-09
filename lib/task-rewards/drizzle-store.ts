@@ -1,15 +1,15 @@
 import { getDb } from "@/lib/db";
 import {
+  aiStudioGenerations as aiStudioGenerationsSchema,
   creditLogs as creditLogsSchema,
   orders as ordersSchema,
   referralInvites as referralInvitesSchema,
   referralRewards as referralRewardsSchema,
   taskRewardClaims as taskRewardClaimsSchema,
   usage as usageSchema,
-  videoGenerations as videoGenerationsSchema,
 } from "@/lib/db/schema";
 import type { TaskRewardStore } from "@/lib/task-rewards/types";
-import { and, count, eq, inArray, sql } from "drizzle-orm";
+import { and, count, eq, inArray, isNull, sql } from "drizzle-orm";
 
 type DbClient = ReturnType<typeof getDb>;
 type DbTransactionCallback = Parameters<DbClient["transaction"]>[0];
@@ -114,13 +114,15 @@ export async function hasSuccessfulPublicVideoForUser(
   userId: string,
 ): Promise<boolean> {
   const rows = await db
-    .select({ id: videoGenerationsSchema.id })
-    .from(videoGenerationsSchema)
+    .select({ id: aiStudioGenerationsSchema.id })
+    .from(aiStudioGenerationsSchema)
     .where(
       and(
-        eq(videoGenerationsSchema.userId, userId),
-        eq(videoGenerationsSchema.status, "success"),
-        eq(videoGenerationsSchema.isPublic, true),
+        eq(aiStudioGenerationsSchema.userId, userId),
+        eq(aiStudioGenerationsSchema.category, "video"),
+        eq(aiStudioGenerationsSchema.status, "succeeded"),
+        eq(aiStudioGenerationsSchema.isPublic, true),
+        isNull(aiStudioGenerationsSchema.userDeletedAt),
       ),
     )
     .limit(1);
