@@ -1,0 +1,70 @@
+{
+  "title": "システムメール",
+  "description": "対象ユーザーを先にプレビューし、完全な受信者一覧をフロントエンドへ渡さずに、再開可能なバッチで管理者通知を送信します。",
+  "form": {
+    "title": "通知を作成",
+    "description": "まず対象ユーザーをプレビューし、その後に送信します。途中で止まっても同じジョブを続行できます。"
+  },
+  "fields": {
+    "scope": "送信範囲",
+    "singleUserQuery": "単一ユーザー",
+    "subject": "件名",
+    "body": "本文"
+  },
+  "scopes": {
+    "all_users": "全ユーザー",
+    "all_paid_users": "すべての有料ユーザー",
+    "active_paid_users": "有効な有料ユーザー",
+    "single_user": "単一ユーザー"
+  },
+  "placeholders": {
+    "singleUserQuery": "正確なユーザー ID またはメール",
+    "subject": "サービス通知",
+    "body": "ここにシステム通知本文を入力してください。"
+  },
+  "help": {
+    "scope": "プレビューはサーバー側で行われ、ブラウザには件数とマスク済みサンプルのみ返されます。",
+    "singleUser": "正確なユーザー ID または正確なメールアドレスを入力してください。",
+    "body": "プレーンテキストのみ対応します。空行はメール内で段落として保持されます。",
+    "batch": "1 回の送信リクエストで最大 30 件を処理します。未完了なら同じジョブを続行できます。"
+  },
+  "actions": {
+    "preview": "受信者をプレビュー",
+    "send": "最初のバッチを送信",
+    "continueSend": "送信を続行",
+    "completed": "完了"
+  },
+  "preview": {
+    "title": "プレビュー",
+    "description": "受信者は短期ジョブとしてサーバー側に保存されるため、途中まで送った後でも続行できます。",
+    "totalRecipients": "対象受信者数",
+    "sampleRecipients": "マスク済みサンプル",
+    "jobId": "ジョブ ID"
+  },
+  "progress": {
+    "processed": "処理済み",
+    "success": "送信成功",
+    "failure": "送信失敗",
+    "remaining": "残り"
+  },
+  "status": {
+    "draft": "下書き",
+    "running": "送信中",
+    "completed": "完了",
+    "failed": "失敗"
+  },
+  "toasts": {
+    "previewReady": "プレビューを作成しました",
+    "previewReadyDescription": "{count} 件の受信者に一致しました。",
+    "previewError": "プレビューに失敗しました",
+    "sendProgress": "バッチを処理しました",
+    "sendProgressDescription": "{processedCount}/{totalRecipients} を処理しました。",
+    "sendCompleted": "送信が完了しました",
+    "sendCompletedDescription": "{successCount} 件送信、{failureCount} 件失敗。",
+    "sendError": "送信に失敗しました"
+  },
+  "errors": {
+    "previewFailed": "受信者のプレビューに失敗しました。",
+    "sendFailed": "システムメールの送信に失敗しました。"
+  }
+}

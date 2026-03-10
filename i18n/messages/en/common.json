@@ -105,6 +105,11 @@
         "icon": "Users"
       },
       {
+        "name": "System Emails",
+        "href": "/dashboard/system-emails",
+        "icon": "Mail"
+      },
+      {
         "name": "API Keys",
         "href": "/dashboard/apikeys-admin",
         "icon": "Key"

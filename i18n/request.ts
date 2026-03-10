@@ -65,6 +65,9 @@ export default getRequestConfig(async ({ requestLocale }) => {
       ).default,
       Prices: (await import(`./messages/${locale}/Dashboard/Admin/Prices.json`))
         .default,
+      SystemEmails: (
+        await import(`./messages/${locale}/Dashboard/Admin/SystemEmails.json`)
+      ).default,
       AdminVideoGenerations: (
         await import(`./messages/${locale}/Dashboard/Admin/VideoGenerations.json`)
       ).default,

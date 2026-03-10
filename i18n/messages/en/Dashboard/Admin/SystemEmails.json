@@ -1,0 +1,70 @@
+{
+  "title": "System Emails",
+  "description": "Preview recipients and send resumable admin system notifications without exposing the full recipient list.",
+  "form": {
+    "title": "Compose notification",
+    "description": "Preview the matched users first, then send or continue delivery in resumable batches."
+  },
+  "fields": {
+    "scope": "Recipient scope",
+    "singleUserQuery": "Single user",
+    "subject": "Subject",
+    "body": "Body"
+  },
+  "scopes": {
+    "all_users": "All users",
+    "all_paid_users": "All paid users",
+    "active_paid_users": "Active paid users",
+    "single_user": "Single user"
+  },
+  "placeholders": {
+    "singleUserQuery": "Exact user ID or email",
+    "subject": "Service update",
+    "body": "Write the system notification here."
+  },
+  "help": {
+    "scope": "Preview is generated on the server. The browser only receives a recipient count and masked samples.",
+    "singleUser": "Use an exact user ID or exact email address.",
+    "body": "Plain text only. Line breaks are preserved as paragraphs in the email.",
+    "batch": "Each send request processes up to 30 recipients. If needed, continue with the same job."
+  },
+  "actions": {
+    "preview": "Preview recipients",
+    "send": "Send first batch",
+    "continueSend": "Continue sending",
+    "completed": "Completed"
+  },
+  "preview": {
+    "title": "Preview",
+    "description": "Recipients are stored server-side in a short-lived job so the send can continue after a partial run.",
+    "totalRecipients": "Matched recipients",
+    "sampleRecipients": "Masked samples",
+    "jobId": "Job ID"
+  },
+  "progress": {
+    "processed": "Processed",
+    "success": "Sent",
+    "failure": "Failed",
+    "remaining": "Remaining"
+  },
+  "status": {
+    "draft": "Draft",
+    "running": "Running",
+    "completed": "Completed",
+    "failed": "Failed"
+  },
+  "toasts": {
+    "previewReady": "Preview ready",
+    "previewReadyDescription": "{count} recipients matched.",
+    "previewError": "Preview failed",
+    "sendProgress": "Batch processed",
+    "sendProgressDescription": "{processedCount}/{totalRecipients} processed.",
+    "sendCompleted": "Send completed",
+    "sendCompletedDescription": "{successCount} sent, {failureCount} failed.",
+    "sendError": "Send failed"
+  },
+  "errors": {
+    "previewFailed": "Failed to preview recipients.",
+    "sendFailed": "Failed to send system emails."
+  }
+}

@@ -105,6 +105,11 @@
         "icon": "Users"
       },
       {
+        "name": "系统邮件",
+        "href": "/dashboard/system-emails",
+        "icon": "Mail"
+      },
+      {
         "name": "API Key 管理",
         "href": "/dashboard/apikeys-admin",
         "icon": "Key"
