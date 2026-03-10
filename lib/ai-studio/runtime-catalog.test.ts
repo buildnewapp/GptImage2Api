@@ -299,3 +299,64 @@ test("validates pricing overrides against the correct split model entry", () => 
 
   assert.deepEqual(errors, []);
 });
+
+test("allows pricing overrides to append rows for models without upstream pricing", () => {
+  const input = {
+    upstream: {
+      version: 1,
+      generatedAt: "2026-03-10T00:00:00.000Z",
+      items: [
+        createDetail({
+          id: "video:bytedance-v1-pro-text-to-video",
+          title: "Bytedance - V1 Pro Text to Video",
+          docUrl: "https://docs.kie.ai/market/bytedance/v1-pro-text-to-video.md",
+          provider: "Bytedance",
+          modelKeys: ["bytedance/v1-pro-text-to-video"],
+          requestSchema: {
+            type: "object",
+            properties: {
+              model: {
+                type: "string",
+                default: "bytedance/v1-pro-text-to-video",
+              },
+            },
+          },
+          examplePayload: {
+            model: "bytedance/v1-pro-text-to-video",
+          },
+          pricingRows: [],
+        }),
+      ],
+    },
+    modelOverrides: {
+      models: {},
+    },
+    pricingOverrides: {
+      models: {
+        "video:bytedance-v1-pro-text-to-video": {
+          addRows: [
+            {
+              modelDescription: "Seedance 1.5, text-to-video, 720p, 5s",
+              interfaceType: "video",
+              provider: "ByteDance",
+              creditPrice: "30",
+              creditUnit: "per video",
+              usdPrice: "",
+              falPrice: "",
+              discountRate: 0,
+              anchor: "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-text-to-video",
+              discountPrice: false,
+            },
+          ],
+        },
+      },
+    },
+  } satisfies Parameters<typeof compileAiStudioRuntimeCatalog>[0];
+
+  assert.deepEqual(validateAiStudioRuntimeBuildInput(input), []);
+
+  const compiled = compileAiStudioRuntimeCatalog(input);
+  assert.equal(compiled.items[0]?.pricingRows.length, 1);
+  assert.equal(compiled.items[0]?.pricingRows[0]?.creditPrice, "30");
+  assert.equal(compiled.items[0]?.pricingRows[0]?.provider, "ByteDance");
+});

@@ -22,7 +22,7 @@ test("exposes the Sora2 family for AI Video Studio", () => {
 test("returns the supported Sora2 versions", () => {
   assert.deepEqual(
     getAiVideoStudioVersions("sora2").map((version) => version.key),
-    ["sora-2", "sora-2-pro"],
+    ["sora-2", "sora-2-pro", "sora-2-pro-storyboard"],
   );
 });
 
@@ -76,6 +76,55 @@ test("resolves Sora2 Pro image-to-video to the ai-studio public model id", () =>
       mode: "image-to-video",
     }),
     "video:sora2-pro-image-to-video",
+  );
+});
+
+test("resolves Sora2 Pro Storyboard text-to-video to the ai-studio public model id", () => {
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "sora2",
+      versionKey: "sora-2-pro-storyboard",
+      mode: "text-to-video",
+    }),
+    "video:sora2-pro-storyboard",
+  );
+});
+
+test("resolves Veo 3.1 Fast variants to the split ai-studio public model id", () => {
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "veo-3.1",
+      versionKey: "veo-3.1-fast",
+      mode: "text-to-video",
+    }),
+    "video:veo-3.1-fast-text-to-video",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "veo-3.1",
+      versionKey: "veo-3.1-fast",
+      mode: "image-to-video",
+    }),
+    "video:veo-3.1-fast-image-to-video",
+  );
+});
+
+test("resolves Veo 3.1 Quality variants to the split ai-studio public model id", () => {
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "veo-3.1",
+      versionKey: "veo-3.1-quality",
+      mode: "text-to-video",
+    }),
+    "video:veo-3.1-quality-text-to-video",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "veo-3.1",
+      versionKey: "veo-3.1-quality",
+      mode: "image-to-video",
+    }),
+    "video:veo-3.1-quality-image-to-video",
   );
 });
 

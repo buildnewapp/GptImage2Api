@@ -110,12 +110,29 @@ const AI_VIDEO_STUDIO_VERSIONS: AiVideoStudioVersion[] = [
     },
   },
   {
-    key: "veo-3.1",
-    label: "Veo 3.1",
+    key: "sora-2-pro-storyboard",
+    label: "Sora 2 Pro Storyboard",
+    familyKey: "sora2",
+    modelIds: {
+      "text-to-video": "video:sora2-pro-storyboard",
+    },
+  },
+  {
+    key: "veo-3.1-fast",
+    label: "Veo 3.1 Fast",
     familyKey: "veo-3.1",
     modelIds: {
-      "text-to-video": "video:generate-veo3-1-video",
-      "image-to-video": "video:generate-veo3-1-video",
+      "text-to-video": "video:veo-3.1-fast-text-to-video",
+      "image-to-video": "video:veo-3.1-fast-image-to-video",
+    },
+  },
+  {
+    key: "veo-3.1-quality",
+    label: "Veo 3.1 Quality",
+    familyKey: "veo-3.1",
+    modelIds: {
+      "text-to-video": "video:veo-3.1-quality-text-to-video",
+      "image-to-video": "video:veo-3.1-quality-image-to-video",
     },
   },
 ];

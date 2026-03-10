@@ -91,6 +91,7 @@ export interface AiStudioPricingRowOverride {
 
 export interface AiStudioPricingOverrideBucket {
   rows?: AiStudioPricingRowOverride[];
+  addRows?: AiStudioPricingRow[];
 }
 
 export interface AiStudioPricingOverridesFile {
@@ -1033,9 +1034,12 @@ function rewriteSchemaModel(detail: AiStudioDocDetail, schemaModel: string) {
 
 function applyPricingOverridesToDetail(
   detail: AiStudioDocDetail,
-  overrides: AiStudioPricingRowOverride[],
+  bucket: AiStudioPricingOverrideBucket,
 ) {
-  if (overrides.length === 0) {
+  const overrides = bucket.rows ?? [];
+  const addRows = bucket.addRows ?? [];
+
+  if (overrides.length === 0 && addRows.length === 0) {
     return detail;
   }
 
@@ -1079,6 +1083,10 @@ function applyPricingOverridesToDetail(
     if (!removed) {
       nextRows.push(currentRow);
     }
+  }
+
+  for (const row of addRows) {
+    nextRows.push(clonePricingRow(row));
   }
 
   detail.pricingRows = nextRows;
@@ -1141,8 +1149,11 @@ export function compileAiStudioRuntimeCatalog({
     if ((modelOverride?.splitModels?.length ?? 0) > 0) {
       return buildSplitModelDetails(rawDetail, modelOverride!).map((detail) => {
         const pricingOverrideBucket = pricingOverrides.models[detail.id];
-        if (pricingOverrideBucket?.rows?.length) {
-          applyPricingOverridesToDetail(detail, pricingOverrideBucket.rows);
+        if (
+          (pricingOverrideBucket?.rows?.length ?? 0) > 0 ||
+          (pricingOverrideBucket?.addRows?.length ?? 0) > 0
+        ) {
+          applyPricingOverridesToDetail(detail, pricingOverrideBucket);
         }
         return detail;
       });
@@ -1150,8 +1161,11 @@ export function compileAiStudioRuntimeCatalog({
 
     const detail = applyModelOverrideToDetail(cloneDetail(rawDetail), modelOverride);
     const pricingOverrideBucket = pricingOverrides.models[detail.id];
-    if (pricingOverrideBucket?.rows?.length) {
-      applyPricingOverridesToDetail(detail, pricingOverrideBucket.rows);
+    if (
+      (pricingOverrideBucket?.rows?.length ?? 0) > 0 ||
+      (pricingOverrideBucket?.addRows?.length ?? 0) > 0
+    ) {
+      applyPricingOverridesToDetail(detail, pricingOverrideBucket);
     }
 
     return [detail];

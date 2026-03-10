@@ -39,6 +39,42 @@
           }
         }
       ]
+    },
+    "video:generate-veo3-1-video": {
+      "splitModels": [
+        {
+          "id": "video:veo-3.1-fast-text-to-video",
+          "title": "Veo 3.1 Fast Text to Video",
+          "schemaModel": "veo3_fast",
+          "pricingMatch": {
+            "modelDescriptionIncludes": "text-to-video, Fast"
+          }
+        },
+        {
+          "id": "video:veo-3.1-fast-image-to-video",
+          "title": "Veo 3.1 Fast Image to Video",
+          "schemaModel": "veo3_fast",
+          "pricingMatch": {
+            "modelDescriptionIncludes": "image-to-video, Fast"
+          }
+        },
+        {
+          "id": "video:veo-3.1-quality-text-to-video",
+          "title": "Veo 3.1 Quality Text to Video",
+          "schemaModel": "veo3",
+          "pricingMatch": {
+            "modelDescriptionIncludes": "text-to-video, Quality"
+          }
+        },
+        {
+          "id": "video:veo-3.1-quality-image-to-video",
+          "title": "Veo 3.1 Quality Image to Video",
+          "schemaModel": "veo3",
+          "pricingMatch": {
+            "modelDescriptionIncludes": "image-to-video, Quality"
+          }
+        }
+      ]
     }
   }
 }

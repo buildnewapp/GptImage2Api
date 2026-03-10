@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-03-09T05:31:46.390Z",
+  "generatedAt": "2026-03-10T01:58:38.314Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -7818,7 +7818,56 @@
           "duration": "5"
         }
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "Seedance 1.5 Fast, image-to-video, 720p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "16",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-fast-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5 Fast, image-to-video, 720p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "36",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-fast-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5 Fast, image-to-video, 1080p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "36",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-fast-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5 Fast, image-to-video, 1080p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "72",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-fast-image-to-video",
+          "discountPrice": false
+        }
+      ]
     },
     {
       "id": "video:bytedance-v1-pro-image-to-video",
@@ -7961,7 +8010,80 @@
           "enable_safety_checker": true
         }
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "Seedance 1.5, image-to-video, 480p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "14",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, image-to-video, 480p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "28",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, image-to-video, 720p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, image-to-video, 720p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "60",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, image-to-video, 1080p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "70",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, image-to-video, 1080p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "140",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-image-to-video",
+          "discountPrice": false
+        }
+      ]
     },
     {
       "id": "video:bytedance-v1-pro-text-to-video",
@@ -8112,7 +8234,80 @@
           "enable_safety_checker": true
         }
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "Seedance 1.5, text-to-video, 480p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "15",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, text-to-video, 480p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, text-to-video, 720p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, text-to-video, 720p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "60",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, text-to-video, 1080p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "70",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, text-to-video, 1080p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "140",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-text-to-video",
+          "discountPrice": false
+        }
+      ]
     },
     {
       "id": "video:bytedance-v1-lite-image-to-video",
@@ -8264,7 +8459,80 @@
           "end_image_url": ""
         }
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "Seedance 1.0, image-to-video, 480p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "10",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, image-to-video, 480p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "20",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, image-to-video, 720p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "23",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, image-to-video, 720p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "45",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, image-to-video, 1080p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "50",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, image-to-video, 1080p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "100",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-image-to-video",
+          "discountPrice": false
+        }
+      ]
     },
     {
       "id": "video:bytedance-v1-lite-text-to-video",
@@ -8408,7 +8676,80 @@
           "enable_safety_checker": true
         }
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "Seedance 1.0, text-to-video, 480p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "10",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, text-to-video, 480p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "20",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, text-to-video, 720p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "23",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, text-to-video, 720p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "45",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, text-to-video, 1080p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "50",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, text-to-video, 1080p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "100",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-text-to-video",
+          "discountPrice": false
+        }
+      ]
     },
     {
       "id": "video:hailuo-2-3-pro-image-to-video",
@@ -9214,7 +9555,7 @@
           "modelDescription": "Open AI sora 2, image-to-video, Standard-15.0s",
           "interfaceType": "video",
           "provider": "Open AI",
-          "creditPrice": "35.0",
+          "creditPrice": "14",
           "creditUnit": "per video",
           "usdPrice": "0.175",
           "falPrice": "1.5",
@@ -9226,7 +9567,7 @@
           "modelDescription": "Open AI sora 2, image-to-video, Standard-10.0s",
           "interfaceType": "video",
           "provider": "Open AI",
-          "creditPrice": "30.0",
+          "creditPrice": "10",
           "creditUnit": "per video",
           "usdPrice": "0.15",
           "falPrice": "1.0",
@@ -9402,10 +9743,10 @@
       },
       "pricingRows": [
         {
-          "modelDescription": "Open AI sora 2, image-to-video, stable-10.0s",
+          "modelDescription": "Sdance, image-to-video, stable-10.0s",
           "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "35",
+          "provider": "Sdance",
+          "creditPrice": "70",
           "creditUnit": "per video",
           "usdPrice": "0.175",
           "falPrice": "1.0",
@@ -9414,10 +9755,10 @@
           "discountPrice": false
         },
         {
-          "modelDescription": "Open AI sora 2, image-to-video, stable-15.0s",
+          "modelDescription": "Sdance, image-to-video, stable-15.0s",
           "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "40",
+          "provider": "Sdance",
+          "creditPrice": "80",
           "creditUnit": "per video",
           "usdPrice": "0.2",
           "falPrice": "1.0",
@@ -9574,10 +9915,10 @@
       },
       "pricingRows": [
         {
-          "modelDescription": "Sdance, text-to-video, Standard-15.0s",
+          "modelDescription": "Open AI sora 2, text-to-video, Standard-15.0s",
           "interfaceType": "video",
-          "provider": "Sdance",
-          "creditPrice": "70",
+          "provider": "Open AI",
+          "creditPrice": "14",
           "creditUnit": "per video",
           "usdPrice": "0.175",
           "falPrice": "1.5",
@@ -9586,10 +9927,10 @@
           "discountPrice": false
         },
         {
-          "modelDescription": "Sdance, text-to-video, Standard-10.0s",
+          "modelDescription": "Open AI sora 2, text-to-video, Standard-10.0s",
           "interfaceType": "video",
-          "provider": "Sdance",
-          "creditPrice": "60",
+          "provider": "Open AI",
+          "creditPrice": "10",
           "creditUnit": "per video",
           "usdPrice": "0.15",
           "falPrice": "1.0",
@@ -9947,34 +10288,10 @@
       },
       "pricingRows": [
         {
-          "modelDescription": "Open AI sora 2 pro, image-to-video, Pro High-10.0s",
-          "interfaceType": "video",
-          "provider": "Open AI",
-          "creditPrice": "330.0",
-          "creditUnit": "per video",
-          "usdPrice": "1.65",
-          "falPrice": "5.0",
-          "discountRate": 67,
-          "anchor": "https://kie.ai/sora-2-pro?model=sora-2-pro-image-to-video",
-          "discountPrice": false
-        },
-        {
-          "modelDescription": "Open AI sora 2 pro, image-to-video, Pro High-15.0s",
-          "interfaceType": "video",
-          "provider": "Open AI",
-          "creditPrice": "630.0",
-          "creditUnit": "per video",
-          "usdPrice": "3.15",
-          "falPrice": "7.5",
-          "discountRate": 58,
-          "anchor": "https://kie.ai/sora-2-pro?model=sora-2-pro-image-to-video",
-          "discountPrice": false
-        },
-        {
           "modelDescription": "Open AI sora 2 pro, image-to-video, Pro Standard-10.0s",
           "interfaceType": "video",
           "provider": "Open AI",
-          "creditPrice": "150.0",
+          "creditPrice": "75",
           "creditUnit": "per video",
           "usdPrice": "0.75",
           "falPrice": "3.0",
@@ -9986,7 +10303,7 @@
           "modelDescription": "Open AI sora 2 pro, image-to-video, Pro Standard-15.0s",
           "interfaceType": "video",
           "provider": "Open AI",
-          "creditPrice": "270.0",
+          "creditPrice": "135",
           "creditUnit": "per video",
           "usdPrice": "1.35",
           "falPrice": "4.5",
@@ -10156,22 +10473,10 @@
       },
       "pricingRows": [
         {
-          "modelDescription": "Open AI sora 2 pro, text-to-video, Pro High-15.0s",
-          "interfaceType": "video",
-          "provider": "Open AI",
-          "creditPrice": "630.0",
-          "creditUnit": "per video",
-          "usdPrice": "3.15",
-          "falPrice": "7.5",
-          "discountRate": 58,
-          "anchor": "https://kie.ai/sora-2-pro?model=sora-2-pro-text-to-video",
-          "discountPrice": false
-        },
-        {
           "modelDescription": "Open AI sora 2 pro, text-to-video, Pro Standard-15.0s",
           "interfaceType": "video",
           "provider": "Open AI",
-          "creditPrice": "270.0",
+          "creditPrice": "135",
           "creditUnit": "per video",
           "usdPrice": "1.35",
           "falPrice": "4.5",
@@ -10180,22 +10485,10 @@
           "discountPrice": false
         },
         {
-          "modelDescription": "Open AI sora 2 pro, text-to-video, Pro High-10.0s",
-          "interfaceType": "video",
-          "provider": "Open AI",
-          "creditPrice": "330.0",
-          "creditUnit": "per video",
-          "usdPrice": "1.65",
-          "falPrice": "5.0",
-          "discountRate": 67,
-          "anchor": "https://kie.ai/sora-2-pro?model=sora-2-pro-text-to-video",
-          "discountPrice": false
-        },
-        {
           "modelDescription": "Open AI sora 2 pro, text-to-video, Pro Standard-10.0s",
           "interfaceType": "video",
           "provider": "Open AI",
-          "creditPrice": "150.0",
+          "creditPrice": "75",
           "creditUnit": "per video",
           "usdPrice": "0.75",
           "falPrice": "3.0",
@@ -10477,7 +10770,7 @@
           "modelDescription": "Open AI sora 2 pro, storyboard, Pro-10.0s",
           "interfaceType": "video",
           "provider": "Open AI",
-          "creditPrice": "150.0",
+          "creditPrice": "75",
           "creditUnit": "per video",
           "usdPrice": "0.75",
           "falPrice": "",
@@ -10489,7 +10782,7 @@
           "modelDescription": "Open AI sora 2 pro, storyboard, Pro-15-25s",
           "interfaceType": "video",
           "provider": "Open AI",
-          "creditPrice": "270.0",
+          "creditPrice": "135",
           "creditUnit": "per video",
           "usdPrice": "1.35",
           "falPrice": "",
@@ -14446,15 +14739,14 @@
       ]
     },
     {
-      "id": "video:generate-veo3-1-video",
+      "id": "video:veo-3.1-fast-text-to-video",
       "category": "video",
-      "title": "Generate Veo3.1 Video",
+      "title": "Veo 3.1 Fast Text to Video",
       "docUrl": "https://docs.kie.ai/veo3-api/generate-veo-3-video.md",
       "provider": "Generate Veo3.1 Video",
       "endpoint": "/api/v1/veo/generate",
       "method": "POST",
       "modelKeys": [
-        "veo3",
         "veo3_fast"
       ],
       "requestSchema": {
@@ -14482,9 +14774,8 @@
           },
           "model": {
             "type": "string",
-            "description": "Select the model type to use.\n\n- veo3: Veo 3.1 Quality, supports both text-to-video and image-to-video generation\n- veo3_fast: Veo3.1 Fast generation model, supports both text-to-video and image-to-video generation",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `veo3_fast` for this endpoint",
             "enum": [
-              "veo3",
               "veo3_fast"
             ],
             "default": "veo3_fast",
@@ -14609,114 +14900,547 @@
       },
       "pricingRows": [
         {
-          "modelDescription": "Google veo 3.1, Get 1080P Video",
+          "modelDescription": "Google veo 3.1, text-to-video, Fast",
           "interfaceType": "video",
           "provider": "Google",
-          "creditPrice": "5",
-          "creditUnit": "per video",
-          "usdPrice": "0.025",
-          "falPrice": "",
-          "discountRate": 99.22,
-          "anchor": "https://kie.ai/veo-3-1?model=veo%2Fget-1080p-video",
-          "discountPrice": false
-        },
-        {
-          "modelDescription": "Google veo 3.1, reference-to-video, Fast",
-          "interfaceType": "video",
-          "provider": "Google",
-          "creditPrice": "60.0",
+          "creditPrice": "20",
           "creditUnit": "per video",
           "usdPrice": "0.3",
           "falPrice": "1.2",
           "discountRate": 75,
           "anchor": "https://kie.ai/veo-3-1",
           "discountPrice": false
+        }
+      ],
+      "alias": null
+    },
+    {
+      "id": "video:veo-3.1-fast-image-to-video",
+      "category": "video",
+      "title": "Veo 3.1 Fast Image to Video",
+      "docUrl": "https://docs.kie.ai/veo3-api/generate-veo-3-video.md",
+      "provider": "Generate Veo3.1 Video",
+      "endpoint": "/api/v1/veo/generate",
+      "method": "POST",
+      "modelKeys": [
+        "veo3_fast"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "Text prompt describing the desired video content. Required for all generation modes.\n\n- Should be detailed and specific in describing video content\n- Can include actions, scenes, style and other information\n- For image-to-video, describe how you want the image to come alive",
+            "examples": [
+              "A dog playing in a park"
+            ]
+          },
+          "imageUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Image URL list (used in image-to-video mode). Supports 1 or 2 images:\n\n- **1 image**: The generated video will unfold around this image, with the image content presented dynamically\n- **2 images**: The first image serves as the video's first frame, and the second image serves as the video's last frame, with the video transitioning between them\n- Must be valid image URLs\n- Images must be accessible to the API server.",
+            "examples": [
+              [
+                "http://example.com/image1.jpg",
+                "http://example.com/image2.jpg"
+              ]
+            ]
+          },
+          "model": {
+            "type": "string",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `veo3_fast` for this endpoint",
+            "enum": [
+              "veo3_fast"
+            ],
+            "default": "veo3_fast",
+            "examples": [
+              "veo3_fast"
+            ]
+          },
+          "generationType": {
+            "type": "string",
+            "description": "Video generation mode (optional). Specifies different video generation approaches:\n\n- **TEXT_2_VIDEO**: Text-to-video - Generate videos using only text prompts\n- **FIRST_AND_LAST_FRAMES_2_VIDEO**: First and last frames to video - Flexible image-to-video generation mode\n  - 1 image: Generate video based on the provided image\n  - 2 images: First image as first frame, second image as last frame, generating transition video\n- **REFERENCE_2_VIDEO**: Reference-to-video - Generate videos based on reference images, requires 1-3 images in imageUrls (minimum 1, maximum 3)\n\n**Important Notes**:\n- REFERENCE_2_VIDEO mode currently only supports veo3_fast model\n- If not specified, the system will automatically determine the generation mode based on whether imageUrls are provided",
+            "enum": [
+              "TEXT_2_VIDEO",
+              "FIRST_AND_LAST_FRAMES_2_VIDEO",
+              "REFERENCE_2_VIDEO"
+            ],
+            "examples": [
+              "TEXT_2_VIDEO"
+            ]
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "Video aspect ratio. Specifies the dimension ratio of the generated video. Available options:\n\n- 16:9: Landscape video format. \n- 9:16: Portrait video format, suitable for mobile short videos\n- Auto: In auto mode, the video will be automatically center-cropped based on whether your uploaded image is closer to 16:9 or 9:16.\n\nDefault value is 16:9.",
+            "enum": [
+              "16:9",
+              "9:16",
+              "Auto"
+            ],
+            "default": "16:9",
+            "examples": [
+              "16:9"
+            ]
+          },
+          "seeds": {
+            "type": "integer",
+            "description": "(Optional) Random seed parameter to control the randomness of the generated content. Value range: 10000-99999. The same seed will generate similar video content, different seeds will generate different content. If not provided, the system will assign one automatically.",
+            "minimum": 10000,
+            "maximum": 99999,
+            "examples": [
+              12345
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "description": "Completion callback URL for receiving video generation status updates.\n\n- Optional but recommended for production use\n- System will POST task completion status to this URL when the video generation is completed\n- Callback will include task results, video URLs, and status information\n- Your callback endpoint should accept POST requests with JSON payload\n- For detailed callback format and implementation guide, see [Callback Documentation](https://docs.kie.ai/veo3-api/generate-veo-3-video-callbacks)\n- Alternatively, use the Get Video Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
+            "examples": [
+              "http://your-callback-url.com/complete"
+            ]
+          },
+          "enableFallback": {
+            "type": "boolean",
+            "description": "Deprecated Enable fallback functionality. When set to true, if the official Veo3.1 video generation service is unavailable or encounters exceptions, the system will automatically switch to a backup model for video generation to ensure task continuity and reliability. Default value is false.\n\n- When fallback is enabled, backup model will be used for the following errors:\n  - public error minor upload\n  - Your prompt was flagged by Website as violating content policies\n  - public error prominent people upload\n- Fallback mode requires 16:9 aspect ratio and uses 1080p resolution by default\n- **Note**: Videos generated through fallback mode cannot be accessed via the Get 1080P Video endpoint\n- **Credit Consumption**: Successful fallback has different credit consumption, please see https://kie.ai/pricing for pricing details\n\n**Note: This parameter is deprecated. Please remove this parameter from your requests. The system has automatically optimized the content review mechanism without requiring manual fallback configuration.**",
+            "default": false,
+            "deprecated": true,
+            "examples": [
+              false
+            ]
+          },
+          "enableTranslation": {
+            "type": "boolean",
+            "description": "Enable prompt translation to English. When set to true, the system will automatically translate prompts to English before video generation for better generation results. Default value is true.\n\n- true: Enable translation, prompts will be automatically translated to English\n- false: Disable translation, use original prompts directly for generation",
+            "default": true,
+            "examples": [
+              true
+            ]
+          },
+          "watermark": {
+            "type": "string",
+            "description": "Watermark text.\n\n- Optional parameter\n- If provided, a watermark will be added to the generated video",
+            "examples": [
+              "MyBrand"
+            ]
+          }
         },
-        {
-          "modelDescription": "Google veo 3.1, text-to-video, Quality",
-          "interfaceType": "video",
-          "provider": "Google",
-          "creditPrice": "250.0",
-          "creditUnit": "per video",
-          "usdPrice": "1.25",
-          "falPrice": "3.2",
-          "discountRate": 60.94,
-          "anchor": "https://kie.ai/veo-3-1",
-          "discountPrice": false
-        },
+        "required": [
+          "prompt"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "imageUrls",
+          "model",
+          "generationType",
+          "aspect_ratio",
+          "seeds",
+          "callBackUrl",
+          "enableFallback",
+          "enableTranslation",
+          "watermark"
+        ],
+        "examples": [
+          {
+            "prompt": "A dog playing in a park",
+            "imageUrls": [
+              "http://example.com/image1.jpg",
+              "http://example.com/image2.jpg"
+            ],
+            "model": "veo3_fast",
+            "watermark": "MyBrand",
+            "callBackUrl": "http://your-callback-url.com/complete",
+            "aspect_ratio": "16:9",
+            "seeds": 12345,
+            "enableFallback": false,
+            "enableTranslation": true,
+            "generationType": "REFERENCE_2_VIDEO"
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "prompt": "A dog playing in a park",
+        "imageUrls": [
+          "http://example.com/image1.jpg",
+          "http://example.com/image2.jpg"
+        ],
+        "model": "veo3_fast",
+        "watermark": "MyBrand",
+        "callBackUrl": "http://your-callback-url.com/complete",
+        "aspect_ratio": "16:9",
+        "seeds": 12345,
+        "enableFallback": false,
+        "enableTranslation": true,
+        "generationType": "REFERENCE_2_VIDEO"
+      },
+      "pricingRows": [
         {
           "modelDescription": "Google veo 3.1, image-to-video, Fast",
           "interfaceType": "video",
           "provider": "Google",
-          "creditPrice": "60.0",
+          "creditPrice": "20",
           "creditUnit": "per video",
           "usdPrice": "0.3",
           "falPrice": "1.2",
           "discountRate": 75,
           "anchor": "https://kie.ai/veo-3-1",
           "discountPrice": false
+        }
+      ],
+      "alias": null
+    },
+    {
+      "id": "video:veo-3.1-quality-text-to-video",
+      "category": "video",
+      "title": "Veo 3.1 Quality Text to Video",
+      "docUrl": "https://docs.kie.ai/veo3-api/generate-veo-3-video.md",
+      "provider": "Generate Veo3.1 Video",
+      "endpoint": "/api/v1/veo/generate",
+      "method": "POST",
+      "modelKeys": [
+        "veo3"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "Text prompt describing the desired video content. Required for all generation modes.\n\n- Should be detailed and specific in describing video content\n- Can include actions, scenes, style and other information\n- For image-to-video, describe how you want the image to come alive",
+            "examples": [
+              "A dog playing in a park"
+            ]
+          },
+          "imageUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Image URL list (used in image-to-video mode). Supports 1 or 2 images:\n\n- **1 image**: The generated video will unfold around this image, with the image content presented dynamically\n- **2 images**: The first image serves as the video's first frame, and the second image serves as the video's last frame, with the video transitioning between them\n- Must be valid image URLs\n- Images must be accessible to the API server.",
+            "examples": [
+              [
+                "http://example.com/image1.jpg",
+                "http://example.com/image2.jpg"
+              ]
+            ]
+          },
+          "model": {
+            "type": "string",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `veo3` for this endpoint",
+            "enum": [
+              "veo3"
+            ],
+            "default": "veo3",
+            "examples": [
+              "veo3"
+            ]
+          },
+          "generationType": {
+            "type": "string",
+            "description": "Video generation mode (optional). Specifies different video generation approaches:\n\n- **TEXT_2_VIDEO**: Text-to-video - Generate videos using only text prompts\n- **FIRST_AND_LAST_FRAMES_2_VIDEO**: First and last frames to video - Flexible image-to-video generation mode\n  - 1 image: Generate video based on the provided image\n  - 2 images: First image as first frame, second image as last frame, generating transition video\n- **REFERENCE_2_VIDEO**: Reference-to-video - Generate videos based on reference images, requires 1-3 images in imageUrls (minimum 1, maximum 3)\n\n**Important Notes**:\n- REFERENCE_2_VIDEO mode currently only supports veo3_fast model\n- If not specified, the system will automatically determine the generation mode based on whether imageUrls are provided",
+            "enum": [
+              "TEXT_2_VIDEO",
+              "FIRST_AND_LAST_FRAMES_2_VIDEO",
+              "REFERENCE_2_VIDEO"
+            ],
+            "examples": [
+              "TEXT_2_VIDEO"
+            ]
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "Video aspect ratio. Specifies the dimension ratio of the generated video. Available options:\n\n- 16:9: Landscape video format. \n- 9:16: Portrait video format, suitable for mobile short videos\n- Auto: In auto mode, the video will be automatically center-cropped based on whether your uploaded image is closer to 16:9 or 9:16.\n\nDefault value is 16:9.",
+            "enum": [
+              "16:9",
+              "9:16",
+              "Auto"
+            ],
+            "default": "16:9",
+            "examples": [
+              "16:9"
+            ]
+          },
+          "seeds": {
+            "type": "integer",
+            "description": "(Optional) Random seed parameter to control the randomness of the generated content. Value range: 10000-99999. The same seed will generate similar video content, different seeds will generate different content. If not provided, the system will assign one automatically.",
+            "minimum": 10000,
+            "maximum": 99999,
+            "examples": [
+              12345
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "description": "Completion callback URL for receiving video generation status updates.\n\n- Optional but recommended for production use\n- System will POST task completion status to this URL when the video generation is completed\n- Callback will include task results, video URLs, and status information\n- Your callback endpoint should accept POST requests with JSON payload\n- For detailed callback format and implementation guide, see [Callback Documentation](https://docs.kie.ai/veo3-api/generate-veo-3-video-callbacks)\n- Alternatively, use the Get Video Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
+            "examples": [
+              "http://your-callback-url.com/complete"
+            ]
+          },
+          "enableFallback": {
+            "type": "boolean",
+            "description": "Deprecated Enable fallback functionality. When set to true, if the official Veo3.1 video generation service is unavailable or encounters exceptions, the system will automatically switch to a backup model for video generation to ensure task continuity and reliability. Default value is false.\n\n- When fallback is enabled, backup model will be used for the following errors:\n  - public error minor upload\n  - Your prompt was flagged by Website as violating content policies\n  - public error prominent people upload\n- Fallback mode requires 16:9 aspect ratio and uses 1080p resolution by default\n- **Note**: Videos generated through fallback mode cannot be accessed via the Get 1080P Video endpoint\n- **Credit Consumption**: Successful fallback has different credit consumption, please see https://kie.ai/pricing for pricing details\n\n**Note: This parameter is deprecated. Please remove this parameter from your requests. The system has automatically optimized the content review mechanism without requiring manual fallback configuration.**",
+            "default": false,
+            "deprecated": true,
+            "examples": [
+              false
+            ]
+          },
+          "enableTranslation": {
+            "type": "boolean",
+            "description": "Enable prompt translation to English. When set to true, the system will automatically translate prompts to English before video generation for better generation results. Default value is true.\n\n- true: Enable translation, prompts will be automatically translated to English\n- false: Disable translation, use original prompts directly for generation",
+            "default": true,
+            "examples": [
+              true
+            ]
+          },
+          "watermark": {
+            "type": "string",
+            "description": "Watermark text.\n\n- Optional parameter\n- If provided, a watermark will be added to the generated video",
+            "examples": [
+              "MyBrand"
+            ]
+          }
         },
+        "required": [
+          "prompt"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "imageUrls",
+          "model",
+          "generationType",
+          "aspect_ratio",
+          "seeds",
+          "callBackUrl",
+          "enableFallback",
+          "enableTranslation",
+          "watermark"
+        ],
+        "examples": [
+          {
+            "prompt": "A dog playing in a park",
+            "imageUrls": [
+              "http://example.com/image1.jpg",
+              "http://example.com/image2.jpg"
+            ],
+            "model": "veo3_fast",
+            "watermark": "MyBrand",
+            "callBackUrl": "http://your-callback-url.com/complete",
+            "aspect_ratio": "16:9",
+            "seeds": 12345,
+            "enableFallback": false,
+            "enableTranslation": true,
+            "generationType": "REFERENCE_2_VIDEO"
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "prompt": "A dog playing in a park",
+        "imageUrls": [
+          "http://example.com/image1.jpg",
+          "http://example.com/image2.jpg"
+        ],
+        "model": "veo3",
+        "watermark": "MyBrand",
+        "callBackUrl": "http://your-callback-url.com/complete",
+        "aspect_ratio": "16:9",
+        "seeds": 12345,
+        "enableFallback": false,
+        "enableTranslation": true,
+        "generationType": "REFERENCE_2_VIDEO"
+      },
+      "pricingRows": [
+        {
+          "modelDescription": "Google veo 3.1, text-to-video, Quality",
+          "interfaceType": "video",
+          "provider": "Google",
+          "creditPrice": "150",
+          "creditUnit": "per video",
+          "usdPrice": "1.25",
+          "falPrice": "3.2",
+          "discountRate": 60.94,
+          "anchor": "https://kie.ai/veo-3-1",
+          "discountPrice": false
+        }
+      ],
+      "alias": null
+    },
+    {
+      "id": "video:veo-3.1-quality-image-to-video",
+      "category": "video",
+      "title": "Veo 3.1 Quality Image to Video",
+      "docUrl": "https://docs.kie.ai/veo3-api/generate-veo-3-video.md",
+      "provider": "Generate Veo3.1 Video",
+      "endpoint": "/api/v1/veo/generate",
+      "method": "POST",
+      "modelKeys": [
+        "veo3"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "Text prompt describing the desired video content. Required for all generation modes.\n\n- Should be detailed and specific in describing video content\n- Can include actions, scenes, style and other information\n- For image-to-video, describe how you want the image to come alive",
+            "examples": [
+              "A dog playing in a park"
+            ]
+          },
+          "imageUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Image URL list (used in image-to-video mode). Supports 1 or 2 images:\n\n- **1 image**: The generated video will unfold around this image, with the image content presented dynamically\n- **2 images**: The first image serves as the video's first frame, and the second image serves as the video's last frame, with the video transitioning between them\n- Must be valid image URLs\n- Images must be accessible to the API server.",
+            "examples": [
+              [
+                "http://example.com/image1.jpg",
+                "http://example.com/image2.jpg"
+              ]
+            ]
+          },
+          "model": {
+            "type": "string",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `veo3` for this endpoint",
+            "enum": [
+              "veo3"
+            ],
+            "default": "veo3",
+            "examples": [
+              "veo3"
+            ]
+          },
+          "generationType": {
+            "type": "string",
+            "description": "Video generation mode (optional). Specifies different video generation approaches:\n\n- **TEXT_2_VIDEO**: Text-to-video - Generate videos using only text prompts\n- **FIRST_AND_LAST_FRAMES_2_VIDEO**: First and last frames to video - Flexible image-to-video generation mode\n  - 1 image: Generate video based on the provided image\n  - 2 images: First image as first frame, second image as last frame, generating transition video\n- **REFERENCE_2_VIDEO**: Reference-to-video - Generate videos based on reference images, requires 1-3 images in imageUrls (minimum 1, maximum 3)\n\n**Important Notes**:\n- REFERENCE_2_VIDEO mode currently only supports veo3_fast model\n- If not specified, the system will automatically determine the generation mode based on whether imageUrls are provided",
+            "enum": [
+              "TEXT_2_VIDEO",
+              "FIRST_AND_LAST_FRAMES_2_VIDEO",
+              "REFERENCE_2_VIDEO"
+            ],
+            "examples": [
+              "TEXT_2_VIDEO"
+            ]
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "Video aspect ratio. Specifies the dimension ratio of the generated video. Available options:\n\n- 16:9: Landscape video format. \n- 9:16: Portrait video format, suitable for mobile short videos\n- Auto: In auto mode, the video will be automatically center-cropped based on whether your uploaded image is closer to 16:9 or 9:16.\n\nDefault value is 16:9.",
+            "enum": [
+              "16:9",
+              "9:16",
+              "Auto"
+            ],
+            "default": "16:9",
+            "examples": [
+              "16:9"
+            ]
+          },
+          "seeds": {
+            "type": "integer",
+            "description": "(Optional) Random seed parameter to control the randomness of the generated content. Value range: 10000-99999. The same seed will generate similar video content, different seeds will generate different content. If not provided, the system will assign one automatically.",
+            "minimum": 10000,
+            "maximum": 99999,
+            "examples": [
+              12345
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "description": "Completion callback URL for receiving video generation status updates.\n\n- Optional but recommended for production use\n- System will POST task completion status to this URL when the video generation is completed\n- Callback will include task results, video URLs, and status information\n- Your callback endpoint should accept POST requests with JSON payload\n- For detailed callback format and implementation guide, see [Callback Documentation](https://docs.kie.ai/veo3-api/generate-veo-3-video-callbacks)\n- Alternatively, use the Get Video Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
+            "examples": [
+              "http://your-callback-url.com/complete"
+            ]
+          },
+          "enableFallback": {
+            "type": "boolean",
+            "description": "Deprecated Enable fallback functionality. When set to true, if the official Veo3.1 video generation service is unavailable or encounters exceptions, the system will automatically switch to a backup model for video generation to ensure task continuity and reliability. Default value is false.\n\n- When fallback is enabled, backup model will be used for the following errors:\n  - public error minor upload\n  - Your prompt was flagged by Website as violating content policies\n  - public error prominent people upload\n- Fallback mode requires 16:9 aspect ratio and uses 1080p resolution by default\n- **Note**: Videos generated through fallback mode cannot be accessed via the Get 1080P Video endpoint\n- **Credit Consumption**: Successful fallback has different credit consumption, please see https://kie.ai/pricing for pricing details\n\n**Note: This parameter is deprecated. Please remove this parameter from your requests. The system has automatically optimized the content review mechanism without requiring manual fallback configuration.**",
+            "default": false,
+            "deprecated": true,
+            "examples": [
+              false
+            ]
+          },
+          "enableTranslation": {
+            "type": "boolean",
+            "description": "Enable prompt translation to English. When set to true, the system will automatically translate prompts to English before video generation for better generation results. Default value is true.\n\n- true: Enable translation, prompts will be automatically translated to English\n- false: Disable translation, use original prompts directly for generation",
+            "default": true,
+            "examples": [
+              true
+            ]
+          },
+          "watermark": {
+            "type": "string",
+            "description": "Watermark text.\n\n- Optional parameter\n- If provided, a watermark will be added to the generated video",
+            "examples": [
+              "MyBrand"
+            ]
+          }
+        },
+        "required": [
+          "prompt"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "imageUrls",
+          "model",
+          "generationType",
+          "aspect_ratio",
+          "seeds",
+          "callBackUrl",
+          "enableFallback",
+          "enableTranslation",
+          "watermark"
+        ],
+        "examples": [
+          {
+            "prompt": "A dog playing in a park",
+            "imageUrls": [
+              "http://example.com/image1.jpg",
+              "http://example.com/image2.jpg"
+            ],
+            "model": "veo3_fast",
+            "watermark": "MyBrand",
+            "callBackUrl": "http://your-callback-url.com/complete",
+            "aspect_ratio": "16:9",
+            "seeds": 12345,
+            "enableFallback": false,
+            "enableTranslation": true,
+            "generationType": "REFERENCE_2_VIDEO"
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "prompt": "A dog playing in a park",
+        "imageUrls": [
+          "http://example.com/image1.jpg",
+          "http://example.com/image2.jpg"
+        ],
+        "model": "veo3",
+        "watermark": "MyBrand",
+        "callBackUrl": "http://your-callback-url.com/complete",
+        "aspect_ratio": "16:9",
+        "seeds": 12345,
+        "enableFallback": false,
+        "enableTranslation": true,
+        "generationType": "REFERENCE_2_VIDEO"
+      },
+      "pricingRows": [
         {
           "modelDescription": "Google veo 3.1, image-to-video, Quality",
           "interfaceType": "video",
           "provider": "Google",
-          "creditPrice": "250.0",
+          "creditPrice": "150",
           "creditUnit": "per video",
           "usdPrice": "1.25",
           "falPrice": "3.2",
           "discountRate": 60.94,
           "anchor": "https://kie.ai/veo-3-1",
-          "discountPrice": false
-        },
-        {
-          "modelDescription": "Google veo 3.1, text-to-video, Fast",
-          "interfaceType": "video",
-          "provider": "Google",
-          "creditPrice": "60.0",
-          "creditUnit": "per video",
-          "usdPrice": "0.3",
-          "falPrice": "1.2",
-          "discountRate": 75,
-          "anchor": "https://kie.ai/veo-3-1",
-          "discountPrice": false
-        },
-        {
-          "modelDescription": "Google veo 3.1, Extend, Quality",
-          "interfaceType": "video",
-          "provider": "Google",
-          "creditPrice": "250",
-          "creditUnit": "per video",
-          "usdPrice": "1.25",
-          "falPrice": "3.2",
-          "discountRate": 60.94,
-          "anchor": "https://kie.ai/veo-3-1?model=veo%2Fextend",
-          "discountPrice": false
-        },
-        {
-          "modelDescription": "Google veo 3.1, Extend, Fast",
-          "interfaceType": "video",
-          "provider": "Google",
-          "creditPrice": "60",
-          "creditUnit": "per video",
-          "usdPrice": "0.30",
-          "falPrice": "1.2",
-          "discountRate": 75,
-          "anchor": "https://kie.ai/veo-3-1?model=veo%2Fextend",
-          "discountPrice": false
-        },
-        {
-          "modelDescription": "Google veo 3.1, Get 4K Video",
-          "interfaceType": "video",
-          "provider": "Google",
-          "creditPrice": "120.0",
-          "creditUnit": "per video",
-          "usdPrice": "0.6",
-          "falPrice": "1.6",
-          "discountRate": 62.5,
-          "anchor": "https://docs.kie.ai/veo3-api/get-veo-3-4k-video",
           "discountPrice": false
         }
-      ]
+      ],
+      "alias": null
     },
     {
       "id": "video:extend-veo3-1-video",

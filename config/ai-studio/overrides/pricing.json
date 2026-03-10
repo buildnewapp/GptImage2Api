@@ -1,5 +1,361 @@
 {
   "models": {
+    "video:bytedance-v1-pro-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "Seedance 1.5, image-to-video, 480p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "14",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, image-to-video, 480p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "28",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, image-to-video, 720p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, image-to-video, 720p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "60",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, image-to-video, 1080p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "70",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, image-to-video, 1080p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "140",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-image-to-video",
+          "discountPrice": false
+        }
+      ]
+    },
+    "video:bytedance-v1-pro-text-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "Seedance 1.5, text-to-video, 480p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "15",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, text-to-video, 480p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, text-to-video, 720p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, text-to-video, 720p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "60",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, text-to-video, 1080p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "70",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5, text-to-video, 1080p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "140",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-text-to-video",
+          "discountPrice": false
+        }
+      ]
+    },
+    "video:bytedance-v1-pro-fast-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "Seedance 1.5 Fast, image-to-video, 720p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "16",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-fast-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5 Fast, image-to-video, 720p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "36",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-fast-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5 Fast, image-to-video, 1080p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "36",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-fast-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.5 Fast, image-to-video, 1080p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "72",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-fast-image-to-video",
+          "discountPrice": false
+        }
+      ]
+    },
+    "video:bytedance-v1-lite-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "Seedance 1.0, image-to-video, 480p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "10",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, image-to-video, 480p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "20",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, image-to-video, 720p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "23",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, image-to-video, 720p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "45",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, image-to-video, 1080p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "50",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-image-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, image-to-video, 1080p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "100",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-image-to-video",
+          "discountPrice": false
+        }
+      ]
+    },
+    "video:bytedance-v1-lite-text-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "Seedance 1.0, text-to-video, 480p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "10",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, text-to-video, 480p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "20",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, text-to-video, 720p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "23",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, text-to-video, 720p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "45",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, text-to-video, 1080p, 5s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "50",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-text-to-video",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Seedance 1.0, text-to-video, 1080p, 10s",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "100",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://kie.ai/seedance-1-0?model=bytedance%2Fv1-lite-text-to-video",
+          "discountPrice": false
+        }
+      ]
+    },
     "video:sora2-text-to-video-standard": {
       "rows": [
         {
@@ -7,18 +363,14 @@
             "runtimeModel": "sora-2-text-to-video",
             "modelDescriptionIncludes": "Standard-15.0s"
           },
-          "provider": "Sdance",
-          "modelDescription": "Sdance, text-to-video, Standard-15.0s",
-          "creditPrice": "70"
+          "creditPrice": "14"
         },
         {
           "match": {
             "runtimeModel": "sora-2-text-to-video",
             "modelDescriptionIncludes": "Standard-10.0s"
           },
-          "provider": "Sdance",
-          "modelDescription": "Sdance, text-to-video, Standard-10.0s",
-          "creditPrice": "60"
+          "creditPrice": "10"
         }
       ]
     },
@@ -41,6 +393,158 @@
           "provider": "Sdance",
           "modelDescription": "Sdance, text-to-video, stable-10.0s",
           "creditPrice": "70"
+        }
+      ]
+    },
+    "video:sora2-image-to-video-standard": {
+      "rows": [
+        {
+          "match": {
+            "runtimeModel": "sora-2-image-to-video",
+            "modelDescriptionIncludes": "Standard-15.0s"
+          },
+          "creditPrice": "14"
+        },
+        {
+          "match": {
+            "runtimeModel": "sora-2-image-to-video",
+            "modelDescriptionIncludes": "Standard-10.0s"
+          },
+          "creditPrice": "10"
+        }
+      ]
+    },
+    "video:sora2-image-to-video-stable": {
+      "rows": [
+        {
+          "match": {
+            "runtimeModel": "sora-2-image-to-video-stable",
+            "modelDescriptionIncludes": "stable-15.0s"
+          },
+          "provider": "Sdance",
+          "modelDescription": "Sdance, image-to-video, stable-15.0s",
+          "creditPrice": "80"
+        },
+        {
+          "match": {
+            "runtimeModel": "sora-2-image-to-video-stable",
+            "modelDescriptionIncludes": "stable-10.0s"
+          },
+          "provider": "Sdance",
+          "modelDescription": "Sdance, image-to-video, stable-10.0s",
+          "creditPrice": "70"
+        }
+      ]
+    },
+    "video:sora2-pro-text-to-video": {
+      "rows": [
+        {
+          "match": {
+            "runtimeModel": "sora-2-pro-text-to-video",
+            "modelDescriptionIncludes": "Pro High-"
+          },
+          "enabled": false
+        },
+        {
+          "match": {
+            "runtimeModel": "sora-2-pro-text-to-video",
+            "modelDescriptionIncludes": "Pro Standard-15.0s"
+          },
+          "creditPrice": "135"
+        },
+        {
+          "match": {
+            "runtimeModel": "sora-2-pro-text-to-video",
+            "modelDescriptionIncludes": "Pro Standard-10.0s"
+          },
+          "creditPrice": "75"
+        }
+      ]
+    },
+    "video:sora2-pro-image-to-video": {
+      "rows": [
+        {
+          "match": {
+            "runtimeModel": "sora-2-pro-image-to-video",
+            "modelDescriptionIncludes": "Pro High-"
+          },
+          "enabled": false
+        },
+        {
+          "match": {
+            "runtimeModel": "sora-2-pro-image-to-video",
+            "modelDescriptionIncludes": "Pro Standard-15.0s"
+          },
+          "creditPrice": "135"
+        },
+        {
+          "match": {
+            "runtimeModel": "sora-2-pro-image-to-video",
+            "modelDescriptionIncludes": "Pro Standard-10.0s"
+          },
+          "creditPrice": "75"
+        }
+      ]
+    },
+    "video:sora2-pro-storyboard": {
+      "rows": [
+        {
+          "match": {
+            "runtimeModel": "sora-2-pro-storyboard",
+            "modelDescriptionIncludes": "Pro-10.0s"
+          },
+          "creditPrice": "75"
+        },
+        {
+          "match": {
+            "runtimeModel": "sora-2-pro-storyboard",
+            "modelDescriptionIncludes": "Pro-15-25s"
+          },
+          "creditPrice": "135"
+        }
+      ]
+    },
+    "video:veo-3.1-fast-text-to-video": {
+      "rows": [
+        {
+          "match": {
+            "runtimeModel": "veo3_fast",
+            "modelDescriptionIncludes": "text-to-video, Fast"
+          },
+          "creditPrice": "20"
+        }
+      ]
+    },
+    "video:veo-3.1-fast-image-to-video": {
+      "rows": [
+        {
+          "match": {
+            "runtimeModel": "veo3_fast",
+            "modelDescriptionIncludes": "image-to-video, Fast"
+          },
+          "creditPrice": "20"
+        }
+      ]
+    },
+    "video:veo-3.1-quality-text-to-video": {
+      "rows": [
+        {
+          "match": {
+            "runtimeModel": "veo3",
+            "modelDescriptionIncludes": "text-to-video, Quality"
+          },
+          "creditPrice": "150"
+        }
+      ]
+    },
+    "video:veo-3.1-quality-image-to-video": {
+      "rows": [
+        {
+          "match": {
+            "runtimeModel": "veo3",
+            "modelDescriptionIncludes": "image-to-video, Quality"
+          },
+          "creditPrice": "150"
         }
       ]
     }
