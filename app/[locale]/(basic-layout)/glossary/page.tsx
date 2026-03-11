@@ -3,6 +3,7 @@ import { listTagsAction } from "@/actions/posts/tags";
 import { POST_CONFIGS } from "@/components/cms/post-config";
 import { PostList } from "@/components/cms/PostList";
 import { Locale } from "@/i18n/routing";
+import { loadPublicListPageData } from "@/lib/cms/page-data";
 import { constructMetadata } from "@/lib/metadata";
 import { Tag } from "@/types/cms";
 import { TextSearch } from "lucide-react";
@@ -33,39 +34,27 @@ const SERVER_POST_PAGE_SIZE = 48;
 
 export default async function Page({ params }: { params: Params }) {
   const { locale } = await params;
-  const t = await getTranslations("Glossary");
+  const [t, listData] = await Promise.all([
+    getTranslations("Glossary"),
+    loadPublicListPageData({
+      fetchPosts: () =>
+        listPublishedPostsAction({
+          pageIndex: 0,
+          pageSize: SERVER_POST_PAGE_SIZE,
+          postType: "glossary",
+          locale,
+        }),
+      fetchTags: () => listTagsAction({ postType: "glossary" }),
+    }),
+  ]);
 
-  // Only fetch from server (database), no local file system access
-  const initialServerPostsResult = await listPublishedPostsAction({
-    pageIndex: 0,
-    pageSize: SERVER_POST_PAGE_SIZE,
-    postType: "glossary",
-    locale: locale,
-  });
-
-  const initialServerPosts =
-    initialServerPostsResult.success && initialServerPostsResult.data?.posts
-      ? initialServerPostsResult.data.posts
-      : [];
-  const totalServerPosts =
-    initialServerPostsResult.success && initialServerPostsResult.data?.count
-      ? initialServerPostsResult.data.count
-      : 0;
-
-  if (!initialServerPostsResult.success) {
+  if (listData.postsError) {
     console.error(
       "Failed to fetch initial server glossary entries:",
-      initialServerPostsResult.error
+      listData.postsError
     );
   }
-
-  const tagsResult = await listTagsAction({ postType: "glossary" });
-  let serverTags: Tag[] = [];
-  if (tagsResult.success && tagsResult.data?.tags) {
-    serverTags = tagsResult.data.tags;
-  }
-
-  const noPostsFound = initialServerPosts.length === 0;
+  const noPostsFound = listData.posts.length === 0;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -87,9 +76,9 @@ export default async function Page({ params }: { params: Params }) {
           postType="glossary"
           baseUrl="/glossary"
           localPosts={[]}
-          initialPosts={initialServerPosts}
-          initialTotal={totalServerPosts}
-          serverTags={serverTags}
+          initialPosts={listData.posts}
+          initialTotal={listData.total}
+          serverTags={listData.tags as Tag[]}
           locale={locale}
           pageSize={SERVER_POST_PAGE_SIZE}
           showTagSelector={true}

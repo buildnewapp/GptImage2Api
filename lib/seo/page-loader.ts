@@ -1,4 +1,5 @@
 import { DEFAULT_LOCALE } from "@/i18n/routing";
+import { loadLocalizedMetadata } from "@/lib/cms/page-data";
 import { type RelatedSeoLink, buildRelatedSeoLinks } from "@/lib/seo/content-schema";
 import {
   type SeoPageType,
@@ -77,20 +78,16 @@ export async function resolveSeoPageAvailableLocales(
     loadMetadata ??
     (async ({ postType, slug, locale }) =>
       getSeoPageCmsModule(postType).getPostMetadata(slug, locale));
-
-  const availableLocales: string[] = [];
-
-  for (const locale of input.locales) {
-    const { metadata } = await metadataLoader({
-      postType: input.postType,
-      slug: input.slug,
-      locale,
-    });
-
-    if (metadata) {
-      availableLocales.push(locale);
-    }
-  }
+  const { availableLocales } = await loadLocalizedMetadata({
+    locales: input.locales,
+    currentLocale: input.locales[0] ?? DEFAULT_LOCALE,
+    loadMetadata: (locale) =>
+      metadataLoader({
+        postType: input.postType,
+        slug: input.slug,
+        locale,
+      }),
+  });
 
   return availableLocales;
 }

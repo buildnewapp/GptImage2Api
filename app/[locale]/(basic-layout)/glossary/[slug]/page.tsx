@@ -9,6 +9,7 @@ import { TiptapRenderer } from "@/components/tiptap/TiptapRenderer";
 import { Button } from "@/components/ui/button";
 import { Link as I18nLink, Locale, LOCALES } from "@/i18n/routing";
 import { glossaryCms } from "@/lib/cms";
+import { loadLocalizedMetadata } from "@/lib/cms/page-data";
 import { constructMetadata } from "@/lib/metadata";
 import { PostBase } from "@/types/cms";
 import dayjs from "dayjs";
@@ -34,10 +35,13 @@ export async function generateMetadata({
   params,
 }: MetadataProps): Promise<Metadata> {
   const { locale, slug } = await params;
-  const { metadata: postMetadata } = await glossaryCms.getPostMetadata(
-    slug,
-    locale
-  );
+  const { currentMetadata: postMetadata, availableLocales } =
+    await loadLocalizedMetadata({
+      locales: LOCALES,
+      currentLocale: locale,
+      loadMetadata: (checkLocale) =>
+        glossaryCms.getPostMetadata(slug, checkLocale),
+    });
 
   if (!postMetadata) {
     return constructMetadata({
@@ -51,18 +55,6 @@ export async function generateMetadata({
 
   const metadataPath = slug.startsWith("/") ? slug : `/${slug}`;
   const fullPath = `/glossary${metadataPath}`;
-
-  // Detect which locales have this glossary entry available
-  const availableLocales: string[] = [];
-  for (const checkLocale of LOCALES) {
-    const { metadata: localeMetadata } = await glossaryCms.getPostMetadata(
-      slug,
-      checkLocale
-    );
-    if (localeMetadata) {
-      availableLocales.push(checkLocale);
-    }
-  }
 
   return constructMetadata({
     title: postMetadata.title,
@@ -81,25 +73,26 @@ export async function generateMetadata({
 
 export default async function GlossaryPage({ params }: { params: Params }) {
   const { slug, locale } = await params;
-  const t = await getTranslations("Glossary");
-
-  const { post, errorCode } = await glossaryCms.getBySlug(slug, locale);
+  const viewCountConfig = POST_CONFIGS.glossary.viewCount;
+  const [t, { post, errorCode }, viewCountResult] = await Promise.all([
+    getTranslations("Glossary"),
+    glossaryCms.getBySlug(slug, locale),
+    viewCountConfig.enabled && viewCountConfig.showInUI
+      ? getViewCountAction({
+          slug,
+          postType: "glossary",
+          locale,
+        })
+      : Promise.resolve(null),
+  ]);
 
   if (!post) {
     notFound();
   }
 
-  // View count tracking
-  const viewCountConfig = POST_CONFIGS.glossary.viewCount;
   let viewCount = 0;
 
-  if (viewCountConfig.enabled && viewCountConfig.showInUI) {
-    // Only get view count for display, incrementing is done in Client Component
-    const viewCountResult = await getViewCountAction({
-      slug,
-      postType: "glossary",
-      locale,
-    });
+  if (viewCountConfig.enabled && viewCountConfig.showInUI && viewCountResult) {
     viewCount =
       viewCountResult.success && viewCountResult.data?.count
         ? viewCountResult.data.count

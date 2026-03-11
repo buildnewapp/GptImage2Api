@@ -3,6 +3,7 @@ import { listTagsAction } from "@/actions/posts/tags";
 import { POST_CONFIGS } from "@/components/cms/post-config";
 import { PostList } from "@/components/cms/PostList";
 import { Locale } from "@/i18n/routing";
+import { loadPublicListPageData } from "@/lib/cms/page-data";
 import { constructMetadata } from "@/lib/metadata";
 import { Tag } from "@/types/cms";
 import { TextSearch } from "lucide-react";
@@ -33,29 +34,21 @@ export async function generateMetadata({
 
 export default async function UseCasesPage({ params }: { params: Params }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "SeoContent" });
+  const [t, listData] = await Promise.all([
+    getTranslations({ locale, namespace: "SeoContent" }),
+    loadPublicListPageData({
+      fetchPosts: () =>
+        listPublishedPostsAction({
+          pageIndex: 0,
+          pageSize: SERVER_POST_PAGE_SIZE,
+          postType: "use_case",
+          locale,
+        }),
+      fetchTags: () => listTagsAction({ postType: "use_case" }),
+    }),
+  ]);
 
-  const initialServerPostsResult = await listPublishedPostsAction({
-    pageIndex: 0,
-    pageSize: SERVER_POST_PAGE_SIZE,
-    postType: "use_case",
-    locale,
-  });
-
-  const initialServerPosts =
-    initialServerPostsResult.success && initialServerPostsResult.data?.posts
-      ? initialServerPostsResult.data.posts
-      : [];
-  const totalServerPosts =
-    initialServerPostsResult.success && initialServerPostsResult.data?.count
-      ? initialServerPostsResult.data.count
-      : 0;
-
-  const tagsResult = await listTagsAction({ postType: "use_case" });
-  const serverTags: Tag[] =
-    tagsResult.success && tagsResult.data?.tags ? tagsResult.data.tags : [];
-
-  if (initialServerPosts.length === 0) {
+  if (listData.posts.length === 0) {
     return (
       <div className="container mx-auto px-4 py-16">
         <div className="flex flex-col items-center justify-center py-16 text-center">
@@ -86,9 +79,9 @@ export default async function UseCasesPage({ params }: { params: Params }) {
         postType="use_case"
         baseUrl="/use-cases"
         localPosts={[]}
-        initialPosts={initialServerPosts}
-        initialTotal={totalServerPosts}
-        serverTags={serverTags}
+        initialPosts={listData.posts}
+        initialTotal={listData.total}
+        serverTags={listData.tags as Tag[]}
         locale={locale}
         pageSize={SERVER_POST_PAGE_SIZE}
         showTagSelector={true}

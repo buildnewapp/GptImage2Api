@@ -10,7 +10,7 @@ type SeoContentSeedEntry = {
   language: "en" | "zh";
   postType: Extract<
     PostType,
-    "use_case" | "template" | "alternative" | "compare"
+    "blog" | "use_case" | "template" | "alternative" | "compare"
   >;
   title: string;
   slug: string;
@@ -24,6 +24,58 @@ type SeoContentSeedEntry = {
 };
 
 export const seoContentSeedEntries: SeoContentSeedEntry[] = [
+  {
+    language: "en",
+    postType: "blog",
+    title: "AI Video Workflow Test Post",
+    slug: "ai-video-workflow-test-post",
+    content: `# AI Video Workflow Test Post
+
+This is an English seed blog post for validating the admin blog workflow.
+
+## What this post is for
+- Verify db:seed:seo-content can create blog rows
+- Verify /dashboard/blogs can list seeded blog posts
+- Provide realistic content for editing and preview checks
+
+## Quick notes
+The content is intentionally short and stable so repeated seed runs remain easy to inspect.
+`,
+    description:
+      "English test blog content used to verify seeded blog posts appear in the admin dashboard.",
+    featuredImageUrl:
+      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
+    isPinned: false,
+    status: "published",
+    visibility: "public",
+    metadataJsonb: {},
+  },
+  {
+    language: "zh",
+    postType: "blog",
+    title: "AI 视频工作流测试博客",
+    slug: "ai-video-workflow-test-post-zh",
+    content: `# AI 视频工作流测试博客
+
+这是一篇用于验证后台博客流程的中文种子文章。
+
+## 这篇文章的用途
+- 验证 db:seed:seo-content 可以写入 blog 数据
+- 验证 /dashboard/blogs 可以展示初始化后的博客
+- 为编辑、预览和列表页提供稳定测试内容
+
+## 说明
+内容刻意保持简短且固定，方便重复执行 seed 后核对结果。
+`,
+    description:
+      "用于验证初始化博客数据是否能进入后台博客列表的中文测试文章。",
+    featuredImageUrl:
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
+    isPinned: false,
+    status: "published",
+    visibility: "public",
+    metadataJsonb: {},
+  },
   {
     language: "en",
     postType: "use_case",
@@ -594,12 +646,14 @@ Both tools are strong, but they optimize for different priorities. This comparis
 
 export const seoContentSeedSlugs = {
   en: {
+    blog: "ai-video-workflow-test-post",
     alternative: "canva-alternative-for-ai-headshots",
     compare: "midjourney-vs-flux-for-marketing-images",
     useCase: "ai-headshot-for-linkedin",
     template: "professional-linkedin-headshot-prompt",
   },
   zh: {
+    blog: "ai-video-workflow-test-post-zh",
     alternative: "canva-alternative-ai-headshots",
     compare: "midjourney-vs-flux-marketing-images",
     useCase: "linkedin-ai-professional-headshot",

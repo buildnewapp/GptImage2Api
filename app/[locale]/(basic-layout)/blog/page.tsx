@@ -4,6 +4,7 @@ import { POST_CONFIGS } from "@/components/cms/post-config";
 import { PostList } from "@/components/cms/PostList";
 import { Locale } from "@/i18n/routing";
 import { blogCms } from "@/lib/cms";
+import { loadPublicListPageData } from "@/lib/cms/page-data";
 import { constructMetadata } from "@/lib/metadata";
 import { Tag } from "@/types/cms";
 import { TextSearch } from "lucide-react";
@@ -34,41 +35,30 @@ const SERVER_POST_PAGE_SIZE = 48;
 
 export default async function Page({ params }: { params: Params }) {
   const { locale } = await params;
-  const t = await getTranslations("Blogs");
+  const [t, listData] = await Promise.all([
+    getTranslations("Blogs"),
+    loadPublicListPageData({
+      fetchLocalPosts: () => blogCms.getLocalList(locale),
+      fetchPosts: () =>
+        listPublishedPostsAction({
+          pageIndex: 0,
+          pageSize: SERVER_POST_PAGE_SIZE,
+          postType: "blog",
+          locale,
+        }),
+      fetchTags: () => listTagsAction({ postType: "blog" }),
+    }),
+  ]);
 
-  const { posts: localPosts } = await blogCms.getLocalList(locale);
-
-  const initialServerPostsResult = await listPublishedPostsAction({
-    pageIndex: 0,
-    pageSize: SERVER_POST_PAGE_SIZE,
-    postType: "blog",
-    locale: locale,
-  });
-
-  const initialServerPosts =
-    initialServerPostsResult.success && initialServerPostsResult.data?.posts
-      ? initialServerPostsResult.data.posts
-      : [];
-  const totalServerPosts =
-    initialServerPostsResult.success && initialServerPostsResult.data?.count
-      ? initialServerPostsResult.data.count
-      : 0;
-
-  if (!initialServerPostsResult.success) {
+  if (listData.postsError) {
     console.error(
       "Failed to fetch initial server posts:",
-      initialServerPostsResult.error
+      listData.postsError
     );
   }
 
-  const tagsResult = await listTagsAction({ postType: "blog" });
-  let serverTags: Tag[] = [];
-  if (tagsResult.success && tagsResult.data?.tags) {
-    serverTags = tagsResult.data.tags;
-  }
-
   const noPostsFound =
-    localPosts.length === 0 && initialServerPosts.length === 0;
+    listData.localPosts.length === 0 && listData.posts.length === 0;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -89,10 +79,10 @@ export default async function Page({ params }: { params: Params }) {
         <PostList
           postType="blog"
           baseUrl="/blog"
-          localPosts={localPosts}
-          initialPosts={initialServerPosts}
-          initialTotal={totalServerPosts}
-          serverTags={serverTags}
+          localPosts={listData.localPosts}
+          initialPosts={listData.posts}
+          initialTotal={listData.total}
+          serverTags={listData.tags as Tag[]}
           locale={locale}
           pageSize={SERVER_POST_PAGE_SIZE}
           showTagSelector={true}

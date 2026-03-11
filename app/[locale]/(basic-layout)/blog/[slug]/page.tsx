@@ -10,6 +10,7 @@ import { TiptapRenderer } from "@/components/tiptap/TiptapRenderer";
 import { Button } from "@/components/ui/button";
 import { Link as I18nLink, Locale, LOCALES } from "@/i18n/routing";
 import { blogCms } from "@/lib/cms";
+import { loadLocalizedMetadata } from "@/lib/cms/page-data";
 import { constructMetadata } from "@/lib/metadata";
 import { PostBase } from "@/types/cms";
 import dayjs from "dayjs";
@@ -34,10 +35,12 @@ export async function generateMetadata({
   params,
 }: MetadataProps): Promise<Metadata> {
   const { locale, slug } = await params;
-  const { metadata: postMetadata } = await blogCms.getPostMetadata(
-    slug,
-    locale
-  );
+  const { currentMetadata: postMetadata, availableLocales } =
+    await loadLocalizedMetadata({
+      locales: LOCALES,
+      currentLocale: locale,
+      loadMetadata: (checkLocale) => blogCms.getPostMetadata(slug, checkLocale),
+    });
 
   if (!postMetadata) {
     return constructMetadata({
@@ -51,18 +54,6 @@ export async function generateMetadata({
 
   const metadataPath = slug.startsWith("/") ? slug : `/${slug}`;
   const fullPath = `/blog${metadataPath}`;
-
-  // Detect which locales have this blog post available
-  const availableLocales: string[] = [];
-  for (const checkLocale of LOCALES) {
-    const { metadata: localeMetadata } = await blogCms.getPostMetadata(
-      slug,
-      checkLocale
-    );
-    if (localeMetadata) {
-      availableLocales.push(checkLocale);
-    }
-  }
 
   return constructMetadata({
     title: postMetadata.title,
@@ -81,25 +72,26 @@ export async function generateMetadata({
 
 export default async function BlogPage({ params }: { params: Params }) {
   const { slug, locale } = await params;
-  const t = await getTranslations("Blogs");
-
-  const { post, errorCode } = await blogCms.getBySlug(slug, locale);
+  const viewCountConfig = POST_CONFIGS.blog.viewCount;
+  const [t, { post, errorCode }, viewCountResult] = await Promise.all([
+    getTranslations("Blogs"),
+    blogCms.getBySlug(slug, locale),
+    viewCountConfig.enabled && viewCountConfig.showInUI
+      ? getViewCountAction({
+          slug,
+          postType: "blog",
+          locale,
+        })
+      : Promise.resolve(null),
+  ]);
 
   if (!post) {
     notFound();
   }
 
-  // View count tracking
-  const viewCountConfig = POST_CONFIGS.blog.viewCount;
   let viewCount = 0;
 
-  if (viewCountConfig.enabled && viewCountConfig.showInUI) {
-    // Only get view count for display, incrementing is done in Client Component
-    const viewCountResult = await getViewCountAction({
-      slug,
-      postType: "blog",
-      locale,
-    });
+  if (viewCountConfig.enabled && viewCountConfig.showInUI && viewCountResult) {
     viewCount =
       viewCountResult.success && viewCountResult.data?.count
         ? viewCountResult.data.count

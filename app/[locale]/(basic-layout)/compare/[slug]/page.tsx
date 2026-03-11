@@ -1,13 +1,13 @@
 import { listPublishedPostsAction } from "@/actions/posts/posts";
 import { SeoComparePage } from "@/components/cms/public/SeoComparePage";
 import { Locale, LOCALES } from "@/i18n/routing";
+import { loadLocalizedMetadata } from "@/lib/cms/page-data";
 import { constructMetadata } from "@/lib/metadata";
 import {
   buildSeoPageOgPath,
   buildSeoPagePath,
   buildSeoPageRelatedLinks,
   getSeoPageCmsModule,
-  resolveSeoPageAvailableLocales,
 } from "@/lib/seo/page-loader";
 import { normalizeCompareMetadata } from "@/lib/seo/content-schema";
 import { Metadata } from "next";
@@ -23,7 +23,12 @@ export async function generateMetadata({
   const { locale, slug } = await params;
   const cms = getSeoPageCmsModule("compare");
   const path = buildSeoPagePath({ postType: "compare", slug });
-  const { metadata: postMetadata } = await cms.getPostMetadata(slug, locale);
+  const { currentMetadata: postMetadata, availableLocales } =
+    await loadLocalizedMetadata({
+      locales: LOCALES,
+      currentLocale: locale,
+      loadMetadata: (checkLocale) => cms.getPostMetadata(slug, checkLocale),
+    });
 
   if (!postMetadata) {
     return constructMetadata({
@@ -34,12 +39,6 @@ export async function generateMetadata({
       path,
     });
   }
-
-  const availableLocales = await resolveSeoPageAvailableLocales({
-    postType: "compare",
-    slug,
-    locales: LOCALES,
-  });
 
   return constructMetadata({
     title: postMetadata.title,
@@ -66,20 +65,21 @@ export default async function CompareDetailPage({
   params: Params;
 }) {
   const { locale, slug } = await params;
-  const t = await getTranslations({ locale, namespace: "SeoContent" });
   const cms = getSeoPageCmsModule("compare");
-  const { post } = await cms.getBySlug(slug, locale);
+  const [t, { post }, relatedResult] = await Promise.all([
+    getTranslations({ locale, namespace: "SeoContent" }),
+    cms.getBySlug(slug, locale),
+    listPublishedPostsAction({
+      pageIndex: 0,
+      pageSize: 4,
+      postType: "compare",
+      locale,
+    }),
+  ]);
 
   if (!post) {
     notFound();
   }
-
-  const relatedResult = await listPublishedPostsAction({
-    pageIndex: 0,
-    pageSize: 4,
-    postType: "compare",
-    locale,
-  });
 
   const relatedLinks = buildSeoPageRelatedLinks({
     postType: "compare",

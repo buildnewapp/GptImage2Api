@@ -1,5 +1,6 @@
 import { listPublishedPostsAction } from "@/actions/posts/posts";
 import { Locale, LOCALES } from "@/i18n/routing";
+import { loadLocalizedMetadata } from "@/lib/cms/page-data";
 import { constructMetadata } from "@/lib/metadata";
 import { normalizeTemplateMetadata } from "@/lib/seo/content-schema";
 import {
@@ -7,7 +8,6 @@ import {
   buildSeoPagePath,
   buildSeoPageRelatedLinks,
   getSeoPageCmsModule,
-  resolveSeoPageAvailableLocales,
 } from "@/lib/seo/page-loader";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -30,7 +30,12 @@ export async function generateMetadata({
   const { locale, slug } = await params;
   const cms = getSeoPageCmsModule("template");
   const path = buildSeoPagePath({ postType: "template", slug });
-  const { metadata: postMetadata } = await cms.getPostMetadata(slug, locale);
+  const { currentMetadata: postMetadata, availableLocales } =
+    await loadLocalizedMetadata({
+      locales: LOCALES,
+      currentLocale: locale,
+      loadMetadata: (checkLocale) => cms.getPostMetadata(slug, checkLocale),
+    });
 
   if (!postMetadata) {
     return constructMetadata({
@@ -41,12 +46,6 @@ export async function generateMetadata({
       path,
     });
   }
-
-  const availableLocales = await resolveSeoPageAvailableLocales({
-    postType: "template",
-    slug,
-    locales: LOCALES,
-  });
 
   return constructMetadata({
     title: postMetadata.title,
@@ -73,20 +72,21 @@ export default async function TemplateDetailPage({
   params: Params;
 }) {
   const { locale, slug } = await params;
-  const t = await getTranslations({ locale, namespace: "SeoContent" });
   const cms = getSeoPageCmsModule("template");
-  const { post } = await cms.getBySlug(slug, locale);
+  const [t, { post }, relatedResult] = await Promise.all([
+    getTranslations({ locale, namespace: "SeoContent" }),
+    cms.getBySlug(slug, locale),
+    listPublishedPostsAction({
+      pageIndex: 0,
+      pageSize: 4,
+      postType: "template",
+      locale,
+    }),
+  ]);
 
   if (!post) {
     notFound();
   }
-
-  const relatedResult = await listPublishedPostsAction({
-    pageIndex: 0,
-    pageSize: 4,
-    postType: "template",
-    locale,
-  });
 
   const relatedLinks = buildSeoPageRelatedLinks({
     postType: "template",
