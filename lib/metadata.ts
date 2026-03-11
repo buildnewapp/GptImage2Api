@@ -1,5 +1,6 @@
 import { siteConfig } from '@/config/site'
-import { DEFAULT_LOCALE, LOCALE_NAMES, LOCALE_TO_HREFLANG, Locale } from '@/i18n/routing'
+import { DEFAULT_LOCALE, LOCALE_NAMES, Locale } from '@/i18n/routing'
+import { buildAlternateLanguageUrls, buildCanonicalUrl } from '@/lib/seo/metadata'
 import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 
@@ -39,30 +40,9 @@ export async function constructMetadata({
 
   canonicalUrl = canonicalUrl || path
 
-  // Use availableLocales if provided, otherwise use all locales
   const locales = availableLocales || Object.keys(LOCALE_NAMES)
+  const alternateLanguages = buildAlternateLanguageUrls(canonicalUrl, locales)
 
-  const alternateLanguages = locales.reduce((acc, lang) => {
-    const localePath = canonicalUrl
-      ? `${lang === DEFAULT_LOCALE ? '' : `/${lang}`}${canonicalUrl === '/' ? '' : canonicalUrl}`
-      : `${lang === DEFAULT_LOCALE ? '' : `/${lang}`}`
-    const url = `${siteConfig.url}${localePath}`
-
-    // Use full locale code for hreflang (e.g., en-US, zh-CN, ja-JP)
-    const hreflangCode = LOCALE_TO_HREFLANG[lang] || lang
-    acc[hreflangCode] = url
-
-    return acc
-  }, {} as Record<string, string>)
-
-  // Add x-default pointing to the English version
-  const defaultPath = canonicalUrl === '/' ? '' : canonicalUrl || ''
-  alternateLanguages['x-default'] = `${siteConfig.url}${defaultPath}`
-
-  // Open Graph
-  // If images is explicitly provided and not empty, use them
-  // If images is undefined/not provided and useDefaultOgImage is false, return undefined to let Next.js use opengraph-image.tsx
-  // If images is undefined/not provided and useDefaultOgImage is true, use default static OG image
   const imageUrls = images && images.length > 0
     ? images.map(img => ({
       url: img.startsWith('http') ? img : `${siteConfig.url}/${img}`,
@@ -70,7 +50,7 @@ export async function constructMetadata({
     }))
     : useDefaultOgImage
       ? [{
-        url: `${siteConfig.url}/og${locale === DEFAULT_LOCALE ? '' : '_' + locale}.png`,
+        url: `${siteConfig.url}/og.png`,
         alt: pageTitle,
       }]
       : undefined
@@ -84,7 +64,12 @@ export async function constructMetadata({
     creator: siteConfig.creator,
     metadataBase: new URL(siteConfig.url),
     alternates: {
-      canonical: canonicalUrl ? `${siteConfig.url}${locale === DEFAULT_LOCALE ? '' : `/${locale}`}${canonicalUrl === '/' ? '' : canonicalUrl}` : undefined,
+      canonical: canonicalUrl
+        ? buildCanonicalUrl({
+            locale: locale || DEFAULT_LOCALE,
+            path: canonicalUrl,
+          })
+        : undefined,
       languages: alternateLanguages,
     },
     // Create an OG image using https://myogimage.com/

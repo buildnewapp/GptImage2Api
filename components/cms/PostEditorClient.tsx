@@ -9,6 +9,10 @@ import { PostForm } from "@/components/cms/PostForm";
 import { getPostConfig } from "@/components/cms/post-config";
 import { Button } from "@/components/ui/button";
 import { PostType } from "@/lib/db/schema";
+import {
+  buildSeoMetadataFromEditorValues,
+  type SeoEditorPostType,
+} from "@/lib/seo/content-schema";
 import { type PostWithTags } from "@/types/cms";
 import { Loader2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -120,6 +124,35 @@ export function PostEditorClient({
   }, [mode, searchParams, postType, config]);
 
   const handleSubmit = async (data: any) => {
+    if (
+      postType === "use_case" ||
+      postType === "template" ||
+      postType === "alternative" ||
+      postType === "compare"
+    ) {
+      data = {
+        ...data,
+        metadataJsonb: buildSeoMetadataFromEditorValues(
+          postType as SeoEditorPostType,
+          data,
+        ),
+      };
+
+      delete data.seoHeroSubtitle;
+      delete data.seoTargetAudience;
+      delete data.seoProblemSummary;
+      delete data.seoBenefitsText;
+      delete data.seoStepsText;
+      delete data.seoFaqsText;
+      delete data.seoPrompt;
+      delete data.seoVariablesText;
+      delete data.seoExampleInput;
+      delete data.seoExampleOutput;
+      delete data.seoTipsText;
+      delete data.seoCtaLabel;
+      delete data.seoCtaHref;
+    }
+
     data = {
       ...data,
       content: data.content.replace(/(\!\[.*?\]\(.*?\))(\S)/g, "$1\n\n$2"),

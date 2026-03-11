@@ -609,7 +609,14 @@ export const referralWithdrawRequests = pgTable(
   }),
 );
 
-export const postTypeEnum = pgEnum("post_type", ["blog", "glossary"]);
+export const postTypeEnum = pgEnum("post_type", [
+  "blog",
+  "glossary",
+  "use_case",
+  "template",
+  "alternative",
+  "compare",
+]);
 export type PostType = (typeof postTypeEnum.enumValues)[number];
 
 export const postStatusEnum = pgEnum("post_status", [
@@ -638,6 +645,7 @@ export const posts = pgTable(
     slug: text("slug").notNull(),
     content: text("content"),
     description: text("description"),
+    metadataJsonb: jsonb("metadata_jsonb"),
     featuredImageUrl: text("featured_image_url"),
     isPinned: boolean("is_pinned").default(false).notNull(),
     status: postStatusEnum("status").default("draft").notNull(),

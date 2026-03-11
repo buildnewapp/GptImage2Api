@@ -19,6 +19,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       NotFound: (await import(`./messages/${locale}/NotFound.json`)).default,
       Glossary: (await import(`./messages/${locale}/Glossary.json`)).default,
       Prompts: (await import(`./messages/${locale}/Prompts.json`)).default,
+      SeoContent: (await import(`./messages/${locale}/SeoContent.json`)).default,
 
       // Dashboard - User
       Settings: (

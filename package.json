@@ -20,6 +20,7 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx lib/db/seed/index.ts",
+    "db:seed:seo-content": "tsx lib/db/seed/seo-content.ts",
     "db:export-pricing": "tsx lib/db/seed/export.ts",
     "db:sync-creem-products": "tsx lib/db/seed/sync-creem-products.ts",
     "ai-studio:sync": "tsx scripts/ai-studio/sync-catalog.ts",

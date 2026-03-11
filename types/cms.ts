@@ -9,6 +9,7 @@ export type PostBase = {
   locale: string
   title: string
   description?: string
+  metadataJsonb?: Record<string, unknown> | null
   featuredImageUrl?: string
   slug: string
   tags?: string
@@ -34,6 +35,7 @@ export type PublicPost = Pick<
   | 'title'
   | 'slug'
   | 'description'
+  | 'metadataJsonb'
   | 'featuredImageUrl'
   | 'status'
   | 'visibility'
@@ -52,6 +54,7 @@ export type PublicPostWithContent = Pick<
   | 'title'
   | 'slug'
   | 'description'
+  | 'metadataJsonb'
   | 'content'
   | 'featuredImageUrl'
   | 'status'

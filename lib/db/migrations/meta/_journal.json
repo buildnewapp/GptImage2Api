@@ -239,6 +239,20 @@
       "when": 1773052820942,
       "tag": "0033_long_havok",
       "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1773150525034,
+      "tag": "0034_seo_content_foundation",
+      "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1773152558203,
+      "tag": "0035_programmatic_seo_page_types",
+      "breakpoints": true
     }
   ]
 }

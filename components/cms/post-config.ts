@@ -18,6 +18,7 @@ export const basePostSchema = z.object({
   slug: z.string().min(3, { message: "Slug must be at least 3 characters." }),
   content: z.string().optional(),
   description: z.string().optional(),
+  metadataJsonb: z.record(z.string(), z.unknown()).optional(),
   tags: z.array(tagSchema).optional(),
   featuredImageUrl: z
     .string()
@@ -32,6 +33,24 @@ export const basePostSchema = z.object({
 export const postActionSchema = basePostSchema.extend({
   id: z.string().uuid().optional(),
 });
+
+const seoEditorFieldsSchema = z.object({
+  seoHeroSubtitle: z.string().optional(),
+  seoTargetAudience: z.string().optional(),
+  seoProblemSummary: z.string().optional(),
+  seoBenefitsText: z.string().optional(),
+  seoStepsText: z.string().optional(),
+  seoFaqsText: z.string().optional(),
+  seoPrompt: z.string().optional(),
+  seoVariablesText: z.string().optional(),
+  seoExampleInput: z.string().optional(),
+  seoExampleOutput: z.string().optional(),
+  seoTipsText: z.string().optional(),
+  seoCtaLabel: z.string().optional(),
+  seoCtaHref: z.string().optional(),
+});
+
+const seoPostSchema = basePostSchema.merge(seoEditorFieldsSchema);
 
 export interface ViewCountConfig {
   /** Enable view count tracking - default off */
@@ -99,10 +118,81 @@ export const POST_CONFIGS: Record<PostType, PostConfig> = {
       edit: (id: string) => `/dashboard/glossary/${id}`,
     },
   },
+  use_case: {
+    postType: "use_case",
+    schema: seoPostSchema,
+    actionSchema: postActionSchema.merge(seoEditorFieldsSchema),
+    imagePath: BLOGS_IMAGE_PATH,
+    enableTags: true,
+    viewCount: {
+      enabled: false,
+      mode: "all",
+      showInUI: true,
+    },
+    showCoverInList: true,
+    routes: {
+      list: "/dashboard/use-cases",
+      create: "/dashboard/use-cases/new",
+      edit: (id: string) => `/dashboard/use-cases/${id}`,
+    },
+  },
+  template: {
+    postType: "template",
+    schema: seoPostSchema,
+    actionSchema: postActionSchema.merge(seoEditorFieldsSchema),
+    imagePath: BLOGS_IMAGE_PATH,
+    enableTags: true,
+    viewCount: {
+      enabled: false,
+      mode: "all",
+      showInUI: true,
+    },
+    showCoverInList: true,
+    routes: {
+      list: "/dashboard/templates",
+      create: "/dashboard/templates/new",
+      edit: (id: string) => `/dashboard/templates/${id}`,
+    },
+  },
+  alternative: {
+    postType: "alternative",
+    schema: seoPostSchema,
+    actionSchema: postActionSchema.merge(seoEditorFieldsSchema),
+    imagePath: BLOGS_IMAGE_PATH,
+    enableTags: true,
+    viewCount: {
+      enabled: false,
+      mode: "all",
+      showInUI: true,
+    },
+    showCoverInList: true,
+    routes: {
+      list: "/dashboard/alternatives",
+      create: "/dashboard/alternatives/new",
+      edit: (id: string) => `/dashboard/alternatives/${id}`,
+    },
+  },
+  compare: {
+    postType: "compare",
+    schema: seoPostSchema,
+    actionSchema: postActionSchema.merge(seoEditorFieldsSchema),
+    imagePath: BLOGS_IMAGE_PATH,
+    enableTags: true,
+    viewCount: {
+      enabled: false,
+      mode: "all",
+      showInUI: true,
+    },
+    showCoverInList: true,
+    routes: {
+      list: "/dashboard/compare",
+      create: "/dashboard/compare/new",
+      edit: (id: string) => `/dashboard/compare/${id}`,
+    },
+  },
 };
 
 // Helper function to get config by content type
 export function getPostConfig(postType: PostType): PostConfig {
   return POST_CONFIGS[postType];
 }
-

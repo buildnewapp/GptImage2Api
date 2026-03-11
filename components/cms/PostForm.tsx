@@ -1,6 +1,7 @@
 "use client";
 
 import { ImageUpload } from "@/components/cms/ImageUpload";
+import { SeoMetadataFields } from "@/components/cms/SeoMetadataFields";
 import { TagInput } from "@/components/cms/TagInput";
 import { TiptapEditor } from "@/components/tiptap/TiptapEditor";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { DEFAULT_LOCALE, Locale, LOCALE_NAMES, LOCALES } from "@/i18n/routing";
 import { PostType } from "@/lib/db/schema";
+import {
+  buildSeoEditorDefaults,
+  type SeoEditorPostType,
+} from "@/lib/seo/content-schema";
 import type { PostWithTags } from "@/types/cms";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -74,6 +79,21 @@ export function PostForm({
     status: initialData?.status || "draft",
     visibility: initialData?.visibility || "public",
   };
+
+  if (
+    postType === "use_case" ||
+    postType === "template" ||
+    postType === "alternative" ||
+    postType === "compare"
+  ) {
+    Object.assign(
+      defaultValues,
+      buildSeoEditorDefaults(
+        postType as SeoEditorPostType,
+        initialData?.metadataJsonb ?? null,
+      ),
+    );
+  }
 
   if (enableTags) {
     defaultValues.tags =
@@ -300,6 +320,17 @@ export function PostForm({
               </FormItem>
             )}
           />
+
+          {(postType === "use_case" ||
+            postType === "template" ||
+            postType === "alternative" ||
+            postType === "compare") && (
+            <SeoMetadataFields
+              form={form}
+              postType={postType as SeoEditorPostType}
+              isSubmitting={isSubmitting}
+            />
+          )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {/* Status Selector */}

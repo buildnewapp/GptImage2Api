@@ -34,6 +34,7 @@ function mapServerPostToPostBase(serverPost: PublicPostWithContent, locale: stri
     id: serverPost.id || undefined,
     title: serverPost.title,
     description: serverPost.description ?? '',
+    metadataJsonb: (serverPost.metadataJsonb as Record<string, unknown> | null) ?? null,
     featuredImageUrl: serverPost.featuredImageUrl ?? '',
     slug: serverPost.slug,
     tags: serverPost.tags ?? '',
@@ -55,6 +56,7 @@ function mapLocalFileToPostBase(data: Record<string, any>, content: string, loca
     id: data.id || undefined,
     title: data.title,
     description: data.description || '',
+    metadataJsonb: data.metadataJsonb || null,
     featuredImageUrl: data.featuredImageUrl || '',
     slug: data.slug,
     tags: data.tags || '',
@@ -390,3 +392,7 @@ export function createCmsModule(postType: PostType) {
 // Pre-configured CMS modules for common post types
 export const blogCms = createCmsModule('blog');
 export const glossaryCms = createCmsModule('glossary');
+export const useCaseCms = createCmsModule('use_case');
+export const templateCms = createCmsModule('template');
+export const alternativeCms = createCmsModule('alternative');
+export const compareCms = createCmsModule('compare');
