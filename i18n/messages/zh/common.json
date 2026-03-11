@@ -140,6 +140,26 @@
         "icon": "BookOpen"
       },
       {
+        "name": "用例管理",
+        "href": "/dashboard/use-cases",
+        "icon": "FileText"
+      },
+      {
+        "name": "模板管理",
+        "href": "/dashboard/templates",
+        "icon": "ScrollText"
+      },
+      {
+        "name": "替代页管理",
+        "href": "/dashboard/alternatives",
+        "icon": "Replace"
+      },
+      {
+        "name": "对比页管理",
+        "href": "/dashboard/compare",
+        "icon": "Scale"
+      },
+      {
         "name": "R2资源管理",
         "href": "/dashboard/r2-resources",
         "icon": "FileBox"

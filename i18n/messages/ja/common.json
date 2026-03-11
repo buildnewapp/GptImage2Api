@@ -140,6 +140,26 @@
         "icon": "BookOpen"
       },
       {
+        "name": "ユースケース管理",
+        "href": "/dashboard/use-cases",
+        "icon": "FileText"
+      },
+      {
+        "name": "テンプレート管理",
+        "href": "/dashboard/templates",
+        "icon": "ScrollText"
+      },
+      {
+        "name": "代替ページ管理",
+        "href": "/dashboard/alternatives",
+        "icon": "Replace"
+      },
+      {
+        "name": "比較ページ管理",
+        "href": "/dashboard/compare",
+        "icon": "Scale"
+      },
+      {
         "name": "R2リソース",
         "href": "/dashboard/r2-resources",
         "icon": "FileBox"
