@@ -145,4 +145,6 @@ dist
 .backup/
 .worktrees/
 
-docs/
+docs/kie
+docs/plans
+docs/prompts

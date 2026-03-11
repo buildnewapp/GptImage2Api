@@ -1,20 +1,14 @@
-import { basePostSchema } from "@/components/cms/post-config";
 import { DEFAULT_LOCALE } from "@/i18n/routing";
 import { apiResponse } from "@/lib/api-response";
 import { getRequestUser } from "@/lib/auth/request-user";
+import { parseAdminPostSubmission } from "@/lib/cms/admin-post-submit";
 import { getDb } from "@/lib/db";
 import {
   postTags as postTagsSchema,
   posts as postsSchema,
-  postTypeEnum,
 } from "@/lib/db/schema";
 import { getErrorMessage } from "@/lib/error-utils";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
-
-const submitPostSchema = z.object({
-  postType: z.enum(postTypeEnum.enumValues).default("blog"),
-}).merge(basePostSchema);
 
 export async function POST(request: Request) {
   const user = await getRequestUser(request);
@@ -33,9 +27,9 @@ export async function POST(request: Request) {
     return apiResponse.badRequest("Invalid JSON body.");
   }
 
-  const validated = submitPostSchema.safeParse(rawBody);
+  const validated = parseAdminPostSubmission(rawBody);
   if (!validated.success) {
-    return apiResponse.badRequest("Invalid input data.");
+    return apiResponse.error(validated.message, validated.status);
   }
 
   const { postType, tags, ...postData } = validated.data;
