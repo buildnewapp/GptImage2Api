@@ -135,31 +135,6 @@
         "icon": "Rss"
       },
       {
-        "name": "术语表管理",
-        "href": "/dashboard/glossary",
-        "icon": "BookOpen"
-      },
-      {
-        "name": "用例管理",
-        "href": "/dashboard/use-cases",
-        "icon": "FileText"
-      },
-      {
-        "name": "模板管理",
-        "href": "/dashboard/templates",
-        "icon": "ScrollText"
-      },
-      {
-        "name": "替代页管理",
-        "href": "/dashboard/alternatives",
-        "icon": "Replace"
-      },
-      {
-        "name": "对比页管理",
-        "href": "/dashboard/compare",
-        "icon": "Scale"
-      },
-      {
         "name": "R2资源管理",
         "href": "/dashboard/r2-resources",
         "icon": "FileBox"
@@ -174,7 +149,15 @@
         "href": "/dashboard/ai-studio-admin",
         "icon": "Bot"
       }
-    ]
+    ],
+    "AdminContentTabs": {
+      "blogs": "博客管理",
+      "glossary": "术语表管理",
+      "compare": "对比页管理",
+      "templates": "模板管理",
+      "alternatives": "替代页管理",
+      "useCases": "用例管理"
+    }
   },
   "ClientAuth": {
     "title": "授权登录",

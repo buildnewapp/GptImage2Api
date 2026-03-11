@@ -1,4 +1,5 @@
 import { listPostsAction } from "@/actions/posts/posts";
+import { AdminContentTabs } from "@/components/cms/AdminContentTabs";
 import { PostDataTable } from "@/components/cms/PostDataTable";
 import { Locale } from "@/i18n/routing";
 import { constructMetadata } from "@/lib/metadata";
@@ -51,6 +52,7 @@ export default async function AdminTemplatesPage() {
 
   return (
     <div className="space-y-6">
+      <AdminContentTabs currentHref="/dashboard/templates" />
       <PostDataTable
         config={{
           postType: "template",

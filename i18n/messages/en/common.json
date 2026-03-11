@@ -135,31 +135,6 @@
         "icon": "Rss"
       },
       {
-        "name": "Glossary",
-        "href": "/dashboard/glossary",
-        "icon": "BookOpen"
-      },
-      {
-        "name": "Use Cases",
-        "href": "/dashboard/use-cases",
-        "icon": "FileText"
-      },
-      {
-        "name": "Templates",
-        "href": "/dashboard/templates",
-        "icon": "ScrollText"
-      },
-      {
-        "name": "Alternatives",
-        "href": "/dashboard/alternatives",
-        "icon": "Replace"
-      },
-      {
-        "name": "Comparisons",
-        "href": "/dashboard/compare",
-        "icon": "Scale"
-      },
-      {
         "name": "R2 Files",
         "href": "/dashboard/r2-resources",
         "icon": "FileBox"
@@ -174,7 +149,15 @@
         "href": "/dashboard/ai-studio-admin",
         "icon": "Bot"
       }
-    ]
+    ],
+    "AdminContentTabs": {
+      "blogs": "Blogs",
+      "glossary": "Glossary",
+      "compare": "Comparisons",
+      "templates": "Templates",
+      "alternatives": "Alternatives",
+      "useCases": "Use Cases"
+    }
   },
   "ClientAuth": {
     "title": "Sign in to continue",
