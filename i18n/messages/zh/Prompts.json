@@ -8,6 +8,9 @@
   "nav": {
     "all": "全部"
   },
+  "pagination": {
+    "loadMore": "加载更多"
+  },
   "card": {
     "prompt": "提示词",
     "expand": "展开",

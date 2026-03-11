@@ -8,6 +8,9 @@
   "nav": {
     "all": "All"
   },
+  "pagination": {
+    "loadMore": "Load More"
+  },
   "card": {
     "prompt": "Prompt",
     "expand": "Expand",

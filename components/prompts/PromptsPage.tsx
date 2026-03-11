@@ -15,6 +15,12 @@ import Image from "next/image";
 import { useCallback, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
+import {
+  getNextVisibleCategoryCount,
+  getVisiblePromptCategories,
+  PROMPTS_CATEGORY_BATCH_SIZE,
+  shouldShowLoadMoreCategories,
+} from "./pagination";
 import { type PromptCategory, promptCategories } from "./promptsData";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL || "";
@@ -218,15 +224,38 @@ function PromptCard({
 export default function PromptsPage() {
   const t = useTranslations("Prompts");
   const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [visibleCategoryCount, setVisibleCategoryCount] = useState(() =>
+    Math.min(PROMPTS_CATEGORY_BATCH_SIZE, promptCategories.length),
+  );
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
-  const filteredCategories = useMemo(() => {
-    if (activeCategory === "all") return promptCategories;
-    return promptCategories.filter((cat) => cat.id === activeCategory);
-  }, [activeCategory]);
+  const visibleCategories = useMemo(() => {
+    return getVisiblePromptCategories({
+      categories: promptCategories,
+      activeCategory,
+      visibleCategoryCount,
+    });
+  }, [activeCategory, visibleCategoryCount]);
+
+  const showLoadMoreButton = useMemo(() => {
+    return shouldShowLoadMoreCategories({
+      activeCategory,
+      visibleCategoryCount,
+      totalCategoryCount: promptCategories.length,
+    });
+  }, [activeCategory, visibleCategoryCount]);
 
   const handlePlayVideo = useCallback((src: string) => {
     setSelectedVideo(src);
+  }, []);
+
+  const handleLoadMoreCategories = useCallback(() => {
+    setVisibleCategoryCount((currentVisibleCategoryCount) =>
+      getNextVisibleCategoryCount({
+        currentVisibleCategoryCount,
+        totalCategoryCount: promptCategories.length,
+      }),
+    );
   }, []);
 
   const getCategoryTitle = (id: string) => {
@@ -308,7 +337,7 @@ export default function PromptsPage() {
       {/* Prompts Grid */}
       <section className="py-12 lg:py-16">
         <div className="container px-4 sm:px-6 lg:px-8">
-          {filteredCategories.map((category) => (
+          {visibleCategories.map((category) => (
             <div key={category.id} className="mb-16 last:mb-0">
               {/* Category Header */}
               <div className="mb-8">
@@ -340,6 +369,17 @@ export default function PromptsPage() {
               </div>
             </div>
           ))}
+
+          {showLoadMoreButton && (
+            <div className="mt-12 flex justify-center">
+              <button
+                onClick={handleLoadMoreCategories}
+                className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-violet-500/30"
+              >
+                {t("pagination.loadMore")}
+              </button>
+            </div>
+          )}
         </div>
       </section>
 
