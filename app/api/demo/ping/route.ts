@@ -1,15 +1,23 @@
 import { apiResponse } from "@/lib/api-response";
 import { getRequestUser } from "@/lib/auth/request-user";
+import { getDb } from "@/lib/db";
+import { user as userSchema } from "@/lib/db/schema";
+import { count } from "drizzle-orm";
+
 
 export async function GET(req: Request) {
-  const user = await getRequestUser(req);
+  const [user, totalUsers] = await Promise.all([
+    getRequestUser(req),
+    getTotalUsers(),
+  ]);
 
-  if (!user) {
-    return apiResponse.unauthorized();
-  }
+  return apiResponse.success({user, totalUsers});
+}
 
-  return apiResponse.success({
-    message: "pong",
-    user,
-  });
+async function getTotalUsers() {
+  const result = await getDb()
+    .select({ value: count() })
+    .from(userSchema);
+
+  return Number(result[0]?.value ?? 0);
 }

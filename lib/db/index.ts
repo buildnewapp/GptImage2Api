@@ -59,7 +59,7 @@ function resolveDbFromCloudflareEnv(env: any, tag: string): DB | null {
 export const getDb = cache((): DB => {
   if (!isHyperdriveConfigured) {
     if (!connectionString) throw new Error('[DB] DATABASE_URL is not set');
-    return createDatabase({ connectionString });
+    return db;
   }
 
   try {
@@ -100,7 +100,7 @@ export const getDb = cache((): DB => {
 export const getDbAsync = cache(async (): Promise<DB> => {
   if (!isHyperdriveConfigured) {
     if (!connectionString) throw new Error('[DB Async] DATABASE_URL is not set');
-    return createDatabase({ connectionString });
+    return db;
   }
 
   try {
