@@ -9,6 +9,7 @@ const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   redirects: async () => [
     {
       source: "/dashboard",

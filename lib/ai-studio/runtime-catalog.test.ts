@@ -1,8 +1,11 @@
 import assert from "node:assert/strict";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { execFile as execFileCallback } from "node:child_process";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { promisify } from "node:util";
+import { pathToFileURL } from "node:url";
 
 import type {
   AiStudioDocDetail,
@@ -10,10 +13,13 @@ import type {
 } from "@/lib/ai-studio/catalog";
 import {
   compileAiStudioRuntimeCatalog,
+  getCachedAiStudioCatalogEntry,
   loadAiStudioRuntimeCatalogFile,
   toAiStudioCatalogEntries,
   validateAiStudioRuntimeBuildInput,
 } from "@/lib/ai-studio/catalog";
+
+const execFile = promisify(execFileCallback);
 
 function createPricingRow(
   overrides: Partial<AiStudioPricingRow> = {},
@@ -147,6 +153,106 @@ test("loads a local runtime catalog file for runtime reads", async () => {
     assert.equal(loaded.items[0]?.alias, "Sora 2");
     assert.equal(toAiStudioCatalogEntries(loaded)[0]?.provider, "OpenAI");
   } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("keeps runtime catalog paths rooted at cwd config dir", async () => {
+  const originalCwd = process.cwd();
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), "ai-studio-bundle-"));
+  const bundleDir = path.join(tempDir, "bundle");
+  const bundledRuntimePath = path.join(
+    bundleDir,
+    "server-functions",
+    "default",
+    "config",
+    "ai-studio",
+    "runtime",
+    "catalog.json",
+  );
+
+  try {
+    await mkdir(path.dirname(bundledRuntimePath), { recursive: true });
+    await writeFile(
+      bundledRuntimePath,
+      JSON.stringify({
+        version: 1,
+        generatedAt: "2026-03-08T00:00:00.000Z",
+        items: [],
+      }),
+      "utf8",
+    );
+
+    const moduleUrl = pathToFileURL(
+      path.join(originalCwd, "lib/ai-studio/catalog.ts"),
+    ).href;
+    const script = [
+      `process.chdir(${JSON.stringify(bundleDir)});`,
+      `const mod = await import(${JSON.stringify(moduleUrl)});`,
+      "process.stdout.write(JSON.stringify(mod.default.getAiStudioCatalogPaths()));",
+    ].join("\n");
+    const { stdout } = await execFile(
+      process.execPath,
+      ["--import", "tsx", "-e", script],
+      {
+        cwd: originalCwd,
+      },
+    );
+    const paths = JSON.parse(stdout) as {
+      runtimeCatalogPath: string;
+    };
+
+    assert.equal(
+      paths.runtimeCatalogPath.endsWith(
+        "/bundle/config/ai-studio/runtime/catalog.json",
+      ),
+      true,
+    );
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("uses the bundled runtime catalog by default in a Cloudflare worker cwd", async () => {
+  const originalCwd = process.cwd();
+  const originalPlatform = process.env.DEPLOYMENT_PLATFORM;
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), "ai-studio-cf-runtime-"));
+  const bundleDir = path.join(tempDir, "bundle");
+
+  try {
+    await mkdir(bundleDir, { recursive: true });
+    process.env.DEPLOYMENT_PLATFORM = "cloudflare";
+
+    const moduleUrl = pathToFileURL(
+      path.join(originalCwd, "lib/ai-studio/catalog.ts"),
+    ).href;
+    const script = [
+      `process.chdir(${JSON.stringify(bundleDir)});`,
+      "process.env.DEPLOYMENT_PLATFORM = 'cloudflare';",
+      `const mod = await import(${JSON.stringify(moduleUrl)});`,
+      "const entry = await mod.default.getCachedAiStudioCatalogEntry('video:sora2-text-to-video-standard');",
+      "process.stdout.write(JSON.stringify({ found: Boolean(entry), id: entry?.id ?? null }));",
+    ].join("\n");
+    const { stdout } = await execFile(
+      process.execPath,
+      ["--import", "tsx", "-e", script],
+      {
+        cwd: originalCwd,
+      },
+    );
+    const result = JSON.parse(stdout) as {
+      found: boolean;
+      id: string | null;
+    };
+
+    assert.equal(result.found, true);
+    assert.equal(result.id, "video:sora2-text-to-video-standard");
+  } finally {
+    if (originalPlatform === undefined) {
+      delete process.env.DEPLOYMENT_PLATFORM;
+    } else {
+      process.env.DEPLOYMENT_PLATFORM = originalPlatform;
+    }
     await rm(tempDir, { recursive: true, force: true });
   }
 });

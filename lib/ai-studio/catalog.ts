@@ -1,6 +1,7 @@
 import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import YAML from "yaml";
+import bundledAiStudioRuntimeCatalog from "@/config/ai-studio/runtime/catalog.json";
 
 export type AiStudioCategory = "image" | "video" | "music" | "chat";
 
@@ -123,6 +124,11 @@ type RuntimeCatalogCache = {
   file: AiStudioCompiledCatalogFile;
 };
 let runtimeCatalogCache: RuntimeCatalogCache | null = null;
+const BUNDLED_AI_STUDIO_RUNTIME_CATALOG_CACHE_KEY = "__bundled_ai_studio_runtime_catalog__";
+
+function getBundledAiStudioRuntimeCatalog(): AiStudioCompiledCatalogFile {
+  return bundledAiStudioRuntimeCatalog as AiStudioCompiledCatalogFile;
+}
 
 export function getAiStudioCatalogPaths() {
   return {
@@ -1437,7 +1443,25 @@ export async function getCachedAiStudioCatalogDetail(id: string) {
 }
 
 async function getCachedAiStudioRuntimeCatalog() {
-  const filePath = getAiStudioCatalogPaths().runtimeCatalogPath;
+  const filePath = process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
+
+  if (!filePath) {
+    if (
+      runtimeCatalogCache &&
+      runtimeCatalogCache.filePath === BUNDLED_AI_STUDIO_RUNTIME_CATALOG_CACHE_KEY
+    ) {
+      return runtimeCatalogCache.file;
+    }
+
+    const file = getBundledAiStudioRuntimeCatalog();
+    runtimeCatalogCache = {
+      filePath: BUNDLED_AI_STUDIO_RUNTIME_CATALOG_CACHE_KEY,
+      mtimeMs: 0,
+      file,
+    };
+    return file;
+  }
+
   const stats = await stat(filePath);
 
   if (
