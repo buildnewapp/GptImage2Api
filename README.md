@@ -1,5 +1,7 @@
 # dev
 
+git clone https://github.com/buildnewapp/nexty-cf-template.git new-project-name
+
 ## install
 https://nexty.dev/zh/docs/start-project/cf-workers
 ```
