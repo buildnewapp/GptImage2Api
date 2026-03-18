@@ -1,0 +1,341 @@
+{
+  "hero": {
+    "title": "Nano Banana 2: The new generation visual model",
+    "highlight_text": "Nano Banana 2",
+    "description": "Nano Banana 2 is our newest visual model for text/image-to-image generation, semantic editing, multilingual typography, and style consistency with 1K/2K/4K output. Try Nano Banana 2 online for free.",
+    "announcement": {
+      "label": "NEW",
+      "title": "Now live: the new nano banana 2 model with sharper detail and text rendering",
+      "url": "/#feature"
+    },
+    "tip": "⚡ 10–30s renders · Free trial · No credit card",
+    "notice": "✨ NanoBananaPro is an independent product and is not affiliated with Google or other AI model providers. We provide access to AI models through our custom interface.",
+    "buttons": [
+      {
+        "title": "Generate for Free",
+        "icon": "RiVideoAddFill",
+        "url": "/dashboard",
+        "target": "_self",
+        "variant": "default"
+      },
+      {
+        "title": "See Examples",
+        "icon": "RiPlayCircleLine",
+        "url": "/showcase",
+        "target": "_self",
+        "variant": "outline"
+      }
+    ],
+    "show_happy_users": false,
+    "show_badge": false
+  },
+  "branding": {
+    "disabled": true,
+    "title": "Powered by cutting-edge AI technology",
+    "items": [
+      {
+        "title": "Next.js",
+        "image": {
+          "src": "/images/nextjs.svg",
+          "alt": "Next.js"
+        }
+      },
+      {
+        "title": "Cloudflare",
+        "image": {
+          "src": "/images/cloudflare.svg",
+          "alt": "cloudflare"
+        }
+      },
+      {
+        "title": "TailwindCSS",
+        "image": {
+          "src": "/images/tailwindcss.svg",
+          "alt": "TailwindCSS"
+        }
+      },
+      {
+        "title": "Shadcn/UI",
+        "image": {
+          "src": "/images/shadcn.svg",
+          "alt": "Shadcn/UI"
+        }
+      },
+      {
+        "title": "Vercel",
+        "image": {
+          "src": "/images/vercel.svg",
+          "alt": "Vercel"
+        }
+      }
+    ]
+  },
+  "introduce": {
+    "name": "introduce",
+    "title": "What is Nano Banana Pro",
+    "label": "About",
+    "description": "Nano Banana Pro is a Gemini 3 Pro-based visual model that blends text generation, image editing, and multimodal understanding. Create ecommerce hero shots, marketing posters, or storyboards directly in the browser with fast, detailed iteration.",
+    "image": {
+      "src": "/placeholder.svg"
+    },
+    "items": [
+      {
+        "title": "Text/Image to Image",
+        "description": "Transform prompts or references into 1K/2K/4K visuals, balancing realism and stylized looks.",
+        "icon": "RiImageAddLine"
+      },
+      {
+        "title": "Smart edits & repainting",
+        "description": "Replace objects, extend scenes, remove watermarks, and refine details with semantic editing.",
+        "icon": "RiMagicLine"
+      },
+      {
+        "title": "Consistent characters & branding",
+        "description": "Keep people and brand elements coherent across scenes—perfect for series content and campaigns.",
+        "icon": "RiSparkling2Line"
+      }
+    ]
+  },
+  "benefit": {
+    "name": "benefit",
+    "title": "Why teams choose Nano Banana Pro",
+    "label": "Benefits",
+    "description": "Gemini 3 Pro-grade clarity, contextual reasoning, and speed help you ship visuals faster with fewer edits.",
+    "items": [
+      {
+        "title": "Crisp text & detail",
+        "description": "Long paragraphs, tables, and multilingual copy stay readable—ideal for posters, packaging, and infographics.",
+        "icon": "RiFileTextLine",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      },
+      {
+        "title": "Semantic edits that respect context",
+        "description": "Understands prompts and references, preserving lighting, perspective, and materials when you tweak scenes.",
+        "icon": "RiMagicLine",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      },
+      {
+        "title": "Fast turnaround",
+        "description": "10–30s generations and edits, with support for consistent characters, storyboards, and batch workflows.",
+        "icon": "RiFlashlightFill",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      }
+    ]
+  },
+  "usage": {
+    "name": "usage",
+    "title": "How Nano Banana Pro works",
+    "description": "Move from idea to delivery in minutes with mixed text/image inputs and iterative editing:",
+    "image": {
+      "src": "/placeholder.svg"
+    },
+    "image_position": "left",
+    "text_align": "center",
+    "items": [
+      {
+        "title": "Set prompts & references",
+        "description": "Add your brief and up to 14 reference images, define style, language, and framing.",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      },
+      {
+        "title": "Generate in one click",
+        "description": "Pick resolution and ratio; get the first pass in 10–30s with stable subjects and structure.",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      },
+      {
+        "title": "Semantic refine",
+        "description": "Swap elements, extend canvas, or remove marks via text or local selection while keeping lighting aligned.",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      },
+      {
+        "title": "Export & reuse",
+        "description": "Download 1K/2K/4K outputs, or reuse characters and styles for the next series.",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      }
+    ]
+  },
+  "feature": {
+    "name": "feature",
+    "title": "Nano Banana Pro feature set",
+    "description": "An end-to-end pipeline for design, marketing, ecommerce, and storytelling—generation, editing, and delivery included.",
+    "items": [
+      {
+        "title": "Multimodal generation (1K/2K/4K)",
+        "description": "Turn text or images into high-res visuals across realistic, illustrative, or product styles.",
+        "icon": "RiHdLine"
+      },
+      {
+        "title": "Precision text & multilingual",
+        "description": "Accurate typography for English, Chinese, Japanese, and more—even long copy stays sharp.",
+        "icon": "RiQuillPenLine"
+      },
+      {
+        "title": "Reference mixing & consistency",
+        "description": "Blend multiple references while keeping characters, branding, and materials coherent across scenes.",
+        "icon": "RiImageLine"
+      },
+      {
+        "title": "Semantic edits & object swap",
+        "description": "Replace objects or adjust mood without breaking lighting, perspective, or composition.",
+        "icon": "RiMagicLine"
+      },
+      {
+        "title": "Reusable styles & characters",
+        "description": "Lock in roles, props, and shot language to produce storyboards or ad sets fast.",
+        "icon": "RiSparkling2Line"
+      },
+      {
+        "title": "Clean exports & rights",
+        "description": "Default watermark-free delivery, commercial-ready for print and digital.",
+        "icon": "RiDropLine"
+      },
+      {
+        "title": "API & workflow integration",
+        "description": "Connect via API for batch generation, automated review, and team collaboration.",
+        "icon": "RiCopyrightLine"
+      }
+    ]
+  },
+  "stats": {
+    "disabled": true,
+    "name": "stats",
+    "label": "Stats",
+    "title": "Trusted by creators worldwide",
+    "description": "Join teams using AI visual models every day.",
+    "icon": "FaRegHeart",
+    "items": [
+      {
+        "title": "Generated visuals",
+        "label": "100K+",
+        "description": "And counting"
+      },
+      {
+        "title": "Avg. render time",
+        "label": "<30s",
+        "description": "Per generation"
+      },
+      {
+        "title": "Satisfaction",
+        "label": "4.9/5",
+        "description": "Rating"
+      }
+    ]
+  },
+  "testimonial": {
+    "disabled": true,
+    "name": "testimonial",
+    "label": "Testimonial",
+    "title": "What teams say about Nano Banana",
+    "description": "Creators and companies shipping faster with Nano Banana Pro.",
+    "icon": "GoThumbsup",
+    "items": [
+      {
+        "title": "Sophia Wells",
+        "label": "Content Creator & Filmmaker",
+        "description": "Free Sora Generator has revolutionized my creative workflow. I can now prototype video concepts in minutes that would have taken days. Highly recommend for any aspiring AI filmmaker!",
+        "image": {
+          "src": "/images/users/user1.jpeg"
+        }
+      },
+      {
+        "title": "Daniel Kim",
+        "label": "Marketing Director",
+        "description": "This tool simplifies everything. It breaks down complex ideas into stunning videos, making video creation so much more accessible and fun. Our marketing campaigns have never looked better!",
+        "image": {
+          "src": "/images/users/user2.jpeg"
+        }
+      },
+      {
+        "title": "Isabella Chang",
+        "label": "Digital Artist",
+        "description": "I can't believe the quality is this good! The videos are incredibly realistic and professional. It's now an indispensable part of my creative workflow. Pure brilliance for AI video generation!",
+        "image": {
+          "src": "/images/users/user3.png"
+        }
+      },
+      {
+        "title": "Marcus Johnson",
+        "label": "Social Media Influencer",
+        "description": "Creating engaging video content has never been easier. I can generate multiple video variations in minutes and my audience engagement has skyrocketed. This is the future of content creation!",
+        "image": {
+          "src": "/images/users/user1.jpeg"
+        }
+      },
+      {
+        "title": "Emma Rodriguez",
+        "label": "Small Business Owner",
+        "description": "As a small business owner, I couldn't afford professional video production. Free Sora Generator gave me the tools to create professional marketing videos myself. Game changer for my business!",
+        "image": {
+          "src": "/images/users/user2.jpeg"
+        }
+      },
+      {
+        "title": "Alex Thompson",
+        "label": "Video Editor & Producer",
+        "description": "The quality and speed are unmatched. I use it for rapid prototyping and presenting concepts to clients. It's become an essential tool in my production pipeline. Absolutely incredible technology!",
+        "image": {
+          "src": "/images/users/user3.png"
+        }
+      }
+    ]
+  },
+  "faq": {
+    "name": "faq",
+    "label": "FAQ",
+    "title": "Nano Banana Pro FAQ",
+    "description": "Questions about Nano Banana Pro? Let us know—happy to help.",
+    "items": [
+      {
+        "title": "What is Nano Banana Pro?",
+        "description": "A Gemini 3 Pro-based visual model for text/image-to-image generation, semantic editing, multilingual typography, and consistent characters or branding."
+      },
+      {
+        "title": "Is there a free plan?",
+        "description": "Yes. Free trials and bonus credits are available—no credit card required to test the core features."
+      },
+      {
+        "title": "What can I create with it?",
+        "description": "Ecommerce hero shots, marketing posters, brand KV, infographics, storyboards, character sheets, and product visuals from prompts plus references."
+      },
+      {
+        "title": "How good is the text rendering?",
+        "description": "Gemini 3 Pro delivers high-accuracy typography: long paragraphs, multilingual copy, and small fonts stay readable for print and digital."
+      },
+      {
+        "title": "Does it support consistency and multiple refs?",
+        "description": "Yes. Mix several reference images to keep characters, brands, and materials aligned across frames or scenes."
+      },
+      {
+        "title": "How fast are generations?",
+        "description": "Most generations and edits finish within 10–30 seconds depending on resolution and scene complexity."
+      }
+    ]
+  },
+  "cta": {
+    "name": "cta",
+    "title": "Ready to try Nano Banana Pro?",
+    "description": "Start a free trial of Nano Banana Pro powered by Gemini 3 Pro, or plug the API into your workflows for automated generation and editing.",
+    "buttons": [
+      {
+        "title": "Start free generation",
+        "url": "/dashboard",
+        "target": "_self",
+        "icon": "RiVideoAddFill"
+      }
+    ]
+  }
+}
