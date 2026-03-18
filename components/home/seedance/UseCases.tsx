@@ -71,7 +71,7 @@ const UseCases = () => {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 border py-2 px-5 rounded-full bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border-purple-200 dark:border-purple-800 mb-6">
             <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-            <span className="text-sm font-semibold text-gray-900 dark:text-white">{t("badge")}</span>
+            <span className="text-sm font-semibold text-gray-900 dark:text-white">{t("badge.label")}</span>
           </div>
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
             <span className="text-gray-900 dark:text-white">{t("titlePrefix")}</span>

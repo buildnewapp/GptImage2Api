@@ -37,7 +37,7 @@ const Testimonials = () => {
         <div className="flex flex-col items-center justify-center mx-auto px-4 mb-16">
           <div className="flex justify-center">
             <div className="inline-flex items-center gap-2 border py-2 px-5 rounded-full bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border-purple-200 dark:border-purple-800">
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">{t("badge")}</span>
+              <span className="text-sm font-semibold text-gray-900 dark:text-white">{t("badge.label")}</span>
             </div>
           </div>
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mt-6 text-center">

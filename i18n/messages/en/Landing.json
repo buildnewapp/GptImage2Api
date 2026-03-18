@@ -1,7 +1,14 @@
 {
   "Hero": {
+    "badge": {
+      "label": "NEW",
+      "text": "Multi-modal AI video creation",
+      "href": "/#pricing"
+    },
     "title": "Seedance 2.0",
     "description": "Experience true multi-modal AI video creation. Combine images, videos, audio, and text to generate cinematic content with precise reference capabilities, seamless video extension, and natural language control.",
+    "getStarted": "Get Started",
+    "getStartedLink": "/#pricing",
     "form": {
       "imageToVideo": "Image to Video",
       "textToVideo": "Text to Video",
@@ -78,6 +85,11 @@
     }
   },
   "Features": {
+    "badge": {
+      "label": "Capabilities",
+      "text": "What makes Seedance 2.0 stand out"
+    },
+    "title": "Key Capabilities of Seedance 2.0",
     "titlePrefix": "Key Capabilities of ",
     "titleSuffix": "Seedance 2.0",
     "description": "From basic stability to complex multi-modal references, experience the next evolution in AI video generation.",
@@ -133,7 +145,11 @@
     ]
   },
   "UseCases": {
-    "badge": "Use Cases",
+    "badge": {
+      "label": "Use Cases",
+      "text": "Real workflows for creators, marketers, and teams"
+    },
+    "title": "Endless Possibilities For Every Creator",
     "titlePrefix": "Endless Possibilities ",
     "titleSuffix": "For Every Creator",
     "description": "From viral content to professional productions, Seedance 2.0 empowers creators across industries to bring their multi-modal visions to life.",
@@ -219,6 +235,62 @@
           "Audio-Visual Art"
         ]
       }
+    ],
+    "cases": [
+      {
+        "title": "Advertising & Marketing",
+        "description": "Create compelling promotional content by referencing successful ad templates. Replicate proven creative formats with your own products and branding.",
+        "image": "",
+        "icon": "megaphone"
+      },
+      {
+        "title": "Education & Training",
+        "description": "Bring lessons to life with engaging visual content. Create animated explanations, historical reconstructions, and interactive learning materials.",
+        "image": "",
+        "icon": "graduation-cap"
+      },
+      {
+        "title": "Creative Storytelling",
+        "description": "Craft unique narratives using multi-modal inputs. Reference film techniques, replicate cinematic styles, and extend your story across seamless scenes.",
+        "image": "",
+        "icon": "clapperboard"
+      },
+      {
+        "title": "Social Media Content",
+        "description": "Generate scroll-stopping content by referencing trending templates and effects. Replicate viral formats with your own creative twist.",
+        "image": "",
+        "icon": "smartphone"
+      },
+      {
+        "title": "Motion & Dance Videos",
+        "description": "Upload reference choreography or motion clips and apply them to any character. Perfect for dance covers, motion replication, and action sequences.",
+        "image": "",
+        "icon": "sparkles"
+      },
+      {
+        "title": "Video Editing & Extension",
+        "description": "Extend existing videos, merge multiple clips, or edit specific segments without regenerating everything from scratch.",
+        "image": "",
+        "icon": "scissors"
+      },
+      {
+        "title": "Film Pre-Visualization",
+        "description": "Reference film clips to replicate camera movements, transitions, and visual effects. Test cinematography before production.",
+        "image": "",
+        "icon": "film"
+      },
+      {
+        "title": "Real Estate & Architecture",
+        "description": "Transform property photos into immersive virtual tours. Showcase architectural designs with dynamic walkthroughs and atmospheric presentations.",
+        "image": "",
+        "icon": "building-2"
+      },
+      {
+        "title": "Music & Audio Sync",
+        "description": "Upload audio tracks and create beat-synced videos. Generate sound effects and background music that match your visual content.",
+        "image": "",
+        "icon": "headphones"
+      }
     ]
   },
   "HowItWorks": {
@@ -241,7 +313,9 @@
     ]
   },
   "Testimonials": {
-    "badge": "Testimonials",
+    "badge": {
+      "label": "Testimonials"
+    },
     "title": "Loved by Creators Worldwide",
     "description": "See what our customers have to say about Seedance 2.0 and how it's transforming their creative workflows.",
     "items": [
@@ -356,6 +430,7 @@
     }
   },
   "FAQ": {
+    "title": "Frequently Asked Questions",
     "titlePrefix": "Frequently Asked ",
     "titleSuffix": "Questions",
     "description": "Everything you need to know about Seedance 2.0 and how to get started.",
@@ -410,7 +485,12 @@
     "title": "Ready to Experience Multi-Modal AI Video Creation?",
     "description": "Use Seedance 2.0 to bring your ideas to life with natural language controls and flexible reference workflows.",
     "button": "Start Creating Now",
+    "trustText": "Built for creators who need fast, production-ready AI video workflows.",
     "features": {
+      "deploy": "Multi-modal workflows",
+      "production": "Production-ready output",
+      "updates": "Fast model updates",
+      "i18n": "Multi-language support",
       "multimodal": "Multi-modal input support",
       "watermark": "Watermark-free downloads",
       "reference": "Flexible reference controls"

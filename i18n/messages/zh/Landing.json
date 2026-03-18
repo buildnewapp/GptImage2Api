@@ -1,7 +1,14 @@
 {
   "Hero": {
+    "badge": {
+      "label": "新品",
+      "text": "多模态 AI 视频创作",
+      "href": "/#pricing"
+    },
     "title": "Seedance 2.0",
     "description": "体验真正的多模态 AI 视频创作。结合图像、视频、音频和文本，通过精确的参考能力、无缝的视频延展和自然语言控制，生成电影级内容。",
+    "getStarted": "立即开始",
+    "getStartedLink": "/#pricing",
     "form": {
       "imageToVideo": "图生视频",
       "textToVideo": "文生视频",
@@ -78,6 +85,11 @@
     }
   },
   "Features": {
+    "badge": {
+      "label": "核心能力",
+      "text": "了解 Seedance 2.0 的关键优势"
+    },
+    "title": "Seedance 2.0 核心能力",
     "titlePrefix": "核心能力：",
     "titleSuffix": "Seedance 2.0",
     "description": "从基础稳定性到复杂的多模态参考，体验 AI 视频生成的下一次进化。",
@@ -133,7 +145,11 @@
     ]
   },
   "UseCases": {
-    "badge": "应用场景",
+    "badge": {
+      "label": "应用场景",
+      "text": "适用于创作者、营销团队与专业制作"
+    },
+    "title": "无限可能，致每一位创作者",
     "titlePrefix": "无限可能 ",
     "titleSuffix": "致每一位创作者",
     "description": "从病毒式传播的内容到专业制作，Seedance 2.0 赋能各行各业的创作者，将多模态愿景变为现实。",
@@ -183,6 +199,62 @@
         "title": "音乐与音频同步",
         "description": "上传音轨并创作节拍同步的视频。生成与您的视觉内容相匹配的音效和背景音乐。",
         "tags": ["节拍同步", "音乐视频", "声音设计", "视听艺术"]
+      }
+    ],
+    "cases": [
+      {
+        "title": "广告与营销",
+        "description": "通过参考成功的广告模板创作引人注目的宣传内容。用您自己的产品和品牌复刻经过验证的创意形式。",
+        "image": "",
+        "icon": "megaphone"
+      },
+      {
+        "title": "教育与培训",
+        "description": "用引人入胜的视觉内容让课程生动起来。制作动画解说、历史重现和互动学习材料。",
+        "image": "",
+        "icon": "graduation-cap"
+      },
+      {
+        "title": "创意叙事",
+        "description": "使用多模态输入构建独特的故事。参考电影技法，复刻电影风格，并在无缝衔接的场景中延展您的故事。",
+        "image": "",
+        "icon": "clapperboard"
+      },
+      {
+        "title": "社交媒体内容",
+        "description": "通过参考热门模板和特效生成让人停不下刷屏的内容。用您自己的创意转折复刻病毒式传播的形式。",
+        "image": "",
+        "icon": "smartphone"
+      },
+      {
+        "title": "动作与舞蹈视频",
+        "description": "上传参考编舞或动作片段，并将其应用于任何角色。非常适合舞蹈翻拍、动作复刻和动作序列。",
+        "image": "",
+        "icon": "sparkles"
+      },
+      {
+        "title": "视频编辑与延展",
+        "description": "无缝延展现有视频，合并多个片段，或在该特定片段进行编辑，无需从头重新生成所有内容。",
+        "image": "",
+        "icon": "scissors"
+      },
+      {
+        "title": "电影预可视化",
+        "description": "参考电影片段以复刻运镜、转场和视觉特效。在制作前测试电影摄影效果。",
+        "image": "",
+        "icon": "film"
+      },
+      {
+        "title": "房地产与建筑",
+        "description": "将房产照片转化为沉浸式虚拟导览。通过动态漫游和氛围展示呈现建筑设计。",
+        "image": "",
+        "icon": "building-2"
+      },
+      {
+        "title": "音乐与音频同步",
+        "description": "上传音轨并创作节拍同步的视频。生成与您的视觉内容相匹配的音效和背景音乐。",
+        "image": "",
+        "icon": "headphones"
       }
     ]
   },
@@ -315,6 +387,7 @@
     }
   },
   "FAQ": {
+    "title": "常见问题",
     "titlePrefix": "常见",
     "titleSuffix": "问题",
     "description": "关于 Seedance 2.0 以及如何开始的所有信息。",
@@ -369,7 +442,12 @@
     "title": "准备好体验多模态 AI 视频创作了吗？",
     "description": "使用 Seedance 2.0 将创意想法转化为视频，通过自然语言控制与灵活参考流程完成创作。",
     "button": "立即开始创作",
+    "trustText": "为需要高效、可投入生产的视频工作流的创作者而打造。",
     "features": {
+      "deploy": "多模态工作流",
+      "production": "可用于生产的输出",
+      "updates": "快速模型更新",
+      "i18n": "多语言支持",
       "multimodal": "支持多模态输入",
       "watermark": "无水印下载",
       "reference": "灵活参考控制"
