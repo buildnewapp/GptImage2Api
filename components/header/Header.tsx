@@ -1,6 +1,7 @@
 import HeaderLinks from "@/components/header/HeaderLinks";
 import MobileMenu from "@/components/header/MobileMenu";
 import { UserAvatar } from "@/components/header/UserAvatar";
+import { getUserBenefits } from "@/actions/usage/benefits";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Link as I18nLink } from "@/i18n/routing";
@@ -15,6 +16,7 @@ const Header = async () => {
   const t = await getTranslations("Home");
   const session = await getSession();
   const user = session?.user;
+  const benefits = user ? await getUserBenefits(user.id) : null;
 
   return (
     <header className="py-2 backdrop-blur-md sticky top-0 z-50">
@@ -44,12 +46,18 @@ const Header = async () => {
           <div className="hidden lg:flex items-center gap-x-2">
             <LocaleSwitcher />
             <ThemeToggle />
-            <UserAvatar user={user as User} />
+            <UserAvatar
+              user={user as User}
+              totalAvailableCredits={benefits?.totalAvailableCredits}
+            />
           </div>
 
           {/* Mobile */}
           <div className="flex lg:hidden items-center gap-x-2">
-            <UserAvatar user={user as User} />
+            <UserAvatar
+              user={user as User}
+              totalAvailableCredits={benefits?.totalAvailableCredits}
+            />
             <MobileMenu />
           </div>
         </div>

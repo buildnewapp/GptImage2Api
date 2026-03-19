@@ -13,7 +13,13 @@ import { UserInfo } from "./UserInfo";
 
 type User = typeof userSchema.$inferSelect;
 
-export function UserAvatar({ user }: { user: User }) {
+export function UserAvatar({
+  user,
+  totalAvailableCredits,
+}: {
+  user: User;
+  totalAvailableCredits?: number | null;
+}) {
   if (!user) {
     return <LoginButton />;
   }
@@ -31,6 +37,7 @@ export function UserAvatar({ user }: { user: User }) {
       <DropdownMenuContent align="end">
         <UserInfo
           user={user}
+          totalAvailableCredits={totalAvailableCredits}
           renderContainer={(children) => (
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">{children}</div>

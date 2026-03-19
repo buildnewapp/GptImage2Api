@@ -1,6 +1,7 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserCreditBadge } from "@/components/header/UserCreditBadge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,7 +24,13 @@ import { useTranslations } from "next-intl";
 
 type User = typeof userSchema.$inferSelect;
 
-export function SidebarUserNav({ user }: { user: User }) {
+export function SidebarUserNav({
+  user,
+  totalAvailableCredits,
+}: {
+  user: User;
+  totalAvailableCredits?: number | null;
+}) {
   const router = useRouter();
   const t = useTranslations("Login");
   const { isMobile } = useSidebar();
@@ -60,8 +67,9 @@ export function SidebarUserNav({ user }: { user: User }) {
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">
-                  {user.name || "User"}
+                <span className="flex items-center gap-1.5 truncate font-semibold">
+                  <span className="truncate">{user.name || "User"}</span>
+                  <UserCreditBadge totalAvailableCredits={totalAvailableCredits} />
                 </span>
                 <span className="truncate text-xs text-muted-foreground">
                   {user.email}
@@ -85,8 +93,11 @@ export function SidebarUserNav({ user }: { user: User }) {
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">
-                    {user.name || "User"}
+                  <span className="flex items-center gap-1.5 truncate font-semibold">
+                    <span className="truncate">{user.name || "User"}</span>
+                    <UserCreditBadge
+                      totalAvailableCredits={totalAvailableCredits}
+                    />
                   </span>
                   <span className="truncate text-xs text-muted-foreground">
                     {user.email}

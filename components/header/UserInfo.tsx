@@ -1,6 +1,7 @@
 "use client";
 
 import { DynamicIcon } from "@/components/DynamicIcon";
+import { UserCreditBadge } from "@/components/header/UserCreditBadge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenuItem,
@@ -24,10 +25,15 @@ type User = typeof userSchema.$inferSelect;
 
 interface UserInfoProps {
   user: User;
+  totalAvailableCredits?: number | null;
   renderContainer?: (children: React.ReactNode) => React.ReactNode;
 }
 
-export function UserInfo({ renderContainer, user }: UserInfoProps) {
+export function UserInfo({
+  renderContainer,
+  user,
+  totalAvailableCredits,
+}: UserInfoProps) {
   const router = useRouter();
 
   const t = useTranslations("Login");
@@ -60,8 +66,9 @@ export function UserInfo({ renderContainer, user }: UserInfoProps) {
             <AvatarFallback>{fallbackLetter}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col space-y-0.5">
-            <p className="text-sm font-medium leading-none">
-              {user.name || "User"}
+            <p className="flex items-center gap-1.5 text-sm font-medium leading-none">
+              <span className="truncate">{user.name || "User"}</span>
+              <UserCreditBadge totalAvailableCredits={totalAvailableCredits} />
             </p>
             <p className="text-xs leading-none text-muted-foreground">
               {user.email}

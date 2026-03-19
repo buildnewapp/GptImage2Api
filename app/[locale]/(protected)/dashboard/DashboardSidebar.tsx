@@ -31,9 +31,13 @@ type Menu = {
 
 type DashboardSidebarProps = {
   showMemberSubscription: boolean;
+  totalAvailableCredits?: number | null;
 };
 
-export function DashboardSidebar({ showMemberSubscription }: DashboardSidebarProps) {
+export function DashboardSidebar({
+  showMemberSubscription,
+  totalAvailableCredits,
+}: DashboardSidebarProps) {
   const { data: session } = authClient.useSession();
   const user = session?.user as any | undefined;
   const pathname = usePathname();
@@ -131,7 +135,10 @@ export function DashboardSidebar({ showMemberSubscription }: DashboardSidebarPro
       </SidebarContent>
 
       <SidebarFooter>
-        <SidebarUserNav user={user} />
+        <SidebarUserNav
+          user={user}
+          totalAvailableCredits={totalAvailableCredits}
+        />
       </SidebarFooter>
     </Sidebar>
   );
