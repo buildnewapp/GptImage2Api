@@ -14,6 +14,7 @@ export default async function AiStudioAdminPage({
     status?: string;
     category?: string;
     search?: string;
+    userId?: string;
   }>;
 }) {
   const params = await searchParams;
@@ -25,7 +26,8 @@ export default async function AiStudioAdminPage({
     status: params.status,
     category: params.category,
     search: params.search,
+    userId: params.userId,
   });
 
-  return <AiStudioAdminClient initialData={data} />;
+  return <AiStudioAdminClient initialData={data} initialUserId={params.userId} />;
 }

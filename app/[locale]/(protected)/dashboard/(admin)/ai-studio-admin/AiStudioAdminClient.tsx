@@ -156,8 +156,10 @@ function StatusBadge({ status }: { status: string }) {
 
 export default function AiStudioAdminClient({
   initialData,
+  initialUserId,
 }: {
   initialData: AdminData;
+  initialUserId?: string;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -282,6 +284,27 @@ export default function AiStudioAdminClient({
           Inspect AI Studio generations, runtime payloads, and credit settlement state.
         </p>
       </div>
+
+      {initialUserId ? (
+        <div className="flex items-center justify-between rounded-md border bg-muted/30 px-3 py-2 text-sm">
+          <span className="text-muted-foreground">
+            当前按用户筛选: <span className="font-mono text-foreground">{initialUserId}</span>
+          </span>
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() =>
+              updateParams({
+                userId: undefined,
+                page: undefined,
+              })
+            }
+          >
+            清除筛选
+          </Button>
+        </div>
+      ) : null}
 
       <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-6">
         <Card>

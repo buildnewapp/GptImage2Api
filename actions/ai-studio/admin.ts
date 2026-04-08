@@ -29,6 +29,7 @@ type AdminAiStudioQuery = {
   status?: string;
   category?: string;
   search?: string;
+  userId?: string;
 };
 
 const ADMIN_AI_STUDIO_CATEGORIES = ["video", "image", "music", "chat"] as const;
@@ -37,8 +38,13 @@ function buildAdminAiStudioWhereClause({
   status = "all",
   category = "all",
   search = "",
-}: Pick<AdminAiStudioQuery, "status" | "category" | "search">) {
+  userId,
+}: Pick<AdminAiStudioQuery, "status" | "category" | "search" | "userId">) {
   const conditions: SQL[] = [];
+
+  if (userId) {
+    conditions.push(eq(aiStudioGenerations.userId, userId));
+  }
 
   if (status && status !== "all") {
     conditions.push(eq(aiStudioGenerations.status, status as any));
@@ -72,6 +78,7 @@ export async function getAdminAiStudioGenerations({
   status = "all",
   category = "all",
   search = "",
+  userId,
 }: AdminAiStudioQuery = {}) {
   if (!(await isAdmin())) {
     return {
@@ -87,7 +94,7 @@ export async function getAdminAiStudioGenerations({
   const safePage = Math.max(1, page);
   const safeLimit = Math.min(Math.max(1, limit), 100);
   const offset = (safePage - 1) * safeLimit;
-  const whereClause = buildAdminAiStudioWhereClause({ status, category, search });
+  const whereClause = buildAdminAiStudioWhereClause({ status, category, search, userId });
 
   const db = getDb();
   const [rows, totalResult, summaryResult] = await Promise.all([

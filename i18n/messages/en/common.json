@@ -120,6 +120,11 @@
         "icon": "ShoppingCart"
       },
       {
+        "name": "Credit Logs",
+        "href": "/dashboard/credits",
+        "icon": "Coins"
+      },
+      {
         "name": "Referrals",
         "href": "/dashboard/referrals-admin",
         "icon": "Gift"

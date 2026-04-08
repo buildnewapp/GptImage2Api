@@ -9,6 +9,7 @@ import { columns } from "./Columns";
 import { OrdersDataTable } from "./DataTable";
 
 type Params = Promise<{ locale: string }>;
+type SearchParams = Promise<{ userId?: string }>;
 
 type MetadataProps = {
   params: Params;
@@ -33,8 +34,16 @@ export async function generateMetadata({
 
 const PAGE_SIZE = 20;
 
-async function OrdersTable() {
-  const initialData = await getOrders({ pageIndex: 0, pageSize: PAGE_SIZE });
+async function OrdersTable({
+  userId,
+}: {
+  userId?: string;
+}) {
+  const initialData = await getOrders({
+    pageIndex: 0,
+    pageSize: PAGE_SIZE,
+    userId,
+  });
 
   if (!initialData.success) {
     return <p className="text-destructive">{initialData.error}</p>;
@@ -52,11 +61,18 @@ async function OrdersTable() {
       initialPageCount={Math.ceil((totalCount || 0) / PAGE_SIZE)}
       pageSize={PAGE_SIZE}
       totalCount={totalCount}
+      initialUserId={userId}
     />
   );
 }
 
-export default function AdminOrdersPage() {
+export default async function AdminOrdersPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  const { userId } = await searchParams;
+
   return (
     <div className="space-y-4">
       <Suspense
@@ -66,7 +82,7 @@ export default function AdminOrdersPage() {
           </div>
         }
       >
-        <OrdersTable />
+        <OrdersTable userId={userId} />
       </Suspense>
     </div>
   );

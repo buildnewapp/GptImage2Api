@@ -14,6 +14,8 @@ import {
 import { getOrders, GetOrdersResult } from "@/actions/orders/admin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -44,6 +46,7 @@ interface DataTableProps<TData, TValue> {
   initialPageCount: number;
   pageSize: number;
   totalCount: number;
+  initialUserId?: string;
 }
 
 const ORDER_TYPES = ALL_ORDER_TYPES;
@@ -60,7 +63,9 @@ export function OrdersDataTable<TData, TValue>({
   initialPageCount,
   pageSize,
   totalCount,
+  initialUserId,
 }: DataTableProps<TData, TValue>) {
+  const pathname = usePathname();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [debouncedGlobalFilter] = useDebounce(globalFilter, 500);
@@ -78,6 +83,7 @@ export function OrdersDataTable<TData, TValue>({
   const [data, setData] = useState<TData[]>(initialData);
   const [pageCount, setPageCount] = useState<number>(initialPageCount);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const lockedUserId = initialUserId || "";
 
   const initialLoad = useMemo(
     () =>
@@ -111,6 +117,7 @@ export function OrdersDataTable<TData, TValue>({
           pageIndex: pagination.pageIndex,
           pageSize: pagination.pageSize,
           filter: debouncedGlobalFilter,
+          userId: lockedUserId || undefined,
           provider: provider || undefined,
           orderType: orderType || undefined,
           status: status || undefined,
@@ -144,6 +151,7 @@ export function OrdersDataTable<TData, TValue>({
     provider,
     orderType,
     status,
+    lockedUserId,
     pagination.pageIndex,
     pagination.pageSize,
     initialData,
@@ -173,6 +181,16 @@ export function OrdersDataTable<TData, TValue>({
 
   return (
     <div>
+      {lockedUserId ? (
+        <div className="mb-3 flex items-center justify-between rounded-md border bg-muted/30 px-3 py-2 text-sm">
+          <span className="text-muted-foreground">
+            当前按用户筛选: <span className="font-mono text-foreground">{lockedUserId}</span>
+          </span>
+          <Button asChild size="sm" variant="outline">
+            <Link href={pathname}>清除筛选</Link>
+          </Button>
+        </div>
+      ) : null}
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Search by Email, Order ID..."

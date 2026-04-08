@@ -1,7 +1,9 @@
 "use client";
 
 import { banUser, unbanUser, UserWithSource } from "@/actions/users/admin";
+import { buildAdminUserQuickActionLinks } from "@/lib/admin/dashboard-users";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,6 +18,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
@@ -29,6 +32,7 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { MoreHorizontal } from "lucide-react";
+import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -167,8 +171,14 @@ const UnbanUserDialog = ({
 };
 
 const ActionsCell = ({ user }: { user: UserType }) => {
+  const locale = useLocale();
+  const router = useRouter();
   const [openBan, setOpenBan] = useState(false);
   const [openUnban, setOpenUnban] = useState(false);
+  const quickLinks = buildAdminUserQuickActionLinks({
+    locale,
+    userId: user.id,
+  });
 
   return (
     <>
@@ -189,6 +199,17 @@ const ActionsCell = ({ user }: { user: UserType }) => {
           >
             Copy user ID
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => router.push(quickLinks.orders)}>
+            用户订单
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push(quickLinks.credits)}>
+            用户积分
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push(quickLinks.generations)}>
+            用户生成记录
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           {user.banned ? (
             <DropdownMenuItem onClick={() => setOpenUnban(true)}>
               Unban user
@@ -251,6 +272,24 @@ export const columns: ColumnDef<UserType>[] = [
               {email}
             </span>
           </div>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "totalCredits",
+    header: "Current Credits",
+    cell: ({ row }) => {
+      const totalCredits = row.original.totalCredits ?? 0;
+      const subscriptionCredits = row.original.subscriptionCreditsBalance ?? 0;
+      const oneTimeCredits = row.original.oneTimeCreditsBalance ?? 0;
+
+      return (
+        <div className="flex min-w-[140px] flex-col">
+          <span className="font-medium">{totalCredits}</span>
+          <span className="text-xs text-muted-foreground">
+            Sub {subscriptionCredits} / One-time {oneTimeCredits}
+          </span>
         </div>
       );
     },
@@ -406,7 +445,16 @@ export const columns: ColumnDef<UserType>[] = [
   {
     accessorKey: "createdAt",
     header: "Joined",
-    cell: ({ row }) => dayjs(row.original.createdAt).format("YYYY-MM-DD HH:mm"),
+    cell: ({ row }) => {
+      const isBanned = row.original.banned;
+
+      return (
+        <div className="flex flex-col gap-1">
+          <span>{dayjs(row.original.createdAt).format("YYYY-MM-DD HH:mm")}</span>
+          {isBanned ? <Badge variant="destructive">Banned</Badge> : null}
+        </div>
+      );
+    },
   },
   {
     id: "actions",

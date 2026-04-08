@@ -120,6 +120,11 @@
         "icon": "ShoppingCart"
       },
       {
+        "name": "积分流水",
+        "href": "/dashboard/credits",
+        "icon": "Coins"
+      },
+      {
         "name": "邀请管理",
         "href": "/dashboard/referrals-admin",
         "icon": "Gift"

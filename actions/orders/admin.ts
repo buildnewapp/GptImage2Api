@@ -13,6 +13,7 @@ const FilterSchema = z.object({
   pageIndex: z.coerce.number().default(0),
   pageSize: z.coerce.number().default(10),
   filter: z.string().optional(),
+  userId: z.string().optional(),
   provider: z.string().optional(),
   orderType: z.string().optional(),
   status: z.string().optional(),
@@ -33,10 +34,13 @@ export async function getOrders(
   const db = getDb();
 
   try {
-    const { pageIndex, pageSize, filter, provider, orderType, status } =
+    const { pageIndex, pageSize, filter, userId, provider, orderType, status } =
       FilterSchema.parse(params);
 
     const conditions = [];
+    if (userId) {
+      conditions.push(eq(ordersSchema.userId, userId));
+    }
     if (provider) {
       conditions.push(eq(ordersSchema.provider, provider));
     }

@@ -4,9 +4,9 @@ import type { ActionResult } from '@/lib/action-response';
 import { actionResponse } from '@/lib/action-response';
 import { isAdmin } from '@/lib/auth/server';
 import { getDb } from '@/lib/db';
-import { session as sessionSchema, user as userSchema, userSource as userSourceSchema } from '@/lib/db/schema';
+import { session as sessionSchema, usage as usageSchema, user as userSchema, userSource as userSourceSchema } from '@/lib/db/schema';
 import { getErrorMessage } from '@/lib/error-utils';
-import { count, desc, eq, ilike, or } from 'drizzle-orm';
+import { count, desc, eq, ilike, or, sql } from 'drizzle-orm';
 
 type UserType = typeof userSchema.$inferSelect;
 
@@ -26,6 +26,9 @@ export type UserWithSource = UserType & {
   deviceBrand?: string | null;
   deviceModel?: string | null;
   language?: string | null;
+  subscriptionCreditsBalance?: number | null;
+  oneTimeCreditsBalance?: number | null;
+  totalCredits?: number | null;
 };
 
 export interface GetUsersResult {
@@ -98,9 +101,13 @@ export async function getUsers({
         deviceBrand: userSourceSchema.deviceBrand,
         deviceModel: userSourceSchema.deviceModel,
         language: userSourceSchema.language,
+        subscriptionCreditsBalance: usageSchema.subscriptionCreditsBalance,
+        oneTimeCreditsBalance: usageSchema.oneTimeCreditsBalance,
+        totalCredits: sql<number>`coalesce(${usageSchema.subscriptionCreditsBalance}, 0) + coalesce(${usageSchema.oneTimeCreditsBalance}, 0)`,
       })
       .from(userSchema)
       .leftJoin(userSourceSchema, eq(userSchema.id, userSourceSchema.userId))
+      .leftJoin(usageSchema, eq(userSchema.id, usageSchema.userId))
       .where(conditions.length > 0 ? or(...conditions) : undefined)
       .orderBy(desc(userSchema.createdAt))
       .offset(pageIndex * pageSize)

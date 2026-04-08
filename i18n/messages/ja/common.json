@@ -120,6 +120,11 @@
         "icon": "ShoppingCart"
       },
       {
+        "name": "クレジット履歴",
+        "href": "/dashboard/credits",
+        "icon": "Coins"
+      },
+      {
         "name": "招待管理",
         "href": "/dashboard/referrals-admin",
         "icon": "Gift"
