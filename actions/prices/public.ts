@@ -20,7 +20,7 @@ export async function getPublicPricingPlans(): Promise<ActionResult<PricingPlan[
 
   const db = getDb();
 
-  const environment = process.env.NODE_ENV === 'production' ? 'live' : 'test'
+  const environment = process.env.PAY_ENV === 'production' ? 'live' : 'test'
 
   try {
     const plans = await db
