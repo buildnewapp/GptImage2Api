@@ -1,4 +1,7 @@
 import assert from "node:assert/strict";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import test from "node:test";
 
 import {
@@ -9,6 +12,7 @@ import {
   getCanonicalAiStudioModelId,
   mapPublicModelAliasToProviderModel,
   normalizeTaskState,
+  queryAiStudioTask,
   submitAiStudioExecution,
   resolveStatusEndpoint,
 } from "@/lib/ai-studio/execute";
@@ -52,6 +56,10 @@ test("maps official doc urls to the expected status endpoints", () => {
 test("extracts nested task identifiers from mixed response payloads", () => {
   assert.equal(extractTaskId({ data: { taskId: "task_123" } }), "task_123");
   assert.equal(extractTaskId({ result: { recordId: "record_456" } }), "record_456");
+  assert.equal(
+    extractTaskId({ code: 200, data: [{ task_id: "task_789", status: "submitted" }] }),
+    "task_789",
+  );
   assert.equal(extractTaskId({ message: "ok" }), null);
 });
 
@@ -77,6 +85,8 @@ test("normalizes provider states into the ai studio polling states", () => {
   assert.equal(normalizeTaskState({ data: { state: "waiting" } }), "queued");
   assert.equal(normalizeTaskState({ data: { state: "generating" } }), "running");
   assert.equal(normalizeTaskState({ data: { state: "success" } }), "succeeded");
+  assert.equal(normalizeTaskState({ data: [{ status: "processing" }] }), "running");
+  assert.equal(normalizeTaskState({ data: [{ status: "completed" }] }), "succeeded");
   assert.equal(normalizeTaskState({ data: { successFlag: 3 } }), "failed");
   assert.equal(
     normalizeTaskState({
@@ -152,6 +162,164 @@ test("treats provider business errors in 200 responses as execution failures", a
   );
 
   global.fetch = originalFetch;
+});
+
+test("routes APIMart executions to api.apimart.ai with the APIMART key", async () => {
+  const originalFetch = global.fetch;
+  const originalApimartKey = process.env.APIMART_API_KEY;
+  process.env.APIMART_API_KEY = "apimart-test-key";
+
+  let requestUrl = "";
+  let authorizationHeader = "";
+
+  global.fetch = async (input, init) => {
+    requestUrl = String(input);
+    authorizationHeader = String((init?.headers as Record<string, string>)?.Authorization ?? "");
+
+    return new Response(
+      JSON.stringify({
+        code: 200,
+        data: [
+          {
+            status: "submitted",
+            task_id: "task_01K8SGYNNNVBQTXNR4MM964S7K",
+          },
+        ],
+      }),
+      {
+        status: 200,
+        headers: {
+          "content-type": "application/json",
+        },
+      },
+    ) as Response;
+  };
+
+  const result = await submitAiStudioExecution(
+    {
+      id: "video:sora2-pro-text-to-video",
+      category: "video",
+      title: "Sora2 Pro - Text to Video",
+      docUrl: "https://docs.kie.ai/market/sora2/sora-2-pro-text-to-video.md",
+      provider: "Sora2",
+      vendor: "apimart",
+      endpoint: "/api/v1/jobs/createTask",
+      method: "POST",
+      modelKeys: ["sora-2-pro"],
+      requestSchema: null,
+      examplePayload: {},
+      pricingRows: [],
+    },
+    {
+      model: "sora-2-pro",
+      prompt: "A waterfall cascading down forming a rainbow",
+      duration: 10,
+      aspect_ratio: "16:9",
+    },
+  );
+
+  assert.equal(requestUrl, "https://api.apimart.ai/v1/videos/generations");
+  assert.equal(authorizationHeader, "Bearer apimart-test-key");
+  assert.equal(result.taskId, "task_01K8SGYNNNVBQTXNR4MM964S7K");
+
+  global.fetch = originalFetch;
+  if (originalApimartKey === undefined) {
+    delete process.env.APIMART_API_KEY;
+  } else {
+    process.env.APIMART_API_KEY = originalApimartKey;
+  }
+});
+
+test("queries APIMart task status from the generic task endpoint", async () => {
+  const originalFetch = global.fetch;
+  const originalApimartKey = process.env.APIMART_API_KEY;
+  const originalRuntimeCatalogPath = process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
+  process.env.APIMART_API_KEY = "apimart-test-key";
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), "ai-studio-apimart-runtime-"));
+  const runtimePath = path.join(tempDir, "catalog.json");
+  await writeFile(
+    runtimePath,
+    JSON.stringify({
+      version: 1,
+      generatedAt: "2026-04-08T00:00:00.000Z",
+      items: [
+        {
+          id: "video:apimart-sora-2-pro",
+          category: "video",
+          title: "Sora2 Pro",
+          docUrl: "https://docs.apimart.ai/en/api-reference/videos/sora-2/generation.md",
+          provider: "Sora2",
+          vendor: "apimart",
+          endpoint: "/v1/videos/generations",
+          method: "POST",
+          modelKeys: ["sora-2-pro"],
+          requestSchema: null,
+          examplePayload: {
+            model: "sora-2-pro",
+          },
+          pricingRows: [],
+        },
+      ],
+    }),
+    "utf8",
+  );
+  process.env.AI_STUDIO_RUNTIME_CATALOG_PATH = runtimePath;
+
+  let requestUrl = "";
+
+  global.fetch = async (input) => {
+    requestUrl = String(input);
+
+    return new Response(
+      JSON.stringify({
+        code: 200,
+        data: [
+          {
+            task_id: "task_01K8SGYNNNVBQTXNR4MM964S7K",
+            status: "completed",
+            result: {
+              videos: [
+                {
+                  url: "https://cdn.apimart.ai/generated/video.mp4",
+                },
+              ],
+            },
+          },
+        ],
+      }),
+      {
+        status: 200,
+        headers: {
+          "content-type": "application/json",
+        },
+      },
+    ) as Response;
+  };
+
+  const result = await queryAiStudioTask(
+    "video:apimart-sora-2-pro",
+    "task_01K8SGYNNNVBQTXNR4MM964S7K",
+  );
+
+  assert.equal(
+    requestUrl,
+    "https://api.apimart.ai/v1/tasks/task_01K8SGYNNNVBQTXNR4MM964S7K?language=en",
+  );
+  assert.equal(result.state, "succeeded");
+  assert.deepEqual(result.mediaUrls, ["https://cdn.apimart.ai/generated/video.mp4"]);
+
+  global.fetch = originalFetch;
+  if (originalApimartKey === undefined) {
+    delete process.env.APIMART_API_KEY;
+  } else {
+    process.env.APIMART_API_KEY = originalApimartKey;
+  }
+  if (originalRuntimeCatalogPath === undefined) {
+    delete process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
+  } else {
+    process.env.AI_STUDIO_RUNTIME_CATALOG_PATH = originalRuntimeCatalogPath;
+  }
+  await rm(tempDir, { recursive: true, force: true });
 });
 
 test("estimates the best pricing row from the active payload", () => {

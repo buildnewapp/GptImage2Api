@@ -4,6 +4,7 @@ import YAML from "yaml";
 import bundledAiStudioRuntimeCatalog from "@/config/ai-studio/runtime/catalog.json";
 
 export type AiStudioCategory = "image" | "video" | "music" | "chat";
+export type AiStudioVendor = "kie" | "apimart";
 
 export interface AiStudioCatalogSeedEntry {
   id: string;
@@ -11,6 +12,7 @@ export interface AiStudioCatalogSeedEntry {
   title: string;
   docUrl: string;
   provider: string;
+  vendor?: AiStudioVendor;
   alias?: string | null;
 }
 
@@ -57,6 +59,7 @@ export interface AiStudioModelOverride {
   alias?: string | null;
   title?: string;
   provider?: string;
+  vendor?: AiStudioVendor;
   splitModels?: AiStudioSplitModelOverride[];
 }
 
@@ -65,6 +68,7 @@ export interface AiStudioSplitModelOverride {
   title: string;
   alias?: string | null;
   provider?: string;
+  vendor?: AiStudioVendor;
   schemaModel: string;
   pricingMatch: NonNullable<AiStudioPricingRowOverride["match"]>;
 }
@@ -105,14 +109,17 @@ type CompileRuntimeCatalogInput = {
   pricingOverrides: AiStudioPricingOverridesFile;
 };
 
-const LLMS_INDEX_URL = "https://docs.kie.ai/llms.txt";
+const KIE_LLMS_INDEX_URL = "https://docs.kie.ai/llms.txt";
+const APIMART_LLMS_INDEX_URL = "https://docs.apimart.ai/llms.txt";
 const OFFICIAL_PRICING_COUNT_URL =
   "https://api.kie.ai/client/v1/model-pricing/count";
 const OFFICIAL_PRICING_PAGE_URL =
   "https://api.kie.ai/client/v1/model-pricing/page";
 
-const DOC_LINE_PATTERN =
+const KIE_DOC_LINE_PATTERN =
   /^- (?:(Image|Video|Music|Chat)\s+Models?\s+>\s+.+?|4o Image API|Flux Kontext API|Runway API(?: > Aleph)?|Veo3\.1 API|Suno API(?: > .+?)?) \[(.+?)\]\((https:\/\/docs\.kie\.ai\/(?!cn\/)[^)]+\.md)\):/;
+const APIMART_DOC_LINE_PATTERN =
+  /^- \[(.+?)\]\((https:\/\/docs\.apimart\.ai\/en\/api-reference\/[^)]+\.md)\):/;
 
 const USER_AGENT =
   "Mozilla/5.0 (compatible; Nexty AiStudio Catalog Sync/1.0; +https://nexty.dev)";
@@ -152,6 +159,15 @@ function slugify(input: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+function buildCatalogSeedId(
+  category: AiStudioCategory,
+  title: string,
+  vendor: AiStudioVendor = "kie",
+) {
+  const slug = slugify(title);
+  return `${category}:${vendor === "apimart" ? `apimart-${slug}` : slug}`;
 }
 
 function normalizeLoose(input: string): string {
@@ -261,6 +277,18 @@ function inferCategory(source: string, docUrl: string): AiStudioCategory | null 
   return null;
 }
 
+function inferApimartCategory(docUrl: string): AiStudioCategory | null {
+  if (docUrl.includes("/en/api-reference/images/")) {
+    return "image";
+  }
+
+  if (docUrl.includes("/en/api-reference/videos/")) {
+    return "video";
+  }
+
+  return null;
+}
+
 function shouldIncludeCatalogEntry(title: string, docUrl: string): boolean {
   const blockedTitlePrefixes = [
     "Get ",
@@ -291,9 +319,37 @@ function shouldIncludeCatalogEntry(title: string, docUrl: string): boolean {
   );
 }
 
+function shouldIncludeApimartCatalogEntry(title: string, docUrl: string): boolean {
+  if (!docUrl.includes("/en/api-reference/")) {
+    return false;
+  }
+
+  if (
+    docUrl.includes("/tasks/") ||
+    docUrl.includes("/uploads/") ||
+    docUrl.includes("/account/") ||
+    docUrl.includes("/texts/") ||
+    docUrl.includes("/audios/") ||
+    docUrl.includes("/create-character") ||
+    docUrl.includes("/query-character")
+  ) {
+    return false;
+  }
+
+  return /image|video/i.test(title);
+}
+
 function toProvider(source: string, title: string): string {
   const first = source.split(">").at(-1)?.trim() || title.split(" - ")[0] || title;
   return first.replace(/\s+/g, " ").trim();
+}
+
+function toApimartProvider(title: string): string {
+  return title
+    .replace(/\s+(Image|Video)\s+Generation$/i, "")
+    .replace(/\s+Video\s+Remix$/i, "")
+    .replace(/\s+Image-to-Video$/i, "")
+    .trim();
 }
 
 function firstPath(openapiDoc: Record<string, any>) {
@@ -784,53 +840,291 @@ export function parseLlmsIndex(content: string): AiStudioCatalogSeedEntry[] {
 
   for (const rawLine of content.split("\n")) {
     const line = rawLine.trim();
-    const match = line.match(DOC_LINE_PATTERN);
-    if (!match) {
+    const kieMatch = line.match(KIE_DOC_LINE_PATTERN);
+    if (kieMatch) {
+      const source = line.slice(2, line.indexOf("[")).trim();
+      const title = kieMatch[2]?.trim();
+      const docUrl = kieMatch[3]?.trim();
+      if (!title || !docUrl || !shouldIncludeCatalogEntry(title, docUrl)) {
+        continue;
+      }
+
+      const category = inferCategory(source, docUrl);
+      if (!category) {
+        continue;
+      }
+
+      entries.push({
+        id: buildCatalogSeedId(category, title, "kie"),
+        category,
+        title,
+        docUrl,
+        provider: toProvider(source, title),
+        vendor: "kie",
+      });
       continue;
     }
 
-    const source = line.slice(2, line.indexOf("[")).trim();
-    const title = match[2]?.trim();
-    const docUrl = match[3]?.trim();
-    if (!title || !docUrl || !shouldIncludeCatalogEntry(title, docUrl)) {
+    const apimartMatch = line.match(APIMART_DOC_LINE_PATTERN);
+    if (!apimartMatch) {
       continue;
     }
 
-    const category = inferCategory(source, docUrl);
+    const title = apimartMatch[1]?.trim();
+    const docUrl = apimartMatch[2]?.trim();
+    if (!title || !docUrl || !shouldIncludeApimartCatalogEntry(title, docUrl)) {
+      continue;
+    }
+
+    const category = inferApimartCategory(docUrl);
     if (!category) {
       continue;
     }
 
     entries.push({
-      id: `${category}:${slugify(title)}`,
+      id: buildCatalogSeedId(category, title, "apimart"),
       category,
       title,
       docUrl,
-      provider: toProvider(source, title),
+      provider: toApimartProvider(title),
+      vendor: "apimart",
     });
   }
 
   return entries;
 }
 
-export function parseApiDocMarkdown(
-  entry: Pick<AiStudioCatalogSeedEntry, "category" | "title" | "docUrl">,
+function parseHtmlLikeBooleanAttribute(attrs: string, key: string) {
+  return new RegExp(`\\b${key}\\b`).test(attrs);
+}
+
+function parseHtmlLikeStringAttribute(attrs: string, key: string) {
+  const match = attrs.match(new RegExp(`${key}="([^"]+)"`));
+  return match?.[1] ?? null;
+}
+
+function stripMarkdownFormatting(input: string) {
+  return input
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function normalizeApimartSchemaType(type: string) {
+  const lower = type.toLowerCase();
+
+  if (lower.startsWith("array<url>")) {
+    return {
+      type: "array",
+      items: {
+        type: "string",
+        format: "uri",
+      },
+    };
+  }
+
+  if (lower.startsWith("array")) {
+    return {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    };
+  }
+
+  if (lower === "integer" || lower === "number" || lower === "boolean" || lower === "string") {
+    return { type: lower };
+  }
+
+  if (lower === "url") {
+    return {
+      type: "string",
+      format: "uri",
+    };
+  }
+
+  return { type: "string" };
+}
+
+function parseApimartDefaultValue(type: string, value: string | null) {
+  if (value === null) {
+    return undefined;
+  }
+
+  const lower = type.toLowerCase();
+  if (lower === "boolean") {
+    return value === "true";
+  }
+
+  if (lower === "integer") {
+    const parsed = Number.parseInt(value, 10);
+    return Number.isFinite(parsed) ? parsed : value;
+  }
+
+  if (lower === "number") {
+    const parsed = Number.parseFloat(value);
+    return Number.isFinite(parsed) ? parsed : value;
+  }
+
+  return value;
+}
+
+function extractSupportedModelValues(content: string) {
+  return [...content.matchAll(/(?:^|\n)\s*[*-]\s+`([^`]+)`/g)]
+    .map((match) => match[1]?.trim() ?? "")
+    .filter((value, index, values) => value.length > 0 && values.indexOf(value) === index);
+}
+
+function extractApimartRequestBlock(markdown: string) {
+  return markdown.match(
+    /```bash[\s\S]*?curl --request\s+([A-Z]+)\s*\\?\s*[\s\S]*?--url\s+(https:\/\/api\.apimart\.ai[^\s\\]+)(?:\s*\\?\s*[\s\S]*?--data\s+'([\s\S]*?)')?[\s\S]*?```/i,
+  );
+}
+
+function extractApimartExamplePayload(markdown: string) {
+  const requestBlock = extractApimartRequestBlock(markdown);
+  const payload = requestBlock?.[3];
+
+  if (!payload) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(payload) as Record<string, any>;
+  } catch {
+    return {};
+  }
+}
+
+function buildApimartRequestSchema(markdown: string, examplePayload: Record<string, any>) {
+  const properties: Record<string, any> = {};
+  const required: string[] = [];
+  let modelKeys: string[] = [];
+
+  for (const match of markdown.matchAll(/<ParamField\s+([^>]*\bbody="[^"]+"[^>]*)>([\s\S]*?)<\/ParamField>/g)) {
+    const attrs = match[1] ?? "";
+    const content = match[2] ?? "";
+    const name = parseHtmlLikeStringAttribute(attrs, "body");
+    const type = parseHtmlLikeStringAttribute(attrs, "type");
+
+    if (!name || !type) {
+      continue;
+    }
+
+    const schema: Record<string, any> = normalizeApimartSchemaType(type);
+    const defaultValue = parseApimartDefaultValue(type, parseHtmlLikeStringAttribute(attrs, "default"));
+    const description = stripMarkdownFormatting(content.split("\n").find((line) => line.trim()) ?? "");
+
+    if (defaultValue !== undefined) {
+      schema.default = defaultValue;
+    }
+    if (description) {
+      schema.description = description;
+    }
+
+    if (parseHtmlLikeBooleanAttribute(attrs, "required")) {
+      required.push(name);
+    }
+
+    if (name === "model") {
+      const supportedModels = extractSupportedModelValues(content);
+      if (supportedModels.length > 0) {
+        schema.enum = supportedModels;
+        modelKeys = supportedModels;
+      } else if (typeof defaultValue === "string") {
+        modelKeys = [defaultValue];
+      } else if (typeof examplePayload.model === "string") {
+        modelKeys = [examplePayload.model];
+      }
+    }
+
+    properties[name] = schema;
+  }
+
+  if (modelKeys.length === 0 && typeof examplePayload.model === "string") {
+    modelKeys = [examplePayload.model];
+  }
+
+  return {
+    modelKeys,
+    requestSchema: {
+      type: "object",
+      ...(required.length > 0 ? { required } : {}),
+      properties,
+    } as Record<string, any>,
+  };
+}
+
+function parseApimartApiDocMarkdown(
+  entry: Pick<
+    AiStudioCatalogSeedEntry,
+    "category" | "title" | "docUrl"
+  > & {
+    id?: string;
+    provider?: string;
+    vendor?: AiStudioVendor;
+  },
   markdown: string,
 ): AiStudioDocDetail {
+  const requestBlock = extractApimartRequestBlock(markdown);
+  if (!requestBlock?.[1] || !requestBlock[2]) {
+    throw new Error("Unable to locate APIMart request example");
+  }
+
+  const method = requestBlock[1].toUpperCase();
+  const endpointUrl = new URL(requestBlock[2]);
+  const examplePayload = extractApimartExamplePayload(markdown);
+  const { modelKeys, requestSchema } = buildApimartRequestSchema(markdown, examplePayload);
+
+  return {
+    id: entry.id ?? buildCatalogSeedId(entry.category, entry.title, "apimart"),
+    category: entry.category,
+    title: entry.title,
+    docUrl: entry.docUrl,
+    provider: entry.provider ?? toApimartProvider(entry.title),
+    vendor: "apimart",
+    endpoint: `${endpointUrl.pathname}${endpointUrl.search}`,
+    method,
+    modelKeys,
+    requestSchema,
+    examplePayload,
+    pricingRows: [],
+  };
+}
+
+export function parseApiDocMarkdown(
+  entry: Pick<
+    AiStudioCatalogSeedEntry,
+    "category" | "title" | "docUrl"
+  > & {
+    id?: string;
+    provider?: string;
+    vendor?: AiStudioVendor;
+  },
+  markdown: string,
+): AiStudioDocDetail {
+  if (entry.vendor === "apimart" || entry.docUrl.includes("docs.apimart.ai")) {
+    return parseApimartApiDocMarkdown(entry, markdown);
+  }
+
   const openapiDoc = YAML.parse(extractYamlCodeBlock(markdown)) as Record<string, any>;
   const { endpoint, method, methodDef } = firstPath(openapiDoc);
   const schema = extractRequestSchema(methodDef);
   const examplePayload = extractRequestExample(methodDef);
   const modelKeys = extractModelKeysFromSchema(schema, endpoint);
 
-  const providerFromTitle = entry.title.split(" - ")[0] || entry.title;
+  const providerFromTitle =
+    entry.provider || entry.title.split(" - ")[0] || entry.title;
 
   return {
-    id: `${entry.category}:${slugify(entry.title)}`,
+    id: entry.id ?? buildCatalogSeedId(entry.category, entry.title, "kie"),
     category: entry.category,
     title: entry.title,
     docUrl: entry.docUrl,
     provider: providerFromTitle,
+    vendor: entry.vendor ?? "kie",
     endpoint,
     method,
     modelKeys,
@@ -922,8 +1216,15 @@ export async function fetchOfficialPricingRows(): Promise<AiStudioPricingRow[]> 
 }
 
 export async function fetchAiStudioCatalogSeeds() {
-  const indexContent = await fetchText(LLMS_INDEX_URL);
-  return parseLlmsIndex(indexContent);
+  const [kieIndexContent, apimartIndexContent] = await Promise.all([
+    fetchText(KIE_LLMS_INDEX_URL),
+    fetchText(APIMART_LLMS_INDEX_URL),
+  ]);
+
+  return [
+    ...parseLlmsIndex(kieIndexContent),
+    ...parseLlmsIndex(apimartIndexContent),
+  ];
 }
 
 export async function getAiStudioCatalog(): Promise<AiStudioCatalogEntry[]> {
@@ -932,10 +1233,17 @@ export async function getAiStudioCatalog(): Promise<AiStudioCatalogEntry[]> {
     fetchOfficialPricingRows(),
   ]);
 
-  return seeds.map((seed) => ({
-    ...seed,
-    pricingRows: matchPricingRowsToEntry(seed, pricingRows),
-  }));
+  return seeds.map((seed) => {
+    const seedVendor = seed.vendor ?? "kie";
+
+    return {
+      ...seed,
+      pricingRows:
+        seedVendor === "kie"
+          ? matchPricingRowsToEntry(seed, pricingRows)
+          : [],
+    };
+  });
 }
 
 export async function getAiStudioCatalogDetail(
@@ -1116,6 +1424,9 @@ function applyModelOverrideToDetail(
   if (override.provider) {
     detail.provider = override.provider;
   }
+  if (override.vendor) {
+    detail.vendor = override.vendor;
+  }
 
   return detail;
 }
@@ -1130,6 +1441,7 @@ function buildSplitModelDetails(
     detail.title = splitModel.title;
     detail.alias = splitModel.alias ?? null;
     detail.provider = splitModel.provider ?? detail.provider;
+    detail.vendor = splitModel.vendor ?? detail.vendor;
     detail.pricingRows = selectMatchingPricingRows(detail, splitModel.pricingMatch);
 
     if (detail.pricingRows.length === 0) {
@@ -1358,6 +1670,7 @@ export function toAiStudioCatalogEntries(file: AiStudioCompiledCatalogFile) {
     alias: item.alias,
     docUrl: item.docUrl,
     provider: item.provider,
+    vendor: item.vendor,
     pricingRows: item.pricingRows.map(clonePricingRow),
   }));
 }

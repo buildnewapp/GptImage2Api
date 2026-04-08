@@ -19,6 +19,17 @@ const llmsSample = `
 - [Get Task Details](https://docs.kie.ai/market/common/get-task-detail.md): Query the status and results
 `;
 
+const apimartLlmsSample = `
+# APIMart
+
+## Docs
+
+- [GPT-4o-image Image Generation](https://docs.apimart.ai/en/api-reference/images/gpt-4o/generation.md): - Asynchronous processing mode, returns task ID for subsequent queries
+- [Sora2 Video Generation](https://docs.apimart.ai/en/api-reference/videos/sora-2/generation.md): - Asynchronous processing mode, returns task ID for subsequent queries
+- [Get Task Status](https://docs.apimart.ai/en/api-reference/tasks/status.md): - Query the execution status and result of an asynchronous task
+- [Upload Image](https://docs.apimart.ai/en/api-reference/uploads/images.md): Upload an image to get a URL for use with image/video generation APIs
+`;
+
 const imageDocSample = `
 # Google - Nano Banana 2
 
@@ -93,6 +104,104 @@ paths:
 \`\`\`
 `;
 
+const apimartImageDocSample = `
+# GPT-4o-image Image Generation
+
+>  - Asynchronous processing mode, returns task ID for subsequent queries
+
+<RequestExample>
+  \`\`\`bash cURL theme={null}
+  curl --request POST \\
+    --url https://api.apimart.ai/v1/images/generations \\
+    --header 'Authorization: Bearer <token>' \\
+    --header 'Content-Type: application/json' \\
+    --data '{
+      "model": "gpt-4o-image",
+      "prompt": "An ancient castle under the starry sky",
+      "size": "1:1",
+      "n": 1,
+      "image_urls": ["https://example.com/image.png"]
+    }'
+  \`\`\`
+</RequestExample>
+
+## Authorizations
+
+<ParamField header="Authorization" type="string" required>
+  All API endpoints require Bearer Token authentication
+</ParamField>
+
+## Body
+
+<ParamField body="model" type="string" default="gpt-4o-image" required>
+  Image generation model name
+
+  Example: \`"gpt-4o-image"\`
+</ParamField>
+
+<ParamField body="prompt" type="string" required>
+  Text description for image generation
+</ParamField>
+
+<ParamField body="size" type="string">
+  Image generation size
+</ParamField>
+
+<ParamField body="n" type="integer">
+  Number of images to generate
+</ParamField>
+
+<ParamField body="image_urls" type="array">
+  Reference image URL list for image-to-image or image editing
+</ParamField>
+`;
+
+const apimartVideoDocSample = `
+# Kling 2.6 Video Generation
+
+> - Async processing mode, returns task ID for subsequent queries
+
+<RequestExample>
+  \`\`\`bash cURL theme={null}
+  curl --request POST \\
+    --url https://api.apimart.ai/v1/videos/generations \\
+    --header 'Authorization: Bearer <token>' \\
+    --header 'Content-Type: application/json' \\
+    --data '{
+      "model": "kling-v2-6",
+      "prompt": "Waves crashing against rocks",
+      "mode": "pro",
+      "duration": 10,
+      "audio": true,
+      "aspect_ratio": "16:9"
+    }'
+  \`\`\`
+</RequestExample>
+
+## Request Parameters
+
+<ParamField body="model" type="string" required>
+  Video generation model name
+
+  Supported models:
+
+  * \`kling-v2-6\`
+  * \`kling-v2-6-master\`
+</ParamField>
+
+<ParamField body="prompt" type="string" required>
+  Text prompt
+</ParamField>
+
+<ParamField body="mode" type="string" default="std">
+  Mode
+</ParamField>
+
+<ParamField body="duration" type="integer" default="5">
+  Duration
+</ParamField>
+`;
+
 test("parses the official llms index into supported catalog entries", () => {
   const entries = parseLlmsIndex(llmsSample);
 
@@ -105,6 +214,31 @@ test("parses the official llms index into supported catalog entries", () => {
   assert.equal(entries[1]?.docUrl, "https://docs.kie.ai/market/grok-imagine/image-to-video.md");
   assert.equal(entries[2]?.id, "video:bytedance-v1-pro-text-to-video");
   assert.equal(entries[4]?.id, "video:generate-veo3-1-video");
+});
+
+test("parses the APIMart llms index into vendor-aware image and video entries", () => {
+  const entries = parseLlmsIndex(apimartLlmsSample);
+
+  assert.equal(entries.length, 2);
+  assert.deepEqual(
+    entries.map((entry) => ({
+      id: entry.id,
+      category: entry.category,
+      vendor: entry.vendor,
+    })),
+    [
+      {
+        id: "image:apimart-gpt-4o-image-image-generation",
+        category: "image",
+        vendor: "apimart",
+      },
+      {
+        id: "video:apimart-sora2-video-generation",
+        category: "video",
+        vendor: "apimart",
+      },
+    ],
+  );
 });
 
 test("parses endpoint, method, model keys, and example payload from an image doc", () => {
@@ -131,6 +265,51 @@ test("parses enum-backed model options from a music doc", () => {
   assert.equal(detail.endpoint, "/api/v1/generate");
   assert.deepEqual(detail.modelKeys, ["V4", "V4_5", "V5"]);
   assert.equal(detail.examplePayload.model, "V5");
+});
+
+test("parses endpoint, schema, and example payload from an APIMart image doc", () => {
+  const detail = parseApiDocMarkdown(
+    {
+      category: "image",
+      title: "GPT-4o-image Image Generation",
+      docUrl: "https://docs.apimart.ai/en/api-reference/images/gpt-4o/generation.md",
+      provider: "GPT-4o-image",
+      vendor: "apimart",
+    },
+    apimartImageDocSample,
+  );
+
+  assert.equal(detail.vendor, "apimart");
+  assert.equal(detail.endpoint, "/v1/images/generations");
+  assert.equal(detail.method, "POST");
+  assert.deepEqual(detail.modelKeys, ["gpt-4o-image"]);
+  assert.equal(detail.requestSchema?.properties?.model?.default, "gpt-4o-image");
+  assert.equal(detail.requestSchema?.properties?.n?.type, "integer");
+  assert.deepEqual(detail.requestSchema?.required, ["model", "prompt"]);
+  assert.equal(detail.examplePayload.model, "gpt-4o-image");
+  assert.equal(detail.examplePayload.size, "1:1");
+});
+
+test("parses supported model enums from an APIMart request-parameters doc", () => {
+  const detail = parseApiDocMarkdown(
+    {
+      category: "video",
+      title: "Kling 2.6 Video Generation",
+      docUrl: "https://docs.apimart.ai/en/api-reference/videos/kling-v2-6/generation.md",
+      provider: "Kling 2.6",
+      vendor: "apimart",
+    },
+    apimartVideoDocSample,
+  );
+
+  assert.equal(detail.endpoint, "/v1/videos/generations");
+  assert.deepEqual(detail.modelKeys, ["kling-v2-6", "kling-v2-6-master"]);
+  assert.deepEqual(detail.requestSchema?.properties?.model?.enum, [
+    "kling-v2-6",
+    "kling-v2-6-master",
+  ]);
+  assert.equal(detail.requestSchema?.properties?.mode?.default, "std");
+  assert.equal(detail.examplePayload.duration, 10);
 });
 
 test("matches official pricing rows onto a catalog entry using model aliases", () => {

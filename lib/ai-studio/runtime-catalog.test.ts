@@ -80,6 +80,7 @@ test("compiles runtime catalog with model and pricing overrides", () => {
         "video:sora2-text-to-video": {
           alias: "Sora 2",
           provider: "OpenAI",
+          vendor: "apimart",
         },
       },
     },
@@ -101,6 +102,7 @@ test("compiles runtime catalog with model and pricing overrides", () => {
 
   assert.equal(compiled.items[0]?.alias, "Sora 2");
   assert.equal(compiled.items[0]?.provider, "OpenAI");
+  assert.equal(compiled.items[0]?.vendor, "apimart");
   assert.equal(compiled.items[0]?.pricingRows[0]?.creditPrice, "42");
 });
 
@@ -338,6 +340,53 @@ test("splits one upstream model into separate runtime variants", () => {
   );
   assert.equal(stable?.pricingRows.length, 1);
   assert.match(stable?.pricingRows[0]?.modelDescription ?? "", /stable/i);
+});
+
+test("allows split models to override vendor independently from display provider", () => {
+  const compiled = compileAiStudioRuntimeCatalog({
+    upstream: {
+      version: 1,
+      generatedAt: "2026-03-08T00:00:00.000Z",
+      items: [createDetail()],
+    },
+    modelOverrides: {
+      models: {
+        "video:sora2-text-to-video": {
+          splitModels: [
+            {
+              id: "video:sora2-text-to-video-standard",
+              title: "Sora2 - Text to Video",
+              schemaModel: "sora-2-text-to-video",
+              pricingMatch: {
+                runtimeModel: "sora-2-text-to-video",
+              },
+            },
+            {
+              id: "video:sora2-text-to-video-apimart",
+              title: "Sora2 Pro - Text to Video",
+              provider: "Sora2",
+              vendor: "apimart",
+              schemaModel: "sora-2-pro",
+              pricingMatch: {
+                runtimeModel: "sora-2-text-to-video",
+              },
+            },
+          ],
+        },
+      },
+    },
+    pricingOverrides: {
+      models: {},
+    },
+  });
+
+  const apimartVariant = compiled.items.find(
+    (item) => item.id === "video:sora2-text-to-video-apimart",
+  );
+
+  assert.equal(apimartVariant?.provider, "Sora2");
+  assert.equal(apimartVariant?.vendor, "apimart");
+  assert.deepEqual(apimartVariant?.modelKeys, ["sora-2-pro"]);
 });
 
 test("validates pricing overrides against the correct split model entry", () => {
