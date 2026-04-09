@@ -5,7 +5,7 @@ import SeedanceHome from "@/components/home/SeedanceHome";
 
 export default function Home() {
   // return <Seedance15Home />;
-  // return <SeedanceHome />;
-  return <HomeTemplate1 />;
+  return <SeedanceHome />;
+  // return <HomeTemplate1 />;
   // return <HomeComponent />;
 }

@@ -5,6 +5,8 @@
   This file contains all theme-related CSS variables.
   You can replace the entire content below with output from tweakcn.com
 */
+@custom-variant dark (&:is(.dark *));
+
 :root {
     --background: oklch(0.9842 0.0034 247.8575);
     --foreground: oklch(0.2795 0.0368 260.0310);
