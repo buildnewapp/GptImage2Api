@@ -120,6 +120,7 @@
     "@vercel/analytics": "^1.4.1",
     "accept-language-parser": "^1.5.0",
     "ai": "^6.0.89",
+    "aos": "3.0.0-beta.6",
     "axios": "^1.7.9",
     "better-auth": "^1.4.18",
     "bowser": "^2.13.1",

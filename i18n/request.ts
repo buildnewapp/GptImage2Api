@@ -21,6 +21,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       Prompts: (await import(`./messages/${locale}/Prompts.json`)).default,
       SeoContent: (await import(`./messages/${locale}/SeoContent.json`)).default,
       HomeTemplate1: (await import(`./messages/${locale}/HomeTemplate1.json`)).default,
+      HomeTemplate2: (await import(`./messages/${locale}/HomeTemplate2.json`)).default,
 
       // Dashboard - User
       Settings: (

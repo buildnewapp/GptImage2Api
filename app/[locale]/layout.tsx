@@ -33,11 +33,32 @@ import {
 import { ThemeProvider } from "next-themes";
 import { Inter as FontSans } from "next/font/google";
 import { notFound } from "next/navigation";
+import {Instrument_Serif, Inter, Space_Grotesk} from 'next/font/google'
+import SiteInit from "@/components/header/SiteInit";
 
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
 });
+
+ const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-sans',
+})
+
+ const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-space-grotesk',
+})
+
+ const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  display: 'swap',
+  variable: '--font-instrument-serif',
+})
 
 type MetadataProps = {
   params: Promise<{ locale: string }>;
@@ -88,7 +109,9 @@ export default async function LocaleLayout({
       <body
         className={cn(
           "min-h-screen bg-background flex flex-col",
-          fontSans.variable
+          inter.variable,
+          spaceGrotesk.variable,
+          instrumentSerif.variable
         )}
       >
         <NextIntlClientProvider messages={messages}>
@@ -100,6 +123,7 @@ export default async function LocaleLayout({
             <PostHogProvider>
               <ReferralCapture />
               <ReferralAutoAccept />
+              <SiteInit/>
               {messages.LanguageDetection && <LanguageDetectionAlert />}
 
               {children}
