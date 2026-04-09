@@ -96,11 +96,13 @@
     "items": [
       {
         "title": "Enhanced Basic Capabilities",
-        "description": "More stable, smoother, and realistic. Better physical laws, natural movement, precise instruction following, and stable style retention."
+        "description": "More stable, smoother, and realistic. Better physical laws, natural movement, precise instruction following, and stable style retention.",
+        "images": ["https://cdn.sdanceai.com/sdanceai/poster/44-poster.webp","https://cdn.sdanceai.com/sdanceai/poster/43-poster.webp","https://cdn.sdanceai.com/sdanceai/poster/46-poster.webp"]
       },
       {
         "title": "Multi-Modal & Free Combination",
-        "description": "Supports text, image, video, and audio inputs. Combine reference objects freely (up to 9 images, 3 videos, 3 audio files)."
+        "description": "Supports text, image, video, and audio inputs. Combine reference objects freely (up to 9 images, 3 videos, 3 audio files).",
+        "images": ["https://cdn.sdanceai.com/sdanceai/poster/1-poster.webp"]
       },
       {
         "title": "Superior Consistency",

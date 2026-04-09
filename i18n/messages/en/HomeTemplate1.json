@@ -9,7 +9,7 @@
       "url": "/#feature"
     },
     "tip": "⚡ 10–30s renders · Free trial · No credit card",
-    "notice": "✨ NanoBananaPro is an independent product and is not affiliated with Google or other AI model providers. We provide access to AI models through our custom interface.",
+    "notice": "",
     "buttons": [
       {
         "title": "Generate for Free",
@@ -76,7 +76,7 @@
     "label": "About",
     "description": "Nano Banana Pro is a Gemini 3 Pro-based visual model that blends text generation, image editing, and multimodal understanding. Create ecommerce hero shots, marketing posters, or storyboards directly in the browser with fast, detailed iteration.",
     "image": {
-      "src": "/placeholder.svg"
+      "src": "https://nanobananapro.cloud/imgs/features/8.webp"
     },
     "items": [
       {
@@ -107,7 +107,7 @@
         "description": "Long paragraphs, tables, and multilingual copy stay readable—ideal for posters, packaging, and infographics.",
         "icon": "RiFileTextLine",
         "image": {
-          "src": "/placeholder.svg"
+          "src": "https://nanobananapro.cloud/imgs/features/5.webp"
         }
       },
       {
@@ -115,7 +115,7 @@
         "description": "Understands prompts and references, preserving lighting, perspective, and materials when you tweak scenes.",
         "icon": "RiMagicLine",
         "image": {
-          "src": "/placeholder.svg"
+          "src": "https://nanobananapro.cloud/imgs/features/6.webp"
         }
       },
       {
@@ -123,7 +123,7 @@
         "description": "10–30s generations and edits, with support for consistent characters, storyboards, and batch workflows.",
         "icon": "RiFlashlightFill",
         "image": {
-          "src": "/placeholder.svg"
+          "src": "https://nanobananapro.cloud/imgs/features/7.webp"
         }
       }
     ]
@@ -133,7 +133,7 @@
     "title": "How Nano Banana Pro works",
     "description": "Move from idea to delivery in minutes with mixed text/image inputs and iterative editing:",
     "image": {
-      "src": "/placeholder.svg"
+      "src": "https://nanobananapro.cloud/imgs/features/11.webp"
     },
     "image_position": "left",
     "text_align": "center",
@@ -142,28 +142,28 @@
         "title": "Set prompts & references",
         "description": "Add your brief and up to 14 reference images, define style, language, and framing.",
         "image": {
-          "src": "/placeholder.svg"
+          "src": "https://nanobananapro.cloud/imgs/features/11.webp"
         }
       },
       {
         "title": "Generate in one click",
         "description": "Pick resolution and ratio; get the first pass in 10–30s with stable subjects and structure.",
         "image": {
-          "src": "/placeholder.svg"
+          "src": "https://nanobananapro.cloud/imgs/features/12.webp"
         }
       },
       {
         "title": "Semantic refine",
         "description": "Swap elements, extend canvas, or remove marks via text or local selection while keeping lighting aligned.",
         "image": {
-          "src": "/placeholder.svg"
+          "src": "https://nanobananapro.cloud/imgs/features/13.webp"
         }
       },
       {
         "title": "Export & reuse",
         "description": "Download 1K/2K/4K outputs, or reuse characters and styles for the next series.",
         "image": {
-          "src": "/placeholder.svg"
+          "src": "https://nanobananapro.cloud/imgs/features/14.webp"
         }
       }
     ]

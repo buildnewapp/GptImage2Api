@@ -84,7 +84,7 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
                   alt={feature.title}
                   width={1280}
                   height={630}
-                  className="rounded-lg"
+                  className="rounded-lg aspect-video"
                 />
               </ImagePreview>
             )}
