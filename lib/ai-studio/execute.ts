@@ -2,9 +2,9 @@ import {
   type AiStudioCatalogEntry,
   type AiStudioDocDetail,
   type AiStudioPricingRow,
-  type AiStudioVendor,
   extractPricingAnchorModel,
   findAiStudioCatalogEntryById,
+  getAiStudioPublicModelId,
   getCachedAiStudioCatalog,
   getCachedAiStudioCatalogDetail,
 } from "@/lib/ai-studio/catalog";
@@ -18,35 +18,12 @@ export type AiStudioNormalizedState =
   | "failed"
   | "unknown";
 
-export function resolveAiStudioVendor(
-  detail: Pick<AiStudioDocDetail, "vendor"> | Pick<AiStudioCatalogEntry, "vendor">,
-): AiStudioVendor {
-  return detail.vendor ?? "kie";
-}
-
-export function getAiStudioApiKey(vendor: AiStudioVendor = "kie") {
-  const apiKey =
-    vendor === "apimart"
-      ? process.env.APIMART_API_KEY
-      : process.env.KIE_API_KEY;
-
+export function getAiStudioApiKey() {
+  const apiKey = process.env.KIE_API_KEY;
   if (!apiKey) {
-    throw new Error(
-      vendor === "apimart"
-        ? "APIMART_API_KEY is not configured"
-        : "KIE_API_KEY is not configured",
-    );
+    throw new Error("KIE_API_KEY is not configured");
   }
-
   return apiKey;
-}
-
-function getAiStudioApiBaseUrl(vendor: AiStudioVendor) {
-  return vendor === "apimart" ? "https://api.apimart.ai" : "https://api.kie.ai";
-}
-
-function vendorSupportsCallback(vendor: AiStudioVendor) {
-  return vendor === "kie";
 }
 
 export function getAiStudioCallbackUrl() {
@@ -73,10 +50,6 @@ export function getAiStudioCallbackUrl() {
 }
 
 export function resolveStatusEndpoint(detail: AiStudioDocDetail) {
-  if (resolveAiStudioVendor(detail) === "apimart") {
-    return "/v1/tasks/:taskId";
-  }
-
   const docUrl = detail.docUrl;
 
   if (detail.endpoint === "/api/v1/jobs/createTask" && docUrl.includes("/market/")) {
@@ -120,7 +93,7 @@ export function extractTaskId(raw: unknown): string | null {
   }
 
   const record = raw as Record<string, unknown>;
-  for (const key of ["taskId", "task_id", "recordId", "record_id", "id"]) {
+  for (const key of ["taskId", "recordId", "id"]) {
     if (typeof record[key] === "string" && record[key]) {
       return record[key] as string;
     }
@@ -200,96 +173,6 @@ function getNestedValue(record: Record<string, unknown>, path: string[]) {
     current = (current as Record<string, unknown>)[segment];
   }
   return current;
-}
-
-function normalizeApimartAspectRatio(value: unknown) {
-  if (typeof value !== "string") {
-    return value;
-  }
-
-  if (value === "landscape") {
-    return "16:9";
-  }
-
-  if (value === "portrait") {
-    return "9:16";
-  }
-
-  return value;
-}
-
-function parseApimartDuration(value: unknown) {
-  if (typeof value === "number" && Number.isFinite(value) && value > 0) {
-    return Math.round(value);
-  }
-
-  if (typeof value === "string" && value.trim()) {
-    const parsed = Number.parseInt(value, 10);
-    if (Number.isFinite(parsed) && parsed > 0) {
-      return parsed;
-    }
-  }
-
-  return undefined;
-}
-
-function buildApimartExecutionBody(
-  detail: AiStudioDocDetail,
-  body: Record<string, any>,
-) {
-  const input =
-    body.input && typeof body.input === "object"
-      ? (body.input as Record<string, any>)
-      : {};
-  const next: Record<string, any> = {
-    model: body.model ?? detail.modelKeys[0],
-    ...input,
-  };
-
-  for (const [key, value] of Object.entries(body)) {
-    if (key === "input" || key === "callBackUrl" || key === "progressCallBackUrl") {
-      continue;
-    }
-
-    next[key] = value;
-  }
-
-  next.aspect_ratio = normalizeApimartAspectRatio(next.aspect_ratio);
-
-  const duration = parseApimartDuration(next.duration ?? next.n_frames);
-  if (duration !== undefined) {
-    next.duration = duration;
-  }
-  delete next.n_frames;
-
-  if (typeof next.remove_watermark === "boolean" && next.watermark === undefined) {
-    next.watermark = !next.remove_watermark;
-  }
-  delete next.remove_watermark;
-
-  if (next.image_url && !next.image_urls) {
-    next.image_urls = [next.image_url];
-  }
-  delete next.image_url;
-  delete next.end_image_url;
-  delete next.size;
-
-  return next;
-}
-
-function resolveApimartSubmitEndpoint(detail: AiStudioDocDetail) {
-  if (detail.endpoint.startsWith("/v1/")) {
-    return detail.endpoint;
-  }
-
-  switch (detail.category) {
-    case "video":
-      return "/v1/videos/generations";
-    case "image":
-      return "/v1/images/generations";
-    default:
-      throw new Error(`APIMart submission is not configured for ${detail.category} models`);
-  }
 }
 
 export function extractProviderFailureReason(raw: unknown): string | null {
@@ -462,12 +345,7 @@ export async function prepareAiStudioExecution(
 
   const body = mapPublicModelAliasToProviderModel(detail, payload);
   const callbackUrl = getAiStudioCallbackUrl();
-  if (
-    callbackUrl &&
-    !body.callBackUrl &&
-    detail.category !== "chat" &&
-    vendorSupportsCallback(resolveAiStudioVendor(detail))
-  ) {
+  if (callbackUrl && !body.callBackUrl && detail.category !== "chat") {
     body.callBackUrl = callbackUrl;
   }
 
@@ -482,23 +360,14 @@ export async function submitAiStudioExecution(
   detail: AiStudioDocDetail,
   body: Record<string, any>,
 ) {
-  const vendor = resolveAiStudioVendor(detail);
-  const requestBody =
-    vendor === "apimart" ? buildApimartExecutionBody(detail, body) : body;
-  const requestMethod = vendor === "apimart" ? "POST" : detail.method;
-  const response = await fetch(
-    `${getAiStudioApiBaseUrl(vendor)}${
-      vendor === "apimart" ? resolveApimartSubmitEndpoint(detail) : detail.endpoint
-    }`,
-    {
-      method: requestMethod,
-      headers: {
-        Authorization: `Bearer ${getAiStudioApiKey(vendor)}`,
-        "Content-Type": "application/json",
-      },
-      body: requestMethod === "GET" ? undefined : JSON.stringify(requestBody),
+  const response = await fetch(`https://api.kie.ai${detail.endpoint}`, {
+    method: detail.method,
+    headers: {
+      Authorization: `Bearer ${getAiStudioApiKey()}`,
+      "Content-Type": "application/json",
     },
-  );
+    body: detail.method === "GET" ? undefined : JSON.stringify(body),
+  });
 
   const contentType = response.headers.get("content-type") ?? "";
   const raw = contentType.includes("application/json")
@@ -553,17 +422,14 @@ export async function queryAiStudioTask(modelId: string, taskId: string) {
     throw new Error("This model does not expose a task status endpoint");
   }
 
-  const vendor = resolveAiStudioVendor(detail);
-  const url =
-    vendor === "apimart"
-      ? `${getAiStudioApiBaseUrl(vendor)}/v1/tasks/${encodeURIComponent(taskId)}?language=en`
-      : `${getAiStudioApiBaseUrl(vendor)}${statusEndpoint}?taskId=${encodeURIComponent(taskId)}`;
-
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${getAiStudioApiKey(vendor)}`,
+  const response = await fetch(
+    `https://api.kie.ai${statusEndpoint}?taskId=${encodeURIComponent(taskId)}`,
+    {
+      headers: {
+        Authorization: `Bearer ${getAiStudioApiKey()}`,
+      },
     },
-  });
+  );
 
   const contentType = response.headers.get("content-type") ?? "";
   const raw = contentType.includes("application/json")
