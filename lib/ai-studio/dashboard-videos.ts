@@ -215,9 +215,7 @@ export function mapAiStudioUserRecordToLegacyVideoHistoryRecord(
     catalogModelId: record.catalogModelId,
     model,
     modelLabel: record.title,
-    mode:
-      resolvedSelection?.mode ??
-      (uploadedImage ? "image-to-video" : "text-to-video"),
+    mode: uploadedImage ? "image-to-video" : "text-to-video",
     providerValues,
     status: mapAiStudioStatusToLegacyVideoStatus(record.status),
     creditsUsed: record.capturedCredits > 0 ? record.capturedCredits : record.reservedCredits,

@@ -1,4 +1,3 @@
-export type AiVideoStudioMode = "text-to-video" | "image-to-video";
 export type AiVideoStudioFamilyKey = string;
 export type AiVideoStudioVersionKey = string;
 
@@ -19,7 +18,7 @@ export type AiVideoStudioVersion = {
   key: AiVideoStudioVersionKey;
   label: string;
   familyKey: AiVideoStudioFamilyKey;
-  modelIds: Partial<Record<AiVideoStudioMode, string>>;
+  modelId: string;
 };
 
 export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
@@ -35,9 +34,10 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
   {
     key: "seedance-2.0",
     label: "Seedance 2.0",
-    description: "Open only to invited personnel; if needed, please apply by email",
-    tags: [{ text: "Targeted opening", type: "coming-soon" }],
-    selectable: false,
+    description:
+      "APIMart-hosted Seedance 2.0 for prompt-first and reference-driven video generation",
+    tags: [{ text: "APIMart", type: "provider" }],
+    selectable: true,
   },
   {
     key: "seedance-1.0",
@@ -63,90 +63,65 @@ const AI_VIDEO_STUDIO_VERSIONS: AiVideoStudioVersion[] = [
     key: "seedance-1.5",
     label: "Seedance 1.5",
     familyKey: "seedance-1.5",
-    modelIds: {
-      "text-to-video": "video:bytedance-v1-pro-text-to-video",
-      "image-to-video": "video:bytedance-v1-pro-image-to-video",
-    },
+    modelId: "video:bytedance-v1-pro-text-to-video",
   },
   {
     key: "seedance-1.5-fast",
     label: "Seedance 1.5 Fast",
     familyKey: "seedance-1.5",
-    modelIds: {
-      "image-to-video": "video:bytedance-v1-pro-fast-image-to-video",
-    },
+    modelId: "video:bytedance-v1-pro-fast-image-to-video",
   },
   {
     key: "seedance-2.0",
     label: "Seedance 2.0",
     familyKey: "seedance-2.0",
-    modelIds: {},
+    modelId: "video:apimart-seedance-2-0",
   },
   {
     key: "seedance-1.0",
     label: "Seedance 1.0",
     familyKey: "seedance-1.0",
-    modelIds: {
-      "text-to-video": "video:bytedance-v1-lite-text-to-video",
-      "image-to-video": "video:bytedance-v1-lite-image-to-video",
-    },
+    modelId: "video:bytedance-v1-lite-text-to-video",
   },
   {
     key: "sora-2",
     label: "Sora 2",
     familyKey: "sora2",
-    modelIds: {
-      "text-to-video": "video:sora2-text-to-video-standard",
-      "image-to-video": "video:sora2-image-to-video-standard",
-    },
+    modelId: "video:sora2-text-to-video-standard",
   },
   {
     key: "sora-2-pro",
     label: "Sora 2 Pro",
     familyKey: "sora2",
-    modelIds: {
-      "text-to-video": "video:sora2-pro-text-to-video",
-      "image-to-video": "video:sora2-pro-image-to-video",
-    },
+    modelId: "video:sora2-pro-text-to-video",
   },
   {
     key: "sora-2-pro-storyboard",
     label: "Sora 2 Pro Storyboard",
     familyKey: "sora2",
-    modelIds: {
-      "text-to-video": "video:sora2-pro-storyboard",
-    },
+    modelId: "video:sora2-pro-storyboard",
   },
   {
     key: "veo-3.1-fast",
     label: "Veo 3.1 Fast",
     familyKey: "veo-3.1",
-    modelIds: {
-      "text-to-video": "video:veo-3.1-fast-text-to-video",
-      "image-to-video": "video:veo-3.1-fast-image-to-video",
-    },
+    modelId: "video:veo-3.1-fast-text-to-video",
   },
   {
     key: "veo-3.1-quality",
     label: "Veo 3.1 Quality",
     familyKey: "veo-3.1",
-    modelIds: {
-      "text-to-video": "video:veo-3.1-quality-text-to-video",
-      "image-to-video": "video:veo-3.1-quality-image-to-video",
-    },
+    modelId: "video:veo-3.1-quality-text-to-video",
   },
 ];
 
 export function getAiVideoStudioSelectionFromModelId(modelId: string) {
   for (const version of AI_VIDEO_STUDIO_VERSIONS) {
-    for (const mode of ["text-to-video", "image-to-video"] as const) {
-      if (version.modelIds[mode] === modelId) {
-        return {
-          familyKey: version.familyKey,
-          versionKey: version.key,
-          mode,
-        };
-      }
+    if (version.modelId === modelId) {
+      return {
+        familyKey: version.familyKey,
+        versionKey: version.key,
+      };
     }
   }
 
@@ -167,16 +142,11 @@ export function getAiVideoStudioVersions(
 export function resolveAiVideoStudioModelId(input: {
   familyKey: AiVideoStudioFamilyKey;
   versionKey: AiVideoStudioVersionKey;
-  mode: AiVideoStudioMode;
 }) {
   const version = AI_VIDEO_STUDIO_VERSIONS.find(
     (item) =>
       item.familyKey === input.familyKey && item.key === input.versionKey,
   );
 
-  if (!version) {
-    return null;
-  }
-
-  return version.modelIds[input.mode] ?? null;
+  return version?.modelId ?? null;
 }

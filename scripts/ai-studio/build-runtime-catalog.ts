@@ -4,9 +4,9 @@ import path from "node:path";
 import {
   compileAiStudioRuntimeCatalog,
   getAiStudioCatalogPaths,
+  loadAiStudioMergedUpstreamCatalogFiles,
   loadAiStudioModelOverridesFile,
   loadAiStudioPricingOverridesFile,
-  loadAiStudioUpstreamCatalogFile,
   validateAiStudioRuntimeBuildInput,
   validateAiStudioRuntimeCatalog,
 } from "@/lib/ai-studio/catalog";
@@ -14,7 +14,7 @@ import {
 async function main() {
   const paths = getAiStudioCatalogPaths();
   const [upstream, modelOverrides, pricingOverrides] = await Promise.all([
-    loadAiStudioUpstreamCatalogFile(paths.upstreamCatalogPath),
+    loadAiStudioMergedUpstreamCatalogFiles(paths.upstreamCatalogPath),
     loadAiStudioModelOverridesFile(paths.modelOverridesPath),
     loadAiStudioPricingOverridesFile(paths.pricingOverridesPath),
   ]);

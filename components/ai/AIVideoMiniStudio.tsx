@@ -7,7 +7,6 @@ import {
   getAiVideoStudioVersions,
   resolveAiVideoStudioModelId,
   type AiVideoStudioFamilyKey,
-  type AiVideoStudioMode,
   type AiVideoStudioVersionKey,
 } from "@/config/ai-video-studio";
 import {
@@ -20,7 +19,6 @@ import {
 import {
   estimateAiVideoMiniStudioCredits,
   getAiVideoMiniStudioPrimaryFields,
-  resolveAiVideoMiniStudioMode,
   validateAiVideoMiniStudioSubmission,
 } from "@/lib/ai-video-studio/mini";
 import { normalizeAiVideoStudioSchema } from "@/lib/ai-video-studio/schema";
@@ -223,7 +221,6 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
   const [selectedVersionKey, setSelectedVersionKey] = useState<AiVideoStudioVersionKey>(
     defaultSelection.versionKey,
   );
-  const [mode, setMode] = useState<AiVideoStudioMode>("text-to-video");
   const [formValues, setFormValues] = useState<AiVideoStudioFormValues>({});
   const [detail, setDetail] = useState<AiStudioPublicDocDetail | null>(null);
   const [detailError, setDetailError] = useState<string | null>(null);
@@ -242,23 +239,15 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
       null,
     [availableVersions, selectedVersionKey],
   );
-  const supportedModes = useMemo(
-    () =>
-      (["text-to-video", "image-to-video"] as const).filter(
-        (candidateMode) => typeof selectedVersion?.modelIds[candidateMode] === "string",
-      ),
-    [selectedVersion],
-  );
   const resolvedModelId = useMemo(
     () =>
       selectedVersion
         ? resolveAiVideoStudioModelId({
             familyKey: selectedFamilyKey,
             versionKey: selectedVersion.key,
-            mode,
           })
         : null,
-    [mode, selectedFamilyKey, selectedVersion],
+    [selectedFamilyKey, selectedVersion],
   );
   const selectedModelValue = `${selectedFamilyKey}::${selectedVersionKey}`;
 
@@ -364,7 +353,6 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
         ? state.versionKey
         : getAiVideoStudioVersions(nextFamilyKey)[0]?.key ?? defaultSelection.versionKey;
 
-      setMode(state.mode);
       setSelectedFamilyKey(nextFamilyKey);
       setSelectedVersionKey(nextVersionKey);
       setFormValues(state.formValues);
@@ -382,7 +370,6 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
       window.localStorage.setItem(
         AI_VIDEO_STUDIO_FORM_STORAGE_KEY,
         serializeAiVideoStudioStoredState({
-          mode,
           familyKey: selectedFamilyKey,
           versionKey: selectedVersionKey,
           isPublic: true,
@@ -392,28 +379,13 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
     } catch {
       // ignore storage errors
     }
-  }, [formValues, mode, selectedFamilyKey, selectedVersionKey]);
+  }, [formValues, selectedFamilyKey, selectedVersionKey]);
 
   const imageValue = primaryFields.imageField
     ? formValues[primaryFields.imageField.key]
     : formValues.image_urls;
   const promptFieldKey = primaryFields.promptField?.key ?? "prompt";
   const promptValue = formValues[promptFieldKey];
-  const resolvedMode = useMemo(
-    () =>
-      resolveAiVideoMiniStudioMode({
-        currentMode: mode,
-        imageValue,
-        supportedModes,
-      }),
-    [imageValue, mode, supportedModes],
-  );
-
-  useEffect(() => {
-    if (resolvedMode !== mode) {
-      setMode(resolvedMode);
-    }
-  }, [mode, resolvedMode]);
 
   const basePayload = useMemo(
     () =>
@@ -444,8 +416,13 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
         : null,
     [basePayload, detail, formValues, selectedPricing],
   );
-  const requiresPrompt = normalizedSchema?.requiresPrompt ?? false;
-  const requiresImage = normalizedSchema?.requiresImage ?? false;
+  const requiredFieldValues = useMemo(
+    () =>
+      normalizedSchema?.fields
+        .filter((field) => field.required)
+        .map((field) => formValues[field.key]) ?? [],
+    [formValues, normalizedSchema],
+  );
   const submitState = useMemo(
     () =>
       validateAiVideoMiniStudioSubmission({
@@ -454,23 +431,14 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
         inputPayload,
         availableCredits: null,
         estimatedCredits,
-        requiresPrompt,
-        requiresImage,
-        promptValue,
-        imageValue,
-        supportsImageToVideo: supportedModes.includes("image-to-video"),
+        requiredFieldValues,
       }),
     [
       estimatedCredits,
-      imageValue,
       inputPayload,
       isSubmitting,
-      promptValue,
-      requiresImage,
-      requiresPrompt,
+      requiredFieldValues,
       resolvedModelId,
-      session?.user,
-      supportedModes,
     ],
   );
 
@@ -588,11 +556,6 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
       return;
     }
 
-    if (submitState.reason === "image-to-video-unsupported") {
-      toast.error("This model does not support reference-image generation.");
-      return;
-    }
-
     if (submitState.reason === "insufficient-credits") {
       toast.error("Insufficient credits.");
       return;
@@ -698,11 +661,6 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
               />
               {detailError ? (
                 <p className="mt-2 text-xs text-amber-200/80">{detailError}</p>
-              ) : null}
-              {submitState.reason === "image-to-video-unsupported" ? (
-                <p className="mt-2 text-xs text-amber-200/80">
-                  当前模型不支持参考图生成，请切换模型或移除图片。
-                </p>
               ) : null}
             </div>
           </div>

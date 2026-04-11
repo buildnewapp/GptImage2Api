@@ -1,4 +1,7 @@
 import assert from "node:assert/strict";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import test from "node:test";
 
 import {
@@ -10,9 +13,10 @@ import {
   getCanonicalAiStudioModelId,
   mapPublicModelAliasToProviderModel,
   normalizeTaskState,
+  queryAiStudioTask,
   resolveTaskMode,
-  submitAiStudioExecution,
   resolveStatusEndpoint,
+  submitAiStudioExecution,
 } from "@/lib/ai-studio/execute";
 
 test("maps official doc urls to the expected status endpoints", () => {
@@ -318,6 +322,195 @@ test("does not advertise callback capability when schema has no callback field",
   );
 
   assert.equal(body.callBackUrl, "https://example.com/api/ai-studio/callback");
+});
+
+test("does not inject legacy kie callback fallback for apimart models", () => {
+  const body = applyAiStudioSystemFields(
+    {
+      id: "video:apimart-seedance-2-0",
+      vendor: "apimart",
+      category: "video",
+      title: "Seedance 2.0",
+      docUrl: "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
+      provider: "ByteDance",
+      endpoint: "/v1/videos/generations",
+      statusEndpoint: "/v1/tasks/{taskId}?language=en",
+      method: "POST",
+      modelKeys: ["doubao-seedance-2.0"],
+      requestSchema: {
+        type: "object",
+        properties: {
+          prompt: {
+            type: "string",
+          },
+        },
+      },
+      examplePayload: {},
+      pricingRows: [],
+    },
+    {
+      prompt: "hello",
+    },
+    "https://example.com/api/ai-studio/callback",
+  );
+
+  assert.equal("callBackUrl" in body, false);
+});
+
+test("submits apimart executions against the apimart base url and extracts task ids", async () => {
+  const originalFetch = global.fetch;
+  process.env.APIMART_API_KEY = "apimart-test-key";
+
+  let requestUrl = "";
+  let authHeader = "";
+  global.fetch = async (input, init) => {
+    requestUrl = String(input);
+    authHeader = String(new Headers(init?.headers).get("authorization"));
+
+    return new Response(
+      JSON.stringify({
+        code: 200,
+        data: [
+          {
+            status: "submitted",
+            task_id: "task_apimart_123",
+          },
+        ],
+      }),
+      {
+        status: 200,
+        headers: {
+          "content-type": "application/json",
+        },
+      },
+    ) as Response;
+  };
+
+  const result = await submitAiStudioExecution(
+    {
+      id: "video:apimart-seedance-2-0",
+      vendor: "apimart",
+      category: "video",
+      title: "Seedance 2.0",
+      docUrl: "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
+      provider: "ByteDance",
+      endpoint: "/v1/videos/generations",
+      statusEndpoint: "/v1/tasks/{taskId}?language=en",
+      method: "POST",
+      modelKeys: ["doubao-seedance-2.0"],
+      requestSchema: {
+        type: "object",
+        properties: {
+          prompt: {
+            type: "string",
+          },
+        },
+      },
+      examplePayload: {},
+      pricingRows: [],
+    },
+    {
+      model: "doubao-seedance-2.0",
+      prompt: "hello",
+    },
+  );
+
+  assert.equal(requestUrl, "https://api.apimart.ai/v1/videos/generations");
+  assert.equal(authHeader, "Bearer apimart-test-key");
+  assert.equal(result.taskId, "task_apimart_123");
+  assert.equal(result.statusMode, "poll");
+
+  global.fetch = originalFetch;
+});
+
+test("queries apimart task status using the task path template", async () => {
+  const originalFetch = global.fetch;
+  const originalRuntimeCatalogPath = process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
+  process.env.APIMART_API_KEY = "apimart-test-key";
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), "ai-studio-apimart-runtime-"));
+  const runtimePath = path.join(tempDir, "catalog.json");
+
+  await writeFile(
+    runtimePath,
+    JSON.stringify({
+      version: 1,
+      generatedAt: "2026-03-08T00:00:00.000Z",
+      items: [
+        {
+          id: "video:apimart-seedance-2-0",
+          vendor: "apimart",
+          category: "video",
+          title: "Seedance 2.0",
+          docUrl: "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
+          provider: "ByteDance",
+          endpoint: "/v1/videos/generations",
+          method: "POST",
+          statusEndpoint: "/v1/tasks/{taskId}?language=en",
+          modelKeys: ["doubao-seedance-2.0"],
+          requestSchema: null,
+          examplePayload: {},
+          pricingRows: [],
+        },
+      ],
+    }),
+    "utf8",
+  );
+  process.env.AI_STUDIO_RUNTIME_CATALOG_PATH = runtimePath;
+
+  let requestUrl = "";
+  let authHeader = "";
+  global.fetch = async (input, init) => {
+    requestUrl = String(input);
+    authHeader = String(new Headers(init?.headers).get("authorization"));
+
+    return new Response(
+      JSON.stringify({
+        code: 200,
+        data: {
+          id: "task_apimart_123",
+          status: "completed",
+          result: {
+            videos: [
+              {
+                url: "https://upload.apimart.ai/f/video/final.mp4",
+              },
+            ],
+            thumbnail_url: "https://upload.apimart.ai/f/image/thumb.png",
+          },
+        },
+      }),
+      {
+        status: 200,
+        headers: {
+          "content-type": "application/json",
+        },
+      },
+    ) as Response;
+  };
+
+  const result = await queryAiStudioTask(
+    "video:apimart-seedance-2-0",
+    "task_apimart_123",
+  );
+
+  assert.equal(
+    requestUrl,
+    "https://api.apimart.ai/v1/tasks/task_apimart_123?language=en",
+  );
+  assert.equal(authHeader, "Bearer apimart-test-key");
+  assert.equal(result.state, "succeeded");
+  assert.deepEqual(result.mediaUrls, [
+    "https://upload.apimart.ai/f/video/final.mp4",
+    "https://upload.apimart.ai/f/image/thumb.png",
+  ]);
+
+  global.fetch = originalFetch;
+  if (originalRuntimeCatalogPath === undefined) {
+    delete process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
+  } else {
+    process.env.AI_STUDIO_RUNTIME_CATALOG_PATH = originalRuntimeCatalogPath;
+  }
+  await rm(tempDir, { recursive: true, force: true });
 });
 
 test("estimates the best pricing row from the active payload", () => {

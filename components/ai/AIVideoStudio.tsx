@@ -4,10 +4,9 @@ import AIVideoStudioFields from "@/components/ai/AIVideoStudioFields";
 import {
   AI_VIDEO_STUDIO_FAMILIES,
   getAiVideoStudioVersions,
-  resolveAiVideoStudioModelId,
   type AiVideoStudioFamilyKey,
-  type AiVideoStudioMode,
   type AiVideoStudioVersionKey,
+  resolveAiVideoStudioModelId,
 } from "@/config/ai-video-studio";
 import { useUserBenefits } from "@/hooks/useUserBenefits";
 import { authClient } from "@/lib/auth/auth-client";
@@ -35,11 +34,9 @@ import { cn } from "@/lib/utils";
 import {
   Copy,
   Download,
-  Image as ImageIcon,
   Loader2,
   Play,
   Sparkles,
-  Type,
   WandSparkles,
   X,
 } from "lucide-react";
@@ -90,7 +87,6 @@ type GenerationTask = {
   taskId?: string;
   state: GenerationTaskState;
   mediaUrls: string[];
-  mode: AiVideoStudioMode;
   familyKey: AiVideoStudioFamilyKey;
   versionKey: AiVideoStudioVersionKey;
   modelId: string;
@@ -112,12 +108,94 @@ function createLocalTaskId() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-function hasImageInput(value: unknown) {
-  if (Array.isArray(value)) {
-    return value.some((item) => typeof item === "string" && item.length > 0);
+function hasRequiredFieldValue(value: unknown) {
+  if (value === undefined || value === null) {
+    return false;
   }
 
-  return typeof value === "string" && value.length > 0;
+  if (typeof value === "string") {
+    return value.trim().length > 0;
+  }
+
+  if (Array.isArray(value)) {
+    return value.length > 0;
+  }
+
+  return true;
+}
+
+function hasFilledValue(value: unknown) {
+  if (value === undefined || value === null || value === "") {
+    return false;
+  }
+
+  if (Array.isArray(value)) {
+    return value.length > 0;
+  }
+
+  return true;
+}
+
+function getValueAtPath(
+  source: Record<string, unknown>,
+  path: string[],
+) {
+  let current: unknown = source;
+
+  for (const segment of path) {
+    if (!current || typeof current !== "object" || Array.isArray(current)) {
+      return undefined;
+    }
+
+    current = (current as Record<string, unknown>)[segment];
+  }
+
+  return current;
+}
+
+function setValueAtPath(
+  source: Record<string, unknown>,
+  path: string[],
+  value: unknown,
+) {
+  const next = structuredClone(source);
+  let cursor = next;
+
+  for (let index = 0; index < path.length - 1; index += 1) {
+    const segment = path[index]!;
+    const current = cursor[segment];
+
+    if (!current || typeof current !== "object" || Array.isArray(current)) {
+      cursor[segment] = {};
+    }
+
+    cursor = cursor[segment] as Record<string, unknown>;
+  }
+
+  cursor[path[path.length - 1]!] = value;
+  return next;
+}
+
+function findValueByKey(
+  source: Record<string, unknown>,
+  key: string,
+): unknown {
+  if (key in source) {
+    return source[key];
+  }
+
+  for (const value of Object.values(source)) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+      continue;
+    }
+
+    const nested = findValueByKey(value as Record<string, unknown>, key);
+    if (nested !== undefined) {
+      return nested;
+    }
+  }
+
+  return undefined;
 }
 
 export default function AIVideoStudio() {
@@ -132,7 +210,6 @@ export default function AIVideoStudio() {
   const hasInitializedFromStorageRef = useRef(false);
   const pollingTimersRef = useRef<Map<string, ReturnType<typeof setInterval>>>(new Map());
 
-  const [mode, setMode] = useState<AiVideoStudioMode>("text-to-video");
   const [selectedFamilyKey, setSelectedFamilyKey] =
     useState<AiVideoStudioFamilyKey>("sora2");
   const [selectedVersionKey, setSelectedVersionKey] =
@@ -159,23 +236,15 @@ export default function AIVideoStudio() {
       null,
     [availableVersions, selectedVersionKey],
   );
-  const supportedModes = useMemo(
-    () =>
-      (["text-to-video", "image-to-video"] as const).filter(
-        (candidateMode) => typeof selectedVersion?.modelIds[candidateMode] === "string",
-      ),
-    [selectedVersion],
-  );
   const resolvedModelId = useMemo(
     () =>
       selectedVersion
         ? resolveAiVideoStudioModelId({
             familyKey: selectedFamilyKey,
             versionKey: selectedVersion.key,
-            mode,
           })
         : null,
-    [mode, selectedFamilyKey, selectedVersionKey],
+    [selectedFamilyKey, selectedVersionKey, selectedVersion],
   );
 
   useEffect(() => {
@@ -187,16 +256,6 @@ export default function AIVideoStudio() {
       setSelectedVersionKey(availableVersions[0]!.key);
     }
   }, [availableVersions, selectedVersionKey]);
-
-  useEffect(() => {
-    if (supportedModes.length === 0) {
-      return;
-    }
-
-    if (!supportedModes.includes(mode)) {
-      setMode(supportedModes[0]!);
-    }
-  }, [mode, supportedModes]);
 
   useEffect(() => {
     if (!resolvedModelId) {
@@ -257,16 +316,16 @@ export default function AIVideoStudio() {
     }
 
     setFormValues((previous) => {
-      const next: AiVideoStudioFormValues = {};
+      let next: AiVideoStudioFormValues = {};
 
       for (const field of normalizedSchema.fields) {
-        const previousValue = previous[field.key];
-        next[field.key] =
-          previousValue !== undefined &&
-          previousValue !== "" &&
-          (!Array.isArray(previousValue) || previousValue.length > 0)
-            ? previousValue
-            : normalizedSchema.defaults[field.key];
+        const previousValue = getValueAtPath(previous, field.path);
+        const defaultValue = getValueAtPath(normalizedSchema.defaults, field.path);
+        next = setValueAtPath(
+          next,
+          field.path,
+          hasFilledValue(previousValue) ? previousValue : defaultValue,
+        );
       }
 
       return next;
@@ -281,7 +340,6 @@ export default function AIVideoStudio() {
     const rawNewState = window.localStorage.getItem(AI_VIDEO_STUDIO_FORM_STORAGE_KEY);
     const state = safeParseAiVideoStudioStoredState(rawNewState);
     if (state) {
-      setMode(state.mode);
       setSelectedFamilyKey(state.familyKey);
       setSelectedVersionKey(state.versionKey);
       setFormValues(state.formValues);
@@ -299,7 +357,6 @@ export default function AIVideoStudio() {
     }
 
     const serialized = serializeAiVideoStudioStoredState({
-      mode,
       familyKey: selectedFamilyKey,
       versionKey: selectedVersionKey,
       isPublic,
@@ -311,7 +368,7 @@ export default function AIVideoStudio() {
     } catch {
       // ignore storage errors
     }
-  }, [formValues, isPublic, mode, selectedFamilyKey, selectedVersionKey]);
+  }, [formValues, isPublic, selectedFamilyKey, selectedVersionKey]);
 
   const basePayload = useMemo(
     () =>
@@ -351,8 +408,15 @@ export default function AIVideoStudio() {
 
   const availableCredits = benefits?.totalAvailableCredits ?? null;
   const hasSignedInSession = hasAiVideoStudioSignedInSession(session);
-  const requiresPrompt = normalizedSchema?.requiresPrompt ?? false;
-  const requiresImage = normalizedSchema?.requiresImage ?? false;
+  const hasRequiredFieldValues = useMemo(
+    () =>
+      !normalizedSchema?.fields.some(
+        (field) =>
+          field.required &&
+          !hasRequiredFieldValue(getValueAtPath(formValues, field.path)),
+      ),
+    [formValues, normalizedSchema],
+  );
 
   const canGenerate =
     !isSubmitting &&
@@ -361,9 +425,7 @@ export default function AIVideoStudio() {
     (!session?.user ||
       availableCredits === null ||
       availableCredits >= estimatedCredits) &&
-    (!requiresPrompt ||
-      (typeof formValues.prompt === "string" && formValues.prompt.trim().length > 0)) &&
-    (!requiresImage || hasImageInput(formValues.image_urls));
+    hasRequiredFieldValues;
 
   const updateGenerationTask = useCallback(
     (localId: string, patch: Partial<GenerationTask>) => {
@@ -469,19 +531,17 @@ export default function AIVideoStudio() {
     }
 
     const localTaskId = createLocalTaskId();
+    const promptValue = findValueByKey(formValues, "prompt");
     const prompt =
-      typeof formValues.prompt === "string" && formValues.prompt.trim().length > 0
-        ? formValues.prompt.trim()
-        : mode === "image-to-video"
-          ? t("form.imageToVideo")
-          : "-";
+      typeof promptValue === "string" && promptValue.trim().length > 0
+        ? promptValue.trim()
+        : "-";
 
     setGenerationTasks((current) => [
       {
         localId: localTaskId,
         state: "queued",
         mediaUrls: [],
-        mode,
         familyKey: selectedFamilyKey,
         versionKey: selectedVersionKey,
         modelId: resolvedModelId,
@@ -555,7 +615,6 @@ export default function AIVideoStudio() {
     inputPayload,
     isPublic,
     isSubmitting,
-    mode,
     optimisticDeduct,
     pollStatus,
     refreshBenefits,
@@ -608,14 +667,12 @@ export default function AIVideoStudio() {
   const handleRemixTask = useCallback(
     (task: GenerationTask) => {
       const restored = restoreAiVideoStudioFormState({
-        mode: task.mode,
         familyKey: task.familyKey,
         versionKey: task.versionKey,
         isPublic: task.isPublic,
         payload: task.payload,
       });
 
-      setMode(restored.mode);
       setSelectedFamilyKey(restored.familyKey);
       setSelectedVersionKey(restored.versionKey);
       setIsPublic(restored.isPublic);
@@ -626,46 +683,31 @@ export default function AIVideoStudio() {
     [t],
   );
 
-  const getFieldLabel = useCallback(
-    (field: ReturnType<typeof normalizeAiVideoStudioSchema>["fields"][number]) => {
-      switch (field.key) {
-        case "prompt":
-          return t("form.prompt");
-        case "image_urls":
-          return t("form.images");
-        case "aspect_ratio":
-          return t("form.aspectRatio");
-        case "n_frames":
-          return t("form.duration");
-        case "remove_watermark":
-          return "Remove watermark";
-        case "character_id_list":
-          return "Character IDs";
-        default:
-          return field.label;
-      }
-    },
-    [t],
-  );
-
   const getTaskParamsLine = useCallback(
     (task: GenerationTask) => {
-      const parts = [
-        task.mode === "image-to-video" ? t("form.imageToVideo") : t("form.textToVideo"),
-      ];
+      const parts: string[] = [];
+      const aspectRatio = findValueByKey(task.formValues, "aspect_ratio");
+      const duration = findValueByKey(task.formValues, "duration");
+      const frames = findValueByKey(task.formValues, "n_frames");
 
-      if (typeof task.formValues.aspect_ratio === "string" && task.formValues.aspect_ratio) {
-        parts.push(`${t("form.aspectRatio")}: ${task.formValues.aspect_ratio}`);
-      }
-      if (typeof task.formValues.n_frames === "string" && task.formValues.n_frames) {
-        parts.push(`${t("form.duration")}: ${task.formValues.n_frames}s`);
+      if (typeof aspectRatio === "string" && aspectRatio) {
+        parts.push(`aspect_ratio: ${aspectRatio}`);
       }
 
-      parts.push(task.isPublic ? t("form.public") : t("form.private"));
+      if (
+        (typeof duration === "string" && duration) ||
+        typeof duration === "number"
+      ) {
+        parts.push(`duration: ${duration}s`);
+      } else if (typeof frames === "string" && frames) {
+        parts.push(`n_frames: ${frames}`);
+      }
+
+      parts.push(task.isPublic ? "public" : "private");
 
       return parts.join(" · ");
     },
-    [t],
+    [],
   );
 
   const modelOptions = useMemo<ModelSelectorItem[]>(
@@ -693,35 +735,6 @@ export default function AIVideoStudio() {
       <div className="w-full min-w-0 max-w-7xl mx-auto">
         <div className="flex w-full min-w-0 flex-col items-start gap-8 my-10 h-full mx-auto p-2 lg:p-6 rounded-xl lg:rounded-3xl border border-border/50 bg-card shadow-xl lg:flex-row">
           <div className="w-full lg:w-[400px] xl:w-[450px] flex-shrink-0 flex flex-col gap-5 h-fit">
-            {supportedModes.length > 0 ? (
-              <div className="flex w-full rounded-xl border border-border/50 bg-white dark:bg-zinc-900 p-1 mb-2">
-                {supportedModes.map((supportedMode) => (
-                  <button
-                    key={supportedMode}
-                    type="button"
-                    onClick={() => setMode(supportedMode)}
-                    className={cn(
-                      "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold transition-all",
-                      mode === supportedMode
-                        ? "bg-zinc-900 text-white dark:bg-white dark:text-black shadow-sm"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                    )}
-                  >
-                    {supportedMode === "text-to-video" ? (
-                      <Type className="w-4 h-4" />
-                    ) : (
-                      <ImageIcon className="w-4 h-4" />
-                    )}
-                    <span>
-                      {supportedMode === "text-to-video"
-                        ? t("form.textToVideo")
-                        : t("form.imageToVideo")}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            ) : null}
-
             <ModelSelector
               selectedId={selectedFamilyKey}
               onSelect={(nextKey) => setSelectedFamilyKey(nextKey as AiVideoStudioFamilyKey)}
@@ -751,13 +764,10 @@ export default function AIVideoStudio() {
                 values={formValues}
                 isPublic={isPublic}
                 disabled={isSubmitting}
-                advancedLabel={t("form.advanced")}
-                publicLabel={t("form.public")}
-                useUrlLabel={t("form.useUrl")}
-                promptPlaceholder={t("form.promptPlaceholder")}
-                onChange={(patch) => setFormValues((current) => ({ ...current, ...patch }))}
+                onChange={(path, nextValue) =>
+                  setFormValues((current) => setValueAtPath(current, path, nextValue))
+                }
                 onPublicChange={setIsPublic}
-                resolveLabel={getFieldLabel}
               />
             ) : null}
 

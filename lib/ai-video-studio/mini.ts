@@ -1,4 +1,3 @@
-import type { AiVideoStudioMode } from "@/config/ai-video-studio";
 import type { AiStudioPublicPricingRow } from "@/lib/ai-studio/public";
 import {
   guessPricingRow,
@@ -18,42 +17,39 @@ export type AiVideoMiniStudioValidationReason =
   | "submitting"
   | "missing-model"
   | "missing-payload"
-  | "missing-prompt"
-  | "missing-image"
+  | "missing-required"
   | "insufficient-credits"
-  | "image-to-video-unsupported"
   | null;
 
-export function hasAiVideoMiniStudioImageInput(value: unknown) {
+function hasRequiredFieldValue(value: unknown) {
   if (Array.isArray(value)) {
     return value.some((item) => typeof item === "string" && item.length > 0);
   }
 
-  return typeof value === "string" && value.length > 0;
+  if (typeof value === "string") {
+    return value.trim().length > 0;
+  }
+
+  return value !== undefined && value !== null;
 }
 
-export function resolveAiVideoMiniStudioMode(input: {
-  currentMode: AiVideoStudioMode;
-  imageValue: unknown;
-  supportedModes: readonly AiVideoStudioMode[];
-}): AiVideoStudioMode {
-  const hasImage = hasAiVideoMiniStudioImageInput(input.imageValue);
+function isPromptField(field: AiVideoStudioFieldDescriptor) {
+  const key = field.key.toLowerCase();
+  return key === "prompt" || key.endsWith("_prompt");
+}
 
-  if (hasImage && input.supportedModes.includes("image-to-video")) {
-    return "image-to-video";
+function isImageField(field: AiVideoStudioFieldDescriptor) {
+  const key = field.key.toLowerCase();
+
+  if (!key.includes("image")) {
+    return false;
   }
 
-  if (!input.supportedModes.includes(input.currentMode)) {
-    return input.supportedModes[0] ?? "text-to-video";
+  if (field.schema.type === "array") {
+    return field.schema.items?.type === "string";
   }
 
-  if (!hasImage && input.currentMode === "image-to-video") {
-    return input.supportedModes.includes("text-to-video")
-      ? "text-to-video"
-      : input.currentMode;
-  }
-
-  return input.currentMode;
+  return field.schema.type === "string";
 }
 
 function findField(
@@ -67,8 +63,8 @@ export function getAiVideoMiniStudioPrimaryFields(
   fields: AiVideoStudioFieldDescriptor[],
 ): AiVideoMiniStudioPrimaryFields {
   return {
-    promptField: findField(fields, (field) => field.kind === "prompt"),
-    imageField: findField(fields, (field) => field.kind === "image"),
+    promptField: findField(fields, isPromptField),
+    imageField: findField(fields, isImageField),
     aspectRatioField: findField(fields, (field) => field.key === "aspect_ratio"),
     resolutionField: findField(fields, (field) => field.key === "resolution"),
     durationField:
@@ -97,16 +93,8 @@ export function validateAiVideoMiniStudioSubmission(input: {
   inputPayload: Record<string, any> | null;
   availableCredits: number | null;
   estimatedCredits: number;
-  requiresPrompt: boolean;
-  requiresImage: boolean;
-  promptValue: unknown;
-  imageValue: unknown;
-  supportsImageToVideo: boolean;
+  requiredFieldValues: unknown[];
 }) {
-  const hasImage = hasAiVideoMiniStudioImageInput(input.imageValue);
-  const hasPrompt =
-    typeof input.promptValue === "string" && input.promptValue.trim().length > 0;
-
   let reason: AiVideoMiniStudioValidationReason = null;
 
   if (input.isSubmitting) {
@@ -115,14 +103,10 @@ export function validateAiVideoMiniStudioSubmission(input: {
     reason = "missing-model";
   } else if (!input.inputPayload) {
     reason = "missing-payload";
-  } else if (hasImage && !input.supportsImageToVideo) {
-    reason = "image-to-video-unsupported";
   } else if (input.availableCredits !== null && input.availableCredits < input.estimatedCredits) {
     reason = "insufficient-credits";
-  } else if (input.requiresPrompt && !hasPrompt) {
-    reason = "missing-prompt";
-  } else if (input.requiresImage && !hasImage) {
-    reason = "missing-image";
+  } else if (input.requiredFieldValues.some((value) => !hasRequiredFieldValue(value))) {
+    reason = "missing-required";
   }
 
   return {

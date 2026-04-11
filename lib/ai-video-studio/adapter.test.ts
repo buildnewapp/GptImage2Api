@@ -23,6 +23,38 @@ const detail = {
   },
 } as const;
 
+const topLevelDetail = {
+  examplePayload: {
+    model: "sora-2-preview",
+    prompt: "Default prompt",
+    aspect_ratio: "16:9",
+    duration: 4,
+  },
+  requestSchema: {
+    type: "object",
+    properties: {
+      model: {
+        type: "string",
+      },
+      prompt: {
+        type: "string",
+      },
+      aspect_ratio: {
+        type: "string",
+      },
+      duration: {
+        type: "integer",
+      },
+      image_urls: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+      },
+    },
+  },
+} as const;
+
 test("builds ai-studio payloads from form values", () => {
   const payload = buildAiVideoStudioPayload({
     detail,
@@ -109,7 +141,6 @@ test("applies selected ai-studio pricing rows onto the payload", () => {
 
 test("restores cached form state from an existing ai-studio payload", () => {
   const restored = restoreAiVideoStudioFormState({
-    mode: "image-to-video",
     familyKey: "sora2",
     versionKey: "sora-2-pro",
     isPublic: false,
@@ -124,7 +155,6 @@ test("restores cached form state from an existing ai-studio payload", () => {
   });
 
   assert.deepEqual(restored, {
-    mode: "image-to-video",
     familyKey: "sora2",
     versionKey: "sora-2-pro",
     isPublic: false,
@@ -138,7 +168,6 @@ test("restores cached form state from an existing ai-studio payload", () => {
 
 test("serializes and parses stored ai-video-studio state safely", () => {
   const state = {
-    mode: "text-to-video" as const,
     familyKey: "sora2" as const,
     versionKey: "sora-2" as const,
     isPublic: true,
@@ -147,14 +176,56 @@ test("serializes and parses stored ai-video-studio state safely", () => {
     },
   };
 
-  assert.equal(
-    serializeAiVideoStudioStoredState(state),
-    JSON.stringify(state),
-  );
+  assert.equal(serializeAiVideoStudioStoredState(state), JSON.stringify(state));
   assert.deepEqual(
     safeParseAiVideoStudioStoredState(JSON.stringify(state)),
     state,
   );
   assert.equal(safeParseAiVideoStudioStoredState("{"), null);
   assert.equal(AI_VIDEO_STUDIO_FORM_STORAGE_KEY, "ai-video-studio-form");
+});
+
+test("builds top-level ai-studio payloads when the schema does not use input", () => {
+  const payload = buildAiVideoStudioPayload({
+    detail: topLevelDetail,
+    formValues: {
+      prompt: "Animate a glass city under moonlight",
+      aspect_ratio: "9:16",
+      duration: 8,
+      image_urls: ["https://example.com/reference.png"],
+    },
+  });
+
+  assert.deepEqual(payload, {
+    model: "sora-2-preview",
+    prompt: "Animate a glass city under moonlight",
+    aspect_ratio: "9:16",
+    duration: 8,
+    image_urls: ["https://example.com/reference.png"],
+  });
+});
+
+test("restores cached top-level form state from an existing ai-studio payload", () => {
+  const restored = restoreAiVideoStudioFormState({
+    familyKey: "sora2",
+    versionKey: "sora-2",
+    isPublic: true,
+    payload: {
+      model: "sora-2-preview",
+      prompt: "Restore a top-level prompt",
+      aspect_ratio: "16:9",
+      duration: 12,
+    },
+  });
+
+  assert.deepEqual(restored, {
+    familyKey: "sora2",
+    versionKey: "sora-2",
+    isPublic: true,
+    formValues: {
+      prompt: "Restore a top-level prompt",
+      aspect_ratio: "16:9",
+      duration: 12,
+    },
+  });
 });

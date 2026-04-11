@@ -26,105 +26,34 @@ test("returns the supported Sora2 versions", () => {
   );
 });
 
-test("exposes disabled family metadata and tags for non-selectable models", () => {
+test("exposes APIMart Seedance 2.0 as a selectable family", () => {
   const family = AI_VIDEO_STUDIO_FAMILIES.find((item) => item.key === "seedance-2.0");
 
-  assert.equal(family?.selectable, false);
-  assert.deepEqual(family?.tags, [
-    { text: "Targeted opening", type: "coming-soon" },
-  ]);
+  assert.equal(family?.selectable, true);
+  assert.deepEqual(family?.tags, [{ text: "APIMart", type: "provider" }]);
 });
 
-test("resolves Sora2 standard text-to-video to the ai-studio public model id", () => {
+test("resolves version selections to a single ai-studio public model id", () => {
   assert.equal(
     resolveAiVideoStudioModelId({
       familyKey: "sora2",
       versionKey: "sora-2",
-      mode: "text-to-video",
     }),
     "video:sora2-text-to-video-standard",
   );
-});
-
-test("resolves Sora2 standard image-to-video to the ai-studio public model id", () => {
   assert.equal(
     resolveAiVideoStudioModelId({
-      familyKey: "sora2",
-      versionKey: "sora-2",
-      mode: "image-to-video",
+      familyKey: "seedance-2.0",
+      versionKey: "seedance-2.0",
     }),
-    "video:sora2-image-to-video-standard",
+    "video:apimart-seedance-2-0",
   );
-});
-
-test("resolves Sora2 Pro text-to-video to the ai-studio public model id", () => {
-  assert.equal(
-    resolveAiVideoStudioModelId({
-      familyKey: "sora2",
-      versionKey: "sora-2-pro",
-      mode: "text-to-video",
-    }),
-    "video:sora2-pro-text-to-video",
-  );
-});
-
-test("resolves Sora2 Pro image-to-video to the ai-studio public model id", () => {
-  assert.equal(
-    resolveAiVideoStudioModelId({
-      familyKey: "sora2",
-      versionKey: "sora-2-pro",
-      mode: "image-to-video",
-    }),
-    "video:sora2-pro-image-to-video",
-  );
-});
-
-test("resolves Sora2 Pro Storyboard text-to-video to the ai-studio public model id", () => {
-  assert.equal(
-    resolveAiVideoStudioModelId({
-      familyKey: "sora2",
-      versionKey: "sora-2-pro-storyboard",
-      mode: "text-to-video",
-    }),
-    "video:sora2-pro-storyboard",
-  );
-});
-
-test("resolves Veo 3.1 Fast variants to the split ai-studio public model id", () => {
   assert.equal(
     resolveAiVideoStudioModelId({
       familyKey: "veo-3.1",
       versionKey: "veo-3.1-fast",
-      mode: "text-to-video",
     }),
     "video:veo-3.1-fast-text-to-video",
-  );
-  assert.equal(
-    resolveAiVideoStudioModelId({
-      familyKey: "veo-3.1",
-      versionKey: "veo-3.1-fast",
-      mode: "image-to-video",
-    }),
-    "video:veo-3.1-fast-image-to-video",
-  );
-});
-
-test("resolves Veo 3.1 Quality variants to the split ai-studio public model id", () => {
-  assert.equal(
-    resolveAiVideoStudioModelId({
-      familyKey: "veo-3.1",
-      versionKey: "veo-3.1-quality",
-      mode: "text-to-video",
-    }),
-    "video:veo-3.1-quality-text-to-video",
-  );
-  assert.equal(
-    resolveAiVideoStudioModelId({
-      familyKey: "veo-3.1",
-      versionKey: "veo-3.1-quality",
-      mode: "image-to-video",
-    }),
-    "video:veo-3.1-quality-image-to-video",
   );
 });
 
@@ -133,18 +62,6 @@ test("returns null for unsupported selections", () => {
     resolveAiVideoStudioModelId({
       familyKey: "missing",
       versionKey: "sora-2",
-      mode: "text-to-video",
-    }),
-    null,
-  );
-});
-
-test("returns null when the configured version does not support the requested mode", () => {
-  assert.equal(
-    resolveAiVideoStudioModelId({
-      familyKey: "seedance-1.5",
-      versionKey: "seedance-1.5-fast",
-      mode: "text-to-video",
     }),
     null,
   );
@@ -152,11 +69,17 @@ test("returns null when the configured version does not support the requested mo
 
 test("resolves ai video studio selection metadata from a model id", () => {
   assert.deepEqual(
-    resolveAiVideoStudioSelectionFromModelId("video:bytedance-v1-pro-image-to-video"),
+    resolveAiVideoStudioSelectionFromModelId("video:apimart-seedance-2-0"),
+    {
+      familyKey: "seedance-2.0",
+      versionKey: "seedance-2.0",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("video:bytedance-v1-pro-fast-image-to-video"),
     {
       familyKey: "seedance-1.5",
-      versionKey: "seedance-1.5",
-      mode: "image-to-video",
+      versionKey: "seedance-1.5-fast",
     },
   );
 });

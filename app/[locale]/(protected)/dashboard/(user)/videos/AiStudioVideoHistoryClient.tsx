@@ -204,16 +204,16 @@ export default function AiStudioVideoHistoryClient() {
         typeof record.requestPayload.input === "object" &&
         !Array.isArray(record.requestPayload.input)
           ? { ...(record.requestPayload.input as Record<string, unknown>) }
-          : {};
+          : Object.fromEntries(
+              Object.entries(record.requestPayload ?? {}).filter(
+                ([key]) => key !== "model",
+              ),
+            );
 
       try {
         window.localStorage.setItem(
           AI_VIDEO_STUDIO_FORM_STORAGE_KEY,
           serializeAiVideoStudioStoredState({
-            mode:
-              record.mode === "image-to-video" || (!record.mode && record.uploadedImage)
-                ? "image-to-video"
-                : "text-to-video",
             familyKey: record.modelKey,
             versionKey: record.versionKey,
             isPublic: record.isPublic,

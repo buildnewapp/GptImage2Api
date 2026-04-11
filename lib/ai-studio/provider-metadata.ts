@@ -94,8 +94,12 @@ function collectCallbackFieldDescriptors(
 }
 
 export function resolveStatusEndpoint<
-  Detail extends Pick<AiStudioDocDetail, "docUrl" | "endpoint">,
+  Detail extends Pick<AiStudioDocDetail, "docUrl" | "endpoint" | "statusEndpoint">,
 >(detail: Detail) {
+  if (typeof detail.statusEndpoint === "string" && detail.statusEndpoint.length > 0) {
+    return detail.statusEndpoint;
+  }
+
   const docUrl = detail.docUrl;
 
   if (detail.endpoint === "/api/v1/jobs/createTask" && docUrl.includes("/market/")) {
@@ -156,7 +160,7 @@ export function getAiStudioRequestMeta(
 export function resolveTaskMode<
   Detail extends Pick<
     AiStudioDocDetail,
-    "category" | "requestSchema" | "docUrl" | "endpoint"
+    "category" | "requestSchema" | "docUrl" | "endpoint" | "statusEndpoint"
   >,
 >(
   detail: Detail,
@@ -180,7 +184,10 @@ export function resolveTaskMode<
 }
 
 export function getAiStudioTaskMeta(
-  detail: Pick<AiStudioDocDetail, "category" | "requestSchema" | "docUrl" | "endpoint">,
+  detail: Pick<
+    AiStudioDocDetail,
+    "category" | "requestSchema" | "docUrl" | "endpoint" | "statusEndpoint"
+  >,
 ): AiStudioTaskMeta {
   return {
     mode: resolveTaskMode(detail),
@@ -189,7 +196,7 @@ export function getAiStudioTaskMeta(
 }
 
 export function applyAiStudioSystemFields<
-  Detail extends Pick<AiStudioDocDetail, "category" | "requestSchema">,
+  Detail extends Pick<AiStudioDocDetail, "category" | "requestSchema" | "vendor">,
 >(
   detail: Detail,
   payload: Record<string, any>,
@@ -202,9 +209,10 @@ export function applyAiStudioSystemFields<
   }
 
   const callbackFieldDescriptors = collectCallbackFieldDescriptors(detail.requestSchema);
+  const vendor = detail.vendor ?? "kie";
 
   if (callbackFieldDescriptors.length === 0) {
-    if (detail.category !== "chat" && !next.callBackUrl) {
+    if (vendor === "kie" && detail.category !== "chat" && !next.callBackUrl) {
       next.callBackUrl = callbackUrl;
     }
     return next;

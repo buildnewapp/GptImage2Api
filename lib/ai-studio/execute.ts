@@ -30,12 +30,40 @@ export type AiStudioNormalizedState =
   | "failed"
   | "unknown";
 
-export function getAiStudioApiKey() {
-  const apiKey = process.env.KIE_API_KEY;
-  if (!apiKey) {
-    throw new Error("KIE_API_KEY is not configured");
+function getAiStudioVendor(detail: Pick<AiStudioDocDetail, "vendor"> | null | undefined) {
+  return detail?.vendor ?? "kie";
+}
+
+export function getAiStudioApiKey(vendor = "kie") {
+  if (vendor === "kie") {
+    const apiKey = process.env.KIE_API_KEY;
+    if (!apiKey) {
+      throw new Error("KIE_API_KEY is not configured");
+    }
+    return apiKey;
   }
-  return apiKey;
+
+  if (vendor === "apimart") {
+    const apiKey = process.env.APIMART_API_KEY;
+    if (!apiKey) {
+      throw new Error("APIMART_API_KEY is not configured");
+    }
+    return apiKey;
+  }
+
+  throw new Error(`Unsupported AI Studio vendor: ${vendor}`);
+}
+
+export function getAiStudioApiBaseUrl(vendor = "kie") {
+  if (vendor === "kie") {
+    return "https://api.kie.ai";
+  }
+
+  if (vendor === "apimart") {
+    return "https://api.apimart.ai";
+  }
+
+  throw new Error(`Unsupported AI Studio vendor: ${vendor}`);
 }
 
 export function getAiStudioCallbackUrl() {
@@ -67,7 +95,7 @@ export function extractTaskId(raw: unknown): string | null {
   }
 
   const record = raw as Record<string, unknown>;
-  for (const key of ["taskId", "recordId", "id"]) {
+  for (const key of ["taskId", "task_id", "recordId", "id"]) {
     if (typeof record[key] === "string" && record[key]) {
       return record[key] as string;
     }
@@ -160,6 +188,8 @@ export function extractProviderFailureReason(raw: unknown): string | null {
     getNestedValue(record, ["data", "failMsg"]),
     getNestedValue(record, ["data", "errorMessage"]),
     getNestedValue(record, ["data", "message"]),
+    getNestedValue(record, ["data", "error", "message"]),
+    getNestedValue(record, ["error", "message"]),
     record.error,
     record.message,
     record.msg,
@@ -172,6 +202,8 @@ export function extractProviderFailureReason(raw: unknown): string | null {
     getNestedValue(record, ["data", "failMsg"]),
     getNestedValue(record, ["data", "errorMessage"]),
     getNestedValue(record, ["data", "message"]),
+    getNestedValue(record, ["data", "error", "message"]),
+    getNestedValue(record, ["error", "message"]),
   ].filter((value): value is string => typeof value === "string" && value.trim().length > 0);
 
   const numericCodes = [
@@ -182,13 +214,17 @@ export function extractProviderFailureReason(raw: unknown): string | null {
   ].filter((value): value is number => typeof value === "number");
 
   const taskState = String(getNestedValue(record, ["data", "state"]) ?? "").toLowerCase();
+  const taskStatus = String(getNestedValue(record, ["data", "status"]) ?? "").toLowerCase();
   const taskFailCode = getNestedValue(record, ["data", "failCode"]);
   const successFlag = getNestedValue(record, ["data", "successFlag"]);
   const hasTaskLevelFailure =
     taskState === "fail" ||
     taskState === "failed" ||
+    taskStatus === "failed" ||
+    taskStatus === "cancelled" ||
     typeof getNestedValue(record, ["data", "failMsg"]) === "string" ||
     typeof getNestedValue(record, ["data", "errorMessage"]) === "string" ||
+    typeof getNestedValue(record, ["data", "error", "message"]) === "string" ||
     (typeof taskFailCode === "string" && taskFailCode.trim().length > 0) ||
     successFlag === 2 ||
     successFlag === 3;
@@ -238,6 +274,7 @@ export function normalizeTaskState(raw: unknown): AiStudioNormalizedState {
   if (
     candidate.includes('"state":"fail"') ||
     candidate.includes('"status":"failed"') ||
+    candidate.includes('"status":"cancelled"') ||
     candidate.includes('"status":"error"') ||
     candidate.includes('"successflag":2') ||
     candidate.includes('"successflag":3')
@@ -248,6 +285,7 @@ export function normalizeTaskState(raw: unknown): AiStudioNormalizedState {
   if (
     candidate.includes('"state":"waiting"') ||
     candidate.includes('"state":"queuing"') ||
+    candidate.includes('"status":"submitted"') ||
     candidate.includes('"status":"pending"') ||
     candidate.includes('"status":"queued"')
   ) {
@@ -277,6 +315,27 @@ export function estimatePricingRow(
     })),
     payload,
   );
+}
+
+function buildAiStudioTaskStatusUrl(
+  detail: Pick<AiStudioDocDetail, "vendor" | "docUrl" | "endpoint" | "statusEndpoint">,
+  taskId: string,
+) {
+  const vendor = getAiStudioVendor(detail);
+  const baseUrl = getAiStudioApiBaseUrl(vendor);
+  const statusEndpoint = resolveStatusEndpoint(detail);
+
+  if (!statusEndpoint) {
+    throw new Error("This model does not expose a task status endpoint");
+  }
+
+  if (/\{task(?:_|-)?id\}/i.test(statusEndpoint)) {
+    return `${baseUrl}${statusEndpoint.replace(/\{task(?:_|-)?id\}/gi, encodeURIComponent(taskId))}`;
+  }
+
+  const url = new URL(`${baseUrl}${statusEndpoint}`);
+  url.searchParams.set("taskId", taskId);
+  return url.toString();
 }
 
 export function mapPublicModelAliasToProviderModel(
@@ -332,10 +391,11 @@ export async function submitAiStudioExecution(
   detail: AiStudioDocDetail,
   body: Record<string, any>,
 ) {
-  const response = await fetch(`https://api.kie.ai${detail.endpoint}`, {
+  const vendor = getAiStudioVendor(detail);
+  const response = await fetch(`${getAiStudioApiBaseUrl(vendor)}${detail.endpoint}`, {
     method: detail.method,
     headers: {
-      Authorization: `Bearer ${getAiStudioApiKey()}`,
+      Authorization: `Bearer ${getAiStudioApiKey(vendor)}`,
       "Content-Type": "application/json",
     },
     body: detail.method === "GET" ? undefined : JSON.stringify(body),
@@ -390,19 +450,12 @@ export async function queryAiStudioTask(modelId: string, taskId: string) {
     throw new Error("Unknown model");
   }
 
-  const statusEndpoint = resolveStatusEndpoint(detail);
-  if (!statusEndpoint) {
-    throw new Error("This model does not expose a task status endpoint");
-  }
-
-  const response = await fetch(
-    `https://api.kie.ai${statusEndpoint}?taskId=${encodeURIComponent(taskId)}`,
-    {
-      headers: {
-        Authorization: `Bearer ${getAiStudioApiKey()}`,
-      },
+  const vendor = getAiStudioVendor(detail);
+  const response = await fetch(buildAiStudioTaskStatusUrl(detail, taskId), {
+    headers: {
+      Authorization: `Bearer ${getAiStudioApiKey(vendor)}`,
     },
-  );
+  });
 
   const contentType = response.headers.get("content-type") ?? "";
   const raw = contentType.includes("application/json")

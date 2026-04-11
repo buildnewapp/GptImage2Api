@@ -1,9 +1,9 @@
 import {
   getAiStudioCatalogPaths,
+  loadAiStudioMergedUpstreamCatalogFiles,
   loadAiStudioModelOverridesFile,
   loadAiStudioPricingOverridesFile,
   loadAiStudioRuntimeCatalogFile,
-  loadAiStudioUpstreamCatalogFile,
   validateAiStudioRuntimeBuildInput,
   validateAiStudioRuntimeCatalog,
 } from "@/lib/ai-studio/catalog";
@@ -11,7 +11,7 @@ import {
 async function main() {
   const paths = getAiStudioCatalogPaths();
   const [upstream, modelOverrides, pricingOverrides, runtime] = await Promise.all([
-    loadAiStudioUpstreamCatalogFile(paths.upstreamCatalogPath),
+    loadAiStudioMergedUpstreamCatalogFiles(paths.upstreamCatalogPath),
     loadAiStudioModelOverridesFile(paths.modelOverridesPath),
     loadAiStudioPricingOverridesFile(paths.pricingOverridesPath),
     loadAiStudioRuntimeCatalogFile(paths.runtimeCatalogPath),

@@ -104,6 +104,45 @@ const imageToVideoDetail = {
   },
 } as const;
 
+const topLevelDetail = {
+  requestSchema: {
+    type: "object",
+    properties: {
+      model: {
+        type: "string",
+      },
+      prompt: {
+        type: "string",
+      },
+      aspect_ratio: {
+        type: "string",
+        enum: ["16:9", "9:16"],
+        default: "16:9",
+      },
+      duration: {
+        type: "integer",
+        enum: [4, 8, 12],
+        default: 4,
+      },
+      image_urls: {
+        type: "array",
+        items: {
+          type: "string",
+          format: "uri",
+        },
+      },
+    },
+    required: ["model", "prompt"],
+    "x-apidog-orders": ["prompt", "image_urls", "aspect_ratio", "duration"],
+  },
+  examplePayload: {
+    model: "sora-2-preview",
+    prompt: "A waterfall in mist",
+    aspect_ratio: "16:9",
+    duration: 8,
+  },
+} as const;
+
 test("normalizes ai-video-studio fields from the input schema in api order", () => {
   const normalized = normalizeAiVideoStudioSchema(textToVideoDetail);
 
@@ -117,7 +156,7 @@ test("normalizes ai-video-studio fields from the input schema in api order", () 
       "character_id_list",
     ],
   );
-  assert.equal(normalized.fields[0]?.kind, "prompt");
+  assert.equal(normalized.fields[0]?.kind, "text");
   assert.equal(normalized.fields[1]?.kind, "enum");
   assert.equal(normalized.fields[2]?.kind, "enum");
   assert.equal(normalized.fields[3]?.kind, "boolean");
@@ -136,23 +175,25 @@ test("uses schema defaults without prefilling example input values", () => {
   });
 });
 
-test("marks prompt fields as required when the schema requires them", () => {
+test("marks required fields from the schema without semantic field conversion", () => {
   const normalized = normalizeAiVideoStudioSchema(textToVideoDetail);
 
-  assert.equal(normalized.requiresPrompt, true);
   assert.equal(
     normalized.fields.find((field) => field.key === "prompt")?.required,
     true,
   );
+  assert.equal(
+    normalized.fields.find((field) => field.key === "prompt")?.kind,
+    "text",
+  );
 });
 
-test("detects image requirements from ai studio image-to-video schema", () => {
+test("keeps image url arrays as plain string-array fields", () => {
   const normalized = normalizeAiVideoStudioSchema(imageToVideoDetail);
 
-  assert.equal(normalized.requiresImage, true);
   assert.equal(
     normalized.fields.find((field) => field.key === "image_urls")?.kind,
-    "image",
+    "string-array",
   );
 });
 
@@ -167,4 +208,31 @@ test("ignores callback fields outside the input payload", () => {
     normalized.fields.some((field) => field.key === "progressCallBackUrl"),
     false,
   );
+});
+
+test("normalizes top-level ai-studio fields when the schema does not use input", () => {
+  const normalized = normalizeAiVideoStudioSchema(topLevelDetail);
+
+  assert.deepEqual(
+    normalized.fields.map((field) => field.key),
+    ["prompt", "image_urls", "aspect_ratio", "duration"],
+  );
+  assert.equal(
+    normalized.fields.find((field) => field.key === "prompt")?.required,
+    true,
+  );
+  assert.equal(
+    normalized.fields.find((field) => field.key === "image_urls")?.kind,
+    "string-array",
+  );
+  assert.equal(
+    normalized.fields.find((field) => field.key === "duration")?.kind,
+    "enum",
+  );
+  assert.deepEqual(normalized.defaults, {
+    prompt: undefined,
+    image_urls: undefined,
+    aspect_ratio: "16:9",
+    duration: 4,
+  });
 });

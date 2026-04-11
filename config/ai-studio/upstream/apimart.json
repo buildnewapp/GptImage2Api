@@ -1,0 +1,643 @@
+{
+  "version": 1,
+  "generatedAt": "2026-04-11T00:00:00.000Z",
+  "items": [
+    {
+      "id": "video:apimart-seedance-2-0",
+      "vendor": "apimart",
+      "category": "video",
+      "title": "Seedance 2.0",
+      "docUrl": "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
+      "provider": "ByteDance",
+      "endpoint": "/v1/videos/generations",
+      "method": "POST",
+      "statusEndpoint": "/v1/tasks/{taskId}?language=en",
+      "modelKeys": [
+        "doubao-seedance-2.0"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "doubao-seedance-2.0"
+            ],
+            "default": "doubao-seedance-2.0",
+            "description": "Video generation model name. Supported values: `doubao-seedance-2.0` and `doubao-seedance-2.0-fast`."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Video content description. Required for text-to-video; optional for image-to-video or video-reference-to-video."
+          },
+          "image_urls": {
+            "type": "array",
+            "description": "Image URL array for image-to-video. Cannot be used together with `image_with_roles`. Maximum of 9 reference images.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "image_with_roles": {
+            "type": "array",
+            "description": "Image array with roles, supporting first-frame and last-frame control.",
+            "items": {
+              "type": "object",
+              "required": [
+                "url",
+                "role"
+              ],
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "Image URL."
+                },
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "first_frame",
+                    "last_frame"
+                  ],
+                  "description": "Image role. `first_frame` sets the starting frame and `last_frame` sets the ending frame."
+                }
+              }
+            }
+          },
+          "video_urls": {
+            "type": "array",
+            "description": "Reference video URL array. Requires publicly accessible video URLs. Unavailable when using `image_with_roles`. Maximum of 3 reference videos, with total duration 15 seconds or less. Reference video resolution must be between 480P and 720P, and videos must not contain real people.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "audio_urls": {
+            "type": "array",
+            "description": "Reference audio URL array. Requires publicly accessible audio URLs. Unavailable when using `image_with_roles`. Maximum of 3 reference audio files, with total duration 15 seconds or less. Reference audio must be used together with reference images or reference videos.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "tools": {
+            "type": "array",
+            "description": "Tool list for enhanced capabilities such as web search.",
+            "items": {
+              "type": "object",
+              "required": [
+                "type"
+              ],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "web_search"
+                  ],
+                  "description": "Tool type."
+                }
+              }
+            }
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Video resolution.",
+            "enum": [
+              "480p",
+              "720p"
+            ],
+            "default": "480p"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed for controlling generation randomness."
+          },
+          "generate_audio": {
+            "type": "boolean",
+            "description": "Whether to generate audio for the output video.",
+            "default": false
+          },
+          "size": {
+            "type": "string",
+            "description": "Video aspect ratio.",
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1",
+              "4:3",
+              "3:4",
+              "21:9",
+              "adaptive"
+            ],
+            "default": "16:9"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Video duration in seconds.",
+            "minimum": 4,
+            "maximum": 15,
+            "default": 5
+          },
+          "return_last_frame": {
+            "type": "boolean",
+            "description": "Whether to return the last frame image for continuous video workflows.",
+            "default": false
+          }
+        }
+      },
+      "examplePayload": {
+        "model": "doubao-seedance-2.0",
+        "prompt": "A cinematic aerial shot sweeping over a neon-lit city at night with light rain and reflective streets.",
+        "resolution": "480p",
+        "size": "16:9",
+        "duration": 5,
+        "generate_audio": true
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:apimart-seedance-2-0-fast",
+      "vendor": "apimart",
+      "category": "video",
+      "title": "Seedance 2.0 Fast",
+      "docUrl": "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
+      "provider": "ByteDance",
+      "endpoint": "/v1/videos/generations",
+      "method": "POST",
+      "statusEndpoint": "/v1/tasks/{taskId}?language=en",
+      "modelKeys": [
+        "doubao-seedance-2.0-fast"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "doubao-seedance-2.0-fast"
+            ],
+            "default": "doubao-seedance-2.0-fast",
+            "description": "Video generation model name. Supported values: `doubao-seedance-2.0` and `doubao-seedance-2.0-fast`."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Video content description. Required for text-to-video; optional for image-to-video or video-reference-to-video."
+          },
+          "image_urls": {
+            "type": "array",
+            "description": "Image URL array for image-to-video. Cannot be used together with `image_with_roles`. Maximum of 9 reference images.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "image_with_roles": {
+            "type": "array",
+            "description": "Image array with roles, supporting first-frame and last-frame control.",
+            "items": {
+              "type": "object",
+              "required": [
+                "url",
+                "role"
+              ],
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "Image URL."
+                },
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "first_frame",
+                    "last_frame"
+                  ],
+                  "description": "Image role. `first_frame` sets the starting frame and `last_frame` sets the ending frame."
+                }
+              }
+            }
+          },
+          "video_urls": {
+            "type": "array",
+            "description": "Reference video URL array. Requires publicly accessible video URLs. Unavailable when using `image_with_roles`. Maximum of 3 reference videos, with total duration 15 seconds or less. Reference video resolution must be between 480P and 720P, and videos must not contain real people.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "audio_urls": {
+            "type": "array",
+            "description": "Reference audio URL array. Requires publicly accessible audio URLs. Unavailable when using `image_with_roles`. Maximum of 3 reference audio files, with total duration 15 seconds or less. Reference audio must be used together with reference images or reference videos.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "tools": {
+            "type": "array",
+            "description": "Tool list for enhanced capabilities such as web search.",
+            "items": {
+              "type": "object",
+              "required": [
+                "type"
+              ],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "web_search"
+                  ],
+                  "description": "Tool type."
+                }
+              }
+            }
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Video resolution.",
+            "enum": [
+              "480p",
+              "720p"
+            ],
+            "default": "480p"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed for controlling generation randomness."
+          },
+          "generate_audio": {
+            "type": "boolean",
+            "description": "Whether to generate audio for the output video.",
+            "default": false
+          },
+          "size": {
+            "type": "string",
+            "description": "Video aspect ratio.",
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1",
+              "4:3",
+              "3:4",
+              "21:9",
+              "adaptive"
+            ],
+            "default": "16:9"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Video duration in seconds.",
+            "minimum": 4,
+            "maximum": 15,
+            "default": 5
+          },
+          "return_last_frame": {
+            "type": "boolean",
+            "description": "Whether to return the last frame image for continuous video workflows.",
+            "default": false
+          }
+        }
+      },
+      "examplePayload": {
+        "model": "doubao-seedance-2.0-fast",
+        "prompt": "A city nightscape timelapse with dynamic traffic streaks and moody clouds moving quickly overhead.",
+        "resolution": "480p",
+        "size": "21:9",
+        "duration": 8
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:apimart-sora-2-pro",
+      "vendor": "apimart",
+      "category": "video",
+      "title": "Sora2 - Pro",
+      "docUrl": "https://docs.apimart.ai/cn/api-reference/videos/sora-2/generation",
+      "provider": "Sora2",
+      "endpoint": "/v1/videos/generations",
+      "method": "POST",
+      "statusEndpoint": "/v1/tasks/{taskId}?language=en",
+      "modelKeys": [
+        "sora-2-pro"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "sora-2-pro"
+            ],
+            "default": "sora-2-pro",
+            "description": "Sora2 video generation model. This entry is pinned to `sora-2-pro`."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Required text prompt. Supports referencing created Sora roles with the `@username` syntax."
+          },
+          "duration": {
+            "type": "integer",
+            "enum": [
+              10,
+              15,
+              25
+            ],
+            "description": "Video duration in seconds. `sora-2-pro` supports 10 seconds, 15 seconds, or 25 seconds."
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "enum": [
+              "16:9",
+              "9:16"
+            ],
+            "description": "Video aspect ratio."
+          },
+          "image_urls": {
+            "type": "array",
+            "description": "Reference image URL list for image-to-video. URLs must be publicly accessible. Supported formats: .jpeg, .jpg, .png, .webp. Maximum file size is 10MB.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "Whether to add the official Sora watermark to the generated video.",
+            "default": false
+          },
+          "thumbnail": {
+            "type": "boolean",
+            "description": "Whether to generate a thumbnail. Thumbnail files are retained for about 1 hour."
+          },
+          "private": {
+            "type": "boolean",
+            "description": "Whether to enable private mode. Private videos cannot be published or remixed.",
+            "default": false
+          },
+          "style": {
+            "type": "string",
+            "enum": [
+              "thanksgiving",
+              "comic",
+              "news",
+              "selfie",
+              "nostalgic",
+              "anime"
+            ],
+            "description": "Optional Sora style preset."
+          },
+          "storyboard": {
+            "type": "boolean",
+            "description": "Whether to enable storyboard mode for more detailed control."
+          },
+          "character_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Reference video URL for character reuse. Using this option reduces the generated video duration by 1 second."
+          },
+          "character_timestamps": {
+            "type": "string",
+            "description": "Character clip time range in the format `start,end`. Only a 2-second range is supported. Using this option reduces the generated video duration by 1 second."
+          }
+        }
+      },
+      "examplePayload": {
+        "model": "sora-2-pro",
+        "prompt": "A cinematic tracking shot of a red train crossing a snowy bridge at dusk, warm cabin lights glowing through the fog.",
+        "duration": 10,
+        "aspect_ratio": "16:9",
+        "private": false,
+        "style": "nostalgic"
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:apimart-sora-2-vip",
+      "vendor": "apimart",
+      "category": "video",
+      "title": "Sora2 - VIP",
+      "docUrl": "https://docs.apimart.ai/cn/api-reference/videos/sora-2/generation",
+      "provider": "Sora2",
+      "endpoint": "/v1/videos/generations",
+      "method": "POST",
+      "statusEndpoint": "/v1/tasks/{taskId}?language=en",
+      "modelKeys": [
+        "sora-2-vip"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "sora-2-vip"
+            ],
+            "default": "sora-2-vip",
+            "description": "Sora2 video generation model. This entry is pinned to `sora-2-vip`."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Required text prompt. Supports referencing created Sora roles with the `@username` syntax."
+          },
+          "duration": {
+            "type": "integer",
+            "enum": [
+              10,
+              15
+            ],
+            "description": "Video duration in seconds. `sora-2-vip` supports 10 seconds or 15 seconds."
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "enum": [
+              "16:9",
+              "9:16"
+            ],
+            "description": "Video aspect ratio."
+          },
+          "image_urls": {
+            "type": "array",
+            "description": "Reference image URL list for image-to-video. URLs must be publicly accessible. Supported formats: .jpeg, .jpg, .png, .webp. Maximum file size is 10MB.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      },
+      "examplePayload": {
+        "model": "sora-2-vip",
+        "prompt": "A quiet mountain lake at sunrise with thin mist drifting across the surface and birds circling above the trees.",
+        "duration": 10,
+        "aspect_ratio": "16:9"
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:apimart-sora-2-preview",
+      "vendor": "apimart",
+      "category": "video",
+      "title": "Sora2 - Preview",
+      "docUrl": "https://docs.apimart.ai/cn/api-reference/videos/sora-2/generation-preview",
+      "provider": "Sora2",
+      "endpoint": "/v1/videos/generations",
+      "method": "POST",
+      "statusEndpoint": "/v1/tasks/{taskId}?language=en",
+      "modelKeys": [
+        "sora-2-preview"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "sora-2-preview"
+            ],
+            "default": "sora-2-preview",
+            "description": "Sora2 preview video generation model. This entry is pinned to `sora-2-preview`."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Required text prompt for video generation."
+          },
+          "duration": {
+            "type": "integer",
+            "enum": [
+              4,
+              8,
+              12
+            ],
+            "default": 4,
+            "description": "Video duration in seconds. Only 4, 8, or 12 seconds are supported."
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "enum": [
+              "landscape",
+              "16:9",
+              "portrait",
+              "9:16"
+            ],
+            "default": "landscape",
+            "description": "Video aspect ratio. `square` is not supported."
+          },
+          "image_urls": {
+            "type": "array",
+            "description": "Reference image URL array for image-to-video. Only the first image is used. When a reference image is provided, APIMart auto-detects the image aspect ratio and overrides the `aspect_ratio` parameter. Maximum file size is 10MB. Supported formats: .jpeg, .jpg, .png, .webp.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      },
+      "examplePayload": {
+        "model": "sora-2-preview",
+        "prompt": "A waterfall surges down dark rocks while sunlight cuts through the mist and forms a bright rainbow.",
+        "duration": 8,
+        "aspect_ratio": "landscape"
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:apimart-sora-2-pro-preview",
+      "vendor": "apimart",
+      "category": "video",
+      "title": "Sora2 - Pro Preview",
+      "docUrl": "https://docs.apimart.ai/cn/api-reference/videos/sora-2/generation-preview",
+      "provider": "Sora2",
+      "endpoint": "/v1/videos/generations",
+      "method": "POST",
+      "statusEndpoint": "/v1/tasks/{taskId}?language=en",
+      "modelKeys": [
+        "sora-2-pro-preview"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "sora-2-pro-preview"
+            ],
+            "default": "sora-2-pro-preview",
+            "description": "Sora2 preview video generation model. This entry is pinned to `sora-2-pro-preview`."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Required text prompt for video generation."
+          },
+          "duration": {
+            "type": "integer",
+            "enum": [
+              4,
+              8,
+              12
+            ],
+            "default": 4,
+            "description": "Video duration in seconds. Only 4, 8, or 12 seconds are supported."
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "enum": [
+              "landscape",
+              "16:9",
+              "portrait",
+              "9:16"
+            ],
+            "default": "landscape",
+            "description": "Video aspect ratio. `square` is not supported."
+          },
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "standard",
+              "high"
+            ],
+            "default": "standard",
+            "description": "Output resolution. This field is only supported by `sora-2-pro-preview`."
+          },
+          "image_urls": {
+            "type": "array",
+            "description": "Reference image URL array for image-to-video. Only the first image is used. When a reference image is provided, APIMart auto-detects the image aspect ratio and overrides the `aspect_ratio` parameter. Maximum file size is 10MB. Supported formats: .jpeg, .jpg, .png, .webp.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      },
+      "examplePayload": {
+        "model": "sora-2-pro-preview",
+        "prompt": "A lone astronaut walks through a flooded library lit by floating lanterns, with reflections shimmering on the water.",
+        "duration": 8,
+        "aspect_ratio": "landscape",
+        "resolution": "high"
+      },
+      "pricingRows": []
+    }
+  ]
+}

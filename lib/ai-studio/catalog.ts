@@ -1,4 +1,4 @@
-import { readFile, stat } from "node:fs/promises";
+import { readFile, readdir, stat } from "node:fs/promises";
 import path from "node:path";
 import YAML from "yaml";
 import bundledAiStudioRuntimeCatalog from "@/config/ai-studio/runtime/catalog.json";
@@ -28,12 +28,14 @@ export interface AiStudioPricingRow {
 }
 
 export interface AiStudioDocDetail extends AiStudioCatalogSeedEntry {
+  vendor?: string;
   endpoint: string;
   method: string;
   modelKeys: string[];
   requestSchema: Record<string, any> | null;
   examplePayload: Record<string, any>;
   pricingRows: AiStudioPricingRow[];
+  statusEndpoint?: string | null;
 }
 
 export interface AiStudioCatalogEntry extends AiStudioCatalogSeedEntry {
@@ -974,6 +976,16 @@ function cloneDetail(detail: AiStudioDocDetail): AiStudioDocDetail {
   };
 }
 
+function mergeAiStudioUpstreamCatalogFiles(
+  files: AiStudioUpstreamCatalogFile[],
+): AiStudioUpstreamCatalogFile {
+  return {
+    version: 1,
+    generatedAt: new Date().toISOString(),
+    items: files.flatMap((file) => file.items.map(cloneDetail)),
+  };
+}
+
 function matchesPricingOverride(
   entry: AiStudioDocDetail,
   row: AiStudioPricingRow,
@@ -1326,6 +1338,32 @@ export async function loadAiStudioUpstreamCatalogFile(
   filePath = getAiStudioCatalogPaths().upstreamCatalogPath,
 ) {
   return readJsonFile<AiStudioUpstreamCatalogFile>(filePath);
+}
+
+export async function loadAiStudioMergedUpstreamCatalogFiles(
+  filePath = getAiStudioCatalogPaths().upstreamCatalogPath,
+) {
+  const upstreamDir = path.dirname(filePath);
+  const primaryName = path.basename(filePath);
+  const entries = await readdir(upstreamDir, {
+    withFileTypes: true,
+  });
+  const fileNames = entries
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
+    .map((entry) => entry.name)
+    .sort((left, right) => {
+      if (left === primaryName) return -1;
+      if (right === primaryName) return 1;
+      return left.localeCompare(right);
+    });
+
+  const files = await Promise.all(
+    fileNames.map((name) =>
+      readJsonFile<AiStudioUpstreamCatalogFile>(path.join(upstreamDir, name)),
+    ),
+  );
+
+  return mergeAiStudioUpstreamCatalogFiles(files);
 }
 
 export async function loadAiStudioModelOverridesFile(

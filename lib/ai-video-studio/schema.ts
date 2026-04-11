@@ -1,8 +1,6 @@
 type JsonSchema = Record<string, any>;
 
 export type AiVideoStudioFieldKind =
-  | "prompt"
-  | "image"
   | "enum"
   | "boolean"
   | "number"
@@ -11,6 +9,7 @@ export type AiVideoStudioFieldKind =
 
 export type AiVideoStudioFieldDescriptor = {
   key: string;
+  path: string[];
   label: string;
   kind: AiVideoStudioFieldKind;
   required: boolean;
@@ -21,8 +20,6 @@ export type AiVideoStudioFieldDescriptor = {
 export type AiVideoStudioSchemaState = {
   fields: AiVideoStudioFieldDescriptor[];
   defaults: Record<string, unknown>;
-  requiresPrompt: boolean;
-  requiresImage: boolean;
 };
 
 function titleCase(input: string) {
@@ -31,30 +28,7 @@ function titleCase(input: string) {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-function isImageField(key: string, schema: JsonSchema) {
-  const lowerKey = key.toLowerCase();
-  if (!lowerKey.includes("image")) {
-    return false;
-  }
-
-  if (schema.type === "array") {
-    return schema.items?.type === "string";
-  }
-
-  return schema.type === "string";
-}
-
-function getFieldKind(key: string, schema: JsonSchema): AiVideoStudioFieldKind {
-  const lowerKey = key.toLowerCase();
-
-  if (lowerKey === "prompt" || lowerKey.endsWith("_prompt")) {
-    return "prompt";
-  }
-
-  if (isImageField(key, schema)) {
-    return "image";
-  }
-
+function getFieldKind(schema: JsonSchema): AiVideoStudioFieldKind {
   if (Array.isArray(schema.enum) && schema.enum.length > 0) {
     return "enum";
   }
@@ -104,42 +78,108 @@ function getOrderedFieldKeys(properties: Record<string, JsonSchema>, schema: Jso
   return keys;
 }
 
+function isCallbackField(key: string) {
+  const normalized = key.toLowerCase().replace(/[^a-z0-9]+/g, "");
+
+  return (
+    normalized === "callback" ||
+    normalized === "callbackurl" ||
+    normalized === "progresscallbackurl" ||
+    normalized === "webhookurl"
+  );
+}
+
+function setValueAtPath(
+  source: Record<string, unknown>,
+  path: string[],
+  value: unknown,
+) {
+  let cursor = source;
+
+  for (let index = 0; index < path.length - 1; index += 1) {
+    const segment = path[index]!;
+    const current = cursor[segment];
+
+    if (!current || typeof current !== "object" || Array.isArray(current)) {
+      cursor[segment] = {};
+    }
+
+    cursor = cursor[segment] as Record<string, unknown>;
+  }
+
+  cursor[path[path.length - 1]!] = value;
+}
+
+function getPayloadSchemaRoot(requestSchema: JsonSchema | null | undefined) {
+  const inputSchema = requestSchema?.properties?.input;
+
+  if (
+    inputSchema &&
+    typeof inputSchema === "object" &&
+    inputSchema.type === "object" &&
+    inputSchema.properties
+  ) {
+    return inputSchema as JsonSchema;
+  }
+
+  return requestSchema ?? null;
+}
+
 export function normalizeAiVideoStudioSchema(detail: {
   requestSchema: JsonSchema | null | undefined;
   examplePayload: JsonSchema | null | undefined;
 }): AiVideoStudioSchemaState {
-  const inputSchema = detail.requestSchema?.properties?.input;
-  const properties = (inputSchema?.properties ?? {}) as Record<string, JsonSchema>;
-  const required = new Set<string>(
-    Array.isArray(inputSchema?.required)
-      ? inputSchema.required.filter((key: unknown): key is string => typeof key === "string")
-      : [],
-  );
+  const payloadSchema = getPayloadSchemaRoot(detail.requestSchema);
   const fields: AiVideoStudioFieldDescriptor[] = [];
   const defaults: Record<string, unknown> = {};
 
-  for (const key of getOrderedFieldKeys(properties, inputSchema ?? {})) {
-    const schema = properties[key];
-    const defaultValue = schema?.default;
+  function walkSchema(schema: JsonSchema | null | undefined, path: string[] = []) {
+    const properties = (schema?.properties ?? {}) as Record<string, JsonSchema>;
+    const required = new Set<string>(
+      Array.isArray(schema?.required)
+        ? schema.required.filter((key: unknown): key is string => typeof key === "string")
+        : [],
+    );
 
-    defaults[key] = defaultValue;
-    fields.push({
-      key,
-      label: titleCase(key),
-      kind: getFieldKind(key, schema),
-      required: required.has(key),
-      schema,
-      defaultValue,
-    });
+    for (const key of getOrderedFieldKeys(properties, schema ?? {})) {
+      if (key === "model" || isCallbackField(key)) {
+        continue;
+      }
+
+      const childSchema = properties[key];
+      if (!childSchema || typeof childSchema !== "object") {
+        continue;
+      }
+
+      const nextPath = [...path, key];
+      const isNestedObject =
+        childSchema.type === "object" &&
+        childSchema.properties &&
+        !Array.isArray(childSchema.enum);
+
+      if (isNestedObject) {
+        walkSchema(childSchema, nextPath);
+        continue;
+      }
+
+      const defaultValue = childSchema.default;
+      setValueAtPath(defaults, nextPath, defaultValue);
+      fields.push({
+        key,
+        path: nextPath,
+        label: titleCase(nextPath.join(" / ")),
+        kind: getFieldKind(childSchema),
+        required: required.has(key),
+        schema: childSchema,
+        defaultValue,
+      });
+    }
   }
+
+  walkSchema(payloadSchema);
 
   return {
     fields,
     defaults,
-    requiresPrompt:
-      required.has("prompt") ||
-      fields.some((field) => field.kind === "prompt" && field.required),
-    requiresImage:
-      fields.some((field) => field.kind === "image" && field.required),
   };
 }

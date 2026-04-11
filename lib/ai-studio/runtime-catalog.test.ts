@@ -13,7 +13,9 @@ import type {
 } from "@/lib/ai-studio/catalog";
 import {
   compileAiStudioRuntimeCatalog,
+  getAiStudioCatalogPaths,
   getCachedAiStudioCatalogEntry,
+  loadAiStudioMergedUpstreamCatalogFiles,
   loadAiStudioRuntimeCatalogFile,
   toAiStudioCatalogEntries,
   validateAiStudioRuntimeBuildInput,
@@ -155,6 +157,101 @@ test("loads a local runtime catalog file for runtime reads", async () => {
   } finally {
     await rm(tempDir, { recursive: true, force: true });
   }
+});
+
+test("merges multiple upstream catalog files from the same directory", async () => {
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), "ai-studio-upstream-merge-"));
+  const primaryPath = path.join(tempDir, "catalog.json");
+  const apimartPath = path.join(tempDir, "apimart.json");
+
+  try {
+    await writeFile(
+      primaryPath,
+      JSON.stringify({
+        version: 1,
+        generatedAt: "2026-03-08T00:00:00.000Z",
+        items: [createDetail()],
+      }),
+      "utf8",
+    );
+    await writeFile(
+      apimartPath,
+      JSON.stringify({
+        version: 1,
+        generatedAt: "2026-03-08T00:00:00.000Z",
+        items: [
+          createDetail({
+            id: "video:apimart-seedance-2-0",
+            vendor: "apimart",
+            title: "Seedance 2.0",
+            docUrl: "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
+            provider: "ByteDance",
+            endpoint: "/v1/videos/generations",
+            statusEndpoint: "/v1/tasks/{taskId}?language=en",
+            modelKeys: ["doubao-seedance-2.0"],
+            examplePayload: {
+              model: "doubao-seedance-2.0",
+            },
+          }),
+        ],
+      }),
+      "utf8",
+    );
+
+    const loaded = await loadAiStudioMergedUpstreamCatalogFiles(primaryPath);
+
+    assert.deepEqual(
+      loaded.items.map((item) => item.id),
+      ["video:sora2-text-to-video", "video:apimart-seedance-2-0"],
+    );
+    assert.equal(loaded.items[1]?.vendor, "apimart");
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("loads apimart sora 2 models from the real upstream catalog", async () => {
+  const { upstreamCatalogPath } = getAiStudioCatalogPaths();
+  const loaded = await loadAiStudioMergedUpstreamCatalogFiles(upstreamCatalogPath);
+
+  const sora2Pro = loaded.items.find((item) => item.id === "video:apimart-sora-2-pro");
+  const sora2Vip = loaded.items.find((item) => item.id === "video:apimart-sora-2-vip");
+  const sora2Preview = loaded.items.find(
+    (item) => item.id === "video:apimart-sora-2-preview",
+  );
+  const sora2ProPreview = loaded.items.find(
+    (item) => item.id === "video:apimart-sora-2-pro-preview",
+  );
+
+  assert.ok(sora2Pro);
+  assert.ok(sora2Vip);
+  assert.ok(sora2Preview);
+  assert.ok(sora2ProPreview);
+  assert.deepEqual(sora2Pro.modelKeys, ["sora-2-pro"]);
+  assert.deepEqual(sora2Vip.modelKeys, ["sora-2-vip"]);
+  assert.deepEqual(sora2Preview.modelKeys, ["sora-2-preview"]);
+  assert.deepEqual(sora2ProPreview.modelKeys, ["sora-2-pro-preview"]);
+  assert.equal(sora2Pro.requestSchema?.properties?.storyboard?.type, "boolean");
+  assert.equal(
+    sora2Vip.requestSchema?.properties?.storyboard,
+    undefined,
+  );
+  assert.equal(
+    sora2Vip.requestSchema?.properties?.watermark,
+    undefined,
+  );
+  assert.equal(
+    sora2Pro.requestSchema?.properties?.character_timestamps?.type,
+    "string",
+  );
+  assert.equal(
+    sora2Preview.requestSchema?.properties?.resolution,
+    undefined,
+  );
+  assert.deepEqual(
+    sora2ProPreview.requestSchema?.properties?.resolution?.enum,
+    ["standard", "high"],
+  );
 });
 
 test("keeps runtime catalog paths rooted at cwd config dir", async () => {
