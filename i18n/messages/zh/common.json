@@ -53,6 +53,11 @@
     },
     "UserMenus": [
       {
+        "name": "生成",
+        "href": "/dashboard/generate",
+        "icon": "WandSparkles"
+      },
+      {
         "name": "我的视频",
         "href": "/dashboard/videos",
         "icon": "Video"
@@ -201,6 +206,10 @@
   "About": {
     "title": "关于我们",
     "description": "关于我们"
+  },
+  "DashboardGenerate": {
+    "title": "生成",
+    "description": "使用 AI Video Studio 创建视频。"
   },
   "AIDemo": {
     "title": "AI 能力展示",

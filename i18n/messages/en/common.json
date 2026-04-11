@@ -53,6 +53,11 @@
     },
     "UserMenus": [
       {
+        "name": "Generate",
+        "href": "/dashboard/generate",
+        "icon": "WandSparkles"
+      },
+      {
         "name": "My Videos",
         "href": "/dashboard/videos",
         "icon": "Video"
@@ -201,6 +206,10 @@
   "About": {
     "title": "About",
     "description": "About the site"
+  },
+  "DashboardGenerate": {
+    "title": "Generate",
+    "description": "Create videos with AI Video Studio."
   },
   "AIDemo": {
     "title": "AI Capabilities",

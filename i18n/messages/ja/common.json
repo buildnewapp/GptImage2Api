@@ -53,6 +53,11 @@
     },
     "UserMenus": [
       {
+        "name": "生成",
+        "href": "/dashboard/generate",
+        "icon": "WandSparkles"
+      },
+      {
         "name": "マイビデオ",
         "href": "/dashboard/videos",
         "icon": "Video"
@@ -201,6 +206,10 @@
   "About": {
     "title": "About",
     "description": "About the site"
+  },
+  "DashboardGenerate": {
+    "title": "生成",
+    "description": "AI Video Studio で動画を生成します。"
   },
   "AIDemo": {
     "title": "AI機能",
