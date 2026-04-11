@@ -105,7 +105,7 @@ export default function HeaderShell({
               totalAvailableCredits={totalAvailableCredits}
             />
             <I18nLink
-              href="/generate"
+              href="/dashboard/generate"
               className="inline-flex h-11 items-center justify-center rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-5 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110"
             >
               <Sparkles className="mr-2 h-4 w-4" />

@@ -6,6 +6,7 @@ import {
 } from "@/components/home/template2/constants";
 import { Template2ShowcaseMedia } from "@/components/home/template2/Media";
 import type { HomeTemplate2ShowcaseSection } from "@/components/home/template2/types";
+import { Link as I18nLink } from "@/i18n/routing";
 
 interface ShowcaseProps {
   section: HomeTemplate2ShowcaseSection;
@@ -33,12 +34,13 @@ export default function Showcase({ section }: ShowcaseProps) {
         <Template2ShowcaseMedia videos={section.videos} />
         <div className="text-center">
           <p className="mb-6 text-lg text-muted-foreground">{section.ctaText}</p>
-          <a data-aos="zoom-in"
-             className="inline-flex h-12 items-center justify-center whitespace-nowrap rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-7 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] ring-offset-background transition-all duration-300 ease-out hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 sm:text-base"
-            href="/generate"
+          <I18nLink
+            data-aos="zoom-in"
+            className="inline-flex h-12 items-center justify-center whitespace-nowrap rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-7 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] ring-offset-background transition-all duration-300 ease-out hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 sm:text-base"
+            href="/dashboard/generate"
           >
             Start Creating Now
-          </a>
+          </I18nLink>
         </div>
       </div>
     </section>

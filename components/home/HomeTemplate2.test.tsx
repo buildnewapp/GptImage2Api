@@ -29,6 +29,25 @@ test("renders the key Seedance 2.0 homepage sections and media urls", () => {
   assert.match(html, /https:\/\/cdn\.sdanceai\.com\/sdanceai\/sdance_videos\/4vr3llg33\.mp4/);
 });
 
+test("routes template2 generate entries through the localized dashboard path", () => {
+  const html = renderHomeTemplate2();
+  const ctaSource = readFileSync(
+    path.join(projectRoot, "components/home/template2/CTA.tsx"),
+    "utf8"
+  );
+  const showcaseSource = readFileSync(
+    path.join(projectRoot, "components/home/template2/Showcase.tsx"),
+    "utf8"
+  );
+
+  assert.match(html, /href="\/dashboard\/generate"/);
+  assert.doesNotMatch(html, /href="\/generate"/);
+  assert.match(ctaSource, /from "@\/i18n\/routing"/);
+  assert.match(ctaSource, /<I18nLink/);
+  assert.match(showcaseSource, /from "@\/i18n\/routing"/);
+  assert.match(showcaseSource, /<I18nLink/);
+});
+
 test("renders hero video rotator controls for hero-1 through hero-4", () => {
   const html = renderHomeTemplate2();
 
