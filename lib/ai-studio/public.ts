@@ -5,6 +5,13 @@ import {
   getAiStudioPublicModelId,
   resolvePricingRowRuntimeModel,
 } from "@/lib/ai-studio/catalog";
+import {
+  type AiStudioRequestMeta,
+  type AiStudioTaskMeta,
+  getAiStudioRequestMeta,
+  getAiStudioTaskMeta,
+  isAiStudioCallbackField,
+} from "@/lib/ai-studio/provider-metadata";
 
 export type AiStudioPublicPricingRow = Omit<AiStudioPricingRow, "anchor"> & {
   runtimeModel: string | null;
@@ -14,23 +21,12 @@ export type AiStudioPublicCatalogEntry = Omit<AiStudioCatalogEntry, "docUrl" | "
 };
 export type AiStudioPublicDocDetail = Omit<AiStudioDocDetail, "docUrl" | "pricingRows"> & {
   pricingRows: AiStudioPublicPricingRow[];
+  requestMeta: AiStudioRequestMeta;
+  taskMeta: AiStudioTaskMeta;
 };
 
-const CALLBACK_KEYS = new Set([
-  "callbackurl",
-  "callback_url",
-  "progresscallbackurl",
-  "progress_callback_url",
-  "webhookurl",
-  "webhook_url",
-]);
-
-function normalizeKey(input: string) {
-  return input.toLowerCase().replace(/[^a-z0-9]+/g, "");
-}
-
 function isCallbackKey(input: string) {
-  return CALLBACK_KEYS.has(normalizeKey(input));
+  return isAiStudioCallbackField(input);
 }
 
 function sanitizeBrandString(input: string) {
@@ -221,6 +217,8 @@ export function toPublicDocDetail(detail: AiStudioDocDetail): AiStudioPublicDocD
       stripCallbackFields: true,
     }) as AiStudioDocDetail["examplePayload"],
     pricingRows: pricingRows.map((row) => toPublicPricingRow(row, detail)),
+    requestMeta: getAiStudioRequestMeta(detail),
+    taskMeta: getAiStudioTaskMeta(detail),
   };
 
   rewritePublicModelFields(detail, next);

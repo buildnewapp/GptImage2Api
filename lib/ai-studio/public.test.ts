@@ -70,6 +70,17 @@ test("serializes public model detail without kie urls, anchors, or callback fiel
   assert.equal(detail.pricingRows[0] && "anchor" in detail.pricingRows[0], false);
   assert.equal(detail.pricingRows[0]?.runtimeModel, "grok-imagine/text-to-video");
   assert.equal(JSON.stringify(detail).toLowerCase().includes("kie"), false);
+  assert.equal(detail.requestMeta.bodyType, "json");
+  assert.deepEqual(detail.requestMeta.hiddenFields.sort(), [
+    "callBackUrl",
+    "progressCallBackUrl",
+  ]);
+  assert.deepEqual(detail.requestMeta.injectedFields.sort(), [
+    "callBackUrl",
+    "progressCallBackUrl",
+  ]);
+  assert.equal(detail.taskMeta.mode, "poll+callback");
+  assert.equal(detail.taskMeta.statusEndpoint, "/api/v1/runway/record-detail");
 });
 
 test("sanitizes debug payloads before returning them to the browser", () => {
@@ -181,4 +192,59 @@ test("replaces single-runtime catalog pricing rows with alias labels", () => {
 
   assert.equal(entry.id, "video:sdance-text-to-video");
   assert.equal(entry.pricingRows[0]?.runtimeModel, "sdance-text-to-video");
+});
+
+test("removes nested callback fields from public detail and exposes matching metadata", () => {
+  const detail = toPublicDocDetail({
+    id: "video:nested-callback-test",
+    category: "video",
+    title: "Nested Callback Test",
+    docUrl: "https://docs.kie.ai/market/example/nested-callback.md",
+    provider: "Example",
+    endpoint: "/api/v1/jobs/createTask",
+    method: "POST",
+    modelKeys: ["example/nested-callback"],
+    requestSchema: {
+      type: "object",
+      properties: {
+        input: {
+          type: "object",
+          properties: {
+            prompt: {
+              type: "string",
+            },
+            callbackUrl: {
+              type: "string",
+            },
+          },
+        },
+        config: {
+          type: "object",
+          properties: {
+            webhook_url: {
+              type: "string",
+            },
+          },
+        },
+      },
+    },
+    examplePayload: {
+      input: {
+        prompt: "hello",
+        callbackUrl: "https://example.com/callback",
+      },
+      config: {
+        webhook_url: "https://example.com/webhook",
+      },
+    },
+    pricingRows: [],
+  });
+
+  assert.equal("callbackUrl" in (detail.requestSchema?.properties?.input?.properties ?? {}), false);
+  assert.equal("webhook_url" in (detail.requestSchema?.properties?.config?.properties ?? {}), false);
+  assert.equal("callbackUrl" in (detail.examplePayload.input ?? {}), false);
+  assert.equal("webhook_url" in (detail.examplePayload.config ?? {}), false);
+  assert.deepEqual(detail.requestMeta.hiddenFields.sort(), ["callbackUrl", "webhook_url"]);
+  assert.deepEqual(detail.requestMeta.injectedFields.sort(), ["callbackUrl", "webhook_url"]);
+  assert.equal(detail.taskMeta.mode, "poll+callback");
 });

@@ -9,7 +9,19 @@ import {
   getCachedAiStudioCatalogDetail,
 } from "@/lib/ai-studio/catalog";
 import { isRenderableAssetUrl } from "@/lib/ai-studio/media";
+import {
+  applyAiStudioSystemFields,
+  getAiStudioTaskMeta,
+  resolveStatusEndpoint,
+  resolveTaskMode,
+} from "@/lib/ai-studio/provider-metadata";
 import { guessPricingRow } from "@/lib/ai-studio/runtime";
+
+export {
+  applyAiStudioSystemFields,
+  resolveStatusEndpoint,
+  resolveTaskMode,
+} from "@/lib/ai-studio/provider-metadata";
 
 export type AiStudioNormalizedState =
   | "queued"
@@ -47,44 +59,6 @@ export function getAiStudioCallbackUrl() {
   }
 
   return callbackUrl.toString();
-}
-
-export function resolveStatusEndpoint(detail: AiStudioDocDetail) {
-  const docUrl = detail.docUrl;
-
-  if (detail.endpoint === "/api/v1/jobs/createTask" && docUrl.includes("/market/")) {
-    return "/api/v1/jobs/recordInfo";
-  }
-
-  if (docUrl.includes("/4o-image-api/")) {
-    return "/api/v1/gpt4o-image/record-info";
-  }
-
-  if (docUrl.includes("/flux-kontext-api/")) {
-    return "/api/v1/flux/kontext/record-info";
-  }
-
-  if (docUrl.includes("/runway-api/")) {
-    return "/api/v1/runway/record-detail";
-  }
-
-  if (docUrl.includes("/veo3-api/")) {
-    return "/api/v1/veo/record-info";
-  }
-
-  if (docUrl.includes("/suno-api/")) {
-    if (docUrl.includes("/cover-suno")) return "/api/v1/suno/cover/record-info";
-    if (docUrl.includes("/generate-lyrics")) return "/api/v1/lyrics/record-info";
-    if (docUrl.includes("/convert-to-wav")) return "/api/v1/wav/record-info";
-    if (docUrl.includes("/separate-vocals")) {
-      return "/api/v1/vocal-removal/record-info";
-    }
-    if (docUrl.includes("/generate-midi")) return "/api/v1/midi/record-info";
-    if (docUrl.includes("/create-music-video")) return "/api/v1/mp4/record-info";
-    return "/api/v1/generate/record-info";
-  }
-
-  return null;
 }
 
 export function extractTaskId(raw: unknown): string | null {
@@ -345,14 +319,12 @@ export async function prepareAiStudioExecution(
 
   const body = mapPublicModelAliasToProviderModel(detail, payload);
   const callbackUrl = getAiStudioCallbackUrl();
-  if (callbackUrl && !body.callBackUrl && detail.category !== "chat") {
-    body.callBackUrl = callbackUrl;
-  }
+  const preparedBody = applyAiStudioSystemFields(detail, body, callbackUrl);
 
   return {
     detail,
-    body,
-    selectedPricing: estimatePricingRow(detail.pricingRows, body),
+    body: preparedBody,
+    selectedPricing: estimatePricingRow(detail.pricingRows, preparedBody),
   };
 }
 
@@ -388,12 +360,13 @@ export async function submitAiStudioExecution(
   }
 
   const taskId = extractTaskId(raw);
-  const statusEndpoint = resolveStatusEndpoint(detail);
+  const taskMeta = getAiStudioTaskMeta(detail);
 
   return {
     raw,
     taskId,
-    statusEndpoint,
+    statusEndpoint: taskMeta.statusEndpoint,
+    statusMode: resolveTaskMode(detail),
     mediaUrls: extractMediaUrls(raw),
   };
 }

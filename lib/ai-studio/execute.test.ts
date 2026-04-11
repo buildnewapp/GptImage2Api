@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  applyAiStudioSystemFields,
   estimatePricingRow,
   extractMediaUrls,
   extractProviderFailureReason,
@@ -9,6 +10,7 @@ import {
   getCanonicalAiStudioModelId,
   mapPublicModelAliasToProviderModel,
   normalizeTaskState,
+  resolveTaskMode,
   submitAiStudioExecution,
   resolveStatusEndpoint,
 } from "@/lib/ai-studio/execute";
@@ -152,6 +154,170 @@ test("treats provider business errors in 200 responses as execution failures", a
   );
 
   global.fetch = originalFetch;
+});
+
+test("injects configured callback fields into request payloads", () => {
+  const body = applyAiStudioSystemFields(
+    {
+      id: "video:grok-imagine-text-to-video",
+      category: "video",
+      title: "Grok Imagine Text to Video",
+      docUrl: "https://docs.kie.ai/market/grok-imagine/text-to-video.md",
+      provider: "Grok Imagine",
+      endpoint: "/api/v1/runway/generate",
+      method: "POST",
+      modelKeys: ["grok-imagine/text-to-video"],
+      requestSchema: {
+        type: "object",
+        properties: {
+          callBackUrl: {
+            type: "string",
+          },
+          progressCallBackUrl: {
+            type: "string",
+          },
+        },
+      },
+      examplePayload: {},
+      pricingRows: [],
+    },
+    {
+      prompt: "hello",
+    },
+    "https://example.com/api/ai-studio/callback",
+  );
+
+  assert.equal(body.callBackUrl, "https://example.com/api/ai-studio/callback");
+  assert.equal(body.progressCallBackUrl, "https://example.com/api/ai-studio/callback");
+});
+
+test("returns a normalized status mode for async kie executions", async () => {
+  const originalFetch = global.fetch;
+  process.env.KIE_API_KEY = "test-key";
+
+  global.fetch = async () =>
+    new Response(
+      JSON.stringify({
+        code: 200,
+        data: {
+          taskId: "task_123",
+        },
+      }),
+      {
+        status: 200,
+        headers: {
+          "content-type": "application/json",
+        },
+      },
+    ) as Response;
+
+  const result = await submitAiStudioExecution(
+    {
+      id: "image:nano-banana",
+      category: "image",
+      title: "Google - Nano Banana 2",
+      docUrl: "https://docs.kie.ai/market/google/nanobanana2.md",
+      provider: "Google",
+      endpoint: "/api/v1/jobs/createTask",
+      method: "POST",
+      modelKeys: ["google/nano-banana-2"],
+      requestSchema: {
+        type: "object",
+        properties: {
+          prompt: {
+            type: "string",
+          },
+        },
+      },
+      examplePayload: {},
+      pricingRows: [],
+    },
+    {
+      model: "google/nano-banana-2",
+    },
+  );
+
+  assert.equal(result.statusMode, "poll");
+  assert.equal(
+    resolveTaskMode({
+      id: "image:nano-banana",
+      category: "image",
+      title: "Google - Nano Banana 2",
+      docUrl: "https://docs.kie.ai/market/google/nanobanana2.md",
+      provider: "Google",
+      endpoint: "/api/v1/jobs/createTask",
+      method: "POST",
+      modelKeys: ["google/nano-banana-2"],
+      requestSchema: {
+        type: "object",
+        properties: {
+          prompt: {
+            type: "string",
+          },
+        },
+      },
+      examplePayload: {},
+      pricingRows: [],
+    }),
+    "poll",
+  );
+
+  global.fetch = originalFetch;
+});
+
+test("does not advertise callback capability when schema has no callback field", () => {
+  assert.equal(
+    resolveTaskMode({
+      id: "image:nano-banana",
+      category: "image",
+      title: "Google - Nano Banana 2",
+      docUrl: "https://docs.kie.ai/market/google/nanobanana2.md",
+      provider: "Google",
+      endpoint: "/api/v1/jobs/createTask",
+      method: "POST",
+      modelKeys: ["google/nano-banana-2"],
+      requestSchema: {
+        type: "object",
+        properties: {
+          prompt: {
+            type: "string",
+          },
+        },
+      },
+      examplePayload: {},
+      pricingRows: [],
+    }),
+    "poll",
+  );
+
+  const body = applyAiStudioSystemFields(
+    {
+      id: "image:nano-banana",
+      category: "image",
+      title: "Google - Nano Banana 2",
+      docUrl: "https://docs.kie.ai/market/google/nanobanana2.md",
+      provider: "Google",
+      endpoint: "/api/v1/jobs/createTask",
+      method: "POST",
+      modelKeys: ["google/nano-banana-2"],
+      requestSchema: {
+        type: "object",
+        properties: {
+          prompt: {
+            type: "string",
+          },
+        },
+      },
+      examplePayload: {},
+      pricingRows: [],
+    },
+    {
+      prompt: "hello",
+    },
+    "https://example.com/api/ai-studio/callback",
+  );
+
+  assert.equal(body.callBackUrl, "https://example.com/api/ai-studio/callback");
 });
 
 test("estimates the best pricing row from the active payload", () => {

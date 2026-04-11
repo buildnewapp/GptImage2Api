@@ -80,6 +80,7 @@ type ExecuteResponse = {
     reservedCredits?: number;
     state?: string;
     taskId?: string | null;
+    statusMode?: "sync" | "poll" | "callback" | "poll+callback";
     statusSupported: boolean;
     raw: unknown;
     mediaUrls: string[];
@@ -201,11 +202,16 @@ function titleCase(input: string) {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
+function normalizeFieldHandle(input: string) {
+  return input.toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
+
 function collectFields(
   schema: Record<string, any> | null,
   payload: Record<string, any>,
   path: string[] = [],
   depth = 0,
+  hiddenFields = new Set<string>(),
 ): FieldDescriptor[] {
   if (!schema || typeof schema !== "object") {
     return [];
@@ -219,7 +225,7 @@ function collectFields(
   const fields: FieldDescriptor[] = [];
 
   for (const [key, childSchema] of Object.entries(properties)) {
-    if (key.toLowerCase().includes("callback")) {
+    if (hiddenFields.has(normalizeFieldHandle(key))) {
       continue;
     }
 
@@ -230,7 +236,7 @@ function collectFields(
 
     if (hasObjectChildren) {
       fields.push(
-        ...collectFields(childSchema, payload, nextPath, depth + 1),
+        ...collectFields(childSchema, payload, nextPath, depth + 1, hiddenFields),
       );
       continue;
     }
@@ -246,17 +252,6 @@ function collectFields(
   }
 
   return fields;
-}
-
-function matchesPayloadField(field: FieldDescriptor, type: "image" | "audio" | "video") {
-  const name = field.path.join(".").toLowerCase();
-  if (type === "image") {
-    return name.includes("image");
-  }
-  if (type === "audio") {
-    return name.includes("audio") || name.includes("voice") || name.includes("song");
-  }
-  return name.includes("video");
 }
 
 function guessSelectedPricing(
@@ -645,28 +640,14 @@ export default function AiStudioShell({
     setPayload((current) => applyPricingRowToPayload(current, row));
   }
 
-  async function handleFileField(field: FieldDescriptor, file: File | null) {
-    if (!file) {
-      return;
-    }
-
-    const dataUrl = await new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(String(reader.result));
-      reader.onerror = () => reject(reader.error);
-      reader.readAsDataURL(file);
-    });
-
-    if (field.schema.type === "array") {
-      updateField(field.path, [dataUrl]);
-      return;
-    }
-
-    updateField(field.path, dataUrl);
-  }
-
   const fields = detail
-    ? collectFields(detail.requestSchema, payload)
+    ? collectFields(
+        detail.requestSchema,
+        payload,
+        [],
+        0,
+        new Set(detail.requestMeta.hiddenFields.map(normalizeFieldHandle)),
+      )
     : [];
   const runtimeModels = collectRuntimeModels(detail?.pricingRows ?? []);
   const selectedPricing =
@@ -910,9 +891,6 @@ export default function AiStudioShell({
                           fieldType === "object" ||
                           key.includes("messages") ||
                           key.includes("tools");
-                        const showImageUpload = matchesPayloadField(field, "image");
-                        const showAudioUpload = matchesPayloadField(field, "audio");
-                        const showVideoUpload = matchesPayloadField(field, "video");
 
                         return (
                           <div
@@ -1005,50 +983,6 @@ export default function AiStudioShell({
                                   updateField(field.path, event.target.value)
                                 }
                               />
-                            )}
-
-                            {(showImageUpload || showAudioUpload || showVideoUpload) && (
-                              <div className="mt-3 flex flex-wrap gap-3">
-                                {showImageUpload && (
-                                  <label className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 dark:border-white/10 dark:bg-slate-950 dark:text-slate-200">
-                                    Upload image
-                                    <input
-                                      type="file"
-                                      accept="image/*"
-                                      className="hidden"
-                                      onChange={(event) =>
-                                        handleFileField(field, event.target.files?.[0] ?? null)
-                                      }
-                                    />
-                                  </label>
-                                )}
-                                {showAudioUpload && (
-                                  <label className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 dark:border-white/10 dark:bg-slate-950 dark:text-slate-200">
-                                    Upload audio
-                                    <input
-                                      type="file"
-                                      accept="audio/*"
-                                      className="hidden"
-                                      onChange={(event) =>
-                                        handleFileField(field, event.target.files?.[0] ?? null)
-                                      }
-                                    />
-                                  </label>
-                                )}
-                                {showVideoUpload && (
-                                  <label className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 dark:border-white/10 dark:bg-slate-950 dark:text-slate-200">
-                                    Upload video
-                                    <input
-                                      type="file"
-                                      accept="video/*"
-                                      className="hidden"
-                                      onChange={(event) =>
-                                        handleFileField(field, event.target.files?.[0] ?? null)
-                                      }
-                                    />
-                                  </label>
-                                )}
-                              </div>
                             )}
                           </div>
                         );

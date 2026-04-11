@@ -80,6 +80,7 @@ export async function POST(request: Request) {
         reservedCredits,
         taskId: result.taskId,
         state,
+        statusMode: result.statusMode,
         statusSupported: Boolean(result.statusEndpoint && result.taskId),
         statusEndpoint: result.statusEndpoint,
         raw: sanitizeAiStudioDebugValue(result.raw),
