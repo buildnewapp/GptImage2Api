@@ -31,7 +31,7 @@ export default function CTA({ section }: CTAProps) {
               <div data-aos="fade-right" className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
                 <a
                   className="inline-flex h-12 items-center justify-center whitespace-nowrap rounded-full bg-white px-7 text-sm font-semibold text-slate-950 ring-offset-background transition-all duration-300 ease-out hover:bg-white/92 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 sm:text-base"
-                  href="/create"
+                  href="/generate"
                 >
                   {section.primaryLabel}
                   <ArrowRight className="ml-2 h-4 w-4" />
