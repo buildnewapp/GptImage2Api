@@ -19,6 +19,15 @@ test("exposes the Sora2 family for AI Video Studio", () => {
   );
 });
 
+test("keeps versions nested under each family for single-source config management", () => {
+  const soraFamily = AI_VIDEO_STUDIO_FAMILIES.find((family) => family.key === "sora2");
+
+  assert.deepEqual(
+    soraFamily?.versions.map((version) => version.key),
+    ["sora-2", "sora-2-pro", "sora-2-pro-storyboard"],
+  );
+});
+
 test("returns the supported Sora2 versions", () => {
   assert.deepEqual(
     getAiVideoStudioVersions("sora2").map((version) => version.key),
