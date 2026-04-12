@@ -1,5 +1,6 @@
 "use client";
 
+import AIVideoMiniStudioTaskHistory from "@/components/ai/AIVideoMiniStudioTaskHistory";
 import type { HomeTemplate2Hero } from "@/components/home/template2/types";
 import { authClient } from "@/lib/auth/auth-client";
 import {
@@ -24,13 +25,20 @@ import {
   getAiVideoMiniStudioPrimaryFields,
   validateAiVideoMiniStudioSubmission,
 } from "@/lib/ai-video-studio/mini";
+import {
+  createAiVideoMiniStudioGenerationTask,
+  resolveAiVideoMiniStudioTaskState,
+  type AiVideoMiniStudioGenerationTask,
+} from "@/lib/ai-video-studio/mini-history";
 import { normalizeAiVideoStudioSchema } from "@/lib/ai-video-studio/schema";
 import type {
   AiStudioPublicDocDetail,
   AiStudioPublicPricingRow,
 } from "@/lib/ai-studio/public";
 import { cn } from "@/lib/utils";
+import { useRouter } from "@/i18n/routing";
 import { ImagePlus, Loader2, Sparkles, X, Zap } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   Suspense,
   lazy,
@@ -167,12 +175,14 @@ interface AIVideoMiniStudioProps {
 const LoginDialog = lazy(() => import("@/components/auth/LoginDialog"));
 
 export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
+  const t = useTranslations("Landing.Hero");
+  const router = useRouter();
   const defaultSelection = useMemo(() => getDefaultSelection(), []);
   const modelOptions = useMemo(() => listAiVideoStudioModelOptions(), []);
   const { data: session } = authClient.useSession();
   const hasInitializedFromStorageRef = useRef(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const pollingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pollingTimersRef = useRef<Map<string, ReturnType<typeof setInterval>>>(new Map());
 
   const [selectedFamilyKey, setSelectedFamilyKey] = useState<AiVideoStudioFamilyKey>(
     defaultSelection.familyKey,
@@ -186,6 +196,10 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [generationTasks, setGenerationTasks] = useState<
+    AiVideoMiniStudioGenerationTask[]
+  >([]);
+  const [activeTaskLocalId, setActiveTaskLocalId] = useState<string | null>(null);
 
   const availableVersions = useMemo(
     () => getAiVideoStudioVersions(selectedFamilyKey),
@@ -223,7 +237,7 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
   useEffect(() => {
     if (!resolvedModelId) {
       setDetail(null);
-      setDetailError("This model combination is not available.");
+      setDetailError(t("form.unsupportedCombination"));
       return;
     }
 
@@ -242,7 +256,7 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
         );
         const json = (await response.json()) as DetailResponse;
         if (!response.ok || !json.success) {
-          throw new Error(json.error || "Failed to load model detail");
+          throw new Error(json.error || t("form.loadModelDetailFailed"));
         }
         if (mounted) {
           setDetail(json.data);
@@ -250,7 +264,7 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
       } catch (error: any) {
         if (mounted) {
           setDetail(null);
-          setDetailError(error?.message || "Failed to load model detail");
+          setDetailError(error?.message || t("form.loadModelDetailFailed"));
         }
       }
     }
@@ -260,7 +274,7 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
     return () => {
       mounted = false;
     };
-  }, [resolvedModelId]);
+  }, [resolvedModelId, t]);
 
   const normalizedSchema = useMemo(
     () => (detail ? normalizeAiVideoStudioSchema(detail) : null),
@@ -438,20 +452,50 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
     }));
   }, []);
 
-  const clearTaskPolling = useCallback(() => {
-    if (pollingTimerRef.current) {
-      clearInterval(pollingTimerRef.current);
-      pollingTimerRef.current = null;
-    }
+  const updateGenerationTask = useCallback(
+    (localId: string, patch: Partial<AiVideoMiniStudioGenerationTask>) => {
+      setGenerationTasks((current) =>
+        current.map((task) => (task.localId === localId ? { ...task, ...patch } : task)),
+      );
+    },
+    [],
+  );
+
+  const increaseTaskProgress = useCallback((localId: string) => {
+    setGenerationTasks((current) =>
+      current.map((task) =>
+        task.localId === localId
+          ? {
+              ...task,
+              progress: Math.min(task.progress + 10, 95),
+            }
+          : task,
+      ),
+    );
   }, []);
 
-  useEffect(() => clearTaskPolling, [clearTaskPolling]);
+  const clearTaskPolling = useCallback((localId: string) => {
+    const timer = pollingTimersRef.current.get(localId);
+    if (!timer) {
+      return;
+    }
+
+    clearInterval(timer);
+    pollingTimersRef.current.delete(localId);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      pollingTimersRef.current.forEach((timer) => clearInterval(timer));
+      pollingTimersRef.current.clear();
+    };
+  }, []);
 
   const pollStatus = useCallback(
-    (taskId: string, modelId: string) => {
-      clearTaskPolling();
+    (localId: string, taskId: string, modelId: string) => {
+      clearTaskPolling(localId);
 
-      pollingTimerRef.current = setInterval(async () => {
+      const timer = setInterval(async () => {
         try {
           const response = await fetch(
             `/api/ai-studio/tasks/${taskId}?modelId=${encodeURIComponent(modelId)}`,
@@ -461,22 +505,44 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
             throw new Error(json.error || "Task polling failed");
           }
 
-          if (json.data.state === "succeeded") {
-            clearTaskPolling();
-            toast.success("Video generation finished.");
+          const nextState = resolveAiVideoMiniStudioTaskState(json.data.state);
+
+          if (nextState === "succeeded") {
+            clearTaskPolling(localId);
+            updateGenerationTask(localId, {
+              state: "succeeded",
+              mediaUrls: json.data.mediaUrls,
+              progress: 100,
+            });
+            setActiveTaskLocalId(localId);
+            toast.success(t("form.generationCompleted"));
             return;
           }
 
-          if (json.data.state === "failed") {
-            clearTaskPolling();
-            toast.error("Generation failed, please try again.");
+          if (nextState === "failed") {
+            clearTaskPolling(localId);
+            updateGenerationTask(localId, {
+              state: "failed",
+              mediaUrls: json.data.mediaUrls,
+              progress: 100,
+            });
+            toast.error(t("form.generationFailed"));
+            return;
           }
+
+          updateGenerationTask(localId, {
+            state: nextState,
+            mediaUrls: json.data.mediaUrls,
+          });
+          increaseTaskProgress(localId);
         } catch {
-          // keep polling until the task reaches a terminal state
+          increaseTaskProgress(localId);
         }
       }, 5000);
+
+      pollingTimersRef.current.set(localId, timer);
     },
-    [clearTaskPolling],
+    [clearTaskPolling, increaseTaskProgress, t, updateGenerationTask],
   );
 
   const handleFileChange = useCallback(
@@ -487,13 +553,13 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
       }
 
       if (!file.type.startsWith("image/")) {
-        toast.error("Only image files are allowed.");
+        toast.error(t("form.imageOnlyError"));
         event.target.value = "";
         return;
       }
 
       if (file.size > 10 * 1024 * 1024) {
-        toast.error("Image must be 10MB or smaller.");
+        toast.error(t("form.uploadTooLarge"));
         event.target.value = "";
         return;
       }
@@ -505,24 +571,24 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
           primaryFields.imageField?.schema.type === "array" ? [dataUrl] : dataUrl;
         updateFormValue(primaryFields.imageField?.key ?? "image_urls", nextValue);
       } catch {
-        toast.error("Image upload failed.");
+        toast.error(t("form.uploadFailed"));
       } finally {
         setIsUploadingImage(false);
         event.target.value = "";
       }
     },
-    [primaryFields.imageField, updateFormValue],
+    [primaryFields.imageField, t, updateFormValue],
   );
 
   const handleGenerate = useCallback(async () => {
     if (!session?.user) {
       setIsLoginDialogOpen(true);
-      toast.error("Please sign in to generate videos.");
+      toast.error(t("form.loginRequired"));
       return;
     }
 
     if (submitState.reason === "insufficient-credits") {
-      toast.error("Insufficient credits.");
+      toast.error(t("form.insufficientCredits"));
       return;
     }
 
@@ -530,6 +596,17 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
       return;
     }
 
+    const localTask = createAiVideoMiniStudioGenerationTask({
+      familyKey: selectedFamilyKey,
+      versionKey: selectedVersionKey,
+      modelId: resolvedModelId,
+      formValues,
+      creditsRequired: estimatedCredits,
+      promptFieldKey,
+    });
+
+    setGenerationTasks((current) => [localTask, ...current]);
+    setActiveTaskLocalId(localTask.localId);
     setIsSubmitting(true);
 
     try {
@@ -548,23 +625,52 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
         throw new Error(json.error || "Execution failed");
       }
 
-      if (json.data.state === "succeeded" || !json.data.taskId) {
-        toast.success("Video generation started.");
+      const nextState = resolveAiVideoMiniStudioTaskState(json.data.state);
+
+      updateGenerationTask(localTask.localId, {
+        taskId: json.data.taskId ?? undefined,
+        state: nextState,
+        mediaUrls: json.data.mediaUrls ?? [],
+        creditsRequired: json.data.reservedCredits ?? estimatedCredits,
+        progress:
+          nextState === "succeeded" || nextState === "failed" || !json.data.taskId
+            ? 100
+            : 10,
+      });
+
+      if (nextState === "failed") {
+        toast.error(t("form.generationFailed"));
+        return;
+      }
+
+      if (nextState === "succeeded" || !json.data.taskId) {
+        toast.success(t("form.generationSuccess"));
       } else {
-        toast.success("Generation queued.");
-        pollStatus(json.data.taskId, resolvedModelId);
+        toast.success(t("form.generationQueued"));
+        pollStatus(localTask.localId, json.data.taskId, resolvedModelId);
       }
     } catch (error: any) {
-      toast.error(error?.message || "Generation failed, please try again.");
+      updateGenerationTask(localTask.localId, {
+        state: "failed",
+        progress: 100,
+      });
+      toast.error(error?.message || t("form.generationFailed"));
     } finally {
       setIsSubmitting(false);
     }
   }, [
+    estimatedCredits,
+    formValues,
     inputPayload,
     pollStatus,
+    promptFieldKey,
     resolvedModelId,
+    selectedFamilyKey,
+    selectedVersionKey,
     session?.user,
     submitState,
+    t,
+    updateGenerationTask,
   ]);
 
   return (
@@ -585,12 +691,12 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
                 <>
                   <img
                     src={currentImagePreview}
-                    alt="Reference preview"
+                    alt={t("form.referencePreview")}
                     className="h-full w-full object-cover"
                   />
                   <span className="absolute inset-0 bg-black/20" />
                   <span className="absolute bottom-2 left-2 rounded-full bg-black/45 px-2 py-1 text-[11px] font-medium text-white">
-                    Replace
+                    {t("form.replace")}
                   </span>
                 </>
               ) : (
@@ -601,7 +707,7 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
                     <ImagePlus className="h-6 w-6" />
                   )}
                   <span className="text-[11px] font-medium text-white/55">
-                    Reference
+                    {t("form.reference")}
                   </span>
                 </span>
               )}
@@ -745,12 +851,12 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
                   primaryFields.imageField?.schema.type === "array" ? [] : "",
                 )
               }
-              className="inline-flex h-9 items-center justify-center rounded-full border border-white/12 bg-white/6 px-3 text-[13px] font-medium text-white/70 transition hover:border-white/20 hover:text-white"
-            >
-              <X className="mr-1.5 h-3.5 w-3.5" />
-              Remove
-            </button>
-          ) : null}
+                  className="inline-flex h-9 items-center justify-center rounded-full border border-white/12 bg-white/6 px-3 text-[13px] font-medium text-white/70 transition hover:border-white/20 hover:text-white"
+                >
+                  <X className="mr-1.5 h-3.5 w-3.5" />
+                  {t("form.remove")}
+                </button>
+              ) : null}
           <span
             data-ai-video-mini-studio-price
             className="flex items-center gap-1 text-xs text-white/50"
@@ -769,15 +875,31 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
               "hover:-translate-y-0.5 hover:brightness-110 disabled:pointer-events-none disabled:opacity-50",
             )}
           >
-            {isSubmitting ? (
-              <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-            )}
-            {isSubmitting ? "Generating..." : hero.ctaLabel}
-          </button>
-        </div>
-      </div>
+                {isSubmitting ? (
+                  <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+                )}
+                {isSubmitting ? t("form.generating") : hero.ctaLabel}
+              </button>
+            </div>
+          </div>
+
+      <AIVideoMiniStudioTaskHistory
+        tasks={generationTasks}
+        activeTaskLocalId={activeTaskLocalId}
+        onOpenVideos={() => router.push("/dashboard/videos")}
+        texts={{
+          historyTitle: t("form.tasks"),
+          historyHint: t("form.historyHint"),
+          queuedOrRunning: (progress) => `${t("form.generating")} ${progress}%`,
+          succeeded: t("form.readyToPreview"),
+          failed: t("form.generationFailed"),
+          creditsRequired: (count) => t("form.creditsRequired", { count }),
+          task: (index) => t("form.task", { index }),
+          openVideos: t("form.viewResult"),
+        }}
+      />
 
       {isLoginDialogOpen ? (
         <Suspense fallback={null}>
