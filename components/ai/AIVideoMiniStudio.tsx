@@ -5,6 +5,7 @@ import { authClient } from "@/lib/auth/auth-client";
 import {
   AI_VIDEO_STUDIO_FAMILIES,
   getAiVideoStudioVersions,
+  listAiVideoStudioModelOptions,
   resolveAiVideoStudioModelId,
   type AiVideoStudioFamilyKey,
   type AiVideoStudioVersionKey,
@@ -17,6 +18,8 @@ import {
   type AiVideoStudioFormValues,
 } from "@/lib/ai-video-studio/adapter";
 import {
+  coerceAiVideoMiniStudioFieldValue,
+  getAiVideoMiniStudioFieldOptions,
   estimateAiVideoMiniStudioCredits,
   getAiVideoMiniStudioPrimaryFields,
   validateAiVideoMiniStudioSubmission,
@@ -65,14 +68,6 @@ type TaskResponse = {
     mediaUrls: string[];
   };
   error?: string;
-};
-
-type ModelOption = {
-  familyKey: AiVideoStudioFamilyKey;
-  familyLabel: string;
-  value: string;
-  versionKey: AiVideoStudioVersionKey;
-  versionLabel: string;
 };
 
 function getFirstSelectableFamily() {
@@ -148,43 +143,7 @@ function getNormalizedFieldValue(
   return getEmptyFieldValue(fieldKey, schema);
 }
 
-function createModelOptions() {
-  const options: ModelOption[] = [];
-
-  for (const family of AI_VIDEO_STUDIO_FAMILIES) {
-    if (family.selectable === false) {
-      continue;
-    }
-
-    for (const version of getAiVideoStudioVersions(family.key)) {
-      options.push({
-        familyKey: family.key,
-        familyLabel: family.label,
-        value: `${family.key}::${version.key}`,
-        versionKey: version.key,
-        versionLabel: version.label,
-      });
-    }
-  }
-
-  return options;
-}
-
-function getSelectOptions(fieldValue: unknown) {
-  if (
-    fieldValue &&
-    typeof fieldValue === "object" &&
-    Array.isArray((fieldValue as { schema?: { enum?: unknown[] } }).schema?.enum)
-  ) {
-    return (fieldValue as { schema: { enum: unknown[] } }).schema.enum.filter(
-      (item): item is string => typeof item === "string",
-    );
-  }
-
-  return [];
-}
-
-function formatDurationOptionLabel(fieldKey: string, value: string) {
+function formatDurationOptionLabel(fieldKey: string, value: string | number) {
   if (fieldKey === "n_frames" || fieldKey === "duration") {
     return `${value}s`;
   }
@@ -209,7 +168,7 @@ const LoginDialog = lazy(() => import("@/components/auth/LoginDialog"));
 
 export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
   const defaultSelection = useMemo(() => getDefaultSelection(), []);
-  const modelOptions = useMemo(() => createModelOptions(), []);
+  const modelOptions = useMemo(() => listAiVideoStudioModelOptions(), []);
   const { data: session } = authClient.useSession();
   const hasInitializedFromStorageRef = useRef(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -442,9 +401,15 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
     ],
   );
 
-  const aspectRatioOptions = getSelectOptions(primaryFields.aspectRatioField);
-  const resolutionOptions = getSelectOptions(primaryFields.resolutionField);
-  const durationOptions = getSelectOptions(primaryFields.durationField);
+  const aspectRatioOptions = getAiVideoMiniStudioFieldOptions(
+    primaryFields.aspectRatioField,
+  );
+  const resolutionOptions = getAiVideoMiniStudioFieldOptions(
+    primaryFields.resolutionField,
+  );
+  const durationOptions = getAiVideoMiniStudioFieldOptions(
+    primaryFields.durationField,
+  );
   const showFallbackControls = !normalizedSchema && !detailError;
   const displayedAspectRatioOptions =
     aspectRatioOptions.length > 0 ? aspectRatioOptions : showFallbackControls ? ["16:9"] : [];
@@ -462,7 +427,7 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
         : [];
   const currentImagePreview = getImageValue(imageValue);
   const priceLabel =
-    estimatedCredits > 0 ? `${estimatedCredits} credits` : `${hero.creditCost} credits`;
+    estimatedCredits > 0 ? `${estimatedCredits}` : `${hero.creditCost}`;
   const isGenerateDisabled =
     submitState.reason !== null && (!session?.user || submitState.reason !== "insufficient-credits");
 
@@ -676,11 +641,11 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
               setSelectedFamilyKey(familyKey);
               setSelectedVersionKey(versionKey);
             }}
-            className="flex h-9 max-w-[210px] items-center rounded-full border border-white/12 bg-white/6 px-3.5 py-2 text-[13px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] outline-none transition hover:border-white/20"
+            className="flex h-9 w-[120px] items-center rounded-full border border-white/12 bg-white/6 px-2 py-2 text-[12px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] outline-none transition hover:border-white/20"
           >
             {modelOptions.map((option) => (
               <option key={option.value} value={option.value}>
-                {option.familyLabel} / {option.versionLabel}
+                {option.label}
               </option>
             ))}
           </select>
@@ -696,13 +661,16 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
               onChange={(event) =>
                 updateFormValue(
                   primaryFields.aspectRatioField?.key ?? "aspect_ratio",
-                  event.target.value,
+                  coerceAiVideoMiniStudioFieldValue(
+                    primaryFields.aspectRatioField,
+                    event.target.value,
+                  ),
                 )
               }
-              className="flex h-9 max-w-[110px] items-center rounded-full border border-white/12 bg-white/6 px-3.5 py-2 text-[13px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] outline-none transition hover:border-white/20"
+              className="flex h-9 w-[65px] items-center rounded-full border border-white/12 bg-white/6 px-2 py-2 text-[12px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] outline-none transition hover:border-white/20"
             >
               {displayedAspectRatioOptions.map((option) => (
-                <option key={option} value={option}>
+                <option key={String(option)} value={String(option)}>
                   {option}
                 </option>
               ))}
@@ -720,13 +688,16 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
               onChange={(event) =>
                 updateFormValue(
                   primaryFields.durationField?.key ?? "duration",
-                  event.target.value,
+                  coerceAiVideoMiniStudioFieldValue(
+                    primaryFields.durationField,
+                    event.target.value,
+                  ),
                 )
               }
-              className="flex h-9 max-w-[110px] items-center rounded-full border border-white/12 bg-white/6 px-3.5 py-2 text-[13px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] outline-none transition hover:border-white/20"
+              className="flex h-9 w-[60px] items-center rounded-full border border-white/12 bg-white/6 px-2 py-2 text-[12px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] outline-none transition hover:border-white/20"
             >
               {displayedDurationOptions.map((option) => (
-                <option key={option} value={option}>
+                <option key={String(option)} value={String(option)}>
                   {formatDurationOptionLabel(
                     primaryFields.durationField?.key ?? "duration",
                     option,
@@ -747,13 +718,16 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
               onChange={(event) =>
                 updateFormValue(
                   primaryFields.resolutionField?.key ?? "resolution",
-                  event.target.value,
+                  coerceAiVideoMiniStudioFieldValue(
+                    primaryFields.resolutionField,
+                    event.target.value,
+                  ),
                 )
               }
-              className="flex h-9 max-w-[110px] items-center rounded-full border border-white/12 bg-white/6 px-3.5 py-2 text-[13px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] outline-none transition hover:border-white/20"
+              className="flex h-9 w-[70px] items-center rounded-full border border-white/12 bg-white/6 px-2 py-2 text-[12px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] outline-none transition hover:border-white/20"
             >
               {displayedResolutionOptions.map((option) => (
-                <option key={option} value={option}>
+                <option key={String(option)} value={String(option)}>
                   {option}
                 </option>
               ))}

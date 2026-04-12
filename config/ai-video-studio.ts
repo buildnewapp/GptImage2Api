@@ -20,16 +20,25 @@ export type AiVideoStudioVersion = {
   label: string;
   familyKey: AiVideoStudioFamilyKey;
   modelId: string;
+  aliases?: string[];
+};
+
+export type AiVideoStudioModelOption = {
+  familyKey: AiVideoStudioFamilyKey;
+  familyLabel: string;
+  value: string;
+  versionKey: AiVideoStudioVersionKey;
+  versionLabel: string;
+  label: string;
 };
 
 export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
   {
     key: "seedance-2.0",
     label: "Seedance 2.0",
-    description:
-      "APIMart-hosted Seedance 2.0 for prompt-first and reference-driven video generation",
+    description: "Seedance 2.0 for prompt-first and reference-driven video generation",
     tags: [
-      { text: "APIMart", type: "provider" },
+      { text: "HOT", type: "hot" },
     ],
     selectable: true,
     versions: [
@@ -37,7 +46,15 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         key: "seedance-2.0",
         label: "Seedance 2.0",
         familyKey: "seedance-2.0",
-        modelId: "video:apimart-seedance-2-0",
+        modelId: "video:seedance-2-0",
+        aliases: ["video:apimart-seedance-2-0"],
+      },
+      {
+        key: "seedance-2.0-fast",
+        label: "Seedance 2.0 fast",
+        familyKey: "seedance-2.0",
+        modelId: "video:seedance-2-0-fast",
+        aliases: ["video:apimart-seedance-2-0-fast"],
       },
     ],
   },
@@ -128,7 +145,10 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
 export function getAiVideoStudioSelectionFromModelId(modelId: string) {
   for (const family of AI_VIDEO_STUDIO_FAMILIES) {
     for (const version of family.versions) {
-      if (version.modelId === modelId) {
+      if (
+        version.modelId === modelId ||
+        version.aliases?.includes(modelId)
+      ) {
         return {
           familyKey: version.familyKey,
           versionKey: version.key,
@@ -150,6 +170,29 @@ export function getAiVideoStudioVersions(
     AI_VIDEO_STUDIO_FAMILIES.find((family) => family.key === familyKey)?.versions ??
     []
   );
+}
+
+export function listAiVideoStudioModelOptions(): AiVideoStudioModelOption[] {
+  const options: AiVideoStudioModelOption[] = [];
+
+  for (const family of AI_VIDEO_STUDIO_FAMILIES) {
+    if (family.selectable === false) {
+      continue;
+    }
+
+    for (const version of getAiVideoStudioVersions(family.key)) {
+      options.push({
+        familyKey: family.key,
+        familyLabel: family.label,
+        value: `${family.key}::${version.key}`,
+        versionKey: version.key,
+        versionLabel: version.label,
+        label: version.label,
+      });
+    }
+  }
+
+  return options;
 }
 
 export function resolveAiVideoStudioModelId(input: {

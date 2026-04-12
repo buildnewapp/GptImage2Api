@@ -1,10 +1,15 @@
 type JsonSchema = Record<string, any>;
 
+type AiVideoStudioFormUiConfig = {
+  fieldOrder?: string[];
+  advancedFields?: string[];
+};
+
 export type AiVideoStudioFieldKind =
   | "enum"
   | "boolean"
   | "number"
-  | "string-array"
+  | "array"
   | "text";
 
 export type AiVideoStudioFieldDescriptor = {
@@ -19,8 +24,30 @@ export type AiVideoStudioFieldDescriptor = {
 
 export type AiVideoStudioSchemaState = {
   fields: AiVideoStudioFieldDescriptor[];
+  primaryFields: AiVideoStudioFieldDescriptor[];
+  advancedFields: AiVideoStudioFieldDescriptor[];
   defaults: Record<string, unknown>;
+  usesDefaultAdvancedGrouping: boolean;
 };
+
+function getPathTokens(path: string[]) {
+  return path
+    .flatMap((segment) =>
+      segment
+        .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+        .toLowerCase()
+        .split(/[^a-z0-9]+/g)
+        .filter(Boolean),
+    );
+}
+
+function matchesDefaultAdvancedField(path: string[]) {
+  const tokens = getPathTokens(path);
+
+  return tokens.some(
+    (token) => token === "seed" || token === "seeds" || token === "watermark",
+  );
+}
 
 function titleCase(input: string) {
   return input
@@ -41,21 +68,23 @@ function getFieldKind(schema: JsonSchema): AiVideoStudioFieldKind {
     return "number";
   }
 
-  if (
-    schema.type === "array" &&
-    schema.items &&
-    schema.items.type === "string"
-  ) {
-    return "string-array";
+  if (schema.type === "array") {
+    return "array";
   }
 
   return "text";
 }
 
-function getOrderedFieldKeys(properties: Record<string, JsonSchema>, schema: JsonSchema) {
-  const ordered = Array.isArray(schema["x-apidog-orders"])
-    ? schema["x-apidog-orders"].filter((key: unknown): key is string => typeof key === "string")
-    : [];
+function getOrderedFieldKeys(
+  properties: Record<string, JsonSchema>,
+  schema: JsonSchema,
+  preferredOrder?: string[],
+) {
+  const ordered = Array.isArray(preferredOrder)
+    ? preferredOrder.filter((key): key is string => typeof key === "string")
+    : Array.isArray(schema["x-apidog-orders"])
+      ? schema["x-apidog-orders"].filter((key: unknown): key is string => typeof key === "string")
+      : [];
   const seen = new Set<string>();
   const keys: string[] = [];
 
@@ -128,10 +157,21 @@ function getPayloadSchemaRoot(requestSchema: JsonSchema | null | undefined) {
 export function normalizeAiVideoStudioSchema(detail: {
   requestSchema: JsonSchema | null | undefined;
   examplePayload: JsonSchema | null | undefined;
+  formUi?: AiVideoStudioFormUiConfig | null | undefined;
 }): AiVideoStudioSchemaState {
   const payloadSchema = getPayloadSchemaRoot(detail.requestSchema);
   const fields: AiVideoStudioFieldDescriptor[] = [];
   const defaults: Record<string, unknown> = {};
+  const advancedFieldSet = new Set(
+    Array.isArray(detail.formUi?.advancedFields)
+      ? detail.formUi?.advancedFields.filter((key): key is string => typeof key === "string")
+      : [],
+  );
+  const hasCustomFormUi =
+    (Array.isArray(detail.formUi?.fieldOrder) &&
+      detail.formUi.fieldOrder.length > 0) ||
+    (Array.isArray(detail.formUi?.advancedFields) &&
+      detail.formUi.advancedFields.length > 0);
 
   function walkSchema(schema: JsonSchema | null | undefined, path: string[] = []) {
     const properties = (schema?.properties ?? {}) as Record<string, JsonSchema>;
@@ -141,7 +181,12 @@ export function normalizeAiVideoStudioSchema(detail: {
         : [],
     );
 
-    for (const key of getOrderedFieldKeys(properties, schema ?? {})) {
+    const preferredOrder =
+      path.length === 0 && Array.isArray(detail.formUi?.fieldOrder)
+        ? detail.formUi.fieldOrder
+        : undefined;
+
+    for (const key of getOrderedFieldKeys(properties, schema ?? {}, preferredOrder)) {
       if (key === "model" || isCallbackField(key)) {
         continue;
       }
@@ -177,9 +222,30 @@ export function normalizeAiVideoStudioSchema(detail: {
   }
 
   walkSchema(payloadSchema);
+  const advancedFields = fields.filter((field) => {
+    if (!hasCustomFormUi) {
+      return field.kind === "boolean" || matchesDefaultAdvancedField(field.path);
+    }
+
+    const joinedPath = field.path.join(".");
+    return (
+      advancedFieldSet.has(joinedPath) ||
+      advancedFieldSet.has(field.key) ||
+      advancedFieldSet.has(field.path[0] ?? "")
+    );
+  });
+  const advancedJoinedPaths = new Set(
+    advancedFields.map((field) => field.path.join(".")),
+  );
+  const primaryFields = fields.filter(
+    (field) => !advancedJoinedPaths.has(field.path.join(".")),
+  );
 
   return {
     fields,
+    primaryFields,
+    advancedFields,
     defaults,
+    usesDefaultAdvancedGrouping: !hasCustomFormUi,
   };
 }

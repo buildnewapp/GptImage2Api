@@ -101,6 +101,42 @@ test("omits empty optional fields from the submitted payload", () => {
   });
 });
 
+test("recursively prunes empty values inside array items", () => {
+  const payload = buildAiVideoStudioPayload({
+    detail,
+    formValues: {
+      prompt: "Animate this still image",
+      image_urls: ["https://example.com/custom.png", ""],
+      character_id_list: ["hero_1", ""],
+      shots: [
+        {
+          prompt: "A close-up",
+          duration: 4,
+        },
+        {
+          prompt: "",
+          duration: "",
+        },
+      ],
+    },
+  });
+
+  assert.deepEqual(payload, {
+    model: "sora-2-image-to-video",
+    input: {
+      prompt: "Animate this still image",
+      image_urls: ["https://example.com/custom.png"],
+      character_id_list: ["hero_1"],
+      shots: [
+        {
+          prompt: "A close-up",
+          duration: 4,
+        },
+      ],
+    },
+  });
+});
+
 test("does not leak example input values into the payload when the form is blank", () => {
   const payload = buildAiVideoStudioPayload({
     detail,

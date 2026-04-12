@@ -55,7 +55,7 @@ test("resolves version selections to a single ai-studio public model id", () => 
       familyKey: "seedance-2.0",
       versionKey: "seedance-2.0",
     }),
-    "video:apimart-seedance-2-0",
+    "video:seedance-2-0",
   );
   assert.equal(
     resolveAiVideoStudioModelId({
@@ -78,7 +78,7 @@ test("returns null for unsupported selections", () => {
 
 test("resolves ai video studio selection metadata from a model id", () => {
   assert.deepEqual(
-    resolveAiVideoStudioSelectionFromModelId("video:apimart-seedance-2-0"),
+    resolveAiVideoStudioSelectionFromModelId("video:seedance-2-0"),
     {
       familyKey: "seedance-2.0",
       versionKey: "seedance-2.0",
@@ -89,6 +89,13 @@ test("resolves ai video studio selection metadata from a model id", () => {
     {
       familyKey: "seedance-1.5",
       versionKey: "seedance-1.5-fast",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("video:apimart-seedance-2-0"),
+    {
+      familyKey: "seedance-2.0",
+      versionKey: "seedance-2.0",
     },
   );
 });

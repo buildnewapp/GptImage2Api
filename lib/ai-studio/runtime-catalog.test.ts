@@ -99,11 +99,23 @@ test("compiles runtime catalog with model and pricing overrides", () => {
         },
       },
     },
+    formUiOverrides: {
+      models: {
+        "video:sora2-text-to-video": {
+          fieldOrder: ["prompt", "duration"],
+          advancedFields: ["duration"],
+        },
+      },
+    },
   });
 
   assert.equal(compiled.items[0]?.alias, "Sora 2");
   assert.equal(compiled.items[0]?.provider, "OpenAI");
   assert.equal(compiled.items[0]?.pricingRows[0]?.creditPrice, "42");
+  assert.deepEqual(compiled.items[0]?.formUi, {
+    fieldOrder: ["prompt", "duration"],
+    advancedFields: ["duration"],
+  });
 });
 
 test("drops disabled models from the compiled runtime catalog", () => {
@@ -121,6 +133,9 @@ test("drops disabled models from the compiled runtime catalog", () => {
       },
     },
     pricingOverrides: {
+      models: {},
+    },
+    formUiOverrides: {
       models: {},
     },
   });
@@ -352,6 +367,14 @@ test("uses the bundled runtime catalog by default in a Cloudflare worker cwd", a
     }
     await rm(tempDir, { recursive: true, force: true });
   }
+});
+
+test("resolves the public Seedance 2.0 alias from the bundled runtime catalog", async () => {
+  const entry = await getCachedAiStudioCatalogEntry("video:seedance-2-0");
+
+  assert.ok(entry);
+  assert.equal(entry.id, "video:apimart-seedance-2-0");
+  assert.equal(entry.alias, "Seedance 2.0");
 });
 
 test("splits one upstream model into separate runtime variants", () => {

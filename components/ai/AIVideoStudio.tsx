@@ -405,6 +405,9 @@ export default function AIVideoStudio() {
     () => toBillableCredits(selectedPricing?.creditPrice),
     [selectedPricing],
   );
+  const shouldShowPublicInAdvanced =
+    normalizedSchema?.usesDefaultAdvancedGrouping === true ||
+    selectedFamilyKey === "seedance-2.0";
 
   const availableCredits = benefits?.totalAvailableCredits ?? null;
   const hasSignedInSession = hasAiVideoStudioSignedInSession(session);
@@ -760,7 +763,55 @@ export default function AIVideoStudio() {
               </div>
             ) : normalizedSchema ? (
               <AIVideoStudioFields
-                fields={normalizedSchema.fields}
+                primaryFields={normalizedSchema.primaryFields}
+                advancedFields={normalizedSchema.advancedFields}
+                advancedLabel={t("form.advanced")}
+                localizedFieldLabels={{
+                  prompt: t("form.prompt"),
+                  size: t("form.size"),
+                  resolution: t("form.resolution"),
+                  aspectRatio: t("form.aspectRatio"),
+                  duration: t("form.duration"),
+                  referenceAudios: t("form.referenceAudios"),
+                  referenceImages: t("form.referenceImages"),
+                  referenceVideos: t("form.referenceVideos"),
+                  referenceUrls: t("form.referenceUrls"),
+                }}
+                publicVisibilityLabel={t("form.isPublic")}
+                publicToggleLabel={t("form.public")}
+                promptPlaceholder={t("form.promptPlaceholder")}
+                referenceFieldTexts={{
+                  useUrlLabel: t("form.useUrl"),
+                  uploadTitle: t("form.uploadTitle"),
+                  addButton: t("form.add"),
+                  removeButton: t("form.remove"),
+                  audioFormats: t("form.audioUploadFormats"),
+                  imageFormats: t("form.imageUploadFormats"),
+                  videoFormats: t("form.videoUploadFormats"),
+                  audioDescription: (max) =>
+                    t("form.audioReferenceHint", { count: max }),
+                  imageDescription: (max) =>
+                    t("form.imageReferenceHint", { count: max }),
+                  videoDescription: (max) =>
+                    t("form.videoReferenceHint", { count: max }),
+                  urlDescription: (max) =>
+                    t("form.urlReferenceHint", { count: max }),
+                  countLabel: (current, max) =>
+                    t("form.referencesCount", { current, max }),
+                  invalidUrl: t("form.invalidUrl"),
+                  uploadFailed: t("form.referenceUploadFailed"),
+                  uploading: t("form.uploadingReference"),
+                  audioOnlyError: t("form.audioOnlyError"),
+                  imageOnlyError: t("form.imageOnlyError"),
+                  videoOnlyError: t("form.videoOnlyError"),
+                  uploadTooLarge: (sizeInMb) =>
+                    t("form.referenceUploadTooLarge", { size: sizeInMb }),
+                  audioUrlPlaceholder: t("form.audioUrlPlaceholder"),
+                  imageUrlPlaceholder: t("form.imageUrlPlaceholder"),
+                  videoUrlPlaceholder: t("form.videoUrlPlaceholder"),
+                  genericUrlPlaceholder: t("form.genericUrlPlaceholder"),
+                }}
+                showPublicInAdvanced={shouldShowPublicInAdvanced}
                 values={formValues}
                 isPublic={isPublic}
                 disabled={isSubmitting}
@@ -772,9 +823,9 @@ export default function AIVideoStudio() {
             ) : null}
 
             {hasSignedInSession ? (
-              <div className="rounded-xl border border-border/60 bg-background/40 px-4 py-3 flex items-center justify-between">
+              <div className="rounded-xl border border-border/60 bg-background/40 px-4 py-2.5 flex items-center justify-between">
                 <div className="text-sm text-muted-foreground">{t("form.currentCredits")}</div>
-                <div className="text-lg font-semibold text-foreground">
+                <div className="font-semibold text-foreground">
                   {isLoadingBenefits
                     ? "--"
                     : t("form.creditsRequired", { count: availableCredits ?? 0 })}

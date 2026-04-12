@@ -36,6 +36,7 @@ export interface AiStudioDocDetail extends AiStudioCatalogSeedEntry {
   examplePayload: Record<string, any>;
   pricingRows: AiStudioPricingRow[];
   statusEndpoint?: string | null;
+  formUi?: AiStudioFormUiModelOverride;
 }
 
 export interface AiStudioCatalogEntry extends AiStudioCatalogSeedEntry {
@@ -101,10 +102,20 @@ export interface AiStudioPricingOverridesFile {
   models: Record<string, AiStudioPricingOverrideBucket>;
 }
 
+export interface AiStudioFormUiModelOverride {
+  fieldOrder?: string[];
+  advancedFields?: string[];
+}
+
+export interface AiStudioFormUiOverridesFile {
+  models: Record<string, AiStudioFormUiModelOverride>;
+}
+
 type CompileRuntimeCatalogInput = {
   upstream: AiStudioUpstreamCatalogFile;
   modelOverrides: AiStudioModelOverridesFile;
   pricingOverrides: AiStudioPricingOverridesFile;
+  formUiOverrides?: AiStudioFormUiOverridesFile;
 };
 
 const LLMS_INDEX_URL = "https://docs.kie.ai/llms.txt";
@@ -143,6 +154,9 @@ export function getAiStudioCatalogPaths() {
     pricingOverridesPath:
       process.env.AI_STUDIO_PRICING_OVERRIDES_PATH ??
       path.join(DEFAULT_AI_STUDIO_DATA_DIR, "overrides", "pricing.json"),
+    formUiOverridesPath:
+      process.env.AI_STUDIO_FORM_UI_OVERRIDES_PATH ??
+      path.join(DEFAULT_AI_STUDIO_DATA_DIR, "overrides", "form-ui.json"),
     runtimeCatalogPath:
       process.env.AI_STUDIO_RUNTIME_CATALOG_PATH ??
       path.join(DEFAULT_AI_STUDIO_DATA_DIR, "runtime", "catalog.json"),
@@ -965,6 +979,23 @@ function clonePricingRow(row: AiStudioPricingRow): AiStudioPricingRow {
   };
 }
 
+function cloneFormUiOverride(
+  value: AiStudioFormUiModelOverride | undefined,
+): AiStudioFormUiModelOverride | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  return {
+    ...(Array.isArray(value.fieldOrder)
+      ? { fieldOrder: [...value.fieldOrder] }
+      : {}),
+    ...(Array.isArray(value.advancedFields)
+      ? { advancedFields: [...value.advancedFields] }
+      : {}),
+  };
+}
+
 function cloneDetail(detail: AiStudioDocDetail): AiStudioDocDetail {
   return {
     ...detail,
@@ -973,6 +1004,7 @@ function cloneDetail(detail: AiStudioDocDetail): AiStudioDocDetail {
       : detail.requestSchema,
     examplePayload: structuredClone(detail.examplePayload),
     pricingRows: detail.pricingRows.map(clonePricingRow),
+    formUi: cloneFormUiOverride(detail.formUi),
   };
 }
 
@@ -1132,6 +1164,18 @@ function applyModelOverrideToDetail(
   return detail;
 }
 
+function applyFormUiOverrideToDetail(
+  detail: AiStudioDocDetail,
+  override: AiStudioFormUiModelOverride | undefined,
+) {
+  if (!override) {
+    return detail;
+  }
+
+  detail.formUi = cloneFormUiOverride(override);
+  return detail;
+}
+
 function buildSplitModelDetails(
   rawDetail: AiStudioDocDetail,
   modelOverride: AiStudioModelOverride,
@@ -1157,6 +1201,7 @@ export function compileAiStudioRuntimeCatalog({
   upstream,
   modelOverrides,
   pricingOverrides,
+  formUiOverrides = { models: {} },
 }: CompileRuntimeCatalogInput): AiStudioCompiledCatalogFile {
   const items = upstream.items.flatMap((rawDetail) => {
     const modelOverride = modelOverrides.models[rawDetail.id];
@@ -1173,6 +1218,7 @@ export function compileAiStudioRuntimeCatalog({
         ) {
           applyPricingOverridesToDetail(detail, pricingOverrideBucket);
         }
+        applyFormUiOverrideToDetail(detail, formUiOverrides.models[detail.id]);
         return detail;
       });
     }
@@ -1185,6 +1231,7 @@ export function compileAiStudioRuntimeCatalog({
     ) {
       applyPricingOverridesToDetail(detail, pricingOverrideBucket);
     }
+    applyFormUiOverrideToDetail(detail, formUiOverrides.models[detail.id]);
 
     return [detail];
   });
@@ -1212,6 +1259,7 @@ export function validateAiStudioRuntimeBuildInput({
   upstream,
   modelOverrides,
   pricingOverrides,
+  formUiOverrides = { models: {} },
 }: CompileRuntimeCatalogInput) {
   const errors: string[] = [];
   const knownModelIds = new Set<string>();
@@ -1289,6 +1337,12 @@ export function validateAiStudioRuntimeBuildInput({
       if (!matched) {
         errors.push(`Pricing override does not match any row for model: ${modelId}`);
       }
+    }
+  }
+
+  for (const [modelId] of Object.entries(formUiOverrides.models)) {
+    if (!compiledModelIds.has(modelId)) {
+      errors.push(`Form UI override targets unknown model: ${modelId}`);
     }
   }
 
@@ -1378,6 +1432,14 @@ export async function loadAiStudioPricingOverridesFile(
   filePath = getAiStudioCatalogPaths().pricingOverridesPath,
 ) {
   return readJsonFileOrDefault<AiStudioPricingOverridesFile>(filePath, {
+    models: {},
+  });
+}
+
+export async function loadAiStudioFormUiOverridesFile(
+  filePath = getAiStudioCatalogPaths().formUiOverridesPath,
+) {
+  return readJsonFileOrDefault<AiStudioFormUiOverridesFile>(filePath, {
     models: {},
   });
 }

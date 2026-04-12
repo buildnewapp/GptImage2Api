@@ -1,5 +1,11 @@
 {
   "models": {
+    "video:apimart-seedance-2-0": {
+      "alias": "seedance-2-0"
+    },
+    "video:apimart-seedance-2-0-fast": {
+      "alias": "seedance-2-0-fast"
+    },
     "video:sora2-text-to-video": {
       "splitModels": [
         {

@@ -160,7 +160,7 @@ test("normalizes ai-video-studio fields from the input schema in api order", () 
   assert.equal(normalized.fields[1]?.kind, "enum");
   assert.equal(normalized.fields[2]?.kind, "enum");
   assert.equal(normalized.fields[3]?.kind, "boolean");
-  assert.equal(normalized.fields[4]?.kind, "string-array");
+  assert.equal(normalized.fields[4]?.kind, "array");
 });
 
 test("uses schema defaults without prefilling example input values", () => {
@@ -188,12 +188,12 @@ test("marks required fields from the schema without semantic field conversion", 
   );
 });
 
-test("keeps image url arrays as plain string-array fields", () => {
+test("keeps image url arrays as array fields", () => {
   const normalized = normalizeAiVideoStudioSchema(imageToVideoDetail);
 
   assert.equal(
     normalized.fields.find((field) => field.key === "image_urls")?.kind,
-    "string-array",
+    "array",
   );
 });
 
@@ -223,7 +223,7 @@ test("normalizes top-level ai-studio fields when the schema does not use input",
   );
   assert.equal(
     normalized.fields.find((field) => field.key === "image_urls")?.kind,
-    "string-array",
+    "array",
   );
   assert.equal(
     normalized.fields.find((field) => field.key === "duration")?.kind,
@@ -235,4 +235,137 @@ test("normalizes top-level ai-studio fields when the schema does not use input",
     aspect_ratio: "16:9",
     duration: 4,
   });
+});
+
+test("applies form ui field order and advanced field grouping overrides", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    ...topLevelDetail,
+    formUi: {
+      fieldOrder: ["duration", "prompt", "aspect_ratio", "image_urls"],
+      advancedFields: ["image_urls", "aspect_ratio"],
+    },
+  });
+
+  assert.deepEqual(
+    normalized.fields.map((field) => field.key),
+    ["duration", "prompt", "aspect_ratio", "image_urls"],
+  );
+  assert.deepEqual(
+    normalized.primaryFields.map((field) => field.key),
+    ["duration", "prompt"],
+  );
+  assert.deepEqual(
+    normalized.advancedFields.map((field) => field.key),
+    ["aspect_ratio", "image_urls"],
+  );
+});
+
+test("uses default advanced grouping for boolean and seed fields when no custom form ui exists", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    requestSchema: {
+      type: "object",
+      properties: {
+        prompt: {
+          type: "string",
+        },
+        seed: {
+          type: "integer",
+        },
+        remove_watermark: {
+          type: "boolean",
+        },
+      },
+      "x-apidog-orders": ["prompt", "seed", "remove_watermark"],
+    },
+    examplePayload: {
+      prompt: "hello",
+    },
+  });
+
+  assert.equal(normalized.usesDefaultAdvancedGrouping, true);
+  assert.deepEqual(
+    normalized.primaryFields.map((field) => field.key),
+    ["prompt"],
+  );
+  assert.deepEqual(
+    normalized.advancedFields.map((field) => field.key),
+    ["seed", "remove_watermark"],
+  );
+});
+
+test("uses default advanced grouping for seeds and watermark-like fields", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    requestSchema: {
+      type: "object",
+      properties: {
+        prompt: {
+          type: "string",
+        },
+        seeds: {
+          type: "array",
+          items: {
+            type: "integer",
+          },
+        },
+        watermark: {
+          type: "boolean",
+        },
+        watermark_text: {
+          type: "string",
+        },
+      },
+      "x-apidog-orders": ["prompt", "seeds", "watermark", "watermark_text"],
+    },
+    examplePayload: {
+      prompt: "hello",
+    },
+  });
+
+  assert.deepEqual(
+    normalized.primaryFields.map((field) => field.key),
+    ["prompt"],
+  );
+  assert.deepEqual(
+    normalized.advancedFields.map((field) => field.key),
+    ["seeds", "watermark", "watermark_text"],
+  );
+});
+
+test("does not force seed and watermark fields into advanced when custom advancedFields are configured", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    requestSchema: {
+      type: "object",
+      properties: {
+        prompt: {
+          type: "string",
+        },
+        seed: {
+          type: "integer",
+        },
+        watermark_text: {
+          type: "string",
+        },
+        duration: {
+          type: "integer",
+        },
+      },
+      "x-apidog-orders": ["prompt", "seed", "watermark_text", "duration"],
+    },
+    examplePayload: {
+      prompt: "hello",
+    },
+    formUi: {
+      advancedFields: ["duration"],
+    },
+  });
+
+  assert.equal(normalized.usesDefaultAdvancedGrouping, false);
+  assert.deepEqual(
+    normalized.primaryFields.map((field) => field.key),
+    ["prompt", "seed", "watermark_text"],
+  );
+  assert.deepEqual(
+    normalized.advancedFields.map((field) => field.key),
+    ["duration"],
+  );
 });

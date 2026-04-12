@@ -34,7 +34,9 @@ function shouldOmitValue(value: unknown) {
 
 function pruneAiVideoStudioFormValues(value: unknown): unknown {
   if (Array.isArray(value)) {
-    const next = value.filter((item) => !shouldOmitValue(item));
+    const next = value
+      .map((item) => pruneAiVideoStudioFormValues(item))
+      .filter((item) => item !== undefined);
     return next.length > 0 ? next : undefined;
   }
 
