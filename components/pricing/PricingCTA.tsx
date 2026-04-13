@@ -31,6 +31,7 @@ export default function PricingCTA({
 
   const provider = plan.provider;
   const isCreem = provider === "creem";
+  const isPayPal = provider === "paypal";
   const isStripe = provider === "stripe";
   const isNowpaymentsMode = checkoutMode === "nowpayments";
 
@@ -111,6 +112,7 @@ export default function PricingCTA({
 
         // Creem
         creemProductId?: string;
+        planId?: string;
       } = {
         provider: provider || "stripe",
       };
@@ -129,6 +131,9 @@ export default function PricingCTA({
           applyCoupon && plan.creemDiscountCode
             ? plan.creemDiscountCode
             : undefined;
+      }
+      if (isPayPal) {
+        requestBody.planId = plan.id;
       }
 
       const response = await fetch("/api/payment/checkout-session", {
@@ -181,6 +186,8 @@ export default function PricingCTA({
     defaultCouponCode = null;
   } else if (isCreem) {
     defaultCouponCode = plan.creemDiscountCode;
+  } else if (isPayPal) {
+    defaultCouponCode = null;
   } else if (isStripe) {
     defaultCouponCode = plan.stripeCouponId;
   }

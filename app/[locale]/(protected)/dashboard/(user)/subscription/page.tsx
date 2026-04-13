@@ -74,6 +74,11 @@ export default async function SubscriptionPage() {
                 </p>
               </>
             )}
+            {subscriptionProvider === "paypal" && (
+              <p className="text-sm text-muted-foreground">
+                Current PayPal subscriptions need to be managed from your PayPal account.
+              </p>
+            )}
             {!subscriptionProvider && (
               <p className="text-sm text-muted-foreground">
                 Unable to load subscription management portal.

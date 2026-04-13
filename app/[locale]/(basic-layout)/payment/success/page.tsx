@@ -24,10 +24,14 @@ import { Suspense, useEffect, useState } from "react";
 const buildVerifySuccessUrl = ({
   sessionId,
   checkoutId,
+  token,
+  subscriptionId,
   provider,
 }: {
   sessionId: string;
   checkoutId: string;
+  token: string;
+  subscriptionId: string;
   provider: string;
 }) => {
   const baseUrl = "/api/payment/verify-success";
@@ -38,6 +42,12 @@ const buildVerifySuccessUrl = ({
     params.append("session_id", sessionId);
   } else if (provider === "creem") {
     params.append("checkout_id", checkoutId);
+  } else if (provider === "paypal") {
+    if (subscriptionId) {
+      params.append("subscription_id", subscriptionId);
+    } else if (token) {
+      params.append("token", token);
+    }
   }
   params.append("provider", provider);
 
@@ -52,6 +62,8 @@ function SuccessContent() {
 
   const sessionId = searchParams.get("session_id");
   const checkoutId = searchParams.get("checkout_id");
+  const token = searchParams.get("token");
+  const subscriptionId = searchParams.get("subscription_id");
   const provider = searchParams.get("provider");
 
   const [status, setStatus] = useState<"verifying" | "success" | "error">(
@@ -81,12 +93,21 @@ function SuccessContent() {
       });
       return;
     }
+    if (provider === "paypal" && !token && !subscriptionId) {
+      setStatus("error");
+      setPaymentData({
+        message: "PayPal token or subscription ID missing. Payment cannot be verified.",
+      });
+      return;
+    }
 
     const verifySession = async () => {
       try {
         const url = buildVerifySuccessUrl({
           sessionId: sessionId ?? "",
           checkoutId: checkoutId ?? "",
+          token: token ?? "",
+          subscriptionId: subscriptionId ?? "",
           provider: provider ?? "",
         });
         const response = await fetch(url, {
@@ -132,7 +153,7 @@ function SuccessContent() {
     };
 
     verifySession();
-  }, [sessionId, checkoutId, provider, locale, revalidateBenefits]);
+  }, [sessionId, checkoutId, token, subscriptionId, provider, locale, revalidateBenefits]);
 
   const fadeIn: Variants = {
     hidden: { opacity: 0, y: 10 },

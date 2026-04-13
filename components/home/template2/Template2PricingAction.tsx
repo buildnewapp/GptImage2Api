@@ -23,6 +23,7 @@ export default function Template2PricingAction({
 
   const provider = plan.provider ?? "stripe";
   const isCreem = provider === "creem";
+  const isPayPal = provider === "paypal";
   const isStripe = provider === "stripe";
 
   const defaultCouponCode = isCreem
@@ -42,6 +43,10 @@ export default function Template2PricingAction({
       console.error("Creem product ID is missing for this plan.");
       return;
     }
+    if (isPayPal && !plan.planId) {
+      console.error("Plan ID is missing for this PayPal plan.");
+      return;
+    }
 
     setIsLoading(true);
 
@@ -49,6 +54,7 @@ export default function Template2PricingAction({
       const requestBody: {
         couponCode?: string;
         creemProductId?: string;
+        planId?: string;
         provider: string;
         referral?: string;
         stripePriceId?: string;
@@ -65,6 +71,9 @@ export default function Template2PricingAction({
       if (isCreem) {
         requestBody.creemProductId = plan.creemProductId ?? undefined;
         requestBody.couponCode = applyCoupon ? plan.creemDiscountCode ?? undefined : undefined;
+      }
+      if (isPayPal) {
+        requestBody.planId = plan.planId ?? undefined;
       }
 
       const response = await fetch("/api/payment/checkout-session", {

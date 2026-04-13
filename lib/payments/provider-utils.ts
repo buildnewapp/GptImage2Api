@@ -17,7 +17,7 @@
 /**
  * Payment provider constants
  */
-export const ORDER_PROVIDERS = ["stripe", "creem"] as const;
+export const ORDER_PROVIDERS = ["stripe", "creem", "paypal"] as const;
 
 // ============================================================================
 // Payment Type Utilities
@@ -256,4 +256,3 @@ export function getRecurringIntervalLabel(interval: string | null | undefined): 
 
   return interval;
 }
-

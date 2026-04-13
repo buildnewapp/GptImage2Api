@@ -7,13 +7,18 @@ import {
 import { getDb } from '@/lib/db';
 import { pricingPlans as pricingPlansSchema } from '@/lib/db/schema';
 import { getErrorMessage } from '@/lib/error-utils';
+import { encodePayPalCustomId, getPayPalApprovalUrl } from '@/lib/paypal';
+import { PayPalClient } from '@/lib/paypal/client';
+import { isRecurringPaymentType } from '@/lib/payments/provider-utils';
 import { getURL } from '@/lib/url';
 import { eq } from 'drizzle-orm';
+import { siteConfig } from '@/config/site';
 
 type RequestData = {
   provider?: string;
   stripePriceId?: string;
   creemProductId?: string;
+  planId?: string;
   couponCode?: string;
   referral?: string;
 };
@@ -108,6 +113,115 @@ export async function POST(req: Request) {
       });
     }
 
+    if (provider === 'paypal') {
+      const { planId } = requestData;
+      if (!planId) {
+        return apiResponse.badRequest('Missing planId');
+      }
+
+      const [plan] = await db
+        .select({
+          id: pricingPlansSchema.id,
+          cardTitle: pricingPlansSchema.cardTitle,
+          creemProductId: pricingPlansSchema.creemProductId,
+          currency: pricingPlansSchema.currency,
+          paymentType: pricingPlansSchema.paymentType,
+          price: pricingPlansSchema.price,
+          provider: pricingPlansSchema.provider,
+        })
+        .from(pricingPlansSchema)
+        .where(eq(pricingPlansSchema.id, planId))
+        .limit(1);
+
+      if (!plan || plan.provider !== 'paypal') {
+        return apiResponse.notFound('Plan not found for PayPal');
+      }
+
+      const localeHeader = req.headers.get('accept-language') ?? 'en-US';
+      const locale = localeHeader.split(',')[0] || 'en-US';
+      const customId = encodePayPalCustomId({
+        planId: plan.id,
+        userId: user.id,
+      });
+      const client = new PayPalClient();
+      const cancelUrl = getURL(process.env.NEXT_PUBLIC_PRICING_PATH ?? 'pricing');
+      const returnUrl = getURL('api/paypal/callback');
+
+      if (isRecurringPaymentType(plan.paymentType)) {
+        if (!plan.creemProductId) {
+          return apiResponse.badRequest('Missing PayPal plan ID');
+        }
+
+        const subscription = await client.createSubscription({
+          application_context: {
+            brand_name: process.env.NEXT_PUBLIC_PROJECT_NAME || siteConfig.name,
+            locale,
+            return_url: returnUrl,
+            shipping_preference: 'NO_SHIPPING',
+            user_action: 'SUBSCRIBE_NOW',
+            cancel_url: cancelUrl,
+          },
+          custom_id: customId,
+          plan_id: plan.creemProductId,
+          subscriber: {
+            email_address: user.email,
+          },
+        });
+
+        const approvalUrl = getPayPalApprovalUrl(subscription.links);
+        if (!approvalUrl) {
+          throw new Error('PayPal subscription approval URL not found');
+        }
+
+        return apiResponse.success({
+          sessionId: subscription.id,
+          url: approvalUrl,
+        });
+      }
+
+      if (!plan.price || !plan.currency) {
+        return apiResponse.badRequest('PayPal one-time plan price is incomplete');
+      }
+
+      const amount = Number(plan.price);
+      if (!Number.isFinite(amount) || amount <= 0) {
+        return apiResponse.badRequest('Invalid PayPal plan price');
+      }
+
+      const order = await client.createOrder({
+        application_context: {
+          brand_name: process.env.NEXT_PUBLIC_PROJECT_NAME || siteConfig.name,
+          locale,
+          return_url: returnUrl,
+          shipping_preference: 'NO_SHIPPING',
+          user_action: 'PAY_NOW',
+          cancel_url: cancelUrl,
+        },
+        intent: 'CAPTURE',
+        purchase_units: [
+          {
+            amount: {
+              currency_code: plan.currency.toUpperCase(),
+              value: amount.toFixed(2),
+            },
+            custom_id: customId,
+            description: plan.cardTitle,
+            invoice_id: plan.id,
+          },
+        ],
+      });
+
+      const approvalUrl = getPayPalApprovalUrl(order.links);
+      if (!approvalUrl) {
+        throw new Error('PayPal order approval URL not found');
+      }
+
+      return apiResponse.success({
+        sessionId: order.id,
+        url: approvalUrl,
+      });
+    }
+
     return apiResponse.badRequest(
       `Unsupported payment provider: ${provider}`
     );
@@ -120,4 +234,3 @@ export async function POST(req: Request) {
     return apiResponse.serverError(errorMessage);
   }
 }
-

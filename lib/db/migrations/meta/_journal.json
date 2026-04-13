@@ -253,6 +253,13 @@
       "when": 1773152558203,
       "tag": "0035_programmatic_seo_page_types",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1776052800000,
+      "tag": "0036_paypal_provider_enum",
+      "breakpoints": true
     }
   ]
 }

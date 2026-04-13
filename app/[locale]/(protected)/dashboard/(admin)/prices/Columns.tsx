@@ -97,7 +97,7 @@ export const columns: ColumnDef<PricingPlan>[] = [
   },
   {
     accessorKey: "priceIdOrProductId",
-    header: "Price ID or Product ID",
+    header: "External Price / Product ID",
     minSize: 200,
     cell: ({ row }) => {
       const plan = row.original;
@@ -145,6 +145,9 @@ export const columns: ColumnDef<PricingPlan>[] = [
               {creemProductId}{" "}
               <ExternalLink className="h-3 w-3 text-muted-foreground hover:text-primary" />
             </Link>
+          )}
+          {provider === "paypal" && creemProductId && (
+            <span className="text-xs">{creemProductId}</span>
           )}
         </div>
       );

@@ -104,6 +104,7 @@ export interface HomeTemplate2CheckoutPlan {
   creemProductId?: string | null;
   enableManualInputCoupon?: boolean;
   isHighlighted?: boolean;
+  planId?: string | null;
   provider?: string | null;
   stripeCouponId?: string | null;
   stripePriceId?: string | null;

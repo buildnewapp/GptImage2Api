@@ -176,6 +176,7 @@ export const providerEnum = pgEnum("provider", [
   "none", // no payment feature
   "stripe",
   "creem",
+  "paypal",
 ]);
 export type PaymentProvider = (typeof providerEnum.enumValues)[number];
 

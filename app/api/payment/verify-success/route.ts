@@ -14,6 +14,7 @@ import { apiResponse } from '@/lib/api-response';
 import { getSession } from '@/lib/auth/server';
 import { NextRequest } from 'next/server';
 import { verifyCreemPayment } from './creem-handler';
+import { verifyPayPalPayment } from './paypal-handler';
 import { verifyStripePayment } from './stripe-handler';
 import type { Provider } from './types';
 
@@ -37,6 +38,10 @@ export async function GET(req: NextRequest) {
 
     if (provider === 'creem') {
       return await verifyCreemPayment(req, user.id);
+    }
+
+    if (provider === 'paypal') {
+      return await verifyPayPalPayment(req, user.id);
     }
 
     return apiResponse.badRequest(`Unsupported payment provider: ${provider}`);

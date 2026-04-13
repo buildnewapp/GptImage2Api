@@ -94,7 +94,7 @@ const pricingPlanFormSchema = z.object({
   groupSlug: z.string().optional(),
   cardTitle: z.string().min(1, "Card title is required."),
   cardDescription: z.string().optional().nullable(),
-  provider: z.enum(["none", "stripe", "creem"]),
+  provider: z.enum(["none", "stripe", "creem", "paypal"]),
   stripePriceId: z.string().optional().nullable(),
   stripeProductId: z.string().optional().nullable(),
   stripeCouponId: z.string().optional().nullable(),
@@ -665,6 +665,12 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
         payload.stripeProductId = null;
         payload.stripeCouponId = null;
         payload.enableManualInputCoupon = false;
+      } else if (payload.provider === "paypal") {
+        payload.stripePriceId = null;
+        payload.stripeProductId = null;
+        payload.stripeCouponId = null;
+        payload.creemDiscountCode = null;
+        payload.enableManualInputCoupon = false;
       } else if (payload.provider === "none") {
         // Remove all fields when provider is none
         payload.stripePriceId = null;
@@ -836,6 +842,10 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                               title="Stripe"
                             />
                             <ChoiceboxGroup.Item value="creem" title="Creem" />
+                            <ChoiceboxGroup.Item
+                              value="paypal"
+                              title="PayPal"
+                            />
                           </ChoiceboxGroup>
                         </FormControl>
                         <FormMessage />
@@ -910,41 +920,51 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                         />
                       </>
                     )}
-                    {watchProvider === "creem" && (
+                    {(watchProvider === "creem" ||
+                      watchProvider === "paypal") && (
                       <FormField
                         control={form.control}
                         name="creemProductId"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Creem Product ID</FormLabel>
+                            <FormLabel>
+                              {watchProvider === "paypal"
+                                ? "PayPal Plan ID"
+                                : "Creem Product ID"}
+                            </FormLabel>
                             <div className="flex items-center gap-2">
                               <FormControl>
                                 <Input
-                                  placeholder="prod_..."
+                                  placeholder={
+                                    watchProvider === "paypal" ? "P-..." : "prod_..."
+                                  }
                                   {...field}
                                   value={field.value ?? ""}
                                   disabled={isLoading || isVerifyingCreem}
                                 />
                               </FormControl>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                onClick={handleCreemVerify}
-                                disabled={
-                                  !watchCreemProductId ||
-                                  isVerifyingCreem ||
-                                  isLoading
-                                }
-                              >
-                                {isVerifyingCreem ? (
-                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : null}
-                                Verify & Fetch
-                              </Button>
+                              {watchProvider === "creem" && (
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  onClick={handleCreemVerify}
+                                  disabled={
+                                    !watchCreemProductId ||
+                                    isVerifyingCreem ||
+                                    isLoading
+                                  }
+                                >
+                                  {isVerifyingCreem ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                  ) : null}
+                                  Verify & Fetch
+                                </Button>
+                              )}
                             </div>
                             <FormDescription>
-                              Enter the Creem product ID for {watchEnvironment}{" "}
-                              environment
+                              {watchProvider === "paypal"
+                                ? "Recurring plans fill this with the PayPal Plan ID. One-time plans can leave it empty."
+                                : `Enter the Creem product ID for ${watchEnvironment} environment`}
                             </FormDescription>
                             <FormMessage />
                           </FormItem>
@@ -959,15 +979,37 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Payment Type</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
+                            {watchProvider === "paypal" ? (
+                              <Select
+                                onValueChange={field.onChange}
                                 value={field.value ?? ""}
-                                readOnly={true}
-                                disabled={true}
-                                placeholder="Fetched from provider"
-                              />
-                            </FormControl>
+                                disabled={isLoading}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select payment type" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="one_time">
+                                    one_time
+                                  </SelectItem>
+                                  <SelectItem value="recurring">
+                                    recurring
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            ) : (
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  value={field.value ?? ""}
+                                  readOnly={true}
+                                  disabled={true}
+                                  placeholder="Fetched from provider"
+                                />
+                              </FormControl>
+                            )}
                             <FormMessage />
                           </FormItem>
                         )}
@@ -978,15 +1020,36 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Recurring Interval</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
+                            {watchProvider === "paypal" ? (
+                              <Select
+                                onValueChange={field.onChange}
                                 value={field.value ?? ""}
-                                readOnly={true}
-                                disabled={true}
-                                placeholder="Fetched from provider"
-                              />
-                            </FormControl>
+                                disabled={
+                                  isLoading ||
+                                  form.watch("paymentType") !== "recurring"
+                                }
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select recurring interval" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="month">month</SelectItem>
+                                  <SelectItem value="year">year</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            ) : (
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  value={field.value ?? ""}
+                                  readOnly={true}
+                                  disabled={true}
+                                  placeholder="Fetched from provider"
+                                />
+                              </FormControl>
+                            )}
                             <FormMessage />
                           </FormItem>
                         )}
@@ -1014,9 +1077,13 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                                       : Number(event.target.value)
                                   )
                                 }
-                                readOnly={true}
-                                disabled={true}
-                                placeholder="Fetched from provider"
+                                readOnly={watchProvider !== "paypal"}
+                                disabled={watchProvider !== "paypal" || isLoading}
+                                placeholder={
+                                  watchProvider === "paypal"
+                                    ? "Enter plan price"
+                                    : "Fetched from provider"
+                                }
                               />
                             </FormControl>
                             <FormMessage />
@@ -1033,9 +1100,13 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                               <Input
                                 {...field}
                                 value={field.value ?? ""}
-                                readOnly={true}
-                                disabled={true}
-                                placeholder="Fetched from provider"
+                                readOnly={watchProvider !== "paypal"}
+                                disabled={watchProvider !== "paypal" || isLoading}
+                                placeholder={
+                                  watchProvider === "paypal"
+                                    ? "USD"
+                                    : "Fetched from provider"
+                                }
                               />
                             </FormControl>
                             <FormMessage />

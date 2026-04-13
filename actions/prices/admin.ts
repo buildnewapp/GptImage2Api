@@ -134,6 +134,12 @@ export async function createPricingPlanAction({
     planData.stripeProductId = null
     planData.stripeCouponId = null
     planData.enableManualInputCoupon = false
+  } else if (planData.provider === 'paypal') {
+    planData.stripePriceId = null
+    planData.stripeProductId = null
+    planData.stripeCouponId = null
+    planData.creemDiscountCode = null
+    planData.enableManualInputCoupon = false
   } else if (planData.provider === 'none') {
     planData.stripePriceId = null
     planData.stripeProductId = null
@@ -257,6 +263,12 @@ export async function updatePricingPlanAction({
     planData.stripeProductId = null
     planData.stripeCouponId = null
     planData.enableManualInputCoupon = false
+  } else if (planData.provider === 'paypal') {
+    planData.stripePriceId = null
+    planData.stripeProductId = null
+    planData.stripeCouponId = null
+    planData.creemDiscountCode = null
+    planData.enableManualInputCoupon = false
   } else if (planData.provider === 'none') {
     planData.stripePriceId = null
     planData.stripeProductId = null
@@ -370,4 +382,3 @@ export async function deletePricingPlanAction({
     )
   }
 }
-

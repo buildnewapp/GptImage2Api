@@ -130,6 +130,7 @@ function buildCheckoutPlan(plan: PricingConfigPlan): HomeTemplate2CheckoutPlan {
     creemProductId: plan.creemProductId ?? null,
     enableManualInputCoupon: plan.enableManualInputCoupon,
     isHighlighted: plan.isHighlighted,
+    planId: plan.id ?? null,
     provider: plan.provider ?? null,
     stripeCouponId: plan.stripeCouponId ?? null,
     stripePriceId: plan.stripePriceId ?? null,
