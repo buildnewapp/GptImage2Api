@@ -13,6 +13,12 @@ import {
   parsePayPalAmount,
 } from "@/lib/paypal";
 import { PayPalClient } from "@/lib/paypal/client";
+import {
+  getInitialPayPalSubscriptionOrderKey,
+  getPayPalSubscriptionPaymentEventAction,
+  resolvePayPalSubscriptionOrderAmount,
+  shouldCreateInitialPayPalSubscriptionOrder,
+} from "@/lib/paypal/subscription-orders";
 import type { PayPalOrder, PayPalSubscription } from "@/lib/paypal/types";
 import {
   grantConfiguredFirstOrderReward,
@@ -24,7 +30,7 @@ import {
 } from "@/lib/payments/credit-manager";
 import { ORDER_TYPES } from "@/lib/payments/provider-utils";
 import { createOrderWithIdempotency } from "@/lib/payments/webhook-helpers";
-import { and, desc, eq, inArray, InferInsertModel } from "drizzle-orm";
+import { and, desc, eq, InferInsertModel } from "drizzle-orm";
 
 function toDate(value?: string | null) {
   if (!value) {
@@ -65,6 +71,20 @@ async function resolvePayPalPlanId({
   return plan?.id ?? null;
 }
 
+async function resolvePayPalPlanPaymentDetails(planId: string) {
+  const db = getDb();
+  const [plan] = await db
+    .select({
+      currency: pricingPlansSchema.currency,
+      price: pricingPlansSchema.price,
+    })
+    .from(pricingPlansSchema)
+    .where(eq(pricingPlansSchema.id, planId))
+    .limit(1);
+
+  return plan ?? null;
+}
+
 async function resolveExistingSubscriptionContext(subscriptionId: string) {
   const db = getDb();
   const [subscription] = await db
@@ -78,6 +98,135 @@ async function resolveExistingSubscriptionContext(subscriptionId: string) {
     .limit(1);
 
   return subscription ?? null;
+}
+
+async function resolveExistingInitialSubscriptionOrder(subscriptionId: string) {
+  const db = getDb();
+  const [order] = await db
+    .select({
+      id: ordersSchema.id,
+      providerOrderId: ordersSchema.providerOrderId,
+      metadata: ordersSchema.metadata,
+    })
+    .from(ordersSchema)
+    .where(
+      and(
+        eq(ordersSchema.provider, "paypal"),
+        eq(
+          ordersSchema.providerOrderId,
+          getInitialPayPalSubscriptionOrderKey(subscriptionId),
+        ),
+        eq(ordersSchema.subscriptionId, subscriptionId),
+        eq(ordersSchema.orderType, ORDER_TYPES.RECURRING),
+      ),
+    )
+    .orderBy(desc(ordersSchema.createdAt))
+    .limit(1);
+
+  return order ?? null;
+}
+
+async function createInitialPayPalSubscriptionOrder(subscription: {
+  create_time?: string;
+  id: string;
+  plan_id?: string;
+  status: string;
+  subscriber?: {
+    email_address?: string;
+  };
+  billing_info?: {
+    last_payment?: {
+      amount?: {
+        currency_code?: string;
+        value?: string;
+      };
+      status?: string;
+      time?: string;
+    };
+  };
+}, {
+  planId,
+  userId,
+}: {
+  planId: string;
+  userId: string;
+}) {
+  const existingInitialOrder = await resolveExistingInitialSubscriptionOrder(
+    subscription.id,
+  );
+
+  if (
+    !shouldCreateInitialPayPalSubscriptionOrder({
+      hasInitialOrder: Boolean(existingInitialOrder),
+      status: subscription.status,
+    })
+  ) {
+    return existingInitialOrder?.id ?? null;
+  }
+
+  const planPaymentDetails = await resolvePayPalPlanPaymentDetails(planId);
+  const lastPayment = subscription.billing_info?.last_payment;
+  const amountTotal = resolvePayPalSubscriptionOrderAmount({
+    lastPaymentAmount: lastPayment?.amount?.value,
+    planPrice: planPaymentDetails?.price?.toString() ?? null,
+  });
+  const currency =
+    lastPayment?.amount?.currency_code?.toLowerCase() ??
+    planPaymentDetails?.currency?.toLowerCase() ??
+    "usd";
+
+  const orderData: InferInsertModel<typeof ordersSchema> = {
+    userId,
+    provider: "paypal",
+    providerOrderId: getInitialPayPalSubscriptionOrderKey(subscription.id),
+    status: "succeeded",
+    orderType: ORDER_TYPES.RECURRING,
+    planId,
+    priceId: subscription.plan_id ?? null,
+    productId: subscription.plan_id ?? null,
+    subscriptionId: subscription.id,
+    amountSubtotal: amountTotal,
+    amountDiscount: "0.00",
+    amountTax: "0.00",
+    amountTotal,
+    currency,
+    metadata: {
+      paypalOrderStage: "initial",
+      paypalPaymentId: null,
+      paypalPaymentStatus: lastPayment?.status ?? null,
+      paypalPlanId: subscription.plan_id ?? null,
+      paypalStatus: subscription.status,
+      paypalSubscriptionId: subscription.id,
+      planId,
+      subscriberEmail: subscription.subscriber?.email_address ?? null,
+      userId,
+    },
+  };
+
+  const { order: insertedOrder, existed } = await createOrderWithIdempotency(
+    "paypal",
+    orderData,
+    getInitialPayPalSubscriptionOrderKey(subscription.id),
+  );
+
+  if (existed || !insertedOrder) {
+    return insertedOrder?.id ?? null;
+  }
+
+  await upgradeSubscriptionCredits(
+    userId,
+    planId,
+    insertedOrder.id,
+    getSubscriptionCurrentPeriodStart(subscription as PayPalSubscription),
+  );
+
+  await grantConfiguredFirstOrderReward({
+    inviteeUserId: userId,
+    sourceOrderId: insertedOrder.id,
+    orderAmountUsd: Number(orderData.amountTotal ?? 0),
+  });
+
+  return insertedOrder.id;
 }
 
 function getSubscriptionCurrentPeriodStart(subscription: PayPalSubscription): number {
@@ -167,6 +316,11 @@ export async function syncPayPalSubscriptionData(
       target: subscriptionsSchema.subscriptionId,
       set: updateData,
     });
+
+  await createInitialPayPalSubscriptionOrder(subscription, {
+    planId,
+    userId,
+  });
 
   if (isEndedPayPalSubscription(subscription.status)) {
     await revokeRemainingSubscriptionCreditsOnEnd(
@@ -279,20 +433,39 @@ export async function handlePayPalSubscriptionPaymentCompleted(resource: any) {
   }
 
   const db = getDb();
-  const [existingOrder] = await db
-    .select({ id: ordersSchema.id })
-    .from(ordersSchema)
-    .where(
-      and(
-        eq(ordersSchema.provider, "paypal"),
-        eq(ordersSchema.subscriptionId, subscriptionId),
-        inArray(ordersSchema.orderType, [
-          ORDER_TYPES.SUBSCRIPTION_INITIAL,
-          ORDER_TYPES.SUBSCRIPTION_RENEWAL,
-        ]),
-      ),
-    )
-    .limit(1);
+  const existingInitialOrder = await resolveExistingInitialSubscriptionOrder(
+    subscriptionId,
+  );
+  const initialOrderMetadata = (existingInitialOrder?.metadata ?? null) as
+    | { paypalPaymentId?: string | null }
+    | null;
+  const action = getPayPalSubscriptionPaymentEventAction({
+    existingInitialOrder: existingInitialOrder
+      ? {
+          paymentId: initialOrderMetadata?.paypalPaymentId ?? null,
+        }
+      : null,
+    paymentEventId: resource.id,
+  });
+
+  if (action === "attach_to_initial" && existingInitialOrder) {
+    await db
+      .update(ordersSchema)
+      .set({
+        metadata: {
+          ...(existingInitialOrder.metadata as Record<string, unknown> | null),
+          paypalPaymentId: resource.id,
+          paypalPaymentStatus: resource.status ?? null,
+        },
+        status: mapPayPalOrderStatus(resource.status ?? "COMPLETED"),
+      })
+      .where(eq(ordersSchema.id, existingInitialOrder.id));
+    return;
+  }
+
+  if (action === "noop") {
+    return;
+  }
 
   const amount = resource?.amount ?? resource?.amount_with_breakdown?.gross_amount;
   const orderData: InferInsertModel<typeof ordersSchema> = {
@@ -300,9 +473,7 @@ export async function handlePayPalSubscriptionPaymentCompleted(resource: any) {
     provider: "paypal",
     providerOrderId: resource.id,
     status: mapPayPalOrderStatus(resource.status ?? "COMPLETED"),
-    orderType: existingOrder
-      ? ORDER_TYPES.SUBSCRIPTION_RENEWAL
-      : ORDER_TYPES.SUBSCRIPTION_INITIAL,
+    orderType: ORDER_TYPES.RECURRING,
     planId,
     priceId: subscription.plan_id ?? null,
     productId: subscription.plan_id ?? null,
@@ -313,6 +484,8 @@ export async function handlePayPalSubscriptionPaymentCompleted(resource: any) {
     amountTotal: parsePayPalAmount(amount?.value),
     currency: amount?.currency_code?.toLowerCase() ?? "usd",
     metadata: {
+      paypalOrderStage:
+        action === "create_initial" ? "initial" : "renewal",
       paypalPaymentId: resource.id,
       paypalPaymentStatus: resource.status ?? null,
       paypalPlanId: subscription.plan_id ?? null,
