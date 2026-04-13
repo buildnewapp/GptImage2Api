@@ -15,7 +15,8 @@ import {
   resolveStatusEndpoint,
   resolveTaskMode,
 } from "@/lib/ai-studio/provider-metadata";
-import { guessPricingRow } from "@/lib/ai-studio/runtime";
+import { guessPricingRow, resolveSelectedPricing } from "@/lib/ai-studio/runtime";
+import { stripLocalReferenceMetadata } from "@/lib/ai-studio/seedance-pricing";
 
 export {
   applyAiStudioSystemFields,
@@ -379,11 +380,15 @@ export async function prepareAiStudioExecution(
   const body = mapPublicModelAliasToProviderModel(detail, payload);
   const callbackUrl = getAiStudioCallbackUrl();
   const preparedBody = applyAiStudioSystemFields(detail, body, callbackUrl);
+  const providerBody = stripLocalReferenceMetadata(preparedBody);
 
   return {
     detail,
-    body: preparedBody,
-    selectedPricing: estimatePricingRow(detail.pricingRows, preparedBody),
+    body: providerBody,
+    selectedPricing: resolveSelectedPricing(detail.pricingRows, {
+      modelId: canonicalModelId,
+      payload: preparedBody,
+    }),
   };
 }
 

@@ -1,4 +1,5 @@
 import type { AiStudioPublicPricingRow } from "@/lib/ai-studio/public";
+import { buildSeedanceDynamicPricingFields } from "@/lib/ai-studio/seedance-pricing";
 
 export function collectRuntimeModels(pricingRows: AiStudioPublicPricingRow[]) {
   const models = new Set<string>();
@@ -158,6 +159,45 @@ export function guessPricingRow<Row extends PricingSelectionRow>(
   }
 
   return bestRow;
+}
+
+type CommonPricingRow = {
+  modelDescription: string;
+  interfaceType: string;
+  provider: string;
+  creditPrice: string;
+  creditUnit: string;
+  usdPrice: string;
+  falPrice: string;
+  discountRate: number;
+  discountPrice: boolean;
+};
+
+export function resolveSelectedPricing<Row extends PricingSelectionRow & Partial<CommonPricingRow>>(
+  pricingRows: Row[],
+  input: {
+    modelId: string;
+    payload: Record<string, any>;
+  },
+) {
+  const estimated = guessPricingRow(pricingRows, input.payload);
+  const dynamicFields = buildSeedanceDynamicPricingFields(
+    input.modelId,
+    input.payload,
+  );
+
+  if (!dynamicFields) {
+    return estimated;
+  }
+
+  return {
+    ...estimated,
+    ...dynamicFields,
+    creditUnit: estimated?.creditUnit ?? "per video",
+    falPrice: estimated?.falPrice ?? "",
+    discountRate: estimated?.discountRate ?? 0,
+    discountPrice: estimated?.discountPrice ?? false,
+  } as Row & CommonPricingRow;
 }
 
 export function getDisplayModelLabel(

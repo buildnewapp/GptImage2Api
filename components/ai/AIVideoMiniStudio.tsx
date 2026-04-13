@@ -373,6 +373,7 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
   const { selectedPricing, estimatedCredits } = useMemo(
     () =>
       estimateAiVideoMiniStudioCredits({
+        modelId: detail?.id ?? null,
         pricingRows: detail?.pricingRows ?? [],
         payload: basePayload,
       }),
@@ -851,12 +852,12 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
                   primaryFields.imageField?.schema.type === "array" ? [] : "",
                 )
               }
-                  className="inline-flex h-9 items-center justify-center rounded-full border border-white/12 bg-white/6 px-3 text-[13px] font-medium text-white/70 transition hover:border-white/20 hover:text-white"
-                >
-                  <X className="mr-1.5 h-3.5 w-3.5" />
-                  {t("form.remove")}
-                </button>
-              ) : null}
+              className="inline-flex h-9 items-center justify-center rounded-full border border-white/12 bg-white/6 px-3 text-[13px] font-medium text-white/70 transition hover:border-white/20 hover:text-white"
+            >
+              <X className="mr-1.5 h-3.5 w-3.5" />
+              {t("form.remove")}
+            </button>
+          ) : null}
           <span
             data-ai-video-mini-studio-price
             className="flex items-center gap-1 text-xs text-white/50"
@@ -875,15 +876,15 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
               "hover:-translate-y-0.5 hover:brightness-110 disabled:pointer-events-none disabled:opacity-50",
             )}
           >
-                {isSubmitting ? (
-                  <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-                )}
-                {isSubmitting ? t("form.generating") : hero.ctaLabel}
-              </button>
-            </div>
-          </div>
+            {isSubmitting ? (
+              <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+            )}
+            {isSubmitting ? t("form.generating") : hero.ctaLabel}
+          </button>
+        </div>
+      </div>
 
       <AIVideoMiniStudioTaskHistory
         tasks={generationTasks}

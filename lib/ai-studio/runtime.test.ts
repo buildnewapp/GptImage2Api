@@ -6,6 +6,7 @@ import {
   collectRuntimeModels,
   getDisplayModelLabel,
   guessPricingRow,
+  resolveSelectedPricing,
   resolvePublicModelId,
   toBillableCredits,
 } from "@/lib/ai-studio/runtime";
@@ -127,6 +128,37 @@ test("guesses pricing rows from structured duration hints instead of url noise",
   );
 
   assert.equal(row?.creditPrice, "30");
+});
+
+test("resolves seedance 2 dynamic pricing even when no static pricing rows exist", () => {
+  const row = resolveSelectedPricing<
+    {
+      modelDescription: string;
+      interfaceType: string;
+      provider: string;
+      creditPrice: string;
+      creditUnit: string;
+      usdPrice: string;
+      falPrice: string;
+      discountRate: number;
+      discountPrice: boolean;
+      runtimeModel?: string | null;
+    }
+  >([], {
+    modelId: "video:seedance-2-0",
+    payload: {
+      model: "seedance-2-0",
+      resolution: "720p",
+      duration: 5,
+    },
+  });
+
+  assert.equal(row?.creditPrice, "205");
+  assert.equal(row?.usdPrice, "");
+  assert.equal(
+    row?.modelDescription,
+    "Seedance 2.0, text/image-to-video, 720p, 5s",
+  );
 });
 
 test("uses the configured alias when rendering a single model key", () => {

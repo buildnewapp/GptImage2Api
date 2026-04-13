@@ -27,7 +27,11 @@ import type {
   AiStudioPublicPricingRow,
 } from "@/lib/ai-studio/public";
 import {
-  guessPricingRow,
+  getSeedancePricingExplanation,
+  LOCAL_REFERENCE_METADATA_KEY,
+} from "@/lib/ai-studio/seedance-pricing";
+import {
+  resolveSelectedPricing,
   toBillableCredits,
 } from "@/lib/ai-studio/runtime";
 import { cn } from "@/lib/utils";
@@ -196,6 +200,39 @@ function findValueByKey(
   }
 
   return undefined;
+}
+
+function mergeReferenceMetadata(
+  source: AiVideoStudioFormValues,
+  metadata: { videoDurationsByUrl?: Record<string, number> },
+) {
+  const existing =
+    source[LOCAL_REFERENCE_METADATA_KEY] &&
+    typeof source[LOCAL_REFERENCE_METADATA_KEY] === "object" &&
+    !Array.isArray(source[LOCAL_REFERENCE_METADATA_KEY])
+      ? (source[LOCAL_REFERENCE_METADATA_KEY] as Record<string, unknown>)
+      : {};
+  const existingVideoDurations =
+    existing.videoDurationsByUrl &&
+    typeof existing.videoDurationsByUrl === "object" &&
+    !Array.isArray(existing.videoDurationsByUrl)
+      ? (existing.videoDurationsByUrl as Record<string, number>)
+      : {};
+
+  return {
+    ...source,
+    [LOCAL_REFERENCE_METADATA_KEY]: {
+      ...existing,
+      ...(metadata.videoDurationsByUrl
+        ? {
+            videoDurationsByUrl: {
+              ...existingVideoDurations,
+              ...metadata.videoDurationsByUrl,
+            },
+          }
+        : {}),
+    },
+  };
 }
 
 export default function AIVideoStudio() {
@@ -384,7 +421,20 @@ export default function AIVideoStudio() {
   const selectedPricing = useMemo(
     () =>
       detail && basePayload
-        ? guessPricingRow(detail.pricingRows, basePayload)
+        ? resolveSelectedPricing(detail.pricingRows, {
+            modelId: detail.id,
+            payload: basePayload,
+          })
+        : null,
+    [basePayload, detail],
+  );
+  const pricingExplanation = useMemo(
+    () =>
+      detail && basePayload
+        ? getSeedancePricingExplanation({
+            model: detail.id,
+            payload: basePayload,
+          })
         : null,
     [basePayload, detail],
   );
@@ -804,6 +854,7 @@ export default function AIVideoStudio() {
                   audioOnlyError: t("form.audioOnlyError"),
                   imageOnlyError: t("form.imageOnlyError"),
                   videoOnlyError: t("form.videoOnlyError"),
+                  videoDurationRequiredError: t("form.videoDurationRequiredError"),
                   uploadTooLarge: (sizeInMb) =>
                     t("form.referenceUploadTooLarge", { size: sizeInMb }),
                   audioUrlPlaceholder: t("form.audioUrlPlaceholder"),
@@ -815,6 +866,9 @@ export default function AIVideoStudio() {
                 values={formValues}
                 isPublic={isPublic}
                 disabled={isSubmitting}
+                onReferenceMetadataChange={(_, metadata) =>
+                  setFormValues((current) => mergeReferenceMetadata(current, metadata))
+                }
                 onChange={(path, nextValue) =>
                   setFormValues((current) => setValueAtPath(current, path, nextValue))
                 }
@@ -834,6 +888,32 @@ export default function AIVideoStudio() {
             ) : null}
 
             <div className="pt-4 mt-auto">
+              {pricingExplanation ? (
+                <div className="mb-3 rounded-xl border border-border/60 bg-background/35 px-4 py-3">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                    {t("form.pricingLogicTitle")}
+                  </div>
+                  <div className="mt-1 text-xs text-muted-foreground">
+                    {pricingExplanation.hasVideoInput
+                      ? t("form.pricingLogicWithVideoSummary")
+                      : t("form.pricingLogicWithoutVideoSummary")}
+                  </div>
+                  <div className="mt-1.5 text-sm font-medium text-foreground">
+                    {pricingExplanation.hasVideoInput
+                      ? t("form.pricingLogicWithVideoFormula", {
+                          input: pricingExplanation.inputVideoDurationSeconds,
+                          output: pricingExplanation.outputDurationSeconds,
+                          rate: pricingExplanation.rate,
+                          credits: pricingExplanation.creditPrice,
+                        })
+                      : t("form.pricingLogicWithoutVideoFormula", {
+                          output: pricingExplanation.outputDurationSeconds,
+                          rate: pricingExplanation.rate,
+                          credits: pricingExplanation.creditPrice,
+                        })}
+                  </div>
+                </div>
+              ) : null}
               <button
                 type="button"
                 onClick={() => void handleGenerate()}

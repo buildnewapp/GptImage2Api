@@ -26,7 +26,7 @@ import {
   applyPricingRowToPayload,
   collectRuntimeModels,
   getDisplayModelLabel,
-  guessPricingRow,
+  resolveSelectedPricing,
   resolvePublicModelId,
 } from "@/lib/ai-studio/runtime";
 import {
@@ -256,9 +256,17 @@ function collectFields(
 
 function guessSelectedPricing(
   pricingRows: AiStudioPublicPricingRow[],
+  modelId: string | null,
   payload: Record<string, any>,
 ) {
-  return guessPricingRow(pricingRows, payload);
+  if (!modelId) {
+    return null;
+  }
+
+  return resolveSelectedPricing(pricingRows, {
+    modelId,
+    payload,
+  });
 }
 
 function looksLikeImage(url: string) {
@@ -624,7 +632,7 @@ export default function AiStudioShell({
         },
         mediaUrls: [],
         pricingRows: detail?.pricingRows ?? [],
-        selectedPricing: guessSelectedPricing(detail?.pricingRows ?? [], payload),
+        selectedPricing: guessSelectedPricing(detail?.pricingRows ?? [], detail?.id ?? null, payload),
         statusSupported: false,
       });
     } finally {
@@ -652,7 +660,7 @@ export default function AiStudioShell({
   const runtimeModels = collectRuntimeModels(detail?.pricingRows ?? []);
   const selectedPricing =
     executeResult?.selectedPricing ||
-    guessSelectedPricing(detail?.pricingRows ?? [], payload);
+    guessSelectedPricing(detail?.pricingRows ?? [], detail?.id ?? null, payload);
   const chatText = executeResult ? extractChatText(executeResult.raw) : "";
   const renderableMediaUrls = collectRenderableMediaUrls(
     executeResult?.mediaUrls ?? [],
@@ -1066,16 +1074,6 @@ export default function AiStudioShell({
                               )}
                             >
                               {row.creditPrice} {row.creditUnit}
-                            </div>
-                            <div
-                              className={cn(
-                                "mt-1 text-xs",
-                                selectedPricing?.modelDescription === row.modelDescription
-                                  ? "text-slate-300"
-                                  : "text-slate-500 dark:text-slate-400",
-                              )}
-                            >
-                              ${row.usdPrice || "-"} · Compared price ${row.falPrice || "N/A"}
                             </div>
                             {row.runtimeModel && (
                               <div

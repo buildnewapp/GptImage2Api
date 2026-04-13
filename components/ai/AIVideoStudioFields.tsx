@@ -42,6 +42,10 @@ type AIVideoStudioFieldsProps = {
   referenceFieldTexts?: ReferenceFieldTexts;
   showPublicInAdvanced?: boolean;
   onChange: (path: string[], value: unknown) => void;
+  onReferenceMetadataChange?: (
+    path: string[],
+    metadata: { videoDurationsByUrl?: Record<string, number> },
+  ) => void;
   onPublicChange: (next: boolean) => void;
 };
 
@@ -241,6 +245,7 @@ export default function AIVideoStudioFields({
   referenceFieldTexts,
   showPublicInAdvanced = false,
   onChange,
+  onReferenceMetadataChange,
   onPublicChange,
 }: AIVideoStudioFieldsProps) {
   const shouldRenderAdvancedSection =
@@ -327,6 +332,9 @@ export default function AIVideoStudioFields({
         referenceFieldTexts={referenceFieldTexts}
         value={getValueAtPath(values, field.path)}
         disabled={disabled}
+        onReferenceMetadataChange={(metadata) =>
+          onReferenceMetadataChange?.(field.path, metadata)
+        }
         onChange={(nextValue) => onChange(field.path, nextValue)}
       />
     );

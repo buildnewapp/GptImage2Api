@@ -43,6 +43,7 @@ export type ReferenceFieldTexts = {
   uploading?: string;
   imageOnlyError?: string;
   videoOnlyError?: string;
+  videoDurationRequiredError?: string;
   audioOnlyError?: string;
   uploadTooLarge?: (sizeInMb: number) => string;
   imageUrlPlaceholder?: string;
@@ -59,6 +60,9 @@ type ReferenceFieldProps = {
   disabled?: boolean;
   labelIcon?: ReactNode;
   texts?: ReferenceFieldTexts;
+  onMetadataChange?: (
+    metadata: { videoDurationsByUrl?: Record<string, number> },
+  ) => void;
   onChange: (value: unknown) => void;
 };
 
@@ -242,6 +246,8 @@ export function getDefaultReferenceFieldTexts(): Required<ReferenceFieldTexts> {
     uploading: "Uploading...",
     imageOnlyError: "Only image files are allowed.",
     videoOnlyError: "Only video files are allowed.",
+    videoDurationRequiredError:
+      "We couldn't read the video duration. Upload the video file or use a direct video URL that exposes metadata.",
     audioOnlyError: "Only audio files are allowed.",
     uploadTooLarge: (sizeInMb) => `File size cannot exceed ${sizeInMb}MB.`,
     imageUrlPlaceholder: "https://example.com/reference-image.png",
@@ -335,6 +341,61 @@ export function getReferenceDisplayName(value: string) {
     return lastSegment || parsed.hostname;
   } catch {
     return value;
+  }
+}
+
+async function getVideoDurationFromUrl(url: string) {
+  return new Promise<number | null>((resolve) => {
+    const video = document.createElement("video");
+    video.preload = "metadata";
+    video.muted = true;
+
+    const cleanup = () => {
+      video.removeAttribute("src");
+      video.load();
+    };
+
+    video.onloadedmetadata = () => {
+      const duration = Number.isFinite(video.duration) && video.duration > 0
+        ? Math.ceil(video.duration)
+        : null;
+      cleanup();
+      resolve(duration);
+    };
+
+    video.onerror = () => {
+      cleanup();
+      resolve(null);
+    };
+
+    video.src = url;
+  });
+}
+
+export async function prepareVideoReferenceUrl(input: {
+  url: string;
+  readDuration?: (url: string) => Promise<number | null>;
+}) {
+  const readDuration = input.readDuration ?? getVideoDurationFromUrl;
+  const duration = await readDuration(input.url);
+
+  if (duration === null || duration <= 0) {
+    return null;
+  }
+
+  return {
+    url: input.url,
+    duration: Math.ceil(duration),
+  };
+}
+
+async function getVideoDurationFromFile(file: File) {
+  const objectUrl = URL.createObjectURL(file);
+
+  try {
+    return await getVideoDurationFromUrl(objectUrl);
+  } finally {
+    URL.revokeObjectURL(objectUrl);
   }
 }
 
@@ -510,6 +571,7 @@ export default function ReferenceField({
   disabled,
   labelIcon,
   texts,
+  onMetadataChange,
   onChange,
 }: ReferenceFieldProps) {
   const fieldKind = resolveReferenceFieldKind(field);
@@ -546,12 +608,35 @@ export default function ReferenceField({
     onChange(toFieldValue(field, limited));
   };
 
-  const handleAddUrl = () => {
+  const handleAddUrl = async () => {
     const trimmed = urlInput.trim();
 
     if (!validateReferenceUrl(trimmed)) {
       toast.error(mergedTexts.invalidUrl);
       return;
+    }
+
+    if (fieldKind === "video") {
+      setIsUploading(true);
+
+      try {
+        const prepared = await prepareVideoReferenceUrl({
+          url: trimmed,
+        });
+
+        if (!prepared) {
+          toast.error(mergedTexts.videoDurationRequiredError);
+          return;
+        }
+
+        onMetadataChange?.({
+          videoDurationsByUrl: {
+            [prepared.url]: prepared.duration,
+          },
+        });
+      } finally {
+        setIsUploading(false);
+      }
     }
 
     const nextUrls = isMultiple ? [...urls, trimmed] : [trimmed];
@@ -580,6 +665,7 @@ export default function ReferenceField({
     try {
       setIsUploading(true);
       const uploadedUrls: string[] = [];
+      const uploadedVideoDurations: Record<string, number> = {};
 
       for (const file of files) {
         if (uploadKind === "image" && !file.type.startsWith("image/")) {
@@ -598,15 +684,34 @@ export default function ReferenceField({
           throw new Error(mergedTexts.uploadTooLarge(config.maxSize / 1024 / 1024));
         }
 
+        const duration =
+          uploadKind === "video"
+            ? await getVideoDurationFromFile(file)
+            : null;
+
+        if (uploadKind === "video" && duration === null) {
+          throw new Error(mergedTexts.videoDurationRequiredError);
+        }
+
         const uploadedUrl = await uploadReferenceFile({
           kind: uploadKind,
           file,
         });
 
         uploadedUrls.push(uploadedUrl);
+
+        if (uploadKind === "video" && duration !== null) {
+          uploadedVideoDurations[uploadedUrl] = duration;
+        }
       }
 
       applyUrls(isMultiple ? [...urls, ...uploadedUrls] : uploadedUrls);
+
+      if (uploadKind === "video" && onMetadataChange && Object.keys(uploadedVideoDurations).length > 0) {
+        onMetadataChange({
+          videoDurationsByUrl: uploadedVideoDurations,
+        });
+      }
     } catch (error) {
       toast.error(getErrorMessage(error) || mergedTexts.uploadFailed);
     } finally {

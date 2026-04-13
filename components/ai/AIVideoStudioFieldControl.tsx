@@ -34,6 +34,9 @@ type AIVideoStudioFieldControlProps = {
   labelIcon?: ReactNode;
   placeholder?: string;
   referenceFieldTexts?: ReferenceFieldTexts;
+  onReferenceMetadataChange?: (
+    metadata: { videoDurationsByUrl?: Record<string, number> },
+  ) => void;
   onChange: (value: unknown) => void;
 };
 
@@ -371,6 +374,7 @@ export default function AIVideoStudioFieldControl({
   labelIcon,
   placeholder,
   referenceFieldTexts,
+  onReferenceMetadataChange,
   onChange,
 }: AIVideoStudioFieldControlProps) {
   const inputId =
@@ -416,6 +420,7 @@ export default function AIVideoStudioFieldControl({
         disabled={disabled}
         labelIcon={labelIcon}
         texts={referenceFieldTexts}
+        onMetadataChange={onReferenceMetadataChange}
         onChange={onChange}
       />
     );

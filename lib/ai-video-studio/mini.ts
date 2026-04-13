@@ -1,6 +1,6 @@
 import type { AiStudioPublicPricingRow } from "@/lib/ai-studio/public";
 import {
-  guessPricingRow,
+  resolveSelectedPricing,
   toBillableCredits,
 } from "@/lib/ai-studio/runtime";
 import type { AiVideoStudioFieldDescriptor } from "@/lib/ai-video-studio/schema";
@@ -186,12 +186,17 @@ export function coerceAiVideoMiniStudioFieldValue(
 }
 
 export function estimateAiVideoMiniStudioCredits(input: {
+  modelId: string | null;
   pricingRows: AiStudioPublicPricingRow[];
   payload: Record<string, any> | null;
 }) {
-  const selectedPricing = input.payload
-    ? guessPricingRow(input.pricingRows, input.payload)
-    : null;
+  const selectedPricing =
+    input.payload && input.modelId
+      ? resolveSelectedPricing(input.pricingRows, {
+          modelId: input.modelId,
+          payload: input.payload,
+        })
+      : null;
 
   return {
     selectedPricing,

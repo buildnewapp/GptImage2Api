@@ -16,4 +16,6 @@ test("mini studio reads hero form copy through Landing.Hero translations", () =>
   assert.match(source, /t\("form\.generationCompleted"\)/);
   assert.match(source, /t\("form\.replace"\)/);
   assert.match(source, /t\("form\.reference"\)/);
+  assert.doesNotMatch(source, /getSeedancePricingExplanation/);
+  assert.doesNotMatch(source, /pricingExplanation/);
 });
