@@ -252,3 +252,55 @@ test("keeps the Most Popular badge visible above the Pro pricing card", () => {
     /class="[^"]*overflow-visible[^"]*border-primary[^"]*"[^>]*>\s*<div class="absolute -top-4 left-1\/2 z-10 -translate-x-1\/2"/
   );
 });
+
+test("reserves shared layout space for the fixed template2 header", () => {
+  const source = readFileSync(
+    path.join(projectRoot, "app/[locale]/(basic-layout)/layout.tsx"),
+    "utf8"
+  );
+
+  assert.match(source, /<main className="flex-1 flex flex-col items-center pt-20">/);
+});
+
+test("offsets the homepage back under the shared fixed header", () => {
+  const pageSource = readFileSync(
+    path.join(projectRoot, "app/[locale]/(basic-layout)/page.tsx"),
+    "utf8"
+  );
+  const templateSource = readFileSync(
+    path.join(projectRoot, "components/home/HomeTemplate2.tsx"),
+    "utf8"
+  );
+
+  assert.match(
+    `${pageSource}\n${templateSource}`,
+    /-mt-20 w-full/
+  );
+});
+
+test("shares template2 theme tokens with HeaderShell when header is rendered outside HomeTemplate2", () => {
+  const constantsSource = readFileSync(
+    path.join(projectRoot, "components/home/template2/constants.ts"),
+    "utf8"
+  );
+  const headerShellSource = readFileSync(
+    path.join(projectRoot, "components/home/template2/HeaderShell.tsx"),
+    "utf8"
+  );
+
+  assert.match(constantsSource, /export const template2ThemeVarsClass\s*=/);
+  assert.match(constantsSource, /pageShellClass\s*=\s*`w-full \$\{template2ThemeVarsClass\}[\s\S]*`;/);
+  assert.match(headerShellSource, /template2ThemeVarsClass/);
+  assert.match(headerShellSource, /className=\{cn\(\s*"fixed top-0 z-50 w-full/);
+});
+
+test("recomputes template2 header overlay when the pathname changes", () => {
+  const headerShellSource = readFileSync(
+    path.join(projectRoot, "components/home/template2/HeaderShell.tsx"),
+    "utf8"
+  );
+
+  assert.match(headerShellSource, /usePathname/);
+  assert.match(headerShellSource, /const pathname = usePathname\(\);/);
+  assert.match(headerShellSource, /\}, \[pathname\]\);/);
+});

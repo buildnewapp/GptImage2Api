@@ -9,8 +9,9 @@ import Template2HeaderLinks from "@/components/home/template2/HeaderLinks";
 import Template2LocaleSwitcher from "@/components/home/template2/LocaleSwitcher";
 import Template2MobileMenu from "@/components/home/template2/MobileMenu";
 import { ThemeToggle } from "@/components/home/template2/ThemeToggle";
+import { template2ThemeVarsClass } from "@/components/home/template2/constants";
 import type { HomeTemplate2Navigation } from "@/components/home/template2/types";
-import { Link as I18nLink } from "@/i18n/routing";
+import { Link as I18nLink, usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { user as userSchema } from "@/lib/db/schema";
 
@@ -27,9 +28,15 @@ export default function HeaderShell({
   totalAvailableCredits,
   user,
 }: Template2HeaderShellProps) {
-  const [overlay, setOverlay] = useState(true);
+  const pathname = usePathname();
+  const [overlay, setOverlay] = useState(() => pathname === "/");
 
   useEffect(() => {
+    if (pathname !== "/") {
+      setOverlay(false);
+      return undefined;
+    }
+
     const heroSentinel = document.querySelector("[data-home-template2-hero-sentinel]");
 
     if (!heroSentinel) {
@@ -50,7 +57,7 @@ export default function HeaderShell({
     observer.observe(heroSentinel);
 
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
 
   return (
     <header
@@ -58,6 +65,7 @@ export default function HeaderShell({
       data-header-contrast-mode={overlay ? "overlay" : "default"}
       className={cn(
         "fixed top-0 z-50 w-full transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300",
+        template2ThemeVarsClass,
         overlay
           ? "border-white/12 bg-transparent"
           : "border-border/70 border-b bg-background/82 shadow backdrop-blur-xl"

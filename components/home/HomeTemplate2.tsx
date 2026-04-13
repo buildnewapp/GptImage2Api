@@ -34,8 +34,8 @@ export default async function HomeTemplate2() {
   } as HomeTemplate2Page;
 
   return (
-    <div className={pageShellClass}>
-      <Header />
+    <div className={pageShellClass + ' -mt-20 w-full'}>
+      {/*<Header />*/}
       <Hero hero={page.hero} />
       <div id="features">
         <FeatureRows items={page.featureRows} />
