@@ -133,6 +133,7 @@ export async function POST(req: Request) {
         .where(eq(pricingPlansSchema.id, planId))
         .limit(1);
 
+      console.log('paypal plan', plan)
       if (!plan || plan.provider !== 'paypal') {
         return apiResponse.notFound('Plan not found for PayPal');
       }
@@ -148,7 +149,9 @@ export async function POST(req: Request) {
       const returnUrl = getURL('api/paypal/callback');
 
       if (isRecurringPaymentType(plan.paymentType)) {
-        if (!plan.creemProductId) {
+        const paypalPlanId = plan.creemProductId?.trim();
+
+        if (!paypalPlanId) {
           return apiResponse.badRequest('Missing PayPal plan ID');
         }
 
@@ -162,10 +165,7 @@ export async function POST(req: Request) {
             cancel_url: cancelUrl,
           },
           custom_id: customId,
-          plan_id: plan.creemProductId,
-          subscriber: {
-            email_address: user.email,
-          },
+          plan_id: paypalPlanId,
         });
 
         const approvalUrl = getPayPalApprovalUrl(subscription.links);
