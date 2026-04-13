@@ -7,6 +7,7 @@ import { Check, X } from "lucide-react";
 type PricingPlan = typeof pricingPlansSchema.$inferSelect;
 
 interface PricingCardDisplayProps {
+  checkoutMode?: "default" | "nowpayments";
   id?: string;
   plan: PricingPlan;
   localizedPlan: PricingPlanTranslation;
@@ -14,6 +15,7 @@ interface PricingCardDisplayProps {
 }
 
 export function PricingCardDisplay({
+  checkoutMode = "default",
   id,
   plan,
   localizedPlan,
@@ -89,7 +91,12 @@ export function PricingCardDisplay({
         </p>
       )}
 
-      <PricingCTA plan={plan} localizedPlan={localizedPlan} theme={theme} />
+      <PricingCTA
+        checkoutMode={checkoutMode}
+        plan={plan}
+        localizedPlan={localizedPlan}
+        theme={theme}
+      />
 
       <div className={cn("mb-6", isSeedanceTheme ? "text-4xl" : "text-4xl")}>
         {originalPrice ? (

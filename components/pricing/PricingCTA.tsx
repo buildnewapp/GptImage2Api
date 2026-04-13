@@ -12,12 +12,14 @@ import { toast } from "sonner";
 type PricingPlan = typeof pricingPlansSchema.$inferSelect;
 
 type Params = {
+  checkoutMode?: "default" | "nowpayments";
   plan: PricingPlan;
   localizedPlan: any;
   theme?: "default" | "seedance";
 };
 
 export default function PricingCTA({
+  checkoutMode = "default",
   plan,
   localizedPlan,
   theme = "default",
@@ -30,8 +32,62 @@ export default function PricingCTA({
   const provider = plan.provider;
   const isCreem = provider === "creem";
   const isStripe = provider === "stripe";
+  const isNowpaymentsMode = checkoutMode === "nowpayments";
 
   const handleCheckout = async (applyCoupon = true) => {
+    if (isNowpaymentsMode) {
+      setIsLoading(true);
+      try {
+        const response = await fetch("/api/nowpayments/checkout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept-Language": (locale || DEFAULT_LOCALE) as string,
+          },
+          body: JSON.stringify({
+            locale,
+            planId: plan.id,
+          }),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            router.push("/login");
+            toast.error("You must be logged in to purchase a plan.");
+            return;
+          }
+
+          throw new Error(
+            result.error || "HTTP error! status: " + response.status,
+          );
+        }
+
+        if (!result.success) {
+          throw new Error(result.error || "Failed to create NOWPayments order.");
+        }
+
+        if (result.data?.url) {
+          router.push(result.data.url);
+          return;
+        }
+
+        throw new Error("Checkout URL not received.");
+      } catch (error) {
+        console.error("NOWPayments Checkout Error:", error);
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred.",
+        );
+      } finally {
+        setIsLoading(false);
+      }
+
+      return;
+    }
+
     const stripePriceId = plan.stripePriceId ?? null;
     if (isStripe && !stripePriceId) {
       toast.error("Stripe price ID is missing for this plan.");
@@ -121,7 +177,9 @@ export default function PricingCTA({
   };
 
   let defaultCouponCode = null;
-  if (isCreem) {
+  if (isNowpaymentsMode) {
+    defaultCouponCode = null;
+  } else if (isCreem) {
     defaultCouponCode = plan.creemDiscountCode;
   } else if (isStripe) {
     defaultCouponCode = plan.stripeCouponId;

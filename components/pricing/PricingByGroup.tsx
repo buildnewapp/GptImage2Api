@@ -21,7 +21,13 @@ import { getLocale, getTranslations } from "next-intl/server";
 
 type PricingPlan = typeof pricingPlansSchema.$inferSelect;
 
-export default async function PricingByGroup() {
+interface PricingByGroupProps {
+  checkoutMode?: "default" | "nowpayments";
+}
+
+export default async function PricingByGroup({
+  checkoutMode = "default",
+}: PricingByGroupProps = {}) {
   const t = await getTranslations("Landing.Pricing");
 
   const locale = await getLocale();
@@ -33,6 +39,10 @@ export default async function PricingByGroup() {
     allPlans = result.data || [];
   } else {
     console.error("Failed to fetch public pricing plans:", result.error);
+  }
+
+  if (checkoutMode === "nowpayments") {
+    allPlans = allPlans.filter((plan) => Number(plan.price ?? 0) > 0);
   }
 
   const annualPlans = allPlans.filter((plan) => plan.groupSlug === "annual");
@@ -76,6 +86,7 @@ export default async function PricingByGroup() {
 
           return (
             <PricingCardDisplay
+              checkoutMode={checkoutMode}
               id={plan.isHighlighted ? "highlight-card" : undefined}
               key={plan.id}
               plan={plan}
