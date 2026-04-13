@@ -389,6 +389,40 @@
       "description": "支付信息发生错误。"
     }
   },
+  "PaymentSuccessPage": {
+    "loadingStatus": "正在加载支付状态...",
+    "verifying": {
+      "title": "正在验证支付",
+      "message": "正在验证你的支付信息..."
+    },
+    "success": {
+      "title": "支付成功！",
+      "message": "你的支付已确认，套餐已更新。"
+    },
+    "error": {
+      "title": "验证失败"
+    },
+    "details": {
+      "title": "交易详情",
+      "orderId": "订单 ID",
+      "subscription": "订阅",
+      "planPurchased": "已购买套餐",
+      "premiumPlan": "高级套餐"
+    },
+    "actions": {
+      "backToHome": "返回首页",
+      "goToDashboard": "控制台",
+      "viewOrders": "查看订单",
+      "tryAgain": "重试"
+    },
+    "errors": {
+      "missingStripeSession": "缺少 Checkout Session ID，无法验证支付。",
+      "missingCreemCheckout": "缺少 Checkout ID，无法验证支付。",
+      "missingPaypalParams": "缺少 PayPal token 或 subscription ID，无法验证支付。",
+      "verificationFailed": "验证失败。",
+      "unknownVerificationError": "验证过程中发生错误。"
+    }
+  },
   "LanguageDetection": {
     "title": "语言建议",
     "description": "检测到你的浏览器语言和当前语言不一样，你随时都可切换语言。",

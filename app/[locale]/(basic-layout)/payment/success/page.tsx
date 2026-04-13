@@ -17,7 +17,7 @@ import {
   ShieldCheck,
   XCircle,
 } from "lucide-react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
@@ -56,6 +56,7 @@ const buildVerifySuccessUrl = ({
 
 function SuccessContent() {
   const locale = useLocale();
+  const t = useTranslations("PaymentSuccessPage");
   const router = useRouter();
   const { mutate: revalidateBenefits } = useUserBenefits();
   const searchParams = useSearchParams();
@@ -75,28 +76,28 @@ function SuccessContent() {
     subscriptionId?: string;
     planName?: string;
   }>({
-    message: "Verifying your payment details...",
+    message: t("verifying.message"),
   });
 
   useEffect(() => {
     if (provider === "stripe" && !sessionId) {
       setStatus("error");
       setPaymentData({
-        message: "Checkout session ID missing. Payment cannot be verified.",
+        message: t("errors.missingStripeSession"),
       });
       return;
     }
     if (provider === "creem" && !checkoutId) {
       setStatus("error");
       setPaymentData({
-        message: "Checkout ID missing. Payment cannot be verified.",
+        message: t("errors.missingCreemCheckout"),
       });
       return;
     }
     if (provider === "paypal" && !token && !subscriptionId) {
       setStatus("error");
       setPaymentData({
-        message: "PayPal token or subscription ID missing. Payment cannot be verified.",
+        message: t("errors.missingPaypalParams"),
       });
       return;
     }
@@ -117,11 +118,11 @@ function SuccessContent() {
         });
         const result = await response.json();
         if (!response.ok) {
-          throw new Error(result.error || "Verification failed.");
+          throw new Error(result.error || t("errors.verificationFailed"));
         }
 
         if (!result.success) {
-          throw new Error(result.error || "Verification failed.");
+          throw new Error(result.error || t("errors.verificationFailed"));
         }
 
         confetti({
@@ -135,7 +136,7 @@ function SuccessContent() {
         setPaymentData({
           message:
             result.data.message ||
-            "Your payment has been confirmed. Your plan has been updated.",
+            t("success.message"),
           orderId: result.data.orderId,
           subscriptionId: result.data.subscriptionId,
           planName: result.data.planName,
@@ -147,13 +148,22 @@ function SuccessContent() {
           message:
             error instanceof Error
               ? error.message
-              : "An error occurred during verification.",
+              : t("errors.unknownVerificationError"),
         });
       }
     };
 
     verifySession();
-  }, [sessionId, checkoutId, token, subscriptionId, provider, locale, revalidateBenefits]);
+  }, [
+    sessionId,
+    checkoutId,
+    token,
+    subscriptionId,
+    provider,
+    locale,
+    revalidateBenefits,
+    t,
+  ]);
 
   const fadeIn: Variants = {
     hidden: { opacity: 0, y: 10 },
@@ -189,7 +199,7 @@ function SuccessContent() {
         </div>
         <div className="space-y-2">
           <h1 className="text-2xl font-bold tracking-tight">
-            Verifying Payment
+            {t("verifying.title")}
           </h1>
           <p className="text-muted-foreground text-balance max-w-xs mx-auto">
             {paymentData.message}
@@ -198,6 +208,18 @@ function SuccessContent() {
       </Card>
     </motion.div>
   );
+
+  const shouldGoToOrders =
+    provider === "paypal" && Boolean(paymentData.subscriptionId);
+  const dashboardHref = shouldGoToOrders
+    ? "/dashboard/my-orders"
+    : "/dashboard";
+  const dashboardTitle = shouldGoToOrders
+    ? t("actions.viewOrders")
+    : t("actions.goToDashboard");
+  const dashboardLabel = shouldGoToOrders
+    ? t("actions.viewOrders")
+    : t("actions.goToDashboard");
 
   const renderSuccess = () => (
     <motion.div
@@ -226,7 +248,7 @@ function SuccessContent() {
           variants={fadeIn}
           className="text-3xl font-bold mb-3 tracking-tight"
         >
-          Payment Successful!
+          {t("success.title")}
         </motion.h1>
 
         <motion.p
@@ -240,12 +262,14 @@ function SuccessContent() {
           <div className="bg-muted/40 rounded-xl border border-border/50 overflow-hidden">
             <div className="bg-muted/60 px-4 py-3 border-b border-border/50 flex items-center gap-2 text-sm font-medium text-foreground/80">
               <Receipt className="w-4 h-4 text-muted-foreground" />
-              <span>Transaction Details</span>
+              <span>{t("details.title")}</span>
             </div>
             <div className="p-4 space-y-3.5 text-sm">
               {paymentData.orderId && (
                 <div className="flex justify-between items-center gap-2">
-                  <span className="text-muted-foreground">Order ID</span>
+                  <span className="text-muted-foreground">
+                    {t("details.orderId")}
+                  </span>
                   <span className="font-mono font-medium text-foreground bg-background px-2 py-0.5 rounded border border-border/50 text-xs">
                     {paymentData.orderId}
                   </span>
@@ -253,7 +277,9 @@ function SuccessContent() {
               )}
               {paymentData.subscriptionId && (
                 <div className="flex justify-between items-center gap-2">
-                  <span className="text-muted-foreground">Subscription</span>
+                  <span className="text-muted-foreground">
+                    {t("details.subscription")}
+                  </span>
                   <span
                     className="font-mono font-medium text-foreground bg-background px-2 py-0.5 rounded border border-border/50 text-xs truncate max-w-[150px]"
                     title={paymentData.subscriptionId}
@@ -263,10 +289,12 @@ function SuccessContent() {
                 </div>
               )}
               <div className="flex justify-between items-center pt-1">
-                <span className="text-muted-foreground">Plan Purchased</span>
+                <span className="text-muted-foreground">
+                  {t("details.planPurchased")}
+                </span>
                 <span className="font-bold text-primary flex items-center gap-1.5">
                   <ShieldCheck className="w-3.5 h-3.5" />
-                  {paymentData.planName || "Premium Plan"}
+                  {paymentData.planName || t("details.premiumPlan")}
                 </span>
               </div>
             </div>
@@ -282,14 +310,18 @@ function SuccessContent() {
             asChild
             size="lg"
           >
-            <I18nLink href="/" title="Back to Home" prefetch={true}>
+            <I18nLink href="/" title={t("actions.backToHome")} prefetch={true}>
               <Home className="w-4 h-4" />
-              <span>Back to Home</span>
+              <span>{t("actions.backToHome")}</span>
             </I18nLink>
           </Button>
           <Button className="flex-1" asChild variant="outline" size="lg">
-            <I18nLink href="/dashboard" title="Go to Dashboard" prefetch={true}>
-              <span>Dashboard</span>
+            <I18nLink
+              href={dashboardHref}
+              title={dashboardTitle}
+              prefetch={true}
+            >
+              <span>{dashboardLabel}</span>
               <ArrowRight className="w-4 h-4 ml-1" />
             </I18nLink>
           </Button>
@@ -321,7 +353,7 @@ function SuccessContent() {
           variants={fadeIn}
           className="text-2xl font-bold mb-3 tracking-tight"
         >
-          Verification Failed
+          {t("error.title")}
         </motion.h1>
         <motion.p
           variants={fadeIn}
@@ -335,15 +367,15 @@ function SuccessContent() {
           className="flex flex-col sm:flex-row gap-3 w-full"
         >
           <Button variant="outline" className="flex-1" asChild>
-            <I18nLink href="/" title="Back to Home" prefetch={true}>
-              <CreditCard className="w-4 h-4" /> Back to Home
+            <I18nLink href="/" title={t("actions.backToHome")} prefetch={true}>
+              <CreditCard className="w-4 h-4" /> {t("actions.backToHome")}
             </I18nLink>
           </Button>
           <Button
             className="flex-1 bg-red-600 hover:bg-red-700 text-white"
             onClick={() => router.refresh()}
           >
-            <RefreshCw className="w-4 h-4" /> Try Again
+            <RefreshCw className="w-4 h-4" /> {t("actions.tryAgain")}
           </Button>
         </motion.div>
       </Card>
@@ -360,6 +392,8 @@ function SuccessContent() {
 }
 
 export default function PaymentSuccessPage() {
+  const t = useTranslations("PaymentSuccessPage");
+
   return (
     <main className="container max-w-4xl mx-auto">
       <Suspense
@@ -367,7 +401,7 @@ export default function PaymentSuccessPage() {
           <div className="flex flex-col items-center justify-center min-h-[80vh] text-center px-4">
             <Loader2 className="w-12 h-12 mb-4 text-primary animate-spin" />
             <h1 className="text-xl font-medium text-muted-foreground">
-              Loading Payment Status...
+              {t("loadingStatus")}
             </h1>
           </div>
         }

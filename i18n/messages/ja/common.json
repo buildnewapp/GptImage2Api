@@ -389,6 +389,40 @@
       "description": "支払い情報にエラーが発生しました。"
     }
   },
+  "PaymentSuccessPage": {
+    "loadingStatus": "支払い状態を読み込み中...",
+    "verifying": {
+      "title": "支払いを確認中",
+      "message": "支払い情報を確認しています..."
+    },
+    "success": {
+      "title": "支払いが完了しました！",
+      "message": "支払いが確認され、プランが更新されました。"
+    },
+    "error": {
+      "title": "確認に失敗しました"
+    },
+    "details": {
+      "title": "取引詳細",
+      "orderId": "注文 ID",
+      "subscription": "サブスクリプション",
+      "planPurchased": "購入プラン",
+      "premiumPlan": "プレミアムプラン"
+    },
+    "actions": {
+      "backToHome": "ホームに戻る",
+      "goToDashboard": "ダッシュボード",
+      "viewOrders": "注文を見る",
+      "tryAgain": "再試行"
+    },
+    "errors": {
+      "missingStripeSession": "Checkout Session ID が不足しているため、支払いを確認できません。",
+      "missingCreemCheckout": "Checkout ID が不足しているため、支払いを確認できません。",
+      "missingPaypalParams": "PayPal の token または subscription ID が不足しているため、支払いを確認できません。",
+      "verificationFailed": "確認に失敗しました。",
+      "unknownVerificationError": "確認中にエラーが発生しました。"
+    }
+  },
   "LanguageDetection": {
     "title": "言語の提案",
     "description": "ブラウザの言語設定が現在のサイト言語と異なっています。いつでも言語を切り替えることができます。",

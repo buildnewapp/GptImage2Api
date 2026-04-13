@@ -389,6 +389,40 @@
       "goToDashboard": "Go to Dashboard"
     }
   },
+  "PaymentSuccessPage": {
+    "loadingStatus": "Loading payment status...",
+    "verifying": {
+      "title": "Verifying Payment",
+      "message": "Verifying your payment details..."
+    },
+    "success": {
+      "title": "Payment Successful!",
+      "message": "Your payment has been confirmed. Your plan has been updated."
+    },
+    "error": {
+      "title": "Verification Failed"
+    },
+    "details": {
+      "title": "Transaction Details",
+      "orderId": "Order ID",
+      "subscription": "Subscription",
+      "planPurchased": "Plan Purchased",
+      "premiumPlan": "Premium Plan"
+    },
+    "actions": {
+      "backToHome": "Back to Home",
+      "goToDashboard": "Dashboard",
+      "viewOrders": "View Orders",
+      "tryAgain": "Try Again"
+    },
+    "errors": {
+      "missingStripeSession": "Checkout session ID missing. Payment cannot be verified.",
+      "missingCreemCheckout": "Checkout ID missing. Payment cannot be verified.",
+      "missingPaypalParams": "PayPal token or subscription ID missing. Payment cannot be verified.",
+      "verificationFailed": "Verification failed.",
+      "unknownVerificationError": "An error occurred during verification."
+    }
+  },
   "LanguageDetection": {
     "title": "Language Suggestion",
     "description": "We noticed your browser language differs from the current site language. You can switch languages anytime.",
