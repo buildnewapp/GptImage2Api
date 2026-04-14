@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-04-14T09:09:35.037Z",
+  "generatedAt": "2026-04-14T09:59:16.645Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -10082,7 +10082,9 @@
                 "default": 5,
                 "examples": [
                   5
-                ]
+                ],
+                "minimum": 4,
+                "maximum": 15
               },
               "web_search": {
                 "type": "boolean",
@@ -10452,7 +10454,9 @@
                 "default": 5,
                 "examples": [
                   5
-                ]
+                ],
+                "minimum": 4,
+                "maximum": 15
               },
               "web_search": {
                 "type": "boolean",

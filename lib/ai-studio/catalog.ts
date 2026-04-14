@@ -111,11 +111,20 @@ export interface AiStudioFormUiOverridesFile {
   models: Record<string, AiStudioFormUiModelOverride>;
 }
 
+export interface AiStudioSchemaModelOverride {
+  set?: Record<string, unknown>;
+}
+
+export interface AiStudioSchemaOverridesFile {
+  models: Record<string, AiStudioSchemaModelOverride>;
+}
+
 type CompileRuntimeCatalogInput = {
   upstream: AiStudioUpstreamCatalogFile;
   modelOverrides: AiStudioModelOverridesFile;
   pricingOverrides: AiStudioPricingOverridesFile;
   formUiOverrides?: AiStudioFormUiOverridesFile;
+  schemaOverrides?: AiStudioSchemaOverridesFile;
 };
 
 const LLMS_INDEX_URL = "https://docs.kie.ai/llms.txt";
@@ -157,6 +166,9 @@ export function getAiStudioCatalogPaths() {
     formUiOverridesPath:
       process.env.AI_STUDIO_FORM_UI_OVERRIDES_PATH ??
       path.join(DEFAULT_AI_STUDIO_DATA_DIR, "overrides", "form-ui.json"),
+    schemaOverridesPath:
+      process.env.AI_STUDIO_SCHEMA_OVERRIDES_PATH ??
+      path.join(DEFAULT_AI_STUDIO_DATA_DIR, "overrides", "schema.json"),
     runtimeCatalogPath:
       process.env.AI_STUDIO_RUNTIME_CATALOG_PATH ??
       path.join(DEFAULT_AI_STUDIO_DATA_DIR, "runtime", "catalog.json"),
@@ -1008,6 +1020,77 @@ function cloneDetail(detail: AiStudioDocDetail): AiStudioDocDetail {
   };
 }
 
+function resolveCompiledRuntimeDetail(
+  modelId: string,
+  upstreamById: Map<string, AiStudioDocDetail>,
+  modelOverrides: AiStudioModelOverridesFile,
+) {
+  const upstreamItem = upstreamById.get(modelId);
+  if (upstreamItem) {
+    return applyModelOverrideToDetail(cloneDetail(upstreamItem), modelOverrides.models[modelId]);
+  }
+
+  const splitSource = Object.entries(modelOverrides.models).find(([, override]) =>
+    override.splitModels?.some((splitModel) => splitModel.id === modelId),
+  );
+
+  if (!splitSource) {
+    return null;
+  }
+
+  return (
+    buildSplitModelDetails(upstreamById.get(splitSource[0])!, splitSource[1]).find(
+      (splitItem) => splitItem.id === modelId,
+    ) ?? null
+  );
+}
+
+function getSchemaOverrideTarget(
+  requestSchema: Record<string, any> | null,
+  overridePath: string,
+) {
+  const segments = overridePath.split(".").filter(Boolean);
+  if (segments.length === 0 || !requestSchema) {
+    return null;
+  }
+
+  let current: Record<string, any> | null = requestSchema;
+  for (const segment of segments.slice(0, -1)) {
+    if (!current) {
+      return null;
+    }
+    const nextValue: unknown = current[segment];
+    if (!nextValue || typeof nextValue !== "object" || Array.isArray(nextValue)) {
+      return null;
+    }
+    current = nextValue as Record<string, any>;
+  }
+
+  return current
+    ? {
+        parent: current,
+        key: segments[segments.length - 1]!,
+      }
+    : null;
+}
+
+function applySchemaOverridesToDetail(
+  detail: AiStudioDocDetail,
+  override: AiStudioSchemaModelOverride | undefined,
+) {
+  if (!override?.set || !detail.requestSchema) {
+    return;
+  }
+
+  for (const [overridePath, value] of Object.entries(override.set)) {
+    const target = getSchemaOverrideTarget(detail.requestSchema, overridePath);
+    if (!target) {
+      continue;
+    }
+    target.parent[target.key] = structuredClone(value);
+  }
+}
+
 function mergeAiStudioUpstreamCatalogFiles(
   files: AiStudioUpstreamCatalogFile[],
 ): AiStudioUpstreamCatalogFile {
@@ -1202,6 +1285,7 @@ export function compileAiStudioRuntimeCatalog({
   modelOverrides,
   pricingOverrides,
   formUiOverrides = { models: {} },
+  schemaOverrides = { models: {} },
 }: CompileRuntimeCatalogInput): AiStudioCompiledCatalogFile {
   const items = upstream.items.flatMap((rawDetail) => {
     const modelOverride = modelOverrides.models[rawDetail.id];
@@ -1218,6 +1302,7 @@ export function compileAiStudioRuntimeCatalog({
         ) {
           applyPricingOverridesToDetail(detail, pricingOverrideBucket);
         }
+        applySchemaOverridesToDetail(detail, schemaOverrides.models[detail.id]);
         applyFormUiOverrideToDetail(detail, formUiOverrides.models[detail.id]);
         return detail;
       });
@@ -1231,6 +1316,7 @@ export function compileAiStudioRuntimeCatalog({
     ) {
       applyPricingOverridesToDetail(detail, pricingOverrideBucket);
     }
+    applySchemaOverridesToDetail(detail, schemaOverrides.models[detail.id]);
     applyFormUiOverrideToDetail(detail, formUiOverrides.models[detail.id]);
 
     return [detail];
@@ -1260,6 +1346,7 @@ export function validateAiStudioRuntimeBuildInput({
   modelOverrides,
   pricingOverrides,
   formUiOverrides = { models: {} },
+  schemaOverrides = { models: {} },
 }: CompileRuntimeCatalogInput) {
   const errors: string[] = [];
   const knownModelIds = new Set<string>();
@@ -1313,17 +1400,7 @@ export function validateAiStudioRuntimeBuildInput({
       continue;
     }
 
-    const upstreamItem = upstreamById.get(modelId);
-    const splitSource = Object.entries(modelOverrides.models).find(([, override]) =>
-      override.splitModels?.some((splitModel) => splitModel.id === modelId),
-    );
-    const item = upstreamItem
-      ? cloneDetail(upstreamItem)
-      : splitSource
-          ? buildSplitModelDetails(upstreamById.get(splitSource[0])!, splitSource[1]).find(
-              (splitItem) => splitItem.id === modelId,
-            ) ?? null
-          : null;
+    const item = resolveCompiledRuntimeDetail(modelId, upstreamById, modelOverrides);
 
     if (!item) {
       errors.push(`Pricing override targets unknown model: ${modelId}`);
@@ -1343,6 +1420,25 @@ export function validateAiStudioRuntimeBuildInput({
   for (const [modelId] of Object.entries(formUiOverrides.models)) {
     if (!compiledModelIds.has(modelId)) {
       errors.push(`Form UI override targets unknown model: ${modelId}`);
+    }
+  }
+
+  for (const [modelId, override] of Object.entries(schemaOverrides.models)) {
+    if (!compiledModelIds.has(modelId)) {
+      errors.push(`Schema override targets unknown model: ${modelId}`);
+      continue;
+    }
+
+    const item = resolveCompiledRuntimeDetail(modelId, upstreamById, modelOverrides);
+    if (!item) {
+      errors.push(`Schema override targets unknown model: ${modelId}`);
+      continue;
+    }
+
+    for (const overridePath of Object.keys(override.set ?? {})) {
+      if (!getSchemaOverrideTarget(item.requestSchema, overridePath)) {
+        errors.push(`Schema override path does not exist for model: ${modelId} -> ${overridePath}`);
+      }
     }
   }
 
@@ -1440,6 +1536,14 @@ export async function loadAiStudioFormUiOverridesFile(
   filePath = getAiStudioCatalogPaths().formUiOverridesPath,
 ) {
   return readJsonFileOrDefault<AiStudioFormUiOverridesFile>(filePath, {
+    models: {},
+  });
+}
+
+export async function loadAiStudioSchemaOverridesFile(
+  filePath = getAiStudioCatalogPaths().schemaOverridesPath,
+) {
+  return readJsonFileOrDefault<AiStudioSchemaOverridesFile>(filePath, {
     models: {},
   });
 }

@@ -8,17 +8,19 @@ import {
   loadAiStudioMergedUpstreamCatalogFiles,
   loadAiStudioModelOverridesFile,
   loadAiStudioPricingOverridesFile,
+  loadAiStudioSchemaOverridesFile,
   validateAiStudioRuntimeBuildInput,
   validateAiStudioRuntimeCatalog,
 } from "@/lib/ai-studio/catalog";
 
 async function main() {
   const paths = getAiStudioCatalogPaths();
-  const [upstream, modelOverrides, pricingOverrides, formUiOverrides] = await Promise.all([
+  const [upstream, modelOverrides, pricingOverrides, formUiOverrides, schemaOverrides] = await Promise.all([
     loadAiStudioMergedUpstreamCatalogFiles(paths.upstreamCatalogPath),
     loadAiStudioModelOverridesFile(paths.modelOverridesPath),
     loadAiStudioPricingOverridesFile(paths.pricingOverridesPath),
     loadAiStudioFormUiOverridesFile(paths.formUiOverridesPath),
+    loadAiStudioSchemaOverridesFile(paths.schemaOverridesPath),
   ]);
 
   const inputErrors = validateAiStudioRuntimeBuildInput({
@@ -26,6 +28,7 @@ async function main() {
     modelOverrides,
     pricingOverrides,
     formUiOverrides,
+    schemaOverrides,
   });
   if (inputErrors.length > 0) {
     throw new Error(
@@ -38,6 +41,7 @@ async function main() {
     modelOverrides,
     pricingOverrides,
     formUiOverrides,
+    schemaOverrides,
   });
   const runtimeErrors = validateAiStudioRuntimeCatalog(runtime);
   if (runtimeErrors.length > 0) {

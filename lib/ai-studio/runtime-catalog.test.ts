@@ -118,6 +118,60 @@ test("compiles runtime catalog with model and pricing overrides", () => {
   });
 });
 
+test("applies request schema overrides to runtime models", () => {
+  const compiled = (compileAiStudioRuntimeCatalog as any)({
+    upstream: {
+      version: 1,
+      generatedAt: "2026-03-08T00:00:00.000Z",
+      items: [
+        createDetail({
+          id: "video:bytedance-seedance-2",
+          requestSchema: {
+            type: "object",
+            properties: {
+              input: {
+                type: "object",
+                properties: {
+                  duration: {
+                    type: "integer",
+                    description: "Video duration in 4-15 seconds.",
+                    default: 5,
+                  },
+                },
+              },
+            },
+          },
+        }),
+      ],
+    },
+    modelOverrides: {
+      models: {},
+    },
+    pricingOverrides: {
+      models: {},
+    },
+    schemaOverrides: {
+      models: {
+        "video:bytedance-seedance-2": {
+          set: {
+            "properties.input.properties.duration.minimum": 4,
+            "properties.input.properties.duration.maximum": 15,
+          },
+        },
+      },
+    },
+  });
+
+  assert.equal(
+    compiled.items[0]?.requestSchema?.properties?.input?.properties?.duration?.minimum,
+    4,
+  );
+  assert.equal(
+    compiled.items[0]?.requestSchema?.properties?.input?.properties?.duration?.maximum,
+    15,
+  );
+});
+
 test("drops disabled models from the compiled runtime catalog", () => {
   const compiled = compileAiStudioRuntimeCatalog({
     upstream: {

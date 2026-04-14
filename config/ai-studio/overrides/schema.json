@@ -1,0 +1,16 @@
+{
+  "models": {
+    "video:bytedance-seedance-2": {
+      "set": {
+        "properties.input.properties.duration.minimum": 4,
+        "properties.input.properties.duration.maximum": 15
+      }
+    },
+    "video:bytedance-seedance-2-0-fast": {
+      "set": {
+        "properties.input.properties.duration.minimum": 4,
+        "properties.input.properties.duration.maximum": 15
+      }
+    }
+  }
+}
