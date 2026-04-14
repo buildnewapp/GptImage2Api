@@ -209,17 +209,9 @@ function SuccessContent() {
     </motion.div>
   );
 
-  const shouldGoToOrders =
-    provider === "paypal" && Boolean(paymentData.subscriptionId);
-  const dashboardHref = shouldGoToOrders
-    ? "/dashboard/my-orders"
-    : "/dashboard";
-  const dashboardTitle = shouldGoToOrders
-    ? t("actions.viewOrders")
-    : t("actions.goToDashboard");
-  const dashboardLabel = shouldGoToOrders
-    ? t("actions.viewOrders")
-    : t("actions.goToDashboard");
+  const dashboardHref = "/dashboard/my-orders";
+  const dashboardTitle = t("actions.viewOrders");
+  const dashboardLabel = t("actions.viewOrders");
 
   const renderSuccess = () => (
     <motion.div

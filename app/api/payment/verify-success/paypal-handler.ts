@@ -14,6 +14,7 @@ import {
   buildOrderResponse,
   buildSubscriptionResponse,
   getOrderByProviderAndUser,
+  getPlanSummaryById,
   getSubscriptionByIdAndUser,
   validateUserIdMatch,
 } from "./helpers";
@@ -44,6 +45,7 @@ export async function verifyPayPalPayment(
   if (subscriptionId) {
     const subscription = await client.getSubscription(subscriptionId);
     const customId = decodePayPalCustomId(subscription.custom_id);
+    const planSummary = await getPlanSummaryById(customId?.planId);
 
     const userIdError = validateUserIdMatch(
       customId?.userId,
@@ -71,8 +73,12 @@ export async function verifyPayPalPayment(
 
     if (!dbSubscription) {
       return apiResponse.success({
+        planId: customId?.planId,
+        planName: planSummary?.name,
         message:
           "Payment successful! Subscription activation may take a moment. Please refresh shortly.",
+        status: subscription.status,
+        subscriptionId,
       });
     }
 
@@ -90,6 +96,7 @@ export async function verifyPayPalPayment(
 
   let order = await client.getOrder(orderId);
   const customId = decodePayPalCustomId(getPayPalOrderCustomId(order));
+  const planSummary = await getPlanSummaryById(customId?.planId);
 
   const userIdError = validateUserIdMatch(
     customId?.userId,
@@ -121,6 +128,9 @@ export async function verifyPayPalPayment(
 
   if (!dbOrder) {
     return apiResponse.success({
+      orderId,
+      planId: customId?.planId,
+      planName: planSummary?.name,
       message:
         order.status === "COMPLETED"
           ? "Payment successful! Order confirmation may take a moment. Please refresh shortly."
@@ -128,5 +138,7 @@ export async function verifyPayPalPayment(
     });
   }
 
-  return buildOrderResponse(dbOrder);
+  return buildOrderResponse(dbOrder, {
+    planName: planSummary?.name,
+  });
 }

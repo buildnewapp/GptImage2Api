@@ -153,7 +153,9 @@ async function main() {
     return
   }
 
+  console.log(`[sync] config: .env`)
   console.log(`[sync] PAYPAL_ENVIRONMENT=${environment.apiEnvironment}`)
+  console.log(`[sync] PAYPAL_CLIENT_ID=${process.env.PAYPAL_CLIENT_ID}`)
   console.log(`[sync] Found ${targetPlans.length} PayPal recurring plan(s) in pricing-config.ts`)
   if (dryRun) {
     console.log('[dry-run] No API writes and no file changes.')

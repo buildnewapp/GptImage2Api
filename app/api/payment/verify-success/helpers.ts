@@ -4,7 +4,11 @@
 
 import { apiResponse } from '@/lib/api-response';
 import { getDb } from '@/lib/db';
-import { orders as ordersSchema, subscriptions as subscriptionsSchema } from '@/lib/db/schema';
+import {
+  orders as ordersSchema,
+  pricingPlans as pricingPlansSchema,
+  subscriptions as subscriptionsSchema,
+} from '@/lib/db/schema';
 import { and, eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 import type { OrderData, Provider, SubscriptionData } from './types';
@@ -25,6 +29,7 @@ export async function getSubscriptionByIdAndUser(
   const [subscription] = await db
     .select({
       id: subscriptionsSchema.id,
+      subscriptionId: subscriptionsSchema.subscriptionId,
       planId: subscriptionsSchema.planId,
       status: subscriptionsSchema.status,
       metadata: subscriptionsSchema.metadata,
@@ -41,6 +46,27 @@ export async function getSubscriptionByIdAndUser(
   return subscription || null;
 }
 
+export async function getPlanSummaryById(planId: string | null | undefined): Promise<{
+  id: string;
+  name: string;
+} | null> {
+  if (!planId) {
+    return null;
+  }
+
+  const db = getDb();
+  const [plan] = await db
+    .select({
+      id: pricingPlansSchema.id,
+      name: pricingPlansSchema.cardTitle,
+    })
+    .from(pricingPlansSchema)
+    .where(eq(pricingPlansSchema.id, planId))
+    .limit(1);
+
+  return plan || null;
+}
+
 /**
  * Retrieves an order from the database by provider, order ID, and user ID
  */
@@ -54,6 +80,7 @@ export async function getOrderByProviderAndUser(
   const [order] = await db
     .select({
       id: ordersSchema.id,
+      planId: ordersSchema.planId,
       metadata: ordersSchema.metadata,
       status: ordersSchema.status,
     })
@@ -106,7 +133,7 @@ export function buildSubscriptionResponse(subscription: SubscriptionData): NextR
 
   if (subscription.status === 'active' || subscription.status === 'trialing') {
     return apiResponse.success({
-      subscriptionId: subscription.id,
+      subscriptionId: subscription.subscriptionId,
       planName: metadata?.planName,
       planId: subscription.planId,
       status: subscription.status,
@@ -129,14 +156,17 @@ export function buildSubscriptionResponse(subscription: SubscriptionData): NextR
 /**
  * Builds a response based on order status
  */
-export function buildOrderResponse(order: OrderData): NextResponse {
+export function buildOrderResponse(
+  order: OrderData,
+  options?: { planName?: string }
+): NextResponse {
   const metadata = order.metadata as any;
 
   if (order.status === 'succeeded') {
     return apiResponse.success({
       orderId: order.id,
-      planName: metadata?.planName,
-      planId: metadata?.planId,
+      planName: metadata?.planName ?? options?.planName,
+      planId: order.planId ?? metadata?.planId,
       message: 'Payment verified and order confirmed.',
     });
   }
@@ -152,4 +182,3 @@ export function buildOrderResponse(order: OrderData): NextResponse {
       'Payment recorded but not finalized yet. Please refresh in a moment, or contact support if the problem persists.',
   });
 }
-
