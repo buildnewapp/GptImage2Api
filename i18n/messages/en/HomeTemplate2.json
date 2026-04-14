@@ -311,6 +311,8 @@
       }
     ],
     "creditPacksDescription": "Buy credits for one-off runs without a subscription plan",
+    "cryptoPaymentLinkLabel": "click to view",
+    "cryptoPaymentText": "Crypto payments are supported,",
     "creditPacksTitle": "Need just a few videos?",
     "description": "Paid access unlocks Seedance 2.0. Starter credits are available on Seedance 2.0 Lite only.",
     "monthlyLabel": "Monthly",

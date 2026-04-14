@@ -6,6 +6,7 @@ import {
   subsectionTitleClass,
 } from "@/components/home/template2/constants";
 import type { HomeTemplate2Pricing } from "@/components/home/template2/types";
+import { Link as I18nLink } from "@/i18n/routing";
 
 interface PricingProps {
   section: HomeTemplate2Pricing;
@@ -83,6 +84,15 @@ export default function Pricing({ section }: PricingProps) {
                 </div>
               ))}
             </div>
+            <p data-aos="fade-up" className="mt-6 text-center text-sm text-muted-foreground">
+              {section.cryptoPaymentText}
+              <I18nLink
+                  href="/payment/nowpayments"
+                  className="font-medium text-primary underline underline-offset-4 transition-opacity hover:opacity-80"
+              >
+                {section.cryptoPaymentLinkLabel}
+              </I18nLink>
+            </p>
           </div>
         ) : null}
 

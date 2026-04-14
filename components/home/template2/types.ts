@@ -148,6 +148,8 @@ export interface HomeTemplate2Pricing {
   comparisonRows: HomeTemplate2ComparisonRow[];
   creditPacks: HomeTemplate2CreditPack[];
   creditPacksDescription: string;
+  cryptoPaymentLinkLabel?: string;
+  cryptoPaymentText?: string;
   creditPacksTitle: string;
   description: string;
   monthlyPlans?: HomeTemplate2PricingPlan[];

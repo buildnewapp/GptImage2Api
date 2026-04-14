@@ -311,6 +311,8 @@
       }
     ],
     "creditPacksDescription": "无需订阅，也可以按次购买积分",
+    "cryptoPaymentLinkLabel": "点击查看",
+    "cryptoPaymentText": "支持虚拟货币支付，",
     "creditPacksTitle": "只需要少量视频？",
     "description": "付费访问可解锁 Seedance 2.0。新手积分仅适用于 Seedance 2.0 Lite。",
     "monthlyLabel": "月付",

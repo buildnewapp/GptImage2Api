@@ -311,6 +311,8 @@
       }
     ],
     "creditPacksDescription": "サブスクリプションなしで単発利用向けのクレジットを購入できます",
+    "cryptoPaymentLinkLabel": "こちらを確認",
+    "cryptoPaymentText": "暗号資産での支払いにも対応しています。",
     "creditPacksTitle": "少数の動画だけ必要ですか？",
     "description": "有料アクセスで Seedance 2.0 が解放されます。スタータークレジットは Seedance 2.0 Lite のみで利用可能です。",
     "monthlyLabel": "月額",
