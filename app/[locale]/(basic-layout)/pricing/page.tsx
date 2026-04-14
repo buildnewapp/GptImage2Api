@@ -1,3 +1,4 @@
+import AiVideoModelPricingComparison from "@/components/home/template2/AiVideoModelPricingComparison";
 import Pricing from "@/components/home/template2/Pricing";
 import PricingValueComparison from "@/components/home/template2/PricingValueComparison";
 import { buildHomeTemplate2PricingSection } from "@/components/home/template2/pricing-data";
@@ -36,6 +37,7 @@ export default async function PricingPage({ params }: { params: Params }) {
     <div className={pageShellClass}>
       <Pricing section={pricing} />
       <PricingValueComparison locale={locale} />
+      <AiVideoModelPricingComparison locale={locale} />
     </div>
   );
 }
