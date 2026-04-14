@@ -48,7 +48,7 @@ export default function Template2PricingRecurring({
 }: Template2PricingRecurringProps) {
   const hasYearlyPlans = yearlyPlans.length > 0;
   const hasMonthlyPlans = monthlyPlans.length > 0;
-  const defaultCycle = hasYearlyPlans ? "annual" : "monthly";
+  const defaultCycle = hasMonthlyPlans ? "monthly" : "annual";
   const [billingCycle, setBillingCycle] = useState<"annual" | "monthly">(defaultCycle);
   const plans =
     billingCycle === "monthly" && hasMonthlyPlans ? monthlyPlans : yearlyPlans;
