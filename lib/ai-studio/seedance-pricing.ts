@@ -1,8 +1,10 @@
 type SeedanceModelId =
   | "video:seedance-2-0"
   | "video:apimart-seedance-2-0"
+  | "video:seedance-2-0-vip"
   | "video:seedance-2-0-fast"
-  | "video:apimart-seedance-2-0-fast";
+  | "video:apimart-seedance-2-0-fast"
+  | "video:seedance-2-0-fast-vip";
 
 type SeedanceResolution = "480p" | "720p";
 type SeedanceTier = "standard" | "fast";
@@ -150,10 +152,33 @@ function parseResolution(payload: Record<string, any>) {
   );
 }
 
+function collectReferencedVideoUrls(payload: Record<string, any>) {
+  return [
+    ...(Array.isArray(payload.video_urls) ? payload.video_urls : []),
+    ...(Array.isArray(getNested(payload, ["input", "video_urls"]))
+      ? (getNested(payload, ["input", "video_urls"]) as unknown[])
+      : []),
+    ...(Array.isArray(payload.reference_video_urls) ? payload.reference_video_urls : []),
+    ...(Array.isArray(getNested(payload, ["input", "reference_video_urls"]))
+      ? (getNested(payload, ["input", "reference_video_urls"]) as unknown[])
+      : []),
+    ...(Array.isArray(payload["reference_video_urls "]) ? payload["reference_video_urls "] : []),
+    ...(Array.isArray(getNested(payload, ["input", "reference_video_urls "]))
+      ? (getNested(payload, ["input", "reference_video_urls "]) as unknown[])
+      : []),
+    payload.video_url,
+    getNested(payload, ["input", "video_url"]),
+  ].filter((value): value is string => typeof value === "string" && value.length > 0);
+}
+
 function hasVideoReference(payload: Record<string, any>) {
   const candidates = [
     payload.video_urls,
     getNested(payload, ["input", "video_urls"]),
+    payload.reference_video_urls,
+    getNested(payload, ["input", "reference_video_urls"]),
+    payload["reference_video_urls "],
+    getNested(payload, ["input", "reference_video_urls "]),
     payload.video_url,
     getNested(payload, ["input", "video_url"]),
     payload.video_input,
@@ -198,14 +223,7 @@ function parseInputVideoDuration(payload: Record<string, any>) {
     return null;
   }
 
-  const referencedUrls = [
-    ...(Array.isArray(payload.video_urls) ? payload.video_urls : []),
-    ...(Array.isArray(getNested(payload, ["input", "video_urls"]))
-      ? (getNested(payload, ["input", "video_urls"]) as unknown[])
-      : []),
-    payload.video_url,
-    getNested(payload, ["input", "video_url"]),
-  ].filter((value): value is string => typeof value === "string" && value.length > 0);
+  const referencedUrls = collectReferencedVideoUrls(payload);
 
   if (referencedUrls.length === 0) {
     return null;
@@ -225,14 +243,16 @@ function parseInputVideoDuration(payload: Record<string, any>) {
 function getSeedanceTier(model: string): SeedanceTier | null {
   if (
     model === "video:seedance-2-0" ||
-    model === "video:apimart-seedance-2-0"
+    model === "video:apimart-seedance-2-0" ||
+    model === "video:seedance-2-0-vip"
   ) {
     return "standard";
   }
 
   if (
     model === "video:seedance-2-0-fast" ||
-    model === "video:apimart-seedance-2-0-fast"
+    model === "video:apimart-seedance-2-0-fast" ||
+    model === "video:seedance-2-0-fast-vip"
   ) {
     return "fast";
   }
@@ -248,7 +268,15 @@ function formatCreditPrice(value: number) {
   return value.toFixed(3).replace(/\.?0+$/, "");
 }
 
-function getModelLabel(tier: SeedanceTier) {
+function getModelLabel(model: string, tier: SeedanceTier) {
+  if (model === "video:seedance-2-0-vip") {
+    return "Seedance 2.0 VIP";
+  }
+
+  if (model === "video:seedance-2-0-fast-vip") {
+    return "Seedance 2.0 Fast VIP";
+  }
+
   return tier === "fast" ? "Seedance 2.0 Fast" : "Seedance 2.0";
 }
 
@@ -279,7 +307,7 @@ export function calculateSeedanceVideoPricing(input: {
     ? outputDuration + (inputVideoDuration ?? 0)
     : outputDuration;
   const credits = billableSeconds * creditRate;
-  const modelLabel = getModelLabel(tier);
+  const modelLabel = getModelLabel(input.model, tier);
 
   return {
     modelDescription: hasVideoInput

@@ -6,6 +6,16 @@
     "video:apimart-seedance-2-0-fast": {
       "alias": "seedance-2-0-fast"
     },
+    "video:bytedance-seedance-2": {
+      "alias": "seedance-2-0-vip",
+      "title": "Seedance 2.0 VIP",
+      "provider": "ByteDance"
+    },
+    "video:bytedance-seedance-2-0-fast": {
+      "alias": "seedance-2-0-fast-vip",
+      "title": "Seedance 2.0 Fast VIP",
+      "provider": "ByteDance"
+    },
     "video:sora2-text-to-video": {
       "splitModels": [
         {

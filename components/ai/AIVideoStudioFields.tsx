@@ -56,6 +56,8 @@ type AiVideoStudioSpecialFieldKey =
   | "aspectRatio"
   | "duration"
   | "seed"
+  | "firstFrameImage"
+  | "lastFrameImage"
   | "referenceAudios"
   | "referenceImages"
   | "referenceVideos"
@@ -119,6 +121,18 @@ function resolveSizeFieldMeaning(schema: JsonSchema) {
 function resolveSpecialFieldKey(
   field: AiVideoStudioFieldDescriptor,
 ): AiVideoStudioSpecialFieldKey | null {
+  for (const segment of [...field.path].reverse()) {
+    const token = normalizeFieldToken(segment);
+
+    if (token === "firstframeurl") {
+      return "firstFrameImage";
+    }
+
+    if (token === "lastframeurl") {
+      return "lastFrameImage";
+    }
+  }
+
   const referenceFieldKind = resolveReferenceFieldKind(field);
 
   if (referenceFieldKind === "image") {
@@ -193,6 +207,10 @@ function renderSpecialFieldIcon(
   }
 
   if (key === "referenceImages") {
+    return <Images className="size-4" />;
+  }
+
+  if (key === "firstFrameImage" || key === "lastFrameImage") {
     return <Images className="size-4" />;
   }
 
@@ -313,7 +331,13 @@ export default function AIVideoStudioFields({
       (specialFieldKey
         ? localizedFieldLabels?.[specialFieldKey]
         : undefined) ??
-      (specialFieldKey === "seed" ? "Seed" : field.path.join("."));
+      (specialFieldKey === "seed"
+        ? "Seed"
+        : specialFieldKey === "firstFrameImage"
+          ? "First Frame"
+          : specialFieldKey === "lastFrameImage"
+            ? "Last Frame"
+            : field.path.join("."));
     const isPromptField = specialFieldKey === "prompt";
     const compact = options?.compact ?? false;
 

@@ -586,6 +586,88 @@ test("prepareAiStudioExecution applies dynamic official pricing for seedance 2.0
   await rm(tempDir, { recursive: true, force: true });
 });
 
+test("prepareAiStudioExecution applies dynamic official pricing for kie seedance 2.0 vip", async () => {
+  const originalRuntimeCatalogPath = process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), "ai-studio-runtime-"));
+  const runtimePath = path.join(tempDir, "catalog.json");
+
+  await writeFile(
+    runtimePath,
+    JSON.stringify({
+      version: 1,
+      generatedAt: "2026-04-14T00:00:00.000Z",
+      items: [
+        {
+          id: "video:bytedance-seedance-2",
+          alias: "seedance-2-0-vip",
+          vendor: "kie",
+          category: "video",
+          title: "Seedance 2.0 VIP",
+          docUrl: "https://docs.kie.ai/market/bytedance/seedance-2.md",
+          provider: "ByteDance",
+          endpoint: "/api/v1/jobs/createTask",
+          method: "POST",
+          modelKeys: ["bytedance/seedance-2"],
+          requestSchema: {
+            type: "object",
+            properties: {
+              model: { type: "string" },
+              input: {
+                type: "object",
+                properties: {
+                  resolution: { type: "string" },
+                  duration: { type: "integer" },
+                  reference_video_urls: {
+                    type: "array",
+                    items: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+          examplePayload: {
+            model: "bytedance/seedance-2",
+            input: {},
+          },
+          pricingRows: [],
+        },
+      ],
+    }),
+    "utf8",
+  );
+  process.env.AI_STUDIO_RUNTIME_CATALOG_PATH = runtimePath;
+
+  const prepared = await prepareAiStudioExecution("video:seedance-2-0-vip", {
+    model: "seedance-2-0-vip",
+    input: {
+      resolution: "720p",
+      duration: 5,
+      reference_video_urls: ["https://example.com/input.mp4"],
+    },
+    __local_reference_metadata: {
+      videoDurationsByUrl: {
+        "https://example.com/input.mp4": 8,
+      },
+    },
+  });
+
+  assert.equal(prepared.detail.id, "video:bytedance-seedance-2");
+  assert.equal(prepared.body.model, "bytedance/seedance-2");
+  assert.equal("__local_reference_metadata" in prepared.body, false);
+  assert.equal(prepared.selectedPricing?.creditPrice, "325");
+  assert.equal(
+    prepared.selectedPricing?.modelDescription,
+    "Seedance 2.0 VIP, video-to-video, 720p, input 8s + output 5s",
+  );
+
+  if (originalRuntimeCatalogPath === undefined) {
+    delete process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
+  } else {
+    process.env.AI_STUDIO_RUNTIME_CATALOG_PATH = originalRuntimeCatalogPath;
+  }
+  await rm(tempDir, { recursive: true, force: true });
+});
+
 test("estimates the best pricing row from the active payload", () => {
   const row = estimatePricingRow(
     [

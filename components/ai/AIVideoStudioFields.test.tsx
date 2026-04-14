@@ -168,3 +168,48 @@ test("maps audio reference fields to the reference audio label", () => {
   assert.match(html, />参考音频</);
   assert.match(html, /data-ai-video-studio-reference-field="audio"/);
 });
+
+test("treats first and last frame urls as dedicated single image upload fields", () => {
+  const html = renderToStaticMarkup(
+    <AIVideoStudioFields
+      primaryFields={[
+        {
+          key: "first_frame_url",
+          path: ["input", "first_frame_url"],
+          label: "first_frame_url",
+          kind: "text",
+          required: false,
+          schema: {
+            type: "string",
+            format: "uri",
+            description: "First frame image url",
+          },
+          defaultValue: "",
+        },
+        {
+          key: "last_frame_url",
+          path: ["input", "last_frame_url"],
+          label: "last_frame_url",
+          kind: "text",
+          required: false,
+          schema: {
+            type: "string",
+            format: "uri",
+            description: "Last frame image url",
+          },
+          defaultValue: "",
+        },
+      ]}
+      advancedFields={[]}
+      values={{}}
+      isPublic
+      onChange={() => {}}
+      onPublicChange={() => {}}
+    />,
+  );
+
+  assert.match(html, />First Frame</);
+  assert.match(html, />Last Frame</);
+  assert.equal((html.match(/data-ai-video-studio-reference-field="image"/g) ?? []).length, 2);
+  assert.equal((html.match(/data-ai-video-studio-reference-multiple="false"/g) ?? []).length, 2);
+});

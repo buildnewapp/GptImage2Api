@@ -56,6 +56,18 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         modelId: "video:seedance-2-0-fast",
         aliases: ["video:apimart-seedance-2-0-fast"],
       },
+      {
+        key: "seedance-2.0-vip",
+        label: "Seedance 2.0 VIP",
+        familyKey: "seedance-2.0",
+        modelId: "video:seedance-2-0-vip",
+      },
+      {
+        key: "seedance-2.0-fast-vip",
+        label: "Seedance 2.0 Fast VIP",
+        familyKey: "seedance-2.0",
+        modelId: "video:seedance-2-0-fast-vip",
+      },
     ],
   },
   {

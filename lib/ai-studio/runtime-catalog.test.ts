@@ -374,7 +374,22 @@ test("resolves the public Seedance 2.0 alias from the bundled runtime catalog", 
 
   assert.ok(entry);
   assert.equal(entry.id, "video:apimart-seedance-2-0");
-  assert.equal(entry.alias, "Seedance 2.0");
+  assert.equal(entry.alias, "seedance-2-0");
+});
+
+test("exposes Seedance 2.0 VIP variants from the bundled runtime catalog", async () => {
+  const standardVip = await getCachedAiStudioCatalogEntry("video:seedance-2-0-vip");
+  const fastVip = await getCachedAiStudioCatalogEntry("video:seedance-2-0-fast-vip");
+
+  assert.ok(standardVip);
+  assert.equal(standardVip.id, "video:bytedance-seedance-2");
+  assert.equal(standardVip.alias, "seedance-2-0-vip");
+  assert.equal(standardVip.provider, "ByteDance");
+
+  assert.ok(fastVip);
+  assert.equal(fastVip.id, "video:bytedance-seedance-2-0-fast");
+  assert.equal(fastVip.alias, "seedance-2-0-fast-vip");
+  assert.equal(fastVip.provider, "ByteDance");
 });
 
 test("splits one upstream model into separate runtime variants", () => {

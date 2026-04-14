@@ -35,11 +35,19 @@ test("returns the supported Sora2 versions", () => {
   );
 });
 
-test("exposes APIMart Seedance 2.0 as a selectable family", () => {
+test("exposes Seedance 2.0 as a selectable family with KIE VIP variants", () => {
   const family = AI_VIDEO_STUDIO_FAMILIES.find((item) => item.key === "seedance-2.0");
 
   assert.equal(family?.selectable, true);
-  assert.deepEqual(family?.tags, [{ text: "APIMart", type: "provider" }]);
+  assert.deepEqual(
+    family?.versions.map((version) => version.key),
+    [
+      "seedance-2.0",
+      "seedance-2.0-fast",
+      "seedance-2.0-vip",
+      "seedance-2.0-fast-vip",
+    ],
+  );
 });
 
 test("resolves version selections to a single ai-studio public model id", () => {
@@ -49,6 +57,13 @@ test("resolves version selections to a single ai-studio public model id", () => 
       versionKey: "sora-2",
     }),
     "video:sora2-text-to-video-standard",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "seedance-2.0",
+      versionKey: "seedance-2.0-vip",
+    }),
+    "video:seedance-2-0-vip",
   );
   assert.equal(
     resolveAiVideoStudioModelId({
@@ -96,6 +111,13 @@ test("resolves ai video studio selection metadata from a model id", () => {
     {
       familyKey: "seedance-2.0",
       versionKey: "seedance-2.0",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("video:seedance-2-0-fast-vip"),
+    {
+      familyKey: "seedance-2.0",
+      versionKey: "seedance-2.0-fast-vip",
     },
   );
 });

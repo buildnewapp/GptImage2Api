@@ -16,10 +16,16 @@ import {
 export type AiStudioPublicPricingRow = Omit<AiStudioPricingRow, "anchor"> & {
   runtimeModel: string | null;
 };
-export type AiStudioPublicCatalogEntry = Omit<AiStudioCatalogEntry, "docUrl" | "pricingRows"> & {
+export type AiStudioPublicCatalogEntry = Omit<
+  AiStudioCatalogEntry,
+  "docUrl" | "pricingRows" | "vendor"
+> & {
   pricingRows: AiStudioPublicPricingRow[];
 };
-export type AiStudioPublicDocDetail = Omit<AiStudioDocDetail, "docUrl" | "pricingRows"> & {
+export type AiStudioPublicDocDetail = Omit<
+  AiStudioDocDetail,
+  "docUrl" | "pricingRows" | "vendor"
+> & {
   pricingRows: AiStudioPublicPricingRow[];
   requestMeta: AiStudioRequestMeta;
   taskMeta: AiStudioTaskMeta;
@@ -206,7 +212,14 @@ export function toPublicCatalogEntry(entry: AiStudioCatalogEntry): AiStudioPubli
 }
 
 export function toPublicDocDetail(detail: AiStudioDocDetail): AiStudioPublicDocDetail {
-  const { docUrl: _docUrl, pricingRows, requestSchema, examplePayload, ...rest } = detail;
+  const {
+    docUrl: _docUrl,
+    pricingRows,
+    requestSchema,
+    examplePayload,
+    vendor: _vendor,
+    ...rest
+  } = detail;
   const next = {
     ...rest,
     modelKeys: [...detail.modelKeys],

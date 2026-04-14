@@ -62,6 +62,7 @@ test("serializes public model detail without kie urls, anchors, or callback fiel
   });
 
   assert.equal("docUrl" in detail, false);
+  assert.equal("vendor" in detail, false);
   assert.equal("callBackUrl" in (detail.requestSchema?.properties ?? {}), false);
   assert.equal("progressCallBackUrl" in (detail.requestSchema?.properties ?? {}), false);
   assert.equal("callBackUrl" in detail.examplePayload, false);
@@ -81,6 +82,42 @@ test("serializes public model detail without kie urls, anchors, or callback fiel
   ]);
   assert.equal(detail.taskMeta.mode, "poll+callback");
   assert.equal(detail.taskMeta.statusEndpoint, "/api/v1/runway/record-detail");
+});
+
+test("hides vendor while preserving alias-based public ids for seedance vip models", () => {
+  const detail = toPublicDocDetail({
+    id: "video:bytedance-seedance-2",
+    category: "video",
+    title: "bytedance-seedance-2",
+    alias: "seedance-2-0-vip",
+    vendor: "kie",
+    docUrl: "https://docs.kie.ai/market/bytedance/seedance-2.md",
+    provider: "ByteDance",
+    endpoint: "/api/v1/jobs/createTask",
+    method: "POST",
+    modelKeys: ["bytedance/seedance-2"],
+    requestSchema: {
+      type: "object",
+      properties: {
+        model: {
+          type: "string",
+          enum: ["bytedance/seedance-2"],
+          default: "bytedance/seedance-2",
+          description: "Must be `bytedance/seedance-2`",
+          examples: ["bytedance/seedance-2"],
+        },
+      },
+    },
+    examplePayload: {
+      model: "bytedance/seedance-2",
+    },
+    pricingRows: [],
+  });
+
+  assert.equal(detail.id, "video:seedance-2-0-vip");
+  assert.deepEqual(detail.modelKeys, ["seedance-2-0-vip"]);
+  assert.equal(detail.examplePayload.model, "seedance-2-0-vip");
+  assert.equal("vendor" in detail, false);
 });
 
 test("sanitizes debug payloads before returning them to the browser", () => {

@@ -8,7 +8,7 @@ import {
 
 test("calculates official credits for seedance 2.0 without video input", () => {
   const pricing = calculateSeedanceVideoPricing({
-    model: "video:seedance-2-0",
+    model: "video:seedance-2-0-vip",
     payload: {
       duration: 5,
       resolution: "480p",
@@ -16,7 +16,7 @@ test("calculates official credits for seedance 2.0 without video input", () => {
   });
 
   assert.deepEqual(pricing, {
-    modelDescription: "Seedance 2.0, text/image-to-video, 480p, 5s",
+    modelDescription: "Seedance 2.0 VIP, text/image-to-video, 480p, 5s",
     creditPrice: "95",
     usdPrice: "",
     billableSeconds: 5,
@@ -124,6 +124,35 @@ test("builds readable pricing explanation for seedance 2.0 fast", () => {
     rate: 9,
     hasVideoInput: true,
     outputDurationSeconds: 4,
+    inputVideoDurationSeconds: 8,
+  });
+});
+
+test("uses kie reference video urls metadata when calculating seedance 2.0 vip pricing", () => {
+  const explanation = getSeedancePricingExplanation({
+    model: "video:seedance-2-0-vip",
+    payload: {
+      input: {
+        duration: 5,
+        resolution: "720p",
+        reference_video_urls: ["https://example.com/input.mp4"],
+      },
+      __local_reference_metadata: {
+        videoDurationsByUrl: {
+          "https://example.com/input.mp4": 8,
+        },
+      },
+    },
+  });
+
+  assert.deepEqual(explanation, {
+    modelDescription: "Seedance 2.0 VIP, video-to-video, 720p, input 8s + output 5s",
+    creditPrice: "325",
+    usdPrice: "",
+    billableSeconds: 13,
+    rate: 25,
+    hasVideoInput: true,
+    outputDurationSeconds: 5,
     inputVideoDurationSeconds: 8,
   });
 });
