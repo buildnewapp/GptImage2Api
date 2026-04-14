@@ -1,4 +1,5 @@
 import Pricing from "@/components/home/template2/Pricing";
+import PricingValueComparison from "@/components/home/template2/PricingValueComparison";
 import { buildHomeTemplate2PricingSection } from "@/components/home/template2/pricing-data";
 import { pageShellClass } from "@/components/home/template2/constants";
 import { Locale } from "@/i18n/routing";
@@ -34,6 +35,7 @@ export default async function PricingPage({ params }: { params: Params }) {
   return (
     <div className={pageShellClass}>
       <Pricing section={pricing} />
+      <PricingValueComparison locale={locale} />
     </div>
   );
 }
