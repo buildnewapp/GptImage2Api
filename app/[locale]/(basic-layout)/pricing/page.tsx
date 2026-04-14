@@ -13,15 +13,11 @@ export async function generateMetadata({
   params,
 }: MetadataProps): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "HomeTemplate2" });
-  const pricing = t.raw("pricing") as {
-    title: string;
-    description: string;
-  };
+  const t = await getTranslations({ locale, namespace: "Pricing" });
 
   return constructMetadata({
-    title: pricing.title,
-    description: pricing.description,
+    title: t("title"),
+    description: t("description"),
     locale: locale as Locale,
     path: "/pricing",
   });

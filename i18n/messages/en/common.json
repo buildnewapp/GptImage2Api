@@ -207,6 +207,10 @@
     "title": "About",
     "description": "About the site"
   },
+  "Pricing": {
+    "title": "seedance 2.0 Pricing",
+    "description": "Pricing plans for the seedance 2.0"
+  },
   "DashboardGenerate": {
     "title": "Generate",
     "description": "Create videos with AI Video Studio."

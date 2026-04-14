@@ -207,6 +207,10 @@
     "title": "About",
     "description": "About the site"
   },
+  "Pricing": {
+    "title": "Seedance 2.0の料金",
+    "description": "Seedance 2.0 の料金プラン"
+  },
   "DashboardGenerate": {
     "title": "生成",
     "description": "AI Video Studio で動画を生成します。"
