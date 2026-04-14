@@ -88,7 +88,6 @@ cloudflare-env.d.ts
 .wrangler
 
 # Generated blog data (build-time generated)
-lib/cms/blog-data.ts
 lib/cms/blog-data.json
 
 # parcel-bundler cache (https://parceljs.org/)
