@@ -100,7 +100,7 @@ export default function Template2PricingRecurring({
               planIconClasses[plan.accent as keyof typeof planIconClasses] ??
               planIconClasses.foreground;
             const buttonClassName = plan.featured
-              ? "inline-flex h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-7 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-base"
+              ? "inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-7 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-base"
               : plan.accent === "accent"
                 ? pricingMaxButtonClass
                 : pricingStartedButtonClass;

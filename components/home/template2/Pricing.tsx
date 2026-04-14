@@ -67,14 +67,14 @@ export default function Pricing({ section }: PricingProps) {
                     <span className="text-lg font-bold">{pack.price}</span>
                     {pack.checkoutPlan ? (
                       <Template2PricingAction
-                        className="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-full border border-border/80 bg-background/70 px-4 text-xs font-semibold text-foreground ring-offset-background transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                        className="inline-flex h-9 cursor-pointer items-center justify-center whitespace-nowrap rounded-full border border-border/80 bg-background/70 px-4 text-xs font-semibold text-foreground ring-offset-background transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
                         label={pack.cta}
                         manualCouponClassName="text-[11px]"
                         plan={pack.checkoutPlan}
                       />
                     ) : (
                       <button
-                        className="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-full border border-border/80 bg-background/70 px-4 text-xs font-semibold text-foreground ring-offset-background transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                        className="inline-flex h-9 cursor-pointer items-center justify-center whitespace-nowrap rounded-full border border-border/80 bg-background/70 px-4 text-xs font-semibold text-foreground ring-offset-background transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
                         type="button"
                       >
                         {pack.cta}
