@@ -12,6 +12,7 @@ function getCopy(locale: string) {
       dollarsPerCredit: "1 积分 = $",
       plan: "产品",
       price: "价格",
+      purchaseNote: "购买说明",
       title: "套餐积分换算表",
     };
   }
@@ -23,6 +24,7 @@ function getCopy(locale: string) {
       dollarsPerCredit: "1クレジットあたりのドル",
       plan: "プラン",
       price: "価格",
+      purchaseNote: "購入条件",
       title: "プラン別クレジット換算表",
     };
   }
@@ -33,6 +35,7 @@ function getCopy(locale: string) {
     dollarsPerCredit: "$ per Credit",
     plan: "Plan",
     price: "Price",
+    purchaseNote: "Purchase Note",
     title: "Credits Value Comparison",
   };
 }
@@ -55,6 +58,7 @@ export default function PricingValueComparison({ locale }: { locale: string }) {
                   <th className="p-6 text-left font-semibold">{copy.plan}</th>
                   <th className="p-6 text-center font-semibold">{copy.price}</th>
                   <th className="p-6 text-center font-semibold">{copy.credits}</th>
+                  <th className="p-6 text-center font-semibold">{copy.purchaseNote}</th>
                   <th className="p-6 text-center font-semibold text-primary">{copy.creditsPerDollar}</th>
                   <th className="p-6 text-center font-semibold text-muted-foreground">{copy.dollarsPerCredit}</th>
                 </tr>
@@ -65,6 +69,7 @@ export default function PricingValueComparison({ locale }: { locale: string }) {
                     <td className="p-6">{row.plan}</td>
                     <td className="p-6 text-center">{row.price}</td>
                     <td className="p-6 text-center">{row.credits.toLocaleString(locale)}</td>
+                    <td className="p-6 text-center">{row.purchaseNote}</td>
                     <td className="p-6 text-center">
                       <span className="font-semibold text-primary">{row.creditsPerDollar}</span>
                     </td>
