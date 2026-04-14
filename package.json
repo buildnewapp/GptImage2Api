@@ -23,6 +23,7 @@
     "db:seed:seo-content": "tsx lib/db/seed/seo-content.ts",
     "db:export-pricing": "tsx lib/db/seed/export.ts",
     "db:sync-creem-products": "tsx lib/db/seed/sync-creem-products.ts",
+    "db:sync-paypal-products": "tsx lib/db/seed/sync-paypal-products.ts",
     "ai-studio:sync": "tsx scripts/ai-studio/sync-catalog.ts",
     "ai-studio:build": "tsx scripts/ai-studio/build-runtime-catalog.ts",
     "ai-studio:validate": "tsx scripts/ai-studio/validate-runtime-catalog.ts",

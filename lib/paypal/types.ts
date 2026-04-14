@@ -59,6 +59,23 @@ export interface PayPalSubscription {
   subscriber?: PayPalSubscriber;
 }
 
+export interface PayPalProduct {
+  id: string;
+  name?: string;
+  description?: string;
+  type?: string;
+  create_time?: string;
+}
+
+export interface PayPalBillingPlan {
+  id: string;
+  product_id?: string;
+  name?: string;
+  description?: string;
+  status?: string;
+  create_time?: string;
+}
+
 export interface PayPalWebhookEvent<T = any> {
   event_type: string;
   id?: string;

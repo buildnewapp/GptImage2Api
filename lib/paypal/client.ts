@@ -1,7 +1,9 @@
 import { getErrorMessage } from "@/lib/error-utils";
 import { buildPayPalWebhookVerificationPayload } from "@/lib/paypal";
 import type {
+  PayPalBillingPlan,
   PayPalOrder,
+  PayPalProduct,
   PayPalSubscription,
 } from "@/lib/paypal/types";
 
@@ -106,6 +108,42 @@ export class PayPalClient {
         method: "GET",
       },
     );
+  }
+
+  async createProduct(
+    payload: Record<string, unknown>,
+    requestId?: string,
+  ): Promise<PayPalProduct> {
+    return this.request<PayPalProduct>("/v1/catalogs/products", {
+      body: payload,
+      headers: requestId
+        ? {
+            "PayPal-Request-Id": requestId,
+          }
+        : undefined,
+      method: "POST",
+    });
+  }
+
+  async createBillingPlan(
+    payload: Record<string, unknown>,
+    requestId?: string,
+  ): Promise<PayPalBillingPlan> {
+    return this.request<PayPalBillingPlan>("/v1/billing/plans", {
+      body: payload,
+      headers: requestId
+        ? {
+            "PayPal-Request-Id": requestId,
+          }
+        : undefined,
+      method: "POST",
+    });
+  }
+
+  async getBillingPlan(planId: string): Promise<PayPalBillingPlan> {
+    return this.request<PayPalBillingPlan>(`/v1/billing/plans/${planId}`, {
+      method: "GET",
+    });
   }
 
   async verifyWebhookSignature({

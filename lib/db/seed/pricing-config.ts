@@ -38,7 +38,10 @@ import { pricingPlanGroups as pricingPlanGroupsTable, pricingPlans as pricingPla
 export type PricingPlanConfig = Omit<
   InferInsertModel<typeof pricingPlansTable>,
   'createdAt' | 'updatedAt'
->
+> & {
+  paypalProductId?: string | null
+  paypalPlanId?: string | null
+}
 
 /**
  * Pricing Group Config type derived from database schema.
@@ -214,7 +217,8 @@ const testPricingPlans: PricingPlanConfig[] = [
     provider: 'paypal',
     stripePriceId: 'TODO_UPDATE_STRIPE_PRICE_ID',
     stripeProductId: 'TODO_UPDATE_STRIPE_PRODUCT_ID',
-    creemProductId: 'P-1GU76961SW0517507NHOOODQ',
+    creemProductId: 'prod_4pS6yO46aTuWHB6eXgyfWR',
+    paypalPlanId: 'P-66P140742S3194151NHOPNGY',
     paymentType: 'recurring',
     recurringInterval: 'year',
     price: '358.80',
@@ -483,10 +487,11 @@ const testPricingPlans: PricingPlanConfig[] = [
     groupSlug: 'monthly',
     cardTitle: 'Pro',
     cardDescription: 'For creators who need more power.',
-    provider: 'creem',
+    provider: 'paypal',
     stripePriceId: 'TODO_UPDATE_STRIPE_PRICE_ID',
     stripeProductId: 'TODO_UPDATE_STRIPE_PRODUCT_ID',
     creemProductId: 'prod_5J9VzHSNPv9OIf2Lj0dtp7',
+    paypalPlanId: 'P-92X943717U341552XNHOOUYI',
     paymentType: 'recurring',
     recurringInterval: 'month',
     price: '59.90',

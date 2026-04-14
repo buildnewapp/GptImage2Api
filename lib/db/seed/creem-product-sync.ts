@@ -19,6 +19,11 @@ export interface CreemProductIdUpdate {
   creemProductId: string
 }
 
+export interface PricingConfigFieldUpdate {
+  planId: string
+  fields: Record<string, string>
+}
+
 export interface BuildCreemProductPayloadInput extends DeriveCreemBillingInput {
   cardTitle: string
   cardDescription: string | null | undefined
@@ -128,13 +133,18 @@ export function buildCreemProductPayload(
   }
 }
 
-function upsertCreemProductIdLine(planObjectText: string, creemProductId: string): string {
+function upsertPricingConfigField(
+  planObjectText: string,
+  fieldName: string,
+  fieldValue: string
+): string {
   const lines = planObjectText.split('\n')
-  const existingIndex = lines.findIndex(line => /\bcreemProductId\s*:/.test(line))
+  const fieldPattern = new RegExp(`\\b${fieldName}\\s*:`)
+  const existingIndex = lines.findIndex(line => fieldPattern.test(line))
 
   if (existingIndex >= 0) {
     const indent = lines[existingIndex].match(/^(\s*)/)?.[1] ?? '    '
-    lines[existingIndex] = `${indent}creemProductId: '${creemProductId}',`
+    lines[existingIndex] = `${indent}${fieldName}: '${fieldValue}',`
     return lines.join('\n')
   }
 
@@ -147,14 +157,14 @@ function upsertCreemProductIdLine(planObjectText: string, creemProductId: string
 
   if (anchorIndex >= 0) {
     const indent = lines[anchorIndex].match(/^(\s*)/)?.[1] ?? '    '
-    lines.splice(anchorIndex + 1, 0, `${indent}creemProductId: '${creemProductId}',`)
+    lines.splice(anchorIndex + 1, 0, `${indent}${fieldName}: '${fieldValue}',`)
     return lines.join('\n')
   }
 
   const idIndex = lines.findIndex(line => /\bid\s*:/.test(line))
   if (idIndex >= 0) {
     const indent = lines[idIndex].match(/^(\s*)/)?.[1] ?? '    '
-    lines.splice(idIndex + 1, 0, `${indent}creemProductId: '${creemProductId}',`)
+    lines.splice(idIndex + 1, 0, `${indent}${fieldName}: '${fieldValue}',`)
   }
 
   return lines.join('\n')
@@ -314,21 +324,39 @@ export function applyCreemProductIdUpdates(
   source: string,
   updates: CreemProductIdUpdate[]
 ): string {
+  return applyPricingConfigFieldUpdates(
+    source,
+    updates.map(update => ({
+      planId: update.planId,
+      fields: {
+        creemProductId: update.creemProductId,
+      },
+    }))
+  )
+}
+
+export function applyPricingConfigFieldUpdates(
+  source: string,
+  updates: PricingConfigFieldUpdate[]
+): string {
   if (updates.length === 0) {
     return source
   }
 
-  const updatesByPlanId = new Map(updates.map(update => [update.planId, update.creemProductId]))
+  const updatesByPlanId = new Map(updates.map(update => [update.planId, update.fields]))
   const planRanges = collectPricingPlanRanges(source)
   let nextSource = source
 
   for (const range of [...planRanges].sort((a, b) => b.start - a.start)) {
-    const newProductId = updatesByPlanId.get(range.id)
-    if (!newProductId) {
+    const fields = updatesByPlanId.get(range.id)
+    if (!fields || Object.keys(fields).length === 0) {
       continue
     }
 
-    const updatedPlanText = upsertCreemProductIdLine(range.text, newProductId)
+    let updatedPlanText = range.text
+    for (const [fieldName, fieldValue] of Object.entries(fields)) {
+      updatedPlanText = upsertPricingConfigField(updatedPlanText, fieldName, fieldValue)
+    }
     nextSource =
       nextSource.slice(0, range.start) + updatedPlanText + nextSource.slice(range.end)
     updatesByPlanId.delete(range.id)

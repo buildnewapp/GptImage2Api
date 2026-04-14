@@ -53,6 +53,11 @@ async function main() {
         throw new Error(`Plan "${plan.cardTitle}" is missing required id field`)
       }
 
+      const providerProductId =
+        plan.provider === 'paypal'
+          ? (plan.paypalPlanId ?? plan.paypalProductId ?? plan.creemProductId ?? null)
+          : plan.creemProductId
+
       await db
         .insert(pricingPlansTable)
         .values({
@@ -65,7 +70,7 @@ async function main() {
           stripePriceId: plan.stripePriceId,
           stripeProductId: plan.stripeProductId,
           stripeCouponId: plan.stripeCouponId,
-          creemProductId: plan.creemProductId,
+          creemProductId: providerProductId,
           creemDiscountCode: plan.creemDiscountCode,
           enableManualInputCoupon: plan.enableManualInputCoupon ?? false,
           paymentType: plan.paymentType,
@@ -97,7 +102,7 @@ async function main() {
             stripePriceId: plan.stripePriceId,
             stripeProductId: plan.stripeProductId,
             stripeCouponId: plan.stripeCouponId,
-            creemProductId: plan.creemProductId,
+            creemProductId: providerProductId,
             creemDiscountCode: plan.creemDiscountCode,
             enableManualInputCoupon: plan.enableManualInputCoupon ?? false,
             paymentType: plan.paymentType,
