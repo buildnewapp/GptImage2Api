@@ -68,7 +68,7 @@ export default function HeaderShell({
         template2ThemeVarsClass,
         overlay
           ? "border-white/12 bg-transparent"
-          : "border-border/70 border-b bg-background/82 shadow backdrop-blur-xl"
+          : "bg-background/82 shadow backdrop-blur-xl"
       )}
     >
       <nav className="container mx-auto flex h-20 items-center justify-between px-4">
