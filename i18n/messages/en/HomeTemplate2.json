@@ -10,13 +10,13 @@
     "resources": "Resources"
   },
   "hero": {
-    "badge": "Current Web App Capabilities",
+    "badge": "Seedance 2.0 web & api",
     "ctaLabel": "Generate Video",
     "creditCost": "25",
-    "description": "Create short AI videos from text or a reference image. Starter credits are available on Seedance 2.0 Lite. Paid Seedance 2.0 access in the web app currently supports up to 720p and 15 seconds.",
+    "description": "Create short AI videos from text or a reference image. Starter credits are available on Seedance 2.0. Paid Seedance 2.0 access in the web app currently supports up to 720p and 15 seconds.",
     "durationLabel": "5s",
     "highlight": "Clearly.",
-    "modelLabel": "Seedance 2.0 Lite",
+    "modelLabel": "Seedance 2.0",
     "placeholder": "Upload up to 12 references, then type @ to mention them in your prompt. E.g.: @image1 imitates @video1 motion, voice references @audio1.",
     "resolutionLabel": "480p",
     "title": "Direct Short-Form Video—",
@@ -29,7 +29,7 @@
   },
   "featureRows": [
     {
-      "description": "Write a prompt, choose aspect ratio, duration, and resolution, then render a short-form clip in the current web app. Seedance 2.0 is available with paid access; starter credits apply to Seedance 2.0 Lite.",
+      "description": "Write a prompt, choose aspect ratio, duration, and resolution, then render a short-form clip in the current web app. Seedance 2.0 is available with paid access; starter credits apply to Seedance 2.0.",
       "title": "Short-Form Text to Video",
       "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/gomdqjkt4.mp4"
     },
@@ -40,7 +40,7 @@
       "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/es600fg0x.mp4"
     },
     {
-      "description": "Start on Seedance 2.0 Lite with starter credits, or unlock Seedance 2.0 with paid access when you need the higher tier. Model limits are shown in the generator before you render.",
+      "description": "Start on Seedance 2.0 with starter credits, or unlock Seedance 2.0 with paid access when you need the higher tier. Model limits are shown in the generator before you render.",
       "title": "Choose 2.0 Lite or 2.0",
       "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/88jhjdm4l.mp4"
     },
@@ -81,7 +81,7 @@
       },
       {
         "accent": "accent",
-        "description": "Starter credits apply to Seedance 2.0 Lite. Seedance 2.0 requires paid access.",
+        "description": "Starter credits apply to Seedance 2.0. Seedance 2.0 requires paid access.",
         "icon": "globe",
         "title": "Model access"
       },
@@ -93,7 +93,7 @@
       },
       {
         "accent": "foreground",
-        "description": "Seedance 2.0 Lite supports up to 12s. Seedance 2.0 supports up to 15s.",
+        "description": "Seedance 2.0 supports up to 12s. Seedance 2.0 supports up to 15s.",
         "icon": "users",
         "title": "Duration limits"
       },
@@ -314,7 +314,7 @@
     "cryptoPaymentLinkLabel": "click to view",
     "cryptoPaymentText": "Crypto payments are supported,",
     "creditPacksTitle": "Need just a few videos?",
-    "description": "Paid access unlocks Seedance 2.0. Starter credits are available on Seedance 2.0 Lite only.",
+    "description": "Paid access unlocks Seedance 2.0. Starter credits are available on Seedance 2.0 only.",
     "monthlyLabel": "Monthly",
     "plans": [
       {
@@ -395,7 +395,7 @@
         "question": "What inputs can I use?"
       },
       {
-        "answer": "Seedance 2.0 Lite currently supports up to 12 seconds in the web app. Paid Seedance 2.0 access currently supports up to 15 seconds.",
+        "answer": "Seedance 2.0 currently supports up to 12 seconds in the web app. Paid Seedance 2.0 access currently supports up to 15 seconds.",
         "question": "How long are outputs?"
       },
       {
@@ -407,7 +407,7 @@
         "question": "Can I edit instead of regenerating?"
       },
       {
-        "answer": "Not in the current public web app. Current public output limits top out at 12 seconds on Seedance 2.0 Lite and 15 seconds on Seedance 2.0.",
+        "answer": "Not in the current public web app. Current public output limits top out at 12 seconds on Seedance 2.0 and 15 seconds on Seedance 2.0.",
         "question": "Can I extend a video to continue the story?"
       },
       {
@@ -423,7 +423,7 @@
         "question": "Is it good for complex motion?"
       },
       {
-        "answer": "seedance2.app offers starter credits on Seedance 2.0 Lite. Seedance 2.0 is available through paid access in the current web app.",
+        "answer": "seedance2.app offers starter credits on Seedance 2.0. Seedance 2.0 is available through paid access in the current web app.",
         "question": "Where can I use it?"
       },
       {
@@ -438,7 +438,7 @@
     "title": "Frequently Asked Questions"
   },
   "cta": {
-    "description": "Open the generator, choose a model, and create short-form clips. Starter credits apply to Seedance 2.0 Lite; paid access unlocks Seedance 2.0.",
+    "description": "Open the generator, choose a model, and create short-form clips. Starter credits apply to Seedance 2.0; paid access unlocks Seedance 2.0.",
     "kicker": "Start in Minutes",
     "primaryLabel": "Open Seedance 2.0",
     "secondaryLabel": "View Prompt Pack",

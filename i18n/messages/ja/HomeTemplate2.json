@@ -10,13 +10,13 @@
     "resources": "リソース"
   },
   "hero": {
-    "badge": "現在の Web アプリ機能",
+    "badge": "Seedance 2.0 web & api",
     "ctaLabel": "動画を生成",
     "creditCost": "25",
-    "description": "テキストまたは参照画像から短尺 AI 動画を生成できます。スタータークレジットは Seedance 2.0 Lite で利用可能です。現在の Web アプリでの有料 Seedance 2.0 は、最大 720p・15 秒まで対応しています。",
+    "description": "テキストまたは参照画像から短尺 AI 動画を生成できます。スタータークレジットは Seedance 2.0 で利用可能です。現在の Web アプリでの有料 Seedance 2.0 は、最大 720p・15 秒まで対応しています。",
     "durationLabel": "5秒",
     "highlight": "より明確に。",
-    "modelLabel": "Seedance 2.0 Lite",
+    "modelLabel": "Seedance 2.0",
     "placeholder": "最大 12 件の参照素材をアップロードし、プロンプト内で @ を入力して参照できます。例: @image1 が @video1 の動きを再現し、音声は @audio1 を参照。",
     "resolutionLabel": "480p",
     "title": "短尺動画を直接生成",
@@ -29,7 +29,7 @@
   },
   "featureRows": [
     {
-      "description": "プロンプトを書き、アスペクト比・長さ・解像度を選ぶだけで、現在の Web アプリ内で短尺クリップを生成できます。Seedance 2.0 は有料アクセスで利用可能で、スタータークレジットは Seedance 2.0 Lite に適用されます。",
+      "description": "プロンプトを書き、アスペクト比・長さ・解像度を選ぶだけで、現在の Web アプリ内で短尺クリップを生成できます。Seedance 2.0 は有料アクセスで利用可能で、スタータークレジットは Seedance 2.0 に適用されます。",
       "title": "短尺テキスト動画生成",
       "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/gomdqjkt4.mp4"
     },
@@ -40,7 +40,7 @@
       "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/es600fg0x.mp4"
     },
     {
-      "description": "まずは Seedance 2.0 Lite をスタータークレジットで試し、より上位の機能が必要になったら有料で Seedance 2.0 を解放できます。モデルの制限は生成前に UI 上で確認できます。",
+      "description": "まずは Seedance 2.0 をスタータークレジットで試し、より上位の機能が必要になったら有料で Seedance 2.0 を解放できます。モデルの制限は生成前に UI 上で確認できます。",
       "title": "2.0 Lite と 2.0 を選択",
       "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/88jhjdm4l.mp4"
     },
@@ -81,7 +81,7 @@
       },
       {
         "accent": "accent",
-        "description": "スタータークレジットは Seedance 2.0 Lite に適用されます。Seedance 2.0 は有料アクセスが必要です。",
+        "description": "スタータークレジットは Seedance 2.0 に適用されます。Seedance 2.0 は有料アクセスが必要です。",
         "icon": "globe",
         "title": "モデル利用条件"
       },
@@ -93,7 +93,7 @@
       },
       {
         "accent": "foreground",
-        "description": "Seedance 2.0 Lite は最大 12 秒、Seedance 2.0 は最大 15 秒まで対応します。",
+        "description": "Seedance 2.0 は最大 12 秒、Seedance 2.0 は最大 15 秒まで対応します。",
         "icon": "users",
         "title": "尺の上限"
       },
@@ -314,7 +314,7 @@
     "cryptoPaymentLinkLabel": "こちらを確認",
     "cryptoPaymentText": "暗号資産での支払いにも対応しています。",
     "creditPacksTitle": "少数の動画だけ必要ですか？",
-    "description": "有料アクセスで Seedance 2.0 が解放されます。スタータークレジットは Seedance 2.0 Lite のみで利用可能です。",
+    "description": "有料アクセスで Seedance 2.0 が解放されます。スタータークレジットは Seedance 2.0 のみで利用可能です。",
     "monthlyLabel": "月額",
     "plans": [
       {
@@ -395,7 +395,7 @@
         "question": "どの入力が使えますか？"
       },
       {
-        "answer": "現在 Web アプリの Seedance 2.0 Lite は最大 12 秒、有料の Seedance 2.0 は最大 15 秒まで対応しています。",
+        "answer": "現在 Web アプリの Seedance 2.0 は最大 12 秒、有料の Seedance 2.0 は最大 15 秒まで対応しています。",
         "question": "出力の長さはどれくらいですか？"
       },
       {
@@ -407,7 +407,7 @@
         "question": "再生成ではなく編集はできますか？"
       },
       {
-        "answer": "現在の公開 Web アプリでは対応していません。公開出力の上限は、Seedance 2.0 Lite が最大 12 秒、Seedance 2.0 が最大 15 秒です。",
+        "answer": "現在の公開 Web アプリでは対応していません。公開出力の上限は、Seedance 2.0 が最大 12 秒、Seedance 2.0 が最大 15 秒です。",
         "question": "動画を延長して物語を続けられますか？"
       },
       {
@@ -423,7 +423,7 @@
         "question": "複雑な動きに強いですか？"
       },
       {
-        "answer": "seedance2.app では Seedance 2.0 Lite にスタータークレジットが提供されています。現在の Web アプリで Seedance 2.0 を使うには有料アクセスが必要です。",
+        "answer": "seedance2.app では Seedance 2.0 にスタータークレジットが提供されています。現在の Web アプリで Seedance 2.0 を使うには有料アクセスが必要です。",
         "question": "どこで使えますか？"
       },
       {
@@ -438,7 +438,7 @@
     "title": "よくある質問"
   },
   "cta": {
-    "description": "ジェネレーターを開き、モデルを選び、短尺クリップを作成しましょう。スタータークレジットは Seedance 2.0 Lite に適用され、有料アクセスで Seedance 2.0 が利用可能になります。",
+    "description": "ジェネレーターを開き、モデルを選び、短尺クリップを作成しましょう。スタータークレジットは Seedance 2.0 に適用され、有料アクセスで Seedance 2.0 が利用可能になります。",
     "kicker": "数分で開始",
     "primaryLabel": "Seedance 2.0 を開く",
     "secondaryLabel": "プロンプトパックを見る",

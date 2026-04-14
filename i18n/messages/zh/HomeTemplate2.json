@@ -10,13 +10,13 @@
     "resources": "资源"
   },
   "hero": {
-    "badge": "当前 Web 应用能力",
+    "badge": "Seedance 2.0 web & api",
     "ctaLabel": "生成视频",
     "creditCost": "25",
-    "description": "从文本或参考图片创建短篇 AI 视频。Seedance 2.0 Lite 提供新手积分。当前 Web 应用中的付费 Seedance 2.0 最多支持 720p 和 15 秒。",
+    "description": "从文本或参考图片创建短篇 AI 视频。Seedance 2.0 提供新手积分。当前 Web 应用中的付费 Seedance 2.0 最多支持 720p 和 15 秒。",
     "durationLabel": "5秒",
     "highlight": "更清晰呈现。",
-    "modelLabel": "Seedance 2.0 Lite",
+    "modelLabel": "Seedance 2.0",
     "placeholder": "最多上传 12 个参考素材，然后在提示词中输入 @ 进行引用。例如：@image1 模仿 @video1 的运动，语音参考 @audio1。",
     "resolutionLabel": "480p",
     "title": "直接生成短视频",
@@ -29,7 +29,7 @@
   },
   "featureRows": [
     {
-      "description": "编写提示词，选择画幅比例、时长和分辨率，然后在当前 Web 应用中渲染短视频片段。Seedance 2.0 需付费解锁；新手积分仅适用于 Seedance 2.0 Lite。",
+      "description": "编写提示词，选择画幅比例、时长和分辨率，然后在当前 Web 应用中渲染短视频片段。Seedance 2.0 需付费解锁；新手积分仅适用于 Seedance 2.0。",
       "title": "短视频文生视频",
       "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/gomdqjkt4.mp4"
     },
@@ -40,7 +40,7 @@
       "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/es600fg0x.mp4"
     },
     {
-      "description": "可以先用新手积分体验 Seedance 2.0 Lite，或在需要更高等级时付费解锁 Seedance 2.0。渲染前，生成器里会显示模型限制。",
+      "description": "可以先用新手积分体验 Seedance 2.0，或在需要更高等级时付费解锁 Seedance 2.0。渲染前，生成器里会显示模型限制。",
       "title": "选择 2.0 Lite 或 2.0",
       "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/88jhjdm4l.mp4"
     },
@@ -81,7 +81,7 @@
       },
       {
         "accent": "accent",
-        "description": "新手积分适用于 Seedance 2.0 Lite。Seedance 2.0 需要付费访问。",
+        "description": "新手积分适用于 Seedance 2.0。Seedance 2.0 需要付费访问。",
         "icon": "globe",
         "title": "模型访问"
       },
@@ -93,7 +93,7 @@
       },
       {
         "accent": "foreground",
-        "description": "Seedance 2.0 Lite 最长支持 12 秒。Seedance 2.0 最长支持 15 秒。",
+        "description": "Seedance 2.0 最长支持 12 秒。Seedance 2.0 最长支持 15 秒。",
         "icon": "users",
         "title": "时长上限"
       },
@@ -314,7 +314,7 @@
     "cryptoPaymentLinkLabel": "点击查看",
     "cryptoPaymentText": "支持虚拟货币支付，",
     "creditPacksTitle": "只需要少量视频？",
-    "description": "付费访问可解锁 Seedance 2.0。新手积分仅适用于 Seedance 2.0 Lite。",
+    "description": "付费访问可解锁 Seedance 2.0。新手积分仅适用于 Seedance 2.0。",
     "monthlyLabel": "月付",
     "plans": [
       {
@@ -395,7 +395,7 @@
         "question": "我可以使用哪些输入？"
       },
       {
-        "answer": "目前 Web 应用中的 Seedance 2.0 Lite 最长支持 12 秒。付费 Seedance 2.0 当前最长支持 15 秒。",
+        "answer": "目前 Web 应用中的 Seedance 2.0 最长支持 12 秒。付费 Seedance 2.0 当前最长支持 15 秒。",
         "question": "输出时长有多长？"
       },
       {
@@ -407,7 +407,7 @@
         "question": "我可以编辑已有视频，而不是重新生成吗？"
       },
       {
-        "answer": "当前公开 Web 应用不支持。现在公开输出上限是 Seedance 2.0 Lite 最长 12 秒，Seedance 2.0 最长 15 秒。",
+        "answer": "当前公开 Web 应用不支持。现在公开输出上限是 Seedance 2.0 最长 12 秒，Seedance 2.0 最长 15 秒。",
         "question": "我可以延长视频继续讲故事吗？"
       },
       {
@@ -423,7 +423,7 @@
         "question": "它擅长复杂运动吗？"
       },
       {
-        "answer": "seedance2.app 为 Seedance 2.0 Lite 提供新手积分。当前 Web 应用中的 Seedance 2.0 需通过付费访问。",
+        "answer": "seedance2.app 为 Seedance 2.0 提供新手积分。当前 Web 应用中的 Seedance 2.0 需通过付费访问。",
         "question": "我可以在哪里使用它？"
       },
       {
@@ -438,7 +438,7 @@
     "title": "常见问题"
   },
   "cta": {
-    "description": "打开生成器，选择模型，开始创建短视频片段。新手积分适用于 Seedance 2.0 Lite；付费访问可解锁 Seedance 2.0。",
+    "description": "打开生成器，选择模型，开始创建短视频片段。新手积分适用于 Seedance 2.0；付费访问可解锁 Seedance 2.0。",
     "kicker": "几分钟即可开始",
     "primaryLabel": "打开 Seedance 2.0",
     "secondaryLabel": "查看提示词包",
