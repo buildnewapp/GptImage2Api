@@ -31,7 +31,7 @@ function resolvePricingEnvironment(environment?: PricingEnvironment): PricingEnv
     return environment;
   }
 
-  return process.env.PAY_ENV === "production" ? "live" : "test";
+  return process.env.PAY_ENV === "live" ? "live" : "test";
 }
 
 function resolveLocale(locale: string): SupportedLocale {

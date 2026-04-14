@@ -28,16 +28,16 @@ const __dirname = path.dirname(__filename)
 const pricingConfigPath = path.join(__dirname, 'pricing-config.ts')
 
 function normalizePayPalEnvironment(rawValue: string | null | undefined) {
-  const normalized = (rawValue ?? 'sandbox').toLowerCase().trim()
+  const normalized = (rawValue ?? 'test').toLowerCase().trim()
 
-  if (normalized === 'sandbox') {
+  if (normalized === 'test') {
     return {
       apiEnvironment: 'sandbox' as const,
       pricingEnvironment: 'test' as const,
     }
   }
 
-  if (normalized === 'production') {
+  if (normalized === 'live') {
     return {
       apiEnvironment: 'production' as const,
       pricingEnvironment: 'live' as const,
@@ -45,7 +45,7 @@ function normalizePayPalEnvironment(rawValue: string | null | undefined) {
   }
 
   throw new Error(
-    `PAYPAL_ENVIRONMENT must be "sandbox" or "production", received: ${rawValue ?? 'undefined'}`
+    `PAY_ENV must be "test" or "live", received: ${rawValue ?? 'undefined'}`
   )
 }
 
@@ -136,7 +136,7 @@ function buildPayPalPlanPayload(
 async function main() {
   const dryRun = process.argv.includes('--dry-run')
   const force = process.argv.includes('--force')
-  const environment = normalizePayPalEnvironment(process.env.PAYPAL_ENVIRONMENT)
+  const environment = normalizePayPalEnvironment(process.env.PAY_ENV)
 
   if (!dryRun && !isPayPalEnabled) {
     throw new Error(
@@ -149,12 +149,12 @@ async function main() {
   )
 
   if (targetPlans.length === 0) {
-    console.log(`No PayPal recurring plans found for PAYPAL_ENVIRONMENT=${environment.apiEnvironment}.`)
+    console.log(`No PayPal recurring plans found for PAY_ENV=${environment.pricingEnvironment}.`)
     return
   }
 
   console.log(`[sync] config: .env`)
-  console.log(`[sync] PAYPAL_ENVIRONMENT=${environment.apiEnvironment}`)
+  console.log(`[sync] PAY_ENV=${environment.pricingEnvironment}`)
   console.log(`[sync] PAYPAL_CLIENT_ID=${process.env.PAYPAL_CLIENT_ID}`)
   console.log(`[sync] Found ${targetPlans.length} PayPal recurring plan(s) in pricing-config.ts`)
   if (dryRun) {
@@ -249,6 +249,7 @@ async function main() {
   }
 
   console.log(`\n[file] ${pricingConfigPath}`)
+  console.log(`\n[next] file to db: pnpm db:seed`)
 }
 
 main().catch(error => {

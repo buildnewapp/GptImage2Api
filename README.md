@@ -43,13 +43,52 @@ https://console.cloud.google.com/auth/clients
 https://nexty.dev/docs/integration/auth#configure-google-oauth
 
 http://localhost:3000
-https://cf-demo1.1000aitools.com
+https://demo.1000aitools.com
 http://localhost:3000/api/auth/callback/google
-https://cf-demo1.1000aitools.com/api/auth/callback/google
+https://demo.1000aitools.com/api/auth/callback/google
 ```
 NEXT_PUBLIC_GOOGLE_CLIENT_ID=364893323217-m7qisfv3p482t3v3e6dbr3ckhpdir308.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=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
 ```
+### paypal
+统一使用 `PAY_ENV` 控制支付环境：
+- `PAY_ENV=test`：PayPal Sandbox
+- `PAY_ENV=live`：PayPal Live
+
+#### 测试环境 
+1 新建测试应用，登录主账户
+https://developer.paypal.com/dashboard/applications/sandbox
+create app → name + Merchant + Sandbox Account → get Client ID + Secret key 1
+启动ngrok: ngrok http --domain=many-fine-bullfrog.ngrok-free.app 3000
+回调地址：https://many-fine-bullfrog.ngrok-free.app/api/paypal/notify
+点击查看应用详情
+添加 webhook → 填写 回调地址 + all events → save
+
+2 手动填写订阅产品信息
+https://www.sandbox.paypal.com/billing/overview
+使用刚才 Sandbox Account 账户登录
+管理定期付款 → 定期付款计划 → 创建计划
+创建定期付款产品 → 产品名称、产品描述、产品编号、产品类型 → 下一步
+固定价格 → 计划名称、计划描述→为此定期付款计划定价→无限结算周期→价格→下一步→开启计划
+返回查看计划详情→复制计划编号使用→P-xxxxx
+
+3 自动创建订阅产品
+提供PAYPAL_CLIENT_ID、PAYPAL_CLIENT_SECRET 让 ai 使用脚本创建产品+订阅计划，获取计划 id
+pnpm db:sync-paypal-products
+
+#### 真实环境
+1 新建测试应用，登录主账户
+https://developer.paypal.com/dashboard/applications/live
+create app → name + Merchant + Sandbox Account → get Client ID + Secret key 1
+回调地址：https://sdanceai.com/api/paypal/notify
+点击查看应用详情
+添加 webhook → 填写 回调地址 + all events → save
+3 自动创建订阅产品
+提供PAYPAL_CLIENT_ID、PAYPAL_CLIENT_SECRET 让 ai 使用脚本创建产品+订阅计划，获取计划 id
+pnpm db:sync-paypal-products
+查看创建成功：https://www.paypal.com/billing/plans
+查看 plan id 回写
+
 ## 部署 cf
 
 ### 配置
@@ -85,3 +124,5 @@ cf -> worker -> setting -> Build
 把所有生产环境的环境变量添加进来，这一步只能手动操作；NEXT_PUBLIC_ 开头的环境变量直接添加，其他环境变量要点击 Encrypt 按钮加密。添加环境变量时，不要把引号复制进去。
 Build cache 设置成 Disabled
 注意：Variables and Secrets + Build 运行时、编译时 变量需要手动一个一个添加进去
+
+## 部署 vps

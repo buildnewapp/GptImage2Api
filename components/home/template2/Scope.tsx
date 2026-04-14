@@ -71,22 +71,6 @@ export default function Scope({ section }: ScopeProps) {
             );
           })}
         </div>
-        <div className="border-y border-border/70 py-12">
-          <p data-aos="fade-up" className="mb-8 text-center text-sm text-muted-foreground">
-            {section.logosLabel}
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
-            {section.logos.map((logo) => (
-              <div
-                key={logo}
-                data-aos="fade-up"
-                className="text-2xl font-bold text-foreground/30"
-              >
-                {logo}
-              </div>
-            ))}
-          </div>
-        </div>
         <div data-aos="fade-up"  className={`${studioPanelClass} mt-20 rounded-[2rem] p-12 text-center`}>
           <h3 className={`${subsectionTitleClass} mb-4`}>{section.footerTitle}</h3>
           <p className="mb-2 text-lg text-muted-foreground">
