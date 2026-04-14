@@ -172,6 +172,76 @@ test("applies request schema overrides to runtime models", () => {
   );
 });
 
+test("hydrates missing request schema for direct models via overrides", () => {
+  const compiled = compileAiStudioRuntimeCatalog({
+    upstream: {
+      version: 1,
+      generatedAt: "2026-03-08T00:00:00.000Z",
+      items: [
+        createDetail({
+          id: "video:kling-3-0",
+          title: "Kling 3.0",
+          docUrl: "https://docs.kie.ai/market/kling/kling-3-0.md",
+          provider: "Kling 3.0",
+          modelKeys: ["api"],
+          requestSchema: null,
+          examplePayload: {},
+          pricingRows: [
+            createPricingRow({
+              modelDescription: "Kling 3.0, video, with audio-1080P",
+              provider: "Kling",
+            }),
+          ],
+        }),
+      ],
+    },
+    modelOverrides: {
+      models: {
+        "video:kling-3-0": {
+          schemaModel: "kling-3.0",
+        },
+      },
+    },
+    pricingOverrides: {
+      models: {},
+    },
+    schemaOverrides: {
+      models: {
+        "video:kling-3-0": {
+          replace: {
+            type: "object",
+            properties: {
+              model: {
+                type: "string",
+              },
+              input: {
+                type: "object",
+                properties: {
+                  prompt: {
+                    type: "string",
+                  },
+                  duration: {
+                    type: "string",
+                  },
+                },
+                required: ["prompt"],
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  assert.equal(compiled.items[0]?.modelKeys[0], "kling-3.0");
+  assert.equal(compiled.items[0]?.examplePayload.model, "kling-3.0");
+  assert.equal(compiled.items[0]?.requestSchema?.properties?.model?.type, "string");
+  assert.equal(
+    compiled.items[0]?.requestSchema?.properties?.input?.properties?.prompt?.type,
+    "string",
+  );
+});
+
 test("drops disabled models from the compiled runtime catalog", () => {
   const compiled = compileAiStudioRuntimeCatalog({
     upstream: {
@@ -444,6 +514,40 @@ test("exposes Seedance 2.0 VIP variants from the bundled runtime catalog", async
   assert.equal(fastVip.id, "video:bytedance-seedance-2-0-fast");
   assert.equal(fastVip.alias, "seedance-2-0-fast-vip");
   assert.equal(fastVip.provider, "ByteDance");
+});
+
+test("exposes pricing rows for wan and hailuo public video models", async () => {
+  const ids = [
+    "video:wan-2-7-text-to-video",
+    "video:wan-2-7-image-to-video",
+    "video:wan-2-7-video-edit",
+    "video:wan-2-7-reference-to-video",
+    "video:wan-2-6-text-to-video",
+    "video:wan-2-6-image-to-video",
+    "video:wan-2-6-video-to-video",
+    "video:wan-2-5-text-to-video",
+    "video:wan-2-5-image-to-video",
+    "video:wan-text-to-video",
+    "video:wan-image-to-video",
+    "video:wan-2-2-a14b-speech-to-video-turbo",
+    "video:wan-animate-move",
+    "video:wan-animate-replace",
+    "video:hailuo-standard-text-to-video",
+    "video:hailuo-standard-image-to-video",
+    "video:hailuo-pro-text-to-video",
+    "video:hailuo-pro-image-to-video",
+    "video:hailuo-2-3-standard-image-to-video",
+    "video:hailuo-2-3-pro-image-to-video",
+  ];
+
+  for (const id of ids) {
+    const entry = await getCachedAiStudioCatalogEntry(id);
+    assert.ok(entry, `${id} should exist in bundled runtime catalog`);
+    assert.ok(
+      (entry.pricingRows?.length ?? 0) > 0,
+      `${id} should expose at least one pricing row`,
+    );
+  }
 });
 
 test("splits one upstream model into separate runtime variants", () => {

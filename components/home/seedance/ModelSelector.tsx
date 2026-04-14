@@ -1,6 +1,13 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, ChevronDown, Sparkles, Video, Zap } from "lucide-react";
 import Image from "next/image";
@@ -44,10 +51,15 @@ export function ModelSelector({
 }: ModelSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const activeVersionId = selectedVersionId || versions?.[0]?.id;
+  const useVersionDropdown = (versions?.length ?? 0) >= 3;
 
   const selectedModel = useMemo(
     () => models.find((item) => item.id === selectedId) || models[0],
     [models, selectedId],
+  );
+  const activeVersion = useMemo(
+    () => versions?.find((item) => item.id === activeVersionId),
+    [activeVersionId, versions],
   );
 
   if (!selectedModel) return null;
@@ -132,25 +144,44 @@ export function ModelSelector({
             <Sparkles className="w-4 h-4" />
             {versionLabel || "Version"}
           </label>
-          <div className="flex w-full rounded-xl border border-border/50 bg-background/50 p-1 gap-2">
-            {versions.map((version) => (
-              <button
-                key={version.id}
-                type="button"
-                onClick={() => onSelectVersion(version.id)}
-                className={cn(
-                  "flex-1 flex items-center justify-center py-2 px-3 rounded-lg text-sm transition-all border text-center",
-                  activeVersionId === version.id
-                    ? "bg-zinc-200/50 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 shadow-sm"
-                    : "border-transparent hover:bg-muted/50",
-                )}
-              >
-                <span className="font-semibold text-foreground text-xs sm:text-sm truncate">
-                  {version.name}
-                </span>
-              </button>
-            ))}
-          </div>
+          {useVersionDropdown ? (
+            <Select value={activeVersionId} onValueChange={onSelectVersion}>
+              <SelectTrigger className="w-full h-11 rounded-xl border-border/50 bg-background/50">
+                <SelectValue placeholder={versionLabel || "Version"}>
+                  <span className="truncate font-semibold">
+                    {activeVersion?.name}
+                  </span>
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {versions.map((version) => (
+                  <SelectItem key={version.id} value={version.id}>
+                    {version.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          ) : (
+            <div className="flex w-full rounded-xl border border-border/50 bg-background/50 p-1 gap-2">
+              {versions.map((version) => (
+                <button
+                  key={version.id}
+                  type="button"
+                  onClick={() => onSelectVersion(version.id)}
+                  className={cn(
+                    "flex-1 flex items-center justify-center py-2 px-3 rounded-lg text-sm transition-all border text-center",
+                    activeVersionId === version.id
+                      ? "bg-zinc-200/50 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 shadow-sm"
+                      : "border-transparent hover:bg-muted/50",
+                  )}
+                >
+                  <span className="font-semibold text-foreground text-xs sm:text-sm truncate">
+                    {version.name}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

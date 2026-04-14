@@ -60,6 +60,7 @@ export interface AiStudioModelOverride {
   alias?: string | null;
   title?: string;
   provider?: string;
+  schemaModel?: string;
   splitModels?: AiStudioSplitModelOverride[];
 }
 
@@ -112,6 +113,7 @@ export interface AiStudioFormUiOverridesFile {
 }
 
 export interface AiStudioSchemaModelOverride {
+  replace?: Record<string, unknown> | null;
   set?: Record<string, unknown>;
 }
 
@@ -1078,6 +1080,13 @@ function applySchemaOverridesToDetail(
   detail: AiStudioDocDetail,
   override: AiStudioSchemaModelOverride | undefined,
 ) {
+  if (override?.replace !== undefined) {
+    detail.requestSchema =
+      override.replace && typeof override.replace === "object"
+        ? (structuredClone(override.replace) as Record<string, any>)
+        : null;
+  }
+
   if (!override?.set || !detail.requestSchema) {
     return;
   }
@@ -1242,6 +1251,9 @@ function applyModelOverrideToDetail(
   }
   if (override.provider) {
     detail.provider = override.provider;
+  }
+  if (override.schemaModel) {
+    rewriteSchemaModel(detail, override.schemaModel);
   }
 
   return detail;
@@ -1433,6 +1445,13 @@ export function validateAiStudioRuntimeBuildInput({
     if (!item) {
       errors.push(`Schema override targets unknown model: ${modelId}`);
       continue;
+    }
+
+    if (override.replace !== undefined) {
+      item.requestSchema =
+        override.replace && typeof override.replace === "object"
+          ? (structuredClone(override.replace) as Record<string, any>)
+          : null;
     }
 
     for (const overridePath of Object.keys(override.set ?? {})) {

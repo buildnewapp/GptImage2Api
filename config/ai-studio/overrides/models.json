@@ -91,6 +91,9 @@
           }
         }
       ]
+    },
+    "video:kling-3-0": {
+      "schemaModel": "kling-3.0"
     }
   }
 }
