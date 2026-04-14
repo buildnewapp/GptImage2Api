@@ -53,10 +53,7 @@ async function main() {
         throw new Error(`Plan "${plan.cardTitle}" is missing required id field`)
       }
 
-      const providerProductId =
-        plan.provider === 'paypal'
-          ? (plan.paypalPlanId ?? plan.paypalProductId ?? plan.creemProductId ?? null)
-          : plan.creemProductId
+      const providerProductId = plan.paypalPlanId ?? null
 
       await db
         .insert(pricingPlansTable)
