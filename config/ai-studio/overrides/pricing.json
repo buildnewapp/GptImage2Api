@@ -1,5 +1,37 @@
 {
   "models": {
+    "video:apimart-seedance-2-0": {
+      "addRows": [
+        {
+          "modelDescription": "Seedance 2.0, 720p no video input",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "41",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
+          "discountPrice": false
+        }
+      ]
+    },
+    "video:apimart-seedance-2-0-fast": {
+      "addRows": [
+        {
+          "modelDescription": "Seedance 2.0 Fast, 720p no video input",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "33",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
+          "discountPrice": false
+        }
+      ]
+    },
     "video:bytedance-v1-pro-image-to-video": {
       "addRows": [
         {

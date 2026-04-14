@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-04-14T09:59:16.645Z",
+  "generatedAt": "2026-04-14T11:54:17.883Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -27644,7 +27644,20 @@
         "duration": 5,
         "generate_audio": true
       },
-      "pricingRows": [],
+      "pricingRows": [
+        {
+          "modelDescription": "Seedance 2.0, 720p no video input",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "41",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
+          "discountPrice": false
+        }
+      ],
       "formUi": {
         "advancedFields": [
           "audio_urls",
@@ -27810,7 +27823,20 @@
         "size": "21:9",
         "duration": 8
       },
-      "pricingRows": [],
+      "pricingRows": [
+        {
+          "modelDescription": "Seedance 2.0 Fast, 720p no video input",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "33",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
+          "discountPrice": false
+        }
+      ],
       "formUi": {
         "advancedFields": [
           "audio_urls",
