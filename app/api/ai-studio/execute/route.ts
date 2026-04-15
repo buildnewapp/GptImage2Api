@@ -44,7 +44,7 @@ export async function POST(request: Request) {
       userId: user.id,
       modelId: input.modelId,
       detail: prepared.detail,
-      payload: prepared.body,
+      payload: prepared.pricingPayload,
       selectedPricing: prepared.selectedPricing,
     });
 

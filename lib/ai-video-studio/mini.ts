@@ -1,7 +1,7 @@
 import type { AiStudioPublicPricingRow } from "@/lib/ai-studio/public";
 import {
+  getEstimatedCreditsForPricing,
   resolveSelectedPricing,
-  toBillableCredits,
 } from "@/lib/ai-studio/runtime";
 import type { AiVideoStudioFieldDescriptor } from "@/lib/ai-video-studio/schema";
 
@@ -200,7 +200,7 @@ export function estimateAiVideoMiniStudioCredits(input: {
 
   return {
     selectedPricing,
-    estimatedCredits: toBillableCredits(selectedPricing?.creditPrice),
+    estimatedCredits: getEstimatedCreditsForPricing(selectedPricing, input.payload),
   };
 }
 

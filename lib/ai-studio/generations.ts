@@ -10,7 +10,7 @@ import type {
   AiStudioPricingRow,
 } from "@/lib/ai-studio/catalog";
 import { persistAiStudioMediaUrls } from "@/lib/ai-studio/assets";
-import { toBillableCredits } from "@/lib/ai-studio/runtime";
+import { getEstimatedCreditsForPricing } from "@/lib/ai-studio/runtime";
 import {
   and,
   desc,
@@ -48,7 +48,10 @@ function buildReserveNotes(
 
 export async function reserveAiStudioGeneration(input: ReserveInput) {
   const generationId = crypto.randomUUID();
-  const reservedCredits = toBillableCredits(input.selectedPricing?.creditPrice);
+  const reservedCredits = getEstimatedCreditsForPricing(
+    input.selectedPricing,
+    input.payload,
+  );
 
   const generation = await getDb().transaction(async (tx) => {
     let nextOneTime = 0;

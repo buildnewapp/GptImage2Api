@@ -92,8 +92,6 @@ test("exposes broader KIE video families with older supported variants", () => {
       "wan-2.6-text-to-video",
       "wan-2.6-image-to-video",
       "wan-2.6-video-to-video",
-      "wan-2.6-flash-image-to-video",
-      "wan-2.6-flash-video-to-video",
       "wan-2.5-text-to-video",
       "wan-2.5-image-to-video",
       "wan-text-to-video",

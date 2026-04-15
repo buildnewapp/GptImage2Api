@@ -31,8 +31,8 @@ import {
   LOCAL_REFERENCE_METADATA_KEY,
 } from "@/lib/ai-studio/seedance-pricing";
 import {
+  getEstimatedCreditsForPricing,
   resolveSelectedPricing,
-  toBillableCredits,
 } from "@/lib/ai-studio/runtime";
 import { cn } from "@/lib/utils";
 import {
@@ -204,7 +204,10 @@ function findValueByKey(
 
 function mergeReferenceMetadata(
   source: AiVideoStudioFormValues,
-  metadata: { videoDurationsByUrl?: Record<string, number> },
+  metadata: {
+    videoDurationsByUrl?: Record<string, number>;
+    audioDurationsByUrl?: Record<string, number>;
+  },
 ) {
   const existing =
     source[LOCAL_REFERENCE_METADATA_KEY] &&
@@ -218,6 +221,12 @@ function mergeReferenceMetadata(
     !Array.isArray(existing.videoDurationsByUrl)
       ? (existing.videoDurationsByUrl as Record<string, number>)
       : {};
+  const existingAudioDurations =
+    existing.audioDurationsByUrl &&
+    typeof existing.audioDurationsByUrl === "object" &&
+    !Array.isArray(existing.audioDurationsByUrl)
+      ? (existing.audioDurationsByUrl as Record<string, number>)
+      : {};
 
   return {
     ...source,
@@ -228,6 +237,14 @@ function mergeReferenceMetadata(
             videoDurationsByUrl: {
               ...existingVideoDurations,
               ...metadata.videoDurationsByUrl,
+            },
+          }
+        : {}),
+      ...(metadata.audioDurationsByUrl
+        ? {
+            audioDurationsByUrl: {
+              ...existingAudioDurations,
+              ...metadata.audioDurationsByUrl,
             },
           }
         : {}),
@@ -452,8 +469,8 @@ export default function AIVideoStudio() {
   );
 
   const estimatedCredits = useMemo(
-    () => toBillableCredits(selectedPricing?.creditPrice),
-    [selectedPricing],
+    () => getEstimatedCreditsForPricing(selectedPricing, basePayload),
+    [basePayload, selectedPricing],
   );
   const shouldShowPublicInAdvanced =
     normalizedSchema?.usesDefaultAdvancedGrouping === true ||

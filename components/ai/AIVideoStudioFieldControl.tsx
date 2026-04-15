@@ -35,7 +35,10 @@ type AIVideoStudioFieldControlProps = {
   placeholder?: string;
   referenceFieldTexts?: ReferenceFieldTexts;
   onReferenceMetadataChange?: (
-    metadata: { videoDurationsByUrl?: Record<string, number> },
+    metadata: {
+      videoDurationsByUrl?: Record<string, number>;
+      audioDurationsByUrl?: Record<string, number>;
+    },
   ) => void;
   onChange: (value: unknown) => void;
 };

@@ -18,6 +18,12 @@ test("buildAiVideoModelPricingRows includes dynamic and static AI video pricing 
       row.type === "Text to Video" &&
       row.spec === "Standard-10.0s"
   );
+  const wanStaticRate = rows.find(
+    (row) =>
+      row.model === "Wan 2.7 Text to Video" &&
+      row.type === "Text to Video" &&
+      row.spec === "720p"
+  );
 
   assert.ok(seedanceDynamic);
   assert.equal(seedanceDynamic.creditPrice, "19 credits/s");
@@ -26,4 +32,8 @@ test("buildAiVideoModelPricingRows includes dynamic and static AI video pricing 
   assert.ok(soraStatic);
   assert.equal(soraStatic.creditPrice, "10 credits");
   assert.equal(soraStatic.billingNote, "Fixed price by spec");
+
+  assert.ok(wanStaticRate);
+  assert.equal(wanStaticRate.creditPrice, "16 credits/s");
+  assert.equal(wanStaticRate.billingNote, "Output seconds × 16");
 });

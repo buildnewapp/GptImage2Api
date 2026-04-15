@@ -44,6 +44,7 @@ export type ReferenceFieldTexts = {
   imageOnlyError?: string;
   videoOnlyError?: string;
   videoDurationRequiredError?: string;
+  audioDurationRequiredError?: string;
   audioOnlyError?: string;
   uploadTooLarge?: (sizeInMb: number) => string;
   imageUrlPlaceholder?: string;
@@ -61,7 +62,10 @@ type ReferenceFieldProps = {
   labelIcon?: ReactNode;
   texts?: ReferenceFieldTexts;
   onMetadataChange?: (
-    metadata: { videoDurationsByUrl?: Record<string, number> },
+    metadata: {
+      videoDurationsByUrl?: Record<string, number>;
+      audioDurationsByUrl?: Record<string, number>;
+    },
   ) => void;
   onChange: (value: unknown) => void;
 };
@@ -248,6 +252,8 @@ export function getDefaultReferenceFieldTexts(): Required<ReferenceFieldTexts> {
     videoOnlyError: "Only video files are allowed.",
     videoDurationRequiredError:
       "We couldn't read the video duration. Upload the video file or use a direct video URL that exposes metadata.",
+    audioDurationRequiredError:
+      "We couldn't read the audio duration. Upload the audio file or use a direct audio URL that exposes metadata.",
     audioOnlyError: "Only audio files are allowed.",
     uploadTooLarge: (sizeInMb) => `File size cannot exceed ${sizeInMb}MB.`,
     imageUrlPlaceholder: "https://example.com/reference-image.png",
@@ -372,6 +378,33 @@ async function getVideoDurationFromUrl(url: string) {
   });
 }
 
+async function getAudioDurationFromUrl(url: string) {
+  return new Promise<number | null>((resolve) => {
+    const audio = document.createElement("audio");
+    audio.preload = "metadata";
+
+    const cleanup = () => {
+      audio.removeAttribute("src");
+      audio.load();
+    };
+
+    audio.onloadedmetadata = () => {
+      const duration = Number.isFinite(audio.duration) && audio.duration > 0
+        ? Math.ceil(audio.duration)
+        : null;
+      cleanup();
+      resolve(duration);
+    };
+
+    audio.onerror = () => {
+      cleanup();
+      resolve(null);
+    };
+
+    audio.src = url;
+  });
+}
+
 export async function prepareVideoReferenceUrl(input: {
   url: string;
   readDuration?: (url: string) => Promise<number | null>;
@@ -389,11 +422,38 @@ export async function prepareVideoReferenceUrl(input: {
   };
 }
 
+export async function prepareAudioReferenceUrl(input: {
+  url: string;
+  readDuration?: (url: string) => Promise<number | null>;
+}) {
+  const readDuration = input.readDuration ?? getAudioDurationFromUrl;
+  const duration = await readDuration(input.url);
+
+  if (duration === null || duration <= 0) {
+    return null;
+  }
+
+  return {
+    url: input.url,
+    duration: Math.ceil(duration),
+  };
+}
+
 async function getVideoDurationFromFile(file: File) {
   const objectUrl = URL.createObjectURL(file);
 
   try {
     return await getVideoDurationFromUrl(objectUrl);
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
+}
+
+async function getAudioDurationFromFile(file: File) {
+  const objectUrl = URL.createObjectURL(file);
+
+  try {
+    return await getAudioDurationFromUrl(objectUrl);
   } finally {
     URL.revokeObjectURL(objectUrl);
   }
@@ -639,6 +699,29 @@ export default function ReferenceField({
       }
     }
 
+    if (fieldKind === "audio") {
+      setIsUploading(true);
+
+      try {
+        const prepared = await prepareAudioReferenceUrl({
+          url: trimmed,
+        });
+
+        if (!prepared) {
+          toast.error(mergedTexts.audioDurationRequiredError);
+          return;
+        }
+
+        onMetadataChange?.({
+          audioDurationsByUrl: {
+            [prepared.url]: prepared.duration,
+          },
+        });
+      } finally {
+        setIsUploading(false);
+      }
+    }
+
     const nextUrls = isMultiple ? [...urls, trimmed] : [trimmed];
     applyUrls(nextUrls);
     setUrlInput("");
@@ -666,6 +749,7 @@ export default function ReferenceField({
       setIsUploading(true);
       const uploadedUrls: string[] = [];
       const uploadedVideoDurations: Record<string, number> = {};
+      const uploadedAudioDurations: Record<string, number> = {};
 
       for (const file of files) {
         if (uploadKind === "image" && !file.type.startsWith("image/")) {
@@ -687,10 +771,16 @@ export default function ReferenceField({
         const duration =
           uploadKind === "video"
             ? await getVideoDurationFromFile(file)
+            : uploadKind === "audio"
+              ? await getAudioDurationFromFile(file)
             : null;
 
         if (uploadKind === "video" && duration === null) {
           throw new Error(mergedTexts.videoDurationRequiredError);
+        }
+
+        if (uploadKind === "audio" && duration === null) {
+          throw new Error(mergedTexts.audioDurationRequiredError);
         }
 
         const uploadedUrl = await uploadReferenceFile({
@@ -703,6 +793,10 @@ export default function ReferenceField({
         if (uploadKind === "video" && duration !== null) {
           uploadedVideoDurations[uploadedUrl] = duration;
         }
+
+        if (uploadKind === "audio" && duration !== null) {
+          uploadedAudioDurations[uploadedUrl] = duration;
+        }
       }
 
       applyUrls(isMultiple ? [...urls, ...uploadedUrls] : uploadedUrls);
@@ -710,6 +804,12 @@ export default function ReferenceField({
       if (uploadKind === "video" && onMetadataChange && Object.keys(uploadedVideoDurations).length > 0) {
         onMetadataChange({
           videoDurationsByUrl: uploadedVideoDurations,
+        });
+      }
+
+      if (uploadKind === "audio" && onMetadataChange && Object.keys(uploadedAudioDurations).length > 0) {
+        onMetadataChange({
+          audioDurationsByUrl: uploadedAudioDurations,
         });
       }
     } catch (error) {

@@ -115,6 +115,16 @@ function getFixedPriceNote(locale: SupportedLocale) {
   return "Fixed price by spec";
 }
 
+function getPerSecondPriceNote(locale: SupportedLocale, rate: string) {
+  if (locale === "zh") {
+    return `输出秒数 × ${rate}`;
+  }
+  if (locale === "ja") {
+    return `出力秒数 × ${rate}`;
+  }
+  return `Output seconds × ${rate}`;
+}
+
 function getDynamicPriceNote(input: {
   hasVideoInput: boolean;
   locale: SupportedLocale;
@@ -152,10 +162,15 @@ function parseStaticPricingRow(
     .filter(Boolean);
   const type = normalizeTypeLabel(segments[1] ?? "", locale);
   const spec = segments.slice(2).join(", ") || "-";
+  const isPerSecond = pricingRow.creditUnit.trim().toLowerCase().includes("per second");
 
   return {
-    billingNote: getFixedPriceNote(locale),
-    creditPrice: formatCredits(pricingRow.creditPrice, locale),
+    billingNote: isPerSecond
+      ? getPerSecondPriceNote(locale, pricingRow.creditPrice)
+      : getFixedPriceNote(locale),
+    creditPrice: isPerSecond
+      ? formatCreditsPerSecond(Number.parseFloat(pricingRow.creditPrice), locale)
+      : formatCredits(pricingRow.creditPrice, locale),
     model: modelLabel,
     spec,
     type,
@@ -256,6 +271,11 @@ export function buildAiVideoModelPricingRows({
 
     for (const version of family.versions) {
       const entry = resolveRuntimeCatalogEntry(version);
+
+      if (version.familyKey === "seedance-2.0") {
+        rows.push(...buildDynamicSeedanceRows(version, resolvedLocale));
+        continue;
+      }
 
       if ((entry?.pricingRows.length ?? 0) > 0) {
         rows.push(

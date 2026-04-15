@@ -331,18 +331,6 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         modelId: "video:wan-2-6-video-to-video",
       },
       {
-        key: "wan-2.6-flash-image-to-video",
-        label: "Wan 2.6 Flash Image to Video",
-        familyKey: "wan",
-        modelId: "video:wan-2-6-flash-image-to-video",
-      },
-      {
-        key: "wan-2.6-flash-video-to-video",
-        label: "Wan 2.6 Flash Video to Video",
-        familyKey: "wan",
-        modelId: "video:wan-2-6-flash-video-to-video",
-      },
-      {
         key: "wan-2.5-text-to-video",
         label: "Wan 2.5 Text to Video",
         familyKey: "wan",

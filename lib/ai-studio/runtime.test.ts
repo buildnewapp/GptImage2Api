@@ -6,6 +6,7 @@ import {
   collectRuntimeModels,
   getDisplayModelLabel,
   guessPricingRow,
+  getEstimatedCreditsForPricing,
   resolveSelectedPricing,
   resolvePublicModelId,
   toBillableCredits,
@@ -88,6 +89,95 @@ test("rounds official decimal credit prices into billable whole credits", () => 
   assert.equal(toBillableCredits("0"), 0);
 });
 
+test("estimates total credits for per-second pricing rows from output duration", () => {
+  const credits = getEstimatedCreditsForPricing(
+    {
+      modelDescription: "Wan 2.7 video, text-to-video, 720p",
+      interfaceType: "video",
+      provider: "Wan",
+      creditPrice: "16",
+      creditUnit: "per second",
+      usdPrice: "",
+      falPrice: "",
+      discountRate: 0,
+      discountPrice: false,
+      runtimeModel: "wan/2-7-text-to-video",
+    },
+    {
+      model: "wan/2-7-text-to-video",
+      input: {
+        duration: "5",
+        resolution: "720p",
+      },
+    },
+  );
+
+  assert.equal(credits, 80);
+});
+
+test("estimates total credits for per-second pricing rows from uploaded media metadata", () => {
+  const credits = getEstimatedCreditsForPricing(
+    {
+      modelDescription: "kling 2.6 motion control, video-to-video, 720P",
+      interfaceType: "video",
+      provider: "Kling",
+      creditPrice: "6",
+      creditUnit: "per second",
+      usdPrice: "",
+      falPrice: "",
+      discountRate: 0,
+      discountPrice: false,
+      runtimeModel: "kling-2.6/motion-control",
+    },
+    {
+      model: "kling-2.6/motion-control",
+      input: {
+        input_urls: ["https://example.com/subject.png"],
+        video_urls: ["https://example.com/motion.mp4"],
+        mode: "720p",
+      },
+      __local_reference_metadata: {
+        videoDurationsByUrl: {
+          "https://example.com/motion.mp4": 8,
+        },
+      },
+    },
+  );
+
+  assert.equal(credits, 48);
+});
+
+test("estimates total credits for per-second pricing rows from uploaded audio metadata", () => {
+  const credits = getEstimatedCreditsForPricing(
+    {
+      modelDescription: "Kling AI Avtar , lip sync, Standard-up to 15 secondss-720p",
+      interfaceType: "video",
+      provider: "Kling",
+      creditPrice: "8.0",
+      creditUnit: "per second",
+      usdPrice: "",
+      falPrice: "",
+      discountRate: 0,
+      discountPrice: false,
+      runtimeModel: "kling/ai-avatar-standard",
+    },
+    {
+      model: "kling/ai-avatar-standard",
+      input: {
+        image_url: "https://example.com/avatar.png",
+        audio_url: "https://example.com/voice.mp3",
+      },
+      __local_reference_metadata: {
+        audioDurationsByUrl: {
+          "https://example.com/voice.mp3": 12,
+        },
+      },
+    },
+  );
+
+  assert.equal(credits, 96);
+});
+
 test("guesses pricing rows from structured duration hints instead of url noise", () => {
   const row = guessPricingRow(
     [
@@ -128,6 +218,46 @@ test("guesses pricing rows from structured duration hints instead of url noise",
   );
 
   assert.equal(row?.creditPrice, "30");
+});
+
+test("prefers audio-matching pricing rows when video models expose with-audio variants", () => {
+  const row = guessPricingRow(
+    [
+      {
+        modelDescription: "kling 2.6, text-to-video, without audio-5.0s",
+        interfaceType: "video",
+        provider: "Kling",
+        creditPrice: "55.0",
+        creditUnit: "per video",
+        usdPrice: "",
+        falPrice: "",
+        discountRate: 0,
+        discountPrice: false,
+        runtimeModel: "kling-2.6/text-to-video",
+      },
+      {
+        modelDescription: "kling 2.6, text-to-video, with audio-5.0s",
+        interfaceType: "video",
+        provider: "Kling",
+        creditPrice: "110.0",
+        creditUnit: "per video",
+        usdPrice: "",
+        falPrice: "",
+        discountRate: 0,
+        discountPrice: false,
+        runtimeModel: "kling-2.6/text-to-video",
+      },
+    ],
+    {
+      model: "kling-2.6/text-to-video",
+      input: {
+        duration: "5",
+        sound: true,
+      },
+    },
+  );
+
+  assert.equal(row?.creditPrice, "110.0");
 });
 
 test("resolves seedance 2 dynamic pricing even when no static pricing rows exist", () => {

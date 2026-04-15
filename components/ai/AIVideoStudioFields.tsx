@@ -44,7 +44,10 @@ type AIVideoStudioFieldsProps = {
   onChange: (path: string[], value: unknown) => void;
   onReferenceMetadataChange?: (
     path: string[],
-    metadata: { videoDurationsByUrl?: Record<string, number> },
+    metadata: {
+      videoDurationsByUrl?: Record<string, number>;
+      audioDurationsByUrl?: Record<string, number>;
+    },
   ) => void;
   onPublicChange: (next: boolean) => void;
 };

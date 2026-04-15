@@ -550,6 +550,60 @@ test("exposes pricing rows for wan and hailuo public video models", async () => 
   }
 });
 
+test("keeps exposed runway and kling pricing rows isolated to the correct model family", async () => {
+  const runway = await getCachedAiStudioCatalogEntry("video:generate-ai-video");
+  const aleph = await getCachedAiStudioCatalogEntry("video:generate-aleph-video");
+  const kling30 = await getCachedAiStudioCatalogEntry("video:kling-3-0");
+  const kling30Motion = await getCachedAiStudioCatalogEntry("video:kling-3-0-motion-control");
+  const kling25Turbo = await getCachedAiStudioCatalogEntry(
+    "video:kling-v2-5-turbo-text-to-video-pro",
+  );
+  const kling21Standard = await getCachedAiStudioCatalogEntry("video:kling-v2-1-standard");
+  const klingAvatar = await getCachedAiStudioCatalogEntry("video:kling-ai-avatar-standard");
+
+  assert.ok(runway);
+  assert.ok(
+    runway.pricingRows.every((row) => !/aleph/i.test(row.modelDescription)),
+    "Runway standard entry should not include Aleph pricing rows",
+  );
+
+  assert.ok(aleph);
+  assert.deepEqual(
+    aleph.pricingRows.map((row) => row.modelDescription),
+    ["Runway Aleph"],
+  );
+
+  assert.ok(kling30);
+  assert.ok(
+    kling30.pricingRows.every((row) => /kling 3\.0, video/i.test(row.modelDescription)),
+    "Kling 3.0 should only include base Kling 3.0 pricing rows",
+  );
+
+  assert.ok(kling30Motion);
+  assert.ok(
+    kling30Motion.pricingRows.every((row) => /motion control/i.test(row.modelDescription)),
+    "Kling 3.0 motion control should only include motion control rows",
+  );
+
+  assert.ok(kling25Turbo);
+  assert.equal(kling25Turbo.pricingRows.length, 2);
+  assert.ok(
+    kling25Turbo.pricingRows.every((row) => /2\.5 turbo/i.test(row.modelDescription)),
+    "Kling 2.5 turbo text-to-video should only include 2.5 turbo rows",
+  );
+
+  assert.ok(kling21Standard);
+  assert.equal(kling21Standard.pricingRows.length, 2);
+  assert.ok(
+    kling21Standard.pricingRows.every((row) => /2\.1/i.test(row.modelDescription)),
+    "Kling 2.1 standard should only include 2.1 standard rows",
+  );
+
+  assert.ok(klingAvatar);
+  assert.equal(klingAvatar.pricingRows.length, 1);
+  assert.match(klingAvatar.pricingRows[0]?.modelDescription ?? "", /lip sync/i);
+});
+
 test("splits one upstream model into separate runtime variants", () => {
   const compiled = compileAiStudioRuntimeCatalog({
     upstream: {

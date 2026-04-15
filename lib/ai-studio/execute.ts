@@ -385,6 +385,7 @@ export async function prepareAiStudioExecution(
   return {
     detail,
     body: providerBody,
+    pricingPayload: preparedBody,
     selectedPricing: resolveSelectedPricing(detail.pricingRows, {
       modelId,
       payload: preparedBody,
