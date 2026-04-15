@@ -395,14 +395,14 @@
             "runtimeModel": "sora-2-text-to-video",
             "modelDescriptionIncludes": "Standard-15.0s"
           },
-          "creditPrice": "14"
+          "creditPrice": "35"
         },
         {
           "match": {
             "runtimeModel": "sora-2-text-to-video",
             "modelDescriptionIncludes": "Standard-10.0s"
           },
-          "creditPrice": "10"
+          "creditPrice": "30"
         }
       ]
     },
@@ -482,14 +482,14 @@
             "runtimeModel": "sora-2-pro-text-to-video",
             "modelDescriptionIncludes": "Pro Standard-15.0s"
           },
-          "creditPrice": "135"
+          "creditPrice": "270"
         },
         {
           "match": {
             "runtimeModel": "sora-2-pro-text-to-video",
             "modelDescriptionIncludes": "Pro Standard-10.0s"
           },
-          "creditPrice": "75"
+          "creditPrice": "150"
         }
       ]
     },
@@ -525,14 +525,14 @@
             "runtimeModel": "sora-2-pro-storyboard",
             "modelDescriptionIncludes": "Pro-10.0s"
           },
-          "creditPrice": "75"
+          "creditPrice": "150"
         },
         {
           "match": {
             "runtimeModel": "sora-2-pro-storyboard",
             "modelDescriptionIncludes": "Pro-15-25s"
           },
-          "creditPrice": "135"
+          "creditPrice": "270"
         }
       ]
     },
@@ -1721,7 +1721,7 @@
             "runtimeModel": "veo3_fast",
             "modelDescriptionIncludes": "text-to-video, Fast"
           },
-          "creditPrice": "20"
+          "creditPrice": "60"
         }
       ]
     },
@@ -1732,7 +1732,7 @@
             "runtimeModel": "veo3_fast",
             "modelDescriptionIncludes": "image-to-video, Fast"
           },
-          "creditPrice": "20"
+          "creditPrice": "60"
         }
       ]
     },
@@ -1743,7 +1743,7 @@
             "runtimeModel": "veo3",
             "modelDescriptionIncludes": "text-to-video, Quality"
           },
-          "creditPrice": "150"
+          "creditPrice": "250"
         }
       ]
     },
@@ -1754,7 +1754,7 @@
             "runtimeModel": "veo3",
             "modelDescriptionIncludes": "image-to-video, Quality"
           },
-          "creditPrice": "150"
+          "creditPrice": "250"
         }
       ]
     }

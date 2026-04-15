@@ -551,8 +551,13 @@ test("exposes pricing rows for wan and hailuo public video models", async () => 
 });
 
 test("keeps exposed runway and kling pricing rows isolated to the correct model family", async () => {
+  const sora2 = await getCachedAiStudioCatalogEntry("video:sora2-text-to-video-standard");
+  const sora2Pro = await getCachedAiStudioCatalogEntry("video:sora2-pro-text-to-video");
+  const sora2Storyboard = await getCachedAiStudioCatalogEntry("video:sora2-pro-storyboard");
   const runway = await getCachedAiStudioCatalogEntry("video:generate-ai-video");
   const aleph = await getCachedAiStudioCatalogEntry("video:generate-aleph-video");
+  const veoFast = await getCachedAiStudioCatalogEntry("video:veo-3.1-fast-text-to-video");
+  const veoQuality = await getCachedAiStudioCatalogEntry("video:veo-3.1-quality-text-to-video");
   const kling30 = await getCachedAiStudioCatalogEntry("video:kling-3-0");
   const kling30Motion = await getCachedAiStudioCatalogEntry("video:kling-3-0-motion-control");
   const kling25Turbo = await getCachedAiStudioCatalogEntry(
@@ -560,6 +565,24 @@ test("keeps exposed runway and kling pricing rows isolated to the correct model 
   );
   const kling21Standard = await getCachedAiStudioCatalogEntry("video:kling-v2-1-standard");
   const klingAvatar = await getCachedAiStudioCatalogEntry("video:kling-ai-avatar-standard");
+
+  assert.ok(sora2);
+  assert.deepEqual(
+    sora2.pricingRows.map((row) => row.creditPrice),
+    ["35", "30"],
+  );
+
+  assert.ok(sora2Pro);
+  assert.deepEqual(
+    sora2Pro.pricingRows.map((row) => row.creditPrice),
+    ["270", "150"],
+  );
+
+  assert.ok(sora2Storyboard);
+  assert.deepEqual(
+    sora2Storyboard.pricingRows.map((row) => row.creditPrice),
+    ["150", "270"],
+  );
 
   assert.ok(runway);
   assert.ok(
@@ -572,6 +595,11 @@ test("keeps exposed runway and kling pricing rows isolated to the correct model 
     aleph.pricingRows.map((row) => row.modelDescription),
     ["Runway Aleph"],
   );
+
+  assert.ok(veoFast);
+  assert.equal(veoFast.pricingRows[0]?.creditPrice, "60");
+  assert.ok(veoQuality);
+  assert.equal(veoQuality.pricingRows[0]?.creditPrice, "250");
 
   assert.ok(kling30);
   assert.ok(

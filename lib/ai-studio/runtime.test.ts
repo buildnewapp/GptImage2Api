@@ -92,16 +92,8 @@ test("rounds official decimal credit prices into billable whole credits", () => 
 test("estimates total credits for per-second pricing rows from output duration", () => {
   const credits = getEstimatedCreditsForPricing(
     {
-      modelDescription: "Wan 2.7 video, text-to-video, 720p",
-      interfaceType: "video",
-      provider: "Wan",
       creditPrice: "16",
       creditUnit: "per second",
-      usdPrice: "",
-      falPrice: "",
-      discountRate: 0,
-      discountPrice: false,
-      runtimeModel: "wan/2-7-text-to-video",
     },
     {
       model: "wan/2-7-text-to-video",
@@ -118,16 +110,8 @@ test("estimates total credits for per-second pricing rows from output duration",
 test("estimates total credits for per-second pricing rows from uploaded media metadata", () => {
   const credits = getEstimatedCreditsForPricing(
     {
-      modelDescription: "kling 2.6 motion control, video-to-video, 720P",
-      interfaceType: "video",
-      provider: "Kling",
       creditPrice: "6",
       creditUnit: "per second",
-      usdPrice: "",
-      falPrice: "",
-      discountRate: 0,
-      discountPrice: false,
-      runtimeModel: "kling-2.6/motion-control",
     },
     {
       model: "kling-2.6/motion-control",
@@ -150,16 +134,8 @@ test("estimates total credits for per-second pricing rows from uploaded media me
 test("estimates total credits for per-second pricing rows from uploaded audio metadata", () => {
   const credits = getEstimatedCreditsForPricing(
     {
-      modelDescription: "Kling AI Avtar , lip sync, Standard-up to 15 secondss-720p",
-      interfaceType: "video",
-      provider: "Kling",
       creditPrice: "8.0",
       creditUnit: "per second",
-      usdPrice: "",
-      falPrice: "",
-      discountRate: 0,
-      discountPrice: false,
-      runtimeModel: "kling/ai-avatar-standard",
     },
     {
       model: "kling/ai-avatar-standard",

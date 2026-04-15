@@ -30,7 +30,7 @@ test("buildAiVideoModelPricingRows includes dynamic and static AI video pricing 
   assert.equal(seedanceDynamic.billingNote, "Output seconds × 19");
 
   assert.ok(soraStatic);
-  assert.equal(soraStatic.creditPrice, "10 credits");
+  assert.equal(soraStatic.creditPrice, "30 credits");
   assert.equal(soraStatic.billingNote, "Fixed price by spec");
 
   assert.ok(wanStaticRate);
