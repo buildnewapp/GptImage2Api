@@ -131,14 +131,41 @@ test("keeps versions nested under each family for single-source config managemen
 
   assert.deepEqual(
     soraFamily?.versions.map((version) => version.key),
-    ["sora-2", "sora-2-pro", "sora-2-pro-storyboard"],
+    [
+      "sora-2",
+      "sora-2-image-to-video",
+      "sora-2-pro",
+      "sora-2-pro-image-to-video",
+      "sora-2-pro-storyboard",
+    ],
   );
 });
 
 test("returns the supported Sora2 versions", () => {
   assert.deepEqual(
     getAiVideoStudioVersions("sora2").map((version) => version.key),
-    ["sora-2", "sora-2-pro", "sora-2-pro-storyboard"],
+    [
+      "sora-2",
+      "sora-2-image-to-video",
+      "sora-2-pro",
+      "sora-2-pro-image-to-video",
+      "sora-2-pro-storyboard",
+    ],
+  );
+});
+
+test("keeps Seedance 1.x variants split by text and image when runtime supports both", () => {
+  assert.deepEqual(
+    getAiVideoStudioVersions("seedance-1.5").map((version) => version.key),
+    [
+      "seedance-1.5",
+      "seedance-1.5-image-to-video",
+      "seedance-1.5-fast",
+    ],
+  );
+  assert.deepEqual(
+    getAiVideoStudioVersions("seedance-1.0").map((version) => version.key),
+    ["seedance-1.0", "seedance-1.0-image-to-video"],
   );
 });
 
@@ -164,6 +191,34 @@ test("resolves version selections to a single ai-studio public model id", () => 
       versionKey: "sora-2",
     }),
     "video:sora2-text-to-video-standard",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "sora2",
+      versionKey: "sora-2-image-to-video",
+    }),
+    "video:sora2-image-to-video-standard",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "sora2",
+      versionKey: "sora-2-pro-image-to-video",
+    }),
+    "video:sora2-pro-image-to-video",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "seedance-1.5",
+      versionKey: "seedance-1.5-image-to-video",
+    }),
+    "video:bytedance-v1-pro-image-to-video",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "seedance-1.0",
+      versionKey: "seedance-1.0-image-to-video",
+    }),
+    "video:bytedance-v1-lite-image-to-video",
   );
   assert.equal(
     resolveAiVideoStudioModelId({
@@ -309,6 +364,34 @@ test("resolves ai video studio selection metadata from a model id", () => {
     {
       familyKey: "kling",
       versionKey: "kling-3.0-motion-control",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("video:sora2-image-to-video-standard"),
+    {
+      familyKey: "sora2",
+      versionKey: "sora-2-image-to-video",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("video:sora2-pro-image-to-video"),
+    {
+      familyKey: "sora2",
+      versionKey: "sora-2-pro-image-to-video",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("video:bytedance-v1-pro-image-to-video"),
+    {
+      familyKey: "seedance-1.5",
+      versionKey: "seedance-1.5-image-to-video",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("video:bytedance-v1-lite-image-to-video"),
+    {
+      familyKey: "seedance-1.0",
+      versionKey: "seedance-1.0-image-to-video",
     },
   );
   assert.deepEqual(

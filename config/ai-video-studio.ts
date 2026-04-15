@@ -80,13 +80,19 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     versions: [
       {
         key: "seedance-1.5",
-        label: "Seedance 1.5",
+        label: "Seedance 1.5 Text to Video",
         familyKey: "seedance-1.5",
         modelId: "video:bytedance-v1-pro-text-to-video",
       },
       {
+        key: "seedance-1.5-image-to-video",
+        label: "Seedance 1.5 Image to Video",
+        familyKey: "seedance-1.5",
+        modelId: "video:bytedance-v1-pro-image-to-video",
+      },
+      {
         key: "seedance-1.5-fast",
-        label: "Seedance 1.5 Fast",
+        label: "Seedance 1.5 Fast Image to Video",
         familyKey: "seedance-1.5",
         modelId: "video:bytedance-v1-pro-fast-image-to-video",
       },
@@ -100,9 +106,15 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     versions: [
       {
         key: "seedance-1.0",
-        label: "Seedance 1.0",
+        label: "Seedance 1.0 Text to Video",
         familyKey: "seedance-1.0",
         modelId: "video:bytedance-v1-lite-text-to-video",
+      },
+      {
+        key: "seedance-1.0-image-to-video",
+        label: "Seedance 1.0 Image to Video",
+        familyKey: "seedance-1.0",
+        modelId: "video:bytedance-v1-lite-image-to-video",
       },
     ],
   },
@@ -114,15 +126,27 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     versions: [
       {
         key: "sora-2",
-        label: "Sora 2",
+        label: "Sora 2 Text to Video",
         familyKey: "sora2",
         modelId: "video:sora2-text-to-video-standard",
       },
       {
+        key: "sora-2-image-to-video",
+        label: "Sora 2 Image to Video",
+        familyKey: "sora2",
+        modelId: "video:sora2-image-to-video-standard",
+      },
+      {
         key: "sora-2-pro",
-        label: "Sora 2 Pro",
+        label: "Sora 2 Pro Text to Video",
         familyKey: "sora2",
         modelId: "video:sora2-pro-text-to-video",
+      },
+      {
+        key: "sora-2-pro-image-to-video",
+        label: "Sora 2 Pro Image to Video",
+        familyKey: "sora2",
+        modelId: "video:sora2-pro-image-to-video",
       },
       {
         key: "sora-2-pro-storyboard",

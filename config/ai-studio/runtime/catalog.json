@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-04-15T01:16:29.324Z",
+  "generatedAt": "2026-04-15T02:44:37.641Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -12325,7 +12325,7 @@
           "modelDescription": "Open AI sora 2, image-to-video, Standard-15.0s",
           "interfaceType": "video",
           "provider": "Open AI",
-          "creditPrice": "14",
+          "creditPrice": "35",
           "creditUnit": "per video",
           "usdPrice": "0.175",
           "falPrice": "1.5",
@@ -12337,7 +12337,7 @@
           "modelDescription": "Open AI sora 2, image-to-video, Standard-10.0s",
           "interfaceType": "video",
           "provider": "Open AI",
-          "creditPrice": "10",
+          "creditPrice": "30",
           "creditUnit": "per video",
           "usdPrice": "0.15",
           "falPrice": "1.0",
@@ -13157,7 +13157,7 @@
           "modelDescription": "Open AI sora 2 pro, image-to-video, Pro Standard-10.0s",
           "interfaceType": "video",
           "provider": "Open AI",
-          "creditPrice": "75",
+          "creditPrice": "150",
           "creditUnit": "per video",
           "usdPrice": "0.75",
           "falPrice": "3.0",
@@ -13169,7 +13169,7 @@
           "modelDescription": "Open AI sora 2 pro, image-to-video, Pro Standard-15.0s",
           "interfaceType": "video",
           "provider": "Open AI",
-          "creditPrice": "135",
+          "creditPrice": "270",
           "creditUnit": "per video",
           "usdPrice": "1.35",
           "falPrice": "4.5",

@@ -435,14 +435,14 @@
             "runtimeModel": "sora-2-image-to-video",
             "modelDescriptionIncludes": "Standard-15.0s"
           },
-          "creditPrice": "14"
+          "creditPrice": "35"
         },
         {
           "match": {
             "runtimeModel": "sora-2-image-to-video",
             "modelDescriptionIncludes": "Standard-10.0s"
           },
-          "creditPrice": "10"
+          "creditPrice": "30"
         }
       ]
     },
@@ -507,14 +507,14 @@
             "runtimeModel": "sora-2-pro-image-to-video",
             "modelDescriptionIncludes": "Pro Standard-15.0s"
           },
-          "creditPrice": "135"
+          "creditPrice": "270"
         },
         {
           "match": {
             "runtimeModel": "sora-2-pro-image-to-video",
             "modelDescriptionIncludes": "Pro Standard-10.0s"
           },
-          "creditPrice": "75"
+          "creditPrice": "150"
         }
       ]
     },

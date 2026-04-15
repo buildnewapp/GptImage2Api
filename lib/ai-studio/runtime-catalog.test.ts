@@ -552,7 +552,9 @@ test("exposes pricing rows for wan and hailuo public video models", async () => 
 
 test("keeps exposed runway and kling pricing rows isolated to the correct model family", async () => {
   const sora2 = await getCachedAiStudioCatalogEntry("video:sora2-text-to-video-standard");
+  const sora2Image = await getCachedAiStudioCatalogEntry("video:sora2-image-to-video-standard");
   const sora2Pro = await getCachedAiStudioCatalogEntry("video:sora2-pro-text-to-video");
+  const sora2ProImage = await getCachedAiStudioCatalogEntry("video:sora2-pro-image-to-video");
   const sora2Storyboard = await getCachedAiStudioCatalogEntry("video:sora2-pro-storyboard");
   const runway = await getCachedAiStudioCatalogEntry("video:generate-ai-video");
   const aleph = await getCachedAiStudioCatalogEntry("video:generate-aleph-video");
@@ -572,10 +574,22 @@ test("keeps exposed runway and kling pricing rows isolated to the correct model 
     ["35", "30"],
   );
 
+  assert.ok(sora2Image);
+  assert.deepEqual(
+    sora2Image.pricingRows.map((row) => row.creditPrice),
+    ["35", "30"],
+  );
+
   assert.ok(sora2Pro);
   assert.deepEqual(
     sora2Pro.pricingRows.map((row) => row.creditPrice),
     ["270", "150"],
+  );
+
+  assert.ok(sora2ProImage);
+  assert.deepEqual(
+    [...sora2ProImage.pricingRows.map((row) => row.creditPrice)].sort(),
+    ["150", "270"],
   );
 
   assert.ok(sora2Storyboard);
