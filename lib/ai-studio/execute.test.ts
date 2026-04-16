@@ -682,6 +682,7 @@ test("estimates the best pricing row from the active payload", () => {
         discountRate: 50,
         anchor: "https://kie.ai/nano-banana-2",
         discountPrice: false,
+        resolution: "1k",
       },
       {
         modelDescription: "Google nano banana 2, 4K",
@@ -694,6 +695,7 @@ test("estimates the best pricing row from the active payload", () => {
         discountRate: 43.75,
         anchor: "https://kie.ai/nano-banana-2",
         discountPrice: false,
+        resolution: "4k",
       },
     ],
     {
@@ -722,6 +724,7 @@ test("prefers the exact anchor model when multiple pricing rows share similar to
         discountRate: 82.5,
         anchor: "https://kie.ai/sora-2?model=sora-2-text-to-video-stable",
         discountPrice: false,
+        duration: 10,
       },
       {
         modelDescription: "Open AI sora 2, text-to-video, Standard-10.0s",
@@ -734,6 +737,7 @@ test("prefers the exact anchor model when multiple pricing rows share similar to
         discountRate: 85,
         anchor: "https://kie.ai/sora-2?model=sora-2-text-to-video",
         discountPrice: false,
+        duration: 10,
       },
     ],
     {
@@ -761,6 +765,7 @@ test("prefers the row matching input n_frames over unrelated digits in payload u
         discountRate: 88.33,
         anchor: "https://kie.ai/sora-2?model=sora-2-image-to-video",
         discountPrice: false,
+        duration: 15,
       },
       {
         modelDescription: "Open AI sora 2, image-to-video, Standard-10.0s",
@@ -773,6 +778,7 @@ test("prefers the row matching input n_frames over unrelated digits in payload u
         discountRate: 85,
         anchor: "https://kie.ai/sora-2?model=sora-2-image-to-video",
         discountPrice: false,
+        duration: 10,
       },
     ],
     {

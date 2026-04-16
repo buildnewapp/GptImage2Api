@@ -15,7 +15,7 @@ import {
   resolveStatusEndpoint,
   resolveTaskMode,
 } from "@/lib/ai-studio/provider-metadata";
-import { guessPricingRow, resolveSelectedPricing } from "@/lib/ai-studio/runtime";
+import { resolveExactPricingRow, resolveSelectedPricing } from "@/lib/ai-studio/runtime";
 import { stripLocalReferenceMetadata } from "@/lib/ai-studio/seedance-pricing";
 
 export {
@@ -309,10 +309,10 @@ export function estimatePricingRow(
   pricingRows: AiStudioPricingRow[],
   payload: Record<string, any>,
 ) {
-  return guessPricingRow(
+  return resolveExactPricingRow(
     pricingRows.map((row) => ({
       ...row,
-      runtimeModel: extractPricingAnchorModel(row.anchor),
+      runtimeModel: row.runtimeModel ?? extractPricingAnchorModel(row.anchor),
     })),
     payload,
   );

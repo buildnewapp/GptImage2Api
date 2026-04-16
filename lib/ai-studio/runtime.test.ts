@@ -5,8 +5,8 @@ import {
   applyPricingRowToPayload,
   collectRuntimeModels,
   getDisplayModelLabel,
-  guessPricingRow,
   getEstimatedCreditsForPricing,
+  resolveExactPricingRow,
   resolveSelectedPricing,
   resolvePublicModelId,
   toBillableCredits,
@@ -83,6 +83,26 @@ test("applies common duration hints from the pricing description", () => {
   assert.equal(payload.duration, 15);
 });
 
+test("applies explicit duration metadata from structured pricing rows", () => {
+  const payload = applyPricingRowToPayload(
+    {
+      model: "wan/2-5-text-to-video",
+      duration: 5,
+      input: {
+        n_frames: "5",
+      },
+    },
+    {
+      modelDescription: "wan/2-5-text-to-video, 1080p, 10s",
+      runtimeModel: "wan/2-5-text-to-video",
+      duration: 10,
+    },
+  );
+
+  assert.equal(payload.duration, 10);
+  assert.equal(payload.input?.n_frames, "10");
+});
+
 test("rounds official decimal credit prices into billable whole credits", () => {
   assert.equal(toBillableCredits("35"), 35);
   assert.equal(toBillableCredits("87.5"), 88);
@@ -154,8 +174,8 @@ test("estimates total credits for per-second pricing rows from uploaded audio me
   assert.equal(credits, 96);
 });
 
-test("guesses pricing rows from structured duration hints instead of url noise", () => {
-  const row = guessPricingRow(
+test("resolves exact pricing rows from explicit structured duration metadata", () => {
+  const row = resolveExactPricingRow(
     [
       {
         modelDescription: "Open AI sora 2, image-to-video, Standard-15.0s",
@@ -168,6 +188,7 @@ test("guesses pricing rows from structured duration hints instead of url noise",
         discountRate: 88.33,
         discountPrice: false,
         runtimeModel: "sora-2-image-to-video",
+        duration: 15,
       },
       {
         modelDescription: "Open AI sora 2, image-to-video, Standard-10.0s",
@@ -180,6 +201,7 @@ test("guesses pricing rows from structured duration hints instead of url noise",
         discountRate: 85,
         discountPrice: false,
         runtimeModel: "sora-2-image-to-video",
+        duration: 10,
       },
     ],
     {
@@ -196,8 +218,8 @@ test("guesses pricing rows from structured duration hints instead of url noise",
   assert.equal(row?.creditPrice, "30");
 });
 
-test("prefers audio-matching pricing rows when video models expose with-audio variants", () => {
-  const row = guessPricingRow(
+test("resolves exact audio-matching pricing rows when models expose variants", () => {
+  const row = resolveExactPricingRow(
     [
       {
         modelDescription: "kling 2.6, text-to-video, without audio-5.0s",
@@ -210,6 +232,8 @@ test("prefers audio-matching pricing rows when video models expose with-audio va
         discountRate: 0,
         discountPrice: false,
         runtimeModel: "kling-2.6/text-to-video",
+        duration: 5,
+        audio: false,
       },
       {
         modelDescription: "kling 2.6, text-to-video, with audio-5.0s",
@@ -222,6 +246,8 @@ test("prefers audio-matching pricing rows when video models expose with-audio va
         discountRate: 0,
         discountPrice: false,
         runtimeModel: "kling-2.6/text-to-video",
+        duration: 5,
+        audio: true,
       },
     ],
     {
@@ -234,6 +260,34 @@ test("prefers audio-matching pricing rows when video models expose with-audio va
   );
 
   assert.equal(row?.creditPrice, "110.0");
+});
+
+test("returns null when exact pricing rows remain ambiguous after structured matching", () => {
+  const row = resolveExactPricingRow(
+    [
+      {
+        modelDescription: "veo3 fast row a",
+        runtimeModel: "veo3_fast",
+        resolution: "1080p",
+        aspectRatio: "16:9",
+      },
+      {
+        modelDescription: "veo3 fast row b",
+        runtimeModel: "veo3_fast",
+        resolution: "1080p",
+        aspectRatio: "16:9",
+      },
+    ],
+    {
+      model: "veo3_fast",
+      input: {
+        resolution: "1080p",
+        aspect_ratio: "16:9",
+      },
+    },
+  );
+
+  assert.equal(row, null);
 });
 
 test("resolves seedance 2 dynamic pricing even when no static pricing rows exist", () => {

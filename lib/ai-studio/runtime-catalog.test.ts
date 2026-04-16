@@ -77,6 +77,22 @@ test("compiles runtime catalog with model and pricing overrides", () => {
       generatedAt: "2026-03-08T00:00:00.000Z",
       items: [createDetail()],
     },
+    kiePrices: {
+      version: 1,
+      generatedAt: "2026-03-08T00:00:00.000Z",
+      rows: [
+        {
+          ...createPricingRow({
+            pricingKey: "Market_SORA2-VIDEO_NO-WATERMARK_10",
+            runtimeModel: "sora-2-text-to-video",
+            duration: 10,
+            source: "kie",
+          }),
+          pricingKey: "Market_SORA2-VIDEO_NO-WATERMARK_10",
+          source: "kie",
+        },
+      ],
+    },
     modelOverrides: {
       models: {
         "video:sora2-text-to-video": {
@@ -116,6 +132,8 @@ test("compiles runtime catalog with model and pricing overrides", () => {
     fieldOrder: ["prompt", "duration"],
     advancedFields: ["duration"],
   });
+  assert.equal(compiled.items[0]?.pricingRows[0]?.pricingKey, "Market_SORA2-VIDEO_NO-WATERMARK_10");
+  assert.equal(compiled.items[0]?.pricingRows[0]?.duration, 10);
 });
 
 test("applies request schema overrides to runtime models", () => {
@@ -570,32 +588,32 @@ test("keeps exposed runway and kling pricing rows isolated to the correct model 
 
   assert.ok(sora2);
   assert.deepEqual(
-    sora2.pricingRows.map((row) => row.creditPrice),
-    ["35", "30"],
+    [...sora2.pricingRows.map((row) => row.creditPrice)].sort(),
+    ["3", "5"],
   );
 
   assert.ok(sora2Image);
   assert.deepEqual(
-    sora2Image.pricingRows.map((row) => row.creditPrice),
-    ["35", "30"],
+    [...sora2Image.pricingRows.map((row) => row.creditPrice)].sort(),
+    ["6", "8"],
   );
 
   assert.ok(sora2Pro);
   assert.deepEqual(
-    sora2Pro.pricingRows.map((row) => row.creditPrice),
-    ["270", "150"],
+    [...sora2Pro.pricingRows.map((row) => row.creditPrice)].sort(),
+    ["135", "165", "315", "75"],
   );
 
   assert.ok(sora2ProImage);
   assert.deepEqual(
     [...sora2ProImage.pricingRows.map((row) => row.creditPrice)].sort(),
-    ["150", "270"],
+    ["150", "270", "330", "630"],
   );
 
   assert.ok(sora2Storyboard);
   assert.deepEqual(
-    sora2Storyboard.pricingRows.map((row) => row.creditPrice),
-    ["150", "270"],
+    [...sora2Storyboard.pricingRows.map((row) => row.creditPrice)].sort(),
+    ["135", "135", "75"],
   );
 
   assert.ok(runway);
@@ -607,43 +625,58 @@ test("keeps exposed runway and kling pricing rows isolated to the correct model 
   assert.ok(aleph);
   assert.deepEqual(
     aleph.pricingRows.map((row) => row.modelDescription),
-    ["Runway Aleph"],
+    ["video:generate-aleph-video"],
   );
 
   assert.ok(veoFast);
-  assert.equal(veoFast.pricingRows[0]?.creditPrice, "60");
+  assert.deepEqual(
+    [...new Set(veoFast.pricingRows.map((row) => row.creditPrice))].sort(),
+    ["20", "25", "60"],
+  );
   assert.ok(veoQuality);
-  assert.equal(veoQuality.pricingRows[0]?.creditPrice, "250");
+  assert.deepEqual(
+    [...new Set(veoQuality.pricingRows.map((row) => row.creditPrice))].sort(),
+    ["150", "155", "190"],
+  );
 
   assert.ok(kling30);
   assert.ok(
-    kling30.pricingRows.every((row) => /kling 3\.0, video/i.test(row.modelDescription)),
+    kling30.pricingRows.every((row) => row.runtimeModel === "kling-3.0"),
     "Kling 3.0 should only include base Kling 3.0 pricing rows",
   );
 
   assert.ok(kling30Motion);
   assert.ok(
-    kling30Motion.pricingRows.every((row) => /motion control/i.test(row.modelDescription)),
+    kling30Motion.pricingRows.every(
+      (row) => row.runtimeModel === "kling-3.0/motion-control",
+    ),
     "Kling 3.0 motion control should only include motion control rows",
   );
 
   assert.ok(kling25Turbo);
   assert.equal(kling25Turbo.pricingRows.length, 2);
   assert.ok(
-    kling25Turbo.pricingRows.every((row) => /2\.5 turbo/i.test(row.modelDescription)),
+    kling25Turbo.pricingRows.every(
+      (row) => row.runtimeModel === "kling/v2-5-turbo-text-to-video-pro",
+    ),
     "Kling 2.5 turbo text-to-video should only include 2.5 turbo rows",
   );
 
   assert.ok(kling21Standard);
   assert.equal(kling21Standard.pricingRows.length, 2);
   assert.ok(
-    kling21Standard.pricingRows.every((row) => /2\.1/i.test(row.modelDescription)),
+    kling21Standard.pricingRows.every(
+      (row) => row.runtimeModel === "kling/v2-1-standard",
+    ),
     "Kling 2.1 standard should only include 2.1 standard rows",
   );
 
   assert.ok(klingAvatar);
   assert.equal(klingAvatar.pricingRows.length, 1);
-  assert.match(klingAvatar.pricingRows[0]?.modelDescription ?? "", /lip sync/i);
+  assert.equal(
+    klingAvatar.pricingRows[0]?.runtimeModel,
+    "kling/ai-avatar-standard",
+  );
 });
 
 test("splits one upstream model into separate runtime variants", () => {

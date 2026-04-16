@@ -1,5 +1,6 @@
 import {
   getAiStudioCatalogPaths,
+  loadAiStudioKiePricesFile,
   loadAiStudioMergedUpstreamCatalogFiles,
   loadAiStudioModelOverridesFile,
   loadAiStudioPricingOverridesFile,
@@ -11,8 +12,9 @@ import {
 
 async function main() {
   const paths = getAiStudioCatalogPaths();
-  const [upstream, modelOverrides, pricingOverrides, schemaOverrides, runtime] = await Promise.all([
+  const [upstream, kiePrices, modelOverrides, pricingOverrides, schemaOverrides, runtime] = await Promise.all([
     loadAiStudioMergedUpstreamCatalogFiles(paths.upstreamCatalogPath),
+    loadAiStudioKiePricesFile(paths.kiePricesPath),
     loadAiStudioModelOverridesFile(paths.modelOverridesPath),
     loadAiStudioPricingOverridesFile(paths.pricingOverridesPath),
     loadAiStudioSchemaOverridesFile(paths.schemaOverridesPath),
@@ -21,6 +23,7 @@ async function main() {
 
   const inputErrors = validateAiStudioRuntimeBuildInput({
     upstream,
+    kiePrices,
     modelOverrides,
     pricingOverrides,
     schemaOverrides,

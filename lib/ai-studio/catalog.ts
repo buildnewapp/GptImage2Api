@@ -2,6 +2,10 @@ import { readFile, readdir, stat } from "node:fs/promises";
 import path from "node:path";
 import YAML from "yaml";
 import bundledAiStudioRuntimeCatalog from "@/config/ai-studio/runtime/catalog.json";
+import {
+  type AiStudioStructuredKiePriceFile,
+  buildAiStudioStructuredKiePrices,
+} from "@/lib/ai-studio/kie-pricing";
 
 export type AiStudioCategory = "image" | "video" | "music" | "chat";
 
@@ -25,6 +29,14 @@ export interface AiStudioPricingRow {
   discountRate: number;
   anchor: string;
   discountPrice: boolean;
+  pricingKey?: string;
+  catalogModelId?: string | null;
+  runtimeModel?: string | null;
+  resolution?: string | null;
+  duration?: number | null;
+  audio?: boolean | null;
+  aspectRatio?: string | null;
+  source?: string | null;
 }
 
 export interface AiStudioDocDetail extends AiStudioCatalogSeedEntry {
@@ -123,6 +135,7 @@ export interface AiStudioSchemaOverridesFile {
 
 type CompileRuntimeCatalogInput = {
   upstream: AiStudioUpstreamCatalogFile;
+  kiePrices?: AiStudioStructuredKiePriceFile;
   modelOverrides: AiStudioModelOverridesFile;
   pricingOverrides: AiStudioPricingOverridesFile;
   formUiOverrides?: AiStudioFormUiOverridesFile;
@@ -159,6 +172,12 @@ export function getAiStudioCatalogPaths() {
     upstreamCatalogPath:
       process.env.AI_STUDIO_UPSTREAM_CATALOG_PATH ??
       path.join(DEFAULT_AI_STUDIO_DATA_DIR, "upstream", "catalog.json"),
+    kieRawPricePath:
+      process.env.AI_STUDIO_KIE_RAW_PRICE_PATH ??
+      path.join(DEFAULT_AI_STUDIO_DATA_DIR, "upstream", "kie_price.json"),
+    kiePricesPath:
+      process.env.AI_STUDIO_KIE_PRICES_PATH ??
+      path.join(DEFAULT_AI_STUDIO_DATA_DIR, "upstream", "kie_prices.json"),
     modelOverridesPath:
       process.env.AI_STUDIO_MODEL_OVERRIDES_PATH ??
       path.join(DEFAULT_AI_STUDIO_DATA_DIR, "overrides", "models.json"),
@@ -675,6 +694,10 @@ export function resolvePricingRowRuntimeModel(
   > & { modelKeys?: string[] },
   row: AiStudioPricingRow,
 ) {
+  if (row.runtimeModel) {
+    return row.runtimeModel;
+  }
+
   const anchorModel = extractPricingAnchorModel(row.anchor);
   if (!anchorModel) {
     return entry.modelKeys?.[0] ?? null;
@@ -790,10 +813,16 @@ function dedupeMatchedPricingRows(rows: AiStudioPricingRow[]) {
 
   for (const row of rows) {
     const key = [
+      row.pricingKey ?? "",
+      row.catalogModelId ?? "",
       normalizeLoose(row.provider),
       row.interfaceType.toLowerCase(),
       canonicalizePricingDescription(row.modelDescription),
-      normalizeModelHandle(extractPricingAnchorModel(row.anchor)),
+      normalizeModelHandle(row.runtimeModel ?? extractPricingAnchorModel(row.anchor)),
+      row.resolution ?? "",
+      row.aspectRatio ?? "",
+      row.duration ?? "",
+      row.audio ?? "",
       normalizeNumericString(row.creditPrice),
       row.creditUnit.toLowerCase(),
     ].join("|");
@@ -993,6 +1022,41 @@ function clonePricingRow(row: AiStudioPricingRow): AiStudioPricingRow {
   };
 }
 
+function matchStructuredKieRowsToDetail(
+  detail: Pick<AiStudioDocDetail, "id" | "modelKeys">,
+  kiePrices: AiStudioStructuredKiePriceFile | undefined,
+) {
+  if (!kiePrices) {
+    return [];
+  }
+
+  return kiePrices.rows
+    .filter((row) => {
+      if (row.catalogModelId) {
+        return row.catalogModelId === detail.id;
+      }
+
+      return Boolean(
+        row.runtimeModel &&
+          detail.modelKeys.some((modelKey) => modelKey === row.runtimeModel),
+      );
+    })
+    .map((row) => clonePricingRow(row));
+}
+
+function resolveBasePricingRows(
+  detail: AiStudioDocDetail,
+  kiePrices: AiStudioStructuredKiePriceFile | undefined,
+) {
+  const structuredRows = matchStructuredKieRowsToDetail(detail, kiePrices);
+
+  if (structuredRows.length > 0) {
+    return structuredRows;
+  }
+
+  return detail.pricingRows.map(clonePricingRow);
+}
+
 function cloneFormUiOverride(
   value: AiStudioFormUiModelOverride | undefined,
 ): AiStudioFormUiModelOverride | undefined {
@@ -1178,8 +1242,9 @@ function applyPricingOverridesToDetail(
   detail: AiStudioDocDetail,
   bucket: AiStudioPricingOverrideBucket,
 ) {
+  const hasKieRows = detail.pricingRows.some((row) => row.source === "kie");
   const overrides = bucket.rows ?? [];
-  const addRows = bucket.addRows ?? [];
+  const addRows = hasKieRows ? [] : (bucket.addRows ?? []);
 
   if (overrides.length === 0 && addRows.length === 0) {
     return detail;
@@ -1197,6 +1262,9 @@ function applyPricingOverridesToDetail(
       }
 
       if (override.enabled === false) {
+        if (currentRow.source === "kie") {
+          continue;
+        }
         removed = true;
         break;
       }
@@ -1294,6 +1362,7 @@ function buildSplitModelDetails(
 
 export function compileAiStudioRuntimeCatalog({
   upstream,
+  kiePrices,
   modelOverrides,
   pricingOverrides,
   formUiOverrides = { models: {} },
@@ -1307,6 +1376,7 @@ export function compileAiStudioRuntimeCatalog({
 
     if ((modelOverride?.splitModels?.length ?? 0) > 0) {
       return buildSplitModelDetails(rawDetail, modelOverride!).map((detail) => {
+        detail.pricingRows = resolveBasePricingRows(detail, kiePrices);
         const pricingOverrideBucket = pricingOverrides.models[detail.id];
         if (
           (pricingOverrideBucket?.rows?.length ?? 0) > 0 ||
@@ -1321,6 +1391,7 @@ export function compileAiStudioRuntimeCatalog({
     }
 
     const detail = applyModelOverrideToDetail(cloneDetail(rawDetail), modelOverride);
+    detail.pricingRows = resolveBasePricingRows(detail, kiePrices);
     const pricingOverrideBucket = pricingOverrides.models[detail.id];
     if (
       (pricingOverrideBucket?.rows?.length ?? 0) > 0 ||
@@ -1344,7 +1415,13 @@ export function compileAiStudioRuntimeCatalog({
 function pricingRowKey(entry: AiStudioDocDetail, row: AiStudioPricingRow) {
   return [
     entry.id,
+    row.pricingKey ?? "",
+    row.catalogModelId ?? "",
     resolvePricingRowRuntimeModel(entry, row) ?? "",
+    row.resolution ?? "",
+    row.aspectRatio ?? "",
+    row.duration ?? "",
+    row.audio ?? "",
     normalizeLoose(row.provider),
     row.interfaceType.toLowerCase(),
     canonicalizePricingDescription(row.modelDescription),
@@ -1355,6 +1432,7 @@ function pricingRowKey(entry: AiStudioDocDetail, row: AiStudioPricingRow) {
 
 export function validateAiStudioRuntimeBuildInput({
   upstream,
+  kiePrices,
   modelOverrides,
   pricingOverrides,
   formUiOverrides = { models: {} },
@@ -1388,7 +1466,9 @@ export function validateAiStudioRuntimeBuildInput({
         compiledModelIds.add(splitModel.id);
 
         const matchedRows = selectMatchingPricingRows(upstreamItem, splitModel.pricingMatch);
-        if (matchedRows.length === 0) {
+        const matchedStructuredRows =
+          kiePrices?.rows.filter((row) => row.catalogModelId === splitModel.id) ?? [];
+        if (matchedRows.length === 0 && matchedStructuredRows.length === 0) {
           errors.push(`Split model does not match any pricing rows: ${splitModel.id}`);
         }
       }
@@ -1419,11 +1499,14 @@ export function validateAiStudioRuntimeBuildInput({
       continue;
     }
 
+    item.pricingRows = resolveBasePricingRows(item, kiePrices);
+    const usesStructuredKiePricing = item.pricingRows.some((row) => row.source === "kie");
+
     for (const override of bucket.rows ?? []) {
       const matched = item.pricingRows.some((row) =>
         matchesPricingOverride(item, row, override),
       );
-      if (!matched) {
+      if (!matched && !usesStructuredKiePricing) {
         errors.push(`Pricing override does not match any row for model: ${modelId}`);
       }
     }
@@ -1446,6 +1529,8 @@ export function validateAiStudioRuntimeBuildInput({
       errors.push(`Schema override targets unknown model: ${modelId}`);
       continue;
     }
+
+    item.pricingRows = resolveBasePricingRows(item, kiePrices);
 
     if (override.replace !== undefined) {
       item.requestSchema =
@@ -1509,6 +1594,13 @@ export async function loadAiStudioUpstreamCatalogFile(
   return readJsonFile<AiStudioUpstreamCatalogFile>(filePath);
 }
 
+export async function buildAiStudioKiePricesFile(
+  rawPricePath = getAiStudioCatalogPaths().kieRawPricePath,
+) {
+  const rawFile = await readJsonFile<Record<string, unknown>>(rawPricePath);
+  return buildAiStudioStructuredKiePrices(rawFile);
+}
+
 export async function loadAiStudioMergedUpstreamCatalogFiles(
   filePath = getAiStudioCatalogPaths().upstreamCatalogPath,
 ) {
@@ -1532,7 +1624,11 @@ export async function loadAiStudioMergedUpstreamCatalogFiles(
     ),
   );
 
-  return mergeAiStudioUpstreamCatalogFiles(files);
+  return mergeAiStudioUpstreamCatalogFiles(
+    files.filter(
+      (file): file is AiStudioUpstreamCatalogFile => Array.isArray(file?.items),
+    ),
+  );
 }
 
 export async function loadAiStudioModelOverridesFile(
@@ -1540,6 +1636,16 @@ export async function loadAiStudioModelOverridesFile(
 ) {
   return readJsonFileOrDefault<AiStudioModelOverridesFile>(filePath, {
     models: {},
+  });
+}
+
+export async function loadAiStudioKiePricesFile(
+  filePath = getAiStudioCatalogPaths().kiePricesPath,
+) {
+  return readJsonFileOrDefault<AiStudioStructuredKiePriceFile>(filePath, {
+    version: 1,
+    generatedAt: "",
+    rows: [],
   });
 }
 

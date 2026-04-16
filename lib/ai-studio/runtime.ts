@@ -18,7 +18,10 @@ export function collectRuntimeModels(pricingRows: AiStudioPublicPricingRow[]) {
 
 export function applyPricingRowToPayload(
   payload: Record<string, any>,
-  pricingRow: Pick<AiStudioPublicPricingRow, "runtimeModel" | "modelDescription">,
+  pricingRow: Pick<
+    AiStudioPublicPricingRow,
+    "runtimeModel" | "modelDescription" | "duration"
+  >,
 ) {
   const next = structuredClone(payload);
 
@@ -26,9 +29,13 @@ export function applyPricingRowToPayload(
     next.model = pricingRow.runtimeModel;
   }
 
-  const durationMatch = pricingRow.modelDescription.match(/(\d+(?:\.\d+)?)s/i);
   const duration =
-    durationMatch?.[1] ? Math.round(Number.parseFloat(durationMatch[1])) : null;
+    typeof pricingRow.duration === "number" && Number.isFinite(pricingRow.duration)
+      ? Math.round(pricingRow.duration)
+      : (() => {
+          const durationMatch = pricingRow.modelDescription.match(/(\d+(?:\.\d+)?)s/i);
+          return durationMatch?.[1] ? Math.round(Number.parseFloat(durationMatch[1])) : null;
+        })();
 
   if (duration) {
     if (typeof next.duration === "number") {
@@ -52,7 +59,33 @@ export function applyPricingRowToPayload(
 type PricingSelectionRow = {
   modelDescription: string;
   runtimeModel?: string | null;
+  resolution?: string | null;
+  duration?: number | null;
+  audio?: boolean | null;
+  aspectRatio?: string | null;
 };
+
+function getPricingSpecificity(row: PricingSelectionRow) {
+  let score = 0;
+
+  if (row.runtimeModel) {
+    score += 1;
+  }
+  if (row.resolution !== undefined && row.resolution !== null) {
+    score += 1;
+  }
+  if (row.duration !== undefined && row.duration !== null) {
+    score += 1;
+  }
+  if (row.audio !== undefined && row.audio !== null) {
+    score += 1;
+  }
+  if (row.aspectRatio !== undefined && row.aspectRatio !== null) {
+    score += 1;
+  }
+
+  return score;
+}
 
 function normalizeRuntimeModel(input: string) {
   return input.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
@@ -183,6 +216,23 @@ function extractResolutionHint(payload: Record<string, any>) {
   return null;
 }
 
+function extractAspectRatioHint(payload: Record<string, any>) {
+  const values = [
+    payload.aspect_ratio,
+    payload.input?.aspect_ratio,
+    payload.size,
+    payload.input?.size,
+  ];
+
+  for (const value of values) {
+    if (typeof value === "string" && value.trim()) {
+      return value.trim().toLowerCase();
+    }
+  }
+
+  return null;
+}
+
 function parseAudioHint(value: unknown) {
   if (typeof value === "boolean") {
     return value;
@@ -217,29 +267,7 @@ function extractAudioHint(payload: Record<string, any>) {
   );
 }
 
-function extractDescriptionDuration(description: string) {
-  const match = description.match(/(\d+(?:\.\d+)?)s/i);
-  return match?.[1] ? Math.round(Number.parseFloat(match[1])) : null;
-}
-
-function extractDescriptionResolution(description: string) {
-  const match = description.match(/\b(\d{3,4}p|[1248]k)\b/i);
-  return match?.[1] ? match[1].toLowerCase() : null;
-}
-
-function extractDescriptionAudio(description: string) {
-  if (/without audio/i.test(description)) {
-    return false;
-  }
-
-  if (/with audio/i.test(description)) {
-    return true;
-  }
-
-  return null;
-}
-
-export function guessPricingRow<Row extends PricingSelectionRow>(
+export function resolveExactPricingRow<Row extends PricingSelectionRow>(
   pricingRows: Row[],
   payload: Record<string, any>,
 ) {
@@ -252,57 +280,66 @@ export function guessPricingRow<Row extends PricingSelectionRow>(
   const durationHint = extractDurationHint(payload);
   const resolutionHint = extractResolutionHint(payload);
   const audioHint = extractAudioHint(payload);
-  let bestRow: Row | null = null;
-  let bestScore = -1;
-
-  for (const row of pricingRows) {
-    let score = 0;
+  const aspectRatioHint = extractAspectRatioHint(payload);
+  const candidates = pricingRows.filter((row) => {
     const runtimeModel = row.runtimeModel ? normalizeRuntimeModel(row.runtimeModel) : "";
 
-    if (payloadModel && runtimeModel) {
-      if (runtimeModel === payloadModel) {
-        score += 20;
-      } else if (runtimeModel.startsWith(`${payloadModel}-`)) {
-        score += 10;
-      } else {
-        score -= 5;
+    if (payloadModel && runtimeModel && runtimeModel !== payloadModel) {
+      return false;
+    }
+
+    if (row.duration !== undefined && row.duration !== null) {
+      if (durationHint === null || row.duration !== durationHint) {
+        return false;
       }
     }
 
-    const rowDuration = extractDescriptionDuration(row.modelDescription);
-    if (durationHint !== null && rowDuration !== null) {
-      if (rowDuration === durationHint) {
-        score += 12;
-      } else {
-        score -= 6;
+    if (row.resolution !== undefined && row.resolution !== null) {
+      if (resolutionHint === null || row.resolution.toLowerCase() !== resolutionHint) {
+        return false;
       }
     }
 
-    const rowResolution = extractDescriptionResolution(row.modelDescription);
-    if (resolutionHint && rowResolution) {
-      if (rowResolution === resolutionHint) {
-        score += 8;
-      } else {
-        score -= 4;
+    if (row.audio !== undefined && row.audio !== null) {
+      if (audioHint === null || row.audio !== audioHint) {
+        return false;
       }
     }
 
-    const rowAudio = extractDescriptionAudio(row.modelDescription);
-    if (audioHint !== null && rowAudio !== null) {
-      if (rowAudio === audioHint) {
-        score += 10;
-      } else {
-        score -= 5;
+    if (row.aspectRatio !== undefined && row.aspectRatio !== null) {
+      if (
+        aspectRatioHint === null ||
+        row.aspectRatio.toLowerCase() !== aspectRatioHint
+      ) {
+        return false;
       }
     }
 
-    if (score > bestScore) {
-      bestScore = score;
-      bestRow = row;
-    }
+    return true;
+  });
+
+  if (candidates.length === 1) {
+    return candidates[0] ?? null;
   }
 
-  return bestRow;
+  if (candidates.length === 0) {
+    return null;
+  }
+
+  const exactRuntimeCandidates =
+    payloadModel
+      ? candidates.filter((row) => normalizeRuntimeModel(row.runtimeModel ?? "") === payloadModel)
+      : candidates;
+  const scopedCandidates =
+    exactRuntimeCandidates.length > 0 ? exactRuntimeCandidates : candidates;
+  const bestSpecificity = Math.max(
+    ...scopedCandidates.map((row) => getPricingSpecificity(row)),
+  );
+  const mostSpecificRows = scopedCandidates.filter(
+    (row) => getPricingSpecificity(row) === bestSpecificity,
+  );
+
+  return mostSpecificRows.length === 1 ? (mostSpecificRows[0] ?? null) : null;
 }
 
 type CommonPricingRow = {
@@ -324,7 +361,7 @@ export function resolveSelectedPricing<Row extends PricingSelectionRow & Partial
     payload: Record<string, any>;
   },
 ) {
-  const estimated = guessPricingRow(pricingRows, input.payload);
+  const estimated = resolveExactPricingRow(pricingRows, input.payload);
   const dynamicFields = buildSeedanceDynamicPricingFields(
     input.modelId,
     input.payload,
