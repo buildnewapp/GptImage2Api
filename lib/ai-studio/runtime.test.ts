@@ -267,6 +267,56 @@ test("resolves seedance 2 dynamic pricing even when no static pricing rows exist
   );
 });
 
+test("keeps seedance 2 dynamic totals as per-video pricing when static rows are per-second", () => {
+  const row = resolveSelectedPricing<
+    {
+      modelDescription: string;
+      interfaceType: string;
+      provider: string;
+      creditPrice: string;
+      creditUnit: string;
+      usdPrice: string;
+      falPrice: string;
+      discountRate: number;
+      discountPrice: boolean;
+      runtimeModel?: string | null;
+    }
+  >(
+    [
+      {
+        modelDescription: "Seedance 2.0, 480p no video input",
+        interfaceType: "video",
+        provider: "ByteDance",
+        creditPrice: "19",
+        creditUnit: "per second",
+        usdPrice: "",
+        falPrice: "",
+        discountRate: 0,
+        discountPrice: false,
+      },
+    ],
+    {
+      modelId: "video:seedance-2-0",
+      payload: {
+        model: "seedance-2-0",
+        resolution: "480p",
+        duration: 5,
+      },
+    },
+  );
+
+  assert.equal(row?.creditPrice, "95");
+  assert.equal(row?.creditUnit, "per video");
+  assert.equal(
+    getEstimatedCreditsForPricing(row, {
+      model: "seedance-2-0",
+      resolution: "480p",
+      duration: 5,
+    }),
+    95,
+  );
+});
+
 test("uses the configured alias when rendering a single model key", () => {
   assert.equal(
     getDisplayModelLabel(

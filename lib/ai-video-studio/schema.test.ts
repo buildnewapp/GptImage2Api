@@ -188,6 +188,49 @@ test("marks required fields from the schema without semantic field conversion", 
   );
 });
 
+test("forces prompt-like fields to stay required even when upstream schema omits them", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    requestSchema: {
+      type: "object",
+      properties: {
+        input: {
+          type: "object",
+          properties: {
+            prompt: {
+              type: "string",
+            },
+            ending_prompt: {
+              type: "string",
+            },
+            aspect_ratio: {
+              type: "string",
+              enum: ["16:9", "9:16"],
+            },
+          },
+        },
+      },
+    },
+    examplePayload: {
+      input: {
+        prompt: "hello",
+      },
+    },
+  });
+
+  assert.equal(
+    normalized.fields.find((field) => field.key === "prompt")?.required,
+    true,
+  );
+  assert.equal(
+    normalized.fields.find((field) => field.key === "ending_prompt")?.required,
+    true,
+  );
+  assert.equal(
+    normalized.fields.find((field) => field.key === "aspect_ratio")?.required,
+    false,
+  );
+});
+
 test("keeps image url arrays as array fields", () => {
   const normalized = normalizeAiVideoStudioSchema(imageToVideoDetail);
 

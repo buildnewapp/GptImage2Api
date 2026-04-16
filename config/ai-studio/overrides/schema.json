@@ -3,13 +3,15 @@
     "video:bytedance-seedance-2": {
       "set": {
         "properties.input.properties.duration.minimum": 4,
-        "properties.input.properties.duration.maximum": 15
+        "properties.input.properties.duration.maximum": 15,
+        "properties.input.properties.web_search.default": false
       }
     },
     "video:bytedance-seedance-2-0-fast": {
       "set": {
         "properties.input.properties.duration.minimum": 4,
-        "properties.input.properties.duration.maximum": 15
+        "properties.input.properties.duration.maximum": 15,
+        "properties.input.properties.web_search.default": false
       }
     },
     "video:kling-3-0": {

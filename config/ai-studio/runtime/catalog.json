@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-04-15T02:44:37.641Z",
+  "generatedAt": "2026-04-16T09:10:03.547Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -9562,7 +9562,8 @@
               },
               "web_search": {
                 "type": "boolean",
-                "description": "Use online search"
+                "description": "Use online search",
+                "default": false
               },
               "nsfw_checker": {
                 "type": "boolean",
@@ -9934,7 +9935,8 @@
               },
               "web_search": {
                 "type": "boolean",
-                "description": "Use online search"
+                "description": "Use online search",
+                "default": false
               },
               "nsfw_checker": {
                 "type": "boolean",

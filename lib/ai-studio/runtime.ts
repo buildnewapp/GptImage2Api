@@ -337,7 +337,7 @@ export function resolveSelectedPricing<Row extends PricingSelectionRow & Partial
   return {
     ...estimated,
     ...dynamicFields,
-    creditUnit: estimated?.creditUnit ?? "per video",
+    creditUnit: dynamicFields.creditUnit ?? estimated?.creditUnit ?? "per video",
     falPrice: estimated?.falPrice ?? "",
     discountRate: estimated?.discountRate ?? 0,
     discountPrice: estimated?.discountPrice ?? false,

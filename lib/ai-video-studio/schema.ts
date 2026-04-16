@@ -118,6 +118,11 @@ function isCallbackField(key: string) {
   );
 }
 
+function isPromptField(key: string) {
+  const normalized = key.toLowerCase();
+  return normalized === "prompt" || normalized.endsWith("_prompt");
+}
+
 function setValueAtPath(
   source: Record<string, unknown>,
   path: string[],
@@ -214,7 +219,7 @@ export function normalizeAiVideoStudioSchema(detail: {
         path: nextPath,
         label: titleCase(nextPath.join(" / ")),
         kind: getFieldKind(childSchema),
-        required: required.has(key),
+        required: required.has(key) || isPromptField(key),
         schema: childSchema,
         defaultValue,
       });
