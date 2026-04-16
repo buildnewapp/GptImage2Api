@@ -72,7 +72,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
   },
   {
     key: "seedance-1.5",
-    label: "Seedance 1.5",
+    label: "Seedance 1.5 Pro",
     description: "Joint audio-video with multilingual lip-sync",
     tags: [
       { text: "With Audio", type: "audio" },
@@ -80,22 +80,10 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     versions: [
       {
         key: "seedance-1.5",
-        label: "Seedance 1.5 Text to Video",
+        label: "Seedance 1.5 Pro",
         familyKey: "seedance-1.5",
-        modelId: "video:bytedance-v1-pro-text-to-video",
-      },
-      {
-        key: "seedance-1.5-image-to-video",
-        label: "Seedance 1.5 Image to Video",
-        familyKey: "seedance-1.5",
-        modelId: "video:bytedance-v1-pro-image-to-video",
-      },
-      {
-        key: "seedance-1.5-fast",
-        label: "Seedance 1.5 Fast Image to Video",
-        familyKey: "seedance-1.5",
-        modelId: "video:bytedance-v1-pro-fast-image-to-video",
-      },
+        modelId: "video:bytedance-seedance-1-5-pro"
+      }
     ],
   },
 

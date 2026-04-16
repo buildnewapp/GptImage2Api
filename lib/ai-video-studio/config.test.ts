@@ -160,7 +160,6 @@ test("keeps Seedance 1.x variants split by text and image when runtime supports 
     [
       "seedance-1.5",
       "seedance-1.5-image-to-video",
-      "seedance-1.5-fast",
     ],
   );
   assert.deepEqual(
@@ -211,7 +210,7 @@ test("resolves version selections to a single ai-studio public model id", () => 
       familyKey: "seedance-1.5",
       versionKey: "seedance-1.5-image-to-video",
     }),
-    "video:bytedance-v1-pro-image-to-video",
+    "video:bytedance-seedance-1-5-pro",
   );
   assert.equal(
     resolveAiVideoStudioModelId({
@@ -339,13 +338,6 @@ test("resolves ai video studio selection metadata from a model id", () => {
     },
   );
   assert.deepEqual(
-    resolveAiVideoStudioSelectionFromModelId("video:bytedance-v1-pro-fast-image-to-video"),
-    {
-      familyKey: "seedance-1.5",
-      versionKey: "seedance-1.5-fast",
-    },
-  );
-  assert.deepEqual(
     resolveAiVideoStudioSelectionFromModelId("video:apimart-seedance-2-0"),
     {
       familyKey: "seedance-2.0",
@@ -385,6 +377,13 @@ test("resolves ai video studio selection metadata from a model id", () => {
     {
       familyKey: "seedance-1.5",
       versionKey: "seedance-1.5-image-to-video",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("video:bytedance-seedance-1-5-pro"),
+    {
+      familyKey: "seedance-1.5",
+      versionKey: "seedance-1.5",
     },
   );
   assert.deepEqual(
