@@ -65,6 +65,7 @@
       "generationQueued": "已加入生成队列。",
       "generationCompleted": "视频生成完成！",
       "generationFailed": "生成失败，请重试",
+      "modelUnavailable": "此接口暂未开放，如需使用请联系客服",
       "historyHint": "提交后生成记录会显示在这里",
       "readyToPreview": "可预览",
       "viewResult": "在“我的视频”中查看",

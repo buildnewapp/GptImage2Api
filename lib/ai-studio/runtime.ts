@@ -203,6 +203,8 @@ function extractResolutionHint(payload: Record<string, any>) {
     payload.resolution,
     payload.input?.resolution,
     payload.input?.image_resolution,
+    payload.size,
+    payload.input?.size,
     payload.mode,
     payload.input?.mode,
   ];
@@ -220,8 +222,6 @@ function extractAspectRatioHint(payload: Record<string, any>) {
   const values = [
     payload.aspect_ratio,
     payload.input?.aspect_ratio,
-    payload.size,
-    payload.input?.size,
   ];
 
   for (const value of values) {

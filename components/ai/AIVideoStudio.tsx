@@ -492,6 +492,7 @@ export default function AIVideoStudio() {
     !isSubmitting &&
     !!resolvedModelId &&
     !!inputPayload &&
+    estimatedCredits > 0 &&
     (!session?.user ||
       availableCredits === null ||
       availableCredits >= estimatedCredits) &&
@@ -597,6 +598,11 @@ export default function AIVideoStudio() {
 
     if (availableCredits !== null && availableCredits < estimatedCredits) {
       toast.error(t("form.insufficientCredits"));
+      return;
+    }
+
+    if (estimatedCredits <= 0) {
+      toast.error(t("form.modelUnavailable"));
       return;
     }
 

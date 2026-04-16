@@ -593,6 +593,11 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
       return;
     }
 
+    if (submitState.reason === "missing-pricing") {
+      toast.error(t("form.modelUnavailable"));
+      return;
+    }
+
     if (!submitState.canGenerate || !resolvedModelId || !inputPayload) {
       return;
     }

@@ -65,6 +65,7 @@
       "generationQueued": "Generation queued.",
       "generationCompleted": "Video generation finished!",
       "generationFailed": "Generation failed, please try again",
+      "modelUnavailable": "This endpoint is not open yet. Please contact support if you need access.",
       "historyHint": "New tasks appear here after you submit.",
       "readyToPreview": "Ready to preview",
       "viewResult": "View in My Videos",

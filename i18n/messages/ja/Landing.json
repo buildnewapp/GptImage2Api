@@ -65,6 +65,7 @@
       "generationQueued": "生成キューに追加しました。",
       "generationCompleted": "動画生成が完了しました！",
       "generationFailed": "生成に失敗しました。再試行してください",
+      "modelUnavailable": "このAPIは現在未開放です。利用をご希望の場合はサポートまでお問い合わせください。",
       "historyHint": "送信したタスクはここに表示されます。",
       "readyToPreview": "プレビュー可能",
       "viewResult": "「マイビデオ」で確認",

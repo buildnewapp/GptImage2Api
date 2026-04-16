@@ -53,6 +53,12 @@ export async function reserveAiStudioGeneration(input: ReserveInput) {
     input.payload,
   );
 
+  if (reservedCredits <= 0) {
+    throw Object.assign(new Error("AI_STUDIO_MODEL_UNAVAILABLE"), {
+      status: 400,
+    });
+  }
+
   const generation = await getDb().transaction(async (tx) => {
     let nextOneTime = 0;
     let nextSubscription = 0;

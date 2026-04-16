@@ -20,6 +20,7 @@ export type AiVideoMiniStudioValidationReason =
   | "missing-model"
   | "missing-payload"
   | "missing-required"
+  | "missing-pricing"
   | "insufficient-credits"
   | null;
 
@@ -220,6 +221,8 @@ export function validateAiVideoMiniStudioSubmission(input: {
     reason = "missing-model";
   } else if (!input.inputPayload) {
     reason = "missing-payload";
+  } else if (input.estimatedCredits <= 0) {
+    reason = "missing-pricing";
   } else if (input.availableCredits !== null && input.availableCredits < input.estimatedCredits) {
     reason = "insufficient-credits";
   } else if (input.requiredFieldValues.some((value) => !hasRequiredFieldValue(value))) {

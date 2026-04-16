@@ -218,6 +218,51 @@ test("resolves exact pricing rows from explicit structured duration metadata", (
   assert.equal(row?.creditPrice, "30");
 });
 
+test("resolves sora 2 pro pricing rows from input size and n_frames", () => {
+  const row = resolveExactPricingRow(
+    [
+      {
+        modelDescription: "sora-2-pro-text-to-video, high, 15s",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "315",
+        creditUnit: "per video",
+        usdPrice: "",
+        falPrice: "",
+        discountRate: 0,
+        discountPrice: false,
+        runtimeModel: "sora-2-pro-text-to-video",
+        resolution: "high",
+        duration: 15,
+      },
+      {
+        modelDescription: "sora-2-pro-text-to-video, high, 10s",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "165",
+        creditUnit: "per video",
+        usdPrice: "",
+        falPrice: "",
+        discountRate: 0,
+        discountPrice: false,
+        runtimeModel: "sora-2-pro-text-to-video",
+        resolution: "high",
+        duration: 10,
+      },
+    ],
+    {
+      model: "sora-2-pro-text-to-video",
+      input: {
+        size: "high",
+        n_frames: "10",
+        aspect_ratio: "landscape",
+      },
+    },
+  );
+
+  assert.equal(row?.creditPrice, "165");
+});
+
 test("resolves exact audio-matching pricing rows when models expose variants", () => {
   const row = resolveExactPricingRow(
     [
