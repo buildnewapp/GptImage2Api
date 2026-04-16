@@ -389,6 +389,7 @@ export async function prepareAiStudioExecution(
     selectedPricing: resolveSelectedPricing(detail.pricingRows, {
       modelId,
       payload: preparedBody,
+      pricing: detail.pricing,
     }),
   };
 }

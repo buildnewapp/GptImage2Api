@@ -376,6 +376,7 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
         modelId: detail?.id ?? null,
         pricingRows: detail?.pricingRows ?? [],
         payload: basePayload,
+        pricing: detail?.pricing,
       }),
     [basePayload, detail],
   );

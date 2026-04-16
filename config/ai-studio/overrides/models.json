@@ -22,6 +22,13 @@
           "id": "video:sora2-text-to-video-standard",
           "title": "Sora2 - Text to Video",
           "schemaModel": "sora-2-text-to-video",
+          "pricing": {
+            "strategy": "exact",
+            "selectors": {
+              "duration": ["input.n_frames"],
+              "aspectRatio": ["input.aspect_ratio"]
+            }
+          },
           "pricingMatch": {
             "runtimeModel": "sora-2-text-to-video"
           }
@@ -30,6 +37,13 @@
           "id": "video:sora2-text-to-video-stable",
           "title": "Sora2 - Text to Video Stable",
           "schemaModel": "sora-2-text-to-video-stable",
+          "pricing": {
+            "strategy": "exact",
+            "selectors": {
+              "duration": ["input.n_frames"],
+              "aspectRatio": ["input.aspect_ratio"]
+            }
+          },
           "pricingMatch": {
             "runtimeModel": "sora-2-text-to-video-stable"
           }
@@ -42,6 +56,13 @@
           "id": "video:sora2-image-to-video-standard",
           "title": "Sora2 - Image to Video",
           "schemaModel": "sora-2-image-to-video",
+          "pricing": {
+            "strategy": "exact",
+            "selectors": {
+              "duration": ["input.n_frames"],
+              "aspectRatio": ["input.aspect_ratio"]
+            }
+          },
           "pricingMatch": {
             "runtimeModel": "sora-2-image-to-video"
           }
@@ -50,11 +71,47 @@
           "id": "video:sora2-image-to-video-stable",
           "title": "Sora2 - Image to Video Stable",
           "schemaModel": "sora-2-image-to-video-stable",
+          "pricing": {
+            "strategy": "exact",
+            "selectors": {
+              "duration": ["input.n_frames"],
+              "aspectRatio": ["input.aspect_ratio"]
+            }
+          },
           "pricingMatch": {
             "runtimeModel": "sora-2-image-to-video-stable"
           }
         }
       ]
+    },
+    "video:sora2-pro-text-to-video": {
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": ["input.size"],
+          "duration": ["input.n_frames"],
+          "aspectRatio": ["input.aspect_ratio"]
+        }
+      }
+    },
+    "video:sora2-pro-image-to-video": {
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": ["input.size"],
+          "duration": ["input.n_frames"],
+          "aspectRatio": ["input.aspect_ratio"]
+        }
+      }
+    },
+    "video:sora2-pro-storyboard": {
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": ["input.n_frames"],
+          "aspectRatio": ["input.aspect_ratio"]
+        }
+      }
     },
     "video:generate-veo3-1-video": {
       "splitModels": [

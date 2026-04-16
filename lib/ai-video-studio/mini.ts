@@ -190,12 +190,21 @@ export function estimateAiVideoMiniStudioCredits(input: {
   modelId: string | null;
   pricingRows: AiStudioPublicPricingRow[];
   payload: Record<string, any> | null;
+  pricing?: {
+    selectors?: {
+      resolution?: string[];
+      duration?: string[];
+      audio?: string[];
+      aspectRatio?: string[];
+    };
+  } | null;
 }) {
   const selectedPricing =
     input.payload && input.modelId
       ? resolveSelectedPricing(input.pricingRows, {
           modelId: input.modelId,
           payload: input.payload,
+          pricing: input.pricing,
         })
       : null;
 

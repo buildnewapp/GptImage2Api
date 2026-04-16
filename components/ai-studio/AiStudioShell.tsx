@@ -255,6 +255,7 @@ function collectFields(
 }
 
 function guessSelectedPricing(
+  detail: Pick<AiStudioPublicDocDetail, "pricingRows" | "pricing"> | null | undefined,
   pricingRows: AiStudioPublicPricingRow[],
   modelId: string | null,
   payload: Record<string, any>,
@@ -266,6 +267,7 @@ function guessSelectedPricing(
   return resolveSelectedPricing(pricingRows, {
     modelId,
     payload,
+    pricing: detail?.pricing,
   });
 }
 
@@ -632,7 +634,12 @@ export default function AiStudioShell({
         },
         mediaUrls: [],
         pricingRows: detail?.pricingRows ?? [],
-        selectedPricing: guessSelectedPricing(detail?.pricingRows ?? [], detail?.id ?? null, payload),
+        selectedPricing: guessSelectedPricing(
+          detail,
+          detail?.pricingRows ?? [],
+          detail?.id ?? null,
+          payload,
+        ),
         statusSupported: false,
       });
     } finally {
@@ -660,7 +667,7 @@ export default function AiStudioShell({
   const runtimeModels = collectRuntimeModels(detail?.pricingRows ?? []);
   const selectedPricing =
     executeResult?.selectedPricing ||
-    guessSelectedPricing(detail?.pricingRows ?? [], detail?.id ?? null, payload);
+    guessSelectedPricing(detail, detail?.pricingRows ?? [], detail?.id ?? null, payload);
   const chatText = executeResult ? extractChatText(executeResult.raw) : "";
   const renderableMediaUrls = collectRenderableMediaUrls(
     executeResult?.mediaUrls ?? [],

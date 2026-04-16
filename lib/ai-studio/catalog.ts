@@ -39,6 +39,18 @@ export interface AiStudioPricingRow {
   source?: string | null;
 }
 
+export interface AiStudioPricingSelectors {
+  resolution?: string[];
+  duration?: string[];
+  audio?: string[];
+  aspectRatio?: string[];
+}
+
+export interface AiStudioPricingConfig {
+  strategy?: "exact";
+  selectors?: AiStudioPricingSelectors;
+}
+
 export interface AiStudioDocDetail extends AiStudioCatalogSeedEntry {
   vendor?: string;
   endpoint: string;
@@ -49,10 +61,12 @@ export interface AiStudioDocDetail extends AiStudioCatalogSeedEntry {
   pricingRows: AiStudioPricingRow[];
   statusEndpoint?: string | null;
   formUi?: AiStudioFormUiModelOverride;
+  pricing?: AiStudioPricingConfig;
 }
 
 export interface AiStudioCatalogEntry extends AiStudioCatalogSeedEntry {
   pricingRows: AiStudioPricingRow[];
+  pricing?: AiStudioPricingConfig;
 }
 
 export interface AiStudioUpstreamCatalogFile {
@@ -73,6 +87,7 @@ export interface AiStudioModelOverride {
   title?: string;
   provider?: string;
   schemaModel?: string;
+  pricing?: AiStudioPricingConfig;
   splitModels?: AiStudioSplitModelOverride[];
 }
 
@@ -82,6 +97,7 @@ export interface AiStudioSplitModelOverride {
   alias?: string | null;
   provider?: string;
   schemaModel: string;
+  pricing?: AiStudioPricingConfig;
   pricingMatch: NonNullable<AiStudioPricingRowOverride["match"]>;
 }
 
@@ -1074,6 +1090,36 @@ function cloneFormUiOverride(
   };
 }
 
+function clonePricingConfig(
+  value: AiStudioPricingConfig | undefined,
+): AiStudioPricingConfig | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  return {
+    ...(value.strategy ? { strategy: value.strategy } : {}),
+    ...(value.selectors
+      ? {
+          selectors: {
+            ...(Array.isArray(value.selectors.resolution)
+              ? { resolution: [...value.selectors.resolution] }
+              : {}),
+            ...(Array.isArray(value.selectors.duration)
+              ? { duration: [...value.selectors.duration] }
+              : {}),
+            ...(Array.isArray(value.selectors.audio)
+              ? { audio: [...value.selectors.audio] }
+              : {}),
+            ...(Array.isArray(value.selectors.aspectRatio)
+              ? { aspectRatio: [...value.selectors.aspectRatio] }
+              : {}),
+          },
+        }
+      : {}),
+  };
+}
+
 function cloneDetail(detail: AiStudioDocDetail): AiStudioDocDetail {
   return {
     ...detail,
@@ -1083,6 +1129,7 @@ function cloneDetail(detail: AiStudioDocDetail): AiStudioDocDetail {
     examplePayload: structuredClone(detail.examplePayload),
     pricingRows: detail.pricingRows.map(clonePricingRow),
     formUi: cloneFormUiOverride(detail.formUi),
+    pricing: clonePricingConfig(detail.pricing),
   };
 }
 
@@ -1323,6 +1370,9 @@ function applyModelOverrideToDetail(
   if (override.schemaModel) {
     rewriteSchemaModel(detail, override.schemaModel);
   }
+  if (override.pricing) {
+    detail.pricing = clonePricingConfig(override.pricing);
+  }
 
   return detail;
 }
@@ -1356,6 +1406,7 @@ function buildSplitModelDetails(
     }
 
     rewriteSchemaModel(detail, splitModel.schemaModel);
+    detail.pricing = clonePricingConfig(splitModel.pricing ?? modelOverride.pricing ?? detail.pricing);
     return [detail];
   });
 }
@@ -1688,6 +1739,7 @@ export function toAiStudioCatalogEntries(file: AiStudioCompiledCatalogFile) {
     docUrl: item.docUrl,
     provider: item.provider,
     pricingRows: item.pricingRows.map(clonePricingRow),
+    pricing: clonePricingConfig(item.pricing),
   }));
 }
 

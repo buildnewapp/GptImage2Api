@@ -1,3 +1,4 @@
+import type { AiStudioPricingSelectors } from "@/lib/ai-studio/catalog";
 import type { AiStudioPublicPricingRow } from "@/lib/ai-studio/public";
 import {
   buildSeedanceDynamicPricingFields,
@@ -65,6 +66,10 @@ type PricingSelectionRow = {
   aspectRatio?: string | null;
 };
 
+type PricingSelectionConfig = {
+  selectors?: AiStudioPricingSelectors;
+};
+
 function getPricingSpecificity(row: PricingSelectionRow) {
   let score = 0;
 
@@ -100,6 +105,57 @@ function parseDurationHint(value: unknown): number | null {
     const parsed = Number.parseFloat(value);
     if (Number.isFinite(parsed) && parsed > 0) {
       return Math.round(parsed);
+    }
+  }
+
+  return null;
+}
+
+function getValueAtSelectorPath(payload: Record<string, any>, path: string) {
+  const segments = path.split(".").filter(Boolean);
+  let current: any = payload;
+
+  for (const segment of segments) {
+    if (!current || typeof current !== "object") {
+      return undefined;
+    }
+    current = current[segment];
+  }
+
+  return current;
+}
+
+function extractStringBySelectors(
+  payload: Record<string, any>,
+  selectors: string[] | undefined,
+) {
+  if (!Array.isArray(selectors) || selectors.length === 0) {
+    return null;
+  }
+
+  for (const selector of selectors) {
+    const value = getValueAtSelectorPath(payload, selector);
+    if (typeof value === "string" && value.trim()) {
+      return value.trim().toLowerCase();
+    }
+  }
+
+  return null;
+}
+
+function extractDurationBySelectors(
+  payload: Record<string, any>,
+  selectors: string[] | undefined,
+) {
+  if (!Array.isArray(selectors) || selectors.length === 0) {
+    return null;
+  }
+
+  for (const selector of selectors) {
+    const value = getValueAtSelectorPath(payload, selector);
+    const parsed = parseDurationHint(value);
+    if (parsed !== null) {
+      return parsed;
     }
   }
 
@@ -176,7 +232,15 @@ function extractDurationFromReferenceMetadata(
   return durations.reduce((sum, value) => sum + value, 0);
 }
 
-function extractDurationHint(payload: Record<string, any>) {
+function extractDurationHint(
+  payload: Record<string, any>,
+  selectors?: AiStudioPricingSelectors,
+) {
+  const selected = extractDurationBySelectors(payload, selectors?.duration);
+  if (selected !== null) {
+    return selected;
+  }
+
   return (
     parseDurationHint(payload.duration) ??
     parseDurationHint(payload.input?.duration) ??
@@ -198,7 +262,15 @@ function extractDurationHint(payload: Record<string, any>) {
   );
 }
 
-function extractResolutionHint(payload: Record<string, any>) {
+function extractResolutionHint(
+  payload: Record<string, any>,
+  selectors?: AiStudioPricingSelectors,
+) {
+  const selected = extractStringBySelectors(payload, selectors?.resolution);
+  if (selected !== null) {
+    return selected;
+  }
+
   const values = [
     payload.resolution,
     payload.input?.resolution,
@@ -218,7 +290,15 @@ function extractResolutionHint(payload: Record<string, any>) {
   return null;
 }
 
-function extractAspectRatioHint(payload: Record<string, any>) {
+function extractAspectRatioHint(
+  payload: Record<string, any>,
+  selectors?: AiStudioPricingSelectors,
+) {
+  const selected = extractStringBySelectors(payload, selectors?.aspectRatio);
+  if (selected !== null) {
+    return selected;
+  }
+
   const values = [
     payload.aspect_ratio,
     payload.input?.aspect_ratio,
@@ -253,7 +333,19 @@ function parseAudioHint(value: unknown) {
   return null;
 }
 
-function extractAudioHint(payload: Record<string, any>) {
+function extractAudioHint(
+  payload: Record<string, any>,
+  selectors?: AiStudioPricingSelectors,
+) {
+  if (Array.isArray(selectors?.audio) && selectors.audio.length > 0) {
+    for (const selector of selectors.audio) {
+      const parsed = parseAudioHint(getValueAtSelectorPath(payload, selector));
+      if (parsed !== null) {
+        return parsed;
+      }
+    }
+  }
+
   return (
     parseAudioHint(payload.sound) ??
     parseAudioHint(payload.input?.sound) ??
@@ -270,6 +362,7 @@ function extractAudioHint(payload: Record<string, any>) {
 export function resolveExactPricingRow<Row extends PricingSelectionRow>(
   pricingRows: Row[],
   payload: Record<string, any>,
+  config?: PricingSelectionConfig | null,
 ) {
   if (pricingRows.length <= 1) {
     return pricingRows[0] ?? null;
@@ -277,10 +370,10 @@ export function resolveExactPricingRow<Row extends PricingSelectionRow>(
 
   const payloadModel =
     typeof payload.model === "string" ? normalizeRuntimeModel(payload.model) : "";
-  const durationHint = extractDurationHint(payload);
-  const resolutionHint = extractResolutionHint(payload);
-  const audioHint = extractAudioHint(payload);
-  const aspectRatioHint = extractAspectRatioHint(payload);
+  const durationHint = extractDurationHint(payload, config?.selectors);
+  const resolutionHint = extractResolutionHint(payload, config?.selectors);
+  const audioHint = extractAudioHint(payload, config?.selectors);
+  const aspectRatioHint = extractAspectRatioHint(payload, config?.selectors);
   const candidates = pricingRows.filter((row) => {
     const runtimeModel = row.runtimeModel ? normalizeRuntimeModel(row.runtimeModel) : "";
 
@@ -359,9 +452,10 @@ export function resolveSelectedPricing<Row extends PricingSelectionRow & Partial
   input: {
     modelId: string;
     payload: Record<string, any>;
+    pricing?: PricingSelectionConfig | null;
   },
 ) {
-  const estimated = resolveExactPricingRow(pricingRows, input.payload);
+  const estimated = resolveExactPricingRow(pricingRows, input.payload, input.pricing);
   const dynamicFields = buildSeedanceDynamicPricingFields(
     input.modelId,
     input.payload,

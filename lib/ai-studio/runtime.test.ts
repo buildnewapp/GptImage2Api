@@ -263,6 +263,57 @@ test("resolves sora 2 pro pricing rows from input size and n_frames", () => {
   assert.equal(row?.creditPrice, "165");
 });
 
+test("prefers configured pricing selectors over generic fallback fields", () => {
+  const row = resolveExactPricingRow(
+    [
+      {
+        modelDescription: "sora-2-pro-text-to-video, standard, 10s",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "75",
+        creditUnit: "per video",
+        usdPrice: "",
+        falPrice: "",
+        discountRate: 0,
+        discountPrice: false,
+        runtimeModel: "sora-2-pro-text-to-video",
+        resolution: "standard",
+        duration: 10,
+      },
+      {
+        modelDescription: "sora-2-pro-text-to-video, high, 10s",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "165",
+        creditUnit: "per video",
+        usdPrice: "",
+        falPrice: "",
+        discountRate: 0,
+        discountPrice: false,
+        runtimeModel: "sora-2-pro-text-to-video",
+        resolution: "high",
+        duration: 10,
+      },
+    ],
+    {
+      model: "sora-2-pro-text-to-video",
+      resolution: "standard",
+      input: {
+        size: "high",
+        n_frames: "10",
+      },
+    },
+    {
+      selectors: {
+        resolution: ["input.size"],
+        duration: ["input.n_frames"],
+      },
+    },
+  );
+
+  assert.equal(row?.creditPrice, "165");
+});
+
 test("resolves exact audio-matching pricing rows when models expose variants", () => {
   const row = resolveExactPricingRow(
     [

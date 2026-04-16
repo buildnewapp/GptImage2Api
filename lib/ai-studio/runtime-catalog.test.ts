@@ -603,6 +603,11 @@ test("keeps exposed runway and kling pricing rows isolated to the correct model 
     [...sora2Pro.pricingRows.map((row) => row.creditPrice)].sort(),
     ["135", "165", "315", "75"],
   );
+  assert.deepEqual(sora2Pro.pricing?.selectors, {
+    resolution: ["input.size"],
+    duration: ["input.n_frames"],
+    aspectRatio: ["input.aspect_ratio"],
+  });
 
   assert.ok(sora2ProImage);
   assert.deepEqual(

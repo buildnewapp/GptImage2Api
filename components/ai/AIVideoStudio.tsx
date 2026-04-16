@@ -441,6 +441,7 @@ export default function AIVideoStudio() {
         ? resolveSelectedPricing(detail.pricingRows, {
             modelId: detail.id,
             payload: basePayload,
+            pricing: detail.pricing,
           })
         : null,
     [basePayload, detail],
