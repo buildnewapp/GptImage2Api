@@ -2,11 +2,9 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import {
-  buildAiStudioKiePricesFile,
   compileAiStudioRuntimeCatalog,
   getAiStudioCatalogPaths,
   loadAiStudioFormUiOverridesFile,
-  loadAiStudioKiePricesFile,
   loadAiStudioMergedUpstreamCatalogFiles,
   loadAiStudioModelOverridesFile,
   loadAiStudioPricingOverridesFile,
@@ -17,18 +15,8 @@ import {
 
 async function main() {
   const paths = getAiStudioCatalogPaths();
-  const kiePrices = await buildAiStudioKiePricesFile(paths.kieRawPricePath);
-
-  await mkdir(path.dirname(paths.kiePricesPath), { recursive: true });
-  await writeFile(
-    paths.kiePricesPath,
-    `${JSON.stringify(kiePrices, null, 2)}\n`,
-    "utf8",
-  );
-
-  const [upstream, loadedKiePrices, modelOverrides, pricingOverrides, formUiOverrides, schemaOverrides] = await Promise.all([
+  const [upstream, modelOverrides, pricingOverrides, formUiOverrides, schemaOverrides] = await Promise.all([
     loadAiStudioMergedUpstreamCatalogFiles(paths.upstreamCatalogPath),
-    loadAiStudioKiePricesFile(paths.kiePricesPath),
     loadAiStudioModelOverridesFile(paths.modelOverridesPath),
     loadAiStudioPricingOverridesFile(paths.pricingOverridesPath),
     loadAiStudioFormUiOverridesFile(paths.formUiOverridesPath),
@@ -37,7 +25,6 @@ async function main() {
 
   const inputErrors = validateAiStudioRuntimeBuildInput({
     upstream,
-    kiePrices: loadedKiePrices,
     modelOverrides,
     pricingOverrides,
     formUiOverrides,
@@ -51,7 +38,6 @@ async function main() {
 
   const runtime = compileAiStudioRuntimeCatalog({
     upstream,
-    kiePrices: loadedKiePrices,
     modelOverrides,
     pricingOverrides,
     formUiOverrides,

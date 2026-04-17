@@ -263,6 +263,75 @@ test("resolves sora 2 pro pricing rows from input size and n_frames", () => {
   assert.equal(row?.creditPrice, "165");
 });
 
+test("resolves storyboard pricing rows when only duration varies", () => {
+  const row = resolveSelectedPricing(
+    [
+      {
+        modelDescription: "sora-2-pro-storyboard, standard, 10s",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "75",
+        creditUnit: "per video",
+        usdPrice: "",
+        falPrice: "",
+        discountRate: 0,
+        discountPrice: false,
+        runtimeModel: "sora-2-pro-storyboard",
+        resolution: "standard",
+        duration: 10,
+      },
+      {
+        modelDescription: "sora-2-pro-storyboard, standard, 15s",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "135",
+        creditUnit: "per video",
+        usdPrice: "",
+        falPrice: "",
+        discountRate: 0,
+        discountPrice: false,
+        runtimeModel: "sora-2-pro-storyboard",
+        resolution: "standard",
+        duration: 15,
+      },
+      {
+        modelDescription: "sora-2-pro-storyboard, standard, 25s",
+        interfaceType: "video",
+        provider: "OpenAI",
+        creditPrice: "135",
+        creditUnit: "per video",
+        usdPrice: "",
+        falPrice: "",
+        discountRate: 0,
+        discountPrice: false,
+        runtimeModel: "sora-2-pro-storyboard",
+        resolution: "standard",
+        duration: 25,
+      },
+    ],
+    {
+      modelId: "video:sora2-pro-storyboard",
+      payload: {
+        model: "sora-2-pro-storyboard",
+        input: {
+          n_frames: "15",
+          aspect_ratio: "landscape",
+          upload_method: "s3",
+        },
+      },
+      pricing: {
+        selectors: {
+          duration: ["input.n_frames"],
+          aspectRatio: ["input.aspect_ratio"],
+        },
+      },
+    },
+  );
+
+  assert.equal(row?.creditPrice, "135");
+  assert.equal(row?.duration, 15);
+});
+
 test("prefers configured pricing selectors over generic fallback fields", () => {
   const row = resolveExactPricingRow(
     [

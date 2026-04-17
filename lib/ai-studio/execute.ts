@@ -399,7 +399,25 @@ export async function submitAiStudioExecution(
   body: Record<string, any>,
 ) {
   const vendor = getAiStudioVendor(detail);
-  const response = await fetch(`${getAiStudioApiBaseUrl(vendor)}${detail.endpoint}`, {
+  const requestUrl = new URL(`${getAiStudioApiBaseUrl(vendor)}${detail.endpoint}`);
+  if (detail.method === "GET") {
+    for (const [key, value] of Object.entries(body)) {
+      if (value === undefined || value === null) {
+        continue;
+      }
+
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          requestUrl.searchParams.append(key, String(item));
+        }
+        continue;
+      }
+
+      requestUrl.searchParams.set(key, String(value));
+    }
+  }
+
+  const response = await fetch(requestUrl.toString(), {
     method: detail.method,
     headers: {
       Authorization: `Bearer ${getAiStudioApiKey(vendor)}`,

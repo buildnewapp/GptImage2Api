@@ -51,14 +51,16 @@ test("exposes Grok Imagine as a multi-version family", () => {
   );
 });
 
-test("exposes Veo 3.1 text and image generation variants", () => {
+test("exposes Veo 3.1 lite, fast, and quality variants", () => {
   assert.deepEqual(
     getAiVideoStudioVersions("veo-3.1").map((version) => version.key),
     [
-      "veo-3.1-fast-text-to-video",
-      "veo-3.1-fast-image-to-video",
-      "veo-3.1-quality-text-to-video",
-      "veo-3.1-quality-image-to-video",
+      "veo-3.1-lite",
+      "veo-3.1-fast",
+      "veo-3.1-quality",
+      "veo-3.1-extend",
+      "veo-3.1-get-1080p",
+      "veo-3.1-get-4k",
     ],
   );
 });
@@ -285,9 +287,30 @@ test("resolves version selections to a single ai-studio public model id", () => 
   assert.equal(
     resolveAiVideoStudioModelId({
       familyKey: "veo-3.1",
-      versionKey: "veo-3.1-fast-text-to-video",
+      versionKey: "veo-3.1-fast",
     }),
-    "video:veo-3.1-fast-text-to-video",
+    "video:veo-3.1-fast",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "veo-3.1",
+      versionKey: "veo-3.1-extend",
+    }),
+    "video:extend-veo3-1-video",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "veo-3.1",
+      versionKey: "veo-3.1-get-1080p",
+    }),
+    "video:get-veo3-1-1080p-video",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "veo-3.1",
+      versionKey: "veo-3.1-get-4k",
+    }),
+    "video:get-veo3-1-4k-video",
   );
   assert.equal(
     resolveAiVideoStudioModelId({
@@ -503,6 +526,42 @@ test("resolves ai video studio selection metadata from a model id", () => {
     {
       familyKey: "runway",
       versionKey: "runway-generate-aleph-video",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("video:veo-3.1-lite"),
+    {
+      familyKey: "veo-3.1",
+      versionKey: "veo-3.1-lite",
+    },
+  );
+  assert.equal(
+    resolveAiVideoStudioSelectionFromModelId("video:veo-3.1-fast-text-to-video"),
+    null,
+  );
+  assert.equal(
+    resolveAiVideoStudioSelectionFromModelId("video:veo-3.1-quality-image-to-video"),
+    null,
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("video:extend-veo3-1-video"),
+    {
+      familyKey: "veo-3.1",
+      versionKey: "veo-3.1-extend",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("video:get-veo3-1-1080p-video"),
+    {
+      familyKey: "veo-3.1",
+      versionKey: "veo-3.1-get-1080p",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("video:get-veo3-1-4k-video"),
+    {
+      familyKey: "veo-3.1",
+      versionKey: "veo-3.1-get-4k",
     },
   );
 });

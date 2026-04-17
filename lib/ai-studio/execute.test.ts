@@ -161,6 +161,73 @@ test("treats provider business errors in 200 responses as execution failures", a
   global.fetch = originalFetch;
 });
 
+test("serializes GET execution payloads into query params", async () => {
+  const originalFetch = global.fetch;
+  process.env.KIE_API_KEY = "test-key";
+
+  let requestUrl = "";
+  let requestBody: BodyInit | null | undefined;
+  global.fetch = async (input, init) => {
+    requestUrl = String(input);
+    requestBody = init?.body;
+
+    return new Response(
+      JSON.stringify({
+        code: 200,
+        msg: "success",
+        data: {
+          resultUrl: "https://tempfile.aiquickdraw.com/p/veo1080.mp4",
+        },
+      }),
+      {
+        status: 200,
+        headers: {
+          "content-type": "application/json",
+        },
+      },
+    ) as Response;
+  };
+
+  const result = await submitAiStudioExecution(
+    {
+      id: "video:get-veo3-1-1080p-video",
+      category: "video",
+      title: "Get 1080P Video",
+      docUrl: "https://docs.kie.ai/veo3-api/get-veo-3-1080-p-video",
+      provider: "Google",
+      endpoint: "/api/v1/veo/get-1080p-video",
+      method: "GET",
+      modelKeys: [],
+      requestSchema: {
+        type: "object",
+        properties: {
+          taskId: {
+            type: "string",
+          },
+          index: {
+            type: "integer",
+          },
+        },
+      },
+      examplePayload: {},
+      pricingRows: [],
+    },
+    {
+      taskId: "veo_task_abcdef123456",
+      index: 0,
+    },
+  );
+
+  assert.equal(
+    requestUrl,
+    "https://api.kie.ai/api/v1/veo/get-1080p-video?taskId=veo_task_abcdef123456&index=0",
+  );
+  assert.equal(requestBody, undefined);
+  assert.deepEqual(result.mediaUrls, ["https://tempfile.aiquickdraw.com/p/veo1080.mp4"]);
+
+  global.fetch = originalFetch;
+});
+
 test("injects configured callback fields into request payloads", () => {
   const body = applyAiStudioSystemFields(
     {

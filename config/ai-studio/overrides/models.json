@@ -59,35 +59,27 @@
     "video:generate-veo3-1-video": {
       "splitModels": [
         {
-          "id": "video:veo-3.1-fast-text-to-video",
-          "title": "Veo 3.1 Fast Text to Video",
+          "id": "video:veo-3.1-lite",
+          "title": "Veo 3.1 Lite",
+          "schemaModel": "veo3_lite",
+          "pricingMatch": {
+            "runtimeModel": "veo3_lite_custom"
+          }
+        },
+        {
+          "id": "video:veo-3.1-fast",
+          "title": "Veo 3.1 Fast",
           "schemaModel": "veo3_fast",
           "pricingMatch": {
-            "modelDescriptionIncludes": "text-to-video, Fast"
+            "runtimeModel": "veo3_fast_custom"
           }
         },
         {
-          "id": "video:veo-3.1-fast-image-to-video",
-          "title": "Veo 3.1 Fast Image to Video",
-          "schemaModel": "veo3_fast",
-          "pricingMatch": {
-            "modelDescriptionIncludes": "image-to-video, Fast"
-          }
-        },
-        {
-          "id": "video:veo-3.1-quality-text-to-video",
-          "title": "Veo 3.1 Quality Text to Video",
+          "id": "video:veo-3.1-quality",
+          "title": "Veo 3.1 Quality",
           "schemaModel": "veo3",
           "pricingMatch": {
-            "modelDescriptionIncludes": "text-to-video, Quality"
-          }
-        },
-        {
-          "id": "video:veo-3.1-quality-image-to-video",
-          "title": "Veo 3.1 Quality Image to Video",
-          "schemaModel": "veo3",
-          "pricingMatch": {
-            "modelDescriptionIncludes": "image-to-video, Quality"
+            "runtimeModel": "veo3_quality_custom"
           }
         }
       ]

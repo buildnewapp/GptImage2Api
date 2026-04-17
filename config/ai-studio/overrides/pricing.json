@@ -31,6 +31,2832 @@
           "discountPrice": false
         }
       ]
+    },
+    "video:veo-3.1-lite": {
+      "addRows": [
+        {
+          "modelDescription": "Veo 3.1 Lite, 720p",
+          "interfaceType": "video",
+          "provider": "Google",
+          "creditPrice": "10",
+          "creditUnit": "per video",
+          "usdPrice": "0.05",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/veo3-api/generate-veo-3-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:veo-3.1-lite",
+          "runtimeModel": "veo3_lite",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "Veo 3.1 Lite, 1080p",
+          "interfaceType": "video",
+          "provider": "Google",
+          "creditPrice": "15",
+          "creditUnit": "per video",
+          "usdPrice": "0.075",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/veo3-api/generate-veo-3-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:veo-3.1-lite",
+          "runtimeModel": "veo3_lite",
+          "resolution": "1080p"
+        },
+        {
+          "modelDescription": "Veo 3.1 Lite, 4k",
+          "interfaceType": "video",
+          "provider": "Google",
+          "creditPrice": "50",
+          "creditUnit": "per video",
+          "usdPrice": "0.25",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/veo3-api/generate-veo-3-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:veo-3.1-lite",
+          "runtimeModel": "veo3_lite",
+          "resolution": "4k"
+        }
+      ]
+    },
+    "video:veo-3.1-fast": {
+      "addRows": [
+        {
+          "modelDescription": "Veo 3.1 Fast, 720p",
+          "interfaceType": "video",
+          "provider": "Google",
+          "creditPrice": "20",
+          "creditUnit": "per video",
+          "usdPrice": "0.10",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/veo3-api/generate-veo-3-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:veo-3.1-fast",
+          "runtimeModel": "veo3_fast",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "Veo 3.1 Fast, 1080p",
+          "interfaceType": "video",
+          "provider": "Google",
+          "creditPrice": "25",
+          "creditUnit": "per video",
+          "usdPrice": "0.125",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/veo3-api/generate-veo-3-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:veo-3.1-fast",
+          "runtimeModel": "veo3_fast",
+          "resolution": "1080p"
+        },
+        {
+          "modelDescription": "Veo 3.1 Fast, 4k",
+          "interfaceType": "video",
+          "provider": "Google",
+          "creditPrice": "60",
+          "creditUnit": "per video",
+          "usdPrice": "0.30",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/veo3-api/generate-veo-3-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:veo-3.1-fast",
+          "runtimeModel": "veo3_fast",
+          "resolution": "4k"
+        }
+      ]
+    },
+    "video:veo-3.1-quality": {
+      "addRows": [
+        {
+          "modelDescription": "Veo 3.1 Quality, 720p",
+          "interfaceType": "video",
+          "provider": "Google",
+          "creditPrice": "150",
+          "creditUnit": "per video",
+          "usdPrice": "0.75",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/veo3-api/generate-veo-3-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:veo-3.1-quality",
+          "runtimeModel": "veo3",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "Veo 3.1 Quality, 1080p",
+          "interfaceType": "video",
+          "provider": "Google",
+          "creditPrice": "155",
+          "creditUnit": "per video",
+          "usdPrice": "0.775",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/veo3-api/generate-veo-3-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:veo-3.1-quality",
+          "runtimeModel": "veo3",
+          "resolution": "1080p"
+        },
+        {
+          "modelDescription": "Veo 3.1 Quality, 4k",
+          "interfaceType": "video",
+          "provider": "Google",
+          "creditPrice": "190",
+          "creditUnit": "per video",
+          "usdPrice": "0.95",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/veo3-api/generate-veo-3-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:veo-3.1-quality",
+          "runtimeModel": "veo3",
+          "resolution": "4k"
+        }
+      ]
+    },
+    "video:extend-veo3-1-video": {
+      "addRows": [
+        {
+          "modelDescription": "Veo 3.1 Extend, Fast",
+          "interfaceType": "video",
+          "provider": "Google",
+          "creditPrice": "20",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/veo3-api/extend-video",
+          "discountPrice": false,
+          "catalogModelId": "video:extend-veo3-1-video",
+          "runtimeModel": "fast"
+        },
+        {
+          "modelDescription": "Veo 3.1 Extend, Lite",
+          "interfaceType": "video",
+          "provider": "Google",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/veo3-api/extend-video",
+          "discountPrice": false,
+          "catalogModelId": "video:extend-veo3-1-video",
+          "runtimeModel": "lite"
+        },
+        {
+          "modelDescription": "Veo 3.1 Extend, Quality",
+          "interfaceType": "video",
+          "provider": "Google",
+          "creditPrice": "250",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/veo3-api/extend-video",
+          "discountPrice": false,
+          "catalogModelId": "video:extend-veo3-1-video",
+          "runtimeModel": "quality"
+        }
+      ]
+    },
+    "video:get-veo3-1-1080p-video": {
+      "addRows": [
+        {
+          "modelDescription": "Veo 3.1 Get 1080P",
+          "interfaceType": "video",
+          "provider": "Google",
+          "creditPrice": "5",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/veo3-api/get-veo-3-1080-p-video",
+          "discountPrice": false,
+          "catalogModelId": "video:get-veo3-1-1080p-video"
+        }
+      ]
+    },
+    "video:get-veo3-1-4k-video": {
+      "addRows": [
+        {
+          "modelDescription": "Veo 3.1 Get 4K",
+          "interfaceType": "video",
+          "provider": "Google",
+          "creditPrice": "40",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/veo3-api/get-veo-3-4k-video",
+          "discountPrice": false,
+          "catalogModelId": "video:get-veo3-1-4k-video"
+        }
+      ]
+    },
+    "video:bytedance-seedance-1-5-pro": {
+      "addRows": [
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 480p, 4s, no audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "7",
+          "creditUnit": "per video",
+          "usdPrice": "0.035",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "480p",
+          "duration": 4,
+          "audio": false
+        },
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 480p, 4s, with audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "14",
+          "creditUnit": "per video",
+          "usdPrice": "0.07",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "480p",
+          "duration": 4,
+          "audio": true
+        },
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 480p, 8s, no audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "14",
+          "creditUnit": "per video",
+          "usdPrice": "0.07",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "480p",
+          "duration": 8,
+          "audio": false
+        },
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 480p, 8s, with audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "28",
+          "creditUnit": "per video",
+          "usdPrice": "0.14",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "480p",
+          "duration": 8,
+          "audio": true
+        },
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 480p, 12s, no audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "19",
+          "creditUnit": "per video",
+          "usdPrice": "0.095",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "480p",
+          "duration": 12,
+          "audio": false
+        },
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 480p, 12s, with audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "38",
+          "creditUnit": "per video",
+          "usdPrice": "0.19",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "480p",
+          "duration": 12,
+          "audio": true
+        },
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 720p, 4s, no audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "14",
+          "creditUnit": "per video",
+          "usdPrice": "0.07",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "720p",
+          "duration": 4,
+          "audio": false
+        },
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 720p, 4s, with audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "28",
+          "creditUnit": "per video",
+          "usdPrice": "0.14",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "720p",
+          "duration": 4,
+          "audio": true
+        },
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 720p, 8s, no audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "28",
+          "creditUnit": "per video",
+          "usdPrice": "0.14",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "720p",
+          "duration": 8,
+          "audio": false
+        },
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 720p, 8s, with audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "56",
+          "creditUnit": "per video",
+          "usdPrice": "0.28",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "720p",
+          "duration": 8,
+          "audio": true
+        },
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 720p, 12s, no audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "42",
+          "creditUnit": "per video",
+          "usdPrice": "0.21",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "720p",
+          "duration": 12,
+          "audio": false
+        },
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 720p, 12s, with audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "84",
+          "creditUnit": "per video",
+          "usdPrice": "0.42",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "720p",
+          "duration": 12,
+          "audio": true
+        },
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 1080p, 4s, no audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "0.15",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "1080p",
+          "duration": 4,
+          "audio": false
+        },
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 1080p, 4s, with audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "60",
+          "creditUnit": "per video",
+          "usdPrice": "0.30",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "1080p",
+          "duration": 4,
+          "audio": true
+        },
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 1080p, 8s, no audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "60",
+          "creditUnit": "per video",
+          "usdPrice": "0.30",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "1080p",
+          "duration": 8,
+          "audio": false
+        },
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 1080p, 8s, with audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "120",
+          "creditUnit": "per video",
+          "usdPrice": "0.60",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "1080p",
+          "duration": 8,
+          "audio": true
+        },
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 1080p, 12s, no audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "90",
+          "creditUnit": "per video",
+          "usdPrice": "0.45",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "1080p",
+          "duration": 12,
+          "audio": false
+        },
+        {
+          "modelDescription": "Bytedance Seedance 1.5 Pro, 1080p, 12s, with audio",
+          "interfaceType": "video",
+          "provider": "Bytedance Seedance 1.5 Pro",
+          "creditPrice": "180",
+          "creditUnit": "per video",
+          "usdPrice": "0.90",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-1-5-pro",
+          "runtimeModel": "bytedance/seedance-1.5-pro",
+          "resolution": "1080p",
+          "duration": 12,
+          "audio": true
+        }
+      ]
+    },
+    "video:bytedance-v1-pro-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "Bytedance V1 Pro Image to Video, 480p",
+          "interfaceType": "video",
+          "provider": "Bytedance V1 Pro Image to Video",
+          "creditPrice": "2.8",
+          "creditUnit": "per second",
+          "usdPrice": "0.014",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/v1-pro-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-v1-pro-image-to-video",
+          "runtimeModel": "bytedance/v1-pro-image-to-video",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "Bytedance V1 Pro Image to Video, 720p",
+          "interfaceType": "video",
+          "provider": "Bytedance V1 Pro Image to Video",
+          "creditPrice": "6",
+          "creditUnit": "per second",
+          "usdPrice": "0.030",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/v1-pro-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-v1-pro-image-to-video",
+          "runtimeModel": "bytedance/v1-pro-image-to-video",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "Bytedance V1 Pro Image to Video, 1080p",
+          "interfaceType": "video",
+          "provider": "Bytedance V1 Pro Image to Video",
+          "creditPrice": "14",
+          "creditUnit": "per second",
+          "usdPrice": "0.070",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/v1-pro-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-v1-pro-image-to-video",
+          "runtimeModel": "bytedance/v1-pro-image-to-video",
+          "resolution": "1080p"
+        }
+      ]
+    },
+    "video:bytedance-v1-pro-text-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "Bytedance - V1 Pro Text to Video, 480p",
+          "interfaceType": "video",
+          "provider": "Bytedance",
+          "creditPrice": "2.8",
+          "creditUnit": "per second",
+          "usdPrice": "0.014",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/v1-pro-text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-v1-pro-text-to-video",
+          "runtimeModel": "bytedance/v1-pro-text-to-video",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "Bytedance - V1 Pro Text to Video, 720p",
+          "interfaceType": "video",
+          "provider": "Bytedance",
+          "creditPrice": "6",
+          "creditUnit": "per second",
+          "usdPrice": "0.030",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/v1-pro-text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-v1-pro-text-to-video",
+          "runtimeModel": "bytedance/v1-pro-text-to-video",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "Bytedance - V1 Pro Text to Video, 1080p",
+          "interfaceType": "video",
+          "provider": "Bytedance",
+          "creditPrice": "14",
+          "creditUnit": "per second",
+          "usdPrice": "0.070",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/v1-pro-text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-v1-pro-text-to-video",
+          "runtimeModel": "bytedance/v1-pro-text-to-video",
+          "resolution": "1080p"
+        }
+      ]
+    },
+    "video:bytedance-v1-lite-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "Bytedance - V1 Lite Image to Video, 480p",
+          "interfaceType": "video",
+          "provider": "Bytedance",
+          "creditPrice": "2",
+          "creditUnit": "per second",
+          "usdPrice": "0.010",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/v1-lite-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-v1-lite-image-to-video",
+          "runtimeModel": "bytedance/v1-lite-image-to-video",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "Bytedance - V1 Lite Image to Video, 720p",
+          "interfaceType": "video",
+          "provider": "Bytedance",
+          "creditPrice": "4.5",
+          "creditUnit": "per second",
+          "usdPrice": "0.0225",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/v1-lite-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-v1-lite-image-to-video",
+          "runtimeModel": "bytedance/v1-lite-image-to-video",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "Bytedance - V1 Lite Image to Video, 1080p",
+          "interfaceType": "video",
+          "provider": "Bytedance",
+          "creditPrice": "10",
+          "creditUnit": "per second",
+          "usdPrice": "0.050",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/v1-lite-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-v1-lite-image-to-video",
+          "runtimeModel": "bytedance/v1-lite-image-to-video",
+          "resolution": "1080p"
+        }
+      ]
+    },
+    "video:bytedance-v1-lite-text-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "Bytedance - V1 Lite Text to Video, 480p",
+          "interfaceType": "video",
+          "provider": "Bytedance",
+          "creditPrice": "2",
+          "creditUnit": "per second",
+          "usdPrice": "0.010",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/v1-lite-text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-v1-lite-text-to-video",
+          "runtimeModel": "bytedance/v1-lite-text-to-video",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "Bytedance - V1 Lite Text to Video, 720p",
+          "interfaceType": "video",
+          "provider": "Bytedance",
+          "creditPrice": "4.5",
+          "creditUnit": "per second",
+          "usdPrice": "0.0225",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/v1-lite-text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-v1-lite-text-to-video",
+          "runtimeModel": "bytedance/v1-lite-text-to-video",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "Bytedance - V1 Lite Text to Video, 1080p",
+          "interfaceType": "video",
+          "provider": "Bytedance",
+          "creditPrice": "10",
+          "creditUnit": "per second",
+          "usdPrice": "0.050",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/v1-lite-text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-v1-lite-text-to-video",
+          "runtimeModel": "bytedance/v1-lite-text-to-video",
+          "resolution": "1080p"
+        }
+      ]
+    },
+    "video:bytedance-v1-pro-fast-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "Bytedance V1 Pro Fast Image to Video, 720p, 5s",
+          "interfaceType": "video",
+          "provider": "Bytedance V1 Pro Fast Image to Video",
+          "creditPrice": "16",
+          "creditUnit": "per video",
+          "usdPrice": "0.080",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/v1-pro-fast-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-v1-pro-fast-image-to-video",
+          "runtimeModel": "bytedance/v1-pro-fast-image-to-video",
+          "resolution": "720p",
+          "duration": 5
+        },
+        {
+          "modelDescription": "Bytedance V1 Pro Fast Image to Video, 720p, 10s",
+          "interfaceType": "video",
+          "provider": "Bytedance V1 Pro Fast Image to Video",
+          "creditPrice": "36",
+          "creditUnit": "per video",
+          "usdPrice": "0.180",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/v1-pro-fast-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-v1-pro-fast-image-to-video",
+          "runtimeModel": "bytedance/v1-pro-fast-image-to-video",
+          "resolution": "720p",
+          "duration": 10
+        },
+        {
+          "modelDescription": "Bytedance V1 Pro Fast Image to Video, 1080p, 5s",
+          "interfaceType": "video",
+          "provider": "Bytedance V1 Pro Fast Image to Video",
+          "creditPrice": "36",
+          "creditUnit": "per video",
+          "usdPrice": "0.180",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/v1-pro-fast-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-v1-pro-fast-image-to-video",
+          "runtimeModel": "bytedance/v1-pro-fast-image-to-video",
+          "resolution": "1080p",
+          "duration": 5
+        },
+        {
+          "modelDescription": "Bytedance V1 Pro Fast Image to Video, 1080p, 10s",
+          "interfaceType": "video",
+          "provider": "Bytedance V1 Pro Fast Image to Video",
+          "creditPrice": "72",
+          "creditUnit": "per video",
+          "usdPrice": "0.360",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/v1-pro-fast-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-v1-pro-fast-image-to-video",
+          "runtimeModel": "bytedance/v1-pro-fast-image-to-video",
+          "resolution": "1080p",
+          "duration": 10
+        }
+      ]
+    },
+    "video:sora2-image-to-video-standard": {
+      "addRows": [
+        {
+          "modelDescription": "sora-2-image-to-video, 10s, with audio, no watermark",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "3",
+          "creditUnit": "per video",
+          "usdPrice": "0.015",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora2/sora-2-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-image-to-video-standard",
+          "runtimeModel": "sora-2-image-to-video",
+          "duration": 10,
+          "audio": true
+        },
+        {
+          "modelDescription": "sora-2-image-to-video, 15s, with audio, no watermark",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "5",
+          "creditUnit": "per video",
+          "usdPrice": "0.025",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora2/sora-2-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-image-to-video-standard",
+          "runtimeModel": "sora-2-image-to-video",
+          "duration": 15,
+          "audio": true
+        }
+      ]
+    },
+    "video:sora2-text-to-video-standard": {
+      "addRows": [
+        {
+          "modelDescription": "sora-2-text-to-video, 10s, with audio, no watermark",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "3",
+          "creditUnit": "per video",
+          "usdPrice": "0.015",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-text-to-video-standard",
+          "runtimeModel": "sora-2-text-to-video",
+          "duration": 10,
+          "audio": true
+        },
+        {
+          "modelDescription": "sora-2-text-to-video, 15s, with audio, no watermark",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "5",
+          "creditUnit": "per video",
+          "usdPrice": "0.025",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-text-to-video-standard",
+          "runtimeModel": "sora-2-text-to-video",
+          "duration": 15,
+          "audio": true
+        }
+      ]
+    },
+    "video:sora2-image-to-video-stable": {
+      "addRows": [
+        {
+          "modelDescription": "sora-2-image-to-video-stable, 10s",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "20",
+          "creditUnit": "per video",
+          "usdPrice": "0.10",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora2/sora-2-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-image-to-video-stable",
+          "runtimeModel": "sora-2-image-to-video-stable",
+          "duration": 10
+        },
+        {
+          "modelDescription": "sora-2-image-to-video-stable, 15s",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "0.15",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora2/sora-2-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-image-to-video-stable",
+          "runtimeModel": "sora-2-image-to-video-stable",
+          "duration": 15
+        }
+      ]
+    },
+    "video:sora2-text-to-video-stable": {
+      "addRows": [
+        {
+          "modelDescription": "sora-2-text-to-video-stable, 10s",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "20",
+          "creditUnit": "per video",
+          "usdPrice": "0.10",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-text-to-video-stable",
+          "runtimeModel": "sora-2-text-to-video-stable",
+          "duration": 10
+        },
+        {
+          "modelDescription": "sora-2-text-to-video-stable, 15s",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "0.15",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-text-to-video-stable",
+          "runtimeModel": "sora-2-text-to-video-stable",
+          "duration": 15
+        }
+      ]
+    },
+    "video:sora2-pro-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "sora-2-pro-image-to-video, standard, 10s",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "75",
+          "creditUnit": "per video",
+          "usdPrice": "0.375",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora2/sora-2-pro-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-pro-image-to-video",
+          "runtimeModel": "sora-2-pro-image-to-video",
+          "resolution": "standard",
+          "duration": 10
+        },
+        {
+          "modelDescription": "sora-2-pro-image-to-video, standard, 15s",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "135",
+          "creditUnit": "per video",
+          "usdPrice": "0.675",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora2/sora-2-pro-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-pro-image-to-video",
+          "runtimeModel": "sora-2-pro-image-to-video",
+          "resolution": "standard",
+          "duration": 15
+        },
+        {
+          "modelDescription": "sora-2-pro-image-to-video, high, 10s",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "165",
+          "creditUnit": "per video",
+          "usdPrice": "0.825",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora2/sora-2-pro-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-pro-image-to-video",
+          "runtimeModel": "sora-2-pro-image-to-video",
+          "resolution": "high",
+          "duration": 10
+        },
+        {
+          "modelDescription": "sora-2-pro-image-to-video, high, 15s",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "315",
+          "creditUnit": "per video",
+          "usdPrice": "1.575",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora2/sora-2-pro-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-pro-image-to-video",
+          "runtimeModel": "sora-2-pro-image-to-video",
+          "resolution": "high",
+          "duration": 15
+        }
+      ]
+    },
+    "video:sora2-pro-text-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "sora-2-pro-text-to-video, standard, 10s",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "75",
+          "creditUnit": "per video",
+          "usdPrice": "0.375",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora2/sora-2-pro-text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-pro-text-to-video",
+          "runtimeModel": "sora-2-pro-text-to-video",
+          "resolution": "standard",
+          "duration": 10
+        },
+        {
+          "modelDescription": "sora-2-pro-text-to-video, standard, 15s",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "135",
+          "creditUnit": "per video",
+          "usdPrice": "0.675",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora2/sora-2-pro-text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-pro-text-to-video",
+          "runtimeModel": "sora-2-pro-text-to-video",
+          "resolution": "standard",
+          "duration": 15
+        },
+        {
+          "modelDescription": "sora-2-pro-text-to-video, high, 10s",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "165",
+          "creditUnit": "per video",
+          "usdPrice": "0.825",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora2/sora-2-pro-text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-pro-text-to-video",
+          "runtimeModel": "sora-2-pro-text-to-video",
+          "resolution": "high",
+          "duration": 10
+        },
+        {
+          "modelDescription": "sora-2-pro-text-to-video, high, 15s",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "315",
+          "creditUnit": "per video",
+          "usdPrice": "1.575",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora2/sora-2-pro-text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-pro-text-to-video",
+          "runtimeModel": "sora-2-pro-text-to-video",
+          "resolution": "high",
+          "duration": 15
+        }
+      ]
+    },
+    "video:sora2-pro-storyboard": {
+      "addRows": [
+        {
+          "modelDescription": "sora-2-pro-storyboard, standard, 10s",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "75",
+          "creditUnit": "per video",
+          "usdPrice": "0.375",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora-2-pro-storyboard.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-pro-storyboard",
+          "runtimeModel": "sora-2-pro-storyboard",
+          "resolution": "standard",
+          "duration": 10
+        },
+        {
+          "modelDescription": "sora-2-pro-storyboard, standard, 15s",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "135",
+          "creditUnit": "per video",
+          "usdPrice": "0.675",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora-2-pro-storyboard.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-pro-storyboard",
+          "runtimeModel": "sora-2-pro-storyboard",
+          "resolution": "standard",
+          "duration": 15
+        },
+        {
+          "modelDescription": "sora-2-pro-storyboard, standard, 25s",
+          "interfaceType": "video",
+          "provider": "OpenAI",
+          "creditPrice": "135",
+          "creditUnit": "per video",
+          "usdPrice": "0.675",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/sora-2-pro-storyboard.md",
+          "discountPrice": false,
+          "catalogModelId": "video:sora2-pro-storyboard",
+          "runtimeModel": "sora-2-pro-storyboard",
+          "resolution": "standard",
+          "duration": 25
+        }
+      ]
+    },
+    "video:grok-imagine-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "grok-imagine/image-to-video, 480p",
+          "interfaceType": "video",
+          "provider": "Grok Imagine",
+          "creditPrice": "1.6",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:grok-imagine-image-to-video",
+          "runtimeModel": "grok-imagine/image-to-video",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "grok-imagine/image-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "Grok Imagine",
+          "creditPrice": "3",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:grok-imagine-image-to-video",
+          "runtimeModel": "grok-imagine/image-to-video",
+          "resolution": "720p"
+        }
+      ]
+    },
+    "video:grok-imagine-text-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "grok-imagine/text-to-video, 480p",
+          "interfaceType": "video",
+          "provider": "Grok Imagine",
+          "creditPrice": "1.6",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:grok-imagine-text-to-video",
+          "runtimeModel": "grok-imagine/text-to-video",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "grok-imagine/text-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "Grok Imagine",
+          "creditPrice": "3",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:grok-imagine-text-to-video",
+          "runtimeModel": "grok-imagine/text-to-video",
+          "resolution": "720p"
+        }
+      ]
+    },
+    "image:grok-imagine-text-to-image": {
+      "addRows": [
+        {
+          "modelDescription": "grok-imagine/text-to-image, standard, 6 images",
+          "interfaceType": "image",
+          "provider": "Grok Imagine",
+          "creditPrice": "4",
+          "creditUnit": "per generation",
+          "usdPrice": "0.02",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/text-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:grok-imagine-text-to-image",
+          "runtimeModel": "grok-imagine/text-to-image",
+          "audio": false
+        },
+        {
+          "modelDescription": "grok-imagine/text-to-image, quality, 4 images",
+          "interfaceType": "image",
+          "provider": "Grok Imagine",
+          "creditPrice": "5",
+          "creditUnit": "per generation",
+          "usdPrice": "0.025",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/text-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:grok-imagine-text-to-image",
+          "runtimeModel": "grok-imagine/text-to-image",
+          "audio": true
+        }
+      ]
+    },
+    "image:grok-imagine-image-to-image": {
+      "addRows": [
+        {
+          "modelDescription": "grok-imagine/image-to-image, 2 images",
+          "interfaceType": "image",
+          "provider": "Grok Imagine",
+          "creditPrice": "4",
+          "creditUnit": "per generation",
+          "usdPrice": "0.02",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/image-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:grok-imagine-image-to-image",
+          "runtimeModel": "grok-imagine/image-to-image"
+        }
+      ]
+    },
+    "video:grok-imagine-video-extend": {
+      "addRows": [
+        {
+          "modelDescription": "grok-imagine/extend, 6s, conservative 720p",
+          "interfaceType": "video",
+          "provider": "Grok Imagine",
+          "creditPrice": "20",
+          "creditUnit": "per video",
+          "usdPrice": "0.10",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/extend.md",
+          "discountPrice": false,
+          "catalogModelId": "video:grok-imagine-video-extend",
+          "runtimeModel": "grok-imagine/extend",
+          "duration": 6
+        },
+        {
+          "modelDescription": "grok-imagine/extend, 10s, conservative 720p",
+          "interfaceType": "video",
+          "provider": "Grok Imagine",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "0.15",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/extend.md",
+          "discountPrice": false,
+          "catalogModelId": "video:grok-imagine-video-extend",
+          "runtimeModel": "grok-imagine/extend",
+          "duration": 10
+        }
+      ]
+    },
+    "video:grok-imagine-video-upscale": {
+      "addRows": [
+        {
+          "modelDescription": "grok-imagine/upscale, 360p to 720p",
+          "interfaceType": "video",
+          "provider": "Grok Imagine",
+          "creditPrice": "10",
+          "creditUnit": "per video",
+          "usdPrice": "0.05",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/upscale.md",
+          "discountPrice": false,
+          "catalogModelId": "video:grok-imagine-video-upscale",
+          "runtimeModel": "grok-imagine/upscale"
+        }
+      ]
+    },
+    "video:kling-3-0-motion-control": {
+      "addRows": [
+        {
+          "modelDescription": "kling-3.0/motion-control, 720p",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "20",
+          "creditUnit": "per second",
+          "usdPrice": "0.1",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/motion-control-v3.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-3-0-motion-control",
+          "runtimeModel": "kling-3.0/motion-control",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "kling-3.0/motion-control, 1080p",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "27",
+          "creditUnit": "per second",
+          "usdPrice": "0.135",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/motion-control-v3.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-3-0-motion-control",
+          "runtimeModel": "kling-3.0/motion-control",
+          "resolution": "1080p"
+        }
+      ]
+    },
+    "video:kling-3-0": {
+      "addRows": [
+        {
+          "modelDescription": "kling-3.0, std, without audio",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "14",
+          "creditUnit": "per second",
+          "usdPrice": "0.07",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/kling-3-0.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-3-0",
+          "runtimeModel": "kling-3.0",
+          "resolution": "std",
+          "audio": false
+        },
+        {
+          "modelDescription": "kling-3.0, std, with audio",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "20",
+          "creditUnit": "per second",
+          "usdPrice": "0.1",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/kling-3-0.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-3-0",
+          "runtimeModel": "kling-3.0",
+          "resolution": "std",
+          "audio": true
+        },
+        {
+          "modelDescription": "kling-3.0, pro, without audio",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "18",
+          "creditUnit": "per second",
+          "usdPrice": "0.09",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/kling-3-0.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-3-0",
+          "runtimeModel": "kling-3.0",
+          "resolution": "pro",
+          "audio": false
+        },
+        {
+          "modelDescription": "kling-3.0, pro, with audio",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "27",
+          "creditUnit": "per second",
+          "usdPrice": "0.135",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/kling-3-0.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-3-0",
+          "runtimeModel": "kling-3.0",
+          "resolution": "pro",
+          "audio": true
+        }
+      ]
+    },
+    "video:kling-2-6-motion-control": {
+      "addRows": [
+        {
+          "modelDescription": "kling-2.6/motion-control, 720p",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "11",
+          "creditUnit": "per second",
+          "usdPrice": "0.055",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/motion-control.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-2-6-motion-control",
+          "runtimeModel": "kling-2.6/motion-control",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "kling-2.6/motion-control, 1080p",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "18",
+          "creditUnit": "per second",
+          "usdPrice": "0.09",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/motion-control.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-2-6-motion-control",
+          "runtimeModel": "kling-2.6/motion-control",
+          "resolution": "1080p"
+        }
+      ]
+    },
+    "video:kling-2-6-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "kling-2.6/image-to-video, 5s, without audio",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "55",
+          "creditUnit": "per video",
+          "usdPrice": "0.28",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-2-6-image-to-video",
+          "runtimeModel": "kling-2.6/image-to-video",
+          "duration": 5,
+          "audio": false
+        },
+        {
+          "modelDescription": "kling-2.6/image-to-video, 10s, without audio",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "110",
+          "creditUnit": "per video",
+          "usdPrice": "0.55",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-2-6-image-to-video",
+          "runtimeModel": "kling-2.6/image-to-video",
+          "duration": 10,
+          "audio": false
+        },
+        {
+          "modelDescription": "kling-2.6/image-to-video, 5s, with audio",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "110",
+          "creditUnit": "per video",
+          "usdPrice": "0.55",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-2-6-image-to-video",
+          "runtimeModel": "kling-2.6/image-to-video",
+          "duration": 5,
+          "audio": true
+        },
+        {
+          "modelDescription": "kling-2.6/image-to-video, 10s, with audio",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "220",
+          "creditUnit": "per video",
+          "usdPrice": "1.10",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-2-6-image-to-video",
+          "runtimeModel": "kling-2.6/image-to-video",
+          "duration": 10,
+          "audio": true
+        }
+      ]
+    },
+    "video:kling-2-6-text-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "kling-2.6/text-to-video, 5s, without audio",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "55",
+          "creditUnit": "per video",
+          "usdPrice": "0.28",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-2-6-text-to-video",
+          "runtimeModel": "kling-2.6/text-to-video",
+          "duration": 5,
+          "audio": false
+        },
+        {
+          "modelDescription": "kling-2.6/text-to-video, 10s, without audio",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "110",
+          "creditUnit": "per video",
+          "usdPrice": "0.55",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-2-6-text-to-video",
+          "runtimeModel": "kling-2.6/text-to-video",
+          "duration": 10,
+          "audio": false
+        },
+        {
+          "modelDescription": "kling-2.6/text-to-video, 5s, with audio",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "110",
+          "creditUnit": "per video",
+          "usdPrice": "0.55",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-2-6-text-to-video",
+          "runtimeModel": "kling-2.6/text-to-video",
+          "duration": 5,
+          "audio": true
+        },
+        {
+          "modelDescription": "kling-2.6/text-to-video, 10s, with audio",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "220",
+          "creditUnit": "per video",
+          "usdPrice": "1.10",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-2-6-text-to-video",
+          "runtimeModel": "kling-2.6/text-to-video",
+          "duration": 10,
+          "audio": true
+        }
+      ]
+    },
+    "video:kling-v2-5-turbo-text-to-video-pro": {
+      "addRows": [
+        {
+          "modelDescription": "kling/v2-5-turbo-text-to-video-pro, 5s",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "42",
+          "creditUnit": "per video",
+          "usdPrice": "0.21",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/v25-turbo-text-to-video-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-v2-5-turbo-text-to-video-pro",
+          "runtimeModel": "kling/v2-5-turbo-text-to-video-pro",
+          "duration": 5
+        },
+        {
+          "modelDescription": "kling/v2-5-turbo-text-to-video-pro, 10s",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "84",
+          "creditUnit": "per video",
+          "usdPrice": "0.42",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/v25-turbo-text-to-video-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-v2-5-turbo-text-to-video-pro",
+          "runtimeModel": "kling/v2-5-turbo-text-to-video-pro",
+          "duration": 10
+        }
+      ]
+    },
+    "video:kling-v2-5-turbo-image-to-video-pro": {
+      "addRows": [
+        {
+          "modelDescription": "kling/v2-5-turbo-image-to-video-pro, 5s",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "42",
+          "creditUnit": "per video",
+          "usdPrice": "0.21",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/v25-turbo-image-to-video-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-v2-5-turbo-image-to-video-pro",
+          "runtimeModel": "kling/v2-5-turbo-image-to-video-pro",
+          "duration": 5
+        },
+        {
+          "modelDescription": "kling/v2-5-turbo-image-to-video-pro, 10s",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "84",
+          "creditUnit": "per video",
+          "usdPrice": "0.42",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/v25-turbo-image-to-video-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-v2-5-turbo-image-to-video-pro",
+          "runtimeModel": "kling/v2-5-turbo-image-to-video-pro",
+          "duration": 10
+        }
+      ]
+    },
+    "video:kling-ai-avatar-pro": {
+      "addRows": [
+        {
+          "modelDescription": "kling/ai-avatar-pro, 1080p",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "16",
+          "creditUnit": "per second",
+          "usdPrice": "0.08",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/ai-avatar-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-ai-avatar-pro",
+          "runtimeModel": "kling/ai-avatar-pro"
+        }
+      ]
+    },
+    "video:kling-ai-avatar-standard": {
+      "addRows": [
+        {
+          "modelDescription": "kling/ai-avatar-standard, 720p",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "8",
+          "creditUnit": "per second",
+          "usdPrice": "0.04",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/ai-avatar-standard.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-ai-avatar-standard",
+          "runtimeModel": "kling/ai-avatar-standard"
+        }
+      ]
+    },
+    "video:kling-v2-1-master-text-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "kling/v2-1-master-text-to-video, 5s",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "160",
+          "creditUnit": "per video",
+          "usdPrice": "0.80",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/v2-1-master-text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-v2-1-master-text-to-video",
+          "runtimeModel": "kling/v2-1-master-text-to-video",
+          "duration": 5
+        },
+        {
+          "modelDescription": "kling/v2-1-master-text-to-video, 10s",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "320",
+          "creditUnit": "per video",
+          "usdPrice": "1.60",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/v2-1-master-text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-v2-1-master-text-to-video",
+          "runtimeModel": "kling/v2-1-master-text-to-video",
+          "duration": 10
+        }
+      ]
+    },
+    "video:kling-v2-1-master-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "kling/v2-1-master-image-to-video, 5s",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "160",
+          "creditUnit": "per video",
+          "usdPrice": "0.80",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/v2-1-master-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-v2-1-master-image-to-video",
+          "runtimeModel": "kling/v2-1-master-image-to-video",
+          "duration": 5
+        },
+        {
+          "modelDescription": "kling/v2-1-master-image-to-video, 10s",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "320",
+          "creditUnit": "per video",
+          "usdPrice": "1.60",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/v2-1-master-image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-v2-1-master-image-to-video",
+          "runtimeModel": "kling/v2-1-master-image-to-video",
+          "duration": 10
+        }
+      ]
+    },
+    "video:kling-v2-1-pro": {
+      "addRows": [
+        {
+          "modelDescription": "kling/v2-1-pro, 5s",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "50",
+          "creditUnit": "per video",
+          "usdPrice": "0.25",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/v2-1-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-v2-1-pro",
+          "runtimeModel": "kling/v2-1-pro",
+          "duration": 5
+        },
+        {
+          "modelDescription": "kling/v2-1-pro, 10s",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "100",
+          "creditUnit": "per video",
+          "usdPrice": "0.5",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/v2-1-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-v2-1-pro",
+          "runtimeModel": "kling/v2-1-pro",
+          "duration": 10
+        }
+      ]
+    },
+    "video:kling-v2-1-standard": {
+      "addRows": [
+        {
+          "modelDescription": "kling/v2-1-standard, 5s",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "25",
+          "creditUnit": "per video",
+          "usdPrice": "0.125",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/v2-1-standard.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-v2-1-standard",
+          "runtimeModel": "kling/v2-1-standard",
+          "duration": 5
+        },
+        {
+          "modelDescription": "kling/v2-1-standard, 10s",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "50",
+          "creditUnit": "per video",
+          "usdPrice": "0.25",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/kling/v2-1-standard.md",
+          "discountPrice": false,
+          "catalogModelId": "video:kling-v2-1-standard",
+          "runtimeModel": "kling/v2-1-standard",
+          "duration": 10
+        }
+      ]
+    },
+    "video:wan-2-7-text-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "wan/2-7-text-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "Wan 2.7",
+          "creditPrice": "16",
+          "creditUnit": "per second",
+          "usdPrice": "0.08",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-7-text-to-video",
+          "runtimeModel": "wan/2-7-text-to-video",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "wan/2-7-text-to-video, 1080p",
+          "interfaceType": "video",
+          "provider": "Wan 2.7",
+          "creditPrice": "24",
+          "creditUnit": "per second",
+          "usdPrice": "0.12",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-7-text-to-video",
+          "runtimeModel": "wan/2-7-text-to-video",
+          "resolution": "1080p"
+        }
+      ]
+    },
+    "video:wan-2-7-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "wan/2-7-image-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "Wan 2.7",
+          "creditPrice": "16",
+          "creditUnit": "per second",
+          "usdPrice": "0.08",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-7-image-to-video",
+          "runtimeModel": "wan/2-7-image-to-video",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "wan/2-7-image-to-video, 1080p",
+          "interfaceType": "video",
+          "provider": "Wan 2.7",
+          "creditPrice": "24",
+          "creditUnit": "per second",
+          "usdPrice": "0.12",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-7-image-to-video",
+          "runtimeModel": "wan/2-7-image-to-video",
+          "resolution": "1080p"
+        }
+      ]
+    },
+    "video:wan-2-7-reference-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "wan/2-7-r2v, 720p",
+          "interfaceType": "video",
+          "provider": "Wan 2.7",
+          "creditPrice": "16",
+          "creditUnit": "per second",
+          "usdPrice": "0.08",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-7-reference-to-video",
+          "runtimeModel": "wan/2-7-r2v",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "wan/2-7-r2v, 1080p",
+          "interfaceType": "video",
+          "provider": "Wan 2.7",
+          "creditPrice": "24",
+          "creditUnit": "per second",
+          "usdPrice": "0.12",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-7-reference-to-video",
+          "runtimeModel": "wan/2-7-r2v",
+          "resolution": "1080p"
+        }
+      ]
+    },
+    "video:wan-2-7-video-edit": {
+      "addRows": [
+        {
+          "modelDescription": "wan/2-7-videoedit, 720p",
+          "interfaceType": "video",
+          "provider": "Wan 2.7",
+          "creditPrice": "16",
+          "creditUnit": "per second",
+          "usdPrice": "0.08",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-7-video-edit",
+          "runtimeModel": "wan/2-7-videoedit",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "wan/2-7-videoedit, 1080p",
+          "interfaceType": "video",
+          "provider": "Wan 2.7",
+          "creditPrice": "24",
+          "creditUnit": "per second",
+          "usdPrice": "0.12",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-7-video-edit",
+          "runtimeModel": "wan/2-7-videoedit",
+          "resolution": "1080p"
+        }
+      ]
+    },
+    "video:wan-2-6-video-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "wan/2-6-video-to-video, 720p, 5s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "70",
+          "creditUnit": "per video",
+          "usdPrice": "0.35",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-video-to-video",
+          "runtimeModel": "wan/2-6-video-to-video",
+          "resolution": "720p",
+          "duration": 5
+        },
+        {
+          "modelDescription": "wan/2-6-video-to-video, 720p, 10s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "140",
+          "creditUnit": "per video",
+          "usdPrice": "0.70",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-video-to-video",
+          "runtimeModel": "wan/2-6-video-to-video",
+          "resolution": "720p",
+          "duration": 10
+        },
+        {
+          "modelDescription": "wan/2-6-video-to-video, 720p, 15s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "209.5",
+          "creditUnit": "per video",
+          "usdPrice": "1.05",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-video-to-video",
+          "runtimeModel": "wan/2-6-video-to-video",
+          "resolution": "720p",
+          "duration": 15
+        },
+        {
+          "modelDescription": "wan/2-6-video-to-video, 1080p, 5s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "104.5",
+          "creditUnit": "per video",
+          "usdPrice": "0.53",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-video-to-video",
+          "runtimeModel": "wan/2-6-video-to-video",
+          "resolution": "1080p",
+          "duration": 5
+        },
+        {
+          "modelDescription": "wan/2-6-video-to-video, 1080p, 10s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "209.5",
+          "creditUnit": "per video",
+          "usdPrice": "1.05",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-video-to-video",
+          "runtimeModel": "wan/2-6-video-to-video",
+          "resolution": "1080p",
+          "duration": 10
+        },
+        {
+          "modelDescription": "wan/2-6-video-to-video, 1080p, 15s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "315",
+          "creditUnit": "per video",
+          "usdPrice": "1.58",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-video-to-video",
+          "runtimeModel": "wan/2-6-video-to-video",
+          "resolution": "1080p",
+          "duration": 15
+        }
+      ]
+    },
+    "video:wan-2-6-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "wan/2-6-image-to-video, 720p, 5s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "70",
+          "creditUnit": "per video",
+          "usdPrice": "0.35",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-image-to-video",
+          "runtimeModel": "wan/2-6-image-to-video",
+          "resolution": "720p",
+          "duration": 5
+        },
+        {
+          "modelDescription": "wan/2-6-image-to-video, 720p, 10s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "140",
+          "creditUnit": "per video",
+          "usdPrice": "0.70",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-image-to-video",
+          "runtimeModel": "wan/2-6-image-to-video",
+          "resolution": "720p",
+          "duration": 10
+        },
+        {
+          "modelDescription": "wan/2-6-image-to-video, 720p, 15s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "209.5",
+          "creditUnit": "per video",
+          "usdPrice": "1.05",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-image-to-video",
+          "runtimeModel": "wan/2-6-image-to-video",
+          "resolution": "720p",
+          "duration": 15
+        },
+        {
+          "modelDescription": "wan/2-6-image-to-video, 1080p, 5s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "104.5",
+          "creditUnit": "per video",
+          "usdPrice": "0.53",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-image-to-video",
+          "runtimeModel": "wan/2-6-image-to-video",
+          "resolution": "1080p",
+          "duration": 5
+        },
+        {
+          "modelDescription": "wan/2-6-image-to-video, 1080p, 10s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "209.5",
+          "creditUnit": "per video",
+          "usdPrice": "1.05",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-image-to-video",
+          "runtimeModel": "wan/2-6-image-to-video",
+          "resolution": "1080p",
+          "duration": 10
+        },
+        {
+          "modelDescription": "wan/2-6-image-to-video, 1080p, 15s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "315",
+          "creditUnit": "per video",
+          "usdPrice": "1.58",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-image-to-video",
+          "runtimeModel": "wan/2-6-image-to-video",
+          "resolution": "1080p",
+          "duration": 15
+        }
+      ]
+    },
+    "video:wan-2-6-text-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "wan/2-6-text-to-video, 720p, 5s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "70",
+          "creditUnit": "per video",
+          "usdPrice": "0.35",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-text-to-video",
+          "runtimeModel": "wan/2-6-text-to-video",
+          "resolution": "720p",
+          "duration": 5
+        },
+        {
+          "modelDescription": "wan/2-6-text-to-video, 720p, 10s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "140",
+          "creditUnit": "per video",
+          "usdPrice": "0.70",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-text-to-video",
+          "runtimeModel": "wan/2-6-text-to-video",
+          "resolution": "720p",
+          "duration": 10
+        },
+        {
+          "modelDescription": "wan/2-6-text-to-video, 720p, 15s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "209.5",
+          "creditUnit": "per video",
+          "usdPrice": "1.05",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-text-to-video",
+          "runtimeModel": "wan/2-6-text-to-video",
+          "resolution": "720p",
+          "duration": 15
+        },
+        {
+          "modelDescription": "wan/2-6-text-to-video, 1080p, 5s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "104.5",
+          "creditUnit": "per video",
+          "usdPrice": "0.53",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-text-to-video",
+          "runtimeModel": "wan/2-6-text-to-video",
+          "resolution": "1080p",
+          "duration": 5
+        },
+        {
+          "modelDescription": "wan/2-6-text-to-video, 1080p, 10s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "209.5",
+          "creditUnit": "per video",
+          "usdPrice": "1.05",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-text-to-video",
+          "runtimeModel": "wan/2-6-text-to-video",
+          "resolution": "1080p",
+          "duration": 10
+        },
+        {
+          "modelDescription": "wan/2-6-text-to-video, 1080p, 15s",
+          "interfaceType": "video",
+          "provider": "Wan 2.6",
+          "creditPrice": "315",
+          "creditUnit": "per video",
+          "usdPrice": "1.58",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-6-text-to-video",
+          "runtimeModel": "wan/2-6-text-to-video",
+          "resolution": "1080p",
+          "duration": 15
+        }
+      ]
+    },
+    "video:wan-2-5-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "wan/2-5-image-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "Wan 2.5",
+          "creditPrice": "12",
+          "creditUnit": "per second",
+          "usdPrice": "0.06",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-5-image-to-video",
+          "runtimeModel": "wan/2-5-image-to-video",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "wan/2-5-image-to-video, 1080p",
+          "interfaceType": "video",
+          "provider": "Wan 2.5",
+          "creditPrice": "20",
+          "creditUnit": "per second",
+          "usdPrice": "0.10",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-5-image-to-video",
+          "runtimeModel": "wan/2-5-image-to-video",
+          "resolution": "1080p"
+        }
+      ]
+    },
+    "video:wan-2-5-text-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "wan/2-5-text-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "Wan 2.5",
+          "creditPrice": "12",
+          "creditUnit": "per second",
+          "usdPrice": "0.06",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-5-text-to-video",
+          "runtimeModel": "wan/2-5-text-to-video",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "wan/2-5-text-to-video, 1080p",
+          "interfaceType": "video",
+          "provider": "Wan 2.5",
+          "creditPrice": "20",
+          "creditUnit": "per second",
+          "usdPrice": "0.10",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-5-text-to-video",
+          "runtimeModel": "wan/2-5-text-to-video",
+          "resolution": "1080p"
+        }
+      ]
+    },
+    "video:wan-animate-replace": {
+      "addRows": [
+        {
+          "modelDescription": "wan/2-2-animate-replace, 480p",
+          "interfaceType": "video",
+          "provider": "Wan",
+          "creditPrice": "6",
+          "creditUnit": "per second",
+          "usdPrice": "0.03",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-animate-replace",
+          "runtimeModel": "wan/2-2-animate-replace",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "wan/2-2-animate-replace, 580p",
+          "interfaceType": "video",
+          "provider": "Wan",
+          "creditPrice": "9.5",
+          "creditUnit": "per second",
+          "usdPrice": "0.0475",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-animate-replace",
+          "runtimeModel": "wan/2-2-animate-replace",
+          "resolution": "580p"
+        },
+        {
+          "modelDescription": "wan/2-2-animate-replace, 720p",
+          "interfaceType": "video",
+          "provider": "Wan",
+          "creditPrice": "12.5",
+          "creditUnit": "per second",
+          "usdPrice": "0.0625",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-animate-replace",
+          "runtimeModel": "wan/2-2-animate-replace",
+          "resolution": "720p"
+        }
+      ]
+    },
+    "video:wan-animate-move": {
+      "addRows": [
+        {
+          "modelDescription": "wan/2-2-animate-move, 480p",
+          "interfaceType": "video",
+          "provider": "Wan",
+          "creditPrice": "6",
+          "creditUnit": "per second",
+          "usdPrice": "0.03",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-animate-move",
+          "runtimeModel": "wan/2-2-animate-move",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "wan/2-2-animate-move, 580p",
+          "interfaceType": "video",
+          "provider": "Wan",
+          "creditPrice": "9.5",
+          "creditUnit": "per second",
+          "usdPrice": "0.0475",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-animate-move",
+          "runtimeModel": "wan/2-2-animate-move",
+          "resolution": "580p"
+        },
+        {
+          "modelDescription": "wan/2-2-animate-move, 720p",
+          "interfaceType": "video",
+          "provider": "Wan",
+          "creditPrice": "12.5",
+          "creditUnit": "per second",
+          "usdPrice": "0.0625",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-animate-move",
+          "runtimeModel": "wan/2-2-animate-move",
+          "resolution": "720p"
+        }
+      ]
+    },
+    "video:wan-2-2-a14b-speech-to-video-turbo": {
+      "addRows": [
+        {
+          "modelDescription": "wan/2-2-a14b-speech-to-video-turbo, 480p",
+          "interfaceType": "video",
+          "provider": "Wan",
+          "creditPrice": "12",
+          "creditUnit": "per second",
+          "usdPrice": "0.06",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-2-a14b-speech-to-video-turbo",
+          "runtimeModel": "wan/2-2-a14b-speech-to-video-turbo",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "wan/2-2-a14b-speech-to-video-turbo, 580p",
+          "interfaceType": "video",
+          "provider": "Wan",
+          "creditPrice": "18",
+          "creditUnit": "per second",
+          "usdPrice": "0.09",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-2-a14b-speech-to-video-turbo",
+          "runtimeModel": "wan/2-2-a14b-speech-to-video-turbo",
+          "resolution": "580p"
+        },
+        {
+          "modelDescription": "wan/2-2-a14b-speech-to-video-turbo, 720p",
+          "interfaceType": "video",
+          "provider": "Wan",
+          "creditPrice": "24",
+          "creditUnit": "per second",
+          "usdPrice": "0.12",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-2-2-a14b-speech-to-video-turbo",
+          "runtimeModel": "wan/2-2-a14b-speech-to-video-turbo",
+          "resolution": "720p"
+        }
+      ]
+    },
+    "video:wan-text-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "wan/2-2-a14b-text-to-video-turbo, 480p",
+          "interfaceType": "video",
+          "provider": "Wan",
+          "creditPrice": "8",
+          "creditUnit": "per second",
+          "usdPrice": "0.04",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-text-to-video",
+          "runtimeModel": "wan/2-2-a14b-text-to-video-turbo",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "wan/2-2-a14b-text-to-video-turbo, 580p",
+          "interfaceType": "video",
+          "provider": "Wan",
+          "creditPrice": "12",
+          "creditUnit": "per second",
+          "usdPrice": "0.06",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-text-to-video",
+          "runtimeModel": "wan/2-2-a14b-text-to-video-turbo",
+          "resolution": "580p"
+        },
+        {
+          "modelDescription": "wan/2-2-a14b-text-to-video-turbo, 720p",
+          "interfaceType": "video",
+          "provider": "Wan",
+          "creditPrice": "16",
+          "creditUnit": "per second",
+          "usdPrice": "0.08",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-text-to-video",
+          "runtimeModel": "wan/2-2-a14b-text-to-video-turbo",
+          "resolution": "720p"
+        }
+      ]
+    },
+    "video:wan-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "wan/2-2-a14b-image-to-video-turbo, 480p",
+          "interfaceType": "video",
+          "provider": "Wan",
+          "creditPrice": "8",
+          "creditUnit": "per second",
+          "usdPrice": "0.04",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-image-to-video",
+          "runtimeModel": "wan/2-2-a14b-image-to-video-turbo",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "wan/2-2-a14b-image-to-video-turbo, 580p",
+          "interfaceType": "video",
+          "provider": "Wan",
+          "creditPrice": "12",
+          "creditUnit": "per second",
+          "usdPrice": "0.06",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-image-to-video",
+          "runtimeModel": "wan/2-2-a14b-image-to-video-turbo",
+          "resolution": "580p"
+        },
+        {
+          "modelDescription": "wan/2-2-a14b-image-to-video-turbo, 720p",
+          "interfaceType": "video",
+          "provider": "Wan",
+          "creditPrice": "16",
+          "creditUnit": "per second",
+          "usdPrice": "0.08",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:wan-image-to-video",
+          "runtimeModel": "wan/2-2-a14b-image-to-video-turbo",
+          "resolution": "720p"
+        }
+      ]
+    },
+    "video:hailuo-2-3-standard-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "hailuo/2-3-image-to-video-standard, 768P, 6s",
+          "interfaceType": "video",
+          "provider": "Hailuo 2.3 Standard Image to Video",
+          "creditPrice": "25",
+          "creditUnit": "per video",
+          "usdPrice": "0.125",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:hailuo-2-3-standard-image-to-video",
+          "runtimeModel": "hailuo/2-3-image-to-video-standard",
+          "resolution": "768P",
+          "duration": 6
+        },
+        {
+          "modelDescription": "hailuo/2-3-image-to-video-standard, 768P, 10s",
+          "interfaceType": "video",
+          "provider": "Hailuo 2.3 Standard Image to Video",
+          "creditPrice": "40",
+          "creditUnit": "per video",
+          "usdPrice": "0.20",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:hailuo-2-3-standard-image-to-video",
+          "runtimeModel": "hailuo/2-3-image-to-video-standard",
+          "resolution": "768P",
+          "duration": 10
+        },
+        {
+          "modelDescription": "hailuo/2-3-image-to-video-standard, 1080P, 6s",
+          "interfaceType": "video",
+          "provider": "Hailuo 2.3 Standard Image to Video",
+          "creditPrice": "40",
+          "creditUnit": "per video",
+          "usdPrice": "0.20",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:hailuo-2-3-standard-image-to-video",
+          "runtimeModel": "hailuo/2-3-image-to-video-standard",
+          "resolution": "1080P",
+          "duration": 6
+        }
+      ]
+    },
+    "video:hailuo-2-3-pro-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "hailuo/2-3-image-to-video-pro, 768P, 6s",
+          "interfaceType": "video",
+          "provider": "Hailuo 2.3 Pro Image to Video",
+          "creditPrice": "40",
+          "creditUnit": "per video",
+          "usdPrice": "0.20",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:hailuo-2-3-pro-image-to-video",
+          "runtimeModel": "hailuo/2-3-image-to-video-pro",
+          "resolution": "768P",
+          "duration": 6
+        },
+        {
+          "modelDescription": "hailuo/2-3-image-to-video-pro, 768P, 10s",
+          "interfaceType": "video",
+          "provider": "Hailuo 2.3 Pro Image to Video",
+          "creditPrice": "80",
+          "creditUnit": "per video",
+          "usdPrice": "0.40",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:hailuo-2-3-pro-image-to-video",
+          "runtimeModel": "hailuo/2-3-image-to-video-pro",
+          "resolution": "768P",
+          "duration": 10
+        },
+        {
+          "modelDescription": "hailuo/2-3-image-to-video-pro, 1080P, 6s",
+          "interfaceType": "video",
+          "provider": "Hailuo 2.3 Pro Image to Video",
+          "creditPrice": "70",
+          "creditUnit": "per video",
+          "usdPrice": "0.35",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:hailuo-2-3-pro-image-to-video",
+          "runtimeModel": "hailuo/2-3-image-to-video-pro",
+          "resolution": "1080P",
+          "duration": 6
+        }
+      ]
+    },
+    "video:hailuo-pro-text-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "hailuo/02-text-to-video-pro, 1080P",
+          "interfaceType": "video",
+          "provider": "Hailuo Pro Text to Video",
+          "creditPrice": "9.5",
+          "creditUnit": "per second",
+          "usdPrice": "0.0475",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:hailuo-pro-text-to-video",
+          "runtimeModel": "hailuo/02-text-to-video-pro",
+          "resolution": "1080P"
+        }
+      ]
+    },
+    "video:hailuo-pro-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "hailuo/02-image-to-video-pro, 1080P",
+          "interfaceType": "video",
+          "provider": "Hailuo Pro Image to Video",
+          "creditPrice": "9.5",
+          "creditUnit": "per second",
+          "usdPrice": "0.0475",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:hailuo-pro-image-to-video",
+          "runtimeModel": "hailuo/02-image-to-video-pro",
+          "resolution": "1080P"
+        }
+      ]
+    },
+    "video:hailuo-standard-text-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "hailuo/02-text-to-video-standard, 768P",
+          "interfaceType": "video",
+          "provider": "Hailuo Standard Text to Video",
+          "creditPrice": "5",
+          "creditUnit": "per second",
+          "usdPrice": "0.025",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:hailuo-standard-text-to-video",
+          "runtimeModel": "hailuo/02-text-to-video-standard",
+          "resolution": "768P"
+        }
+      ]
+    },
+    "video:hailuo-standard-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "hailuo/02-image-to-video-standard, 512P",
+          "interfaceType": "video",
+          "provider": "Hailuo Standard Image to Video",
+          "creditPrice": "2",
+          "creditUnit": "per second",
+          "usdPrice": "0.010",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:hailuo-standard-image-to-video",
+          "runtimeModel": "hailuo/02-image-to-video-standard",
+          "resolution": "512P"
+        },
+        {
+          "modelDescription": "hailuo/02-image-to-video-standard, 768P",
+          "interfaceType": "video",
+          "provider": "Hailuo Standard Image to Video",
+          "creditPrice": "5",
+          "creditUnit": "per second",
+          "usdPrice": "0.025",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:hailuo-standard-image-to-video",
+          "runtimeModel": "hailuo/02-image-to-video-standard",
+          "resolution": "768P"
+        }
+      ]
+    },
+    "video:generate-ai-video": {
+      "addRows": [
+        {
+          "modelDescription": "video:generate-ai-video, 720p, 5s",
+          "interfaceType": "video",
+          "provider": "Generate AI Video",
+          "creditPrice": "12",
+          "creditUnit": "per video",
+          "usdPrice": "0.06",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:generate-ai-video",
+          "runtimeModel": "runway-duration-5-generate",
+          "resolution": "720p",
+          "duration": 5
+        },
+        {
+          "modelDescription": "video:generate-ai-video, 1080p, 5s",
+          "interfaceType": "video",
+          "provider": "Generate AI Video",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "0.15",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:generate-ai-video",
+          "runtimeModel": "runway-duration-5-generate",
+          "resolution": "1080p",
+          "duration": 5
+        },
+        {
+          "modelDescription": "video:generate-ai-video, 720p, 10s",
+          "interfaceType": "video",
+          "provider": "Generate AI Video",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "0.15",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:generate-ai-video",
+          "runtimeModel": "runway-duration-10-generate",
+          "resolution": "720p",
+          "duration": 10
+        }
+      ]
+    },
+    "video:generate-aleph-video": {
+      "addRows": [
+        {
+          "modelDescription": "video:generate-aleph-video",
+          "interfaceType": "video",
+          "provider": "Generate Aleph Video",
+          "creditPrice": "90.0",
+          "creditUnit": "per video",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "catalogModelId": "video:generate-aleph-video"
+        }
+      ]
     }
   }
 }

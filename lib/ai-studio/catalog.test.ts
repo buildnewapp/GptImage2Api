@@ -3,7 +3,6 @@ import test from "node:test";
 
 import {
   findAiStudioCatalogEntryById,
-  matchPricingRowsToEntry,
   parseApiDocMarkdown,
   parseLlmsIndex,
 } from "@/lib/ai-studio/catalog";
@@ -131,126 +130,6 @@ test("parses enum-backed model options from a music doc", () => {
   assert.equal(detail.endpoint, "/api/v1/generate");
   assert.deepEqual(detail.modelKeys, ["V4", "V4_5", "V5"]);
   assert.equal(detail.examplePayload.model, "V5");
-});
-
-test("matches official pricing rows onto a catalog entry using model aliases", () => {
-  const detail = parseApiDocMarkdown({
-    category: "image",
-    title: "Google - Nano Banana 2",
-    docUrl: "https://docs.kie.ai/market/google/nanobanana2.md",
-  }, imageDocSample);
-
-  const matches = matchPricingRowsToEntry(detail, [
-    {
-      modelDescription: "Google nano banana 2, 4K",
-      interfaceType: "image",
-      provider: "Google",
-      creditPrice: "18",
-      creditUnit: "per image",
-      usdPrice: "0.09",
-      falPrice: "0.16",
-      discountRate: 43.75,
-      anchor: "https://kie.ai/nano-banana-2",
-      discountPrice: false,
-    },
-    {
-      modelDescription: "gpt-5-2, Chat, Input",
-      interfaceType: "chat",
-      provider: "OpenAI",
-      creditPrice: "87.5",
-      creditUnit: "per million tokens",
-      usdPrice: "0.44",
-      falPrice: "",
-      discountRate: 75,
-      anchor: "https://kie.ai/gpt-5-2",
-      discountPrice: false,
-    },
-  ]);
-
-  assert.equal(matches.length, 1);
-  assert.equal(matches[0]?.creditPrice, "18");
-});
-
-test("narrows sora pricing rows to the same model family and mode", () => {
-  const matches = matchPricingRowsToEntry(
-    {
-      category: "video",
-      title: "Sora2 - Text to Video",
-      provider: "Sora2",
-      docUrl: "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
-      modelKeys: ["sora-2-text-to-video"],
-    },
-    [
-      {
-        modelDescription: "Open AI sora 2, text-to-video, stable-15.0s",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "40",
-        creditUnit: "per video",
-        usdPrice: "0.2",
-        falPrice: "1.0",
-        discountRate: 80,
-        anchor: "https://kie.ai/sora-2?model=sora-2-text-to-video-stable",
-        discountPrice: false,
-      },
-      {
-        modelDescription: "Open AI sora 2, text-to-video, Standard-10.0s",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "30",
-        creditUnit: "per video",
-        usdPrice: "0.15",
-        falPrice: "1.0",
-        discountRate: 85,
-        anchor: "https://kie.ai/sora-2?model=sora-2-text-to-video",
-        discountPrice: false,
-      },
-      {
-        modelDescription: "Open AI sora 2, image-to-video, stable-10.0s",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "35",
-        creditUnit: "per video",
-        usdPrice: "0.175",
-        falPrice: "1.0",
-        discountRate: 82.5,
-        anchor: "https://kie.ai/sora-2?model=sora-2-image-to-video-stable",
-        discountPrice: false,
-      },
-      {
-        modelDescription: "Open AI sora 2 pro, text-to-video, Pro High-10.0s",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "330",
-        creditUnit: "per video",
-        usdPrice: "1.65",
-        falPrice: "5.0",
-        discountRate: 67,
-        anchor: "https://kie.ai/sora-2-pro?model=sora-2-pro-text-to-video",
-        discountPrice: false,
-      },
-      {
-        modelDescription: "Open AI sora 2-watermark-remover",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "10",
-        creditUnit: "per removal",
-        usdPrice: "0.05",
-        falPrice: "",
-        discountRate: 0,
-        anchor: "https://kie.ai/sora-2?model=sora-watermark-remover",
-        discountPrice: false,
-      },
-    ],
-  );
-
-  assert.deepEqual(
-    matches.map((row) => row.modelDescription).sort(),
-    [
-      "Open AI sora 2, text-to-video, Standard-10.0s",
-      "Open AI sora 2, text-to-video, stable-15.0s",
-    ].sort(),
-  );
 });
 
 test("finds canonical bytedance entries from legacy slash-style public ids", () => {

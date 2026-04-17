@@ -92,6 +92,22 @@ function getPricingSpecificity(row: PricingSelectionRow) {
   return score;
 }
 
+function countDistinctDefinedValues<T>(
+  rows: PricingSelectionRow[],
+  getValue: (row: PricingSelectionRow) => T | null | undefined,
+) {
+  const values = new Set<T>();
+
+  for (const row of rows) {
+    const value = getValue(row);
+    if (value !== undefined && value !== null) {
+      values.add(value);
+    }
+  }
+
+  return values.size;
+}
+
 function normalizeRuntimeModel(input: string) {
   return input.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
@@ -274,6 +290,8 @@ function extractResolutionHint(
   const values = [
     payload.resolution,
     payload.input?.resolution,
+    payload.quality,
+    payload.input?.quality,
     payload.input?.image_resolution,
     payload.size,
     payload.input?.size,
@@ -374,6 +392,23 @@ export function resolveExactPricingRow<Row extends PricingSelectionRow>(
   const resolutionHint = extractResolutionHint(payload, config?.selectors);
   const audioHint = extractAudioHint(payload, config?.selectors);
   const aspectRatioHint = extractAspectRatioHint(payload, config?.selectors);
+  const scopedRows = payloadModel
+    ? pricingRows.filter((row) => {
+        const runtimeModel = row.runtimeModel
+          ? normalizeRuntimeModel(row.runtimeModel)
+          : "";
+
+        return !runtimeModel || runtimeModel === payloadModel;
+      })
+    : pricingRows;
+  const requiresDurationHint =
+    countDistinctDefinedValues(scopedRows, (row) => row.duration) > 1;
+  const requiresResolutionHint =
+    countDistinctDefinedValues(scopedRows, (row) => row.resolution) > 1;
+  const requiresAudioHint =
+    countDistinctDefinedValues(scopedRows, (row) => row.audio) > 1;
+  const requiresAspectRatioHint =
+    countDistinctDefinedValues(scopedRows, (row) => row.aspectRatio) > 1;
   const candidates = pricingRows.filter((row) => {
     const runtimeModel = row.runtimeModel ? normalizeRuntimeModel(row.runtimeModel) : "";
 
@@ -382,27 +417,37 @@ export function resolveExactPricingRow<Row extends PricingSelectionRow>(
     }
 
     if (row.duration !== undefined && row.duration !== null) {
-      if (durationHint === null || row.duration !== durationHint) {
+      if (
+        (durationHint === null && requiresDurationHint) ||
+        (durationHint !== null && row.duration !== durationHint)
+      ) {
         return false;
       }
     }
 
     if (row.resolution !== undefined && row.resolution !== null) {
-      if (resolutionHint === null || row.resolution.toLowerCase() !== resolutionHint) {
+      if (
+        (resolutionHint === null && requiresResolutionHint) ||
+        (resolutionHint !== null && row.resolution.toLowerCase() !== resolutionHint)
+      ) {
         return false;
       }
     }
 
     if (row.audio !== undefined && row.audio !== null) {
-      if (audioHint === null || row.audio !== audioHint) {
+      if (
+        (audioHint === null && requiresAudioHint) ||
+        (audioHint !== null && row.audio !== audioHint)
+      ) {
         return false;
       }
     }
 
     if (row.aspectRatio !== undefined && row.aspectRatio !== null) {
       if (
-        aspectRatioHint === null ||
-        row.aspectRatio.toLowerCase() !== aspectRatioHint
+        (aspectRatioHint === null && requiresAspectRatioHint) ||
+        (aspectRatioHint !== null &&
+          row.aspectRatio.toLowerCase() !== aspectRatioHint)
       ) {
         return false;
       }

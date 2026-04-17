@@ -145,11 +145,6 @@ type CompileRuntimeCatalogInput = {
 };
 
 const LLMS_INDEX_URL = "https://docs.kie.ai/llms.txt";
-const OFFICIAL_PRICING_COUNT_URL =
-  "https://api.kie.ai/client/v1/model-pricing/count";
-const OFFICIAL_PRICING_PAGE_URL =
-  "https://api.kie.ai/client/v1/model-pricing/page";
-
 const DOC_LINE_PATTERN =
   /^- (?:(Image|Video|Music|Chat)\s+Models?\s+>\s+.+?|4o Image API|Flux Kontext API|Runway API(?: > Aleph)?|Veo3\.1 API|Suno API(?: > .+?)?) \[(.+?)\]\((https:\/\/docs\.kie\.ai\/(?!cn\/)[^)]+\.md)\):/;
 
@@ -901,22 +896,6 @@ export function parseApiDocMarkdown(
   };
 }
 
-export function matchPricingRowsToEntry(
-  entry: Pick<
-    AiStudioCatalogSeedEntry,
-    "category" | "title" | "provider" | "docUrl"
-  > & { modelKeys?: string[] },
-  pricingRows: AiStudioPricingRow[],
-): AiStudioPricingRow[] {
-  return dedupeMatchedPricingRows(
-    pricingRows
-    .map((row) => ({ row, score: scorePricingMatch(entry, row) }))
-    .filter((item) => item.score >= 8)
-    .sort((left, right) => right.score - left.score)
-    .map((item) => item.row),
-  );
-}
-
 async function fetchText(url: string): Promise<string> {
   const response = await fetch(url, {
     headers: {
@@ -929,73 +908,17 @@ async function fetchText(url: string): Promise<string> {
   return response.text();
 }
 
-export async function fetchOfficialPricingRows(): Promise<AiStudioPricingRow[]> {
-  const countResponse = await fetch(OFFICIAL_PRICING_COUNT_URL, {
-    headers: {
-      "User-Agent": USER_AGENT,
-    },
-  });
-  if (!countResponse.ok) {
-    throw new Error(
-      `Failed to fetch official pricing count: ${countResponse.status}`,
-    );
-  }
-
-  const countJson = (await countResponse.json()) as {
-    data?: { all?: number };
-  };
-  const total = countJson.data?.all ?? 0;
-  if (!total) {
-    return [];
-  }
-
-  const pageSize = 100;
-  const pages = Math.ceil(total / pageSize);
-  const requests = Array.from({ length: pages }, (_, index) =>
-    fetch(OFFICIAL_PRICING_PAGE_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "User-Agent": USER_AGENT,
-      },
-      body: JSON.stringify({
-        pageNum: index + 1,
-        pageSize,
-        modelDescription: "",
-        interfaceType: "",
-      }),
-    }).then(async (response) => {
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch official pricing page ${index + 1}: ${response.status}`,
-        );
-      }
-
-      const json = (await response.json()) as {
-        data?: { records?: AiStudioPricingRow[] };
-      };
-      return json.data?.records ?? [];
-    }),
-  );
-
-  const pagesResult = await Promise.all(requests);
-  return pagesResult.flat();
-}
-
 export async function fetchAiStudioCatalogSeeds() {
   const indexContent = await fetchText(LLMS_INDEX_URL);
   return parseLlmsIndex(indexContent);
 }
 
 export async function getAiStudioCatalog(): Promise<AiStudioCatalogEntry[]> {
-  const [seeds, pricingRows] = await Promise.all([
-    fetchAiStudioCatalogSeeds(),
-    fetchOfficialPricingRows(),
-  ]);
+  const seeds = await fetchAiStudioCatalogSeeds();
 
   return seeds.map((seed) => ({
     ...seed,
-    pricingRows: matchPricingRowsToEntry(seed, pricingRows),
+    pricingRows: [],
   }));
 }
 
@@ -1049,14 +972,10 @@ function matchStructuredKieRowsToDetail(
 function resolveBasePricingRows(
   detail: AiStudioDocDetail,
   kiePrices: AiStudioStructuredKiePriceFile | undefined,
-) {
-  const structuredRows = matchStructuredKieRowsToDetail(detail, kiePrices);
-
-  if (structuredRows.length > 0) {
-    return structuredRows;
-  }
-
-  return detail.pricingRows.map(clonePricingRow);
+): AiStudioPricingRow[] {
+  void detail;
+  void kiePrices;
+  return [];
 }
 
 function cloneFormUiOverride(
@@ -1120,6 +1039,8 @@ const DURATION_SELECTOR_CANDIDATES = [
 const RESOLUTION_SELECTOR_CANDIDATES = [
   "input.resolution",
   "resolution",
+  "input.quality",
+  "quality",
   "input.image_resolution",
   "image_resolution",
   "input.size",
@@ -1137,6 +1058,8 @@ const AUDIO_SELECTOR_CANDIDATES = [
   "audio",
   "input.with_audio",
   "with_audio",
+  "input.enable_pro",
+  "enable_pro",
 ] as const;
 
 const ASPECT_RATIO_SELECTOR_CANDIDATES = [
@@ -1258,7 +1181,9 @@ function inferPricingConfig(detail: AiStudioDocDetail): AiStudioPricingConfig | 
       schema,
       RESOLUTION_SELECTOR_CANDIDATES,
       (schemaNode, path) =>
-        path.includes("resolution") || hasEnumOverlap(schemaNode, resolutionValues),
+        path.includes("resolution") ||
+        path.includes("quality") ||
+        hasEnumOverlap(schemaNode, resolutionValues),
     );
     if (resolutionPath) {
       selectors.resolution = [resolutionPath];
@@ -1333,11 +1258,12 @@ function resolveCompiledRuntimeDetail(
     return null;
   }
 
-  return (
-    buildSplitModelDetails(upstreamById.get(splitSource[0])!, splitSource[1]).find(
-      (splitItem) => splitItem.id === modelId,
-    ) ?? null
-  );
+  const splitModel = splitSource[1].splitModels?.find((item) => item.id === modelId);
+  if (!splitModel) {
+    return null;
+  }
+
+  return createSplitModelDetail(upstreamById.get(splitSource[0])!, splitModel);
 }
 
 function getSchemaOverrideTarget(
@@ -1404,7 +1330,10 @@ function mergeAiStudioUpstreamCatalogFiles(
 }
 
 function matchesPricingRowMatch(
-  entry: AiStudioDocDetail,
+  entry: Pick<
+    AiStudioDocDetail,
+    "category" | "title" | "provider" | "docUrl" | "modelKeys"
+  >,
   row: AiStudioPricingRow,
   match: AiStudioPricingRowMatch,
 ) {
@@ -1435,12 +1364,29 @@ function matchesPricingRowMatch(
 }
 
 function selectMatchingPricingRows(
-  detail: AiStudioDocDetail,
+  detail: Pick<
+    AiStudioDocDetail,
+    "category" | "title" | "provider" | "docUrl" | "modelKeys"
+  >,
+  pricingRows: AiStudioPricingRow[],
   match: AiStudioPricingRowMatch,
 ) {
-  return detail.pricingRows
+  return pricingRows
     .filter((row) => matchesPricingRowMatch(detail, row, match))
     .map(clonePricingRow);
+}
+
+function resolveSplitModelPricingRows(
+  detail: AiStudioDocDetail,
+  kiePrices: AiStudioStructuredKiePriceFile | undefined,
+  match: AiStudioPricingRowMatch,
+) {
+  const baseRows = resolveBasePricingRows(detail, kiePrices);
+  if (baseRows.some((row) => row.catalogModelId === detail.id)) {
+    return baseRows;
+  }
+
+  return selectMatchingPricingRows(detail, baseRows, match);
 }
 
 function rewriteSchemaModel(detail: AiStudioDocDetail, schemaModel: string) {
@@ -1466,20 +1412,13 @@ function applyPricingOverridesToDetail(
   detail: AiStudioDocDetail,
   bucket: AiStudioPricingOverrideBucket,
 ) {
-  const hasKieRows = detail.pricingRows.some((row) => row.source === "kie");
-  const addRows = hasKieRows ? [] : (bucket.addRows ?? []);
+  const addRows = bucket.addRows ?? [];
 
   if (addRows.length === 0) {
     return detail;
   }
 
-  const nextRows: AiStudioPricingRow[] = detail.pricingRows.map(clonePricingRow);
-
-  for (const row of addRows) {
-    nextRows.push(clonePricingRow(row));
-  }
-
-  detail.pricingRows = nextRows;
+  detail.pricingRows = addRows.map(clonePricingRow);
   return detail;
 }
 
@@ -1519,25 +1458,18 @@ function applyFormUiOverrideToDetail(
   return detail;
 }
 
-function buildSplitModelDetails(
+function createSplitModelDetail(
   rawDetail: AiStudioDocDetail,
-  modelOverride: AiStudioModelOverride,
+  splitModel: AiStudioSplitModelOverride,
 ) {
-  return (modelOverride.splitModels ?? []).flatMap((splitModel) => {
-    const detail = cloneDetail(rawDetail);
-    detail.id = splitModel.id;
-    detail.title = splitModel.title;
-    detail.alias = splitModel.alias ?? null;
-    detail.provider = splitModel.provider ?? detail.provider;
-    detail.pricingRows = selectMatchingPricingRows(detail, splitModel.pricingMatch);
-
-    if (detail.pricingRows.length === 0) {
-      return [];
-    }
-
-    rewriteSchemaModel(detail, splitModel.schemaModel);
-    return [detail];
-  });
+  const detail = cloneDetail(rawDetail);
+  detail.id = splitModel.id;
+  detail.title = splitModel.title;
+  detail.alias = splitModel.alias ?? null;
+  detail.provider = splitModel.provider ?? detail.provider;
+  detail.pricingRows = [];
+  rewriteSchemaModel(detail, splitModel.schemaModel);
+  return detail;
 }
 
 export function compileAiStudioRuntimeCatalog({
@@ -1555,8 +1487,13 @@ export function compileAiStudioRuntimeCatalog({
     }
 
     if ((modelOverride?.splitModels?.length ?? 0) > 0) {
-      return buildSplitModelDetails(rawDetail, modelOverride!).map((detail) => {
-        detail.pricingRows = resolveBasePricingRows(detail, kiePrices);
+      return (modelOverride!.splitModels ?? []).map((splitModel) => {
+        const detail = createSplitModelDetail(rawDetail, splitModel);
+        detail.pricingRows = resolveSplitModelPricingRows(
+          detail,
+          kiePrices,
+          splitModel.pricingMatch,
+        );
         const pricingOverrideBucket = pricingOverrides.models[detail.id];
         if ((pricingOverrideBucket?.addRows?.length ?? 0) > 0) {
           applyPricingOverridesToDetail(detail, pricingOverrideBucket);
@@ -1641,12 +1578,8 @@ export function validateAiStudioRuntimeBuildInput({
         }
         compiledModelIds.add(splitModel.id);
 
-        const matchedRows = selectMatchingPricingRows(upstreamItem, splitModel.pricingMatch);
-        const matchedStructuredRows =
-          kiePrices?.rows.filter((row) => row.catalogModelId === splitModel.id) ?? [];
-        if (matchedRows.length === 0 && matchedStructuredRows.length === 0) {
-          errors.push(`Split model does not match any pricing rows: ${splitModel.id}`);
-        }
+        const splitDetail = createSplitModelDetail(upstreamItem, splitModel);
+        void splitDetail;
       }
       continue;
     }
@@ -1676,12 +1609,6 @@ export function validateAiStudioRuntimeBuildInput({
     }
 
     item.pricingRows = resolveBasePricingRows(item, kiePrices);
-    if (
-      (bucket.addRows?.length ?? 0) > 0 &&
-      item.pricingRows.some((row) => row.source === "kie")
-    ) {
-      errors.push(`Pricing addRows should only target models without KIE pricing: ${modelId}`);
-    }
   }
 
   for (const [modelId] of Object.entries(formUiOverrides.models)) {

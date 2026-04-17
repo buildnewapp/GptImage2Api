@@ -14,6 +14,72 @@
         "properties.input.properties.web_search.default": false
       }
     },
+    "video:grok-imagine-text-to-video": {
+      "set": {
+        "properties.input.properties.duration": {
+          "type": "integer",
+          "minimum": 6,
+          "maximum": 30,
+          "multipleOf": 1,
+          "default": 6,
+          "description": "The duration of the generated video (in seconds) (6-30). (Minimum: 6, Maximum: 30, Step: 1)"
+        }
+      }
+    },
+    "video:grok-imagine-image-to-video": {
+      "set": {
+        "properties.input.properties.duration": {
+          "type": "integer",
+          "minimum": 6,
+          "maximum": 30,
+          "multipleOf": 1,
+          "default": 6,
+          "description": "The duration of the generated video (in seconds) (6-30). (Minimum: 6, Maximum: 30, Step: 1)"
+        }
+      }
+    },
+    "video:veo-3.1-lite": {
+      "set": {
+        "properties.resolution": {
+          "type": "string",
+          "enum": [
+            "720p",
+            "1080p",
+            "4k"
+          ],
+          "default": "720p",
+          "description": "Output resolution."
+        }
+      }
+    },
+    "video:veo-3.1-fast": {
+      "set": {
+        "properties.resolution": {
+          "type": "string",
+          "enum": [
+            "720p",
+            "1080p",
+            "4k"
+          ],
+          "default": "720p",
+          "description": "Output resolution."
+        }
+      }
+    },
+    "video:veo-3.1-quality": {
+      "set": {
+        "properties.resolution": {
+          "type": "string",
+          "enum": [
+            "720p",
+            "1080p",
+            "4k"
+          ],
+          "default": "720p",
+          "description": "Output resolution."
+        }
+      }
+    },
     "video:kling-3-0": {
       "replace": {
         "type": "object",
