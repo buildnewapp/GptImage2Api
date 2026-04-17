@@ -30,6 +30,49 @@ export type AiVideoStudioSchemaState = {
   usesDefaultAdvancedGrouping: boolean;
 };
 
+function getValueAtPath(source: Record<string, unknown>, path: string[]) {
+  let current: unknown = source;
+
+  for (const segment of path) {
+    if (!current || typeof current !== "object" || Array.isArray(current)) {
+      return undefined;
+    }
+
+    current = (current as Record<string, unknown>)[segment];
+  }
+
+  return current;
+}
+
+function hasFilledValue(value: unknown) {
+  if (value === undefined || value === null || value === "") {
+    return false;
+  }
+
+  if (Array.isArray(value)) {
+    return value.length > 0;
+  }
+
+  return true;
+}
+
+function isFieldValueSupported(
+  field: AiVideoStudioFieldDescriptor,
+  value: unknown,
+) {
+  if (!hasFilledValue(value)) {
+    return false;
+  }
+
+  if (field.kind !== "enum") {
+    return true;
+  }
+
+  const options = Array.isArray(field.schema.enum) ? field.schema.enum : [];
+
+  return options.some((option) => option === value);
+}
+
 function getPathTokens(path: string[]) {
   return path
     .flatMap((segment) =>
@@ -253,4 +296,25 @@ export function normalizeAiVideoStudioSchema(detail: {
     defaults,
     usesDefaultAdvancedGrouping: !hasCustomFormUi,
   };
+}
+
+export function mergeAiVideoStudioFormValues(input: {
+  fields: AiVideoStudioFieldDescriptor[];
+  defaults: Record<string, unknown>;
+  previousValues: Record<string, unknown>;
+}) {
+  const next: Record<string, unknown> = {};
+
+  for (const field of input.fields) {
+    const previousValue = getValueAtPath(input.previousValues, field.path);
+    const defaultValue = getValueAtPath(input.defaults, field.path);
+
+    setValueAtPath(
+      next,
+      field.path,
+      isFieldValueSupported(field, previousValue) ? previousValue : defaultValue,
+    );
+  }
+
+  return next;
 }

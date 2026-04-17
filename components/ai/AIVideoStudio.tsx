@@ -21,7 +21,10 @@ import {
   serializeAiVideoStudioStoredState,
 } from "@/lib/ai-video-studio/storage";
 import { hasAiVideoStudioSignedInSession } from "@/lib/ai-video-studio/view";
-import { normalizeAiVideoStudioSchema } from "@/lib/ai-video-studio/schema";
+import {
+  mergeAiVideoStudioFormValues,
+  normalizeAiVideoStudioSchema,
+} from "@/lib/ai-video-studio/schema";
 import type {
   AiStudioPublicDocDetail,
   AiStudioPublicPricingRow,
@@ -138,18 +141,6 @@ function hasRequiredFieldValue(value: unknown) {
 
   if (typeof value === "string") {
     return value.trim().length > 0;
-  }
-
-  if (Array.isArray(value)) {
-    return value.length > 0;
-  }
-
-  return true;
-}
-
-function hasFilledValue(value: unknown) {
-  if (value === undefined || value === null || value === "") {
-    return false;
   }
 
   if (Array.isArray(value)) {
@@ -389,24 +380,13 @@ export default function AIVideoStudio() {
       return;
     }
 
-    setFormValues((previous) => {
-      let next: AiVideoStudioFormValues = {};
-
-      for (const field of normalizedSchema.fields) {
-        const previousValue = getValueAtPath(previous, field.path);
-        const defaultValue = getValueAtPath(
-          normalizedSchema.defaults,
-          field.path,
-        );
-        next = setValueAtPath(
-          next,
-          field.path,
-          hasFilledValue(previousValue) ? previousValue : defaultValue,
-        );
-      }
-
-      return next;
-    });
+    setFormValues((previous) =>
+      mergeAiVideoStudioFormValues({
+        fields: normalizedSchema.fields,
+        defaults: normalizedSchema.defaults,
+        previousValues: previous,
+      }),
+    );
   }, [normalizedSchema]);
 
   useEffect(() => {

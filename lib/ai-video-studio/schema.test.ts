@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { normalizeAiVideoStudioSchema } from "@/lib/ai-video-studio/schema";
+import {
+  mergeAiVideoStudioFormValues,
+  normalizeAiVideoStudioSchema,
+} from "@/lib/ai-video-studio/schema";
 
 const textToVideoDetail = {
   requestSchema: {
@@ -410,5 +413,59 @@ test("does not force seed and watermark fields into advanced when custom advance
   assert.deepEqual(
     normalized.advancedFields.map((field) => field.key),
     ["duration"],
+  );
+});
+
+test("drops stale enum values that are not supported by the newly selected model", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    requestSchema: {
+      type: "object",
+      properties: {
+        input: {
+          type: "object",
+          properties: {
+            prompt: {
+              type: "string",
+            },
+            resolution: {
+              type: "string",
+              enum: ["720p", "1080p"],
+              default: "720p",
+            },
+            duration: {
+              type: "integer",
+              enum: [5, 10],
+              default: 5,
+            },
+          },
+          required: ["prompt"],
+          "x-apidog-orders": ["prompt", "resolution", "duration"],
+        },
+      },
+    },
+    examplePayload: {
+      input: {
+        prompt: "Animate this image",
+        resolution: "720p",
+        duration: 5,
+      },
+    },
+  });
+
+  assert.deepEqual(
+    mergeAiVideoStudioFormValues({
+      fields: normalized.fields,
+      defaults: normalized.defaults,
+      previousValues: {
+        prompt: "Animate this image",
+        resolution: "480p",
+        duration: 10,
+      },
+    }),
+    {
+      prompt: "Animate this image",
+      resolution: "720p",
+      duration: 10,
+    },
   );
 });

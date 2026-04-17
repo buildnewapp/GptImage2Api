@@ -162,10 +162,10 @@ test("keeps Seedance 1.0 variants explicit while Seedance 1.5 stays single-entry
   assert.deepEqual(
     getAiVideoStudioVersions("seedance-1.0").map((version) => version.key),
     [
-      "seedance-1.0-pro-image-to-video",
       "seedance-1.0-pro-text-to-video",
-      "seedance-1.0-lite-image-to-video",
+      "seedance-1.0-pro-image-to-video",
       "seedance-1.0-lite-text-to-video",
+      "seedance-1.0-lite-image-to-video",
       "seedance-1.0-pro-fast-image-to-video",
     ],
   );
