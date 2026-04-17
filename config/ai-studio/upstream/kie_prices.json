@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-04-17T02:55:50.861Z",
+  "generatedAt": "2026-04-17T03:36:06.313Z",
   "rows": [
     {
       "pricingKey": "Market_wan_2-6-video-to-video_1080p_5",
@@ -162,6 +162,23 @@
       "resolution": "480p",
       "duration": null,
       "audio": null
+    },
+    {
+      "pricingKey": "Market_kling-2.6_text-to-video_false_10",
+      "creditPrice": "110",
+      "source": "kie",
+      "modelDescription": "kling-2.6/text-to-video, 10s, false",
+      "interfaceType": "video",
+      "provider": "Kling",
+      "creditUnit": "per video",
+      "usdPrice": "",
+      "falPrice": "",
+      "discountRate": 0,
+      "anchor": "",
+      "discountPrice": false,
+      "runtimeModel": "kling-2.6/text-to-video",
+      "duration": 10,
+      "audio": false
     },
     {
       "pricingKey": "Market_wan_2-6-flash-image-to-video_1080p_10_true",
@@ -1275,6 +1292,23 @@
       "audio": null
     },
     {
+      "pricingKey": "Market_kling-2.6_image-to-video_false_10",
+      "creditPrice": "110",
+      "source": "kie",
+      "modelDescription": "kling-2.6/image-to-video, 10s, false",
+      "interfaceType": "video",
+      "provider": "Kling",
+      "creditUnit": "per video",
+      "usdPrice": "",
+      "falPrice": "",
+      "discountRate": 0,
+      "anchor": "",
+      "discountPrice": false,
+      "runtimeModel": "kling-2.6/image-to-video",
+      "duration": 10,
+      "audio": false
+    },
+    {
       "pricingKey": "Market_bytedance_seedance-1.5-pro_480p_12_with-audio",
       "creditPrice": "38",
       "source": "kie",
@@ -1735,7 +1769,7 @@
     },
     {
       "pricingKey": "Market_sora2-remix_sora2pro_standard_15",
-      "creditPrice": "270",
+      "creditPrice": "135",
       "source": "kie",
       "modelDescription": "sora-2-pro-image-to-video, standard, 15s",
       "interfaceType": "video",
@@ -1753,7 +1787,7 @@
     },
     {
       "pricingKey": "Market_sora2-remix_sora2pro_standard_10",
-      "creditPrice": "150",
+      "creditPrice": "75",
       "source": "kie",
       "modelDescription": "sora-2-pro-image-to-video, standard, 10s",
       "interfaceType": "video",
@@ -1806,7 +1840,7 @@
     },
     {
       "pricingKey": "Market_sora2-remix_WATERMARK_sora2_10",
-      "creditPrice": "4",
+      "creditPrice": "20",
       "source": "kie",
       "modelDescription": "sora-2-image-to-video-stable, 10s",
       "interfaceType": "video",
@@ -1824,7 +1858,7 @@
     },
     {
       "pricingKey": "Market_sora2-remix_WATERMARK_sora2_15",
-      "creditPrice": "6",
+      "creditPrice": "30",
       "source": "kie",
       "modelDescription": "sora-2-image-to-video-stable, 15s",
       "interfaceType": "video",
@@ -1909,6 +1943,23 @@
       "resolution": null,
       "duration": 10,
       "audio": null
+    },
+    {
+      "pricingKey": "Market_kling-2.6_image-to-video_true_5",
+      "creditPrice": "110",
+      "source": "kie",
+      "modelDescription": "kling-2.6/image-to-video, 5s, true",
+      "interfaceType": "video",
+      "provider": "Kling",
+      "creditUnit": "per video",
+      "usdPrice": "",
+      "falPrice": "",
+      "discountRate": 0,
+      "anchor": "",
+      "discountPrice": false,
+      "runtimeModel": "kling-2.6/image-to-video",
+      "duration": 5,
+      "audio": true
     },
     {
       "pricingKey": "Market_bytedance_seedance-1.5-pro_720p_8_no-audio",
@@ -2213,7 +2264,7 @@
     },
     {
       "pricingKey": "Market_sora2-remix_NO-WATERMARK_sora2_10",
-      "creditPrice": "6",
+      "creditPrice": "3",
       "source": "kie",
       "modelDescription": "sora-2-image-to-video, 10s",
       "interfaceType": "video",
@@ -2283,7 +2334,7 @@
     },
     {
       "pricingKey": "Market_sora2-remix_NO-WATERMARK_sora2_15",
-      "creditPrice": "8",
+      "creditPrice": "5",
       "source": "kie",
       "modelDescription": "sora-2-image-to-video, 15s",
       "interfaceType": "video",
@@ -3139,6 +3190,23 @@
       "resolution": "720p"
     },
     {
+      "pricingKey": "Market_kling-2.6_image-to-video_false_5",
+      "creditPrice": "55",
+      "source": "kie",
+      "modelDescription": "kling-2.6/image-to-video, 5s, false",
+      "interfaceType": "video",
+      "provider": "Kling",
+      "creditUnit": "per video",
+      "usdPrice": "",
+      "falPrice": "",
+      "discountRate": 0,
+      "anchor": "",
+      "discountPrice": false,
+      "runtimeModel": "kling-2.6/image-to-video",
+      "duration": 5,
+      "audio": false
+    },
+    {
       "pricingKey": "Market_grok-imagine_extend_720p_6",
       "creditPrice": "20",
       "source": "kie",
@@ -3228,6 +3296,23 @@
       "audio": null
     },
     {
+      "pricingKey": "Market_kling-2.6_image-to-video_true_10",
+      "creditPrice": "220",
+      "source": "kie",
+      "modelDescription": "kling-2.6/image-to-video, 10s, true",
+      "interfaceType": "video",
+      "provider": "Kling",
+      "creditUnit": "per video",
+      "usdPrice": "",
+      "falPrice": "",
+      "discountRate": 0,
+      "anchor": "",
+      "discountPrice": false,
+      "runtimeModel": "kling-2.6/image-to-video",
+      "duration": 10,
+      "audio": true
+    },
+    {
       "pricingKey": "Market_wan_2-5-text-to-video_1080p_10",
       "creditPrice": "200",
       "source": "kie",
@@ -3298,8 +3383,25 @@
       "resolution": "720p"
     },
     {
+      "pricingKey": "Market_kling-2.6_text-to-video_false_5",
+      "creditPrice": "55",
+      "source": "kie",
+      "modelDescription": "kling-2.6/text-to-video, 5s, false",
+      "interfaceType": "video",
+      "provider": "Kling",
+      "creditUnit": "per video",
+      "usdPrice": "",
+      "falPrice": "",
+      "discountRate": 0,
+      "anchor": "",
+      "discountPrice": false,
+      "runtimeModel": "kling-2.6/text-to-video",
+      "duration": 5,
+      "audio": false
+    },
+    {
       "pricingKey": "Market_sora2-remix_sora2pro_high_10",
-      "creditPrice": "330",
+      "creditPrice": "165",
       "source": "kie",
       "modelDescription": "sora-2-pro-image-to-video, high, 10s",
       "interfaceType": "video",
@@ -3335,7 +3437,7 @@
     },
     {
       "pricingKey": "Market_sora2-remix_sora2pro_high_15",
-      "creditPrice": "630",
+      "creditPrice": "315",
       "source": "kie",
       "modelDescription": "sora-2-pro-image-to-video, high, 15s",
       "interfaceType": "video",
@@ -3438,6 +3540,23 @@
       "resolution": "720p",
       "duration": 5,
       "audio": null
+    },
+    {
+      "pricingKey": "Market_kling-2.6_text-to-video_true_10",
+      "creditPrice": "220",
+      "source": "kie",
+      "modelDescription": "kling-2.6/text-to-video, 10s, true",
+      "interfaceType": "video",
+      "provider": "Kling",
+      "creditUnit": "per video",
+      "usdPrice": "",
+      "falPrice": "",
+      "discountRate": 0,
+      "anchor": "",
+      "discountPrice": false,
+      "runtimeModel": "kling-2.6/text-to-video",
+      "duration": 10,
+      "audio": true
     },
     {
       "pricingKey": "Market_wan_2-5-image-to-video_720p_10",
@@ -3790,6 +3909,23 @@
       "resolution": "1080p",
       "duration": 5,
       "audio": null
+    },
+    {
+      "pricingKey": "Market_kling-2.6_text-to-video_true_5",
+      "creditPrice": "110",
+      "source": "kie",
+      "modelDescription": "kling-2.6/text-to-video, 5s, true",
+      "interfaceType": "video",
+      "provider": "Kling",
+      "creditUnit": "per video",
+      "usdPrice": "",
+      "falPrice": "",
+      "discountRate": 0,
+      "anchor": "",
+      "discountPrice": false,
+      "runtimeModel": "kling-2.6/text-to-video",
+      "duration": 5,
+      "audio": true
     }
   ]
 }

@@ -12,6 +12,7 @@ import type {
   AiStudioPricingRow,
 } from "@/lib/ai-studio/catalog";
 import {
+  buildAiStudioKiePricesFile,
   compileAiStudioRuntimeCatalog,
   getAiStudioCatalogPaths,
   getCachedAiStudioCatalogEntry,
@@ -70,7 +71,7 @@ function createDetail(
   };
 }
 
-test("compiles runtime catalog with model and pricing overrides", () => {
+test("compiles runtime catalog with model overrides and generated kie pricing", () => {
   const compiled = compileAiStudioRuntimeCatalog({
     upstream: {
       version: 1,
@@ -102,18 +103,7 @@ test("compiles runtime catalog with model and pricing overrides", () => {
       },
     },
     pricingOverrides: {
-      models: {
-        "video:sora2-text-to-video": {
-          rows: [
-            {
-              match: {
-                runtimeModel: "sora-2-text-to-video",
-              },
-              creditPrice: "42",
-            },
-          ],
-        },
-      },
+      models: {},
     },
     formUiOverrides: {
       models: {
@@ -127,13 +117,52 @@ test("compiles runtime catalog with model and pricing overrides", () => {
 
   assert.equal(compiled.items[0]?.alias, "Sora 2");
   assert.equal(compiled.items[0]?.provider, "OpenAI");
-  assert.equal(compiled.items[0]?.pricingRows[0]?.creditPrice, "42");
+  assert.equal(compiled.items[0]?.pricingRows[0]?.creditPrice, "30");
   assert.deepEqual(compiled.items[0]?.formUi, {
     fieldOrder: ["prompt", "duration"],
     advancedFields: ["duration"],
   });
   assert.equal(compiled.items[0]?.pricingRows[0]?.pricingKey, "Market_SORA2-VIDEO_NO-WATERMARK_10");
   assert.equal(compiled.items[0]?.pricingRows[0]?.duration, 10);
+});
+
+test("normalizes sora image pricing from kie raw prices to the current display pricing system", async () => {
+  const { kieRawPricePath } = getAiStudioCatalogPaths();
+  const kiePrices = await buildAiStudioKiePricesFile(kieRawPricePath);
+
+  const soraImage = kiePrices.rows.filter(
+    (row) => row.catalogModelId === "video:sora2-image-to-video-standard",
+  );
+  const soraImageStable = kiePrices.rows.filter(
+    (row) => row.catalogModelId === "video:sora2-image-to-video-stable",
+  );
+  const soraProImage = kiePrices.rows.filter(
+    (row) => row.catalogModelId === "video:sora2-pro-image-to-video",
+  );
+
+  assert.deepEqual(
+    soraImage.map((row) => [row.pricingKey, row.creditPrice]).sort(),
+    [
+      ["Market_sora2-remix_NO-WATERMARK_sora2_10", "3"],
+      ["Market_sora2-remix_NO-WATERMARK_sora2_15", "5"],
+    ],
+  );
+  assert.deepEqual(
+    soraImageStable.map((row) => [row.pricingKey, row.creditPrice]).sort(),
+    [
+      ["Market_sora2-remix_WATERMARK_sora2_10", "20"],
+      ["Market_sora2-remix_WATERMARK_sora2_15", "30"],
+    ],
+  );
+  assert.deepEqual(
+    soraProImage.map((row) => [row.pricingKey, row.creditPrice]).sort(),
+    [
+      ["Market_sora2-remix_sora2pro_high_10", "165"],
+      ["Market_sora2-remix_sora2pro_high_15", "315"],
+      ["Market_sora2-remix_sora2pro_standard_10", "75"],
+      ["Market_sora2-remix_sora2pro_standard_15", "135"],
+    ],
+  );
 });
 
 test("generates pricing selectors from request schema and pricing rows without model override pricing", () => {
@@ -669,6 +698,7 @@ test("keeps exposed runway and kling pricing rows isolated to the correct model 
   const veoQuality = await getCachedAiStudioCatalogEntry("video:veo-3.1-quality-text-to-video");
   const kling30 = await getCachedAiStudioCatalogEntry("video:kling-3-0");
   const kling30Motion = await getCachedAiStudioCatalogEntry("video:kling-3-0-motion-control");
+  const kling26Image = await getCachedAiStudioCatalogEntry("video:kling-2-6-image-to-video");
   const kling25Turbo = await getCachedAiStudioCatalogEntry(
     "video:kling-v2-5-turbo-text-to-video-pro",
   );
@@ -757,6 +787,19 @@ test("keeps exposed runway and kling pricing rows isolated to the correct model 
       (row) => row.runtimeModel === "kling-3.0/motion-control",
     ),
     "Kling 3.0 motion control should only include motion control rows",
+  );
+
+  assert.ok(kling26Image);
+  assert.equal(kling26Image.pricingRows.length, 4);
+  assert.deepEqual(
+    [...new Set(kling26Image.pricingRows.map((row) => row.creditPrice))].sort(),
+    ["110", "220", "55"],
+  );
+  assert.ok(
+    kling26Image.pricingRows.every(
+      (row) => row.runtimeModel === "kling-2.6/image-to-video",
+    ),
+    "Kling 2.6 image-to-video should only include 2.6 image rows",
   );
 
   assert.ok(kling25Turbo);
@@ -868,7 +911,7 @@ test("splits one upstream model into separate runtime variants", () => {
   assert.match(stable?.pricingRows[0]?.modelDescription ?? "", /stable/i);
 });
 
-test("validates pricing overrides against the correct split model entry", () => {
+test("validates split model build inputs without requiring pricing row overrides", () => {
   const errors = validateAiStudioRuntimeBuildInput({
     upstream: {
       version: 1,
@@ -915,19 +958,7 @@ test("validates pricing overrides against the correct split model entry", () => 
       },
     },
     pricingOverrides: {
-      models: {
-        "video:sora2-text-to-video-stable": {
-          rows: [
-            {
-              match: {
-                runtimeModel: "sora-2-text-to-video-stable",
-                modelDescriptionIncludes: "stable-10.0s",
-              },
-              creditPrice: "70",
-            },
-          ],
-        },
-      },
+      models: {},
     },
   });
 
@@ -941,22 +972,22 @@ test("allows pricing overrides to append rows for models without upstream pricin
       generatedAt: "2026-03-10T00:00:00.000Z",
       items: [
         createDetail({
-          id: "video:bytedance-v1-pro-text-to-video",
-          title: "Bytedance - V1 Pro Text to Video",
-          docUrl: "https://docs.kie.ai/market/bytedance/v1-pro-text-to-video.md",
-          provider: "Bytedance",
-          modelKeys: ["bytedance/v1-pro-text-to-video"],
+          id: "video:apimart-seedance-2-0",
+          title: "Seedance 2.0",
+          docUrl: "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
+          provider: "ByteDance",
+          modelKeys: ["seedance-2.0"],
           requestSchema: {
             type: "object",
             properties: {
               model: {
                 type: "string",
-                default: "bytedance/v1-pro-text-to-video",
+                default: "seedance-2.0",
               },
             },
           },
           examplePayload: {
-            model: "bytedance/v1-pro-text-to-video",
+            model: "seedance-2.0",
           },
           pricingRows: [],
         }),
@@ -967,18 +998,18 @@ test("allows pricing overrides to append rows for models without upstream pricin
     },
     pricingOverrides: {
       models: {
-        "video:bytedance-v1-pro-text-to-video": {
+        "video:apimart-seedance-2-0": {
           addRows: [
             {
-              modelDescription: "Seedance 1.5, text-to-video, 720p, 5s",
+              modelDescription: "Seedance 2.0, 720p no video input",
               interfaceType: "video",
               provider: "ByteDance",
-              creditPrice: "30",
-              creditUnit: "per video",
+              creditPrice: "41",
+              creditUnit: "per second",
               usdPrice: "",
               falPrice: "",
               discountRate: 0,
-              anchor: "https://kie.ai/seedance-1-5?model=bytedance%2Fv1-pro-text-to-video",
+              anchor: "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
               discountPrice: false,
             },
           ],
@@ -991,6 +1022,6 @@ test("allows pricing overrides to append rows for models without upstream pricin
 
   const compiled = compileAiStudioRuntimeCatalog(input);
   assert.equal(compiled.items[0]?.pricingRows.length, 1);
-  assert.equal(compiled.items[0]?.pricingRows[0]?.creditPrice, "30");
+  assert.equal(compiled.items[0]?.pricingRows[0]?.creditPrice, "41");
   assert.equal(compiled.items[0]?.pricingRows[0]?.provider, "ByteDance");
 });

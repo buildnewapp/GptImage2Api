@@ -90,38 +90,26 @@ export interface AiStudioModelOverride {
   splitModels?: AiStudioSplitModelOverride[];
 }
 
+export interface AiStudioPricingRowMatch {
+  runtimeModel?: string;
+  modelDescriptionIncludes?: string;
+  provider?: string;
+}
+
 export interface AiStudioSplitModelOverride {
   id: string;
   title: string;
   alias?: string | null;
   provider?: string;
   schemaModel: string;
-  pricingMatch: NonNullable<AiStudioPricingRowOverride["match"]>;
+  pricingMatch: AiStudioPricingRowMatch;
 }
 
 export interface AiStudioModelOverridesFile {
   models: Record<string, AiStudioModelOverride>;
 }
 
-export interface AiStudioPricingRowOverride {
-  match?: {
-    runtimeModel?: string;
-    modelDescriptionIncludes?: string;
-    provider?: string;
-  };
-  enabled?: boolean;
-  modelDescription?: string;
-  provider?: string;
-  creditPrice?: string;
-  creditUnit?: string;
-  usdPrice?: string;
-  falPrice?: string;
-  discountRate?: number;
-  discountPrice?: boolean;
-}
-
 export interface AiStudioPricingOverrideBucket {
-  rows?: AiStudioPricingRowOverride[];
   addRows?: AiStudioPricingRow[];
 }
 
@@ -1415,16 +1403,11 @@ function mergeAiStudioUpstreamCatalogFiles(
   };
 }
 
-function matchesPricingOverride(
+function matchesPricingRowMatch(
   entry: AiStudioDocDetail,
   row: AiStudioPricingRow,
-  override: AiStudioPricingRowOverride,
+  match: AiStudioPricingRowMatch,
 ) {
-  const match = override.match;
-  if (!match) {
-    return true;
-  }
-
   if (match.runtimeModel) {
     const runtimeModel = resolvePricingRowRuntimeModel(entry, row) ?? "";
     if (runtimeModel !== match.runtimeModel) {
@@ -1453,10 +1436,10 @@ function matchesPricingOverride(
 
 function selectMatchingPricingRows(
   detail: AiStudioDocDetail,
-  match: NonNullable<AiStudioPricingRowOverride["match"]>,
+  match: AiStudioPricingRowMatch,
 ) {
   return detail.pricingRows
-    .filter((row) => matchesPricingOverride(detail, row, { match }))
+    .filter((row) => matchesPricingRowMatch(detail, row, match))
     .map(clonePricingRow);
 }
 
@@ -1484,57 +1467,13 @@ function applyPricingOverridesToDetail(
   bucket: AiStudioPricingOverrideBucket,
 ) {
   const hasKieRows = detail.pricingRows.some((row) => row.source === "kie");
-  const overrides = bucket.rows ?? [];
   const addRows = hasKieRows ? [] : (bucket.addRows ?? []);
 
-  if (overrides.length === 0 && addRows.length === 0) {
+  if (addRows.length === 0) {
     return detail;
   }
 
-  const nextRows: AiStudioPricingRow[] = [];
-
-  for (const row of detail.pricingRows) {
-    let currentRow = clonePricingRow(row);
-    let removed = false;
-
-    for (const override of overrides) {
-      if (!matchesPricingOverride(detail, currentRow, override)) {
-        continue;
-      }
-
-      if (override.enabled === false) {
-        if (currentRow.source === "kie") {
-          continue;
-        }
-        removed = true;
-        break;
-      }
-
-      currentRow = {
-        ...currentRow,
-        ...(override.modelDescription !== undefined
-          ? { modelDescription: override.modelDescription }
-          : {}),
-        ...(override.provider !== undefined ? { provider: override.provider } : {}),
-        ...(override.creditPrice !== undefined
-          ? { creditPrice: override.creditPrice }
-          : {}),
-        ...(override.creditUnit !== undefined ? { creditUnit: override.creditUnit } : {}),
-        ...(override.usdPrice !== undefined ? { usdPrice: override.usdPrice } : {}),
-        ...(override.falPrice !== undefined ? { falPrice: override.falPrice } : {}),
-        ...(override.discountRate !== undefined
-          ? { discountRate: override.discountRate }
-          : {}),
-        ...(override.discountPrice !== undefined
-          ? { discountPrice: override.discountPrice }
-          : {}),
-      };
-    }
-
-    if (!removed) {
-      nextRows.push(currentRow);
-    }
-  }
+  const nextRows: AiStudioPricingRow[] = detail.pricingRows.map(clonePricingRow);
 
   for (const row of addRows) {
     nextRows.push(clonePricingRow(row));
@@ -1619,10 +1558,7 @@ export function compileAiStudioRuntimeCatalog({
       return buildSplitModelDetails(rawDetail, modelOverride!).map((detail) => {
         detail.pricingRows = resolveBasePricingRows(detail, kiePrices);
         const pricingOverrideBucket = pricingOverrides.models[detail.id];
-        if (
-          (pricingOverrideBucket?.rows?.length ?? 0) > 0 ||
-          (pricingOverrideBucket?.addRows?.length ?? 0) > 0
-        ) {
+        if ((pricingOverrideBucket?.addRows?.length ?? 0) > 0) {
           applyPricingOverridesToDetail(detail, pricingOverrideBucket);
         }
         applySchemaOverridesToDetail(detail, schemaOverrides.models[detail.id]);
@@ -1635,10 +1571,7 @@ export function compileAiStudioRuntimeCatalog({
     const detail = applyModelOverrideToDetail(cloneDetail(rawDetail), modelOverride);
     detail.pricingRows = resolveBasePricingRows(detail, kiePrices);
     const pricingOverrideBucket = pricingOverrides.models[detail.id];
-    if (
-      (pricingOverrideBucket?.rows?.length ?? 0) > 0 ||
-      (pricingOverrideBucket?.addRows?.length ?? 0) > 0
-    ) {
+    if ((pricingOverrideBucket?.addRows?.length ?? 0) > 0) {
       applyPricingOverridesToDetail(detail, pricingOverrideBucket);
     }
     applySchemaOverridesToDetail(detail, schemaOverrides.models[detail.id]);
@@ -1743,15 +1676,11 @@ export function validateAiStudioRuntimeBuildInput({
     }
 
     item.pricingRows = resolveBasePricingRows(item, kiePrices);
-    const usesStructuredKiePricing = item.pricingRows.some((row) => row.source === "kie");
-
-    for (const override of bucket.rows ?? []) {
-      const matched = item.pricingRows.some((row) =>
-        matchesPricingOverride(item, row, override),
-      );
-      if (!matched && !usesStructuredKiePricing) {
-        errors.push(`Pricing override does not match any row for model: ${modelId}`);
-      }
+    if (
+      (bucket.addRows?.length ?? 0) > 0 &&
+      item.pricingRows.some((row) => row.source === "kie")
+    ) {
+      errors.push(`Pricing addRows should only target models without KIE pricing: ${modelId}`);
     }
   }
 

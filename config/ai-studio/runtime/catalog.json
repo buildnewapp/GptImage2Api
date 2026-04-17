@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-04-17T02:55:50.882Z",
+  "generatedAt": "2026-04-17T03:36:06.338Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -7906,59 +7906,85 @@
       },
       "pricingRows": [
         {
-          "modelDescription": "kling 2.6, text-to-video, with audio-10.0s",
+          "pricingKey": "Market_kling-2.6_text-to-video_false_10",
+          "creditPrice": "110",
+          "source": "kie",
+          "modelDescription": "kling-2.6/text-to-video, 10s, false",
           "interfaceType": "video",
           "provider": "Kling",
-          "creditPrice": "220.0",
           "creditUnit": "per video",
-          "usdPrice": "1.1",
-          "falPrice": "1.4",
-          "discountRate": 21.43,
-          "anchor": "https://kie.ai/kling-2-6?model=kling-2.6%2Ftext-to-video",
-          "discountPrice": false
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "runtimeModel": "kling-2.6/text-to-video",
+          "duration": 10,
+          "audio": false
         },
         {
-          "modelDescription": "kling 2.6, text-to-video, without audio-10.0s",
+          "pricingKey": "Market_kling-2.6_text-to-video_false_5",
+          "creditPrice": "55",
+          "source": "kie",
+          "modelDescription": "kling-2.6/text-to-video, 5s, false",
           "interfaceType": "video",
           "provider": "Kling",
-          "creditPrice": "110.0",
           "creditUnit": "per video",
-          "usdPrice": "0.55",
-          "falPrice": "0.7",
-          "discountRate": 21.43,
-          "anchor": "https://kie.ai/kling-2-6?model=kling-2.6%2Ftext-to-video",
-          "discountPrice": false
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "runtimeModel": "kling-2.6/text-to-video",
+          "duration": 5,
+          "audio": false
         },
         {
-          "modelDescription": "kling 2.6, text-to-video, without audio-5.0s",
+          "pricingKey": "Market_kling-2.6_text-to-video_true_10",
+          "creditPrice": "220",
+          "source": "kie",
+          "modelDescription": "kling-2.6/text-to-video, 10s, true",
           "interfaceType": "video",
           "provider": "Kling",
-          "creditPrice": "55.0",
           "creditUnit": "per video",
-          "usdPrice": "0.275",
-          "falPrice": "0.35",
-          "discountRate": 21.43,
-          "anchor": "https://kie.ai/kling-2-6?model=kling-2.6%2Ftext-to-video",
-          "discountPrice": false
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "runtimeModel": "kling-2.6/text-to-video",
+          "duration": 10,
+          "audio": true
         },
         {
-          "modelDescription": "kling 2.6, text-to-video, with audio-5.0s",
+          "pricingKey": "Market_kling-2.6_text-to-video_true_5",
+          "creditPrice": "110",
+          "source": "kie",
+          "modelDescription": "kling-2.6/text-to-video, 5s, true",
           "interfaceType": "video",
           "provider": "Kling",
-          "creditPrice": "110.0",
           "creditUnit": "per video",
-          "usdPrice": "0.55",
-          "falPrice": "0.7",
-          "discountRate": 21.43,
-          "anchor": "https://kie.ai/kling-2-6?model=kling-2.6%2Ftext-to-video",
-          "discountPrice": false
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "runtimeModel": "kling-2.6/text-to-video",
+          "duration": 5,
+          "audio": true
         }
       ],
       "pricing": {
         "strategy": "exact",
         "selectors": {
+          "duration": [
+            "input.duration"
+          ],
           "aspectRatio": [
             "input.aspect_ratio"
+          ],
+          "audio": [
+            "input.sound"
           ]
         }
       }
@@ -8081,54 +8107,85 @@
       },
       "pricingRows": [
         {
-          "modelDescription": "kling 2.6, image-to-video, without audio-10.0s",
+          "pricingKey": "Market_kling-2.6_image-to-video_false_10",
+          "creditPrice": "110",
+          "source": "kie",
+          "modelDescription": "kling-2.6/image-to-video, 10s, false",
           "interfaceType": "video",
           "provider": "Kling",
-          "creditPrice": "110.0",
           "creditUnit": "per video",
-          "usdPrice": "0.55",
-          "falPrice": "0.7",
-          "discountRate": 21.43,
-          "anchor": "https://kie.ai/kling-2-6?model=kling-2.6%2Fimage-to-video",
-          "discountPrice": false
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "runtimeModel": "kling-2.6/image-to-video",
+          "duration": 10,
+          "audio": false
         },
         {
-          "modelDescription": "kling 2.6, image-to-video, with audio-10.0s",
+          "pricingKey": "Market_kling-2.6_image-to-video_true_5",
+          "creditPrice": "110",
+          "source": "kie",
+          "modelDescription": "kling-2.6/image-to-video, 5s, true",
           "interfaceType": "video",
           "provider": "Kling",
-          "creditPrice": "220.0",
           "creditUnit": "per video",
-          "usdPrice": "1.1",
-          "falPrice": "1.4",
-          "discountRate": 21.43,
-          "anchor": "https://kie.ai/kling-2-6?model=kling-2.6%2Fimage-to-video",
-          "discountPrice": false
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "runtimeModel": "kling-2.6/image-to-video",
+          "duration": 5,
+          "audio": true
         },
         {
-          "modelDescription": "kling 2.6, image-to-video, with audio-5.0s",
+          "pricingKey": "Market_kling-2.6_image-to-video_false_5",
+          "creditPrice": "55",
+          "source": "kie",
+          "modelDescription": "kling-2.6/image-to-video, 5s, false",
           "interfaceType": "video",
           "provider": "Kling",
-          "creditPrice": "110.0",
           "creditUnit": "per video",
-          "usdPrice": "0.55",
-          "falPrice": "0.7",
-          "discountRate": 21.43,
-          "anchor": "https://kie.ai/kling-2-6?model=kling-2.6%2Fimage-to-video",
-          "discountPrice": false
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "runtimeModel": "kling-2.6/image-to-video",
+          "duration": 5,
+          "audio": false
         },
         {
-          "modelDescription": "kling 2.6, image-to-video, without audio-5.0s",
+          "pricingKey": "Market_kling-2.6_image-to-video_true_10",
+          "creditPrice": "220",
+          "source": "kie",
+          "modelDescription": "kling-2.6/image-to-video, 10s, true",
           "interfaceType": "video",
           "provider": "Kling",
-          "creditPrice": "55.0",
           "creditUnit": "per video",
-          "usdPrice": "0.275",
-          "falPrice": "0.35",
-          "discountRate": 21.43,
-          "anchor": "https://kie.ai/kling-2-6",
-          "discountPrice": false
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "",
+          "discountPrice": false,
+          "runtimeModel": "kling-2.6/image-to-video",
+          "duration": 10,
+          "audio": true
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "audio": [
+            "input.sound"
+          ]
+        }
+      }
     },
     {
       "id": "video:kling-v2-5-turbo-image-to-video-pro",
@@ -8667,15 +8724,111 @@
       },
       "pricingRows": [
         {
-          "modelDescription": "Kling AI Avtar , lip sync, Pro-up to 15 secondss-1080p",
+          "modelDescription": "kling 3.0 motion control, video-to-video, 1080P",
           "interfaceType": "video",
           "provider": "Kling",
-          "creditPrice": "16.0",
+          "creditPrice": "27",
           "creditUnit": "per second",
-          "usdPrice": "",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://kie.ai/kling-ai-avatar?model=kling%2Fai-avatar-v1-pro",
+          "usdPrice": "0.135",
+          "falPrice": "0.168",
+          "discountRate": 19.64,
+          "anchor": "https://kie.ai/kling-3-motion-control",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "kling 3.0 motion control, video-to-video, 720P",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "20",
+          "creditUnit": "per second",
+          "usdPrice": "0.1",
+          "falPrice": "0.126",
+          "discountRate": 20.63,
+          "anchor": "https://kie.ai/kling-3-motion-control",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Kling 3.0, video, with audio-1080P",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "27",
+          "creditUnit": "per second",
+          "usdPrice": "0.135",
+          "falPrice": "0.168",
+          "discountRate": 19.64,
+          "anchor": "https://kie.ai/kling-3-0",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Kling 3.0, video, without audio-1080P",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "18",
+          "creditUnit": "per second",
+          "usdPrice": "0.09",
+          "falPrice": "0.112",
+          "discountRate": 19.64,
+          "anchor": "https://kie.ai/kling-3-0",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Kling 3.0, video, with audio-720P",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "20",
+          "creditUnit": "per second",
+          "usdPrice": "0.1",
+          "falPrice": "0.112",
+          "discountRate": 10.71,
+          "anchor": "https://kie.ai/kling-3-0",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "Kling 3.0, video, without audio-720P",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "14",
+          "creditUnit": "per second",
+          "usdPrice": "0.07",
+          "falPrice": "0.084",
+          "discountRate": 16.67,
+          "anchor": "https://kie.ai/kling-3-0",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "kling 2.6, image-to-video, without audio-5.0s",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "55.0",
+          "creditUnit": "per video",
+          "usdPrice": "0.275",
+          "falPrice": "0.35",
+          "discountRate": 21.43,
+          "anchor": "https://kie.ai/kling-2-6",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "kling 2.6 motion control, video to video, 1080P",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "9",
+          "creditUnit": "per second",
+          "usdPrice": "0.045",
+          "falPrice": "0.112",
+          "discountRate": 59.82,
+          "anchor": "https://kie.ai/kling-2.6-motion-control",
+          "discountPrice": false
+        },
+        {
+          "modelDescription": "kling 2.6 motion control, video-to-video, 720P",
+          "interfaceType": "video",
+          "provider": "Kling",
+          "creditPrice": "6",
+          "creditUnit": "per second",
+          "usdPrice": "0.03",
+          "falPrice": "0.07",
+          "discountRate": 57.14,
+          "anchor": "https://kie.ai/kling-2.6-motion-control",
           "discountPrice": false
         }
       ]
@@ -15613,44 +15766,7 @@
           "shift": 5
         }
       },
-      "pricingRows": [
-        {
-          "modelDescription": "Wan 2.2 A14B Turbo API Speech to Video, 480p",
-          "interfaceType": "video",
-          "provider": "Wan",
-          "creditPrice": "12.0",
-          "creditUnit": "per second",
-          "usdPrice": "",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://kie.ai/wan-speech-to-video-turbo",
-          "discountPrice": false
-        },
-        {
-          "modelDescription": "Wan 2.2 A14B Turbo API Speech to Video, 580p",
-          "interfaceType": "video",
-          "provider": "Wan",
-          "creditPrice": "18.0",
-          "creditUnit": "per second",
-          "usdPrice": "",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://kie.ai/wan-speech-to-video-turbo",
-          "discountPrice": false
-        },
-        {
-          "modelDescription": "Wan 2.2 A14B Turbo API Speech to Video, 720p",
-          "interfaceType": "video",
-          "provider": "Wan",
-          "creditPrice": "24.0",
-          "creditUnit": "per second",
-          "usdPrice": "",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://kie.ai/wan-speech-to-video-turbo",
-          "discountPrice": false
-        }
-      ]
+      "pricingRows": []
     },
     {
       "id": "video:wan-text-to-video",
@@ -15793,52 +15909,7 @@
           "nsfw_checker": false
         }
       },
-      "pricingRows": [
-        {
-          "modelDescription": "Wan 2.2 A14B Turbo, text-to-video, 480p, 5s",
-          "interfaceType": "video",
-          "provider": "Wan",
-          "creditPrice": "40.0",
-          "creditUnit": "per video",
-          "usdPrice": "",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://kie.ai/wan/v2-2?model=wan%2F2-2-a14b-text-to-video-turbo",
-          "discountPrice": false
-        },
-        {
-          "modelDescription": "Wan 2.2 A14B Turbo, text-to-video, 580p, 5s",
-          "interfaceType": "video",
-          "provider": "Wan",
-          "creditPrice": "60.0",
-          "creditUnit": "per video",
-          "usdPrice": "",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://kie.ai/wan/v2-2?model=wan%2F2-2-a14b-text-to-video-turbo",
-          "discountPrice": false
-        },
-        {
-          "modelDescription": "Wan 2.2 A14B Turbo, text-to-video, 720p, 5s",
-          "interfaceType": "video",
-          "provider": "Wan",
-          "creditPrice": "80.0",
-          "creditUnit": "per video",
-          "usdPrice": "",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://kie.ai/wan/v2-2?model=wan%2F2-2-a14b-text-to-video-turbo",
-          "discountPrice": false
-        }
-      ],
-      "pricing": {
-        "strategy": "exact",
-        "selectors": {
-          "aspectRatio": [
-            "input.aspect_ratio"
-          ]
-        }
-      }
+      "pricingRows": []
     },
     {
       "id": "video:wan-animate-move",

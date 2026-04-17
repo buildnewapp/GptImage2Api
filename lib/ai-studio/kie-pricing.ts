@@ -272,6 +272,28 @@ function parseKlingKey(pricingKey: string, creditPrice: number) {
     });
   }
 
+  const kling26Match = pricingKey.match(
+    /^Market_kling-2\.6_(text-to-video|image-to-video)_(true|false)_(5|10)$/i,
+  );
+  if (kling26Match) {
+    const [, operation, audioToken, durationToken] = kling26Match;
+    const runtimeModel = `kling-2.6/${operation}`;
+    return createRow(pricingKey, creditPrice, {
+      modelDescription: `${runtimeModel}, ${durationToken}s, ${audioToken}`,
+      interfaceType: "video",
+      provider: "Kling",
+      creditUnit: "per video",
+      usdPrice: "",
+      falPrice: "",
+      discountRate: 0,
+      anchor: "",
+      discountPrice: false,
+      runtimeModel,
+      duration: toDuration(durationToken),
+      audio: audioToken === "true",
+    });
+  }
+
   const motionMatch = pricingKey.match(/^Market_kling-3_motion-control_(720p|1080p)$/i);
   if (motionMatch) {
     const [, resolution] = motionMatch;
@@ -291,7 +313,7 @@ function parseKlingKey(pricingKey: string, creditPrice: number) {
   }
 
   const legacyMatch = pricingKey.match(
-    /^Market_(kling-(?:2\.6_(?:text-to-video|image-to-video|motion-control)|ai-avatar-(?:standard|pro))|kling_v(?:1-avatar-standard|2-1-(?:master-text-to-video|master-image-to-video|pro|standard)|2-5-turbo-(?:text-to-video-pro|image-to-video-pro)))(?:_(720p|1080p|5|10))?(?:_(true|false))?$/i,
+    /^Market_(kling-(?:2\.6_motion-control|ai-avatar-(?:standard|pro))|kling_v(?:1-avatar-standard|2-1-(?:master-text-to-video|master-image-to-video|pro|standard)|2-5-turbo-(?:text-to-video-pro|image-to-video-pro)))(?:_(720p|1080p|5|10))?(?:_(true|false))?$/i,
   );
 
   if (!legacyMatch) {
@@ -384,10 +406,38 @@ function createSoraRows(
   );
 }
 
+function normalizeSoraDisplayCreditPrice(pricingKey: string, creditPrice: number) {
+  switch (pricingKey) {
+    case "Market_sora2-remix_NO-WATERMARK_sora2_10":
+      return 3;
+    case "Market_sora2-remix_NO-WATERMARK_sora2_15":
+      return 5;
+    case "Market_sora2-remix_WATERMARK_sora2_10":
+      return 20;
+    case "Market_sora2-remix_WATERMARK_sora2_15":
+      return 30;
+    case "Market_sora2-remix_sora2pro_standard_10":
+      return 75;
+    case "Market_sora2-remix_sora2pro_standard_15":
+      return 135;
+    case "Market_sora2-remix_sora2pro_high_10":
+      return 165;
+    case "Market_sora2-remix_sora2pro_high_15":
+      return 315;
+    default:
+      return creditPrice;
+  }
+}
+
 function parseSoraKey(pricingKey: string, creditPrice: number) {
+  const normalizedCreditPrice = normalizeSoraDisplayCreditPrice(
+    pricingKey,
+    creditPrice,
+  );
+
   let match = pricingKey.match(/^Market_SORA2-VIDEO_NO-WATERMARK_(10|15)$/i);
   if (match) {
-    return createSoraRows(pricingKey, creditPrice, [
+    return createSoraRows(pricingKey, normalizedCreditPrice, [
       {
         catalogModelId: "video:sora2-text-to-video-standard",
         runtimeModel: "sora-2-text-to-video",
@@ -398,7 +448,7 @@ function parseSoraKey(pricingKey: string, creditPrice: number) {
 
   match = pricingKey.match(/^Market_SORA2-STABLE-VIDEO_(10|15)$/i);
   if (match) {
-    return createSoraRows(pricingKey, creditPrice, [
+    return createSoraRows(pricingKey, normalizedCreditPrice, [
       {
         catalogModelId: "video:sora2-text-to-video-stable",
         runtimeModel: "sora-2-text-to-video-stable",
@@ -409,7 +459,7 @@ function parseSoraKey(pricingKey: string, creditPrice: number) {
 
   match = pricingKey.match(/^Market_sora2-remix_NO-WATERMARK_sora2_(10|15)$/i);
   if (match) {
-    return createSoraRows(pricingKey, creditPrice, [
+    return createSoraRows(pricingKey, normalizedCreditPrice, [
       {
         catalogModelId: "video:sora2-image-to-video-standard",
         runtimeModel: "sora-2-image-to-video",
@@ -420,7 +470,7 @@ function parseSoraKey(pricingKey: string, creditPrice: number) {
 
   match = pricingKey.match(/^Market_sora2-remix_WATERMARK_sora2_(10|15)$/i);
   if (match) {
-    return createSoraRows(pricingKey, creditPrice, [
+    return createSoraRows(pricingKey, normalizedCreditPrice, [
       {
         catalogModelId: "video:sora2-image-to-video-stable",
         runtimeModel: "sora-2-image-to-video-stable",
@@ -431,7 +481,7 @@ function parseSoraKey(pricingKey: string, creditPrice: number) {
 
   match = pricingKey.match(/^Market_SORA2-VIDEO-PRO_(standard|high)_(10|15)$/i);
   if (match) {
-    return createSoraRows(pricingKey, creditPrice, [
+    return createSoraRows(pricingKey, normalizedCreditPrice, [
       {
         catalogModelId: "video:sora2-pro-text-to-video",
         runtimeModel: "sora-2-pro-text-to-video",
@@ -443,7 +493,7 @@ function parseSoraKey(pricingKey: string, creditPrice: number) {
 
   match = pricingKey.match(/^Market_sora2-remix_sora2pro_(standard|high)_(10|15)$/i);
   if (match) {
-    return createSoraRows(pricingKey, creditPrice, [
+    return createSoraRows(pricingKey, normalizedCreditPrice, [
       {
         catalogModelId: "video:sora2-pro-image-to-video",
         runtimeModel: "sora-2-pro-image-to-video",
@@ -455,7 +505,7 @@ function parseSoraKey(pricingKey: string, creditPrice: number) {
 
   match = pricingKey.match(/^Market_SORA2-PRO-STORYBOARD_standard_(10|15|25)$/i);
   if (match) {
-    return createSoraRows(pricingKey, creditPrice, [
+    return createSoraRows(pricingKey, normalizedCreditPrice, [
       {
         catalogModelId: "video:sora2-pro-storyboard",
         runtimeModel: "sora-2-pro-storyboard",
