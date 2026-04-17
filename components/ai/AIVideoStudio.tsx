@@ -104,12 +104,31 @@ type GenerationTask = {
   createdAt: number;
 };
 
+const POLLING_ERROR_LIMIT = 3;
+
 function createLocalTaskId() {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
     return crypto.randomUUID();
   }
 
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function resolveGenerationTaskState(
+  state: string | null | undefined,
+): GenerationTaskState {
+  if (state === "succeeded") {
+    return "succeeded";
+  }
+
+  if (state === "failed") {
+    return "failed";
+  }
+
+  return state === "queued" ? "queued" : "running";
 }
 
 function hasRequiredFieldValue(value: unknown) {
@@ -140,10 +159,7 @@ function hasFilledValue(value: unknown) {
   return true;
 }
 
-function getValueAtPath(
-  source: Record<string, unknown>,
-  path: string[],
-) {
+function getValueAtPath(source: Record<string, unknown>, path: string[]) {
   let current: unknown = source;
 
   for (const segment of path) {
@@ -180,10 +196,7 @@ function setValueAtPath(
   return next;
 }
 
-function findValueByKey(
-  source: Record<string, unknown>,
-  key: string,
-): unknown {
+function findValueByKey(source: Record<string, unknown>, key: string): unknown {
   if (key in source) {
     return source[key];
   }
@@ -262,7 +275,10 @@ export default function AIVideoStudio() {
     optimisticDeduct,
   } = useUserBenefits();
   const hasInitializedFromStorageRef = useRef(false);
-  const pollingTimersRef = useRef<Map<string, ReturnType<typeof setInterval>>>(new Map());
+  const pollingTimersRef = useRef<Map<string, ReturnType<typeof setInterval>>>(
+    new Map(),
+  );
+  const pollingErrorCountsRef = useRef<Map<string, number>>(new Map());
 
   const [selectedFamilyKey, setSelectedFamilyKey] =
     useState<AiVideoStudioFamilyKey>("sora2");
@@ -275,7 +291,9 @@ export default function AIVideoStudio() {
   const [isPublic, setIsPublic] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [generationTasks, setGenerationTasks] = useState<GenerationTask[]>([]);
-  const [activeTaskLocalId, setActiveTaskLocalId] = useState<string | null>(null);
+  const [activeTaskLocalId, setActiveTaskLocalId] = useState<string | null>(
+    null,
+  );
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
   const availableFamilies = AI_VIDEO_STUDIO_FAMILIES;
@@ -306,7 +324,9 @@ export default function AIVideoStudio() {
       return;
     }
 
-    if (!availableVersions.some((version) => version.key === selectedVersionKey)) {
+    if (
+      !availableVersions.some((version) => version.key === selectedVersionKey)
+    ) {
       setSelectedVersionKey(availableVersions[0]!.key);
     }
   }, [availableVersions, selectedVersionKey]);
@@ -374,7 +394,10 @@ export default function AIVideoStudio() {
 
       for (const field of normalizedSchema.fields) {
         const previousValue = getValueAtPath(previous, field.path);
-        const defaultValue = getValueAtPath(normalizedSchema.defaults, field.path);
+        const defaultValue = getValueAtPath(
+          normalizedSchema.defaults,
+          field.path,
+        );
         next = setValueAtPath(
           next,
           field.path,
@@ -391,7 +414,9 @@ export default function AIVideoStudio() {
       return;
     }
 
-    const rawNewState = window.localStorage.getItem(AI_VIDEO_STUDIO_FORM_STORAGE_KEY);
+    const rawNewState = window.localStorage.getItem(
+      AI_VIDEO_STUDIO_FORM_STORAGE_KEY,
+    );
     const state = safeParseAiVideoStudioStoredState(rawNewState);
     if (state) {
       setSelectedFamilyKey(state.familyKey);
@@ -502,7 +527,9 @@ export default function AIVideoStudio() {
   const updateGenerationTask = useCallback(
     (localId: string, patch: Partial<GenerationTask>) => {
       setGenerationTasks((current) =>
-        current.map((task) => (task.localId === localId ? { ...task, ...patch } : task)),
+        current.map((task) =>
+          task.localId === localId ? { ...task, ...patch } : task,
+        ),
       );
     },
     [],
@@ -524,11 +551,13 @@ export default function AIVideoStudio() {
   const clearTaskPolling = useCallback((localId: string) => {
     const timer = pollingTimersRef.current.get(localId);
     if (!timer) {
+      pollingErrorCountsRef.current.delete(localId);
       return;
     }
 
     clearInterval(timer);
     pollingTimersRef.current.delete(localId);
+    pollingErrorCountsRef.current.delete(localId);
   }, []);
 
   const pollStatus = useCallback(
@@ -545,6 +574,8 @@ export default function AIVideoStudio() {
             throw new Error(json.error || "Task polling failed");
           }
 
+          pollingErrorCountsRef.current.delete(localId);
+
           if (json.data.state === "succeeded") {
             clearTaskPolling(localId);
             updateGenerationTask(localId, {
@@ -559,36 +590,64 @@ export default function AIVideoStudio() {
             clearTaskPolling(localId);
             updateGenerationTask(localId, {
               state: "failed",
+              mediaUrls: json.data.mediaUrls,
               progress: 100,
             });
             toast.error(t("form.generationFailed"));
             void refreshBenefits();
           } else {
             updateGenerationTask(localId, {
-              state: json.data.state === "queued" ? "queued" : "running",
+              state: resolveGenerationTaskState(json.data.state),
               mediaUrls: json.data.mediaUrls,
             });
             increaseTaskProgress(localId);
           }
         } catch {
+          const nextErrorCount =
+            (pollingErrorCountsRef.current.get(localId) ?? 0) + 1;
+          pollingErrorCountsRef.current.set(localId, nextErrorCount);
+
+          if (nextErrorCount >= POLLING_ERROR_LIMIT) {
+            clearTaskPolling(localId);
+            updateGenerationTask(localId, {
+              state: "failed",
+              progress: 100,
+            });
+            toast.error(t("form.generationFailed"));
+            void refreshBenefits();
+            return;
+          }
+
           increaseTaskProgress(localId);
         }
       }, 5000);
 
       pollingTimersRef.current.set(localId, timer);
     },
-    [clearTaskPolling, increaseTaskProgress, refreshBenefits, t, updateGenerationTask],
+    [
+      clearTaskPolling,
+      increaseTaskProgress,
+      refreshBenefits,
+      t,
+      updateGenerationTask,
+    ],
   );
 
   useEffect(() => {
     return () => {
       pollingTimersRef.current.forEach((timer) => clearInterval(timer));
       pollingTimersRef.current.clear();
+      pollingErrorCountsRef.current.clear();
     };
   }, []);
 
   const handleGenerate = useCallback(async () => {
-    if (isSubmitting || !resolvedModelId || !inputPayload) {
+    if (
+      isSubmitting ||
+      !resolvedModelId ||
+      !inputPayload ||
+      !hasRequiredFieldValues
+    ) {
       return;
     }
 
@@ -656,25 +715,39 @@ export default function AIVideoStudio() {
         optimisticDeduct(json.data.reservedCredits ?? 0);
       }
 
+      const nextState = resolveGenerationTaskState(json.data.state);
+      const shouldPoll = Boolean(
+        json.data.taskId &&
+          json.data.statusSupported &&
+          nextState !== "succeeded" &&
+          nextState !== "failed",
+      );
+
       updateGenerationTask(localTaskId, {
         taskId: json.data.taskId ?? undefined,
-        state:
-          json.data.state === "succeeded"
-            ? "succeeded"
-            : json.data.state === "failed"
-              ? "failed"
-              : "queued",
+        state: nextState,
         mediaUrls: json.data.mediaUrls ?? [],
         selectedPricing: json.data.selectedPricing ?? selectedPricing,
         creditsRequired: json.data.reservedCredits ?? estimatedCredits,
-        progress: json.data.state === "succeeded" || !json.data.taskId ? 100 : 10,
+        progress: shouldPoll ? 10 : 100,
       });
 
-      if (json.data.state === "succeeded" || !json.data.taskId) {
+      if (nextState === "failed") {
+        toast.error(t("form.generationFailed"));
+        void refreshBenefits();
+      } else if (!shouldPoll) {
         toast.success(t("form.generationSuccess"));
         void refreshBenefits();
       } else {
-        pollStatus(localTaskId, json.data.taskId, resolvedModelId);
+        const queuedTaskId = json.data.taskId;
+        if (!queuedTaskId) {
+          toast.success(t("form.generationSuccess"));
+          void refreshBenefits();
+          return;
+        }
+
+        toast.success(t("form.generationQueued"));
+        pollStatus(localTaskId, queuedTaskId, resolvedModelId);
       }
     } catch (error: any) {
       updateGenerationTask(localTaskId, {
@@ -702,6 +775,7 @@ export default function AIVideoStudio() {
     session,
     t,
     updateGenerationTask,
+    hasRequiredFieldValues,
   ]);
 
   const activeTask = useMemo(() => {
@@ -713,7 +787,10 @@ export default function AIVideoStudio() {
       return generationTasks[0];
     }
 
-    return generationTasks.find((task) => task.localId === activeTaskLocalId) ?? generationTasks[0];
+    return (
+      generationTasks.find((task) => task.localId === activeTaskLocalId) ??
+      generationTasks[0]
+    );
   }, [activeTaskLocalId, generationTasks]);
 
   const activeResultVideoUrl = activeTask?.mediaUrls[0] ?? null;
@@ -730,16 +807,19 @@ export default function AIVideoStudio() {
     [t],
   );
 
-  const handleDownloadVideo = useCallback((url: string, taskId: string | undefined) => {
-    const link = document.createElement("a");
-    link.href = url;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.download = `video-task-${taskId || Date.now()}.mp4`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-  }, []);
+  const handleDownloadVideo = useCallback(
+    (url: string, taskId: string | undefined) => {
+      const link = document.createElement("a");
+      link.href = url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.download = `video-task-${taskId || Date.now()}.mp4`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    },
+    [],
+  );
 
   const handleRemixTask = useCallback(
     (task: GenerationTask) => {
@@ -760,32 +840,29 @@ export default function AIVideoStudio() {
     [t],
   );
 
-  const getTaskParamsLine = useCallback(
-    (task: GenerationTask) => {
-      const parts: string[] = [];
-      const aspectRatio = findValueByKey(task.formValues, "aspect_ratio");
-      const duration = findValueByKey(task.formValues, "duration");
-      const frames = findValueByKey(task.formValues, "n_frames");
+  const getTaskParamsLine = useCallback((task: GenerationTask) => {
+    const parts: string[] = [];
+    const aspectRatio = findValueByKey(task.formValues, "aspect_ratio");
+    const duration = findValueByKey(task.formValues, "duration");
+    const frames = findValueByKey(task.formValues, "n_frames");
 
-      if (typeof aspectRatio === "string" && aspectRatio) {
-        parts.push(`aspect_ratio: ${aspectRatio}`);
-      }
+    if (typeof aspectRatio === "string" && aspectRatio) {
+      parts.push(`aspect_ratio: ${aspectRatio}`);
+    }
 
-      if (
-        (typeof duration === "string" && duration) ||
-        typeof duration === "number"
-      ) {
-        parts.push(`duration: ${duration}s`);
-      } else if (typeof frames === "string" && frames) {
-        parts.push(`n_frames: ${frames}`);
-      }
+    if (
+      (typeof duration === "string" && duration) ||
+      typeof duration === "number"
+    ) {
+      parts.push(`duration: ${duration}s`);
+    } else if (typeof frames === "string" && frames) {
+      parts.push(`n_frames: ${frames}`);
+    }
 
-      parts.push(task.isPublic ? "public" : "private");
+    parts.push(task.isPublic ? "public" : "private");
 
-      return parts.join(" · ");
-    },
-    [],
-  );
+    return parts.join(" · ");
+  }, []);
 
   const modelOptions = useMemo<ModelSelectorItem[]>(
     () =>
@@ -806,6 +883,17 @@ export default function AIVideoStudio() {
       })),
     [availableVersions],
   );
+  const versionLabelByKey = useMemo(
+    () =>
+      new Map(
+        availableFamilies.flatMap((family) =>
+          family.versions.map(
+            (version) => [version.key, version.label] as const,
+          ),
+        ),
+      ),
+    [availableFamilies],
+  );
 
   return (
     <main className="flex flex-1 flex-col items-center container px-4">
@@ -814,7 +902,9 @@ export default function AIVideoStudio() {
           <div className="w-full lg:w-[400px] xl:w-[450px] flex-shrink-0 flex flex-col gap-5 h-fit">
             <ModelSelector
               selectedId={selectedFamilyKey}
-              onSelect={(nextKey) => setSelectedFamilyKey(nextKey as AiVideoStudioFamilyKey)}
+              onSelect={(nextKey) =>
+                setSelectedFamilyKey(nextKey as AiVideoStudioFamilyKey)
+              }
               models={modelOptions}
               label={t("form.aiModel")}
               placeholder={t("form.selectModel")}
@@ -829,7 +919,7 @@ export default function AIVideoStudio() {
             {detailLoading ? (
               <div className="rounded-xl border border-border/60 bg-background/40 px-4 py-6 flex items-center justify-center gap-2 text-sm text-muted-foreground">
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Loading model settings...</span>
+                <span>{t("form.loadingModelSettings")}</span>
               </div>
             ) : detailError ? (
               <div className="rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
@@ -878,7 +968,9 @@ export default function AIVideoStudio() {
                   audioOnlyError: t("form.audioOnlyError"),
                   imageOnlyError: t("form.imageOnlyError"),
                   videoOnlyError: t("form.videoOnlyError"),
-                  videoDurationRequiredError: t("form.videoDurationRequiredError"),
+                  videoDurationRequiredError: t(
+                    "form.videoDurationRequiredError",
+                  ),
                   uploadTooLarge: (sizeInMb) =>
                     t("form.referenceUploadTooLarge", { size: sizeInMb }),
                   audioUrlPlaceholder: t("form.audioUrlPlaceholder"),
@@ -891,10 +983,14 @@ export default function AIVideoStudio() {
                 isPublic={isPublic}
                 disabled={isSubmitting}
                 onReferenceMetadataChange={(_, metadata) =>
-                  setFormValues((current) => mergeReferenceMetadata(current, metadata))
+                  setFormValues((current) =>
+                    mergeReferenceMetadata(current, metadata),
+                  )
                 }
                 onChange={(path, nextValue) =>
-                  setFormValues((current) => setValueAtPath(current, path, nextValue))
+                  setFormValues((current) =>
+                    setValueAtPath(current, path, nextValue),
+                  )
                 }
                 onPublicChange={setIsPublic}
               />
@@ -902,11 +998,15 @@ export default function AIVideoStudio() {
 
             {hasSignedInSession ? (
               <div className="rounded-xl border border-border/60 bg-background/40 px-4 py-2.5 flex items-center justify-between">
-                <div className="text-sm text-muted-foreground">{t("form.currentCredits")}</div>
+                <div className="text-sm text-muted-foreground">
+                  {t("form.currentCredits")}
+                </div>
                 <div className="font-semibold text-foreground">
                   {isLoadingBenefits
                     ? "--"
-                    : t("form.creditsRequired", { count: availableCredits ?? 0 })}
+                    : t("form.creditsRequired", {
+                        count: availableCredits ?? 0,
+                      })}
                 </div>
               </div>
             ) : null}
@@ -966,11 +1066,17 @@ export default function AIVideoStudio() {
               <div className="flex-1 min-h-0 h-full bg-muted/30 flex flex-col p-3 gap-3">
                 <div className="relative rounded-2xl overflow-hidden bg-black h-[clamp(180px,36vh,420px)] lg:h-[clamp(220px,42vh,520px)] shrink-0">
                   <div className="h-full w-full">
-                    {activeTask && (activeTask.state === "queued" || activeTask.state === "running") ? (
+                    {activeTask &&
+                    (activeTask.state === "queued" ||
+                      activeTask.state === "running") ? (
                       <div className="flex flex-col items-center justify-center h-full w-full gap-3">
                         <Loader2 className="w-10 h-10 animate-spin text-blue-400" />
-                        <p className="text-white/80 text-sm">{t("form.generating")}</p>
-                        <p className="text-white/60 text-xs">{activeTask.progress}%</p>
+                        <p className="text-white/80 text-sm">
+                          {t("form.generating")}
+                        </p>
+                        <p className="text-white/60 text-xs">
+                          {activeTask.progress}%
+                        </p>
                       </div>
                     ) : activeResultVideoUrl ? (
                       <video
@@ -992,8 +1098,12 @@ export default function AIVideoStudio() {
 
                 <div className="flex-1 min-h-0 rounded-2xl border border-border/60 bg-background/50 p-3 flex flex-col">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-semibold text-foreground">{t("form.tasks")}</h3>
-                    <span className="text-xs text-muted-foreground">{generationTasks.length}</span>
+                    <h3 className="text-sm font-semibold text-foreground">
+                      {t("form.tasks")}
+                    </h3>
+                    <span className="text-xs text-muted-foreground">
+                      {generationTasks.length}
+                    </span>
                   </div>
                   <div className="mt-3 flex-1 min-h-0 overflow-y-auto space-y-3 pr-1">
                     {generationTasks.map((task, index) => (
@@ -1023,7 +1133,9 @@ export default function AIVideoStudio() {
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center text-[11px] text-white/70">
-                                {task.state === "failed" ? t("form.generationFailed") : t("form.generating")}
+                                {task.state === "failed"
+                                  ? t("form.generationFailed")
+                                  : t("form.generating")}
                               </div>
                             )}
                           </div>
@@ -1031,16 +1143,22 @@ export default function AIVideoStudio() {
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center justify-between gap-3">
                               <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
-                                <span>{t("form.task", { index: generationTasks.length - index })}</span>
+                                <span>
+                                  {t("form.task", {
+                                    index: generationTasks.length - index,
+                                  })}
+                                </span>
                                 {task.taskId ? (
                                   <span
                                     className="font-mono text-[10px] text-muted-foreground bg-background/50 border border-border/50 px-1.5 py-0.5 rounded cursor-pointer hover:bg-muted transition-colors flex items-center gap-1"
                                     onClick={(event) => {
                                       event.stopPropagation();
-                                      navigator.clipboard.writeText(task.taskId!);
-                                      toast.success("Task ID copied");
+                                      navigator.clipboard.writeText(
+                                        task.taskId!,
+                                      );
+                                      toast.success(t("form.taskIdCopied"));
                                     }}
-                                    title="Copy Task ID"
+                                    title={t("form.copyTaskId")}
                                   >
                                     {task.taskId}
                                     <Copy className="w-2.5 h-2.5" />
@@ -1052,9 +1170,12 @@ export default function AIVideoStudio() {
                               </div>
                             </div>
                             <div className="mt-1 text-[11px] text-muted-foreground truncate">
-                              {availableVersions.find((version) => version.key === task.versionKey)?.label ?? task.versionKey}
+                              {versionLabelByKey.get(task.versionKey) ??
+                                task.versionKey}
                               {" · "}
-                              {t("form.creditsRequired", { count: task.creditsRequired })}
+                              {t("form.creditsRequired", {
+                                count: task.creditsRequired,
+                              })}
                               {" · "}
                               {getTaskParamsLine(task)}
                             </div>
@@ -1067,13 +1188,16 @@ export default function AIVideoStudio() {
                                   <div
                                     className={cn(
                                       "h-full rounded-full transition-all",
-                                      task.state === "failed" ? "bg-red-500" : "bg-blue-500",
+                                      task.state === "failed"
+                                        ? "bg-red-500"
+                                        : "bg-blue-500",
                                     )}
                                     style={{ width: `${task.progress}%` }}
                                   />
                                 </div>
                                 <div className="mt-1 text-[11px] text-muted-foreground flex items-center gap-1.5">
-                                  {task.state === "queued" || task.state === "running" ? (
+                                  {task.state === "queued" ||
+                                  task.state === "running" ? (
                                     <Loader2 className="w-3 h-3 animate-spin" />
                                   ) : null}
                                   <span>
@@ -1105,7 +1229,10 @@ export default function AIVideoStudio() {
                                 onClick={(event) => {
                                   event.stopPropagation();
                                   if (task.mediaUrls[0]) {
-                                    handleDownloadVideo(task.mediaUrls[0], task.taskId);
+                                    handleDownloadVideo(
+                                      task.mediaUrls[0],
+                                      task.taskId,
+                                    );
                                   }
                                 }}
                                 disabled={!task.mediaUrls[0]}
@@ -1155,16 +1282,25 @@ export default function AIVideoStudio() {
 
       {selectedVideo && typeof document !== "undefined"
         ? createPortal(
-            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-200">
+            <div
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-200"
+              onClick={() => setSelectedVideo(null)}
+            >
               <button
                 type="button"
-                onClick={() => setSelectedVideo(null)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setSelectedVideo(null);
+                }}
                 className="absolute top-4 right-4 p-2 text-white/50 hover:text-white transition-colors z-10"
               >
                 <X className="w-8 h-8" />
               </button>
 
-              <div className="relative w-full max-w-5xl aspect-video rounded-2xl overflow-hidden bg-black shadow-2xl ring-1 ring-white/10">
+              <div
+                className="relative w-full max-w-5xl aspect-video rounded-2xl overflow-hidden bg-black shadow-2xl ring-1 ring-white/10"
+                onClick={(event) => event.stopPropagation()}
+              >
                 <video
                   src={selectedVideo || undefined}
                   className="w-full h-full object-contain"
@@ -1173,11 +1309,6 @@ export default function AIVideoStudio() {
                   playsInline
                 />
               </div>
-
-              <div
-                className="absolute inset-0 -z-10"
-                onClick={() => setSelectedVideo(null)}
-              />
             </div>,
             document.body,
           )
