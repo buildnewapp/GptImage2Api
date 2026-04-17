@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-04-16T14:23:58.125Z",
+  "generatedAt": "2026-04-16T15:03:06.943Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -13263,17 +13263,6 @@
           "duration": 15
         }
       ],
-      "pricing": {
-        "strategy": "exact",
-        "selectors": {
-          "duration": [
-            "input.n_frames"
-          ],
-          "aspectRatio": [
-            "input.aspect_ratio"
-          ]
-        }
-      },
       "alias": null
     },
     {
@@ -13501,17 +13490,6 @@
           "duration": 15
         }
       ],
-      "pricing": {
-        "strategy": "exact",
-        "selectors": {
-          "duration": [
-            "input.n_frames"
-          ],
-          "aspectRatio": [
-            "input.aspect_ratio"
-          ]
-        }
-      },
       "alias": null
     },
     {
@@ -13720,17 +13698,6 @@
           "duration": 10
         }
       ],
-      "pricing": {
-        "strategy": "exact",
-        "selectors": {
-          "duration": [
-            "input.n_frames"
-          ],
-          "aspectRatio": [
-            "input.aspect_ratio"
-          ]
-        }
-      },
       "alias": null
     },
     {
@@ -13939,17 +13906,6 @@
           "duration": 10
         }
       ],
-      "pricing": {
-        "strategy": "exact",
-        "selectors": {
-          "duration": [
-            "input.n_frames"
-          ],
-          "aspectRatio": [
-            "input.aspect_ratio"
-          ]
-        }
-      },
       "alias": null
     },
     {
@@ -14222,21 +14178,7 @@
           "resolution": "high",
           "duration": 15
         }
-      ],
-      "pricing": {
-        "strategy": "exact",
-        "selectors": {
-          "resolution": [
-            "input.size"
-          ],
-          "duration": [
-            "input.n_frames"
-          ],
-          "aspectRatio": [
-            "input.aspect_ratio"
-          ]
-        }
-      }
+      ]
     },
     {
       "id": "video:sora2-pro-text-to-video",
@@ -14493,21 +14435,7 @@
           "resolution": "standard",
           "duration": 15
         }
-      ],
-      "pricing": {
-        "strategy": "exact",
-        "selectors": {
-          "resolution": [
-            "input.size"
-          ],
-          "duration": [
-            "input.n_frames"
-          ],
-          "aspectRatio": [
-            "input.aspect_ratio"
-          ]
-        }
-      }
+      ]
     },
     {
       "id": "video:sora2-watermark-remover",
@@ -14880,18 +14808,7 @@
           "resolution": "standard",
           "duration": 15
         }
-      ],
-      "pricing": {
-        "strategy": "exact",
-        "selectors": {
-          "duration": [
-            "input.n_frames"
-          ],
-          "aspectRatio": [
-            "input.aspect_ratio"
-          ]
-        }
-      }
+      ]
     },
     {
       "id": "video:sora2-characters",

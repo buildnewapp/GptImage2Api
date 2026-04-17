@@ -1120,6 +1120,193 @@ function clonePricingConfig(
   };
 }
 
+const DURATION_SELECTOR_CANDIDATES = [
+  "input.duration",
+  "duration",
+  "input.video_duration",
+  "video_duration",
+  "input.audio_duration",
+  "audio_duration",
+  "input.n_frames",
+  "input.extend_times",
+] as const;
+
+const RESOLUTION_SELECTOR_CANDIDATES = [
+  "input.resolution",
+  "resolution",
+  "input.image_resolution",
+  "image_resolution",
+  "input.size",
+  "size",
+  "input.mode",
+  "mode",
+] as const;
+
+const AUDIO_SELECTOR_CANDIDATES = [
+  "input.generate_audio",
+  "generate_audio",
+  "input.sound",
+  "sound",
+  "input.audio",
+  "audio",
+  "input.with_audio",
+  "with_audio",
+] as const;
+
+const ASPECT_RATIO_SELECTOR_CANDIDATES = [
+  "input.aspect_ratio",
+  "aspect_ratio",
+] as const;
+
+function getSchemaValueAtPath(schema: Record<string, any> | null, path: string) {
+  if (!schema) {
+    return null;
+  }
+
+  const segments = path.split(".").filter(Boolean);
+  let current: any = schema;
+
+  for (const segment of segments) {
+    if (!current || typeof current !== "object") {
+      return null;
+    }
+    current = current[segment];
+  }
+
+  return current && typeof current === "object" ? current : null;
+}
+
+function getSchemaEnumValues(schemaNode: Record<string, any> | null) {
+  if (!schemaNode || !Array.isArray(schemaNode.enum)) {
+    return [];
+  }
+
+  return schemaNode.enum
+    .filter((item): item is string => typeof item === "string" && item.trim().length > 0)
+    .map((item) => item.trim().toLowerCase());
+}
+
+function collectNormalizedPricingValues(
+  rows: AiStudioPricingRow[],
+  key: "resolution" | "aspectRatio",
+) {
+  return new Set(
+    rows
+      .map((row) => row[key])
+      .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
+      .map((value) => value.trim().toLowerCase()),
+  );
+}
+
+function hasPricingDuration(rows: AiStudioPricingRow[]) {
+  return rows.some((row) => typeof row.duration === "number" && Number.isFinite(row.duration));
+}
+
+function hasPricingAudio(rows: AiStudioPricingRow[]) {
+  return rows.some((row) => typeof row.audio === "boolean");
+}
+
+function hasEnumOverlap(schemaNode: Record<string, any> | null, values: Set<string>) {
+  if (values.size === 0) {
+    return false;
+  }
+
+  return getSchemaEnumValues(schemaNode).some((value) => values.has(value));
+}
+
+function inferSelectorPath(
+  schema: Record<string, any> | null,
+  candidates: readonly string[],
+  matcher?: (schemaNode: Record<string, any> | null, path: string) => boolean,
+) {
+  for (const path of candidates) {
+    const schemaNode = getSchemaValueAtPath(schema, path);
+    if (!schemaNode) {
+      continue;
+    }
+    if (!matcher || matcher(schemaNode, path)) {
+      return path;
+    }
+  }
+
+  return null;
+}
+
+function mergePricingConfig(
+  base: AiStudioPricingConfig | undefined,
+  override: AiStudioPricingConfig | undefined,
+): AiStudioPricingConfig | undefined {
+  if (!base && !override) {
+    return undefined;
+  }
+
+  return {
+    strategy: override?.strategy ?? base?.strategy ?? "exact",
+    selectors: {
+      ...(base?.selectors ?? {}),
+      ...(override?.selectors ?? {}),
+    },
+  };
+}
+
+function inferPricingConfig(detail: AiStudioDocDetail): AiStudioPricingConfig | undefined {
+  const schema = detail.requestSchema;
+  const selectors: AiStudioPricingSelectors = {};
+  const resolutionValues = collectNormalizedPricingValues(detail.pricingRows, "resolution");
+  const aspectRatioValues = collectNormalizedPricingValues(detail.pricingRows, "aspectRatio");
+
+  if (hasPricingDuration(detail.pricingRows)) {
+    const durationPath = inferSelectorPath(schema, DURATION_SELECTOR_CANDIDATES);
+    if (durationPath) {
+      selectors.duration = [durationPath];
+    }
+  }
+
+  if (resolutionValues.size > 0) {
+    const resolutionPath = inferSelectorPath(
+      schema,
+      RESOLUTION_SELECTOR_CANDIDATES,
+      (schemaNode, path) =>
+        path.includes("resolution") || hasEnumOverlap(schemaNode, resolutionValues),
+    );
+    if (resolutionPath) {
+      selectors.resolution = [resolutionPath];
+    }
+  }
+
+  if (aspectRatioValues.size > 0 || getSchemaValueAtPath(schema, "properties.input.properties.aspect_ratio")) {
+    const aspectRatioPath = inferSelectorPath(
+      schema,
+      ASPECT_RATIO_SELECTOR_CANDIDATES,
+      (schemaNode, path) =>
+        path.includes("aspect_ratio") || hasEnumOverlap(schemaNode, aspectRatioValues),
+    );
+    if (aspectRatioPath) {
+      selectors.aspectRatio = [aspectRatioPath];
+    }
+  }
+
+  if (hasPricingAudio(detail.pricingRows)) {
+    const audioPath = inferSelectorPath(schema, AUDIO_SELECTOR_CANDIDATES);
+    if (audioPath) {
+      selectors.audio = [audioPath];
+    }
+  }
+
+  if (Object.keys(selectors).length === 0) {
+    return undefined;
+  }
+
+  return {
+    strategy: "exact",
+    selectors,
+  };
+}
+
+function applyGeneratedPricingConfigToDetail(detail: AiStudioDocDetail) {
+  detail.pricing = mergePricingConfig(inferPricingConfig(detail), detail.pricing);
+}
+
 function cloneDetail(detail: AiStudioDocDetail): AiStudioDocDetail {
   return {
     ...detail,
@@ -1436,6 +1623,7 @@ export function compileAiStudioRuntimeCatalog({
           applyPricingOverridesToDetail(detail, pricingOverrideBucket);
         }
         applySchemaOverridesToDetail(detail, schemaOverrides.models[detail.id]);
+        applyGeneratedPricingConfigToDetail(detail);
         applyFormUiOverrideToDetail(detail, formUiOverrides.models[detail.id]);
         return detail;
       });
@@ -1451,6 +1639,7 @@ export function compileAiStudioRuntimeCatalog({
       applyPricingOverridesToDetail(detail, pricingOverrideBucket);
     }
     applySchemaOverridesToDetail(detail, schemaOverrides.models[detail.id]);
+    applyGeneratedPricingConfigToDetail(detail);
     applyFormUiOverrideToDetail(detail, formUiOverrides.models[detail.id]);
 
     return [detail];
