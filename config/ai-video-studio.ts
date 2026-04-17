@@ -93,16 +93,34 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     description: "Advanced model with smooth, stable motion",
     versions: [
       {
-        key: "seedance-1.0",
-        label: "Seedance 1.0 Text to Video",
+        key: "seedance-1.0-pro-text-to-video",
+        label: "V1 Pro Text To Video",
+        familyKey: "seedance-1.0",
+        modelId: "video:bytedance-v1-pro-text-to-video",
+      },
+      {
+        key: "seedance-1.0-pro-image-to-video",
+        label: "V1 Pro Image To Video",
+        familyKey: "seedance-1.0",
+        modelId: "video:bytedance-v1-pro-image-to-video",
+      },
+      {
+        key: "seedance-1.0-lite-text-to-video",
+        label: "V1 Lite Text To Video",
         familyKey: "seedance-1.0",
         modelId: "video:bytedance-v1-lite-text-to-video",
       },
       {
-        key: "seedance-1.0-image-to-video",
-        label: "Seedance 1.0 Image to Video",
+        key: "seedance-1.0-lite-image-to-video",
+        label: "V1 Lite Image To Video",
         familyKey: "seedance-1.0",
         modelId: "video:bytedance-v1-lite-image-to-video",
+      },
+      {
+        key: "seedance-1.0-pro-fast-image-to-video",
+        label: "V1 Pro Fast Image To Video",
+        familyKey: "seedance-1.0",
+        modelId: "video:bytedance-v1-pro-fast-image-to-video",
       },
     ],
   },
