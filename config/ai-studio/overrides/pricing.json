@@ -411,20 +411,16 @@
         {
           "match": {
             "runtimeModel": "sora-2-text-to-video-stable",
-            "modelDescriptionIncludes": "stable-15.0s"
+            "modelDescriptionIncludes": ", 15s"
           },
-          "provider": "Sdance",
-          "modelDescription": "Sdance, text-to-video, stable-15.0s",
-          "creditPrice": "80"
+          "creditPrice": "30"
         },
         {
           "match": {
             "runtimeModel": "sora-2-text-to-video-stable",
-            "modelDescriptionIncludes": "stable-10.0s"
+            "modelDescriptionIncludes": ", 10s"
           },
-          "provider": "Sdance",
-          "modelDescription": "Sdance, text-to-video, stable-10.0s",
-          "creditPrice": "70"
+          "creditPrice": "20"
         }
       ]
     },
@@ -433,16 +429,16 @@
         {
           "match": {
             "runtimeModel": "sora-2-image-to-video",
-            "modelDescriptionIncludes": "Standard-15.0s"
+            "modelDescriptionIncludes": ", 15s"
           },
-          "creditPrice": "35"
+          "creditPrice": "5"
         },
         {
           "match": {
             "runtimeModel": "sora-2-image-to-video",
-            "modelDescriptionIncludes": "Standard-10.0s"
+            "modelDescriptionIncludes": ", 10s"
           },
-          "creditPrice": "30"
+          "creditPrice": "3"
         }
       ]
     },
@@ -451,20 +447,16 @@
         {
           "match": {
             "runtimeModel": "sora-2-image-to-video-stable",
-            "modelDescriptionIncludes": "stable-15.0s"
+            "modelDescriptionIncludes": ", 15s"
           },
-          "provider": "Sdance",
-          "modelDescription": "Sdance, image-to-video, stable-15.0s",
-          "creditPrice": "80"
+          "creditPrice": "30"
         },
         {
           "match": {
             "runtimeModel": "sora-2-image-to-video-stable",
-            "modelDescriptionIncludes": "stable-10.0s"
+            "modelDescriptionIncludes": ", 10s"
           },
-          "provider": "Sdance",
-          "modelDescription": "Sdance, image-to-video, stable-10.0s",
-          "creditPrice": "70"
+          "creditPrice": "20"
         }
       ]
     },
@@ -473,23 +465,30 @@
         {
           "match": {
             "runtimeModel": "sora-2-pro-text-to-video",
-            "modelDescriptionIncludes": "Pro High-"
+            "modelDescriptionIncludes": ", high, 15s"
           },
-          "enabled": false
+          "creditPrice": "315"
         },
         {
           "match": {
             "runtimeModel": "sora-2-pro-text-to-video",
-            "modelDescriptionIncludes": "Pro Standard-15.0s"
+            "modelDescriptionIncludes": ", high, 10s"
           },
-          "creditPrice": "270"
+          "creditPrice": "165"
         },
         {
           "match": {
             "runtimeModel": "sora-2-pro-text-to-video",
-            "modelDescriptionIncludes": "Pro Standard-10.0s"
+            "modelDescriptionIncludes": ", standard, 15s"
           },
-          "creditPrice": "150"
+          "creditPrice": "135"
+        },
+        {
+          "match": {
+            "runtimeModel": "sora-2-pro-text-to-video",
+            "modelDescriptionIncludes": ", standard, 10s"
+          },
+          "creditPrice": "75"
         }
       ]
     },
@@ -498,23 +497,30 @@
         {
           "match": {
             "runtimeModel": "sora-2-pro-image-to-video",
-            "modelDescriptionIncludes": "Pro High-"
+            "modelDescriptionIncludes": ", high, 15s"
           },
-          "enabled": false
+          "creditPrice": "315"
         },
         {
           "match": {
             "runtimeModel": "sora-2-pro-image-to-video",
-            "modelDescriptionIncludes": "Pro Standard-15.0s"
+            "modelDescriptionIncludes": ", high, 10s"
           },
-          "creditPrice": "270"
+          "creditPrice": "165"
         },
         {
           "match": {
             "runtimeModel": "sora-2-pro-image-to-video",
-            "modelDescriptionIncludes": "Pro Standard-10.0s"
+            "modelDescriptionIncludes": ", standard, 15s"
           },
-          "creditPrice": "150"
+          "creditPrice": "135"
+        },
+        {
+          "match": {
+            "runtimeModel": "sora-2-pro-image-to-video",
+            "modelDescriptionIncludes": ", standard, 10s"
+          },
+          "creditPrice": "75"
         }
       ]
     },
@@ -523,16 +529,23 @@
         {
           "match": {
             "runtimeModel": "sora-2-pro-storyboard",
-            "modelDescriptionIncludes": "Pro-10.0s"
+            "modelDescriptionIncludes": ", 10s"
           },
-          "creditPrice": "150"
+          "creditPrice": "75"
         },
         {
           "match": {
             "runtimeModel": "sora-2-pro-storyboard",
-            "modelDescriptionIncludes": "Pro-15-25s"
+            "modelDescriptionIncludes": ", 15s"
           },
-          "creditPrice": "270"
+          "creditPrice": "135"
+        },
+        {
+          "match": {
+            "runtimeModel": "sora-2-pro-storyboard",
+            "modelDescriptionIncludes": ", 25s"
+          },
+          "creditPrice": "135"
         }
       ]
     },

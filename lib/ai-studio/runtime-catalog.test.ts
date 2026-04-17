@@ -136,6 +136,93 @@ test("compiles runtime catalog with model and pricing overrides", () => {
   assert.equal(compiled.items[0]?.pricingRows[0]?.duration, 10);
 });
 
+test("generates pricing selectors from request schema and pricing rows without model override pricing", () => {
+  const compiled = compileAiStudioRuntimeCatalog({
+    upstream: {
+      version: 1,
+      generatedAt: "2026-04-17T00:00:00.000Z",
+      items: [
+        createDetail({
+          id: "video:sora2-pro-text-to-video",
+          title: "Sora2 - Pro Text to Video",
+          docUrl: "https://docs.kie.ai/market/sora2/sora-2-pro-text-to-video.md",
+          provider: "OpenAI",
+          modelKeys: ["sora-2-pro-text-to-video"],
+          requestSchema: {
+            type: "object",
+            properties: {
+              model: {
+                type: "string",
+                default: "sora-2-pro-text-to-video",
+              },
+              input: {
+                type: "object",
+                properties: {
+                  prompt: {
+                    type: "string",
+                  },
+                  aspect_ratio: {
+                    type: "string",
+                    enum: ["16:9", "9:16"],
+                  },
+                  n_frames: {
+                    type: "string",
+                    enum: ["10", "15"],
+                  },
+                  size: {
+                    type: "string",
+                    enum: ["standard", "high"],
+                  },
+                },
+              },
+            },
+          },
+          examplePayload: {
+            model: "sora-2-pro-text-to-video",
+            input: {
+              prompt: "A neon alley",
+              aspect_ratio: "16:9",
+              n_frames: "10",
+              size: "standard",
+            },
+          },
+          pricingRows: [
+            createPricingRow({
+              modelDescription: "sora-2-pro-text-to-video, high, 10s",
+              runtimeModel: "sora-2-pro-text-to-video",
+              resolution: "high",
+              duration: 10,
+              aspectRatio: "16:9",
+            }),
+            createPricingRow({
+              modelDescription: "sora-2-pro-text-to-video, standard, 15s",
+              runtimeModel: "sora-2-pro-text-to-video",
+              resolution: "standard",
+              duration: 15,
+              aspectRatio: "9:16",
+            }),
+          ],
+        }),
+      ],
+    },
+    modelOverrides: {
+      models: {},
+    },
+    pricingOverrides: {
+      models: {},
+    },
+  });
+
+  assert.deepEqual(compiled.items[0]?.pricing, {
+    strategy: "exact",
+    selectors: {
+      resolution: ["input.size"],
+      duration: ["input.n_frames"],
+      aspectRatio: ["input.aspect_ratio"],
+    },
+  });
+});
+
 test("applies request schema overrides to runtime models", () => {
   const compiled = (compileAiStudioRuntimeCatalog as any)({
     upstream: {
@@ -571,6 +658,8 @@ test("exposes pricing rows for wan and hailuo public video models", async () => 
 test("keeps exposed runway and kling pricing rows isolated to the correct model family", async () => {
   const sora2 = await getCachedAiStudioCatalogEntry("video:sora2-text-to-video-standard");
   const sora2Image = await getCachedAiStudioCatalogEntry("video:sora2-image-to-video-standard");
+  const sora2Stable = await getCachedAiStudioCatalogEntry("video:sora2-text-to-video-stable");
+  const sora2ImageStable = await getCachedAiStudioCatalogEntry("video:sora2-image-to-video-stable");
   const sora2Pro = await getCachedAiStudioCatalogEntry("video:sora2-pro-text-to-video");
   const sora2ProImage = await getCachedAiStudioCatalogEntry("video:sora2-pro-image-to-video");
   const sora2Storyboard = await getCachedAiStudioCatalogEntry("video:sora2-pro-storyboard");
@@ -595,7 +684,19 @@ test("keeps exposed runway and kling pricing rows isolated to the correct model 
   assert.ok(sora2Image);
   assert.deepEqual(
     [...sora2Image.pricingRows.map((row) => row.creditPrice)].sort(),
-    ["6", "8"],
+    ["3", "5"],
+  );
+
+  assert.ok(sora2Stable);
+  assert.deepEqual(
+    [...sora2Stable.pricingRows.map((row) => row.creditPrice)].sort(),
+    ["20", "30"],
+  );
+
+  assert.ok(sora2ImageStable);
+  assert.deepEqual(
+    [...sora2ImageStable.pricingRows.map((row) => row.creditPrice)].sort(),
+    ["20", "30"],
   );
 
   assert.ok(sora2Pro);
@@ -612,7 +713,7 @@ test("keeps exposed runway and kling pricing rows isolated to the correct model 
   assert.ok(sora2ProImage);
   assert.deepEqual(
     [...sora2ProImage.pricingRows.map((row) => row.creditPrice)].sort(),
-    ["150", "270", "330", "630"],
+    ["135", "165", "315", "75"],
   );
 
   assert.ok(sora2Storyboard);

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-04-16T15:03:06.943Z",
+  "generatedAt": "2026-04-17T02:55:50.882Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -930,7 +930,15 @@
           "anchor": "https://kie.ai/seedream5-0-lite?model=seedream%2F5-lite-image-to-image",
           "discountPrice": false
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "image:z-image",
@@ -1077,7 +1085,15 @@
           "anchor": "https://kie.ai/topaz-image-upscale",
           "discountPrice": false
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "image:google-nano-banana-2",
@@ -1259,7 +1275,15 @@
           "anchor": "https://kie.ai/nano-banana-2",
           "discountPrice": false
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "image:google-imagen4-fast",
@@ -2094,7 +2118,15 @@
           "anchor": "https://kie.ai/nano-banana",
           "discountPrice": false
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "image:flux-2-pro-image-to-image",
@@ -2808,7 +2840,15 @@
           "anchor": "https://kie.ai/grok-imagine?model=grok-imagine%2Ftext-to-video",
           "discountPrice": false
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "image:grok-imagine-image-to-image",
@@ -6507,7 +6547,15 @@
           "anchor": "https://kie.ai/wan-2-7-image",
           "discountPrice": false
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "image:wan-2-7-image-pro",
@@ -7047,7 +7095,21 @@
           "resolution": "480p",
           "duration": 6
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:grok-imagine-image-to-video",
@@ -7401,7 +7463,21 @@
           "resolution": "480p",
           "duration": 6
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:grok-imagine-video-upscale",
@@ -7705,7 +7781,15 @@
           "resolution": "720p",
           "duration": 6
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.extend_times"
+          ]
+        }
+      }
     },
     {
       "id": "video:kling-2-6-text-to-video",
@@ -7869,7 +7953,15 @@
           "anchor": "https://kie.ai/kling-2-6?model=kling-2.6%2Ftext-to-video",
           "discountPrice": false
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:kling-2-6-image-to-video",
@@ -8185,7 +8277,15 @@
           "duration": 5,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ]
+        }
+      }
     },
     {
       "id": "video:kling-v2-5-turbo-text-to-video-pro",
@@ -8347,7 +8447,18 @@
           "duration": 5,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:kling-ai-avatar-standard",
@@ -8724,7 +8835,15 @@
           "duration": 10,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ]
+        }
+      }
     },
     {
       "id": "video:kling-v2-1-master-text-to-video",
@@ -8886,7 +9005,18 @@
           "duration": 10,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:kling-v2-1-pro",
@@ -9052,7 +9182,15 @@
           "duration": 5,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ]
+        }
+      }
     },
     {
       "id": "video:kling-v2-1-standard",
@@ -9209,7 +9347,15 @@
           "duration": 10,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ]
+        }
+      }
     },
     {
       "id": "video:kling-2-6-motion-control",
@@ -9387,7 +9533,15 @@
           "duration": null,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": [
+            "input.mode"
+          ]
+        }
+      }
     },
     {
       "id": "video:kling-3-0-motion-control",
@@ -9687,7 +9841,18 @@
           "resolution": "720p",
           "audio": true
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ],
+          "audio": [
+            "input.sound"
+          ]
+        }
+      }
     },
     {
       "id": "video:bytedance-seedance-2",
@@ -10060,6 +10225,14 @@
           "nsfw_checker"
         ]
       },
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      },
       "alias": "seedance-2-0-vip"
     },
     {
@@ -10384,6 +10557,14 @@
           "generate_audio",
           "nsfw_checker"
         ]
+      },
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
       },
       "alias": "seedance-2-0-fast-vip"
     },
@@ -10878,7 +11059,24 @@
           "duration": 8,
           "audio": false
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ],
+          "audio": [
+            "input.generate_audio"
+          ]
+        }
+      }
     },
     {
       "id": "video:bytedance-v1-pro-fast-image-to-video",
@@ -11069,7 +11267,18 @@
           "duration": 10,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ]
+        }
+      }
     },
     {
       "id": "video:bytedance-v1-pro-image-to-video",
@@ -11327,7 +11536,18 @@
           "duration": 10,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ]
+        }
+      }
     },
     {
       "id": "video:bytedance-v1-pro-text-to-video",
@@ -11593,7 +11813,21 @@
           "duration": 5,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:bytedance-v1-lite-image-to-video",
@@ -11860,7 +12094,18 @@
           "duration": 10,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ]
+        }
+      }
     },
     {
       "id": "video:bytedance-v1-lite-text-to-video",
@@ -12120,7 +12365,21 @@
           "duration": 5,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:hailuo-2-3-pro-image-to-video",
@@ -12290,7 +12549,18 @@
           "resolution": "768p",
           "duration": 6
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ]
+        }
+      }
     },
     {
       "id": "video:hailuo-2-3-standard-image-to-video",
@@ -12460,7 +12730,18 @@
           "resolution": "1080p",
           "duration": 6
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ]
+        }
+      }
     },
     {
       "id": "video:hailuo-pro-text-to-video",
@@ -12831,7 +13112,15 @@
           "resolution": null,
           "duration": 6
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ]
+        }
+      }
     },
     {
       "id": "video:hailuo-standard-image-to-video",
@@ -13036,7 +13325,18 @@
           "resolution": "768p",
           "duration": 6
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ]
+        }
+      }
     },
     {
       "id": "video:sora2-image-to-video-standard",
@@ -13228,7 +13528,7 @@
       "pricingRows": [
         {
           "pricingKey": "Market_sora2-remix_NO-WATERMARK_sora2_10",
-          "creditPrice": "6",
+          "creditPrice": "3",
           "source": "kie",
           "modelDescription": "sora-2-image-to-video, 10s",
           "interfaceType": "video",
@@ -13246,7 +13546,7 @@
         },
         {
           "pricingKey": "Market_sora2-remix_NO-WATERMARK_sora2_15",
-          "creditPrice": "8",
+          "creditPrice": "5",
           "source": "kie",
           "modelDescription": "sora-2-image-to-video, 15s",
           "interfaceType": "video",
@@ -13263,6 +13563,17 @@
           "duration": 15
         }
       ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.n_frames"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      },
       "alias": null
     },
     {
@@ -13455,7 +13766,7 @@
       "pricingRows": [
         {
           "pricingKey": "Market_sora2-remix_WATERMARK_sora2_10",
-          "creditPrice": "4",
+          "creditPrice": "20",
           "source": "kie",
           "modelDescription": "sora-2-image-to-video-stable, 10s",
           "interfaceType": "video",
@@ -13473,7 +13784,7 @@
         },
         {
           "pricingKey": "Market_sora2-remix_WATERMARK_sora2_15",
-          "creditPrice": "6",
+          "creditPrice": "30",
           "source": "kie",
           "modelDescription": "sora-2-image-to-video-stable, 15s",
           "interfaceType": "video",
@@ -13490,6 +13801,17 @@
           "duration": 15
         }
       ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.n_frames"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      },
       "alias": null
     },
     {
@@ -13698,6 +14020,17 @@
           "duration": 10
         }
       ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.n_frames"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      },
       "alias": null
     },
     {
@@ -13906,6 +14239,17 @@
           "duration": 10
         }
       ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.n_frames"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      },
       "alias": null
     },
     {
@@ -14108,7 +14452,7 @@
       "pricingRows": [
         {
           "pricingKey": "Market_sora2-remix_sora2pro_standard_15",
-          "creditPrice": "270",
+          "creditPrice": "135",
           "source": "kie",
           "modelDescription": "sora-2-pro-image-to-video, standard, 15s",
           "interfaceType": "video",
@@ -14126,7 +14470,7 @@
         },
         {
           "pricingKey": "Market_sora2-remix_sora2pro_standard_10",
-          "creditPrice": "150",
+          "creditPrice": "75",
           "source": "kie",
           "modelDescription": "sora-2-pro-image-to-video, standard, 10s",
           "interfaceType": "video",
@@ -14144,7 +14488,7 @@
         },
         {
           "pricingKey": "Market_sora2-remix_sora2pro_high_10",
-          "creditPrice": "330",
+          "creditPrice": "165",
           "source": "kie",
           "modelDescription": "sora-2-pro-image-to-video, high, 10s",
           "interfaceType": "video",
@@ -14162,7 +14506,7 @@
         },
         {
           "pricingKey": "Market_sora2-remix_sora2pro_high_15",
-          "creditPrice": "630",
+          "creditPrice": "315",
           "source": "kie",
           "modelDescription": "sora-2-pro-image-to-video, high, 15s",
           "interfaceType": "video",
@@ -14178,7 +14522,21 @@
           "resolution": "high",
           "duration": 15
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.n_frames"
+          ],
+          "resolution": [
+            "input.size"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:sora2-pro-text-to-video",
@@ -14435,7 +14793,21 @@
           "resolution": "standard",
           "duration": 15
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.n_frames"
+          ],
+          "resolution": [
+            "input.size"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:sora2-watermark-remover",
@@ -14808,7 +15180,18 @@
           "resolution": "standard",
           "duration": 15
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.n_frames"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:sora2-characters",
@@ -15032,7 +15415,15 @@
           "duration": null,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": [
+            "input.resolution"
+          ]
+        }
+      }
     },
     {
       "id": "video:wan-2-2-a14b-speech-to-video-turbo",
@@ -15439,7 +15830,15 @@
           "anchor": "https://kie.ai/wan/v2-2?model=wan%2F2-2-a14b-text-to-video-turbo",
           "discountPrice": false
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:wan-animate-move",
@@ -15598,7 +15997,15 @@
           "duration": null,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": [
+            "input.resolution"
+          ]
+        }
+      }
     },
     {
       "id": "video:wan-animate-replace",
@@ -15757,7 +16164,15 @@
           "duration": null,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": [
+            "input.resolution"
+          ]
+        }
+      }
     },
     {
       "id": "video:wan-2-6-image-to-video",
@@ -15994,7 +16409,18 @@
           "duration": 5,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ]
+        }
+      }
     },
     {
       "id": "video:wan-2-6-text-to-video",
@@ -16212,7 +16638,18 @@
           "duration": 5,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ]
+        }
+      }
     },
     {
       "id": "video:wan-2-6-video-to-video",
@@ -16449,7 +16886,18 @@
           "duration": 5,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ]
+        }
+      }
     },
     {
       "id": "video:wan-2-6-flash-image-to-video",
@@ -16810,7 +17258,21 @@
           "duration": 5,
           "audio": false
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ],
+          "audio": [
+            "input.audio"
+          ]
+        }
+      }
     },
     {
       "id": "video:wan-2-6-flash-video-to-video",
@@ -17093,7 +17555,21 @@
           "duration": 5,
           "audio": true
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ],
+          "audio": [
+            "input.audio"
+          ]
+        }
+      }
     },
     {
       "id": "video:wan-2-5-image-to-video",
@@ -17307,7 +17783,18 @@
           "duration": 10,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ]
+        }
+      }
     },
     {
       "id": "video:wan-2-5-text-to-video",
@@ -17524,7 +18011,21 @@
           "duration": 10,
           "audio": null
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:wan-2-7-text-to-video",
@@ -17700,7 +18201,15 @@
           "runtimeModel": "wan/2-7-text-to-video",
           "resolution": "1080p"
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": [
+            "input.resolution"
+          ]
+        }
+      }
     },
     {
       "id": "video:wan-2-7-image-to-video",
@@ -17869,7 +18378,15 @@
           "runtimeModel": "wan/2-7-image-to-video",
           "resolution": "720p"
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": [
+            "input.resolution"
+          ]
+        }
+      }
     },
     {
       "id": "video:wan-2-7-video-edit",
@@ -18097,7 +18614,18 @@
           "runtimeModel": "wan/2-7-videoedit",
           "resolution": "720p"
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": [
+            "input.resolution"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:wan-2-7-reference-to-video",
@@ -18350,7 +18878,18 @@
           "runtimeModel": "wan/2-7-r2v",
           "resolution": "720p"
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": [
+            "input.resolution"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:topaz-video-upscale",
@@ -18834,7 +19373,15 @@
           "duration": 5,
           "resolution": "1080p"
         }
-      ]
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "duration"
+          ]
+        }
+      }
     },
     {
       "id": "video:extend-ai-video",
@@ -24849,6 +25396,14 @@
           "resolution": "1080p"
         }
       ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "aspect_ratio"
+          ]
+        }
+      },
       "alias": null
     },
     {
@@ -25084,6 +25639,14 @@
           "resolution": "1080p"
         }
       ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "aspect_ratio"
+          ]
+        }
+      },
       "alias": null
     },
     {
@@ -25373,6 +25936,14 @@
           "resolution": "720p"
         }
       ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "aspect_ratio"
+          ]
+        }
+      },
       "alias": null
     },
     {
@@ -25662,6 +26233,14 @@
           "resolution": "720p"
         }
       ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "aspect_ratio"
+          ]
+        }
+      },
       "alias": null
     },
     {

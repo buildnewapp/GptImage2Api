@@ -143,6 +143,18 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         modelId: "video:sora2-image-to-video-standard",
       },
       {
+        key: "sora-2-stable",
+        label: "Sora 2 Text to Video Stable",
+        familyKey: "sora2",
+        modelId: "video:sora2-text-to-video-stable",
+      },
+      {
+        key: "sora-2-image-to-video-stable",
+        label: "Sora 2 Image to Video Stable",
+        familyKey: "sora2",
+        modelId: "video:sora2-image-to-video-stable",
+      },
+      {
         key: "sora-2-pro",
         label: "Sora 2 Pro Text to Video",
         familyKey: "sora2",

@@ -134,6 +134,8 @@ test("keeps versions nested under each family for single-source config managemen
     [
       "sora-2",
       "sora-2-image-to-video",
+      "sora-2-stable",
+      "sora-2-image-to-video-stable",
       "sora-2-pro",
       "sora-2-pro-image-to-video",
       "sora-2-pro-storyboard",
@@ -147,6 +149,8 @@ test("returns the supported Sora2 versions", () => {
     [
       "sora-2",
       "sora-2-image-to-video",
+      "sora-2-stable",
+      "sora-2-image-to-video-stable",
       "sora-2-pro",
       "sora-2-pro-image-to-video",
       "sora-2-pro-storyboard",
@@ -200,6 +204,20 @@ test("resolves version selections to a single ai-studio public model id", () => 
       versionKey: "sora-2-image-to-video",
     }),
     "video:sora2-image-to-video-standard",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "sora2",
+      versionKey: "sora-2-stable",
+    }),
+    "video:sora2-text-to-video-stable",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "sora2",
+      versionKey: "sora-2-image-to-video-stable",
+    }),
+    "video:sora2-image-to-video-stable",
   );
   assert.equal(
     resolveAiVideoStudioModelId({
@@ -394,6 +412,20 @@ test("resolves ai video studio selection metadata from a model id", () => {
     {
       familyKey: "sora2",
       versionKey: "sora-2-image-to-video",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("video:sora2-text-to-video-stable"),
+    {
+      familyKey: "sora2",
+      versionKey: "sora-2-stable",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("video:sora2-image-to-video-stable"),
+    {
+      familyKey: "sora2",
+      versionKey: "sora-2-image-to-video-stable",
     },
   );
   assert.deepEqual(

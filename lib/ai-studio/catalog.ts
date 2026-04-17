@@ -87,7 +87,6 @@ export interface AiStudioModelOverride {
   title?: string;
   provider?: string;
   schemaModel?: string;
-  pricing?: AiStudioPricingConfig;
   splitModels?: AiStudioSplitModelOverride[];
 }
 
@@ -97,7 +96,6 @@ export interface AiStudioSplitModelOverride {
   alias?: string | null;
   provider?: string;
   schemaModel: string;
-  pricing?: AiStudioPricingConfig;
   pricingMatch: NonNullable<AiStudioPricingRowOverride["match"]>;
 }
 
@@ -1170,7 +1168,25 @@ function getSchemaValueAtPath(schema: Record<string, any> | null, path: string) 
     if (!current || typeof current !== "object") {
       return null;
     }
-    current = current[segment];
+
+    if (segment in current) {
+      current = current[segment];
+      continue;
+    }
+
+    const properties =
+      current.properties &&
+      typeof current.properties === "object" &&
+      !Array.isArray(current.properties)
+        ? current.properties
+        : null;
+
+    if (properties && segment in properties) {
+      current = properties[segment];
+      continue;
+    }
+
+    return null;
   }
 
   return current && typeof current === "object" ? current : null;
@@ -1232,24 +1248,11 @@ function inferSelectorPath(
   return null;
 }
 
-function mergePricingConfig(
-  base: AiStudioPricingConfig | undefined,
-  override: AiStudioPricingConfig | undefined,
-): AiStudioPricingConfig | undefined {
-  if (!base && !override) {
+function inferPricingConfig(detail: AiStudioDocDetail): AiStudioPricingConfig | undefined {
+  if (detail.pricingRows.length === 0) {
     return undefined;
   }
 
-  return {
-    strategy: override?.strategy ?? base?.strategy ?? "exact",
-    selectors: {
-      ...(base?.selectors ?? {}),
-      ...(override?.selectors ?? {}),
-    },
-  };
-}
-
-function inferPricingConfig(detail: AiStudioDocDetail): AiStudioPricingConfig | undefined {
   const schema = detail.requestSchema;
   const selectors: AiStudioPricingSelectors = {};
   const resolutionValues = collectNormalizedPricingValues(detail.pricingRows, "resolution");
@@ -1274,7 +1277,11 @@ function inferPricingConfig(detail: AiStudioDocDetail): AiStudioPricingConfig | 
     }
   }
 
-  if (aspectRatioValues.size > 0 || getSchemaValueAtPath(schema, "properties.input.properties.aspect_ratio")) {
+  if (
+    aspectRatioValues.size > 0 ||
+    getSchemaValueAtPath(schema, "input.aspect_ratio") ||
+    getSchemaValueAtPath(schema, "aspect_ratio")
+  ) {
     const aspectRatioPath = inferSelectorPath(
       schema,
       ASPECT_RATIO_SELECTOR_CANDIDATES,
@@ -1304,7 +1311,7 @@ function inferPricingConfig(detail: AiStudioDocDetail): AiStudioPricingConfig | 
 }
 
 function applyGeneratedPricingConfigToDetail(detail: AiStudioDocDetail) {
-  detail.pricing = mergePricingConfig(inferPricingConfig(detail), detail.pricing);
+  detail.pricing = inferPricingConfig(detail);
 }
 
 function cloneDetail(detail: AiStudioDocDetail): AiStudioDocDetail {
@@ -1557,9 +1564,6 @@ function applyModelOverrideToDetail(
   if (override.schemaModel) {
     rewriteSchemaModel(detail, override.schemaModel);
   }
-  if (override.pricing) {
-    detail.pricing = clonePricingConfig(override.pricing);
-  }
 
   return detail;
 }
@@ -1593,7 +1597,6 @@ function buildSplitModelDetails(
     }
 
     rewriteSchemaModel(detail, splitModel.schemaModel);
-    detail.pricing = clonePricingConfig(splitModel.pricing ?? modelOverride.pricing ?? detail.pricing);
     return [detail];
   });
 }
