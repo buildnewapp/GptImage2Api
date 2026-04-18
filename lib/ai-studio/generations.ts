@@ -23,6 +23,7 @@ export type AiStudioGenerationRecord = typeof aiStudioGenerations.$inferSelect;
 type ReserveInput = {
   userId: string;
   modelId: string;
+  isPublic: boolean;
   detail: AiStudioDocDetail;
   payload: Record<string, any>;
   selectedPricing: AiStudioPricingRow | null;
@@ -125,6 +126,7 @@ export async function reserveAiStudioGeneration(input: ReserveInput) {
         id: generationId,
         userId: input.userId,
         catalogModelId: input.modelId,
+        isPublic: input.isPublic,
         category: input.detail.category,
         titleSnapshot: input.detail.title,
         providerSnapshot: input.detail.provider,

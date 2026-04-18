@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { AiVideoStudioFieldDescriptor } from "@/lib/ai-video-studio/schema";
 import type { ReactNode } from "react";
+import { toast } from "sonner";
 
 type PromptFieldProps = {
   field: AiVideoStudioFieldDescriptor;
@@ -13,6 +14,7 @@ type PromptFieldProps = {
   value: unknown;
   disabled?: boolean;
   labelIcon?: ReactNode;
+  labelTitle?: string;
   placeholder?: string;
   onChange: (value: unknown) => void;
 };
@@ -51,6 +53,7 @@ export default function PromptField({
   value,
   disabled,
   labelIcon,
+  labelTitle,
   placeholder,
   onChange,
 }: PromptFieldProps) {
@@ -61,7 +64,13 @@ export default function PromptField({
     <div data-ai-video-studio-prompt-field className="space-y-2">
       <Label
         htmlFor={inputId}
-        className="inline-flex items-center gap-2 font-medium text-muted-foreground text-sm"
+        title={labelTitle}
+        data-ai-video-studio-field-description-trigger={labelTitle ? "true" : undefined}
+        onClick={labelTitle ? () => toast.info(labelTitle) : undefined}
+        className={cn(
+          "inline-flex items-center gap-2 font-medium text-muted-foreground text-sm",
+          labelTitle && "cursor-pointer transition hover:text-foreground active:opacity-80",
+        )}
       >
         {labelIcon ? (
           <span className="size-4 text-muted-foreground">{labelIcon}</span>

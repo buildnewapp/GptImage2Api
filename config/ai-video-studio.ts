@@ -43,28 +43,14 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     selectable: true,
     versions: [
       {
-        key: "seedance-2.0",
-        label: "Seedance 2.0",
-        familyKey: "seedance-2.0",
-        modelId: "video:seedance-2-0",
-        aliases: ["video:apimart-seedance-2-0"],
-      },
-      {
-        key: "seedance-2.0-fast",
-        label: "Seedance 2.0 fast",
-        familyKey: "seedance-2.0",
-        modelId: "video:seedance-2-0-fast",
-        aliases: ["video:apimart-seedance-2-0-fast"],
-      },
-      {
         key: "seedance-2.0-vip",
-        label: "Seedance 2.0 VIP",
+        label: "Seedance 2.0",
         familyKey: "seedance-2.0",
         modelId: "video:seedance-2-0-vip",
       },
       {
         key: "seedance-2.0-fast-vip",
-        label: "Seedance 2.0 Fast VIP",
+        label: "Seedance 2.0 Fast",
         familyKey: "seedance-2.0",
         modelId: "video:seedance-2-0-fast-vip",
       },

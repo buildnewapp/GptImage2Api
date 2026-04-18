@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
+import { toast } from "sonner";
 
 type ToolsFieldProps = {
   inputId: string;
@@ -11,6 +12,7 @@ type ToolsFieldProps = {
   value: unknown;
   disabled?: boolean;
   compact?: boolean;
+  labelTitle?: string;
   onChange: (value: unknown) => void;
 };
 
@@ -33,6 +35,7 @@ export default function ToolsField({
   value,
   disabled,
   compact = false,
+  labelTitle,
   onChange,
 }: ToolsFieldProps) {
   const checked = hasWebSearchTool(value);
@@ -48,8 +51,12 @@ export default function ToolsField({
         <Search className={cn("shrink-0", compact ? "size-4" : "size-4")} />
         <Label
           htmlFor={inputId}
+          title={labelTitle}
+          data-ai-video-studio-field-description-trigger={labelTitle ? "true" : undefined}
+          onClick={labelTitle ? () => toast.info(labelTitle) : undefined}
           className={cn(
             "font-medium text-muted-foreground",
+            labelTitle && "cursor-pointer transition hover:text-foreground active:opacity-80",
             compact ? "text-[13px]" : "text-sm",
           )}
         >

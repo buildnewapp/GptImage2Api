@@ -23,6 +23,7 @@ import { z } from "zod";
 
 const inputSchema = z.object({
   modelId: z.string().min(1),
+  isPublic: z.boolean().optional().default(true),
   payload: z.record(z.string(), z.any()),
 });
 
@@ -43,6 +44,7 @@ export async function POST(request: Request) {
     const { generation, reservedCredits } = await reserveAiStudioGeneration({
       userId: user.id,
       modelId: input.modelId,
+      isPublic: input.isPublic,
       detail: prepared.detail,
       payload: prepared.pricingPayload,
       selectedPricing: prepared.selectedPricing,

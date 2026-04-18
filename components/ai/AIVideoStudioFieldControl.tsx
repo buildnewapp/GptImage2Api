@@ -20,6 +20,7 @@ import type {
   AiVideoStudioFieldKind,
 } from "@/lib/ai-video-studio/schema";
 import type { ReactNode } from "react";
+import { toast } from "sonner";
 
 type JsonSchema = Record<string, any>;
 
@@ -42,6 +43,13 @@ type AIVideoStudioFieldControlProps = {
   ) => void;
   onChange: (value: unknown) => void;
 };
+
+function getFieldDescriptionTitle(field: AiVideoStudioFieldDescriptor) {
+  return typeof field.schema.description === "string" &&
+    field.schema.description.trim().length > 0
+    ? field.schema.description
+    : undefined;
+}
 
 function getEnumOptions(schema: JsonSchema) {
   return Array.isArray(schema.enum)
@@ -243,12 +251,17 @@ function renderFieldLabel(
   htmlFor?: string,
   compact = false,
   icon?: ReactNode,
+  title?: string,
 ) {
   return (
     <Label
       htmlFor={htmlFor}
+      title={title}
+      data-ai-video-studio-field-description-trigger={title ? "true" : undefined}
+      onClick={title ? () => toast.info(title) : undefined}
       className={cn(
         "inline-flex items-center gap-2 font-medium text-muted-foreground",
+        title && "cursor-pointer transition hover:text-foreground active:opacity-80",
         compact ? "text-[13px]" : "text-sm",
       )}
     >
@@ -384,6 +397,7 @@ export default function AIVideoStudioFieldControl({
     Array.isArray(field.path) && field.path.length > 0
       ? field.path.join("__")
       : field.key;
+  const labelTitle = getFieldDescriptionTitle(field);
   const referenceFieldKind = resolveReferenceFieldKind(field);
 
   if (!compact && field.kind === "text" && isPromptFieldDescriptor(field)) {
@@ -395,6 +409,7 @@ export default function AIVideoStudioFieldControl({
         value={value}
         disabled={disabled}
         labelIcon={labelIcon}
+        labelTitle={labelTitle}
         placeholder={placeholder}
         onChange={onChange}
       />
@@ -422,6 +437,7 @@ export default function AIVideoStudioFieldControl({
         value={value}
         disabled={disabled}
         labelIcon={labelIcon}
+        labelTitle={labelTitle}
         texts={referenceFieldTexts}
         onMetadataChange={onReferenceMetadataChange}
         onChange={onChange}
@@ -437,6 +453,7 @@ export default function AIVideoStudioFieldControl({
         value={value}
         disabled={disabled}
         compact={compact}
+        labelTitle={labelTitle}
         onChange={onChange}
       />
     );
@@ -449,7 +466,7 @@ export default function AIVideoStudioFieldControl({
 
     return (
       <div className={getFieldRootClassName(compact)}>
-        {renderFieldLabel(label, inputId, compact, labelIcon)}
+        {renderFieldLabel(label, inputId, compact, labelIcon, labelTitle)}
         <div
           id={inputId}
           className={cn("flex flex-wrap gap-3", compact && "gap-2")}
@@ -488,7 +505,7 @@ export default function AIVideoStudioFieldControl({
           compact ? "gap-3 rounded-none border-0 bg-transparent px-0 py-1" : "rounded-xl border border-border/60 bg-background/40 ",
         )}
       >
-        {renderFieldLabel(label, inputId, compact, labelIcon)}
+        {renderFieldLabel(label, inputId, compact, labelIcon, labelTitle)}
         <Switch
           id={inputId}
           checked={Boolean(value)}
@@ -514,7 +531,7 @@ export default function AIVideoStudioFieldControl({
 
     return (
       <div className="space-y-2">
-        {renderFieldLabel(label, inputId, compact, labelIcon)}
+        {renderFieldLabel(label, inputId, compact, labelIcon, labelTitle)}
         <div
           id={inputId}
           data-ai-video-studio-array-field={field.key}
@@ -615,7 +632,7 @@ export default function AIVideoStudioFieldControl({
       return (
         <div className={cn("space-y-2", compact && "min-w-0 flex-1")}>
           <div className="flex items-center justify-between gap-3">
-            {renderFieldLabel(label, inputId, compact, labelIcon)}
+            {renderFieldLabel(label, inputId, compact, labelIcon, labelTitle)}
             <span className="text-xs font-medium tabular-nums text-muted-foreground">
               {sliderValue}
             </span>
@@ -635,7 +652,7 @@ export default function AIVideoStudioFieldControl({
 
     return (
       <div className={getFieldRootClassName(compact)}>
-        {renderFieldLabel(label, inputId, compact, labelIcon)}
+        {renderFieldLabel(label, inputId, compact, labelIcon, labelTitle)}
         <Input
           id={inputId}
           type="number"
@@ -657,7 +674,7 @@ export default function AIVideoStudioFieldControl({
 
   return (
     <div className={getFieldRootClassName(compact)}>
-      {renderFieldLabel(label, inputId, compact, labelIcon)}
+      {renderFieldLabel(label, inputId, compact, labelIcon, labelTitle)}
       <Input
         id={inputId}
         value={typeof value === "string" ? value : ""}

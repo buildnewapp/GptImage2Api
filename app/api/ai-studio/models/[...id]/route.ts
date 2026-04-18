@@ -3,7 +3,7 @@ import {
   canAccessAiStudioModel,
   loadAiStudioPolicyConfig,
 } from "@/lib/ai-studio/policy";
-import { toPublicDocDetail } from "@/lib/ai-studio/public";
+import { stripModelDetailPricingFields, toPublicDocDetail } from "@/lib/ai-studio/public";
 import { apiResponse } from "@/lib/api-response";
 import { getRequestUser } from "@/lib/auth/request-user";
 
@@ -37,7 +37,7 @@ export async function GET(
     if (!canAccessAiStudioModel(detail, { role: user?.role, config: policy })) {
       return apiResponse.notFound("Model not found");
     }
-    return apiResponse.success(toPublicDocDetail(detail));
+    return apiResponse.success(stripModelDetailPricingFields(toPublicDocDetail(detail)));
   } catch (error: any) {
     return apiResponse.serverError(
       error?.message || "Failed to load model detail",

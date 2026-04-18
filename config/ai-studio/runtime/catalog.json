@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-04-17T14:43:55.125Z",
+  "generatedAt": "2026-04-18T05:15:07.110Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -7275,9 +7275,9 @@
             "description": "Input parameters for the generation task",
             "properties": {
               "prompt": {
-                "description": "The text prompt describing the video to generate (Max length: 2500 characters)",
                 "type": "string",
-                "maxLength": 5000,
+                "description": "The text prompt describing the video to generate (Max length: 2500 characters)",
+                "maxLength": 2500,
                 "examples": [
                   "A team of paratroopers descends into enemy territory, as they pass through clouds, the camera switches to a slow pan above the battlefield lighting up with"
                 ]
@@ -8961,9 +8961,9 @@
             "properties": {
               "prompt": {
                 "type": "string",
-                "description": "The text prompt used to generate the video. Required field. (Min length: 3, Max length: 1536 characters)",
+                "description": "The text prompt used to generate the video. Required field. (Min length: 3, Max length: 20000 characters)",
                 "minLength": 3,
-                "maxLength": 1536,
+                "maxLength": 20000,
                 "examples": [
                   "A serene beach at sunset with waves gently crashing on the shore, palm trees swaying in the breeze, and seagulls flying across the orange sky"
                 ]
@@ -9023,11 +9023,12 @@
                 ]
               },
               "resolution": {
-                "description": "Video resolution - 480p for faster generation, 720p for balance",
                 "type": "string",
+                "description": "Video resolution - 480p for faster generation, 720p for balance, 1080p for High-quality video",
                 "enum": [
                   "480p",
-                  "720p"
+                  "720p",
+                  "1080p"
                 ],
                 "default": "720p",
                 "examples": [
@@ -9041,6 +9042,11 @@
                   },
                   {
                     "value": "720p",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "1080p",
                     "name": "",
                     "description": ""
                   }
@@ -9237,9 +9243,9 @@
             "properties": {
               "prompt": {
                 "type": "string",
-                "description": "The text prompt used to generate the video. Required field. (Min length: 3, Max length: 1536 characters)",
+                "description": "The text prompt used to generate the video. Required field. (Min length: 3, Max length: 20000 characters)",
                 "minLength": 3,
-                "maxLength": 1536,
+                "maxLength": 20000,
                 "examples": [
                   "A serene beach at sunset with waves gently crashing on the shore, palm trees swaying in the breeze, and seagulls flying across the orange sky"
                 ]
@@ -21400,7 +21406,8 @@
           "callBackUrl",
           "enableFallback",
           "enableTranslation",
-          "watermark"
+          "watermark",
+          "resolution"
         ],
         "examples": [
           {
@@ -21647,7 +21654,8 @@
           "callBackUrl",
           "enableFallback",
           "enableTranslation",
-          "watermark"
+          "watermark",
+          "resolution"
         ],
         "examples": [
           {
@@ -21894,7 +21902,8 @@
           "callBackUrl",
           "enableFallback",
           "enableTranslation",
-          "watermark"
+          "watermark",
+          "resolution"
         ],
         "examples": [
           {

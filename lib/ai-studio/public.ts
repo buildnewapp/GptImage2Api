@@ -31,6 +31,10 @@ export type AiStudioPublicDocDetail = Omit<
   taskMeta: AiStudioTaskMeta;
 };
 
+type AiStudioModelDetailResponse = {
+  pricingRows: Record<string, unknown>[];
+};
+
 function isCallbackKey(input: string) {
   return isAiStudioCallbackField(input);
 }
@@ -239,5 +243,21 @@ export function toPublicDocDetail(detail: AiStudioDocDetail): AiStudioPublicDocD
   return {
     ...next,
     id: getPublicAiStudioModelId(detail),
+  };
+}
+
+export function stripModelDetailPricingFields<T extends AiStudioModelDetailResponse>(detail: T) {
+  return {
+    ...detail,
+    pricingRows: detail.pricingRows.map(
+      ({
+        discountPrice: _discountPrice,
+        discountRate: _discountRate,
+        falPrice: _falPrice,
+        modelDescription: _modelDescription,
+        usdPrice: _usdPrice,
+        ...row
+      }) => row,
+    ),
   };
 }

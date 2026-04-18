@@ -1,6 +1,13 @@
 "use client";
 
 import AIVideoStudioFields from "@/components/ai/AIVideoStudioFields";
+import { collectApiFieldDocs } from "@/components/ai/AIVideoStudioApiDocs";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import {
   AI_VIDEO_STUDIO_FAMILIES,
   getAiVideoStudioVersions,
@@ -34,6 +41,7 @@ import {
   LOCAL_REFERENCE_METADATA_KEY,
 } from "@/lib/ai-studio/seedance-pricing";
 import {
+  applyPricingRowToPayload,
   getEstimatedCreditsForPricing,
   resolveSelectedPricing,
 } from "@/lib/ai-studio/runtime";
@@ -57,6 +65,8 @@ import {
   type ModelSelectorItem,
   type ModelSelectorVersionItem,
 } from "@/components/home/seedance/ModelSelector";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 
 type DetailResponse = {
   success: boolean;
@@ -106,6 +116,8 @@ type GenerationTask = {
   progress: number;
   createdAt: number;
 };
+
+type SubmitMode = "form" | "api";
 
 const POLLING_ERROR_LIMIT = 3;
 
@@ -256,6 +268,171 @@ function mergeReferenceMetadata(
   };
 }
 
+function usesApiInputEnvelope(detail: {
+  requestSchema?: Record<string, any> | null;
+  examplePayload?: Record<string, any> | null;
+}) {
+  const inputSchema = detail.requestSchema?.properties?.input;
+
+  if (
+    inputSchema &&
+    typeof inputSchema === "object" &&
+    inputSchema.type === "object" &&
+    inputSchema.properties
+  ) {
+    return true;
+  }
+
+  return Boolean(
+    detail.examplePayload?.input &&
+      typeof detail.examplePayload.input === "object" &&
+      !Array.isArray(detail.examplePayload.input),
+  );
+}
+
+function getApiPayloadSchemaRoot(requestSchema?: Record<string, any> | null) {
+  const inputSchema = requestSchema?.properties?.input;
+
+  if (
+    inputSchema &&
+    typeof inputSchema === "object" &&
+    inputSchema.type === "object" &&
+    inputSchema.properties
+  ) {
+    return inputSchema as Record<string, any>;
+  }
+
+  return requestSchema ?? null;
+}
+
+function isApiCallbackField(key: string) {
+  const normalized = key.toLowerCase().replace(/[^a-z0-9]+/g, "");
+
+  return (
+    normalized === "callback" ||
+    normalized === "callbackurl" ||
+    normalized === "progresscallbackurl" ||
+    normalized === "webhookurl"
+  );
+}
+
+function getApiEmptyValueForSchema(schema: Record<string, any>) {
+  if (schema.default !== undefined) {
+    return structuredClone(schema.default);
+  }
+
+  if (Array.isArray(schema.enum) && schema.enum.length > 0) {
+    return schema.enum[0] ?? "";
+  }
+
+  if (schema.type === "array") {
+    return [];
+  }
+
+  if (
+    schema.type === "object" &&
+    schema.properties &&
+    !Array.isArray(schema.enum)
+  ) {
+    return materializeApiPayloadFormValues(schema, {});
+  }
+
+  if (schema.type === "string") {
+    return "";
+  }
+
+  return null;
+}
+
+function materializeApiPayloadFormValues(
+  schema: Record<string, any> | null | undefined,
+  formValues: AiVideoStudioFormValues,
+) {
+  const properties = (schema?.properties ?? {}) as Record<string, Record<string, any>>;
+  const source =
+    formValues && typeof formValues === "object" && !Array.isArray(formValues)
+      ? formValues
+      : {};
+
+  if (Object.keys(properties).length === 0) {
+    return structuredClone(source);
+  }
+
+  const next: Record<string, unknown> = {};
+
+  for (const [key, childSchema] of Object.entries(properties)) {
+    if (key === "model" || isApiCallbackField(key)) {
+      continue;
+    }
+
+    const currentValue = source[key];
+    const isNestedObject =
+      childSchema?.type === "object" &&
+      childSchema.properties &&
+      !Array.isArray(childSchema.enum);
+
+    if (isNestedObject) {
+      next[key] = materializeApiPayloadFormValues(
+        childSchema,
+        currentValue as AiVideoStudioFormValues,
+      );
+      continue;
+    }
+
+    next[key] =
+      currentValue !== undefined
+        ? structuredClone(currentValue)
+        : getApiEmptyValueForSchema(childSchema);
+  }
+
+  for (const [key, value] of Object.entries(source)) {
+    if (key in properties || key === "model" || isApiCallbackField(key)) {
+      continue;
+    }
+
+    next[key] = structuredClone(value);
+  }
+
+  return next;
+}
+
+function buildApiModePayload(input: {
+  detail: {
+    examplePayload?: Record<string, any> | null;
+    requestSchema?: Record<string, any> | null;
+  };
+  formValues: AiVideoStudioFormValues;
+  selectedPricing?: AiStudioPublicPricingRow | null;
+}) {
+  const basePayload = input.detail.examplePayload ?? {};
+  const nextPayload = materializeApiPayloadFormValues(
+    getApiPayloadSchemaRoot(input.detail.requestSchema),
+    input.formValues,
+  ) as Record<string, unknown>;
+
+  const payload = (
+    usesApiInputEnvelope(input.detail)
+      ? {
+          ...(typeof basePayload.model === "string"
+            ? { model: basePayload.model }
+            : {}),
+          input: nextPayload,
+        }
+      : {
+          ...(typeof basePayload.model === "string"
+            ? { model: basePayload.model }
+            : {}),
+          ...nextPayload,
+        }
+  ) as Record<string, any>;
+
+  if (input.selectedPricing) {
+    return applyPricingRowToPayload(payload, input.selectedPricing);
+  }
+
+  return payload;
+}
+
 export default function AIVideoStudio() {
   const t = useTranslations("Landing.Hero");
   const { data: session } = authClient.useSession();
@@ -279,6 +456,8 @@ export default function AIVideoStudio() {
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState<string | null>(null);
   const [formValues, setFormValues] = useState<AiVideoStudioFormValues>({});
+  const [submitMode, setSubmitMode] = useState<SubmitMode>("form");
+  const [apiPayloadText, setApiPayloadText] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [generationTasks, setGenerationTasks] = useState<GenerationTask[]>([]);
@@ -429,7 +608,7 @@ export default function AIVideoStudio() {
     }
   }, [formValues, isPublic, selectedFamilyKey, selectedVersionKey]);
 
-  const basePayload = useMemo(
+  const formBasePayload = useMemo(
     () =>
       detail
         ? buildAiVideoStudioPayload({
@@ -440,38 +619,155 @@ export default function AIVideoStudio() {
     [detail, formValues],
   );
 
-  const selectedPricing = useMemo(
+  const formSelectedPricing = useMemo(
     () =>
-      detail && basePayload
+      detail && formBasePayload
         ? resolveSelectedPricing(detail.pricingRows, {
             modelId: detail.id,
-            payload: basePayload,
+            payload: formBasePayload,
             pricing: detail.pricing,
           })
         : null,
-    [basePayload, detail],
+    [detail, formBasePayload],
   );
-  const pricingExplanation = useMemo(
+  const formPricingExplanation = useMemo(
     () =>
-      detail && basePayload
+      detail && formBasePayload
         ? getSeedancePricingExplanation({
             model: detail.id,
-            payload: basePayload,
+            payload: formBasePayload,
           })
         : null,
-    [basePayload, detail],
+    [detail, formBasePayload],
   );
 
-  const inputPayload = useMemo(
+  const formInputPayload = useMemo(
     () =>
-      detail && basePayload
+      detail && formBasePayload
         ? buildAiVideoStudioPayload({
             detail,
             formValues,
-            selectedPricing,
+            selectedPricing: formSelectedPricing,
           })
         : null,
-    [basePayload, detail, formValues, selectedPricing],
+    [detail, formBasePayload, formSelectedPricing, formValues],
+  );
+
+  const defaultApiPayload = useMemo(
+    () =>
+      detail
+        ? buildApiModePayload({
+            detail,
+            formValues,
+            selectedPricing: formSelectedPricing,
+          })
+        : null,
+    [detail, formSelectedPricing, formValues],
+  );
+
+  useEffect(() => {
+    if (submitMode !== "api") {
+      return;
+    }
+
+    setApiPayloadText(
+      JSON.stringify(defaultApiPayload ?? {}, null, 2),
+    );
+  }, [defaultApiPayload, submitMode]);
+
+  const apiPayloadState = useMemo(() => {
+    if (submitMode !== "api") {
+      return {
+        payload: null as Record<string, any> | null,
+        error: null as string | null,
+      };
+    }
+
+    if (!apiPayloadText.trim()) {
+      return {
+        payload: null,
+        error: "JSON payload is required.",
+      };
+    }
+
+    try {
+      const parsed = JSON.parse(apiPayloadText);
+
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        return {
+          payload: null,
+          error: "JSON payload must be an object.",
+        };
+      }
+
+      return {
+        payload: parsed as Record<string, any>,
+        error: null,
+      };
+    } catch {
+      return {
+        payload: null,
+        error: "Invalid JSON payload.",
+      };
+    }
+  }, [apiPayloadText, submitMode]);
+
+  const apiBasePayload = apiPayloadState.payload;
+  const apiSelectedPricing = useMemo(
+    () =>
+      detail && apiBasePayload
+        ? resolveSelectedPricing(detail.pricingRows, {
+            modelId: detail.id,
+            payload: apiBasePayload,
+            pricing: detail.pricing,
+          })
+        : null,
+    [apiBasePayload, detail],
+  );
+  const apiPricingExplanation = useMemo(
+    () =>
+      detail && apiBasePayload
+        ? getSeedancePricingExplanation({
+            model: detail.id,
+            payload: apiBasePayload,
+          })
+        : null,
+    [apiBasePayload, detail],
+  );
+  const apiInputPayload = useMemo(
+    () =>
+      apiBasePayload
+        ? apiSelectedPricing
+          ? applyPricingRowToPayload(apiBasePayload, apiSelectedPricing)
+          : apiBasePayload
+        : null,
+    [apiBasePayload, apiSelectedPricing],
+  );
+
+  const basePayload =
+    submitMode === "api" ? apiBasePayload : formBasePayload;
+  const selectedPricing =
+    submitMode === "api" ? apiSelectedPricing : formSelectedPricing;
+  const pricingExplanation =
+    submitMode === "api" ? apiPricingExplanation : formPricingExplanation;
+  const inputPayload =
+    submitMode === "api" ? apiInputPayload : formInputPayload;
+  const apiFieldDocs = useMemo(
+    () =>
+      detail
+        ? collectApiFieldDocs({
+            requestSchema: detail.requestSchema,
+            copy: {
+              required: t("form.apiFieldDocRequired"),
+              type: t("form.apiFieldDocType"),
+              enum: t("form.apiFieldDocEnum"),
+              range: t("form.apiFieldDocRange"),
+              minimum: t("form.apiFieldDocMinimum"),
+              maximum: t("form.apiFieldDocMaximum"),
+            },
+          })
+        : [],
+    [detail, t],
   );
 
   const estimatedCredits = useMemo(
@@ -498,11 +794,12 @@ export default function AIVideoStudio() {
     !isSubmitting &&
     !!resolvedModelId &&
     !!inputPayload &&
+    (submitMode === "form" || !apiPayloadState.error) &&
     estimatedCredits > 0 &&
     (!session?.user ||
       availableCredits === null ||
       availableCredits >= estimatedCredits) &&
-    hasRequiredFieldValues;
+    (submitMode === "api" || hasRequiredFieldValues);
 
   const updateGenerationTask = useCallback(
     (localId: string, patch: Partial<GenerationTask>) => {
@@ -626,8 +923,13 @@ export default function AIVideoStudio() {
       isSubmitting ||
       !resolvedModelId ||
       !inputPayload ||
-      !hasRequiredFieldValues
+      (submitMode === "form" && !hasRequiredFieldValues)
     ) {
+      return;
+    }
+
+    if (submitMode === "api" && apiPayloadState.error) {
+      toast.error(apiPayloadState.error);
       return;
     }
 
@@ -647,11 +949,23 @@ export default function AIVideoStudio() {
     }
 
     const localTaskId = createLocalTaskId();
-    const promptValue = findValueByKey(formValues, "prompt");
+    const promptValue = findValueByKey(
+      submitMode === "api" ? inputPayload : formValues,
+      "prompt",
+    );
     const prompt =
       typeof promptValue === "string" && promptValue.trim().length > 0
         ? promptValue.trim()
         : "-";
+    const taskFormValues =
+      submitMode === "api"
+        ? restoreAiVideoStudioFormState({
+            familyKey: selectedFamilyKey,
+            versionKey: selectedVersionKey,
+            isPublic,
+            payload: inputPayload,
+          }).formValues
+        : { ...formValues };
 
     setGenerationTasks((current) => [
       {
@@ -663,7 +977,7 @@ export default function AIVideoStudio() {
         modelId: resolvedModelId,
         prompt,
         isPublic,
-        formValues: { ...formValues },
+        formValues: taskFormValues,
         payload: structuredClone(inputPayload),
         creditsRequired: estimatedCredits,
         selectedPricing,
@@ -683,6 +997,7 @@ export default function AIVideoStudio() {
         },
         body: JSON.stringify({
           modelId: resolvedModelId,
+          isPublic,
           payload: inputPayload,
         }),
       });
@@ -756,6 +1071,8 @@ export default function AIVideoStudio() {
     t,
     updateGenerationTask,
     hasRequiredFieldValues,
+    apiPayloadState.error,
+    submitMode,
   ]);
 
   const activeTask = useMemo(() => {
@@ -876,10 +1193,10 @@ export default function AIVideoStudio() {
   );
 
   return (
-    <main className="flex flex-1 flex-col items-center container px-4">
+    <main className="flex flex-1 flex-col items-center container px-0 sm:px-4">
       <div className="w-full min-w-0 max-w-7xl mx-auto">
         <div className="flex w-full min-w-0 flex-col items-start gap-8 my-10 h-full mx-auto p-2 lg:p-6 rounded-xl lg:rounded-3xl border border-border/50 bg-card shadow-xl lg:flex-row">
-          <div className="w-full lg:w-[400px] xl:w-[450px] flex-shrink-0 flex flex-col gap-5 h-fit">
+          <div className="w-full lg:w-[400px] xl:w-[450px] flex-shrink-0 flex flex-col gap-3 h-fit">
             <ModelSelector
               selectedId={selectedFamilyKey}
               onSelect={(nextKey) =>
@@ -894,6 +1211,27 @@ export default function AIVideoStudio() {
                 setSelectedVersionKey(nextVersionKey as AiVideoStudioVersionKey)
               }
               versionLabel={t("form.modelVersion")}
+              labelAccessory={
+                <div className="inline-flex items-center rounded-lg border border-border/60 bg-background/60 p-1">
+                  {(["form", "api"] as const).map((mode) => (
+                    <button
+                      key={mode}
+                      type="button"
+                      onClick={() => setSubmitMode(mode)}
+                      className={cn(
+                        "rounded-md px-3 py-1 text-xs font-medium transition-colors",
+                        submitMode === mode
+                          ? "bg-foreground text-background"
+                          : "text-muted-foreground hover:text-foreground",
+                      )}
+                    >
+                      {mode === "form"
+                        ? t("form.submitModeForm")
+                        : t("form.submitModeApi")}
+                    </button>
+                  ))}
+                </div>
+              }
             />
 
             {detailLoading ? (
@@ -905,7 +1243,7 @@ export default function AIVideoStudio() {
               <div className="rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
                 {detailError}
               </div>
-            ) : normalizedSchema ? (
+            ) : normalizedSchema && submitMode === "form" ? (
               <AIVideoStudioFields
                 primaryFields={normalizedSchema.primaryFields}
                 advancedFields={normalizedSchema.advancedFields}
@@ -974,6 +1312,91 @@ export default function AIVideoStudio() {
                 }
                 onPublicChange={setIsPublic}
               />
+            ) : submitMode === "api" ? (
+              <div className="space-y-3">
+                <div className="rounded-xl border border-border/60 bg-background/40 p-4 space-y-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <div className="text-sm font-semibold text-foreground">
+                        {t("form.apiRequestJsonTitle")}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {t("form.apiRequestJsonDescription")}
+                      </div>
+                    </div>
+                  </div>
+                  <Textarea
+                    value={apiPayloadText}
+                    onChange={(event) => setApiPayloadText(event.target.value)}
+                    disabled={isSubmitting}
+                    spellCheck={false}
+                    className="min-h-[420px] resize-y font-mono text-xs leading-6"
+                  />
+                  <div className="flex items-center justify-between rounded-lg border border-border/60 bg-background/60 px-3 py-2">
+                    <div>
+                      <div className="text-sm font-medium text-foreground">
+                        {t("form.isPublic")}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {t("form.public")}
+                      </div>
+                    </div>
+                    <Switch
+                      checked={isPublic}
+                      onCheckedChange={setIsPublic}
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  {apiPayloadState.error ? (
+                    <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+                      {apiPayloadState.error === "JSON payload is required."
+                        ? t("form.apiJsonRequired")
+                        : apiPayloadState.error === "JSON payload must be an object."
+                          ? t("form.apiJsonMustBeObject")
+                          : apiPayloadState.error === "Invalid JSON payload."
+                            ? t("form.apiJsonInvalid")
+                            : apiPayloadState.error}
+                    </div>
+                  ) : null}
+                </div>
+                {apiFieldDocs.length > 0 ? (
+                  <div className="rounded-xl border border-border/60 bg-background/50 px-4 py-3">
+                    <Accordion type="single" collapsible className="w-full">
+                      <AccordionItem value="api-field-docs" className="border-b-0">
+                        <AccordionTrigger className="py-0 hover:no-underline">
+                          <div className="text-sm font-semibold text-foreground">
+                            {t("form.apiFieldDocsTitle")}
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="pt-3">
+                          <div className="space-y-3">
+                            {apiFieldDocs.map((field) => (
+                              <div
+                                key={field.key}
+                                className="rounded-lg border border-border/50 bg-background/60 px-3 py-2.5"
+                              >
+                                <div className="font-mono text-xs text-foreground">
+                                  {field.title}
+                                </div>
+                                {field.description ? (
+                                  <div className="mt-1 text-xs leading-5 text-muted-foreground">
+                                    {field.description}
+                                  </div>
+                                ) : null}
+                                {field.meta ? (
+                                  <div className="mt-1 text-xs text-muted-foreground/90">
+                                    {field.meta}
+                                  </div>
+                                ) : null}
+                              </div>
+                            ))}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </div>
+                ) : null}
+              </div>
             ) : null}
 
             {hasSignedInSession ? (
@@ -991,7 +1414,7 @@ export default function AIVideoStudio() {
               </div>
             ) : null}
 
-            <div className="pt-4 mt-auto">
+            <div className="mt-auto">
               {pricingExplanation ? (
                 <div className="mb-3 rounded-xl border border-border/60 bg-background/35 px-4 py-3">
                   <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">

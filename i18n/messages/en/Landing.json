@@ -123,7 +123,21 @@
       "watermarkPlaceholder": "Add a watermark (optional)",
       "enableTranslation": "Auto Translate Prompt",
       "veoQuality": "Veo 3.1 Quality",
-      "veoFast": "Veo 3.1 Fast"
+      "veoFast": "Veo 3.1 Fast",
+      "submitModeForm": "Form",
+      "submitModeApi": "API",
+      "apiRequestJsonTitle": "Request JSON",
+      "apiRequestJsonDescription": "Empty fields are kept in the payload. You can edit values before submit.",
+      "apiJsonRequired": "JSON payload is required.",
+      "apiJsonMustBeObject": "JSON payload must be an object.",
+      "apiJsonInvalid": "Invalid JSON payload.",
+      "apiFieldDocsTitle": "Field Docs",
+      "apiFieldDocRequired": "Required",
+      "apiFieldDocType": "Type",
+      "apiFieldDocEnum": "Options",
+      "apiFieldDocRange": "Range",
+      "apiFieldDocMinimum": "Minimum",
+      "apiFieldDocMaximum": "Maximum"
     }
   },
   "Features": {

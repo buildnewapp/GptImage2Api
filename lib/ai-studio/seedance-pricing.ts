@@ -6,7 +6,7 @@ type SeedanceModelId =
   | "video:apimart-seedance-2-0-fast"
   | "video:seedance-2-0-fast-vip";
 
-type SeedanceResolution = "480p" | "720p";
+type SeedanceResolution = "480p" | "720p" | "1080p";
 type SeedanceTier = "standard" | "fast";
 
 export const LOCAL_REFERENCE_METADATA_KEY = "__local_reference_metadata";
@@ -24,11 +24,12 @@ type SeedancePricingResult = {
 
 const CREDIT_RATES: Record<
   SeedanceTier,
-  Record<SeedanceResolution, { noVideo: number; withVideo: number }>
+  Partial<Record<SeedanceResolution, { noVideo: number; withVideo: number }>>
 > = {
   standard: {
     "480p": { noVideo: 19, withVideo: 11.5 },
     "720p": { noVideo: 41, withVideo: 25 },
+    "1080p": { noVideo: 102, withVideo: 62 },
   },
   fast: {
     "480p": { noVideo: 15.5, withVideo: 9 },
@@ -137,7 +138,7 @@ function normalizeResolution(value: unknown): SeedanceResolution | null {
   }
 
   const normalized = value.trim().toLowerCase();
-  if (normalized === "480p" || normalized === "720p") {
+  if (normalized === "480p" || normalized === "720p" || normalized === "1080p") {
     return normalized;
   }
 
@@ -302,7 +303,12 @@ export function calculateSeedanceVideoPricing(input: {
     hasVideoReference(input.payload);
 
   const rateKey = hasVideoInput ? "withVideo" : "noVideo";
-  const creditRate = CREDIT_RATES[tier][resolution][rateKey];
+  const resolutionRates = CREDIT_RATES[tier][resolution];
+  if (!resolutionRates) {
+    return null;
+  }
+
+  const creditRate = resolutionRates[rateKey];
   const billableSeconds = hasVideoInput
     ? outputDuration + (inputVideoDuration ?? 0)
     : outputDuration;

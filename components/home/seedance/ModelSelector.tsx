@@ -11,7 +11,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, ChevronDown, Sparkles, Video, Zap } from "lucide-react";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 
 export type ModelSelectorItem = {
   id: string;
@@ -36,6 +36,7 @@ type ModelSelectorProps = {
   selectedVersionId?: string;
   onSelectVersion?: (id: string) => void;
   versionLabel?: string;
+  labelAccessory?: ReactNode;
 };
 
 export function ModelSelector({
@@ -48,6 +49,7 @@ export function ModelSelector({
   selectedVersionId,
   onSelectVersion,
   versionLabel,
+  labelAccessory,
 }: ModelSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const activeVersionId = selectedVersionId || versions?.[0]?.id;
@@ -66,10 +68,13 @@ export function ModelSelector({
 
   return (
     <div className="space-y-2 relative">
-      <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-        <Sparkles className="w-4 h-4" />
-        {label}
-      </label>
+      <div className="flex items-center justify-between gap-3">
+        <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+          <Sparkles className="w-4 h-4" />
+          {label}
+        </label>
+        {labelAccessory}
+      </div>
 
       <div className="relative">
         <button
@@ -146,7 +151,7 @@ export function ModelSelector({
           </label>
           {useVersionDropdown ? (
             <Select value={activeVersionId} onValueChange={onSelectVersion}>
-              <SelectTrigger className="w-full h-11 rounded-xl border-border/50 bg-background/50">
+              <SelectTrigger className="w-full !h-11 rounded-xl border-border/50 bg-background/50">
                 <SelectValue placeholder={versionLabel || "Version"}>
                   <span className="truncate font-semibold">
                     {activeVersion?.name}

@@ -60,6 +60,7 @@ type ReferenceFieldProps = {
   value: unknown;
   disabled?: boolean;
   labelIcon?: ReactNode;
+  labelTitle?: string;
   texts?: ReferenceFieldTexts;
   onMetadataChange?: (
     metadata: {
@@ -630,6 +631,7 @@ export default function ReferenceField({
   value,
   disabled,
   labelIcon,
+  labelTitle,
   texts,
   onMetadataChange,
   onChange,
@@ -832,7 +834,15 @@ export default function ReferenceField({
         kind={fieldKind}
         inputId={inputId}
         label={(
-          <div className="inline-flex items-center gap-2 font-medium text-muted-foreground text-sm">
+          <div
+            title={labelTitle}
+            data-ai-video-studio-field-description-trigger={labelTitle ? "true" : undefined}
+            onClick={labelTitle ? () => toast.info(labelTitle) : undefined}
+            className={cn(
+              "inline-flex items-center gap-2 font-medium text-muted-foreground text-sm",
+              labelTitle && "cursor-pointer transition hover:text-foreground active:opacity-80",
+            )}
+          >
             {labelIcon ? <span className="size-4 text-muted-foreground">{labelIcon}</span> : null}
             <span>{label}</span>
             {countText ? (

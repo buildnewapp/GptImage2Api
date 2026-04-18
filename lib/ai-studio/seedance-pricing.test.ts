@@ -170,9 +170,30 @@ test("does not render zero-second input duration in pricing explanation when met
   assert.equal(explanation, null);
 });
 
-test("returns null when seedance payload does not expose a supported resolution", () => {
+test("calculates official credits for seedance 2.0 at 1080p without video input", () => {
   const pricing = calculateSeedanceVideoPricing({
     model: "video:seedance-2-0",
+    payload: {
+      duration: 5,
+      resolution: "1080p",
+    },
+  });
+
+  assert.deepEqual(pricing, {
+    modelDescription: "Seedance 2.0, text/image-to-video, 1080p, 5s",
+    creditPrice: "510",
+    usdPrice: "",
+    billableSeconds: 5,
+    rate: 102,
+    hasVideoInput: false,
+    outputDurationSeconds: 5,
+    inputVideoDurationSeconds: 0,
+  });
+});
+
+test("returns null when seedance 2.0 fast payload uses an unsupported resolution", () => {
+  const pricing = calculateSeedanceVideoPricing({
+    model: "video:seedance-2-0-fast",
     payload: {
       duration: 5,
       resolution: "1080p",

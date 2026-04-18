@@ -245,7 +245,7 @@ function renderSpecialFieldIcon(
     return <Sparkles className="size-4" />;
   }
 
-  return null;
+  return <SlidersHorizontal className="size-4" />;
 }
 
 function createRandomSeed() {

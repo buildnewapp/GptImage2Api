@@ -123,7 +123,21 @@
       "watermarkPlaceholder": "添加水印（可选）",
       "enableTranslation": "自动翻译提示词",
       "veoQuality": "Veo 3.1 画质版",
-      "veoFast": "Veo 3.1 速度版"
+      "veoFast": "Veo 3.1 速度版",
+      "submitModeForm": "表单",
+      "submitModeApi": "API",
+      "apiRequestJsonTitle": "请求 JSON",
+      "apiRequestJsonDescription": "空字段也会保留在 payload 中，提交前可手动编辑。",
+      "apiJsonRequired": "JSON payload 不能为空。",
+      "apiJsonMustBeObject": "JSON payload 必须是对象。",
+      "apiJsonInvalid": "JSON payload 格式无效。",
+      "apiFieldDocsTitle": "字段说明",
+      "apiFieldDocRequired": "必填",
+      "apiFieldDocType": "类型",
+      "apiFieldDocEnum": "可选值",
+      "apiFieldDocRange": "范围",
+      "apiFieldDocMinimum": "最小值",
+      "apiFieldDocMaximum": "最大值"
     }
   },
   "Features": {

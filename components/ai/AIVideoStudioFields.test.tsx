@@ -1,8 +1,71 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { collectApiFieldDocs } from "@/components/ai/AIVideoStudioApiDocs";
 import AIVideoStudioFields from "@/components/ai/AIVideoStudioFields";
 import { renderToStaticMarkup } from "react-dom/server";
+
+test("collects api field docs from requestSchema.properties.input", () => {
+  const docs = collectApiFieldDocs({
+    copy: {
+      required: "必填",
+      type: "类型",
+      enum: "可选值",
+      range: "范围",
+      minimum: "最小值",
+      maximum: "最大值",
+    },
+    requestSchema: {
+      type: "object",
+      properties: {
+        input: {
+          type: "object",
+          required: ["prompt"],
+          properties: {
+            prompt: {
+              type: "string",
+              description: "Main prompt text.",
+            },
+            duration: {
+              type: "integer",
+              description: "Video duration in seconds.",
+              minimum: 4,
+              maximum: 15,
+            },
+            aspect_ratio: {
+              type: "string",
+              enum: ["16:9", "9:16"],
+            },
+          },
+          "x-apidog-orders": ["duration", "prompt", "aspect_ratio"],
+        },
+      },
+    },
+  });
+
+  assert.deepEqual(
+    docs.map((item) => item.key),
+    ["duration", "prompt", "aspect_ratio"],
+  );
+  assert.deepEqual(docs[0], {
+    key: "duration",
+    title: "duration",
+    description: "Video duration in seconds.",
+    meta: "类型: integer · 范围: 4 - 15",
+  });
+  assert.deepEqual(docs[1], {
+    key: "prompt",
+    title: "prompt",
+    description: "Main prompt text.",
+    meta: "必填 · 类型: string",
+  });
+  assert.deepEqual(docs[2], {
+    key: "aspect_ratio",
+    title: "aspect_ratio",
+    description: "",
+    meta: "类型: string · 可选值: 16:9, 9:16",
+  });
+});
 
 test("renders advanced fields inside a collapsible trigger section", () => {
   const html = renderToStaticMarkup(
@@ -212,4 +275,34 @@ test("treats first and last frame urls as dedicated single image upload fields",
   assert.match(html, />Last Frame</);
   assert.equal((html.match(/data-ai-video-studio-reference-field="image"/g) ?? []).length, 2);
   assert.equal((html.match(/data-ai-video-studio-reference-multiple="false"/g) ?? []).length, 2);
+});
+
+test("renders a default parameter icon for regular schema fields", () => {
+  const html = renderToStaticMarkup(
+    <AIVideoStudioFields
+      primaryFields={[
+        {
+          key: "cfg_scale",
+          path: ["cfg_scale"],
+          label: "cfg_scale",
+          kind: "number",
+          required: false,
+          schema: {
+            type: "number",
+            minimum: 1,
+            maximum: 20,
+          },
+          defaultValue: "",
+        },
+      ]}
+      advancedFields={[]}
+      values={{ cfg_scale: 7 }}
+      isPublic
+      onChange={() => {}}
+      onPublicChange={() => {}}
+    />,
+  );
+
+  assert.match(html, />cfg_scale</);
+  assert.match(html, /lucide-sliders-horizontal/);
 });

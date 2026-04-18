@@ -123,7 +123,21 @@
       "watermarkPlaceholder": "透かしを追加（オプション）",
       "enableTranslation": "プロンプト自動翻訳",
       "veoQuality": "Veo 3.1 高画質",
-      "veoFast": "Veo 3.1 高速"
+      "veoFast": "Veo 3.1 高速",
+      "submitModeForm": "フォーム",
+      "submitModeApi": "API",
+      "apiRequestJsonTitle": "リクエスト JSON",
+      "apiRequestJsonDescription": "空のフィールドも payload に保持されます。送信前に値を手動で編集できます。",
+      "apiJsonRequired": "JSON payload は必須です。",
+      "apiJsonMustBeObject": "JSON payload はオブジェクトである必要があります。",
+      "apiJsonInvalid": "JSON payload の形式が正しくありません。",
+      "apiFieldDocsTitle": "フィールド説明",
+      "apiFieldDocRequired": "必須",
+      "apiFieldDocType": "型",
+      "apiFieldDocEnum": "選択肢",
+      "apiFieldDocRange": "範囲",
+      "apiFieldDocMinimum": "最小値",
+      "apiFieldDocMaximum": "最大値"
     }
   },
   "Features": {

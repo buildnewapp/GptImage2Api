@@ -58,6 +58,28 @@ test("renders raw field labels without icon markup", () => {
   assert.doesNotMatch(html, /lucide-/);
 });
 
+test("renders schema descriptions as title attributes for regular field labels", () => {
+  const html = renderToStaticMarkup(
+    <AIVideoStudioFieldControl
+      field={{
+        key: "generate_audio",
+        path: ["generate_audio"],
+        kind: "boolean",
+        schema: {
+          type: "boolean",
+          description: "Whether to generate audio for the video.",
+        },
+      } as any}
+      label="generate_audio"
+      value={true}
+      onChange={() => {}}
+    />,
+  );
+
+  assert.match(html, /title="Whether to generate audio for the video\."/);
+  assert.match(html, /data-ai-video-studio-field-description-trigger="true"/);
+});
+
 test("renders string arrays as array editors driven by the items schema", () => {
   const html = renderToStaticMarkup(
     <AIVideoStudioFieldControl
@@ -170,6 +192,7 @@ test("renders multiline prompt counters when a max length is provided", () => {
         kind: "text",
         schema: {
           type: "string",
+          description: "Describe the video scene.",
         },
       } as any}
       label="提示词"
@@ -180,6 +203,8 @@ test("renders multiline prompt counters when a max length is provided", () => {
 
   assert.match(html, /data-ai-video-studio-prompt-field/);
   assert.match(html, /<textarea/);
+  assert.match(html, /title="Describe the video scene\."/);
+  assert.match(html, /data-ai-video-studio-field-description-trigger="true"/);
   assert.match(html, /5\/1000/);
   assert.match(html, /h-\[120px\]/);
 });
@@ -194,6 +219,7 @@ test("renders image url arrays with the specialized reference field UI", () => {
         schema: {
           type: "array",
           maxItems: 3,
+          description: "Reference images for style guidance.",
           items: {
             type: "string",
             format: "uri",
@@ -208,6 +234,8 @@ test("renders image url arrays with the specialized reference field UI", () => {
 
   assert.match(html, /data-ai-video-studio-reference-field="image"/);
   assert.match(html, /data-ai-video-studio-reference-multiple="true"/);
+  assert.match(html, /title="Reference images for style guidance\."/);
+  assert.match(html, /data-ai-video-studio-field-description-trigger="true"/);
   assert.doesNotMatch(html, /0\/9/);
   assert.doesNotMatch(html, /Upload reference images, up to 9\./);
   assert.doesNotMatch(html, /text-2xl/);
