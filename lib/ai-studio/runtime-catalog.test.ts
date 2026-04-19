@@ -820,6 +820,7 @@ test("exposes Seedance 2.0 VIP variants from the bundled runtime catalog", async
 
 test("exposes pricing rows only for models backed by pricing overrides", async () => {
   const pricedIds = [
+    "video:seedance-2-0-vip",
     "video:veo-3.1-lite",
     "video:veo-3.1-fast",
     "video:veo-3.1-quality",
