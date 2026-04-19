@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-04-19T04:14:23.257Z",
+  "generatedAt": "2026-04-19T04:18:54.344Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -9476,7 +9476,20 @@
           "web_search": false
         }
       },
-      "pricingRows": [],
+      "pricingRows": [
+        {
+          "modelDescription": "Seedance 2.0 Fast VIP, 720p no video input",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "33",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-2-fast.md",
+          "discountPrice": false
+        }
+      ],
       "formUi": {
         "advancedFields": [
           "first_frame_url",
@@ -9487,6 +9500,14 @@
           "generate_audio",
           "nsfw_checker"
         ]
+      },
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
       },
       "alias": "seedance-2-0-fast-vip"
     },

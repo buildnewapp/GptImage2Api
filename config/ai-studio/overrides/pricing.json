@@ -16,6 +16,22 @@
         }
       ]
     },
+    "video:bytedance-seedance-2-0-fast": {
+      "addRows": [
+        {
+          "modelDescription": "Seedance 2.0 Fast VIP, 720p no video input",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "33",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-2-fast.md",
+          "discountPrice": false
+        }
+      ]
+    },
     "video:apimart-seedance-2-0": {
       "addRows": [
         {
