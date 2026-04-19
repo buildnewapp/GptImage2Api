@@ -58,7 +58,7 @@
         "icon": "WandSparkles"
       },
       {
-        "name": "My Videos",
+        "name": "My Creations",
         "href": "/dashboard/videos",
         "icon": "Video"
       },
@@ -150,7 +150,7 @@
         "icon": "FileBox"
       },
       {
-        "name": "Video Generations",
+        "name": "Generation Records",
         "href": "/dashboard/admin-videos",
         "icon": "Video"
       },

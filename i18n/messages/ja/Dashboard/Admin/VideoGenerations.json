@@ -1,15 +1,18 @@
 {
-  "title": "動画生成履歴",
-  "description": "全ユーザーの動画生成記録を閲覧",
+  "title": "生成履歴",
+  "description": "全ユーザーの画像と動画の生成記録を閲覧",
   "columns": {
     "id": "ID",
     "user": "ユーザー",
     "selectedModel": "ユーザー選択モデル",
+    "category": "種類",
+    "image": "画像",
+    "video": "動画",
     "model": "モデル",
     "inputParams": "入力パラメータ",
-    "video": "動画",
-    "playVideo": "動画を再生",
-    "noVideo": "動画なし",
+    "preview": "プレビュー",
+    "openPreview": "プレビューを開く",
+    "noPreview": "プレビューなし",
     "viewJson": "JSONを表示",
     "status": "ステータス",
     "credits": "クレジット",
@@ -23,6 +26,14 @@
     "all_statuses": "すべてのステータス",
     "all_models": "すべてのモデル"
   },
+  "status": {
+    "pending": "処理中",
+    "success": "成功",
+    "failed": "失敗"
+  },
+  "empty": "生成記録がありません。",
+  "copy_task_id": "タスク ID をコピー",
+  "task_id_copied": "タスク ID をコピーしました",
   "pagination": {
     "previous": "前へ",
     "next": "次へ",

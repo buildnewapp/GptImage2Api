@@ -38,7 +38,7 @@ export async function getAdminAiStudioVideoGenerations({
       ? status
       : "all",
   );
-  const conditions: SQL[] = [eq(aiStudioGenerations.category, "video")];
+  const conditions: SQL[] = [inArray(aiStudioGenerations.category, ["video", "image"])];
 
   if (statusFilters) {
     conditions.push(inArray(aiStudioGenerations.status, [...statusFilters]));
@@ -69,6 +69,7 @@ export async function getAdminAiStudioVideoGenerations({
         userId: aiStudioGenerations.userId,
         userEmail: user.email,
         userName: user.name,
+        category: aiStudioGenerations.category,
         catalogModelId: aiStudioGenerations.catalogModelId,
         title: aiStudioGenerations.titleSnapshot,
         providerTaskId: aiStudioGenerations.providerTaskId,
@@ -101,6 +102,7 @@ export async function getAdminAiStudioVideoGenerations({
         userId: row.userId,
         userEmail: row.userEmail,
         userName: row.userName,
+        category: row.category,
         catalogModelId: row.catalogModelId,
         title: row.title,
         providerTaskId: row.providerTaskId,

@@ -41,7 +41,7 @@ export async function GET(request: Request) {
     const statusFilters = getAiStudioStatusesForLegacyVideoFilter(input.status);
     const conditions = [
       eq(aiStudioGenerations.userId, user.id),
-      eq(aiStudioGenerations.category, "video"),
+      inArray(aiStudioGenerations.category, ["video", "image"]),
       isNull(aiStudioGenerations.userDeletedAt),
       ...(statusFilters
         ? [inArray(aiStudioGenerations.status, [...statusFilters])]
@@ -54,6 +54,7 @@ export async function GET(request: Request) {
       getDb()
         .select({
           id: aiStudioGenerations.id,
+          category: aiStudioGenerations.category,
           catalogModelId: aiStudioGenerations.catalogModelId,
           title: aiStudioGenerations.titleSnapshot,
           provider: aiStudioGenerations.providerSnapshot,
@@ -86,6 +87,7 @@ export async function GET(request: Request) {
     const records = rows.map((row) =>
       mapAiStudioUserRecordToLegacyVideoHistoryRecord({
         id: row.id,
+        category: row.category,
         catalogModelId: publicModelIds.get(row.catalogModelId) ?? row.catalogModelId,
         title: row.title,
         provider: row.provider,
@@ -114,7 +116,7 @@ export async function GET(request: Request) {
     });
   } catch (error: any) {
     return apiResponse.serverError(
-      error?.message || "Failed to load AI Studio video history",
+      error?.message || "Failed to load AI Studio generation history",
     );
   }
 }
@@ -141,13 +143,13 @@ export async function PATCH(request: Request) {
     );
 
     if (!updated) {
-      return apiResponse.notFound("Video generation record not found.");
+      return apiResponse.notFound("Generation record not found.");
     }
 
     return apiResponse.success(updated);
   } catch (error: any) {
     return apiResponse.serverError(
-      error?.message || "Failed to update AI Studio video visibility",
+      error?.message || "Failed to update AI Studio generation visibility",
     );
   }
 }
@@ -171,13 +173,13 @@ export async function DELETE(request: Request) {
     const deleted = await softDeleteAiStudioGenerationForUser(user.id, input.id);
 
     if (!deleted) {
-      return apiResponse.notFound("Video generation record not found.");
+      return apiResponse.notFound("Generation record not found.");
     }
 
     return apiResponse.success(deleted);
   } catch (error: any) {
     return apiResponse.serverError(
-      error?.message || "Failed to delete AI Studio video history item",
+      error?.message || "Failed to delete AI Studio generation history item",
     );
   }
 }

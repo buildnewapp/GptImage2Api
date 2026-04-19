@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-04-19T04:18:54.344Z",
+  "generatedAt": "2026-04-19T12:18:06.062Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -504,7 +504,30 @@
           "nsfw_checker": false
         }
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "seedream/4.5-text-to-image",
+          "interfaceType": "image",
+          "provider": "Seedream4.5",
+          "creditPrice": "6.5",
+          "creditUnit": "per image",
+          "usdPrice": "0.032",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/seedream/4-5-text-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:seedream4-5-text-to-image",
+          "runtimeModel": "seedream/4.5-text-to-image"
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "image:seedream4-5-edit",
@@ -639,7 +662,30 @@
           "nsfw_checker": true
         }
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "seedream/4.5-edit",
+          "interfaceType": "image",
+          "provider": "Seedream4.5",
+          "creditPrice": "6.5",
+          "creditUnit": "per image",
+          "usdPrice": "0.0325",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/seedream/4-5-edit.md",
+          "discountPrice": false,
+          "catalogModelId": "image:seedream4-5-edit",
+          "runtimeModel": "seedream/4.5-edit"
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "image:seedream5-0-lite-text-to-image",
@@ -756,7 +802,30 @@
           "nsfw_checker": false
         }
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "seedream/5-lite-text-to-image, up to 3K",
+          "interfaceType": "image",
+          "provider": "Seedream5.0 Lite",
+          "creditPrice": "5.5",
+          "creditUnit": "per image",
+          "usdPrice": "0.0275",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/seedream/5-lite-text-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:seedream5-0-lite-text-to-image",
+          "runtimeModel": "seedream/5-lite-text-to-image"
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "image:seedream5-0-lite-image-to-image",
@@ -892,7 +961,30 @@
           "nsfw_checker": true
         }
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "seedream/5-lite-image-to-image, up to 3K",
+          "interfaceType": "image",
+          "provider": "Seedream5.0 Lite",
+          "creditPrice": "5.5",
+          "creditUnit": "per image",
+          "usdPrice": "0.0275",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/seedream-5-lite-image-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:seedream5-0-lite-image-to-image",
+          "runtimeModel": "seedream/5-lite-image-to-image"
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "image:z-image",
@@ -1135,7 +1227,64 @@
           "output_format": "png"
         }
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "Nano Banana 2, 1K",
+          "interfaceType": "image",
+          "provider": "Google",
+          "creditPrice": "5",
+          "creditUnit": "per image",
+          "usdPrice": "0.025",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/google/nanobanana2.md",
+          "discountPrice": false,
+          "catalogModelId": "image:google-nano-banana-2",
+          "runtimeModel": "nano-banana-2",
+          "resolution": "1k"
+        },
+        {
+          "modelDescription": "Nano Banana 2, 2K",
+          "interfaceType": "image",
+          "provider": "Google",
+          "creditPrice": "8",
+          "creditUnit": "per image",
+          "usdPrice": "0.04",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/google/nanobanana2.md",
+          "discountPrice": false,
+          "catalogModelId": "image:google-nano-banana-2",
+          "runtimeModel": "nano-banana-2",
+          "resolution": "2k"
+        },
+        {
+          "modelDescription": "Nano Banana 2, 4K",
+          "interfaceType": "image",
+          "provider": "Google",
+          "creditPrice": "12",
+          "creditUnit": "per image",
+          "usdPrice": "0.06",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/google/nanobanana2.md",
+          "discountPrice": false,
+          "catalogModelId": "image:google-nano-banana-2",
+          "runtimeModel": "nano-banana-2",
+          "resolution": "4k"
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": [
+            "input.resolution"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "image:google-imagen4-fast",
@@ -1860,7 +2009,64 @@
           "output_format": "png"
         }
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "Nano Banana Pro, 1K",
+          "interfaceType": "image",
+          "provider": "Google",
+          "creditPrice": "8",
+          "creditUnit": "per image",
+          "usdPrice": "0.04",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/google/pro-image-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:google-nano-banana-pro",
+          "runtimeModel": "nano-banana-pro",
+          "resolution": "1k"
+        },
+        {
+          "modelDescription": "Nano Banana Pro, 2K",
+          "interfaceType": "image",
+          "provider": "Google",
+          "creditPrice": "8",
+          "creditUnit": "per image",
+          "usdPrice": "0.04",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/google/pro-image-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:google-nano-banana-pro",
+          "runtimeModel": "nano-banana-pro",
+          "resolution": "2k"
+        },
+        {
+          "modelDescription": "Nano Banana Pro, 4K",
+          "interfaceType": "image",
+          "provider": "Google",
+          "creditPrice": "14",
+          "creditUnit": "per image",
+          "usdPrice": "0.07",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/google/pro-image-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:google-nano-banana-pro",
+          "runtimeModel": "nano-banana-pro",
+          "resolution": "4k"
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": [
+            "input.resolution"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "image:flux-2-pro-image-to-image",
@@ -2577,8 +2783,7 @@
           "anchor": "https://docs.kie.ai/market/grok-imagine/text-to-image.md",
           "discountPrice": false,
           "catalogModelId": "image:grok-imagine-text-to-image",
-          "runtimeModel": "grok-imagine/text-to-image",
-          "audio": true
+          "runtimeModel": "grok-imagine/text-to-image"
         }
       ],
       "pricing": {
@@ -5080,7 +5285,22 @@
           "seed": 0
         }
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "qwen2/image-edit, varies by aspect ratio",
+          "interfaceType": "image",
+          "provider": "Qwen2",
+          "creditPrice": "6",
+          "creditUnit": "per image",
+          "usdPrice": "0.03",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/qwen2/image-edit.md",
+          "discountPrice": false,
+          "catalogModelId": "image:qwen2-image-edit",
+          "runtimeModel": "qwen2/image-edit"
+        }
+      ]
     },
     {
       "id": "image:qwen2-text-to-image",
@@ -5231,7 +5451,22 @@
           "output_format": "png"
         }
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "qwen2/text-to-image, varies by aspect ratio",
+          "interfaceType": "image",
+          "provider": "Qwen2",
+          "creditPrice": "6",
+          "creditUnit": "per image",
+          "usdPrice": "0.03",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/30861522e0.md",
+          "discountPrice": false,
+          "catalogModelId": "image:qwen2-text-to-image",
+          "runtimeModel": "qwen2/text-to-image"
+        }
+      ]
     },
     {
       "id": "image:generate-4o-image",
@@ -5822,7 +6057,30 @@
         "x-apidog-ignore-properties": []
       },
       "examplePayload": {},
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "wan/2-7-image",
+          "interfaceType": "image",
+          "provider": "Wan 2.7 Image",
+          "creditPrice": "4.8",
+          "creditUnit": "per image",
+          "usdPrice": "0.024",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/wan/2-7-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:wan-2-7-image",
+          "runtimeModel": "wan/2-7-image"
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "image:wan-2-7-image-pro",
@@ -6104,7 +6362,30 @@
         "x-apidog-ignore-properties": []
       },
       "examplePayload": {},
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "wan/2-7-image-pro",
+          "interfaceType": "image",
+          "provider": "Wan 2.7 Image Pro",
+          "creditPrice": "12",
+          "creditUnit": "per image",
+          "usdPrice": "0.06",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/wan/2-7-image-pro.md",
+          "discountPrice": false,
+          "catalogModelId": "image:wan-2-7-image-pro",
+          "runtimeModel": "wan/2-7-image-pro"
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:grok-imagine-text-to-video",

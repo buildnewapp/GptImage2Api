@@ -16,6 +16,7 @@ export type LegacyProviderValues = {
 
 export type AiStudioUserHistoryItem = {
   id: string;
+  category: string;
   catalogModelId: string;
   title: string;
   provider: string;
@@ -34,6 +35,7 @@ export type LegacyVideoHistoryRecord = {
   id: string;
   taskId: string;
   providerTaskId?: string | null;
+  category: string;
   catalogModelId?: string;
   model: string;
   modelLabel: string | null;
@@ -50,6 +52,7 @@ export type LegacyVideoHistoryRecord = {
   visibilityAvailable: boolean;
   prompt: string | null;
   resultUrl: string | null;
+  resultUrls: string[];
   createdAt: string;
   requestPayload: Record<string, any>;
 };
@@ -59,6 +62,7 @@ export type AiStudioAdminVideoItem = {
   userId: string;
   userEmail: string | null;
   userName: string | null;
+  category: string;
   catalogModelId: string;
   title: string;
   providerTaskId: string | null;
@@ -76,6 +80,7 @@ export type LegacyAdminVideoRecord = {
   userId: string;
   userEmail: string | null;
   userName: string | null;
+  category: string;
   model: string;
   selectedModel: string;
   status: LegacyVideoStatus;
@@ -94,7 +99,9 @@ function asRecord(value: unknown) {
 }
 
 function asString(value: unknown) {
-  return typeof value === "string" && value.trim().length > 0 ? value : undefined;
+  return typeof value === "string" && value.trim().length > 0
+    ? value
+    : undefined;
 }
 
 function asBoolean(value: unknown) {
@@ -107,7 +114,10 @@ function getFirstString(value: unknown) {
   }
 
   if (Array.isArray(value)) {
-    return value.find((item): item is string => typeof item === "string" && item.trim().length > 0);
+    return value.find(
+      (item): item is string =>
+        typeof item === "string" && item.trim().length > 0,
+    );
   }
 
   return undefined;
@@ -131,7 +141,9 @@ function compactProviderValues(values: LegacyProviderValues) {
   ) as LegacyProviderValues;
 }
 
-export function mapAiStudioStatusToLegacyVideoStatus(status: string): LegacyVideoStatus {
+export function mapAiStudioStatusToLegacyVideoStatus(
+  status: string,
+): LegacyVideoStatus {
   if (status === "succeeded") {
     return "success";
   }
@@ -172,26 +184,19 @@ export function mapAiStudioStoredPayloadToLegacyVideoInput(
       asString(input.image_url) ??
       asString(input.first_frame_image) ??
       asString(root.image_url),
-    resolution:
-      asString(input.resolution) ??
-      asString(input.image_resolution),
-    aspectRatio:
-      asString(input.aspect_ratio) ??
-      asString(input.aspectRatio),
-    duration:
-      formatDuration(input.n_frames) ??
-      formatDuration(input.duration),
+    resolution: asString(input.resolution) ?? asString(input.image_resolution),
+    aspectRatio: asString(input.aspect_ratio) ?? asString(input.aspectRatio),
+    duration: formatDuration(input.n_frames) ?? formatDuration(input.duration),
     seed:
       (typeof input.seed === "number" || typeof input.seed === "string") &&
       `${input.seed}`.trim().length > 0
         ? `${input.seed}`
-        : (typeof input.seeds === "number" || typeof input.seeds === "string") &&
+        : (typeof input.seeds === "number" ||
+              typeof input.seeds === "string") &&
             `${input.seeds}`.trim().length > 0
           ? `${input.seeds}`
           : undefined,
-    cameraFixed:
-      asBoolean(input.camera_fixed) ??
-      asBoolean(input.cameraFixed),
+    cameraFixed: asBoolean(input.camera_fixed) ?? asBoolean(input.cameraFixed),
     enableSafetyChecker:
       asBoolean(input.enable_safety_checker) ??
       asBoolean(input.enableSafetyChecker),
@@ -201,33 +206,46 @@ export function mapAiStudioStoredPayloadToLegacyVideoInput(
 export function mapAiStudioUserRecordToLegacyVideoHistoryRecord(
   record: AiStudioUserHistoryItem,
 ): LegacyVideoHistoryRecord {
-  const providerValues = mapAiStudioStoredPayloadToLegacyVideoInput(record.requestPayload);
-  const resolvedSelection = getAiVideoStudioSelectionFromModelId(record.catalogModelId);
+  const providerValues = mapAiStudioStoredPayloadToLegacyVideoInput(
+    record.requestPayload,
+  );
+  const resolvedSelection = getAiVideoStudioSelectionFromModelId(
+    record.catalogModelId,
+  );
   const model = asString(record.requestPayload?.model) ?? record.catalogModelId;
   const taskId = record.providerTaskId ?? record.id;
   const prompt = providerValues.prompt ?? null;
   const uploadedImage = providerValues.imageUrl ?? null;
+  const category = record.category || "video";
 
   const nextRecord: LegacyVideoHistoryRecord = {
     id: record.id,
     taskId,
     providerTaskId: record.providerTaskId,
+    category,
     catalogModelId: record.catalogModelId,
     model,
     modelLabel: record.title,
-    mode: uploadedImage ? "image-to-video" : "text-to-video",
     providerValues,
     status: mapAiStudioStatusToLegacyVideoStatus(record.status),
-    creditsUsed: record.capturedCredits > 0 ? record.capturedCredits : record.reservedCredits,
+    creditsUsed:
+      record.capturedCredits > 0
+        ? record.capturedCredits
+        : record.reservedCredits,
     creditsRequired: record.reservedCredits,
     creditsRefunded: record.refundedCredits > 0,
     isPublic: record.isPublic ?? true,
     visibilityAvailable: true,
     prompt,
     resultUrl: record.resultUrls[0] ?? null,
+    resultUrls: record.resultUrls,
     createdAt: record.createdAt,
     requestPayload: record.requestPayload,
   };
+
+  if (category === "video") {
+    nextRecord.mode = uploadedImage ? "image-to-video" : "text-to-video";
+  }
 
   if (resolvedSelection?.familyKey) {
     nextRecord.modelKey = resolvedSelection.familyKey;
@@ -247,7 +265,9 @@ export function mapAiStudioUserRecordToLegacyVideoHistoryRecord(
 export function mapAiStudioAdminRecordToLegacyAdminVideoRecord(
   record: AiStudioAdminVideoItem,
 ): LegacyAdminVideoRecord {
-  const providerValues = mapAiStudioStoredPayloadToLegacyVideoInput(record.requestPayload);
+  const providerValues = mapAiStudioStoredPayloadToLegacyVideoInput(
+    record.requestPayload,
+  );
 
   return {
     id: record.id,
@@ -255,6 +275,7 @@ export function mapAiStudioAdminRecordToLegacyAdminVideoRecord(
     userId: record.userId,
     userEmail: record.userEmail,
     userName: record.userName,
+    category: record.category,
     model: asString(record.requestPayload?.model) ?? record.catalogModelId,
     selectedModel: record.title,
     status: mapAiStudioStatusToLegacyVideoStatus(record.status),

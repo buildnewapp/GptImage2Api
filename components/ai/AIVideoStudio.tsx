@@ -1,6 +1,9 @@
 "use client";
 
 import AIVideoStudioFields from "@/components/ai/AIVideoStudioFields";
+import AIVideoStudioMediaPreview, {
+  type AIVideoStudioPreview,
+} from "@/components/ai/AIVideoStudioMediaPreview";
 import { collectApiFieldDocs } from "@/components/ai/AIVideoStudioApiDocs";
 import {
   Accordion,
@@ -10,6 +13,7 @@ import {
 } from "@/components/ui/accordion";
 import {
   AI_VIDEO_STUDIO_FAMILIES,
+  getAiVideoStudioSelectionFromModelId,
   getAiVideoStudioVersions,
   type AiVideoStudioFamilyKey,
   type AiVideoStudioVersionKey,
@@ -27,7 +31,9 @@ import {
   safeParseAiVideoStudioStoredState,
   serializeAiVideoStudioStoredState,
 } from "@/lib/ai-video-studio/storage";
-import { hasAiVideoStudioSignedInSession } from "@/lib/ai-video-studio/view";
+import {
+  shouldShowAiVideoStudioSignedInUi,
+} from "@/lib/ai-video-studio/view";
 import {
   mergeAiVideoStudioFormValues,
   normalizeAiVideoStudioSchema,
@@ -49,6 +55,8 @@ import { cn } from "@/lib/utils";
 import {
   Copy,
   Download,
+  Image as ImageIcon,
+  Images,
   Loader2,
   Play,
   Sparkles,
@@ -57,7 +65,6 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { toast } from "sonner";
 import HeroPromptCarousel from "@/components/home/seedance/HeroPromptCarousel";
 import {
@@ -65,6 +72,7 @@ import {
   type ModelSelectorItem,
   type ModelSelectorVersionItem,
 } from "@/components/home/seedance/ModelSelector";
+import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -97,6 +105,25 @@ type TaskResponse = {
   error?: string;
 };
 
+type HistoryResponse = {
+  success: boolean;
+  data: {
+    items: Array<{
+      id: string;
+      catalogModelId: string;
+      category: string;
+      status: string;
+      providerTaskId: string | null;
+      isPublic: boolean;
+      reservedCredits: number;
+      resultUrls: string[];
+      createdAt: string;
+      requestPayload: Record<string, any>;
+    }>;
+  };
+  error?: string;
+};
+
 type GenerationTaskState = "queued" | "running" | "succeeded" | "failed";
 
 type GenerationTask = {
@@ -118,8 +145,10 @@ type GenerationTask = {
 };
 
 type SubmitMode = "form" | "api";
+type GeneratedMediaKind = "image" | "video";
 
 const POLLING_ERROR_LIMIT = 3;
+const VISIBLE_GENERATION_TASK_COUNT = 5;
 
 function createLocalTaskId() {
   if (
@@ -348,7 +377,10 @@ function materializeApiPayloadFormValues(
   schema: Record<string, any> | null | undefined,
   formValues: AiVideoStudioFormValues,
 ) {
-  const properties = (schema?.properties ?? {}) as Record<string, Record<string, any>>;
+  const properties = (schema?.properties ?? {}) as Record<
+    string,
+    Record<string, any>
+  >;
   const source =
     formValues && typeof formValues === "object" && !Array.isArray(formValues)
       ? formValues
@@ -433,6 +465,72 @@ function buildApiModePayload(input: {
   return payload;
 }
 
+function resolveGeneratedMediaKind(
+  modelId?: string | null,
+): GeneratedMediaKind {
+  return typeof modelId === "string" && modelId.startsWith("image:")
+    ? "image"
+    : "video";
+}
+
+function inferDownloadExtension(url: string, kind: GeneratedMediaKind) {
+  try {
+    const pathname = new URL(url).pathname;
+    const extension = pathname.split(".").pop()?.toLowerCase();
+
+    if (extension && /^[a-z0-9]+$/.test(extension)) {
+      return extension;
+    }
+  } catch {
+    // ignore URL parsing errors
+  }
+
+  return kind === "image" ? "png" : "mp4";
+}
+
+function mapHistoryItemToGenerationTask(
+  item: HistoryResponse["data"]["items"][number],
+): GenerationTask | null {
+  if (item.category !== "image" && item.category !== "video") {
+    return null;
+  }
+
+  const selection = getAiVideoStudioSelectionFromModelId(item.catalogModelId);
+  if (!selection) {
+    return null;
+  }
+
+  const restored = restoreAiVideoStudioFormState({
+    familyKey: selection.familyKey,
+    versionKey: selection.versionKey,
+    isPublic: item.isPublic,
+    payload: item.requestPayload,
+  });
+  const promptValue = findValueByKey(restored.formValues, "prompt");
+
+  return {
+    localId: item.id,
+    taskId: item.providerTaskId ?? undefined,
+    state: resolveGenerationTaskState(item.status),
+    mediaUrls: item.resultUrls,
+    familyKey: selection.familyKey,
+    versionKey: selection.versionKey,
+    modelId: item.catalogModelId,
+    prompt:
+      typeof promptValue === "string" && promptValue.trim().length > 0
+        ? promptValue.trim()
+        : "-",
+    isPublic: item.isPublic,
+    formValues: restored.formValues,
+    payload: item.requestPayload,
+    creditsRequired: item.reservedCredits,
+    selectedPricing: null,
+    progress:
+      item.status === "succeeded" || item.status === "failed" ? 100 : 10,
+    createdAt: new Date(item.createdAt).getTime(),
+  };
+}
+
 export default function AIVideoStudio() {
   const t = useTranslations("Landing.Hero");
   const { data: session } = authClient.useSession();
@@ -464,7 +562,9 @@ export default function AIVideoStudio() {
   const [activeTaskLocalId, setActiveTaskLocalId] = useState<string | null>(
     null,
   );
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [selectedPreview, setSelectedPreview] =
+    useState<AIVideoStudioPreview | null>(null);
+  const [hasClientMounted, setHasClientMounted] = useState(false);
 
   const availableFamilies = AI_VIDEO_STUDIO_FAMILIES;
   const availableVersions = useMemo(
@@ -488,6 +588,10 @@ export default function AIVideoStudio() {
         : null,
     [selectedFamilyKey, selectedVersionKey, selectedVersion],
   );
+
+  useEffect(() => {
+    setHasClientMounted(true);
+  }, []);
 
   useEffect(() => {
     if (availableVersions.length === 0) {
@@ -670,9 +774,7 @@ export default function AIVideoStudio() {
       return;
     }
 
-    setApiPayloadText(
-      JSON.stringify(defaultApiPayload ?? {}, null, 2),
-    );
+    setApiPayloadText(JSON.stringify(defaultApiPayload ?? {}, null, 2));
   }, [defaultApiPayload, submitMode]);
 
   const apiPayloadState = useMemo(() => {
@@ -744,8 +846,7 @@ export default function AIVideoStudio() {
     [apiBasePayload, apiSelectedPricing],
   );
 
-  const basePayload =
-    submitMode === "api" ? apiBasePayload : formBasePayload;
+  const basePayload = submitMode === "api" ? apiBasePayload : formBasePayload;
   const selectedPricing =
     submitMode === "api" ? apiSelectedPricing : formSelectedPricing;
   const pricingExplanation =
@@ -777,9 +878,15 @@ export default function AIVideoStudio() {
   const shouldShowPublicInAdvanced =
     normalizedSchema?.usesDefaultAdvancedGrouping === true ||
     selectedFamilyKey === "seedance-2.0";
+  const selectedModelMediaKind = resolveGeneratedMediaKind(resolvedModelId);
 
-  const availableCredits = benefits?.totalAvailableCredits ?? null;
-  const hasSignedInSession = hasAiVideoStudioSignedInSession(session);
+  const availableCredits = hasClientMounted
+    ? (benefits?.totalAvailableCredits ?? null)
+    : null;
+  const hasSignedInSession = shouldShowAiVideoStudioSignedInUi(
+    session,
+    hasClientMounted,
+  );
   const hasRequiredFieldValues = useMemo(
     () =>
       !normalizedSchema?.fields.some(
@@ -800,6 +907,11 @@ export default function AIVideoStudio() {
       availableCredits === null ||
       availableCredits >= estimatedCredits) &&
     (submitMode === "api" || hasRequiredFieldValues);
+
+  const visibleGenerationTasks = useMemo(
+    () => generationTasks.slice(0, VISIBLE_GENERATION_TASK_COUNT),
+    [generationTasks],
+  );
 
   const updateGenerationTask = useCallback(
     (localId: string, patch: Partial<GenerationTask>) => {
@@ -840,6 +952,7 @@ export default function AIVideoStudio() {
   const pollStatus = useCallback(
     (localId: string, taskId: string, modelId: string) => {
       clearTaskPolling(localId);
+      const mediaKind = resolveGeneratedMediaKind(modelId);
 
       const timer = setInterval(async () => {
         try {
@@ -861,7 +974,13 @@ export default function AIVideoStudio() {
               progress: 100,
             });
             setActiveTaskLocalId(localId);
-            toast.success(t("form.generationSuccess"));
+            toast.success(
+              t(
+                mediaKind === "image"
+                  ? "form.generationSuccessImage"
+                  : "form.generationSuccess",
+              ),
+            );
             void refreshBenefits();
           } else if (json.data.state === "failed") {
             clearTaskPolling(localId);
@@ -918,6 +1037,75 @@ export default function AIVideoStudio() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!hasSignedInSession) {
+      setGenerationTasks([]);
+      return;
+    }
+
+    let mounted = true;
+
+    async function loadHistory() {
+      try {
+        const response = await fetch("/api/ai-studio/history?limit=5");
+        const json = (await response.json()) as HistoryResponse;
+
+        if (!response.ok || !json.success) {
+          throw new Error(json.error || "Failed to load history");
+        }
+
+        if (!mounted) {
+          return;
+        }
+
+        const historyTasks = json.data.items
+          .map(mapHistoryItemToGenerationTask)
+          .filter((task): task is GenerationTask => task !== null);
+
+        setGenerationTasks((current) => {
+          if (current.length === 0) {
+            return historyTasks;
+          }
+
+          const existingTaskIds = new Set(
+            current
+              .map((task) => task.taskId)
+              .filter((taskId): taskId is string => Boolean(taskId)),
+          );
+
+          return [
+            ...current,
+            ...historyTasks.filter(
+              (task) => !task.taskId || !existingTaskIds.has(task.taskId),
+            ),
+          ];
+        });
+      } catch {
+        // ignore history loading failures
+      }
+    }
+
+    void loadHistory();
+
+    return () => {
+      mounted = false;
+    };
+  }, [hasSignedInSession]);
+
+  useEffect(() => {
+    generationTasks.forEach((task) => {
+      if (
+        !task.taskId ||
+        (task.state !== "queued" && task.state !== "running") ||
+        pollingTimersRef.current.has(task.localId)
+      ) {
+        return;
+      }
+
+      pollStatus(task.localId, task.taskId, task.modelId);
+    });
+  }, [generationTasks, pollStatus]);
+
   const handleGenerate = useCallback(async () => {
     if (
       isSubmitting ||
@@ -934,7 +1122,13 @@ export default function AIVideoStudio() {
     }
 
     if (!session?.user) {
-      toast.error(t("form.loginRequired"));
+      toast.error(
+        t(
+          selectedModelMediaKind === "image"
+            ? "form.loginRequiredImage"
+            : "form.loginRequired",
+        ),
+      );
       return;
     }
 
@@ -1031,12 +1225,24 @@ export default function AIVideoStudio() {
         toast.error(t("form.generationFailed"));
         void refreshBenefits();
       } else if (!shouldPoll) {
-        toast.success(t("form.generationSuccess"));
+        toast.success(
+          t(
+            selectedModelMediaKind === "image"
+              ? "form.generationSuccessImage"
+              : "form.generationSuccess",
+          ),
+        );
         void refreshBenefits();
       } else {
         const queuedTaskId = json.data.taskId;
         if (!queuedTaskId) {
-          toast.success(t("form.generationSuccess"));
+          toast.success(
+            t(
+              selectedModelMediaKind === "image"
+                ? "form.generationSuccessImage"
+                : "form.generationSuccess",
+            ),
+          );
           void refreshBenefits();
           return;
         }
@@ -1073,24 +1279,29 @@ export default function AIVideoStudio() {
     hasRequiredFieldValues,
     apiPayloadState.error,
     submitMode,
+    selectedModelMediaKind,
   ]);
 
   const activeTask = useMemo(() => {
-    if (generationTasks.length === 0) {
+    if (visibleGenerationTasks.length === 0) {
       return null;
     }
 
     if (!activeTaskLocalId) {
-      return generationTasks[0];
+      return visibleGenerationTasks[0];
     }
 
     return (
-      generationTasks.find((task) => task.localId === activeTaskLocalId) ??
-      generationTasks[0]
+      visibleGenerationTasks.find(
+        (task) => task.localId === activeTaskLocalId,
+      ) ?? visibleGenerationTasks[0]
     );
-  }, [activeTaskLocalId, generationTasks]);
+  }, [activeTaskLocalId, visibleGenerationTasks]);
 
-  const activeResultVideoUrl = activeTask?.mediaUrls[0] ?? null;
+  const activeResultMediaUrl = activeTask?.mediaUrls[0] ?? null;
+  const activeTaskMediaKind = resolveGeneratedMediaKind(activeTask?.modelId);
+  const activeImageUrls =
+    activeTaskMediaKind === "image" ? (activeTask?.mediaUrls ?? []) : [];
 
   const handleCopyPrompt = useCallback(
     async (prompt: string) => {
@@ -1104,16 +1315,31 @@ export default function AIVideoStudio() {
     [t],
   );
 
-  const handleDownloadVideo = useCallback(
-    (url: string, taskId: string | undefined) => {
+  const handleDownloadMedia = useCallback(
+    (url: string, taskId: string | undefined, kind: GeneratedMediaKind) => {
       const link = document.createElement("a");
       link.href = url;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
-      link.download = `video-task-${taskId || Date.now()}.mp4`;
+      link.download = `${kind}-task-${taskId || Date.now()}.${inferDownloadExtension(url, kind)}`;
       document.body.appendChild(link);
       link.click();
       link.remove();
+    },
+    [],
+  );
+
+  const handleOpenImagePreview = useCallback(
+    (urls: string[], index: number) => {
+      if (!urls[index]) {
+        return;
+      }
+
+      setSelectedPreview({
+        kind: "image",
+        urls,
+        index,
+      });
     },
     [],
   );
@@ -1167,6 +1393,7 @@ export default function AIVideoStudio() {
         id: family.key,
         name: family.label,
         description: family.description,
+        icon: family.icon,
         tags: family.tags,
         selectable: family.selectable,
       })),
@@ -1214,12 +1441,13 @@ export default function AIVideoStudio() {
               labelAccessory={
                 <div className="inline-flex items-center rounded-lg border border-border/60 bg-background/60 p-1">
                   {(["form", "api"] as const).map((mode) => (
-                    <button
+                    <Button
                       key={mode}
                       type="button"
                       onClick={() => setSubmitMode(mode)}
+                      variant="ghost"
                       className={cn(
-                        "rounded-md px-3 py-1 text-xs font-medium transition-colors",
+                        "h-auto rounded-md px-3 py-1 text-xs font-medium transition-colors hover:bg-transparent",
                         submitMode === mode
                           ? "bg-foreground text-background"
                           : "text-muted-foreground hover:text-foreground",
@@ -1228,7 +1456,7 @@ export default function AIVideoStudio() {
                       {mode === "form"
                         ? t("form.submitModeForm")
                         : t("form.submitModeApi")}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               }
@@ -1261,7 +1489,11 @@ export default function AIVideoStudio() {
                 }}
                 publicVisibilityLabel={t("form.isPublic")}
                 publicToggleLabel={t("form.public")}
-                promptPlaceholder={t("form.promptPlaceholder")}
+                promptPlaceholder={t(
+                  selectedModelMediaKind === "image"
+                    ? "form.promptPlaceholderImage"
+                    : "form.promptPlaceholder",
+                )}
                 referenceFieldTexts={{
                   useUrlLabel: t("form.useUrl"),
                   uploadTitle: t("form.uploadTitle"),
@@ -1351,7 +1583,8 @@ export default function AIVideoStudio() {
                     <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
                       {apiPayloadState.error === "JSON payload is required."
                         ? t("form.apiJsonRequired")
-                        : apiPayloadState.error === "JSON payload must be an object."
+                        : apiPayloadState.error ===
+                            "JSON payload must be an object."
                           ? t("form.apiJsonMustBeObject")
                           : apiPayloadState.error === "Invalid JSON payload."
                             ? t("form.apiJsonInvalid")
@@ -1362,7 +1595,10 @@ export default function AIVideoStudio() {
                 {apiFieldDocs.length > 0 ? (
                   <div className="rounded-xl border border-border/60 bg-background/50 px-4 py-3">
                     <Accordion type="single" collapsible className="w-full">
-                      <AccordionItem value="api-field-docs" className="border-b-0">
+                      <AccordionItem
+                        value="api-field-docs"
+                        className="border-b-0"
+                      >
                         <AccordionTrigger className="py-0 hover:no-underline">
                           <div className="text-sm font-semibold text-foreground">
                             {t("form.apiFieldDocsTitle")}
@@ -1441,7 +1677,7 @@ export default function AIVideoStudio() {
                   </div>
                 </div>
               ) : null}
-              <button
+              <Button
                 type="button"
                 onClick={() => void handleGenerate()}
                 disabled={!canGenerate}
@@ -1457,10 +1693,14 @@ export default function AIVideoStudio() {
                   <span>
                     {isSubmitting
                       ? t("form.generating")
-                      : `${t("form.generate")} (${t("form.creditsRequired", { count: estimatedCredits })})`}
+                      : `${t(
+                          selectedModelMediaKind === "image"
+                            ? "form.generateImage"
+                            : "form.generate",
+                        )} (${t("form.creditsRequired", { count: estimatedCredits })})`}
                   </span>
                 </div>
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -1481,15 +1721,49 @@ export default function AIVideoStudio() {
                           {activeTask.progress}%
                         </p>
                       </div>
-                    ) : activeResultVideoUrl ? (
-                      <video
-                        key={activeTask?.localId || activeResultVideoUrl}
-                        src={activeResultVideoUrl}
-                        playsInline
-                        controls
-                        autoPlay
-                        className="w-full h-full object-contain"
-                      />
+                    ) : activeResultMediaUrl ? (
+                      activeTaskMediaKind === "image" ? (
+                        <div
+                          className={cn(
+                            "grid h-full w-full gap-2 p-2",
+                            activeImageUrls.length > 1
+                              ? "grid-cols-2"
+                              : "grid-cols-1",
+                          )}
+                        >
+                          {activeImageUrls.map((url, index) => (
+                            <Button
+                              key={`${activeTask?.localId || "active"}-${url}`}
+                              type="button"
+                              onClick={() =>
+                                handleOpenImagePreview(activeImageUrls, index)
+                              }
+                              variant="ghost"
+                              className="group h-full min-h-0 w-full overflow-hidden rounded-xl border border-white/10 bg-black/30 p-0 text-left hover:bg-transparent"
+                            >
+                              <img
+                                src={url}
+                                alt={activeTask?.prompt || "Generated image"}
+                                className="h-full w-full object-contain transition-transform duration-200 group-hover:scale-[1.01]"
+                              />
+                              {activeImageUrls.length > 1 ? (
+                                <div className="pointer-events-none absolute right-2 top-2 rounded-full bg-black/65 px-2 py-1 text-[10px] font-medium text-white">
+                                  {index + 1} / {activeImageUrls.length}
+                                </div>
+                              ) : null}
+                            </Button>
+                          ))}
+                        </div>
+                      ) : (
+                        <video
+                          key={activeTask?.localId || activeResultMediaUrl}
+                          src={activeResultMediaUrl}
+                          playsInline
+                          controls
+                          autoPlay
+                          className="w-full h-full object-contain"
+                        />
+                      )
                     ) : activeTask?.state === "failed" ? (
                       <div className="flex flex-col items-center justify-center h-full w-full gap-3 text-white/75">
                         <X className="w-8 h-8" />
@@ -1499,7 +1773,7 @@ export default function AIVideoStudio() {
                   </div>
                 </div>
 
-                <div className="flex-1 min-h-0 rounded-2xl border border-border/60 bg-background/50 p-3 flex flex-col">
+                <div className="flex-1 min-h-0 flex flex-col">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-semibold text-foreground">
                       {t("form.tasks")}
@@ -1509,7 +1783,7 @@ export default function AIVideoStudio() {
                     </span>
                   </div>
                   <div className="mt-3 flex-1 min-h-0 overflow-y-auto space-y-3 pr-1">
-                    {generationTasks.map((task, index) => (
+                    {visibleGenerationTasks.map((task, index) => (
                       <div
                         key={task.localId}
                         onClick={() => setActiveTaskLocalId(task.localId)}
@@ -1520,20 +1794,67 @@ export default function AIVideoStudio() {
                             : "border-border/60 bg-background/60 hover:bg-muted/40",
                         )}
                       >
-                        <div className="flex items-start gap-3">
-                          <div className="w-36 h-24 rounded-lg overflow-hidden bg-black shrink-0 border border-border/50">
+                        <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-start">
+                          <div className="h-40 w-full rounded-lg overflow-hidden bg-black border border-border/50 sm:h-24 sm:w-36 sm:shrink-0">
                             {task.mediaUrls[0] ? (
-                              <video
-                                src={task.mediaUrls[0]}
-                                className="w-full h-full object-cover"
-                                muted
-                                playsInline
-                                preload="metadata"
-                                onClick={(event) => {
-                                  event.stopPropagation();
-                                  setSelectedVideo(task.mediaUrls[0] || null);
-                                }}
-                              />
+                              resolveGeneratedMediaKind(task.modelId) ===
+                              "image" ? (
+                                <div
+                                  className={cn(
+                                    "relative grid h-full w-full gap-0.5 p-0.5",
+                                    task.mediaUrls.length > 1
+                                      ? "grid-cols-2"
+                                      : "grid-cols-1",
+                                  )}
+                                >
+                                  {task.mediaUrls
+                                    .slice(0, 4)
+                                    .map((url, imageIndex) => (
+                                      <Button
+                                        key={`${task.localId}-${url}`}
+                                        type="button"
+                                        onClick={(event) => {
+                                          event.stopPropagation();
+                                          handleOpenImagePreview(
+                                            task.mediaUrls,
+                                            imageIndex,
+                                          );
+                                        }}
+                                        variant="ghost"
+                                        className="h-full w-full overflow-hidden rounded-[6px] p-0 hover:bg-transparent"
+                                      >
+                                        <img
+                                          src={url}
+                                          alt={
+                                            task.prompt ||
+                                            `Generated image ${imageIndex + 1}`
+                                          }
+                                          className="h-full w-full object-cover"
+                                        />
+                                      </Button>
+                                    ))}
+                                  {task.mediaUrls.length > 1 ? (
+                                    <div className="pointer-events-none absolute right-1.5 top-1.5 rounded-full bg-black/70 px-1.5 py-0.5 text-[10px] font-medium text-white">
+                                      {task.mediaUrls.length}
+                                    </div>
+                                  ) : null}
+                                </div>
+                              ) : (
+                                <video
+                                  src={task.mediaUrls[0]}
+                                  className="w-full h-full object-cover"
+                                  muted
+                                  playsInline
+                                  preload="metadata"
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    setSelectedPreview({
+                                      kind: "video",
+                                      url: task.mediaUrls[0]!,
+                                    });
+                                  }}
+                                />
+                              )
                             ) : (
                               <div className="w-full h-full flex items-center justify-center text-[11px] text-white/70">
                                 {task.state === "failed"
@@ -1544,8 +1865,8 @@ export default function AIVideoStudio() {
                           </div>
 
                           <div className="min-w-0 flex-1">
-                            <div className="flex items-center justify-between gap-3">
-                              <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
+                            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+                              <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-foreground">
                                 <span>
                                   {t("form.task", {
                                     index: generationTasks.length - index,
@@ -1568,7 +1889,7 @@ export default function AIVideoStudio() {
                                   </span>
                                 ) : null}
                               </div>
-                              <div className="text-[11px] text-muted-foreground">
+                              <div className="text-[11px] text-muted-foreground sm:text-right">
                                 {new Date(task.createdAt).toLocaleTimeString()}
                               </div>
                             </div>
@@ -1582,7 +1903,7 @@ export default function AIVideoStudio() {
                               {" · "}
                               {getTaskParamsLine(task)}
                             </div>
-                            <div className="mt-1 text-xs text-foreground/90 break-words max-h-10 overflow-hidden">
+                            <div className="mt-1 text-xs text-foreground/90 break-words line-clamp-2 overflow-hidden">
                               {task.prompt}
                             </div>
                             {task.state !== "succeeded" ? (
@@ -1613,59 +1934,84 @@ export default function AIVideoStudio() {
                             ) : null}
 
                             <div className="mt-2 flex flex-wrap gap-1.5">
-                              <button
+                              <Button
                                 type="button"
                                 onClick={(event) => {
                                   event.stopPropagation();
                                   if (task.mediaUrls[0]) {
-                                    setSelectedVideo(task.mediaUrls[0]);
+                                    if (
+                                      resolveGeneratedMediaKind(
+                                        task.modelId,
+                                      ) === "image"
+                                    ) {
+                                      handleOpenImagePreview(task.mediaUrls, 0);
+                                    } else {
+                                      setSelectedPreview({
+                                        kind: "video",
+                                        url: task.mediaUrls[0],
+                                      });
+                                    }
                                   }
                                 }}
                                 disabled={!task.mediaUrls[0]}
-                                className="inline-flex items-center gap-1 rounded-md border border-border/60 bg-background px-2 py-1 text-[11px] disabled:opacity-50"
+                                variant="link"
+                                size="xs"
+                                className="h-auto gap-1 px-0 text-[11px]"
                               >
-                                <Play className="w-3 h-3" />
-                                {t("form.openVideo")}
-                              </button>
-                              <button
+                                {resolveGeneratedMediaKind(task.modelId) ===
+                                "image" ? (
+                                  <ImageIcon className="w-3 h-3" />
+                                ) : (
+                                  <Play className="w-3 h-3" />
+                                )}
+                                {t("form.open")}
+                              </Button>
+                              <Button
                                 type="button"
                                 onClick={(event) => {
                                   event.stopPropagation();
                                   if (task.mediaUrls[0]) {
-                                    handleDownloadVideo(
+                                    handleDownloadMedia(
                                       task.mediaUrls[0],
                                       task.taskId,
+                                      resolveGeneratedMediaKind(task.modelId),
                                     );
                                   }
                                 }}
                                 disabled={!task.mediaUrls[0]}
-                                className="inline-flex items-center gap-1 rounded-md border border-border/60 bg-background px-2 py-1 text-[11px] disabled:opacity-50"
+                                variant="link"
+                                size="xs"
+                                className="h-auto gap-1 px-0 text-[11px]"
                               >
                                 <Download className="w-3 h-3" />
-                                {t("form.downloadVideo")}
-                              </button>
-                              <button
+                                {t("form.download")}
+                              </Button>
+                              <Button
                                 type="button"
                                 onClick={(event) => {
                                   event.stopPropagation();
                                   void handleCopyPrompt(task.prompt);
                                 }}
-                                className="inline-flex items-center gap-1 rounded-md border border-border/60 bg-background px-2 py-1 text-[11px]"
+                                variant="link"
+                                size="xs"
+                                className="h-auto gap-1 px-0 text-[11px]"
                               >
                                 <Copy className="w-3 h-3" />
-                                {t("form.copyPrompt")}
-                              </button>
-                              <button
+                                {t("form.copy")}
+                              </Button>
+                              <Button
                                 type="button"
                                 onClick={(event) => {
                                   event.stopPropagation();
                                   handleRemixTask(task);
                                 }}
-                                className="inline-flex items-center gap-1 rounded-md border border-border/60 bg-background px-2 py-1 text-[11px]"
+                                variant="link"
+                                size="xs"
+                                className="h-auto gap-1 px-0 text-[11px]"
                               >
                                 <WandSparkles className="w-3 h-3" />
                                 {t("form.remix")}
-                              </button>
+                              </Button>
                             </div>
                           </div>
                         </div>
@@ -1675,47 +2021,36 @@ export default function AIVideoStudio() {
                 </div>
               </div>
             </div>
+          ) : selectedModelMediaKind === "image" ? (
+            <div className="flex h-full min-h-[420px] w-full min-w-0 items-center justify-center rounded-xl border border-border/50 bg-muted/10 p-6">
+              <div className="flex max-w-md flex-col items-center gap-3 text-center">
+                <div className="flex size-14 items-center justify-center rounded-2xl border border-border/60 bg-background/70">
+                  <Images className="size-7 text-muted-foreground" />
+                </div>
+                <div className="text-base font-semibold text-foreground">
+                  {t("form.generateImage")}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {t("form.historyHint")}
+                </div>
+              </div>
+            </div>
           ) : (
             <div className="w-full min-w-0 overflow-hidden">
-              <HeroPromptCarousel onPlayVideo={setSelectedVideo} />
+              <HeroPromptCarousel
+                onPlayVideo={(url) =>
+                  setSelectedPreview({ kind: "video", url })
+                }
+              />
             </div>
           )}
         </div>
       </div>
 
-      {selectedVideo && typeof document !== "undefined"
-        ? createPortal(
-            <div
-              className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-200"
-              onClick={() => setSelectedVideo(null)}
-            >
-              <button
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setSelectedVideo(null);
-                }}
-                className="absolute top-4 right-4 p-2 text-white/50 hover:text-white transition-colors z-10"
-              >
-                <X className="w-8 h-8" />
-              </button>
-
-              <div
-                className="relative w-full max-w-5xl aspect-video rounded-2xl overflow-hidden bg-black shadow-2xl ring-1 ring-white/10"
-                onClick={(event) => event.stopPropagation()}
-              >
-                <video
-                  src={selectedVideo || undefined}
-                  className="w-full h-full object-contain"
-                  controls
-                  autoPlay
-                  playsInline
-                />
-              </div>
-            </div>,
-            document.body,
-          )
-        : null}
+      <AIVideoStudioMediaPreview
+        preview={selectedPreview}
+        onClose={() => setSelectedPreview(null)}
+      />
     </main>
   );
 }

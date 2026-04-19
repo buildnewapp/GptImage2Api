@@ -1,6 +1,6 @@
 {
-  "title": "My Videos",
-  "description": "View your video generation history and results",
+  "title": "My Creations",
+  "description": "View your image and video generation history and results",
   "columns": {
     "model": "Model",
     "status": "Status",
@@ -14,13 +14,13 @@
     "failed": "Failed"
   },
   "credits_refunded": "Refunded",
-  "empty": "No video generations yet. Go to the homepage to create your first video!",
+  "empty": "No image or video generations yet. Go to the homepage to create your first one!",
   "view_video": "View Video",
   "make_public": "Make Public",
   "make_private": "Make Private",
   "visibility_updated": "Visibility updated",
   "visibility_update_failed": "Failed to update visibility",
-  "load_error": "Failed to load video history",
+  "load_error": "Failed to load generation history",
   "pagination": {
     "previous": "Previous",
     "next": "Next",
@@ -34,8 +34,19 @@
   },
   "download": "Download",
   "copy": "Copy",
+  "copy_prompt": "Copy Prompt",
   "delete": "Delete",
-  "delete_confirm": "Delete this video from your list? Admins will still be able to see it.",
-  "delete_success": "Video removed from your list",
-  "delete_failed": "Failed to delete video"
+  "delete_confirm": "Delete this item from your list? Admins will still be able to see it.",
+  "delete_success": "Item removed from your list",
+  "delete_failed": "Failed to delete item",
+  "refresh": "Refresh",
+  "copy_task_id": "Copy Task ID",
+  "task_id_copied": "Task ID copied",
+  "copy_request": "Copy Request",
+  "request_copied": "Request copied",
+  "request_copy_failed": "Failed to copy request",
+  "media": {
+    "text_to_image": "Text to Image",
+    "image_to_image": "Image to Image"
+  }
 }

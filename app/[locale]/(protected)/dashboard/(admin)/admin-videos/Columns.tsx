@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ColumnDef } from "@tanstack/react-table";
-import { Clock, Copy, Play, Video } from "lucide-react";
+import { Clock, Copy, ImageIcon, Play, Video } from "lucide-react";
 import { toast } from "sonner";
 
 export type VideoGenerationRecord = {
@@ -18,6 +18,7 @@ export type VideoGenerationRecord = {
   userId: string;
   userEmail: string | null;
   userName: string | null;
+  category: string;
   model: string;
   selectedModel: string;
   status: string;
@@ -62,19 +63,21 @@ function InputParamsDialog({
   );
 }
 
-function ResultVideoDialog({
+function ResultMediaDialog({
   resultUrl,
+  category,
   triggerText,
-  noVideoText,
+  noPreviewText,
   title,
 }: {
   resultUrl: string | null;
+  category: string;
   triggerText: string;
-  noVideoText: string;
+  noPreviewText: string;
   title: string;
 }) {
   if (!resultUrl) {
-    return <span className="text-xs text-muted-foreground">{noVideoText}</span>;
+    return <span className="text-xs text-muted-foreground">{noPreviewText}</span>;
   }
 
   return (
@@ -85,13 +88,21 @@ function ResultVideoDialog({
           className="group relative h-16 w-28 overflow-hidden rounded-md border border-border bg-muted"
           aria-label={triggerText}
         >
-          <video
-            src={resultUrl}
-            className="h-full w-full object-cover"
-            muted
-            playsInline
-            preload="metadata"
-          />
+          {category === "image" ? (
+            <img
+              src={resultUrl}
+              alt={title}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <video
+              src={resultUrl}
+              className="h-full w-full object-cover"
+              muted
+              playsInline
+              preload="metadata"
+            />
+          )}
           <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition-opacity group-hover:opacity-100">
             <Play className="h-4 w-4 text-white" />
           </span>
@@ -102,13 +113,21 @@ function ResultVideoDialog({
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <div className="overflow-hidden rounded-md bg-black">
-          <video
-            src={resultUrl}
-            className="max-h-[70vh] w-full"
-            controls
-            autoPlay
-            playsInline
-          />
+          {category === "image" ? (
+            <img
+              src={resultUrl}
+              alt={title}
+              className="max-h-[70vh] w-full object-contain"
+            />
+          ) : (
+            <video
+              src={resultUrl}
+              className="max-h-[70vh] w-full"
+              controls
+              autoPlay
+              playsInline
+            />
+          )}
         </div>
       </DialogContent>
     </Dialog>
@@ -140,6 +159,17 @@ export const getColumns = (
     ),
   },
   {
+    accessorKey: "category",
+    header: () => t("columns.category"),
+    cell: ({ row }) => (
+      <Badge variant="outline">
+        {row.original.category === "image"
+          ? t("columns.image")
+          : t("columns.video")}
+      </Badge>
+    ),
+  },
+  {
     accessorKey: "model",
     header: () => t("columns.model"),
     cell: ({ row }) => {
@@ -152,9 +182,9 @@ export const getColumns = (
               className="text-[10px] font-mono text-muted-foreground/70 bg-muted/50 px-1.5 py-0.5 rounded w-fit cursor-pointer hover:bg-muted hover:text-foreground transition-colors flex items-center gap-1 border border-border/50"
               onClick={() => {
                 navigator.clipboard.writeText(taskId);
-                toast.success("Task ID copied");
+                toast.success(t("task_id_copied"));
               }}
-              title="Copy Task ID"
+              title={t("copy_task_id")}
             >
               {taskId}
               <Copy className="w-2.5 h-2.5" />
@@ -180,13 +210,14 @@ export const getColumns = (
   },
   {
     accessorKey: "resultUrl",
-    header: () => t("columns.video"),
+    header: () => t("columns.preview"),
     cell: ({ row }) => (
-      <ResultVideoDialog
+      <ResultMediaDialog
         resultUrl={row.original.resultUrl}
-        triggerText={t("columns.playVideo")}
-        noVideoText={t("columns.noVideo")}
-        title={t("columns.video")}
+        category={row.original.category}
+        triggerText={t("columns.openPreview")}
+        noPreviewText={t("columns.noPreview")}
+        title={t("columns.preview")}
       />
     ),
   },
@@ -200,20 +231,24 @@ export const getColumns = (
           return (
             <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-800">
               <Clock className="w-3 h-3 mr-1" />
-              Pending
+              {t("status.pending")}
             </Badge>
           );
         case "success":
           return (
             <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800">
-              <Video className="w-3 h-3 mr-1" />
-              Success
+              {row.original.category === "image" ? (
+                <ImageIcon className="w-3 h-3 mr-1" />
+              ) : (
+                <Video className="w-3 h-3 mr-1" />
+              )}
+              {t("status.success")}
             </Badge>
           );
         case "failed":
           return (
             <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200 dark:bg-red-950/30 dark:text-red-400 dark:border-red-800">
-              Failed
+              {t("status.failed")}
             </Badge>
           );
         default:

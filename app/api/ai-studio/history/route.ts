@@ -46,6 +46,7 @@ export async function GET(request: Request) {
           provider: record.providerSnapshot,
           status: record.status,
           providerTaskId: record.providerTaskId,
+          isPublic: record.isPublic,
           reservedCredits: record.creditsReserved,
           capturedCredits: record.creditsCaptured,
           refundedCredits: record.creditsRefunded,
@@ -55,6 +56,12 @@ export async function GET(request: Request) {
           createdAt: record.createdAt,
           completedAt: record.completedAt,
           failedAt: record.failedAt,
+          requestPayload:
+            record.requestPayload &&
+            typeof record.requestPayload === "object" &&
+            !Array.isArray(record.requestPayload)
+              ? (record.requestPayload as Record<string, any>)
+              : {},
           statusReason: getAiStudioHistoryStatusReason({
             status: record.status,
             statusReason: record.statusReason,

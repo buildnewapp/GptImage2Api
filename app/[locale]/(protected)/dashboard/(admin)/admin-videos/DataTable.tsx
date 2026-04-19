@@ -81,9 +81,7 @@ export function DataTable({ data }: DataTableProps) {
                 : "bg-card border-border text-muted-foreground hover:text-foreground hover:bg-muted",
             )}
           >
-            {status === "all"
-              ? t("filters.all_statuses")
-              : status.charAt(0).toUpperCase() + status.slice(1)}
+            {status === "all" ? t("filters.all_statuses") : t(`status.${status}`)}
           </button>
         ))}
 
@@ -129,7 +127,7 @@ export function DataTable({ data }: DataTableProps) {
                   colSpan={columns.length}
                   className="text-center py-10 text-muted-foreground"
                 >
-                  No records found
+                  {t("empty")}
                 </TableCell>
               </TableRow>
             ) : (

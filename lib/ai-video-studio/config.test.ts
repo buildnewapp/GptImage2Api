@@ -37,6 +37,26 @@ test("exposes the Sora2 family for AI Video Studio", () => {
     AI_VIDEO_STUDIO_FAMILIES.some((family) => family.key === "runway"),
     true,
   );
+  assert.equal(
+    AI_VIDEO_STUDIO_FAMILIES.some((family) => family.key === "nano-banana"),
+    true,
+  );
+  assert.equal(
+    AI_VIDEO_STUDIO_FAMILIES.some((family) => family.key === "seedream-image"),
+    true,
+  );
+  assert.equal(
+    AI_VIDEO_STUDIO_FAMILIES.some((family) => family.key === "qwen2-image"),
+    true,
+  );
+  assert.equal(
+    AI_VIDEO_STUDIO_FAMILIES.some((family) => family.key === "grok-imagine-image"),
+    true,
+  );
+  assert.equal(
+    AI_VIDEO_STUDIO_FAMILIES.some((family) => family.key === "wan-image"),
+    true,
+  );
 });
 
 test("exposes Grok Imagine as a multi-version family", () => {
@@ -118,6 +138,31 @@ test("exposes broader KIE video families with older supported variants", () => {
     getAiVideoStudioVersions("runway").map((version) => version.key),
     ["runway-generate-ai-video", "runway-generate-aleph-video"],
   );
+  assert.deepEqual(
+    getAiVideoStudioVersions("nano-banana").map((version) => version.key),
+    ["nano-banana-pro", "nano-banana-2"],
+  );
+  assert.deepEqual(
+    getAiVideoStudioVersions("seedream-image").map((version) => version.key),
+    [
+      "seedream-5-lite-text-to-image",
+      "seedream-5-lite-image-to-image",
+      "seedream-4.5-text-to-image",
+      "seedream-4.5-edit",
+    ],
+  );
+  assert.deepEqual(
+    getAiVideoStudioVersions("qwen2-image").map((version) => version.key),
+    ["qwen2-text-to-image", "qwen2-image-edit"],
+  );
+  assert.deepEqual(
+    getAiVideoStudioVersions("grok-imagine-image").map((version) => version.key),
+    ["grok-imagine-text-to-image", "grok-imagine-image-to-image"],
+  );
+  assert.deepEqual(
+    getAiVideoStudioVersions("wan-image").map((version) => version.key),
+    ["wan-2.7-image", "wan-2.7-image-pro"],
+  );
 });
 
 test("keeps visible family descriptions free of provider branding", () => {
@@ -183,12 +228,7 @@ test("exposes Seedance 2.0 as a selectable family with KIE VIP variants", () => 
   assert.equal(family?.selectable, true);
   assert.deepEqual(
     family?.versions.map((version) => version.key),
-    [
-      "seedance-2.0",
-      "seedance-2.0-fast",
-      "seedance-2.0-vip",
-      "seedance-2.0-fast-vip",
-    ],
+    ["seedance-2.0-vip", "seedance-2.0-fast-vip"],
   );
 });
 
@@ -276,13 +316,6 @@ test("resolves version selections to a single ai-studio public model id", () => 
       versionKey: "seedance-2.0-vip",
     }),
     "video:seedance-2-0-vip",
-  );
-  assert.equal(
-    resolveAiVideoStudioModelId({
-      familyKey: "seedance-2.0",
-      versionKey: "seedance-2.0",
-    }),
-    "video:seedance-2-0",
   );
   assert.equal(
     resolveAiVideoStudioModelId({
@@ -389,6 +422,90 @@ test("resolves version selections to a single ai-studio public model id", () => 
     }),
     "video:grok-imagine-text-to-video",
   );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "nano-banana",
+      versionKey: "nano-banana-pro",
+    }),
+    "image:google-nano-banana-pro",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "nano-banana",
+      versionKey: "nano-banana-2",
+    }),
+    "image:google-nano-banana-2",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "seedream-image",
+      versionKey: "seedream-5-lite-text-to-image",
+    }),
+    "image:seedream5-0-lite-text-to-image",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "seedream-image",
+      versionKey: "seedream-5-lite-image-to-image",
+    }),
+    "image:seedream5-0-lite-image-to-image",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "seedream-image",
+      versionKey: "seedream-4.5-text-to-image",
+    }),
+    "image:seedream4-5-text-to-image",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "seedream-image",
+      versionKey: "seedream-4.5-edit",
+    }),
+    "image:seedream4-5-edit",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "qwen2-image",
+      versionKey: "qwen2-text-to-image",
+    }),
+    "image:qwen2-text-to-image",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "qwen2-image",
+      versionKey: "qwen2-image-edit",
+    }),
+    "image:qwen2-image-edit",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "grok-imagine-image",
+      versionKey: "grok-imagine-text-to-image",
+    }),
+    "image:grok-imagine-text-to-image",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "grok-imagine-image",
+      versionKey: "grok-imagine-image-to-image",
+    }),
+    "image:grok-imagine-image-to-image",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "wan-image",
+      versionKey: "wan-2.7-image",
+    }),
+    "image:wan-2-7-image",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "wan-image",
+      versionKey: "wan-2.7-image-pro",
+    }),
+    "image:wan-2-7-image-pro",
+  );
 });
 
 test("returns null for unsupported selections", () => {
@@ -402,20 +519,6 @@ test("returns null for unsupported selections", () => {
 });
 
 test("resolves ai video studio selection metadata from a model id", () => {
-  assert.deepEqual(
-    resolveAiVideoStudioSelectionFromModelId("video:seedance-2-0"),
-    {
-      familyKey: "seedance-2.0",
-      versionKey: "seedance-2.0",
-    },
-  );
-  assert.deepEqual(
-    resolveAiVideoStudioSelectionFromModelId("video:apimart-seedance-2-0"),
-    {
-      familyKey: "seedance-2.0",
-      versionKey: "seedance-2.0",
-    },
-  );
   assert.deepEqual(
     resolveAiVideoStudioSelectionFromModelId("video:seedance-2-0-fast-vip"),
     {
@@ -562,6 +665,48 @@ test("resolves ai video studio selection metadata from a model id", () => {
     {
       familyKey: "veo-3.1",
       versionKey: "veo-3.1-get-4k",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("image:google-nano-banana-pro"),
+    {
+      familyKey: "nano-banana",
+      versionKey: "nano-banana-pro",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("image:seedream5-0-lite-image-to-image"),
+    {
+      familyKey: "seedream-image",
+      versionKey: "seedream-5-lite-image-to-image",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("image:qwen2-text-to-image"),
+    {
+      familyKey: "qwen2-image",
+      versionKey: "qwen2-text-to-image",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("image:grok-imagine-text-to-image"),
+    {
+      familyKey: "grok-imagine-image",
+      versionKey: "grok-imagine-text-to-image",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("image:grok-imagine-image-to-image"),
+    {
+      familyKey: "grok-imagine-image",
+      versionKey: "grok-imagine-image-to-image",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("image:wan-2-7-image-pro"),
+    {
+      familyKey: "wan-image",
+      versionKey: "wan-2.7-image-pro",
     },
   );
 });

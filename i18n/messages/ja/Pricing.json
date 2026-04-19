@@ -1,10 +1,10 @@
 {
   "badge": {
     "label": "価格",
-    "text": "一度の支払い、生涯アップデート"
+    "text": "SdanceAI の Seedance 2.0 料金プラン"
   },
-  "title": "数か月ではなく数日で SaaS を出荷",
-  "description": "実証済みの SaaS スターターテンプレートを使用することで、定型コーディングをスキップし、ユーザーが実際に必要とする機能に集中できます。",
+  "title": "Seedance 2.0の料金",
+  "description": "SdanceAI で提供する Seedance 2.0 のオンライン体験と API の料金プランを確認できます。",
   "annual": "年額",
   "monthly": "月額",
   "onetime": "一回限り",

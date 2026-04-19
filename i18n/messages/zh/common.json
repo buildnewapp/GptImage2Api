@@ -58,7 +58,7 @@
         "icon": "WandSparkles"
       },
       {
-        "name": "我的视频",
+        "name": "我的作品",
         "href": "/dashboard/videos",
         "icon": "Video"
       },
@@ -150,7 +150,7 @@
         "icon": "FileBox"
       },
       {
-        "name": "视频生成记录",
+        "name": "生成记录",
         "href": "/dashboard/admin-videos",
         "icon": "Video"
       },

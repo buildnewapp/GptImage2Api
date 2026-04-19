@@ -178,3 +178,35 @@ Pricing: 5s at 720p costs 12 credits per video (≈ $0.06), while 10s at 720p or
 
 runway/generate-aleph-video
 90.0  / per video
+
+
+
+nano-banana-pro
+Pricing: Nano Banana Pro now just 8 credits (≈ $0.04) for 1K/2K and 14 credits (≈ $0.07) for 4K.
+
+nano-banana-2
+Pricing: Nano Banana 2 API 现已上线：1 K 仅 5 credits ($0.025)、2 K 8 credits ($0.04)、4 K 12 credits ($0.06)，约为官方定价 4 折，最高省 60 %！
+
+seedream/5-lite-text-to-image
+Pricing: 5.5 credits per image (≈ US $0.0275), up to 3 K resolution text-to-image/edit, ~21 % cheaper than official & Fal.ai rates.
+
+seedream/5-lite-image-to-image
+Pricing: 5.5 credits per image (≈ US $0.0275), up to 3 K resolution text-to-image/edit, ~21 % cheaper than official & Fal.ai rates.
+
+seedream/4.5-edit
+Pricing: 6.5 credits per image (=$0.0325), a smooth 19 % below the official price.
+
+seedream/4.5-text-to-image
+Pricing: 6.5 credits per image (≈ $0.032), a smooth 19 % below the official price.
+
+qwen2/text-to-image
+Pricing: Price ≈ $0.03 per image, depending on the image aspect ratio. For detailed comparisons, please refer to the README.
+
+qwen2/image-edit
+Pricing: Price ≈ $0.03 per image, depending on the image aspect ratio. For detailed comparisons, please refer to the README.
+
+wan/2-7-image
+Pricing: WAN-2.7 Image Pro costs 12 credits per image (≈ $0.06), while WAN-2.7 Image costs 4.8 credits per image (≈ $0.024). 
+
+wan/2-7-image-pro
+Pricing: WAN-2.7 Image Pro costs 12 credits per image (≈ $0.06), while WAN-2.7 Image costs 4.8 credits per image (≈ $0.024). 

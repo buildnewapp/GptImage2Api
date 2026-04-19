@@ -6,10 +6,23 @@ export type AiVideoStudioTag = {
   type: string;
 };
 
+export type AiVideoStudioFamilyIconKey =
+  | "bytedance"
+  | "google"
+  | "grok"
+  | "hailuo"
+  | "jimeng"
+  | "kling"
+  | "nano-banana"
+  | "qwen"
+  | "runway"
+  | "sora";
+
 export type AiVideoStudioFamily = {
   key: AiVideoStudioFamilyKey;
   label: string;
   description: string;
+  icon: AiVideoStudioFamilyIconKey;
   tags?: AiVideoStudioTag[];
   selectable?: boolean;
   versions: AiVideoStudioVersion[];
@@ -37,6 +50,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     key: "seedance-2.0",
     label: "Seedance 2.0",
     description: "Seedance 2.0 for prompt-first and reference-driven video generation",
+    icon: "bytedance",
     tags: [
       { text: "HOT", type: "hot" },
     ],
@@ -60,6 +74,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     key: "seedance-1.5",
     label: "Seedance 1.5 Pro",
     description: "Joint audio-video with multilingual lip-sync",
+    icon: "bytedance",
     tags: [
       { text: "With Audio", type: "audio" },
     ],
@@ -77,6 +92,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     key: "seedance-1.0",
     label: "Seedance 1.0",
     description: "Advanced model with smooth, stable motion",
+    icon: "bytedance",
     versions: [
       {
         key: "seedance-1.0-pro-text-to-video",
@@ -114,6 +130,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     key: "sora2",
     label: "Sora 2",
     description: "OpenAI model with realistic physics",
+    icon: "sora",
     tags: [{ text: "With Audio", type: "audio" }],
     versions: [
       {
@@ -164,6 +181,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     key: "veo-3.1",
     label: "Veo 3.1",
     description: "Google's latest video model with native audio",
+    icon: "google",
     tags: [{ text: "With Audio", type: "audio" }],
     versions: [
       {
@@ -208,6 +226,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     key: "grok-imagine",
     label: "Grok Imagine",
     description: "Grok video generation with text, image, extend, and upscale variants",
+    icon: "grok",
     selectable: true,
     versions: [
       {
@@ -240,6 +259,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     key: "kling",
     label: "Kling",
     description: "Kling video models across 2.1, 2.5, 2.6, and 3.0 variants",
+    icon: "kling",
     selectable: true,
     versions: [
       {
@@ -326,6 +346,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     key: "wan",
     label: "Wan",
     description: "Wan video models across 2.2, 2.5, 2.6, and 2.7 workflows",
+    icon: "qwen",
     selectable: true,
     versions: [
       {
@@ -418,6 +439,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     key: "hailuo",
     label: "Hailuo",
     description: "Hailuo text-to-video and image-to-video variants, including 2.3 image models",
+    icon: "hailuo",
     selectable: true,
     versions: [
       {
@@ -462,6 +484,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     key: "runway",
     label: "Runway",
     description: "Runway video generation endpoints",
+    icon: "runway",
     selectable: true,
     versions: [
       {
@@ -475,6 +498,123 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "Runway Generate Aleph Video",
         familyKey: "runway",
         modelId: "video:generate-aleph-video",
+      },
+    ],
+  },
+  {
+    key: "nano-banana",
+    label: "Nano Banana",
+    description: "Nano Banana image generation and edit models",
+    icon: "nano-banana",
+    selectable: true,
+    versions: [
+      {
+        key: "nano-banana-pro",
+        label: "Google - Nano Banana Pro",
+        familyKey: "nano-banana",
+        modelId: "image:google-nano-banana-pro",
+      },
+      {
+        key: "nano-banana-2",
+        label: "Google - Nano Banana 2",
+        familyKey: "nano-banana",
+        modelId: "image:google-nano-banana-2",
+      },
+    ],
+  },
+  {
+    key: "seedream-image",
+    label: "Seedream",
+    description: "Seedream image generation and edit models",
+    icon: "jimeng",
+    selectable: true,
+    versions: [
+      {
+        key: "seedream-5-lite-text-to-image",
+        label: "Seedream5.0 Lite - Text to Image",
+        familyKey: "seedream-image",
+        modelId: "image:seedream5-0-lite-text-to-image",
+      },
+      {
+        key: "seedream-5-lite-image-to-image",
+        label: "Seedream5.0 Lite - Image to Image",
+        familyKey: "seedream-image",
+        modelId: "image:seedream5-0-lite-image-to-image",
+      },
+      {
+        key: "seedream-4.5-text-to-image",
+        label: "Seedream4.5 - Text to Image",
+        familyKey: "seedream-image",
+        modelId: "image:seedream4-5-text-to-image",
+      },
+      {
+        key: "seedream-4.5-edit",
+        label: "Seedream4.5 - Edit",
+        familyKey: "seedream-image",
+        modelId: "image:seedream4-5-edit",
+      },
+    ],
+  },
+  {
+    key: "qwen2-image",
+    label: "Qwen2",
+    description: "Qwen2 text-to-image and image edit models",
+    icon: "qwen",
+    selectable: true,
+    versions: [
+      {
+        key: "qwen2-text-to-image",
+        label: "Qwen2 - Text To Image",
+        familyKey: "qwen2-image",
+        modelId: "image:qwen2-text-to-image",
+      },
+      {
+        key: "qwen2-image-edit",
+        label: "Qwen2 - Image Edit",
+        familyKey: "qwen2-image",
+        modelId: "image:qwen2-image-edit",
+      },
+    ],
+  },
+  {
+    key: "grok-imagine-image",
+    label: "Grok Imagine",
+    description: "Grok Imagine text-to-image and image-to-image models",
+    icon: "grok",
+    selectable: true,
+    versions: [
+      {
+        key: "grok-imagine-text-to-image",
+        label: "Grok Imagine - Text to Image",
+        familyKey: "grok-imagine-image",
+        modelId: "image:grok-imagine-text-to-image",
+      },
+      {
+        key: "grok-imagine-image-to-image",
+        label: "Grok Imagine - image to image",
+        familyKey: "grok-imagine-image",
+        modelId: "image:grok-imagine-image-to-image",
+      },
+    ],
+  },
+  {
+    key: "wan-image",
+    label: "Wan Image",
+    description: "Wan 2.7 image generation and edit models",
+    icon: "qwen",
+    selectable: true,
+    versions: [
+      {
+        key: "wan-2.7-image",
+        label: "Wan 2.7 Image",
+        familyKey: "wan-image",
+        modelId: "image:wan-2-7-image",
+      },
+      {
+        key: "wan-2.7-image-pro",
+        label: "Wan 2.7 Image Pro",
+        familyKey: "wan-image",
+        modelId: "image:wan-2-7-image-pro",
       },
     ],
   },

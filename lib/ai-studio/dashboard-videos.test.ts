@@ -61,6 +61,7 @@ test("extracts legacy video dashboard fields from ai studio request payloads", (
 test("maps ai studio user history records into the legacy card view shape", () => {
   const record = mapAiStudioUserRecordToLegacyVideoHistoryRecord({
     id: "gen_1",
+    category: "video",
     catalogModelId: "video:bytedance-v1-pro-image-to-video",
     title: "Bytedance - V1 Pro Image to Video",
     provider: "Bytedance",
@@ -87,11 +88,12 @@ test("maps ai studio user history records into the legacy card view shape", () =
     id: "gen_1",
     taskId: "task_1",
     providerTaskId: "task_1",
+    category: "video",
     catalogModelId: "video:bytedance-v1-pro-image-to-video",
     model: "bytedance/v1-pro-image-to-video",
     modelLabel: "Bytedance - V1 Pro Image to Video",
-    modelKey: "seedance-1.5",
-    versionKey: "seedance-1.5",
+    modelKey: "seedance-1.0",
+    versionKey: "seedance-1.0-pro-image-to-video",
     status: "success",
     creditsUsed: 28,
     creditsRequired: 28,
@@ -101,6 +103,7 @@ test("maps ai studio user history records into the legacy card view shape", () =
     prompt: "Animate this still",
     uploadedImage: "https://example.com/reference.png",
     resultUrl: "https://example.com/video.mp4",
+    resultUrls: ["https://example.com/video.mp4"],
     createdAt: new Date("2026-03-09T00:00:00.000Z").toISOString(),
     mode: "image-to-video",
     requestPayload: {
@@ -121,12 +124,77 @@ test("maps ai studio user history records into the legacy card view shape", () =
   });
 });
 
+test("maps ai studio image history records into the shared dashboard card shape", () => {
+  const record = mapAiStudioUserRecordToLegacyVideoHistoryRecord({
+    id: "gen_image_1",
+    category: "image",
+    catalogModelId: "image:gpt-image-1",
+    title: "GPT Image 1",
+    provider: "OpenAI",
+    status: "succeeded",
+    providerTaskId: null,
+    isPublic: false,
+    reservedCredits: 10,
+    capturedCredits: 10,
+    refundedCredits: 0,
+    resultUrls: [
+      "https://example.com/image-1.png",
+      "https://example.com/image-2.png",
+      "https://example.com/image-3.png",
+    ],
+    createdAt: new Date("2026-03-10T00:00:00.000Z").toISOString(),
+    requestPayload: {
+      model: "gpt-image-1",
+      input: {
+        prompt: "A cinematic portrait of a robot",
+        aspect_ratio: "1:1",
+      },
+    },
+  });
+
+  assert.deepEqual(record, {
+    id: "gen_image_1",
+    taskId: "gen_image_1",
+    providerTaskId: null,
+    category: "image",
+    catalogModelId: "image:gpt-image-1",
+    model: "gpt-image-1",
+    modelLabel: "GPT Image 1",
+    status: "success",
+    creditsUsed: 10,
+    creditsRequired: 10,
+    creditsRefunded: false,
+    isPublic: false,
+    visibilityAvailable: true,
+    prompt: "A cinematic portrait of a robot",
+    resultUrl: "https://example.com/image-1.png",
+    resultUrls: [
+      "https://example.com/image-1.png",
+      "https://example.com/image-2.png",
+      "https://example.com/image-3.png",
+    ],
+    createdAt: new Date("2026-03-10T00:00:00.000Z").toISOString(),
+    requestPayload: {
+      model: "gpt-image-1",
+      input: {
+        prompt: "A cinematic portrait of a robot",
+        aspect_ratio: "1:1",
+      },
+    },
+    providerValues: {
+      prompt: "A cinematic portrait of a robot",
+      aspectRatio: "1:1",
+    },
+  });
+});
+
 test("maps ai studio admin records into the legacy admin table shape", () => {
   const record = mapAiStudioAdminRecordToLegacyAdminVideoRecord({
     id: "gen_2",
     userId: "user_1",
     userEmail: "user@example.com",
     userName: "Video User",
+    category: "image",
     catalogModelId: "video:sora2-pro-text-to-video",
     title: "Sora 2 Pro",
     providerTaskId: "task_2",
@@ -149,6 +217,7 @@ test("maps ai studio admin records into the legacy admin table shape", () => {
     userId: "user_1",
     userEmail: "user@example.com",
     userName: "Video User",
+    category: "image",
     model: "sora-2-pro-text-to-video",
     selectedModel: "Sora 2 Pro",
     status: "failed",
