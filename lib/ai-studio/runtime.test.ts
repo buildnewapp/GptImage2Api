@@ -103,6 +103,26 @@ test("applies explicit duration metadata from structured pricing rows", () => {
   assert.equal(payload.input?.n_frames, "10");
 });
 
+test("does not crash when selected pricing metadata has no model description", () => {
+  const payload = applyPricingRowToPayload(
+    {
+      model: "video:seedance-2-0-vip",
+      duration: 5,
+      input: {
+        n_frames: "5",
+      },
+    },
+    {
+      runtimeModel: "video:seedance-2-0-vip",
+      duration: null,
+    } as any,
+  );
+
+  assert.equal(payload.model, "video:seedance-2-0-vip");
+  assert.equal(payload.duration, 5);
+  assert.equal(payload.input?.n_frames, "5");
+});
+
 test("rounds official decimal credit prices into billable whole credits", () => {
   assert.equal(toBillableCredits("35"), 35);
   assert.equal(toBillableCredits("87.5"), 88);

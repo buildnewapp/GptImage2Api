@@ -21,8 +21,10 @@ export function applyPricingRowToPayload(
   payload: Record<string, any>,
   pricingRow: Pick<
     AiStudioPublicPricingRow,
-    "runtimeModel" | "modelDescription" | "duration"
-  >,
+    "runtimeModel" | "duration"
+  > & {
+    modelDescription?: string | null;
+  },
 ) {
   const next = structuredClone(payload);
 
@@ -34,7 +36,10 @@ export function applyPricingRowToPayload(
     typeof pricingRow.duration === "number" && Number.isFinite(pricingRow.duration)
       ? Math.round(pricingRow.duration)
       : (() => {
-          const durationMatch = pricingRow.modelDescription.match(/(\d+(?:\.\d+)?)s/i);
+          const durationMatch =
+            typeof pricingRow.modelDescription === "string"
+              ? pricingRow.modelDescription.match(/(\d+(?:\.\d+)?)s/i)
+              : null;
           return durationMatch?.[1] ? Math.round(Number.parseFloat(durationMatch[1])) : null;
         })();
 
