@@ -207,6 +207,14 @@ function buildDynamicSeedanceRows(
     {
       payload: {
         duration: 1,
+        resolution: "1080p",
+      },
+      spec: "1080p",
+      type: "text/image-to-video",
+    },
+    {
+      payload: {
+        duration: 1,
         resolution: "480p",
         input: {
           video_duration: 1,
@@ -226,6 +234,18 @@ function buildDynamicSeedanceRows(
         },
       },
       spec: "720p",
+      type: "video-to-video",
+    },
+    {
+      payload: {
+        duration: 1,
+        resolution: "1080p",
+        input: {
+          video_duration: 1,
+          video_url: "https://example.com/input.mp4",
+        },
+      },
+      spec: "1080p",
       type: "video-to-video",
     },
   ] as const;
