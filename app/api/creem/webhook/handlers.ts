@@ -18,9 +18,6 @@ import {
   grantConfiguredFirstOrderReward,
 } from '@/lib/referrals/first-order';
 import {
-  revokeOneTimeCredits,
-  revokeRemainingSubscriptionCreditsOnEnd,
-  revokeSubscriptionCredits,
   upgradeOneTimeCredits,
   upgradeSubscriptionCredits,
 } from '@/lib/payments/credit-manager';
@@ -232,32 +229,13 @@ export async function handleCreemSubscriptionUpdated(
   payload: CreemSubscriptionUpdateEvent | CreemSubscriptionActiveEvent | CreemSubscriptionExpiredEvent | CreemSubscriptionCanceledEvent,
   isDeleted: boolean = false
 ) {
-  const db = getDb();
-
   const subscription = payload.object
   const subscriptionId = subscription?.id;
-  const customerId = subscription?.customer?.id;
 
   try {
     await syncCreemSubscriptionData(subscriptionId, subscription?.metadata);
     if (isDeleted) {
-      // --- [custom] Revoke the user's benefits---
-      let userId = subscription.metadata?.userId as string;
-      if (!userId) {
-        try {
-          const storeSubscription = await db
-            .select({ userId: subscriptionsSchema.userId })
-            .from(subscriptionsSchema)
-            .where(eq(subscriptionsSchema.subscriptionId, subscriptionId))
-            .limit(1);
-          userId = storeSubscription[0]?.userId;
-        } catch (err) {
-          console.error(`Error retrieving user for subscription ${subscription.id}:`, err);
-        }
-      }
-
-      revokeRemainingSubscriptionCreditsOnEnd('creem', subscriptionId, userId, subscription.metadata);
-      // --- End: [custom] Revoke the user's benefits ---
+      console.log(`[Creem webhook] Subscription ${subscriptionId} deleted. Order/subscription state synced without credit changes.`);
     }
   } catch (error) {
     console.error(
@@ -330,17 +308,7 @@ export async function handleCreemPaymentRefunded(
     );
   }
 
-  if (originalOrder.subscriptionId) {
-    // [custom] Revoke the user's benefits
-    await revokeSubscriptionCredits(originalOrder);
-    // --- End: [custom] Revoke the user's benefits ---
-  } else {
-    // [custom] Revoke the user's benefits
-    await revokeOneTimeCredits(
-      refundAmountCents,
-      originalOrder,
-      refundOrder.id
-    );
-    // --- End: [custom] Revoke the user's benefits ---
-  }
+  console.log(
+    `[Creem webhook] Refund ${refundId} recorded for original order ${originalOrder.id} without credit changes`
+  );
 }

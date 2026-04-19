@@ -13,6 +13,9 @@ export default getRequestConfig(async ({ requestLocale }) => {
   return {
     locale,
     messages: {
+      // common
+      ...common,
+
       Landing: (await import(`./messages/${locale}/Landing.json`)).default,
       Seedance15: (await import(`./messages/${locale}/Seedance15.json`)).default,
       Pricing: (await import(`./messages/${locale}/Pricing.json`)).default,
@@ -74,9 +77,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
       AdminVideoGenerations: (
         await import(`./messages/${locale}/Dashboard/Admin/VideoGenerations.json`)
       ).default,
-
-      // common
-      ...common,
     },
   };
 });

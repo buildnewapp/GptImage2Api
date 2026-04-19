@@ -8,6 +8,18 @@
   "annual": "Annual",
   "monthly": "Monthly",
   "onetime": "One-Time",
-  "saveTip": "Save 20%"
+  "saveTip": "Save 20%",
+  "manualCoupon": "I have a different coupon code",
+  "errors": {
+    "loginRequired": "You must be logged in to purchase a plan.",
+    "httpStatus": "Request failed with status {status}.",
+    "nowpaymentsOrderFailed": "Failed to create NOWPayments order.",
+    "checkoutSessionFailed": "Failed to create checkout session.",
+    "checkoutUrlMissing": "Checkout URL not received.",
+    "unexpected": "An unexpected error occurred.",
+    "stripePriceMissing": "Stripe price ID is missing for this plan.",
+    "creemProductMissing": "Creem product ID is missing for this plan.",
+    "paypalPlanMissing": "PayPal plan ID is missing for this plan.",
+    "recurringHigherTierRequired": "You already have an equal or higher subscription. Repeat purchases must be for a higher-priced plan."
+  }
 }
-

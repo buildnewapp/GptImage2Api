@@ -15,6 +15,7 @@ import {
 } from '@/lib/db/schema';
 import { getErrorMessage } from '@/lib/error-utils';
 import { isRecurringPaymentType } from '@/lib/payments/provider-utils';
+import { assertRecurringPurchaseIsHigherTier } from '@/lib/payments/subscription-purchase';
 import { stripe } from '@/lib/stripe';
 import { getURL } from '@/lib/url';
 import { eq, InferInsertModel } from 'drizzle-orm';
@@ -120,6 +121,10 @@ export async function createStripeCheckoutSession(params: {
   const mode: Stripe.Checkout.SessionCreateParams.Mode = isSubscription
     ? 'subscription'
     : 'payment';
+
+  if (isSubscription) {
+    await assertRecurringPurchaseIsHigherTier(userId, plan.id);
+  }
 
   const sessionParams: Stripe.Checkout.SessionCreateParams = {
     customer: customerId,
@@ -680,4 +685,3 @@ export async function sendFraudRefundUserEmail({
     console.error(`Failed to send fraud refund user email for charge ${charge.id}:`, emailError);
   }
 }
-

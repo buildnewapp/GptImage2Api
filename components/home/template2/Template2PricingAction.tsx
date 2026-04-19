@@ -3,8 +3,13 @@
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 import type { HomeTemplate2CheckoutPlan } from "@/components/home/template2/types";
+
+const RECURRING_PURCHASE_REQUIRES_HIGHER_TIER_ERROR =
+  "RECURRING_PURCHASE_REQUIRES_HIGHER_TIER";
 
 interface Template2PricingActionProps {
   className: string;
@@ -20,6 +25,7 @@ export default function Template2PricingAction({
   plan,
 }: Template2PricingActionProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const t = useTranslations("Pricing");
 
   const provider = plan.provider ?? "stripe";
   const isCreem = provider === "creem";
@@ -33,18 +39,30 @@ export default function Template2PricingAction({
       : null;
   const allowManualCoupon = Boolean(defaultCouponCode) && plan.enableManualInputCoupon;
 
+  const getCheckoutErrorMessage = (error: unknown) => {
+    if (!(error instanceof Error)) {
+      return t("errors.unexpected");
+    }
+
+    if (error.message === RECURRING_PURCHASE_REQUIRES_HIGHER_TIER_ERROR) {
+      return t("errors.recurringHigherTierRequired");
+    }
+
+    return error.message;
+  };
+
   const handleCheckout = async (applyCoupon = true) => {
     if (isStripe && !plan.stripePriceId) {
-      console.error("Stripe price ID is missing for this plan.");
+      toast.error(t("errors.stripePriceMissing"));
       return;
     }
 
     if (isCreem && !plan.creemProductId) {
-      console.error("Creem product ID is missing for this plan.");
+      toast.error(t("errors.creemProductMissing"));
       return;
     }
     if (isPayPal && !plan.planId) {
-      console.error("Plan ID is missing for this PayPal plan.");
+      toast.error(t("errors.paypalPlanMissing"));
       return;
     }
 
@@ -88,24 +106,28 @@ export default function Template2PricingAction({
 
       if (!response.ok) {
         if (response.status === 401) {
+          toast.error(t("errors.loginRequired"));
           window.location.assign("/login");
           return;
         }
 
-        throw new Error(result.error || `HTTP error! status: ${response.status}`);
+        throw new Error(
+          result.error || t("errors.httpStatus", { status: response.status }),
+        );
       }
 
       if (!result.success) {
-        throw new Error(result.error || "Failed to create checkout session.");
+        throw new Error(result.error || t("errors.checkoutSessionFailed"));
       }
 
       if (!result.data?.url) {
-        throw new Error("Checkout URL not received.");
+        throw new Error(t("errors.checkoutUrlMissing"));
       }
 
       window.location.assign(result.data.url);
     } catch (error) {
       console.error("Checkout Error:", error);
+      toast.error(getCheckoutErrorMessage(error));
     } finally {
       setIsLoading(false);
     }
@@ -146,7 +168,7 @@ export default function Template2PricingAction({
             onClick={() => void handleCheckout(false)}
             type="button"
           >
-            I have a different coupon code
+            {t("manualCoupon")}
           </button>
         </div>
       ) : null}

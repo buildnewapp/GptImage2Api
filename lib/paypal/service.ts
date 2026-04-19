@@ -24,7 +24,6 @@ import {
   grantConfiguredFirstOrderReward,
 } from "@/lib/referrals/first-order";
 import {
-  revokeRemainingSubscriptionCreditsOnEnd,
   upgradeOneTimeCredits,
   upgradeSubscriptionCredits,
 } from "@/lib/payments/credit-manager";
@@ -323,11 +322,8 @@ export async function syncPayPalSubscriptionData(
   });
 
   if (isEndedPayPalSubscription(subscription.status)) {
-    await revokeRemainingSubscriptionCreditsOnEnd(
-      "paypal",
-      subscription.id,
-      userId,
-      subscriptionData.metadata,
+    console.log(
+      `[PayPal] Subscription ${subscription.id} ended. Order/subscription state synced without credit changes.`,
     );
   }
 }

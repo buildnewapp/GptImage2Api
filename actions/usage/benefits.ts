@@ -4,6 +4,10 @@ import { actionResponse, ActionResult } from '@/lib/action-response';
 import { getSession } from '@/lib/auth/server';
 import { getDb } from '@/lib/db';
 import { creditLogs as creditLogsSchema, subscriptions as subscriptionsSchema, usage as usageSchema } from '@/lib/db/schema';
+import {
+  applyDueYearlyAllocations,
+  getNextYearlyCreditDate,
+} from '@/lib/payments/subscription-credits';
 import { desc, eq } from 'drizzle-orm';
 
 export interface UserBenefits {
@@ -42,14 +46,13 @@ const defaultUserBenefits: UserBenefits = {
 function createUserBenefitsFromData(
   usageData: UsageData | null,
   subscription: SubscriptionData | null,
-  currentYearlyDetails: any | null = null
 ): UserBenefits {
   const subCredits = (usageData?.subscriptionCreditsBalance ?? 0) as number;
   const oneTimeCredits = (usageData?.oneTimeCreditsBalance ?? 0) as number;
   const totalCredits = subCredits + oneTimeCredits;
 
   const currentPeriodEnd = subscription?.currentPeriodEnd ?? null;
-  const nextCreditDate = currentYearlyDetails?.nextCreditDate ?? null;
+  const nextCreditDate = getNextYearlyCreditDate(usageData?.balanceJsonb) ?? null;
 
   let finalStatus = subscription?.status ?? null;
   if (finalStatus && subscription?.currentPeriodEnd && new Date(subscription.currentPeriodEnd) < new Date()) {
@@ -145,12 +148,10 @@ export async function getUserBenefits(userId: string): Promise<UserBenefits> {
       finalUsageData = await processYearlySubscriptionCatchUp(userId) ?? finalUsageData;
 
       const subscription = await fetchSubscriptionData(userId);
-      const currentYearlyDetails = (finalUsageData.balanceJsonb as any)?.yearlyAllocationDetails;
 
       return createUserBenefitsFromData(
         finalUsageData,
         subscription,
-        currentYearlyDetails
       );
     } else {
       const subscription = await fetchSubscriptionData(userId);
@@ -213,51 +214,20 @@ async function processYearlySubscriptionCatchUp(
       }
 
       finalUsageData = usage as UsageData;
-      const yearlyDetails = (usage.balanceJsonb as any)?.yearlyAllocationDetails;
+      const allocationResult = applyDueYearlyAllocations({
+        balanceJsonb: usage.balanceJsonb,
+        currentBalance: usage.subscriptionCreditsBalance,
+      });
 
-      if (
-        !yearlyDetails ||
-        (yearlyDetails.remainingMonths || 0) <= 0 ||
-        !yearlyDetails.nextCreditDate ||
-        new Date() < new Date(yearlyDetails.nextCreditDate)
-      ) {
+      if (allocationResult.grants.length === 0) {
         return false;
       }
-
-      const yearMonthToAllocate = new Date(yearlyDetails.nextCreditDate)
-        .toISOString()
-        .slice(0, 7);
-
-      if (yearlyDetails.lastAllocatedMonth === yearMonthToAllocate) {
-        return false;
-      }
-
-      const allocationDate = new Date(yearlyDetails.nextCreditDate);
-      const creditsToAllocate = yearlyDetails.monthlyCredits;
-
-      const newRemainingMonths = yearlyDetails.remainingMonths - 1;
-      const nextCreditDate = new Date(yearlyDetails.nextCreditDate);
-      nextCreditDate.setMonth(nextCreditDate.getMonth() + 1);
-
-      const newYearlyDetails = {
-        ...yearlyDetails,
-        remainingMonths: newRemainingMonths,
-        nextCreditDate: nextCreditDate.toISOString(),
-        lastAllocatedMonth: yearMonthToAllocate,
-      };
-
-      const newBalanceJsonb = {
-        ...(usage.balanceJsonb as any),
-        yearlyAllocationDetails: newYearlyDetails,
-      };
-
-      const newSubscriptionBalance = creditsToAllocate;
 
       const updatedUsage = await tx
         .update(usageSchema)
         .set({
-          subscriptionCreditsBalance: newSubscriptionBalance,
-          balanceJsonb: newBalanceJsonb,
+          subscriptionCreditsBalance: allocationResult.nextBalance,
+          balanceJsonb: allocationResult.nextBalanceJsonb,
         })
         .where(eq(usageSchema.userId, userId))
         .returning({
@@ -267,22 +237,25 @@ async function processYearlySubscriptionCatchUp(
 
       const balances = updatedUsage[0];
       if (balances) {
-        const relatedOrderId: string | null =
-          yearlyDetails.relatedOrderId || null;
+        let runningSubscriptionSnapshot =
+          balances.subscriptionCreditsSnapshot - allocationResult.grants.reduce((sum, grant) => sum + grant.amount, 0);
 
-        await tx.insert(creditLogsSchema).values({
-          userId: userId,
-          amount: creditsToAllocate,
-          oneTimeCreditsSnapshot: balances.oneTimeCreditsSnapshot,
-          subscriptionCreditsSnapshot: balances.subscriptionCreditsSnapshot,
-          type: 'subscription_grant',
-          notes: `Yearly subscription monthly credits allocated`,
-          relatedOrderId: relatedOrderId,
-          createdAt: allocationDate, // use the date of the month to allocate the credits
-        });
+        for (const grant of allocationResult.grants) {
+          runningSubscriptionSnapshot += grant.amount;
+          await tx.insert(creditLogsSchema).values({
+            userId: userId,
+            amount: grant.amount,
+            oneTimeCreditsSnapshot: balances.oneTimeCreditsSnapshot,
+            subscriptionCreditsSnapshot: runningSubscriptionSnapshot,
+            type: 'subscription_grant',
+            notes: `Yearly subscription monthly credits allocated`,
+            relatedOrderId: grant.relatedOrderId,
+            createdAt: grant.allocationDate,
+          });
+        }
       }
 
-      return newRemainingMonths > 0;
+      return true;
     });
   }
 

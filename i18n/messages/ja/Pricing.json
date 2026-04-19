@@ -8,6 +8,18 @@
   "annual": "年額",
   "monthly": "月額",
   "onetime": "一回限り",
-  "saveTip": "20% 節約"
+  "saveTip": "20% 節約",
+  "manualCoupon": "別のクーポンコードを持っています",
+  "errors": {
+    "loginRequired": "プランを購入するにはログインが必要です。",
+    "httpStatus": "リクエストに失敗しました。ステータス: {status}",
+    "nowpaymentsOrderFailed": "NOWPayments 注文の作成に失敗しました。",
+    "checkoutSessionFailed": "チェックアウトセッションの作成に失敗しました。",
+    "checkoutUrlMissing": "チェックアウト URL を取得できませんでした。",
+    "unexpected": "予期しないエラーが発生しました。",
+    "stripePriceMissing": "このプランには Stripe の価格 ID がありません。",
+    "creemProductMissing": "このプランには Creem の商品 ID がありません。",
+    "paypalPlanMissing": "このプランには PayPal のプラン ID がありません。",
+    "recurringHigherTierRequired": "すでに同等または上位のサブスクリプションがあります。再購入できるのは、より高額なプランのみです。"
+  }
 }
-

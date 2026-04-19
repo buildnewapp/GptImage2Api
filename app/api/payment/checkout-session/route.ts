@@ -10,6 +10,7 @@ import { getErrorMessage } from '@/lib/error-utils';
 import { encodePayPalCustomId, getPayPalApprovalUrl } from '@/lib/paypal';
 import { PayPalClient } from '@/lib/paypal/client';
 import { isRecurringPaymentType } from '@/lib/payments/provider-utils';
+import { assertRecurringPurchaseIsHigherTier } from '@/lib/payments/subscription-purchase';
 import { getURL } from '@/lib/url';
 import { eq } from 'drizzle-orm';
 import { siteConfig } from '@/config/site';
@@ -81,6 +82,10 @@ export async function POST(req: Request) {
         return apiResponse.notFound('Plan not found for Creem product ID');
       }
 
+      if (isRecurringPaymentType(plan.paymentType)) {
+        await assertRecurringPurchaseIsHigherTier(user.id, plan.id);
+      }
+
       const sessionParams = {
         product_id: creemProductId,
         units: 1,
@@ -136,6 +141,10 @@ export async function POST(req: Request) {
       console.log('paypal plan', plan)
       if (!plan || plan.provider !== 'paypal') {
         return apiResponse.notFound('Plan not found for PayPal');
+      }
+
+      if (isRecurringPaymentType(plan.paymentType)) {
+        await assertRecurringPurchaseIsHigherTier(user.id, plan.id);
       }
 
       const localeHeader = req.headers.get('accept-language') ?? 'en-US';

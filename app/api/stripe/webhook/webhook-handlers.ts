@@ -15,9 +15,6 @@ import {
   grantConfiguredFirstOrderReward,
 } from '@/lib/referrals/first-order';
 import {
-  revokeOneTimeCredits,
-  revokeRemainingSubscriptionCreditsOnEnd,
-  revokeSubscriptionCredits,
   upgradeOneTimeCredits,
   upgradeSubscriptionCredits,
 } from '@/lib/payments/credit-manager';
@@ -285,8 +282,6 @@ export async function handleInvoicePaid(invoice: Stripe.Invoice) {
  * @param subscription The Stripe Subscription object.
  */
 export async function handleSubscriptionUpdate(subscription: Stripe.Subscription, isDeleted: boolean = false) {
-  const db = getDb();
-
   const customerId = typeof subscription.customer === 'string' ? subscription.customer : null;
 
   if (!customerId) {
@@ -298,22 +293,7 @@ export async function handleSubscriptionUpdate(subscription: Stripe.Subscription
     await syncSubscriptionData(subscription.id, customerId, subscription.metadata);
 
     if (isDeleted) {
-      // --- [custom] Revoke the user's benefits---
-      let userId = subscription.metadata?.userId as string;
-      if (!userId) {
-        try {
-          const userData = await db
-            .select({ id: userSchema.id })
-            .from(userSchema)
-            .where(eq(userSchema.stripeCustomerId, customerId))
-            .limit(1);
-          userId = userData[0]?.id;
-        } catch (err) {
-          console.error(`Error retrieving customer ${customerId} for subscription ${subscription.id}:`, err);
-        }
-      }
-      revokeRemainingSubscriptionCreditsOnEnd('stripe', subscription.id, userId, subscription.metadata);
-      // --- End: [custom] Revoke the user's benefits ---
+      console.log(`Subscription ${subscription.id} deleted. Order/subscription state synced without credit changes.`);
     }
   } catch (error) {
     console.error(`Error syncing subscription ${subscription.id} during update event:`, error);
@@ -460,14 +440,7 @@ export async function handleRefund(charge: Stripe.Charge) {
     throw new Error(`Error inserting refund order for refund ${chargeId}`);
   }
 
-  // --- [custom] Revoke the user's benefits  ---
-  if (originalOrder.subscriptionId) {
-    revokeSubscriptionCredits(originalOrder);
-  } else {
-    const refundAmountCents = Math.abs(charge.amount_refunded);
-    revokeOneTimeCredits(refundAmountCents, originalOrder, refundOrder.id);
-  }
-  // --- End: [custom] Revoke the user's benefits ---
+  console.log(`Refund ${chargeId} recorded for original order ${originalOrder.id} without credit changes.`);
 }
 
 /**

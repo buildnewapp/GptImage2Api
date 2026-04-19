@@ -88,6 +88,9 @@ create app → name + Merchant + Sandbox Account → get Client ID + Secret key 
 pnpm db:sync-paypal-products
 查看创建成功：https://www.paypal.com/billing/plans
 查看 plan id 回写
+4 测试账户
+卖家: sb-6kvqf45985282@business.example.com 、{fS]JJ3@   
+买家：sb-bpqfs45936111@personal.example.com、 Ri&W3dVD
 
 ## 部署 cf
 

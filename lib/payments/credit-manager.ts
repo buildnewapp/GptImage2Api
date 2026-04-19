@@ -26,6 +26,11 @@ import {
   usage as usageSchema,
 } from '@/lib/db/schema';
 import { isMonthlyInterval, isYearlyInterval } from '@/lib/payments/provider-utils';
+import {
+  addSubscriptionCreditsBalance,
+  buildYearlyAllocationEntry,
+  mergeYearlyAllocation,
+} from '@/lib/payments/subscription-credits';
 import type {
   Order,
 } from '@/lib/payments/types';
@@ -296,31 +301,38 @@ export async function upgradeSubscriptionCredits(userId: string, planId: string,
         attempts++;
         try {
           await db.transaction(async (tx) => {
-            const monthlyDetails = {
-              monthlyAllocationDetails: {
-                monthlyCredits: creditsToGrant,
-                relatedOrderId: orderId,
-              }
-            };
+            const existingUsage = await tx
+              .select()
+              .from(usageSchema)
+              .where(eq(usageSchema.userId, userId))
+              .for('update');
+            const usage = existingUsage[0];
+            const nextSubscriptionBalance = addSubscriptionCreditsBalance(
+              usage?.subscriptionCreditsBalance,
+              creditsToGrant,
+            );
 
-            const updatedUsage = await tx
-              .insert(usageSchema)
-              .values({
-                userId: userId,
-                subscriptionCreditsBalance: creditsToGrant,
-                balanceJsonb: monthlyDetails,
-              })
-              .onConflictDoUpdate({
-                target: usageSchema.userId,
-                set: {
-                  subscriptionCreditsBalance: creditsToGrant,
-                  balanceJsonb: sql`coalesce(${usageSchema.balanceJsonb}, '{}'::jsonb) - 'monthlyAllocationDetails' || ${JSON.stringify(monthlyDetails)}::jsonb`,
-                },
-              })
-              .returning({
-                oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
-                subscriptionCreditsSnapshot: usageSchema.subscriptionCreditsBalance,
-              });
+            const updatedUsage = usage
+              ? await tx
+                  .update(usageSchema)
+                  .set({
+                    subscriptionCreditsBalance: nextSubscriptionBalance,
+                  })
+                  .where(eq(usageSchema.userId, userId))
+                  .returning({
+                    oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
+                    subscriptionCreditsSnapshot: usageSchema.subscriptionCreditsBalance,
+                  })
+              : await tx
+                  .insert(usageSchema)
+                  .values({
+                    userId,
+                    subscriptionCreditsBalance: nextSubscriptionBalance,
+                  })
+                  .returning({
+                    oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
+                    subscriptionCreditsSnapshot: usageSchema.subscriptionCreditsBalance,
+                  });
 
             const balances = updatedUsage[0];
             if (!balances) { throw new Error('Failed to update usage for monthly subscription'); }
@@ -363,37 +375,47 @@ export async function upgradeSubscriptionCredits(userId: string, planId: string,
         attempts++;
         try {
           await db.transaction(async (tx) => {
-            const startDate = new Date(currentPeriodStart); // currentPeriodStart is a 13 digits timestamp
-            const nextCreditDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate());
+            const existingUsage = await tx
+              .select()
+              .from(usageSchema)
+              .where(eq(usageSchema.userId, userId))
+              .for('update');
+            const usage = existingUsage[0];
+            const yearlyEntry = buildYearlyAllocationEntry({
+              currentPeriodStart,
+              monthlyCredits: benefits.monthlyCredits,
+              orderId,
+              totalMonths: benefits.totalMonths,
+            });
+            const nextSubscriptionBalance = addSubscriptionCreditsBalance(
+              usage?.subscriptionCreditsBalance,
+              benefits.monthlyCredits,
+            );
+            const nextBalanceJsonb = mergeYearlyAllocation(usage?.balanceJsonb, yearlyEntry);
 
-            const yearlyDetails = {
-              yearlyAllocationDetails: {
-                remainingMonths: benefits.totalMonths - 1,
-                nextCreditDate: nextCreditDate,
-                monthlyCredits: benefits.monthlyCredits,
-                lastAllocatedMonth: `${startDate.getFullYear()}-${(startDate.getMonth() + 1).toString().padStart(2, '0')}`,
-                relatedOrderId: orderId,
-              }
-            };
-
-            const updatedUsage = await tx
-              .insert(usageSchema)
-              .values({
-                userId: userId,
-                subscriptionCreditsBalance: benefits.monthlyCredits,
-                balanceJsonb: yearlyDetails,
-              })
-              .onConflictDoUpdate({
-                target: usageSchema.userId,
-                set: {
-                  subscriptionCreditsBalance: benefits.monthlyCredits,
-                  balanceJsonb: sql`coalesce(${usageSchema.balanceJsonb}, '{}'::jsonb) - 'yearlyAllocationDetails' || ${JSON.stringify(yearlyDetails)}::jsonb`,
-                }
-              })
-              .returning({
-                oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
-                subscriptionCreditsSnapshot: usageSchema.subscriptionCreditsBalance,
-              });
+            const updatedUsage = usage
+              ? await tx
+                  .update(usageSchema)
+                  .set({
+                    subscriptionCreditsBalance: nextSubscriptionBalance,
+                    balanceJsonb: nextBalanceJsonb,
+                  })
+                  .where(eq(usageSchema.userId, userId))
+                  .returning({
+                    oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
+                    subscriptionCreditsSnapshot: usageSchema.subscriptionCreditsBalance,
+                  })
+              : await tx
+                  .insert(usageSchema)
+                  .values({
+                    userId,
+                    subscriptionCreditsBalance: nextSubscriptionBalance,
+                    balanceJsonb: nextBalanceJsonb,
+                  })
+                  .returning({
+                    oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
+                    subscriptionCreditsSnapshot: usageSchema.subscriptionCreditsBalance,
+                  });
 
             const balances = updatedUsage[0];
             if (!balances) { throw new Error('Failed to update usage for yearly subscription'); }
@@ -640,4 +662,3 @@ async function applySubscriptionCreditsRevocation(params: {
     }
   });
 }
-
