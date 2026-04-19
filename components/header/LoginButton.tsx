@@ -3,10 +3,11 @@
 import LoginDialog from "@/components/auth/LoginDialog";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "@/i18n/routing";
+import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
-export default function LoginButton() {
+export default function LoginButton({ className }: { className?: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations("Login");
@@ -28,7 +29,11 @@ export default function LoginButton() {
 
   return (
     <>
-      <Button onClick={handleLogin} variant="default" className={`shadow-lg`}>
+      <Button
+        onClick={handleLogin}
+        variant="default"
+        className={cn("shadow-lg", className)}
+      >
         {t("Button.signIn")}
       </Button>
 

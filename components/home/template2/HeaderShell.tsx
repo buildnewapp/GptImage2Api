@@ -30,6 +30,22 @@ export default function HeaderShell({
 }: Template2HeaderShellProps) {
   const pathname = usePathname();
   const [overlay, setOverlay] = useState(() => pathname === "/");
+  const accountButtonClassName = cn(
+    "h-10 rounded-full border px-3 py-2 text-sm shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring/70 focus:ring-offset-2",
+    overlay
+      ? "border-white/16 bg-white/8 text-white hover:border-white/24 hover:bg-white/12"
+      : "border-border/75 bg-background/80 text-foreground hover:border-border hover:bg-card/90",
+  );
+  const avatarTriggerClassName = cn(
+    "h-10 w-10 rounded-full border transition-all duration-200",
+    overlay
+      ? "border-white/16 bg-white/8 text-white hover:border-white/24 hover:bg-white/12"
+      : "border-border/75 bg-background/80 text-foreground hover:border-border hover:bg-card/90",
+  );
+  const avatarClassName = cn(
+    "h-10 w-10 border",
+    overlay ? "border-white/12" : "border-border/60",
+  );
 
   useEffect(() => {
     if (pathname !== "/") {
@@ -37,7 +53,9 @@ export default function HeaderShell({
       return undefined;
     }
 
-    const heroSentinel = document.querySelector("[data-home-template2-hero-sentinel]");
+    const heroSentinel = document.querySelector(
+      "[data-home-template2-hero-sentinel]",
+    );
 
     if (!heroSentinel) {
       setOverlay(false);
@@ -51,7 +69,7 @@ export default function HeaderShell({
       {
         rootMargin: "-80px 0px 0px 0px",
         threshold: 0.01,
-      }
+      },
     );
 
     observer.observe(heroSentinel);
@@ -68,7 +86,7 @@ export default function HeaderShell({
         template2ThemeVarsClass,
         overlay
           ? "border-white/12 bg-transparent"
-          : "bg-background/82 shadow backdrop-blur-xl"
+          : "bg-background/82 shadow backdrop-blur-xl",
       )}
     >
       <nav className="container mx-auto flex h-20 items-center justify-between px-4">
@@ -84,7 +102,7 @@ export default function HeaderShell({
                 "flex h-10 w-10 items-center justify-center rounded-full border transition-colors duration-300",
                 overlay
                   ? "border-white/20 bg-white/10 shadow-[0_18px_40px_-28px_rgba(15,23,42,0.9)]"
-                  : "border-border/75 bg-background/70 backdrop-blur-md"
+                  : "border-border/75 bg-background/70 backdrop-blur-md",
               )}
             >
               <Image src="/logo.png" alt="Logo" width={28} height={28} />
@@ -92,7 +110,9 @@ export default function HeaderShell({
             <span
               className={cn(
                 "[font-family:var(--font-instrument-serif),serif] text-[clamp(1.38rem,1.18rem+0.62vw,1.56rem)] leading-[1.08] tracking-[-0.01em] whitespace-nowrap transition-colors duration-300",
-                overlay ? "text-white drop-shadow-[0_1px_18px_rgba(15,23,42,0.55)]" : "text-foreground"
+                overlay
+                  ? "text-white drop-shadow-[0_1px_18px_rgba(15,23,42,0.55)]"
+                  : "text-foreground",
               )}
             >
               {navigation.brand}
@@ -111,6 +131,9 @@ export default function HeaderShell({
             <UserAvatar
               user={user as User}
               totalAvailableCredits={totalAvailableCredits}
+              avatarClassName={avatarClassName}
+              loginButtonClassName={accountButtonClassName}
+              triggerClassName={avatarTriggerClassName}
             />
             <I18nLink
               href="/dashboard/generate"

@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { user as userSchema } from "@/lib/db/schema";
+import { cn } from "@/lib/utils";
 import { UserInfo } from "./UserInfo";
 
 type User = typeof userSchema.$inferSelect;
@@ -16,23 +17,40 @@ type User = typeof userSchema.$inferSelect;
 export function UserAvatar({
   user,
   totalAvailableCredits,
+  avatarClassName,
+  loginButtonClassName,
+  triggerClassName,
 }: {
   user: User;
   totalAvailableCredits?: number | null;
+  avatarClassName?: string;
+  loginButtonClassName?: string;
+  triggerClassName?: string;
 }) {
   if (!user) {
-    return <LoginButton />;
+    return <LoginButton className={loginButtonClassName} />;
   }
 
   const fallbackLetter = user.email[0].toUpperCase();
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="focus:outline-hidden">
-        <Avatar className="h-8 w-8">
-          <AvatarImage src={user.image || undefined} />
-          <AvatarFallback>{fallbackLetter}</AvatarFallback>
-        </Avatar>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          aria-label="Open user menu"
+          className={cn(
+            triggerClassName
+              ? "inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              : "rounded-full focus:outline-hidden",
+            triggerClassName,
+          )}
+        >
+          <Avatar className={cn("h-8 w-8", avatarClassName)}>
+            <AvatarImage src={user.image || undefined} />
+            <AvatarFallback>{fallbackLetter}</AvatarFallback>
+          </Avatar>
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <UserInfo
