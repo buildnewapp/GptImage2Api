@@ -440,6 +440,10 @@
         "href": "/#features"
       },
       {
+        "name": "Showcase",
+        "href": "/showcase"
+      },
+      {
         "name": "Prompts",
         "href": "/prompts"
       },
@@ -485,6 +489,10 @@
             {
               "href": "/blog",
               "name": "Blog"
+            },
+            {
+              "href": "/showcase",
+              "name": "Showcase"
             },
             {
               "href": "/prompts",

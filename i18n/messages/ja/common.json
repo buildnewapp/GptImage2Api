@@ -440,6 +440,10 @@
         "href": "/#features"
       },
       {
+        "name": "ショーケース",
+        "href": "/showcase"
+      },
+      {
         "name": "プロンプト",
         "href": "/prompts"
       },
@@ -485,6 +489,10 @@
             {
               "href": "/blog",
               "name": "ブログ"
+            },
+            {
+              "href": "/showcase",
+              "name": "ショーケース"
             },
             {
               "href": "/prompts",

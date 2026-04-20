@@ -1,6 +1,7 @@
-import Footer from "@/components/footer/Footer";
+// import Footer from "@/components/footer/Footer";
 // import Header from "@/components/header/Header";
 import Header from "@/components/home/template2/Header";
+import Footer from "@/components/home/template2/Footer";
 
 export default function BasicLayout({
   children,

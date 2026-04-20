@@ -22,6 +22,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       NotFound: (await import(`./messages/${locale}/NotFound.json`)).default,
       Glossary: (await import(`./messages/${locale}/Glossary.json`)).default,
       Prompts: (await import(`./messages/${locale}/Prompts.json`)).default,
+      Showcase: (await import(`./messages/${locale}/Showcase.json`)).default,
       SeoContent: (await import(`./messages/${locale}/SeoContent.json`)).default,
       HomeTemplate1: (await import(`./messages/${locale}/HomeTemplate1.json`)).default,
       HomeTemplate2: (await import(`./messages/${locale}/HomeTemplate2.json`)).default,

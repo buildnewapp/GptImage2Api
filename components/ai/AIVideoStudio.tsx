@@ -161,6 +161,22 @@ function createLocalTaskId() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+function getDefaultSelection(initialModelId?: string | null) {
+  const resolvedSelection =
+    typeof initialModelId === "string" && initialModelId.length > 0
+      ? getAiVideoStudioSelectionFromModelId(initialModelId)
+      : null;
+
+  if (resolvedSelection) {
+    return resolvedSelection;
+  }
+
+  return {
+    familyKey: "sora2" as AiVideoStudioFamilyKey,
+    versionKey: "sora-2" as AiVideoStudioVersionKey,
+  };
+}
+
 function resolveGenerationTaskState(
   state: string | null | undefined,
 ): GenerationTaskState {
@@ -531,7 +547,13 @@ function mapHistoryItemToGenerationTask(
   };
 }
 
-export default function AIVideoStudio() {
+interface AIVideoStudioProps {
+  initialModelId?: string | null;
+}
+
+export default function AIVideoStudio({
+  initialModelId = null,
+}: AIVideoStudioProps = {}) {
   const t = useTranslations("Landing.Hero");
   const { data: session } = authClient.useSession();
   const {
@@ -545,11 +567,15 @@ export default function AIVideoStudio() {
     new Map(),
   );
   const pollingErrorCountsRef = useRef<Map<string, number>>(new Map());
+  const defaultSelection = useMemo(
+    () => getDefaultSelection(initialModelId),
+    [initialModelId],
+  );
 
   const [selectedFamilyKey, setSelectedFamilyKey] =
-    useState<AiVideoStudioFamilyKey>("sora2");
+    useState<AiVideoStudioFamilyKey>(defaultSelection.familyKey);
   const [selectedVersionKey, setSelectedVersionKey] =
-    useState<AiVideoStudioVersionKey>("sora-2");
+    useState<AiVideoStudioVersionKey>(defaultSelection.versionKey);
   const [detail, setDetail] = useState<AiStudioPublicDocDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState<string | null>(null);
@@ -677,6 +703,13 @@ export default function AIVideoStudio() {
       return;
     }
 
+    if (initialModelId) {
+      setSelectedFamilyKey(defaultSelection.familyKey);
+      setSelectedVersionKey(defaultSelection.versionKey);
+      hasInitializedFromStorageRef.current = true;
+      return;
+    }
+
     const rawNewState = window.localStorage.getItem(
       AI_VIDEO_STUDIO_FORM_STORAGE_KEY,
     );
@@ -691,7 +724,7 @@ export default function AIVideoStudio() {
     }
 
     hasInitializedFromStorageRef.current = true;
-  }, []);
+  }, [defaultSelection.familyKey, defaultSelection.versionKey, initialModelId]);
 
   useEffect(() => {
     if (!hasInitializedFromStorageRef.current) {
@@ -1420,10 +1453,10 @@ export default function AIVideoStudio() {
   );
 
   return (
-    <main className="flex flex-1 flex-col items-center container px-0 sm:px-4">
+    <main className="container flex flex-1 flex-col items-center px-0 sm:px-4">
       <div className="w-full min-w-0 max-w-7xl mx-auto">
-        <div className="flex w-full min-w-0 flex-col items-start gap-8 my-10 h-full mx-auto p-2 lg:p-6 rounded-xl lg:rounded-3xl border border-border/50 bg-card shadow-xl lg:flex-row">
-          <div className="w-full lg:w-[400px] xl:w-[450px] flex-shrink-0 flex flex-col gap-3 h-fit">
+        <div className="mx-auto my-6 flex h-full w-full min-w-0 flex-col items-start gap-4 rounded-xl border border-border/50 bg-card p-2 shadow-xl sm:my-8 sm:p-3 lg:my-10 lg:flex-row lg:gap-8 lg:rounded-3xl lg:p-6">
+          <div className="flex h-fit w-full flex-shrink-0 flex-col gap-3 lg:w-[400px] xl:w-[450px]">
             <ModelSelector
               selectedId={selectedFamilyKey}
               onSelect={(nextKey) =>
@@ -1562,7 +1595,7 @@ export default function AIVideoStudio() {
                     onChange={(event) => setApiPayloadText(event.target.value)}
                     disabled={isSubmitting}
                     spellCheck={false}
-                    className="min-h-[420px] resize-y font-mono text-xs leading-6"
+                    className="min-h-[320px] resize-y font-mono text-xs leading-6 sm:min-h-[420px]"
                   />
                   <div className="flex items-center justify-between rounded-lg border border-border/60 bg-background/60 px-3 py-2">
                     <div>

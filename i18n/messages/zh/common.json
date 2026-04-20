@@ -440,6 +440,10 @@
         "href": "/#features"
       },
       {
+        "name": "作品展示",
+        "href": "/showcase"
+      },
+      {
         "name": "提示词",
         "href": "/prompts"
       },
@@ -485,6 +489,10 @@
             {
               "href": "/blog",
               "name": "博客"
+            },
+            {
+              "href": "/showcase",
+              "name": "作品展示"
             },
             {
               "href": "/prompts",

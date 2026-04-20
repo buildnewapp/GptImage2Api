@@ -5,6 +5,7 @@ import type { HomeTemplate2Hero } from "@/components/home/template2/types";
 import { authClient } from "@/lib/auth/auth-client";
 import {
   AI_VIDEO_STUDIO_FAMILIES,
+  getAiVideoStudioSelectionFromModelId,
   getAiVideoStudioVersions,
   listAiVideoStudioModelOptions,
   resolveAiVideoStudioModelId,
@@ -85,7 +86,15 @@ function getFirstSelectableFamily() {
   );
 }
 
-function getDefaultSelection() {
+function getDefaultSelection(initialModelId?: string | null) {
+  const resolvedSelection =
+    typeof initialModelId === "string" && initialModelId.length > 0
+      ? getAiVideoStudioSelectionFromModelId(initialModelId)
+      : null;
+  if (resolvedSelection) {
+    return resolvedSelection;
+  }
+
   const family = getFirstSelectableFamily();
   const version = family ? getAiVideoStudioVersions(family.key)[0] : null;
 
@@ -170,14 +179,21 @@ function readFileAsDataUrl(file: File) {
 
 interface AIVideoMiniStudioProps {
   hero: HomeTemplate2Hero;
+  initialModelId?: string | null;
 }
 
 const LoginDialog = lazy(() => import("@/components/auth/LoginDialog"));
 
-export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
+export default function AIVideoMiniStudio({
+  hero,
+  initialModelId = null,
+}: AIVideoMiniStudioProps) {
   const t = useTranslations("Landing.Hero");
   const router = useRouter();
-  const defaultSelection = useMemo(() => getDefaultSelection(), []);
+  const defaultSelection = useMemo(
+    () => getDefaultSelection(initialModelId),
+    [initialModelId],
+  );
   const modelOptions = useMemo(() => listAiVideoStudioModelOptions(), []);
   const { data: session } = authClient.useSession();
   const hasInitializedFromStorageRef = useRef(false);
@@ -308,7 +324,20 @@ export default function AIVideoMiniStudio({ hero }: AIVideoMiniStudioProps) {
   }, [normalizedSchema]);
 
   useEffect(() => {
+    if (initialModelId) {
+      setSelectedFamilyKey(defaultSelection.familyKey);
+      setSelectedVersionKey(defaultSelection.versionKey);
+      hasInitializedFromStorageRef.current = true;
+    }
+  }, [defaultSelection.familyKey, defaultSelection.versionKey, initialModelId]);
+
+  useEffect(() => {
     if (hasInitializedFromStorageRef.current) {
+      return;
+    }
+
+    if (initialModelId) {
+      hasInitializedFromStorageRef.current = true;
       return;
     }
 
