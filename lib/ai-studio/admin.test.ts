@@ -2,10 +2,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  ADMIN_AI_STUDIO_EDITABLE_CATEGORIES,
   buildAiStudioAdminSummary,
   canAdminMarkGenerationFailed,
   formatAdminFailureReason,
   matchesAiStudioAdminFilters,
+  parseAdminAiStudioGenerationEditInput,
   type AiStudioAdminRow,
 } from "@/lib/ai-studio/admin";
 
@@ -100,4 +102,51 @@ test("formats admin failure reasons consistently", () => {
     "Marked failed by admin: Provider task failed",
   );
   assert.equal(formatAdminFailureReason(), "Marked failed by admin.");
+});
+
+test("parses editable admin generation fields into normalized values", () => {
+  const parsed = parseAdminAiStudioGenerationEditInput({
+    generationId: "322bb0d1-f307-4400-a65e-0df36ceff5de",
+    catalogModelId: " image:gpt-image-1 ",
+    category: "image",
+    resultUrlsText: "https://example.com/1.png\n\n https://example.com/2.png ",
+    isPublic: true,
+    userDeletedAt: "",
+    completedAt: "2026-04-20T18:30",
+  });
+
+  assert.deepEqual(parsed, {
+    generationId: "322bb0d1-f307-4400-a65e-0df36ceff5de",
+    catalogModelId: "image:gpt-image-1",
+    category: "image",
+    resultUrls: ["https://example.com/1.png", "https://example.com/2.png"],
+    isPublic: true,
+    userDeletedAt: null,
+    completedAt: new Date("2026-04-20T18:30").toISOString(),
+  });
+});
+
+test("rejects invalid admin generation edit input", () => {
+  assert.throws(
+    () =>
+      parseAdminAiStudioGenerationEditInput({
+        generationId: "322bb0d1-f307-4400-a65e-0df36ceff5de",
+        catalogModelId: "video:model",
+        category: "invalid-category",
+        resultUrlsText: "notaurl",
+        isPublic: false,
+        userDeletedAt: "bad-date",
+        completedAt: "",
+      }),
+    /category|url|date/i,
+  );
+});
+
+test("exports the supported editable admin categories", () => {
+  assert.deepEqual(ADMIN_AI_STUDIO_EDITABLE_CATEGORIES, [
+    "video",
+    "image",
+    "music",
+    "chat",
+  ]);
 });

@@ -1,9 +1,11 @@
 "use server";
 
 import {
+  ADMIN_AI_STUDIO_EDITABLE_CATEGORIES,
   buildAiStudioAdminSummary,
   canAdminMarkGenerationFailed,
   formatAdminFailureReason,
+  parseAdminAiStudioGenerationEditInput,
 } from "@/lib/ai-studio/admin";
 import { forceFailAiStudioGeneration } from "@/lib/ai-studio/generations";
 import { actionResponse, type ActionResult } from "@/lib/action-response";
@@ -122,6 +124,8 @@ export async function getAdminAiStudioGenerations({
         reservedCredits: aiStudioGenerations.creditsReserved,
         capturedCredits: aiStudioGenerations.creditsCaptured,
         refundedCredits: aiStudioGenerations.creditsRefunded,
+        isPublic: aiStudioGenerations.isPublic,
+        userDeletedAt: aiStudioGenerations.userDeletedAt,
         createdAt: aiStudioGenerations.createdAt,
         completedAt: aiStudioGenerations.completedAt,
         failedAt: aiStudioGenerations.failedAt,
@@ -159,6 +163,7 @@ export async function getAdminAiStudioGenerations({
     records: rows.map((row) => ({
       ...row,
       createdAt: row.createdAt.toISOString(),
+      userDeletedAt: row.userDeletedAt?.toISOString() ?? null,
       completedAt: row.completedAt?.toISOString() ?? null,
       failedAt: row.failedAt?.toISOString() ?? null,
       resultUrls: Array.isArray(row.resultUrls) ? (row.resultUrls as string[]) : [],
@@ -183,6 +188,16 @@ export async function getAdminAiStudioGenerations({
 const MarkFailedSchema = z.object({
   generationId: z.string().uuid(),
   reason: z.string().trim().max(500).optional(),
+});
+
+const UpdateGenerationSchema = z.object({
+  generationId: z.string().uuid(),
+  catalogModelId: z.string().trim().min(1).max(255),
+  category: z.enum(ADMIN_AI_STUDIO_EDITABLE_CATEGORIES),
+  resultUrlsText: z.string().max(5000).optional().default(""),
+  isPublic: z.boolean(),
+  userDeletedAt: z.string().optional().nullable(),
+  completedAt: z.string().optional().nullable(),
 });
 
 export async function markAiStudioGenerationFailedByAdmin(
@@ -255,6 +270,60 @@ export async function markAiStudioGenerationFailedByAdmin(
       id: updated.id,
       status: updated.status,
       refundedCredits: updated.creditsRefunded,
+    });
+  } catch (error) {
+    return actionResponse.error(getErrorMessage(error));
+  }
+}
+
+export async function updateAiStudioGenerationByAdmin(
+  input: z.infer<typeof UpdateGenerationSchema>,
+): Promise<
+  ActionResult<{
+    id: string;
+  }>
+> {
+  if (!(await isAdmin())) {
+    return actionResponse.forbidden("Admin privileges required.");
+  }
+
+  try {
+    const parsed = UpdateGenerationSchema.parse(input);
+    const normalized = parseAdminAiStudioGenerationEditInput(parsed);
+
+    const existing = await getDb()
+      .select({ id: aiStudioGenerations.id })
+      .from(aiStudioGenerations)
+      .where(eq(aiStudioGenerations.id, normalized.generationId))
+      .limit(1);
+
+    if (!existing[0]) {
+      return actionResponse.notFound("Generation record not found.");
+    }
+
+    const updated = await getDb()
+      .update(aiStudioGenerations)
+      .set({
+        catalogModelId: normalized.catalogModelId,
+        category: normalized.category,
+        resultUrls: normalized.resultUrls,
+        isPublic: normalized.isPublic,
+        userDeletedAt: normalized.userDeletedAt
+          ? new Date(normalized.userDeletedAt)
+          : null,
+        completedAt: normalized.completedAt
+          ? new Date(normalized.completedAt)
+          : null,
+      })
+      .where(eq(aiStudioGenerations.id, normalized.generationId))
+      .returning({ id: aiStudioGenerations.id });
+
+    if (!updated[0]) {
+      return actionResponse.notFound("Generation record not found.");
+    }
+
+    return actionResponse.success({
+      id: updated[0].id,
     });
   } catch (error) {
     return actionResponse.error(getErrorMessage(error));

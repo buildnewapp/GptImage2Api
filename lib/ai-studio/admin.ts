@@ -11,6 +11,26 @@ export type AiStudioAdminRow = {
   createdAt: string;
 };
 
+export const ADMIN_AI_STUDIO_EDITABLE_CATEGORIES = [
+  "video",
+  "image",
+  "music",
+  "chat",
+] as const;
+
+export type AdminAiStudioEditableCategory =
+  (typeof ADMIN_AI_STUDIO_EDITABLE_CATEGORIES)[number];
+
+export type AdminAiStudioGenerationEditInput = {
+  generationId: string;
+  catalogModelId: string;
+  category: string;
+  resultUrlsText?: string | null;
+  isPublic: boolean;
+  userDeletedAt?: string | null;
+  completedAt?: string | null;
+};
+
 export function canAdminMarkGenerationFailed(status: string) {
   return status !== "failed";
 }
@@ -94,4 +114,71 @@ export function buildAiStudioAdminSummary(rows: AiStudioAdminRow[]) {
       refundedCredits: 0,
     },
   );
+}
+
+function normalizeAdminGenerationDateTime(
+  value: string | null | undefined,
+  fieldName: "userDeletedAt" | "completedAt",
+) {
+  const normalized = value?.trim();
+  if (!normalized) {
+    return null;
+  }
+
+  const parsed = new Date(normalized);
+  if (Number.isNaN(parsed.getTime())) {
+    throw new Error(`Invalid ${fieldName} date`);
+  }
+
+  return parsed.toISOString();
+}
+
+function normalizeAdminGenerationResultUrls(value: string | null | undefined) {
+  const lines = (value ?? "")
+    .split(/\r?\n/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  for (const url of lines) {
+    try {
+      new URL(url);
+    } catch {
+      throw new Error(`Invalid result url: ${url}`);
+    }
+  }
+
+  return lines;
+}
+
+export function parseAdminAiStudioGenerationEditInput(
+  input: AdminAiStudioGenerationEditInput,
+) {
+  const catalogModelId = input.catalogModelId.trim();
+  if (!catalogModelId) {
+    throw new Error("catalogModelId is required");
+  }
+
+  if (
+    !ADMIN_AI_STUDIO_EDITABLE_CATEGORIES.includes(
+      input.category as AdminAiStudioEditableCategory,
+    )
+  ) {
+    throw new Error(`Invalid category: ${input.category}`);
+  }
+
+  return {
+    generationId: input.generationId,
+    catalogModelId,
+    category: input.category as AdminAiStudioEditableCategory,
+    resultUrls: normalizeAdminGenerationResultUrls(input.resultUrlsText),
+    isPublic: input.isPublic,
+    userDeletedAt: normalizeAdminGenerationDateTime(
+      input.userDeletedAt,
+      "userDeletedAt",
+    ),
+    completedAt: normalizeAdminGenerationDateTime(
+      input.completedAt,
+      "completedAt",
+    ),
+  };
 }

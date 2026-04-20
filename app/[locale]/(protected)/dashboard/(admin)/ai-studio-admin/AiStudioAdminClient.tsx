@@ -1,6 +1,9 @@
 "use client";
 
-import { markAiStudioGenerationFailedByAdmin } from "@/actions/ai-studio/admin";
+import {
+  markAiStudioGenerationFailedByAdmin,
+  updateAiStudioGenerationByAdmin,
+} from "@/actions/ai-studio/admin";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +20,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Table,
@@ -29,7 +48,13 @@ import {
 } from "@/components/ui/table";
 import { canAdminMarkGenerationFailed } from "@/lib/ai-studio/admin";
 import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight, LoaderCircle, Search } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  LoaderCircle,
+  MoreHorizontal,
+  Search,
+} from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -57,10 +82,12 @@ type AdminData = {
     resultUrls: string[];
     reservedCredits: number;
     capturedCredits: number;
-    refundedCredits: number;
-    createdAt: string;
-    completedAt: string | null;
-    failedAt: string | null;
+  refundedCredits: number;
+  createdAt: string;
+  isPublic: boolean;
+  userDeletedAt: string | null;
+  completedAt: string | null;
+  failedAt: string | null;
   }>;
   total: number;
   totalPages: number;
@@ -75,37 +102,6 @@ type AdminData = {
     refundedCredits: number;
   };
 };
-
-function JsonDialog({
-  title,
-  value,
-  triggerLabel,
-}: {
-  title: string;
-  value: unknown;
-  triggerLabel: string;
-}) {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <button
-          type="button"
-          className="text-sm text-primary hover:underline underline-offset-4"
-        >
-          {triggerLabel}
-        </button>
-      </DialogTrigger>
-      <DialogContent className="max-w-4xl">
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-        </DialogHeader>
-        <pre className="max-h-[70vh] overflow-auto rounded-md bg-muted p-4 text-xs leading-5">
-          {JSON.stringify(value ?? {}, null, 2)}
-        </pre>
-      </DialogContent>
-    </Dialog>
-  );
-}
 
 function TextDialog({
   title,
@@ -154,6 +150,42 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
+type AdminRecord = AdminData["records"][number];
+
+type EditFormState = {
+  catalogModelId: string;
+  category: string;
+  resultUrlsText: string;
+  isPublic: boolean;
+  userDeletedAt: string;
+  completedAt: string;
+};
+
+function toDateTimeLocalValue(value: string | null) {
+  if (!value) {
+    return "";
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
+  return localDate.toISOString().slice(0, 16);
+}
+
+function buildEditFormState(record: AdminRecord): EditFormState {
+  return {
+    catalogModelId: record.catalogModelId,
+    category: record.category,
+    resultUrlsText: record.resultUrls.join("\n"),
+    isPublic: record.isPublic,
+    userDeletedAt: toDateTimeLocalValue(record.userDeletedAt),
+    completedAt: toDateTimeLocalValue(record.completedAt),
+  };
+}
+
 export default function AiStudioAdminClient({
   initialData,
   initialUserId,
@@ -165,9 +197,23 @@ export default function AiStudioAdminClient({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [searchInput, setSearchInput] = useState(searchParams.get("search") || "");
-  const [selectedRecord, setSelectedRecord] = useState<AdminData["records"][number] | null>(null);
+  const [selectedRecord, setSelectedRecord] = useState<AdminRecord | null>(null);
+  const [editingRecord, setEditingRecord] = useState<AdminRecord | null>(null);
+  const [editForm, setEditForm] = useState<EditFormState>({
+    catalogModelId: "",
+    category: "video",
+    resultUrlsText: "",
+    isPublic: true,
+    userDeletedAt: "",
+    completedAt: "",
+  });
+  const [selectedDetail, setSelectedDetail] = useState<{
+    title: string;
+    value: unknown;
+  } | null>(null);
   const [failureReason, setFailureReason] = useState("");
   const [isSubmittingFailure, startFailureTransition] = useTransition();
+  const [isSubmittingEdit, startEditTransition] = useTransition();
 
   const updateParams = useCallback(
     (params: Record<string, string | undefined>) => {
@@ -188,7 +234,7 @@ export default function AiStudioAdminClient({
     [initialData.availableCategories],
   );
 
-  function openFailDialog(record: AdminData["records"][number]) {
+  function openFailDialog(record: AdminRecord) {
     setSelectedRecord(record);
     setFailureReason(record.statusReason || "Refunded after admin verification.");
   }
@@ -228,8 +274,211 @@ export default function AiStudioAdminClient({
     });
   }
 
+  function openDetailDialog(title: string, value: unknown) {
+    setSelectedDetail({ title, value });
+  }
+
+  function closeDetailDialog(open: boolean) {
+    if (open) {
+      return;
+    }
+
+    setSelectedDetail(null);
+  }
+
+  function openEditDialog(record: AdminRecord) {
+    setEditingRecord(record);
+    setEditForm(buildEditFormState(record));
+  }
+
+  function closeEditDialog(open: boolean) {
+    if (open) {
+      return;
+    }
+
+    setEditingRecord(null);
+  }
+
+  function handleEditSave() {
+    if (!editingRecord) {
+      return;
+    }
+
+    startEditTransition(async () => {
+      const result = await updateAiStudioGenerationByAdmin({
+        generationId: editingRecord.id,
+        catalogModelId: editForm.catalogModelId,
+        category: editForm.category as "video" | "image" | "music" | "chat",
+        resultUrlsText: editForm.resultUrlsText,
+        isPublic: editForm.isPublic,
+        userDeletedAt: editForm.userDeletedAt,
+        completedAt: editForm.completedAt,
+      });
+
+      if (!result.success) {
+        toast.error("Failed to update generation", {
+          description: result.error,
+        });
+        return;
+      }
+
+      toast.success("Generation updated");
+      setEditingRecord(null);
+      router.refresh();
+    });
+  }
+
   return (
     <div className="space-y-6">
+      <Dialog open={Boolean(editingRecord)} onOpenChange={closeEditDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit generation</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2 md:col-span-2">
+                <label className="text-sm font-medium" htmlFor="edit-catalogModelId">
+                  Catalog Model ID
+                </label>
+                <Input
+                  id="edit-catalogModelId"
+                  value={editForm.catalogModelId}
+                  onChange={(event) =>
+                    setEditForm((current) => ({
+                      ...current,
+                      catalogModelId: event.target.value,
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium" htmlFor="edit-category">
+                  Category
+                </label>
+                <Select
+                  value={editForm.category}
+                  onValueChange={(value) =>
+                    setEditForm((current) => ({
+                      ...current,
+                      category: value,
+                    }))
+                  }
+                >
+                  <SelectTrigger id="edit-category" className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {["video", "image", "music", "chat"].map((value) => (
+                      <SelectItem key={value} value={value}>
+                        {value}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex items-center justify-between rounded-md border px-3 py-2">
+                <div>
+                  <div className="text-sm font-medium">isPublic</div>
+                  <div className="text-xs text-muted-foreground">
+                    Control public visibility for this record.
+                  </div>
+                </div>
+                <Switch
+                  checked={editForm.isPublic}
+                  onCheckedChange={(checked) =>
+                    setEditForm((current) => ({
+                      ...current,
+                      isPublic: checked,
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium" htmlFor="edit-userDeletedAt">
+                  userDeletedAt
+                </label>
+                <Input
+                  id="edit-userDeletedAt"
+                  type="datetime-local"
+                  value={editForm.userDeletedAt}
+                  onChange={(event) =>
+                    setEditForm((current) => ({
+                      ...current,
+                      userDeletedAt: event.target.value,
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium" htmlFor="edit-completedAt">
+                  completedAt
+                </label>
+                <Input
+                  id="edit-completedAt"
+                  type="datetime-local"
+                  value={editForm.completedAt}
+                  onChange={(event) =>
+                    setEditForm((current) => ({
+                      ...current,
+                      completedAt: event.target.value,
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="space-y-2 md:col-span-2">
+                <label className="text-sm font-medium" htmlFor="edit-resultUrls">
+                  resultUrls
+                </label>
+                <Textarea
+                  id="edit-resultUrls"
+                  rows={6}
+                  value={editForm.resultUrlsText}
+                  onChange={(event) =>
+                    setEditForm((current) => ({
+                      ...current,
+                      resultUrlsText: event.target.value,
+                    }))
+                  }
+                  placeholder="One URL per line"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => closeEditDialog(false)}
+                disabled={isSubmittingEdit}
+              >
+                Cancel
+              </Button>
+              <Button type="button" onClick={handleEditSave} disabled={isSubmittingEdit}>
+                {isSubmittingEdit ? <LoaderCircle className="mr-2 h-4 w-4 animate-spin" /> : null}
+                Save
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={Boolean(selectedDetail)} onOpenChange={closeDetailDialog}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>{selectedDetail?.title}</DialogTitle>
+          </DialogHeader>
+          <pre className="max-h-[70vh] overflow-auto rounded-md bg-muted p-4 text-xs leading-5">
+            {JSON.stringify(selectedDetail?.value ?? {}, null, 2)}
+          </pre>
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={Boolean(selectedRecord)} onOpenChange={closeFailDialog}>
         <DialogContent className="max-w-xl">
           <DialogHeader>
@@ -376,7 +625,7 @@ export default function AiStudioAdminClient({
                 <Button
                   key={value}
                   type="button"
-                  variant={category === value ? "secondary" : "outline"}
+                  variant={category === value ? "default" : "outline"}
                   size="sm"
                   onClick={() =>
                     updateParams({
@@ -415,12 +664,12 @@ export default function AiStudioAdminClient({
                 <TableRow>
                   <TableHead>User</TableHead>
                   <TableHead>Model</TableHead>
+                  <TableHead>Preview</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Credits</TableHead>
                   <TableHead>Provider Task</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead>Actions</TableHead>
-                  <TableHead>Details</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -451,8 +700,50 @@ export default function AiStudioAdminClient({
                         </div>
                       </TableCell>
                       <TableCell>
+                        {record.resultUrls.length > 0 ? (
+                          <div className="flex flex-wrap gap-2">
+                            {record.resultUrls.map((url, index) => (
+                              <a
+                                key={`${record.id}-${index}`}
+                                href={url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="block overflow-hidden rounded-md border bg-muted transition-opacity hover:opacity-80"
+                              >
+                                {record.category === "image" ? (
+                                  <img
+                                    src={url}
+                                    alt={`${record.title} preview ${index + 1}`}
+                                    className="h-8 w-12 object-cover"
+                                  />
+                                ) : (
+                                  <video
+                                    src={url}
+                                    className="h-8 w-12 object-cover"
+                                    muted
+                                    playsInline
+                                    preload="metadata"
+                                  />
+                                )}
+                              </a>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">—</span>
+                        )}
+                      </TableCell>
+                      <TableCell>
                         <div className="flex flex-col gap-2">
                           <StatusBadge status={record.status} />
+                          <button
+                            type="button"
+                            className="w-fit"
+                            onClick={() => openEditDialog(record)}
+                          >
+                            <Badge variant={record.isPublic ? "default" : "outline"}>
+                              {record.isPublic ? "Public" : "Private"}
+                            </Badge>
+                          </button>
                           {record.statusReason && (
                             <div className="max-w-[240px] rounded-md border border-rose-200/70 bg-rose-50/70 px-2.5 py-2 text-xs text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/20 dark:text-rose-300">
                               <div
@@ -478,30 +769,88 @@ export default function AiStudioAdminClient({
                           <span className="text-muted-foreground">Refunded {record.refundedCredits}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="font-mono text-xs">
-                        {record.providerTaskId || "—"}
+                      <TableCell>
+                        <div className="flex flex-col gap-1 font-mono text-xs">
+                          <span>{record.providerTaskId || "—"}</span>
+                          <div className="flex items-center gap-2 font-sans">
+                            <button
+                              type="button"
+                              className="text-xs text-primary hover:underline underline-offset-4"
+                              onClick={() =>
+                                openDetailDialog("Request Payload", record.requestPayload)
+                              }
+                            >
+                              Request
+                            </button>
+                            <button
+                              type="button"
+                              className="text-xs text-primary hover:underline underline-offset-4"
+                              onClick={() =>
+                                openDetailDialog("Response Payload", record.responsePayload)
+                              }
+                            >
+                              Response
+                            </button>
+                          </div>
+                        </div>
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {new Date(record.createdAt).toLocaleString()}
                       </TableCell>
                       <TableCell>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="outline"
-                          disabled={!canAdminMarkGenerationFailed(record.status)}
-                          onClick={() => openFailDialog(record)}
-                        >
-                          Mark failed
-                        </Button>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-2">
-                          <JsonDialog title="Request Payload" value={record.requestPayload} triggerLabel="Request" />
-                          <JsonDialog title="Response Payload" value={record.responsePayload} triggerLabel="Response" />
-                          <JsonDialog title="Callback Payload" value={record.callbackPayload} triggerLabel="Callback" />
-                          <JsonDialog title="Pricing Snapshot" value={record.officialPricingSnapshot} triggerLabel="Pricing" />
-                        </div>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button type="button" variant="ghost" size="icon">
+                              <span className="sr-only">Open actions</span>
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem onSelect={() => openEditDialog(record)}>
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              disabled={!canAdminMarkGenerationFailed(record.status)}
+                              onSelect={() => openFailDialog(record)}
+                            >
+                              Mark failed and refund
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onSelect={() =>
+                                openDetailDialog("Request Payload", record.requestPayload)
+                              }
+                            >
+                              Request
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onSelect={() =>
+                                openDetailDialog("Response Payload", record.responsePayload)
+                              }
+                            >
+                              Response
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onSelect={() =>
+                                openDetailDialog("Callback Payload", record.callbackPayload)
+                              }
+                            >
+                              Callback
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onSelect={() =>
+                                openDetailDialog(
+                                  "Pricing Snapshot",
+                                  record.officialPricingSnapshot,
+                                )
+                              }
+                            >
+                              Pricing
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </TableCell>
                     </TableRow>
                   ))
