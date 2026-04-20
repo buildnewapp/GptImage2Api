@@ -6,6 +6,8 @@ export type LegacyVideoStatusFilter = LegacyVideoStatus | "all";
 export type LegacyProviderValues = {
   prompt?: string;
   imageUrl?: string;
+  imageUrls?: string[];
+  inputVideos?: string[];
   resolution?: string;
   aspectRatio?: string;
   duration?: string;
@@ -44,6 +46,8 @@ export type LegacyVideoHistoryRecord = {
   mode?: "image-to-video" | "text-to-video";
   providerValues?: LegacyProviderValues;
   uploadedImage?: string | null;
+  uploadedImages?: string[];
+  inputVideos?: string[];
   status: LegacyVideoStatus;
   creditsUsed: number;
   creditsRequired?: number;
@@ -123,6 +127,17 @@ function getFirstString(value: unknown) {
   return undefined;
 }
 
+function getStringArray(value: unknown) {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.filter(
+    (item): item is string =>
+      typeof item === "string" && item.trim().length > 0,
+  );
+}
+
 function formatDuration(value: unknown) {
   if (typeof value === "number" && Number.isFinite(value)) {
     return `${Math.round(value)}s`;
@@ -175,15 +190,29 @@ export function mapAiStudioStoredPayloadToLegacyVideoInput(
 ) {
   const root = asRecord(payload) ?? {};
   const input = asRecord(root.input) ?? root;
+  const arrayImageUrls = getStringArray(input.image_urls);
+  const fallbackArrayImageUrls = getStringArray(input.imageUrls);
+  const imageUrls =
+    arrayImageUrls.length > 0 ? arrayImageUrls : fallbackArrayImageUrls;
+  const arrayInputVideos = getStringArray(input.input_videos);
+  const fallbackArrayInputVideos = getStringArray(input.inputVideos);
+  const inputVideos =
+    arrayInputVideos.length > 0 ? arrayInputVideos : fallbackArrayInputVideos;
+  const singleImageUrl =
+    asString(input.image_url) ??
+    asString(input.first_frame_image) ??
+    asString(root.image_url);
 
   return compactProviderValues({
     prompt: asString(input.prompt) ?? asString(root.prompt),
-    imageUrl:
-      getFirstString(input.image_urls) ??
-      getFirstString(input.imageUrls) ??
-      asString(input.image_url) ??
-      asString(input.first_frame_image) ??
-      asString(root.image_url),
+    imageUrl: imageUrls[0] ?? singleImageUrl,
+    imageUrls:
+      imageUrls.length > 0
+        ? imageUrls
+        : singleImageUrl
+          ? [singleImageUrl]
+          : undefined,
+    inputVideos: inputVideos.length > 0 ? inputVideos : undefined,
     resolution: asString(input.resolution) ?? asString(input.image_resolution),
     aspectRatio: asString(input.aspect_ratio) ?? asString(input.aspectRatio),
     duration: formatDuration(input.n_frames) ?? formatDuration(input.duration),
@@ -216,6 +245,8 @@ export function mapAiStudioUserRecordToLegacyVideoHistoryRecord(
   const taskId = record.providerTaskId ?? record.id;
   const prompt = providerValues.prompt ?? null;
   const uploadedImage = providerValues.imageUrl ?? null;
+  const uploadedImages = providerValues.imageUrls ?? [];
+  const inputVideos = providerValues.inputVideos ?? [];
   const category = record.category || "video";
 
   const nextRecord: LegacyVideoHistoryRecord = {
@@ -258,6 +289,9 @@ export function mapAiStudioUserRecordToLegacyVideoHistoryRecord(
   if (uploadedImage) {
     nextRecord.uploadedImage = uploadedImage;
   }
+
+  nextRecord.uploadedImages = [...uploadedImages];
+  nextRecord.inputVideos = [...inputVideos];
 
   return nextRecord;
 }

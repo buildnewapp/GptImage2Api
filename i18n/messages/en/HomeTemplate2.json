@@ -13,7 +13,7 @@
     "badge": "Seedance 2.0 web & api",
     "ctaLabel": "Generate Video",
     "creditCost": "25",
-    "description": "Create short AI videos from text or a reference image. Starter credits are available on Seedance 2.0. Paid Seedance 2.0 access in the web app currently supports up to 720p and 15 seconds.",
+    "description": "Create short AI videos from text or a reference image. New users can start with Seedance 2.0 right away and keep earning plenty of credits through daily tasks. Seedance 2.0 in the current web app supports up to 1080p and 15 seconds.",
     "durationLabel": "5s",
     "highlight": "Clearly.",
     "modelLabel": "Seedance 2.0",
@@ -29,7 +29,7 @@
   },
   "featureRows": [
     {
-      "description": "Write a prompt, choose aspect ratio, duration, and resolution, then render a short-form clip in the current web app. Seedance 2.0 is available with paid access; starter credits apply to Seedance 2.0.",
+      "description": "Write a prompt, choose aspect ratio, duration, and resolution, then render a short-form clip in the current web app. New users can access Seedance 2.0 right away and keep earning plenty of credits through daily tasks.",
       "title": "Short-Form Text to Video",
       "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/gomdqjkt4.mp4"
     },
@@ -40,12 +40,12 @@
       "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/es600fg0x.mp4"
     },
     {
-      "description": "Start on Seedance 2.0 with starter credits, or unlock Seedance 2.0 with paid access when you need the higher tier. Model limits are shown in the generator before you render.",
-      "title": "Choose 2.0 Lite or 2.0",
+      "description": "Start on Seedance 2.0 right away, then keep earning plenty of credits through daily tasks. Model limits are shown in the generator before you render.",
+      "title": "Start on 2.0 Right Away",
       "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/88jhjdm4l.mp4"
     },
     {
-      "description": "Current public plans in seedance2.app top out at 720p and 15 seconds for Seedance 2.0. We surface those limits in the UI so you can scope prompts realistically before spending credits.",
+      "description": "Current public plans in seedance2.app top out at 1080p and 15 seconds for Seedance 2.0. We surface those limits in the UI so you can scope prompts realistically before spending credits.",
       "reverse": true,
       "title": "Clear Output Limits",
       "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/nf3vdfl8a.mp4"
@@ -53,8 +53,8 @@
   ],
   "scope": {
     "description": "What the web app exposes today",
-    "footerDescription": "No hidden long-form or 1080p promises",
-    "footerStat": "Up to 720p and 15s today",
+    "footerDescription": "No hidden long-form promises",
+    "footerStat": "Up to 1080p and 15s today",
     "footerTitle": "Built for short-form production",
     "logos": [
       "TECHCRUNCH",
@@ -81,13 +81,13 @@
       },
       {
         "accent": "accent",
-        "description": "Starter credits apply to Seedance 2.0. Seedance 2.0 requires paid access.",
+        "description": "New users can access Seedance 2.0 right away and keep earning plenty of credits through daily tasks.",
         "icon": "globe",
         "title": "Model access"
       },
       {
         "accent": "foreground",
-        "description": "Current options in the app are 480p and 720p.",
+        "description": "Current options in the app are 480p, 720p, and 1080p.",
         "icon": "award",
         "title": "Resolution limits"
       },
@@ -151,7 +151,7 @@
     "ctaText": "Ready to create your own short clip?",
     "description": "These preview assets on the page are short local clips. The metadata shown here reflects the actual file in this site.",
     "kicker": "Video Showcase",
-    "note": "We are not presenting these samples as hidden 1080p or long-form exports. They are short local preview assets rendered on this page.",
+    "note": "We are not presenting these samples as hidden long-form exports. They are short local preview assets rendered on this page.",
     "title": "See the Current Site Samples",
     "videos": [
       {
@@ -255,12 +255,12 @@
   "pricing": {
     "comparisonRows": [
       {
-        "feature": "Paid Seedance 2.0 access",
+        "feature": "Seedance 2.0 access",
         "other": "Varies",
         "seedance": "Available"
       },
       {
-        "feature": "Starter credits in the web app",
+        "feature": "Starter and daily-task credits in the web app",
         "other": "Varies",
         "seedance": "All models"
       },
@@ -272,7 +272,7 @@
       {
         "feature": "Current public max resolution",
         "other": "Varies",
-        "seedance": "720p"
+        "seedance": "1080p"
       },
       {
         "feature": "Text-to-video",
@@ -314,7 +314,7 @@
     "cryptoPaymentLinkLabel": "click to view",
     "cryptoPaymentText": "Crypto payments are supported,",
     "creditPacksTitle": "Need just a few videos?",
-    "description": "Paid access unlocks Seedance 2.0. Starter credits are available on Seedance 2.0 only.",
+    "description": "New users can start on Seedance 2.0 right away and keep earning plenty of credits through daily tasks.",
     "monthlyLabel": "Monthly",
     "plans": [
       {
@@ -325,7 +325,7 @@
         "cta": "Get Started",
         "description": "Short-form video access for solo creators",
         "features": [
-          { "text": "480p and 720p output options" },
+          { "text": "480p, 720p, and 1080p output options" },
           { "text": "Up to 15 second Seedance 2.0 clips" },
           { "text": "Credit-based rendering" },
           { "text": "Priority processing" },
@@ -346,7 +346,7 @@
         "description": "More credits for heavier short-form iteration",
         "featured": true,
         "features": [
-          { "text": "480p and 720p output options" },
+          { "text": "480p, 720p, and 1080p output options" },
           { "text": "Up to 15 second Seedance 2.0 clips" },
           { "text": "Higher monthly credit pool" },
           { "text": "Priority processing" },
@@ -366,7 +366,7 @@
         "cta": "Get Max",
         "description": "Largest credit pool for teams and production volume",
         "features": [
-          { "text": "480p and 720p output options" },
+          { "text": "480p, 720p, and 1080p output options" },
           { "text": "Up to 15 second Seedance 2.0 clips" },
           { "text": "Largest monthly credit pool" },
           { "text": "Priority processing" },
@@ -423,7 +423,7 @@
         "question": "Is it good for complex motion?"
       },
       {
-        "answer": "seedance2.app offers starter credits on Seedance 2.0. Seedance 2.0 is available through paid access in the current web app.",
+        "answer": "On seedance2.app, new users can start on Seedance 2.0 right away and keep earning plenty of credits through daily tasks.",
         "question": "Where can I use it?"
       },
       {
@@ -431,14 +431,14 @@
         "question": "Can I use outputs commercially?"
       },
       {
-        "answer": "Outputs can vary. Current public limits in the web app are short clips only, with 480p or 720p output and a maximum of 15 seconds on Seedance 2.0.",
+        "answer": "Outputs can vary. Current public limits in the web app are short clips only, with 480p, 720p, or 1080p output and a maximum of 15 seconds on Seedance 2.0.",
         "question": "What are known limitations?"
       }
     ],
     "title": "Frequently Asked Questions"
   },
   "cta": {
-    "description": "Open the generator, choose a model, and create short-form clips. Starter credits apply to Seedance 2.0; paid access unlocks Seedance 2.0.",
+    "description": "Open the generator, choose a model, and create short-form clips. New users can start on Seedance 2.0 right away and keep earning plenty of credits through daily tasks.",
     "kicker": "Start in Minutes",
     "primaryLabel": "Open Seedance 2.0",
     "secondaryLabel": "View Prompt Pack",

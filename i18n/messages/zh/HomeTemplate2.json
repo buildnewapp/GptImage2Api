@@ -13,7 +13,7 @@
     "badge": "Seedance 2.0 web & api",
     "ctaLabel": "生成视频",
     "creditCost": "25",
-    "description": "从文本或参考图片创建短篇 AI 视频。Seedance 2.0 提供新手积分。当前 Web 应用中的付费 Seedance 2.0 最多支持 720p 和 15 秒。",
+    "description": "从文本或参考图片创建短篇 AI 视频。新手可以直接使用 Seedance 2.0，并通过每日任务持续获得大量积分。当前 Web 应用中的 Seedance 2.0 最多支持 1080p 和 15 秒。",
     "durationLabel": "5秒",
     "highlight": "更清晰呈现。",
     "modelLabel": "Seedance 2.0",
@@ -29,7 +29,7 @@
   },
   "featureRows": [
     {
-      "description": "编写提示词，选择画幅比例、时长和分辨率，然后在当前 Web 应用中渲染短视频片段。Seedance 2.0 需付费解锁；新手积分仅适用于 Seedance 2.0。",
+      "description": "编写提示词，选择画幅比例、时长和分辨率，然后在当前 Web 应用中渲染短视频片段。新手即可直接使用 Seedance 2.0，并可通过每日任务持续获得大量积分。",
       "title": "短视频文生视频",
       "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/gomdqjkt4.mp4"
     },
@@ -40,12 +40,12 @@
       "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/es600fg0x.mp4"
     },
     {
-      "description": "可以先用新手积分体验 Seedance 2.0，或在需要更高等级时付费解锁 Seedance 2.0。渲染前，生成器里会显示模型限制。",
-      "title": "选择 2.0 Lite 或 2.0",
+      "description": "新手可以直接使用 Seedance 2.0，后续也可以通过每日任务持续获得大量积分。渲染前，生成器里会显示模型限制。",
+      "title": "直接开始使用 2.0",
       "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/88jhjdm4l.mp4"
     },
     {
-      "description": "当前 seedance2.app 的公开方案中，Seedance 2.0 最高支持 720p 和 15 秒。我们会在界面中直接展示这些限制，方便你在消耗积分前合理规划提示词。",
+      "description": "当前 seedance2.app 的公开方案中，Seedance 2.0 最高支持 1080p 和 15 秒。我们会在界面中直接展示这些限制，方便你在消耗积分前合理规划提示词。",
       "reverse": true,
       "title": "输出限制一目了然",
       "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/nf3vdfl8a.mp4"
@@ -53,8 +53,8 @@
   ],
   "scope": {
     "description": "当前 Web 应用今天实际开放的能力",
-    "footerDescription": "没有隐藏的长视频或 1080p 承诺",
-    "footerStat": "目前最高 720p 与 15 秒",
+    "footerDescription": "没有隐藏的长视频承诺",
+    "footerStat": "目前最高 1080p 与 15 秒",
     "footerTitle": "专为短视频生产而建",
     "logos": [
       "TECHCRUNCH",
@@ -81,13 +81,13 @@
       },
       {
         "accent": "accent",
-        "description": "新手积分适用于 Seedance 2.0。Seedance 2.0 需要付费访问。",
+        "description": "新手可以直接使用 Seedance 2.0，并可通过每日任务持续获得大量积分。",
         "icon": "globe",
         "title": "模型访问"
       },
       {
         "accent": "foreground",
-        "description": "当前应用中的公开选项为 480p 和 720p。",
+        "description": "当前应用中的公开选项为 480p、720p 和 1080p。",
         "icon": "award",
         "title": "分辨率上限"
       },
@@ -151,7 +151,7 @@
     "ctaText": "准备好创建你自己的短片了吗？",
     "description": "本页展示的预览素材都是站内短视频片段。这里显示的元数据反映的是本站实际文件信息。",
     "kicker": "视频展示",
-    "note": "这些样片并不是隐藏的 1080p 或长视频导出。它们就是当前页面上渲染的本地短视频预览素材。",
+    "note": "这些样片并不是隐藏的长视频导出。它们就是当前页面上渲染的本地短视频预览素材。",
     "title": "看看当前网站里的示例素材",
     "videos": [
       {
@@ -255,12 +255,12 @@
   "pricing": {
     "comparisonRows": [
       {
-        "feature": "付费 Seedance 2.0 访问",
+        "feature": "Seedance 2.0 访问",
         "other": "视情况而定",
         "seedance": "可用"
       },
       {
-        "feature": "Web 应用内新手积分",
+        "feature": "Web 应用内新手与任务积分",
         "other": "视情况而定",
         "seedance": "所有模型"
       },
@@ -272,7 +272,7 @@
       {
         "feature": "当前公开最高分辨率",
         "other": "视情况而定",
-        "seedance": "720p"
+        "seedance": "1080p"
       },
       {
         "feature": "文生视频",
@@ -314,7 +314,7 @@
     "cryptoPaymentLinkLabel": "点击查看",
     "cryptoPaymentText": "支持虚拟货币支付，",
     "creditPacksTitle": "只需要少量视频？",
-    "description": "付费访问可解锁 Seedance 2.0。新手积分仅适用于 Seedance 2.0。",
+    "description": "新手可直接使用 Seedance 2.0，并通过每日任务持续获得大量积分。",
     "monthlyLabel": "月付",
     "plans": [
       {
@@ -325,7 +325,7 @@
         "cta": "开始使用",
         "description": "面向个人创作者的短视频访问方案",
         "features": [
-          { "text": "480p 与 720p 输出选项" },
+          { "text": "480p、720p 与 1080p 输出选项" },
           { "text": "Seedance 2.0 最长支持 15 秒片段" },
           { "text": "按积分消耗渲染" },
           { "text": "优先处理" },
@@ -346,7 +346,7 @@
         "description": "适合高频短视频迭代的更多积分",
         "featured": true,
         "features": [
-          { "text": "480p 与 720p 输出选项" },
+          { "text": "480p、720p 与 1080p 输出选项" },
           { "text": "Seedance 2.0 最长支持 15 秒片段" },
           { "text": "更高的月度积分池" },
           { "text": "优先处理" },
@@ -366,7 +366,7 @@
         "cta": "升级 Max",
         "description": "为团队与更大产量准备的最大积分池",
         "features": [
-          { "text": "480p 与 720p 输出选项" },
+          { "text": "480p、720p 与 1080p 输出选项" },
           { "text": "Seedance 2.0 最长支持 15 秒片段" },
           { "text": "最大的月度积分池" },
           { "text": "优先处理" },
@@ -423,7 +423,7 @@
         "question": "它擅长复杂运动吗？"
       },
       {
-        "answer": "seedance2.app 为 Seedance 2.0 提供新手积分。当前 Web 应用中的 Seedance 2.0 需通过付费访问。",
+        "answer": "在 seedance2.app 中，新手可以直接使用 Seedance 2.0，并通过每日任务持续获得大量积分。",
         "question": "我可以在哪里使用它？"
       },
       {
@@ -431,14 +431,14 @@
         "question": "我可以将输出用于商业用途吗？"
       },
       {
-        "answer": "输出效果会有所波动。当前 Web 应用的公开限制是仅支持短片，输出分辨率为 480p 或 720p，Seedance 2.0 最长支持 15 秒。",
+        "answer": "输出效果会有所波动。当前 Web 应用的公开限制是仅支持短片，输出分辨率支持 480p、720p 和 1080p，Seedance 2.0 最长支持 15 秒。",
         "question": "目前已知的限制有哪些？"
       }
     ],
     "title": "常见问题"
   },
   "cta": {
-    "description": "打开生成器，选择模型，开始创建短视频片段。新手积分适用于 Seedance 2.0；付费访问可解锁 Seedance 2.0。",
+    "description": "打开生成器，选择模型，开始创建短视频片段。新手可以直接使用 Seedance 2.0，并通过每日任务持续获得大量积分。",
     "kicker": "几分钟即可开始",
     "primaryLabel": "打开 Seedance 2.0",
     "secondaryLabel": "查看提示词包",

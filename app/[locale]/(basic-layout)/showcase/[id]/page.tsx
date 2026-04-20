@@ -64,7 +64,10 @@ export default async function ShowcaseDetailPage({
     notFound();
   }
 
-  const previewUrl = record.resultUrls[0] ?? record.uploadedImage ?? null;
+  const referenceImages = record.uploadedImages ?? [];
+  const referenceVideos = record.inputVideos ?? [];
+  const previewUrl =
+    record.resultUrls[0] ?? referenceImages[0] ?? record.uploadedImage ?? null;
   const modeLabel =
     record.category === "image"
       ? t("detail.imageGeneration")
@@ -241,16 +244,48 @@ export default async function ShowcaseDetailPage({
                 ) : null}
               </div>
 
-              {record.uploadedImage ? (
+              {referenceImages.length > 0 ? (
                 <div className="mt-5">
                   <div className="mb-3 text-sm text-muted-foreground">
-                    {t("detail.referenceImage")}
+                    {t("detail.referenceImages")}
                   </div>
-                  <img
-                    src={record.uploadedImage}
-                    alt={t("detail.referenceImage")}
-                    className="h-32 w-32 rounded-[1.2rem] border border-border/70 object-cover"
-                  />
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                    {referenceImages.map((url, index) => (
+                      <img
+                        key={`${url}-${index}`}
+                        src={url}
+                        alt={`${t("detail.referenceImages")} ${index + 1}`}
+                        className="aspect-square w-full rounded-[1.2rem] border border-border/70 object-cover"
+                      />
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+
+              {referenceVideos.length > 0 ? (
+                <div className="mt-5">
+                  <div className="mb-3 text-sm text-muted-foreground">
+                    {t("detail.referenceVideos")}
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {referenceVideos.map((url, index) => (
+                      <a
+                        key={`${url}-${index}`}
+                        href={url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="overflow-hidden rounded-[1.2rem] border border-border/70 bg-card"
+                      >
+                        <video
+                          src={url}
+                          className="aspect-video w-full object-cover"
+                          controls
+                          playsInline
+                          preload="metadata"
+                        />
+                      </a>
+                    ))}
+                  </div>
                 </div>
               ) : null}
             </div>

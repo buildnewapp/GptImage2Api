@@ -278,6 +278,15 @@ test("offsets the homepage back under the shared fixed header", () => {
   );
 });
 
+test("clips horizontal overflow at the homepage shell to avoid page-level sideways scrolling", () => {
+  const source = readFileSync(
+    path.join(projectRoot, "components/home/HomeTemplate2.tsx"),
+    "utf8"
+  );
+
+  assert.match(source, /pageShellClass \+ " -mt-20 w-full overflow-x-hidden"/);
+});
+
 test("shares template2 theme tokens with HeaderShell when header is rendered outside HomeTemplate2", () => {
   const constantsSource = readFileSync(
     path.join(projectRoot, "components/home/template2/constants.ts"),

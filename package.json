@@ -1,10 +1,6 @@
 {
   "name": "sdanceweb",
   "version": "1.0.0",
-  "author": {
-    "name": "WeNext",
-    "repository": "https://github.com/wenextdev/nexty.dev"
-  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

@@ -34,7 +34,7 @@ export default async function HomeTemplate2() {
   } as HomeTemplate2Page;
 
   return (
-    <div className={pageShellClass + ' -mt-20 w-full'}>
+    <div className={pageShellClass + " -mt-20 w-full overflow-x-hidden"}>
       {/*<Header />*/}
       <Hero hero={page.hero} />
       <div id="features">

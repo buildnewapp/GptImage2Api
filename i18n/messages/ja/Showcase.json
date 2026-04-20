@@ -25,6 +25,7 @@
     "aspectRatio": "アスペクト比",
     "resolution": "解像度",
     "duration": "長さ",
-    "referenceImage": "参照画像"
+    "referenceImages": "参照画像",
+    "referenceVideos": "参照動画"
   }
 }

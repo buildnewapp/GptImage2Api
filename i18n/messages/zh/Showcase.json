@@ -25,6 +25,7 @@
     "aspectRatio": "画幅比例",
     "resolution": "分辨率",
     "duration": "时长",
-    "referenceImage": "参考图"
+    "referenceImages": "参考图片",
+    "referenceVideos": "参考视频"
   }
 }

@@ -25,6 +25,7 @@
     "aspectRatio": "Aspect ratio",
     "resolution": "Resolution",
     "duration": "Duration",
-    "referenceImage": "Reference image"
+    "referenceImages": "Reference images",
+    "referenceVideos": "Reference videos"
   }
 }
