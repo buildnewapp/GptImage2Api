@@ -8,6 +8,22 @@
   "annual": "Annual",
   "monthly": "Monthly",
   "onetime": "One-Time",
+  "taskHub": {
+    "title": "Complete tasks to unlock plenty of free credits and try AI generation for free",
+    "badgeLabel": "Task Center",
+    "buttonLabel": "Open Task Center",
+    "items": [
+      {
+        "title": "Sign up for credits"
+      },
+      {
+        "title": "Daily check-in credits"
+      },
+      {
+        "title": "Invite for credits"
+      }
+    ]
+  },
   "saveTip": "Save 20%",
   "manualCoupon": "I have a different coupon code",
   "errors": {

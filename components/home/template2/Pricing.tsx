@@ -1,5 +1,6 @@
 import Template2PricingAction from "@/components/home/template2/Template2PricingAction";
 import Template2PricingRecurring from "@/components/home/template2/Template2PricingRecurring";
+import PricingTaskHub from "@/components/home/template2/PricingTaskHub";
 import {
   moduleCardClass,
   sectionTitleClass,
@@ -10,9 +11,17 @@ import { Link as I18nLink } from "@/i18n/routing";
 
 interface PricingProps {
   section: HomeTemplate2Pricing;
+  taskHub?: {
+    badgeLabel: string;
+    buttonLabel: string;
+    items: Array<{
+      title: string;
+    }>;
+    title: string;
+  };
 }
 
-export default function Pricing({ section }: PricingProps) {
+export default function Pricing({ section, taskHub }: PricingProps) {
   const yearlyPlans = section.yearlyPlans ?? section.plans;
   const monthlyPlans = section.monthlyPlans ?? [];
 
@@ -26,6 +35,7 @@ export default function Pricing({ section }: PricingProps) {
           <p data-aos="fade-up" className="mx-auto max-w-3xl text-xl text-muted-foreground">
             {section.description}
           </p>
+          {taskHub ? <PricingTaskHub section={taskHub} /> : null}
         </div>
 
         <Template2PricingRecurring
