@@ -567,6 +567,7 @@ export default function AIVideoStudio({
     new Map(),
   );
   const pollingErrorCountsRef = useRef<Map<string, number>>(new Map());
+  const pollingInFlightRef = useRef<Set<string>>(new Set());
   const defaultSelection = useMemo(
     () => getDefaultSelection(initialModelId),
     [initialModelId],
@@ -972,6 +973,8 @@ export default function AIVideoStudio({
 
   const clearTaskPolling = useCallback((localId: string) => {
     const timer = pollingTimersRef.current.get(localId);
+    pollingInFlightRef.current.delete(localId);
+
     if (!timer) {
       pollingErrorCountsRef.current.delete(localId);
       return;
@@ -988,6 +991,12 @@ export default function AIVideoStudio({
       const mediaKind = resolveGeneratedMediaKind(modelId);
 
       const timer = setInterval(async () => {
+        if (pollingInFlightRef.current.has(localId)) {
+          return;
+        }
+
+        pollingInFlightRef.current.add(localId);
+
         try {
           const response = await fetch(
             `/api/ai-studio/tasks/${taskId}?modelId=${encodeURIComponent(modelId)}`,
@@ -1048,6 +1057,8 @@ export default function AIVideoStudio({
           }
 
           increaseTaskProgress(localId);
+        } finally {
+          pollingInFlightRef.current.delete(localId);
         }
       }, 5000);
 
@@ -1067,6 +1078,7 @@ export default function AIVideoStudio({
       pollingTimersRef.current.forEach((timer) => clearInterval(timer));
       pollingTimersRef.current.clear();
       pollingErrorCountsRef.current.clear();
+      pollingInFlightRef.current.clear();
     };
   }, []);
 
