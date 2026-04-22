@@ -3,12 +3,28 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+} from "@/components/ui/pagination";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import {
   AI_VIDEO_STUDIO_FORM_STORAGE_KEY,
@@ -28,13 +44,15 @@ import {
   Loader2,
   MoreHorizontal,
   RefreshCcw,
+  Search,
   Settings,
   Trash2,
   Video,
   WandSparkles,
+  X,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -52,22 +70,99 @@ function mapTaskStateToLegacyStatus(state: string) {
   return "pending";
 }
 
+function buildPaginationItems(currentPage: number, totalPages: number) {
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
+  }
+
+  const items: Array<number | "ellipsis"> = [1];
+  const start = Math.max(2, currentPage - 1);
+  const end = Math.min(totalPages - 1, currentPage + 1);
+
+  if (start > 2) {
+    items.push("ellipsis");
+  }
+
+  for (let nextPage = start; nextPage <= end; nextPage += 1) {
+    items.push(nextPage);
+  }
+
+  if (end < totalPages - 1) {
+    items.push("ellipsis");
+  }
+
+  items.push(totalPages);
+  return items;
+}
+
+function parsePage(value: string | null) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed >= 1 ? Math.floor(parsed) : 1;
+}
+
 export default function AiStudioVideoHistoryClient() {
   const t = useTranslations("VideoGeneration");
   const tLanding = useTranslations("Landing.Hero");
   const locale = useLocale();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [records, setRecords] = useState<VideoGeneration[]>([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const [selectedRecord, setSelectedRecord] = useState<VideoGeneration | null>(
+    null,
+  );
   const [updatingVisibilityId, setUpdatingVisibilityId] = useState<
     string | null
   >(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const page = parsePage(searchParams.get("page"));
+  const rawStatusFilter = searchParams.get("status");
+  const statusFilter =
+    rawStatusFilter === "pending" ||
+    rawStatusFilter === "success" ||
+    rawStatusFilter === "failed"
+      ? rawStatusFilter
+      : "all";
+  const searchQuery = searchParams.get("q")?.trim() ?? "";
+  const [searchInput, setSearchInput] = useState(searchQuery);
+  const paginationItems = buildPaginationItems(page, totalPages);
+
+  useEffect(() => {
+    setSearchInput(searchQuery);
+  }, [searchQuery]);
+
+  const updateQueryParams = useCallback(
+    (updates: { page?: number; status?: string; q?: string }) => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      if (updates.page && updates.page > 1) {
+        params.set("page", String(updates.page));
+      } else if (updates.page !== undefined) {
+        params.delete("page");
+      }
+
+      if (updates.status && updates.status !== "all") {
+        params.set("status", updates.status);
+      } else if (updates.status !== undefined) {
+        params.delete("status");
+      }
+
+      if (updates.q && updates.q.trim()) {
+        params.set("q", updates.q.trim());
+      } else if (updates.q !== undefined) {
+        params.delete("q");
+      }
+
+      const nextQuery = params.toString();
+      router.push(nextQuery ? `${pathname}?${nextQuery}` : pathname, {
+        scroll: false,
+      });
+    },
+    [pathname, router, searchParams],
+  );
 
   const fetchHistory = useCallback(async () => {
     setLoading(true);
@@ -78,6 +173,9 @@ export default function AiStudioVideoHistoryClient() {
       });
       if (statusFilter !== "all") {
         params.set("status", statusFilter);
+      }
+      if (searchQuery) {
+        params.set("q", searchQuery);
       }
 
       const res = await fetch(`/api/ai-studio/video-history?${params}`);
@@ -110,27 +208,27 @@ export default function AiStudioVideoHistoryClient() {
                 const newStatus = mapTaskStateToLegacyStatus(
                   statusData.data.state,
                 );
-                if (newStatus !== "pending") {
-                  setRecords((current) =>
-                    current.map((item) =>
-                      item.id === record.id
-                        ? {
-                            ...item,
-                            status: newStatus,
-                            resultUrls:
-                              statusData.data.mediaUrls?.length > 0
-                                ? statusData.data.mediaUrls
-                                : item.resultUrls,
-                            resultUrl:
-                              statusData.data.mediaUrls?.[0] || item.resultUrl,
-                            creditsRefunded:
-                              Number(statusData.data.refundedCredits ?? 0) >
-                                0 || item.creditsRefunded,
-                          }
-                        : item,
-                    ),
-                  );
-                }
+                setRecords((current) =>
+                  current.map((item) =>
+                    item.id === record.id
+                      ? {
+                          ...item,
+                          status: newStatus,
+                          resultUrls:
+                            statusData.data.mediaUrls?.length > 0
+                              ? statusData.data.mediaUrls
+                              : item.resultUrls,
+                          resultUrl:
+                            statusData.data.mediaUrls?.[0] || item.resultUrl,
+                          responsePayload:
+                            statusData.data.raw ?? item.responsePayload,
+                          creditsRefunded:
+                            Number(statusData.data.refundedCredits ?? 0) > 0 ||
+                            item.creditsRefunded,
+                        }
+                      : item,
+                  ),
+                );
               }
             })
             .catch(() => {
@@ -143,11 +241,21 @@ export default function AiStudioVideoHistoryClient() {
     } finally {
       setLoading(false);
     }
-  }, [page, statusFilter]);
+  }, [page, searchQuery, statusFilter]);
 
   useEffect(() => {
     void fetchHistory();
   }, [fetchHistory]);
+
+  useEffect(() => {
+    if (!selectedRecord) {
+      return;
+    }
+
+    const nextSelectedRecord =
+      records.find((record) => record.id === selectedRecord.id) ?? null;
+    setSelectedRecord(nextSelectedRecord);
+  }, [records, selectedRecord]);
 
   const getTaskParamsLine = useCallback(
     (record: VideoGeneration) => {
@@ -382,7 +490,11 @@ export default function AiStudioVideoHistoryClient() {
 
         const nextPage = records.length === 1 && page > 1 ? page - 1 : page;
         if (nextPage !== page) {
-          setPage(nextPage);
+          updateQueryParams({
+            page: nextPage,
+            status: statusFilter,
+            q: searchQuery,
+          });
         } else {
           void fetchHistory();
         }
@@ -393,7 +505,16 @@ export default function AiStudioVideoHistoryClient() {
         setDeletingId(null);
       }
     },
-    [deletingId, fetchHistory, page, records.length, t],
+    [
+      deletingId,
+      fetchHistory,
+      page,
+      records.length,
+      searchQuery,
+      statusFilter,
+      t,
+      updateQueryParams,
+    ],
   );
 
   const getStatusBadge = (
@@ -453,6 +574,100 @@ export default function AiStudioVideoHistoryClient() {
       .replace(/\b\w/g, (letter) => letter.toUpperCase());
   };
 
+  const formatDetailDateTime = useCallback(
+    (value: string | Date) =>
+      new Intl.DateTimeFormat(locale, {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      }).format(new Date(value)),
+    [locale],
+  );
+
+  const formatJsonBlock = useCallback((value: unknown) => {
+    if (value == null) {
+      return "";
+    }
+
+    if (typeof value === "string") {
+      return value;
+    }
+
+    try {
+      return JSON.stringify(value, null, 2);
+    } catch {
+      return String(value);
+    }
+  }, []);
+
+  const detailFields = selectedRecord
+    ? [
+        {
+          label: t("detail.fields.status"),
+          value: t(`status.${selectedRecord.status}`),
+        },
+        {
+          label: t("detail.fields.category"),
+          value:
+            selectedRecord.category === "image"
+              ? t("detail.category.image")
+              : t("detail.category.video"),
+        },
+        {
+          label: t("detail.fields.model"),
+          value:
+            selectedRecord.modelLabel ||
+            formatModelName(selectedRecord.model) ||
+            "-",
+        },
+        {
+          label: t("detail.fields.catalog_model"),
+          value: selectedRecord.catalogModelId || "-",
+        },
+        {
+          label: t("detail.fields.task_id"),
+          value: selectedRecord.taskId || "-",
+        },
+        {
+          label: t("detail.fields.provider_task_id"),
+          value: selectedRecord.providerTaskId || "-",
+        },
+        {
+          label: t("detail.fields.visibility"),
+          value: selectedRecord.isPublic
+            ? tLanding("form.public")
+            : tLanding("form.private"),
+        },
+        {
+          label: t("detail.fields.credits"),
+          value: String(selectedRecord.creditsRequired ?? selectedRecord.creditsUsed),
+        },
+        {
+          label: t("detail.fields.used_credits"),
+          value: String(selectedRecord.creditsUsed),
+        },
+        {
+          label: t("detail.fields.created_at"),
+          value: formatDetailDateTime(selectedRecord.createdAt),
+        },
+        {
+          label: t("detail.fields.mode"),
+          value: selectedRecord.mode
+            ? selectedRecord.mode === "image-to-video"
+              ? tLanding("form.imageToVideo")
+              : tLanding("form.textToVideo")
+            : "-",
+        },
+        {
+          label: t("detail.fields.prompt"),
+          value: selectedRecord.prompt || "-",
+        },
+      ]
+    : [];
+
   if (loading && records.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -463,36 +678,85 @@ export default function AiStudioVideoHistoryClient() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center gap-3">
-        {["all", "pending", "success", "failed"].map((status) => (
-          <Button
-            key={status}
-            type="button"
-            variant={statusFilter === status ? "default" : "outline"}
-            onClick={() => {
-              setStatusFilter(status);
-              setPage(1);
-            }}
-            className={cn(
-              "rounded-lg transition-all",
-              statusFilter !== status &&
-                "bg-card text-muted-foreground hover:text-foreground hover:bg-muted",
-            )}
-          >
-            {status === "all" ? t("filter.all") : t(`status.${status}`)}
-          </Button>
-        ))}
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          onClick={() => void fetchHistory()}
-          className="ml-auto rounded-lg"
-          title={t("refresh")}
-          aria-label={t("refresh")}
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <form
+          className="flex flex-1 items-center gap-2"
+          onSubmit={(event) => {
+            event.preventDefault();
+            updateQueryParams({
+              page: 1,
+              status: statusFilter,
+              q: searchInput,
+            });
+          }}
         >
-          <RefreshCcw className={cn("w-4 h-4", loading && "animate-spin")} />
-        </Button>
+          <Input
+            value={searchInput}
+            onChange={(event) => setSearchInput(event.target.value)}
+            placeholder={t("search.placeholder")}
+            className="rounded-lg"
+          />
+          <Button
+            type="submit"
+            variant="outline"
+            className="shrink-0 rounded-lg"
+          >
+            <Search className="w-4 h-4" />
+            {t("search.submit")}
+          </Button>
+          {searchQuery ? (
+            <Button
+              type="button"
+              variant="ghost"
+              className="shrink-0 rounded-lg"
+              onClick={() => {
+                setSearchInput("");
+                updateQueryParams({
+                  page: 1,
+                  status: statusFilter,
+                  q: "",
+                });
+              }}
+            >
+              {t("search.clear")}
+            </Button>
+          ) : null}
+        </form>
+
+        <div className="flex flex-wrap items-center gap-3">
+          {["all", "pending", "success", "failed"].map((status) => (
+            <Button
+              key={status}
+              type="button"
+              variant={statusFilter === status ? "default" : "outline"}
+              onClick={() =>
+                updateQueryParams({
+                  page: 1,
+                  status,
+                  q: searchQuery,
+                })
+              }
+              className={cn(
+                "rounded-lg transition-all",
+                statusFilter !== status &&
+                  "bg-card text-muted-foreground hover:text-foreground hover:bg-muted",
+              )}
+            >
+              {status === "all" ? t("filter.all") : t(`status.${status}`)}
+            </Button>
+          ))}
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onClick={() => void fetchHistory()}
+            className="rounded-lg"
+            title={t("refresh")}
+            aria-label={t("refresh")}
+          >
+            <RefreshCcw className={cn("w-4 h-4", loading && "animate-spin")} />
+          </Button>
+        </div>
       </div>
 
       {records.length === 0 ? (
@@ -515,25 +779,21 @@ export default function AiStudioVideoHistoryClient() {
             return (
               <div
                 key={record.id}
-                className="group rounded-xl border border-border bg-card overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
+                className="group cursor-pointer rounded-xl border border-border bg-card overflow-hidden shadow-sm transition-all duration-200 hover:shadow-md"
+                onClick={() => setSelectedRecord(record)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setSelectedRecord(record);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
               >
                 <div
                   className={cn(
                     "relative aspect-video bg-muted/50",
-                    (record.category === "video" ||
-                      (record.category === "image" &&
-                        imageResultUrls.length > 0)) &&
-                      "cursor-pointer",
                   )}
-                  onClick={() => {
-                    if (record.category !== "video" || !record.resultUrl) {
-                      return;
-                    }
-
-                    setExpandedItem(
-                      expandedItem === record.id ? null : record.id,
-                    );
-                  }}
                 >
                   {record.status === "success" &&
                   (record.category === "image"
@@ -549,7 +809,6 @@ export default function AiStudioVideoHistoryClient() {
                             formatModelName(record.model)
                           }
                           className="w-full h-full object-cover"
-                          onClick={() => handleOpenImage(imageResultUrls[0]!)}
                         />
                       ) : (
                         <div className="grid h-full grid-cols-2 gap-0.5 bg-border/40 p-0.5">
@@ -563,7 +822,6 @@ export default function AiStudioVideoHistoryClient() {
                               <div
                                 key={`${record.id}-${url}-${index}`}
                                 className="relative overflow-hidden bg-muted"
-                                onClick={() => handleOpenImage(url)}
                               >
                                 <img
                                   src={url}
@@ -586,7 +844,6 @@ export default function AiStudioVideoHistoryClient() {
                         className="w-full h-full object-cover"
                         muted
                         playsInline
-                        controls={expandedItem === record.id}
                         onMouseOver={(event) =>
                           (event.target as HTMLVideoElement).play()
                         }
@@ -662,12 +919,17 @@ export default function AiStudioVideoHistoryClient() {
                           variant="ghost"
                           size="xs"
                           aria-label={t("columns.actions")}
+                          onClick={(event) => event.stopPropagation()}
                         >
                           <Settings className="w-3 h-3" />
                           {t("columns.actions")}
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-44">
+                      <DropdownMenuContent
+                        align="end"
+                        className="w-44"
+                        onClick={(event) => event.stopPropagation()}
+                      >
                         <DropdownMenuItem
                           onClick={() =>
                             handleDownloadMedia(
@@ -757,40 +1019,311 @@ export default function AiStudioVideoHistoryClient() {
         </div>
       )}
 
+      <Drawer
+        open={!!selectedRecord}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelectedRecord(null);
+          }
+        }}
+        direction="right"
+      >
+        <DrawerContent className="overflow-hidden p-0 data-[vaul-drawer-direction=right]:h-full data-[vaul-drawer-direction=right]:w-[92vw] data-[vaul-drawer-direction=right]:sm:max-w-3xl">
+          {selectedRecord && (
+            <div className="flex h-full min-h-0 flex-col">
+              <DrawerHeader className="gap-3 border-b">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-1">
+                    <DrawerTitle>
+                      {selectedRecord.modelLabel ||
+                        formatModelName(selectedRecord.model)}
+                    </DrawerTitle>
+                    <DrawerDescription>
+                      {formatCompactDateTime(selectedRecord.createdAt)}
+                    </DrawerDescription>
+                  </div>
+                  <DrawerClose asChild>
+                    <Button variant="ghost" size="icon-sm" aria-label={t("detail.close")}>
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </DrawerClose>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  {getStatusBadge(
+                    selectedRecord.status,
+                    selectedRecord.creditsRefunded,
+                    selectedRecord.category,
+                  )}
+                  <Badge variant="secondary">
+                    {selectedRecord.isPublic
+                      ? tLanding("form.public")
+                      : tLanding("form.private")}
+                  </Badge>
+                </div>
+              </DrawerHeader>
+
+              <div className="min-h-0 flex-1 overflow-y-auto">
+                <div className="space-y-6 p-4">
+                  <section className="space-y-3">
+                    <h3 className="text-sm font-semibold">{t("detail.preview")}</h3>
+                    {selectedRecord.status === "success" ? (
+                      selectedRecord.category === "image" ? (
+                        selectedRecord.resultUrls.length > 0 ? (
+                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                            {selectedRecord.resultUrls.map((url, index) => (
+                              <button
+                                key={`${selectedRecord.id}-result-${url}-${index}`}
+                                type="button"
+                                className="overflow-hidden rounded-lg border bg-muted text-left"
+                                onClick={() => handleOpenImage(url)}
+                              >
+                                <img
+                                  src={url}
+                                  alt={`${selectedRecord.prompt || selectedRecord.modelLabel || formatModelName(selectedRecord.model)} ${index + 1}`}
+                                  className="aspect-video h-full w-full object-cover"
+                                />
+                              </button>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+                            {t("detail.empty_result")}
+                          </div>
+                        )
+                      ) : selectedRecord.resultUrl ? (
+                        <div className="overflow-hidden rounded-lg border bg-black">
+                          <video
+                            src={selectedRecord.resultUrl}
+                            className="aspect-video w-full"
+                            controls
+                            playsInline
+                          />
+                        </div>
+                      ) : (
+                        <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+                          {t("detail.empty_result")}
+                        </div>
+                      )
+                    ) : (
+                      <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+                        {t("detail.empty_result")}
+                      </div>
+                    )}
+                  </section>
+
+                  <Separator />
+
+                  <section className="space-y-3">
+                    <h3 className="text-sm font-semibold">{t("detail.basic_info")}</h3>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {detailFields.map((item) => (
+                        <div
+                          key={item.label}
+                          className="rounded-lg border bg-muted/30 px-3 py-2"
+                        >
+                          <div className="text-xs text-muted-foreground">{item.label}</div>
+                          <div className="mt-1 break-all text-sm leading-6">
+                            {item.value}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {(selectedRecord.uploadedImages?.length ||
+                    selectedRecord.inputVideos?.length ||
+                    selectedRecord.resultUrls.length > 0) && (
+                    <>
+                      <Separator />
+                      <section className="space-y-4">
+                        {selectedRecord.uploadedImages?.length ? (
+                          <div className="space-y-2">
+                            <h3 className="text-sm font-semibold">
+                              {t("detail.uploaded_images")}
+                            </h3>
+                            <div className="flex flex-wrap gap-2">
+                              {selectedRecord.uploadedImages.map((url, index) => (
+                                <button
+                                  key={`${selectedRecord.id}-upload-${url}-${index}`}
+                                  type="button"
+                                  className="overflow-hidden rounded-lg border bg-muted"
+                                  onClick={() => handleOpenImage(url)}
+                                >
+                                  <img
+                                    src={url}
+                                    alt={`${t("detail.uploaded_images")} ${index + 1}`}
+                                    className="h-20 w-20 object-cover"
+                                  />
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        ) : null}
+
+                        {selectedRecord.inputVideos?.length ? (
+                          <div className="space-y-2">
+                            <h3 className="text-sm font-semibold">
+                              {t("detail.input_videos")}
+                            </h3>
+                            <div className="space-y-2">
+                              {selectedRecord.inputVideos.map((url, index) => (
+                                <video
+                                  key={`${selectedRecord.id}-input-video-${url}-${index}`}
+                                  src={url}
+                                  className="w-full rounded-lg border bg-black"
+                                  controls
+                                  playsInline
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        ) : null}
+
+                        {selectedRecord.resultUrls.length > 0 ? (
+                          <div className="space-y-2">
+                            <h3 className="text-sm font-semibold">
+                              {t("detail.result_urls")}
+                            </h3>
+                            <div className="space-y-2">
+                              {selectedRecord.resultUrls.map((url, index) => (
+                                <a
+                                  key={`${selectedRecord.id}-result-link-${url}-${index}`}
+                                  href={url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="block rounded-lg border bg-muted/30 px-3 py-2 text-sm text-foreground/80 underline-offset-4 hover:underline"
+                                >
+                                  {url}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        ) : null}
+                      </section>
+                    </>
+                  )}
+
+                  <Separator />
+
+                  <section className="space-y-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 className="text-sm font-semibold">{t("detail.request")}</h3>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="xs"
+                        onClick={() => void handleCopyRequest(selectedRecord.requestPayload)}
+                      >
+                        <Copy className="w-3 h-3" />
+                        {t("copy_request")}
+                      </Button>
+                    </div>
+                    <pre className="max-h-[360px] overflow-auto rounded-lg bg-slate-950 p-4 font-mono text-xs leading-6 text-slate-100">
+                      {formatJsonBlock(selectedRecord.requestPayload)}
+                    </pre>
+                  </section>
+
+                  <Separator />
+
+                  <section className="space-y-3">
+                    <h3 className="text-sm font-semibold">{t("detail.response")}</h3>
+                    {selectedRecord.responsePayload ? (
+                      <pre className="max-h-[360px] overflow-auto rounded-lg bg-slate-950 p-4 font-mono text-xs leading-6 text-slate-100">
+                        {formatJsonBlock(selectedRecord.responsePayload)}
+                      </pre>
+                    ) : (
+                      <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+                        {t("detail.empty_response")}
+                      </div>
+                    )}
+                  </section>
+                </div>
+              </div>
+            </div>
+          )}
+        </DrawerContent>
+      </Drawer>
+
       {totalPages > 1 && (
-        <div className="flex items-center justify-between pt-4">
-          <span className="text-sm text-muted-foreground">
+        <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:items-center sm:justify-between">
+          <span className="text-center text-sm text-muted-foreground sm:text-left">
             {t("pagination.total_records", { count: totalCount })}
           </span>
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              onClick={() => setPage((current) => Math.max(1, current - 1))}
-              disabled={page <= 1}
-              className="rounded-lg"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </Button>
-            <span className="text-sm px-3">
+          <div className="flex flex-row items-center gap-6">
+            <span className="text-sm text-muted-foreground">
               {t("pagination.page_of", {
                 current: page,
                 total: totalPages,
               })}
             </span>
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              onClick={() =>
-                setPage((current) => Math.min(totalPages, current + 1))
-              }
-              disabled={page >= totalPages}
-              className="rounded-lg"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </Button>
+            <Pagination className="mx-0 w-auto">
+              <PaginationContent className="flex-wrap justify-center">
+                <PaginationItem>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      updateQueryParams({
+                        page: Math.max(1, page - 1),
+                        status: statusFilter,
+                        q: searchQuery,
+                      })
+                    }
+                    disabled={page <= 1}
+                    className="gap-1 rounded-lg px-2.5"
+                    aria-label={t("pagination.previous")}
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                </PaginationItem>
+
+                {paginationItems.map((item, index) => (
+                  <PaginationItem key={`${item}-${index}`}>
+                    {item === "ellipsis" ? (
+                      <PaginationEllipsis />
+                    ) : (
+                      <Button
+                        type="button"
+                        variant={item === page ? "outline" : "ghost"}
+                        size="sm"
+                        onClick={() =>
+                          updateQueryParams({
+                            page: item,
+                            status: statusFilter,
+                            q: searchQuery,
+                          })
+                        }
+                        aria-current={item === page ? "page" : undefined}
+                        className="min-w-9 rounded-lg"
+                      >
+                        {item}
+                      </Button>
+                    )}
+                  </PaginationItem>
+                ))}
+
+                <PaginationItem>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      updateQueryParams({
+                        page: Math.min(totalPages, page + 1),
+                        status: statusFilter,
+                        q: searchQuery,
+                      })
+                    }
+                    disabled={page >= totalPages}
+                    className="gap-1 rounded-lg px-2.5"
+                    aria-label={t("pagination.next")}
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </div>
         </div>
       )}

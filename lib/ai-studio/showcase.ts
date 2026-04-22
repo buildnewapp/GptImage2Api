@@ -28,6 +28,7 @@ function mapShowcaseRow(row: {
   resultUrls: unknown;
   createdAt: Date;
   requestPayload: unknown;
+  responsePayload?: unknown;
 }) {
   const mapped = mapAiStudioUserRecordToLegacyVideoHistoryRecord({
     id: row.id,
@@ -47,6 +48,7 @@ function mapShowcaseRow(row: {
       row.requestPayload && typeof row.requestPayload === "object"
         ? (row.requestPayload as Record<string, any>)
         : {},
+    responsePayload: row.responsePayload ?? null,
   });
 
   return {

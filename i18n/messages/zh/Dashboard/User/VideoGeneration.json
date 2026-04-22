@@ -40,11 +40,46 @@
   "delete_success": "已从你的列表中移除",
   "delete_failed": "删除记录失败",
   "refresh": "刷新",
+  "search": {
+    "placeholder": "搜索任务 ID、模型名或 Prompt",
+    "submit": "搜索",
+    "clear": "清除"
+  },
   "copy_task_id": "复制任务 ID",
   "task_id_copied": "任务 ID 已复制",
   "copy_request": "复制请求",
   "request_copied": "请求已复制",
   "request_copy_failed": "复制请求失败",
+  "detail": {
+    "close": "关闭详情",
+    "preview": "结果预览",
+    "basic_info": "基础数据",
+    "request": "Request 请求",
+    "response": "Response 响应",
+    "empty_result": "当前还没有可预览的结果。",
+    "empty_response": "当前还没有可用的响应数据。",
+    "uploaded_images": "上传图片",
+    "input_videos": "输入视频",
+    "result_urls": "结果链接",
+    "category": {
+      "image": "图片",
+      "video": "视频"
+    },
+    "fields": {
+      "status": "状态",
+      "category": "类型",
+      "model": "模型",
+      "catalog_model": "模型 ID",
+      "task_id": "任务 ID",
+      "provider_task_id": "渠道任务 ID",
+      "visibility": "可见性",
+      "credits": "预扣积分",
+      "used_credits": "实际积分",
+      "created_at": "创建时间",
+      "mode": "生成方式",
+      "prompt": "Prompt"
+    }
+  },
   "media": {
     "text_to_image": "文生图",
     "image_to_image": "图生图"

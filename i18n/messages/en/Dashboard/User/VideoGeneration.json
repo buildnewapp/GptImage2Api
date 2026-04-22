@@ -40,11 +40,46 @@
   "delete_success": "Item removed from your list",
   "delete_failed": "Failed to delete item",
   "refresh": "Refresh",
+  "search": {
+    "placeholder": "Search task ID, model, or prompt",
+    "submit": "Search",
+    "clear": "Clear"
+  },
   "copy_task_id": "Copy Task ID",
   "task_id_copied": "Task ID copied",
   "copy_request": "Copy Request",
   "request_copied": "Request copied",
   "request_copy_failed": "Failed to copy request",
+  "detail": {
+    "close": "Close details",
+    "preview": "Preview",
+    "basic_info": "Basic Info",
+    "request": "Request",
+    "response": "Response",
+    "empty_result": "No preview result available yet.",
+    "empty_response": "No response payload available yet.",
+    "uploaded_images": "Uploaded Images",
+    "input_videos": "Input Videos",
+    "result_urls": "Result URLs",
+    "category": {
+      "image": "Image",
+      "video": "Video"
+    },
+    "fields": {
+      "status": "Status",
+      "category": "Category",
+      "model": "Model",
+      "catalog_model": "Model ID",
+      "task_id": "Task ID",
+      "provider_task_id": "Provider Task ID",
+      "visibility": "Visibility",
+      "credits": "Reserved Credits",
+      "used_credits": "Used Credits",
+      "created_at": "Created At",
+      "mode": "Mode",
+      "prompt": "Prompt"
+    }
+  },
   "media": {
     "text_to_image": "Text to Image",
     "image_to_image": "Image to Image"

@@ -12,13 +12,25 @@ import { apiResponse } from "@/lib/api-response";
 import { getRequestUser } from "@/lib/auth/request-user";
 import { getDb } from "@/lib/db";
 import { aiStudioGenerations } from "@/lib/db/schema";
-import { and, count, desc, eq, inArray, isNull } from "drizzle-orm";
+import {
+  and,
+  count,
+  desc,
+  eq,
+  ilike,
+  inArray,
+  isNull,
+  or,
+  sql,
+  type SQL,
+} from "drizzle-orm";
 import { z } from "zod";
 
 const querySchema = z.object({
   page: z.coerce.number().int().min(1).optional().default(1),
   limit: z.coerce.number().int().min(1).max(50).optional().default(12),
   status: z.enum(["all", "pending", "success", "failed"]).optional().default("all"),
+  q: z.string().optional().default(""),
 });
 
 export async function GET(request: Request) {
@@ -36,10 +48,11 @@ export async function GET(request: Request) {
         searchParams.get("pageSize") ??
         12,
       status: searchParams.get("status") ?? "all",
+      q: searchParams.get("q") ?? "",
     });
 
     const statusFilters = getAiStudioStatusesForLegacyVideoFilter(input.status);
-    const conditions = [
+    const conditions: SQL[] = [
       eq(aiStudioGenerations.userId, user.id),
       inArray(aiStudioGenerations.category, ["video", "image"]),
       isNull(aiStudioGenerations.userDeletedAt),
@@ -47,6 +60,21 @@ export async function GET(request: Request) {
         ? [inArray(aiStudioGenerations.status, [...statusFilters])]
         : []),
     ];
+
+    if (input.q.trim()) {
+      const query = `%${input.q.trim()}%`;
+      conditions.push(
+        or(
+          ilike(aiStudioGenerations.titleSnapshot, query),
+          ilike(aiStudioGenerations.providerSnapshot, query),
+          ilike(aiStudioGenerations.catalogModelId, query),
+          ilike(aiStudioGenerations.providerTaskId, query),
+          sql`cast(${aiStudioGenerations.id} as text) ilike ${query}`,
+          sql`cast(${aiStudioGenerations.requestPayload} as text) ilike ${query}`,
+        )!,
+      );
+    }
+
     const whereClause = and(...conditions);
     const offset = (input.page - 1) * input.limit;
 
@@ -67,6 +95,7 @@ export async function GET(request: Request) {
           resultUrls: aiStudioGenerations.resultUrls,
           createdAt: aiStudioGenerations.createdAt,
           requestPayload: aiStudioGenerations.requestPayload,
+          responsePayload: aiStudioGenerations.responsePayload,
         })
         .from(aiStudioGenerations)
         .where(whereClause)
@@ -103,6 +132,7 @@ export async function GET(request: Request) {
           row.requestPayload && typeof row.requestPayload === "object"
             ? (row.requestPayload as Record<string, any>)
             : {},
+        responsePayload: row.responsePayload ?? null,
       }),
     );
 

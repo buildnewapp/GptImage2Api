@@ -31,6 +31,7 @@ export type AiStudioUserHistoryItem = {
   resultUrls: string[];
   createdAt: string;
   requestPayload: Record<string, any>;
+  responsePayload: unknown | null;
 };
 
 export type LegacyVideoHistoryRecord = {
@@ -59,6 +60,7 @@ export type LegacyVideoHistoryRecord = {
   resultUrls: string[];
   createdAt: string;
   requestPayload: Record<string, any>;
+  responsePayload: unknown | null;
 };
 
 export type AiStudioAdminVideoItem = {
@@ -272,6 +274,7 @@ export function mapAiStudioUserRecordToLegacyVideoHistoryRecord(
     resultUrls: record.resultUrls,
     createdAt: record.createdAt,
     requestPayload: record.requestPayload,
+    responsePayload: record.responsePayload,
   };
 
   if (category === "video") {

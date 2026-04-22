@@ -40,6 +40,11 @@
   "delete_success": "一覧から削除しました",
   "delete_failed": "項目の削除に失敗しました",
   "refresh": "更新",
+  "search": {
+    "placeholder": "タスク ID、モデル名、またはプロンプトを検索",
+    "submit": "検索",
+    "clear": "クリア"
+  },
   "copy_task_id": "タスク ID をコピー",
   "task_id_copied": "タスク ID をコピーしました",
   "copy_request": "リクエストをコピー",

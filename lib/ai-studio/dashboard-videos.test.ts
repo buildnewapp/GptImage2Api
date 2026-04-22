@@ -112,6 +112,11 @@ test("maps ai studio user history records into the legacy card view shape", () =
         resolution: "720p",
       },
     },
+    responsePayload: {
+      task_id: "task_1",
+      resultUrls: ["https://example.com/video.mp4"],
+      state: "succeeded",
+    },
   });
 
   assert.deepEqual(record, {
@@ -122,6 +127,8 @@ test("maps ai studio user history records into the legacy card view shape", () =
     catalogModelId: "video:bytedance-v1-pro-image-to-video",
     model: "bytedance/v1-pro-image-to-video",
     modelLabel: "Bytedance - V1 Pro Image to Video",
+    modelKey: "seedance-1.0",
+    versionKey: "seedance-1.0-pro-image-to-video",
     status: "success",
     creditsUsed: 28,
     creditsRequired: 28,
@@ -144,6 +151,11 @@ test("maps ai studio user history records into the legacy card view shape", () =
         duration: "5",
         resolution: "720p",
       },
+    },
+    responsePayload: {
+      task_id: "task_1",
+      resultUrls: ["https://example.com/video.mp4"],
+      state: "succeeded",
     },
     providerValues: {
       prompt: "Animate this still",
@@ -184,6 +196,7 @@ test("maps multiple showcase references into the legacy card view shape", () => 
         ],
       },
     },
+    responsePayload: null,
   });
 
   assert.deepEqual(record.uploadedImages, [
@@ -230,6 +243,7 @@ test("maps ai studio image history records into the shared dashboard card shape"
         aspect_ratio: "1:1",
       },
     },
+    responsePayload: null,
   });
 
   assert.deepEqual(record, {
@@ -263,6 +277,7 @@ test("maps ai studio image history records into the shared dashboard card shape"
         aspect_ratio: "1:1",
       },
     },
+    responsePayload: null,
     providerValues: {
       prompt: "A cinematic portrait of a robot",
       aspectRatio: "1:1",
