@@ -1,0 +1,31 @@
+{
+  "list": {
+    "title": "seedance 2.0 作品展示",
+    "description": "浏览社区中公开且生成成功的作品，进入详情后可以查看提示词、参数和结果。",
+    "eyebrow": "公开作品",
+    "empty": "暂时还没有公开作品。",
+    "viewDetails": "查看详情",
+    "pageLabel": "第 {page} / {totalPages} 页"
+  },
+  "detail": {
+    "back": "返回 Showcase",
+    "continueTitle": "基于这个作品继续生成",
+    "continueDescription": "下面的生成器会自动预选这条记录所使用的模型，方便你更快复刻或再创作。",
+    "prompt": "提示词",
+    "settings": "参数",
+    "result": "生成结果",
+    "provider": "提供商",
+    "model": "模型",
+    "createdAt": "创建时间",
+    "mode": "模式",
+    "credits": "积分",
+    "imageToVideo": "图生视频",
+    "textToVideo": "文生视频",
+    "imageGeneration": "图片生成",
+    "aspectRatio": "画幅比例",
+    "resolution": "分辨率",
+    "duration": "时长",
+    "referenceImages": "参考图片",
+    "referenceVideos": "参考视频"
+  }
+}

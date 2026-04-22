@@ -1,0 +1,33 @@
+{
+  "title": "API Key 管理",
+  "description": "管理所有用户的 API Key。",
+  "searchPlaceholder": "按邮箱、标题、Key 或状态搜索...",
+  "table": {
+    "user": "用户",
+    "title": "标题",
+    "key": "API Key",
+    "status": "状态",
+    "createdAt": "创建时间",
+    "actions": "操作",
+    "untitled": "未命名",
+    "empty": "未找到 API Key。"
+  },
+  "status": {
+    "active": "启用",
+    "disabled": "停用"
+  },
+  "actions": {
+    "copy": "复制",
+    "disable": "停用",
+    "enable": "启用",
+    "delete": "删除"
+  },
+  "toasts": {
+    "copySuccess": "API Key 已复制",
+    "copyError": "复制 API Key 失败",
+    "updateSuccess": "API Key 状态已更新",
+    "updateError": "更新 API Key 失败",
+    "deleteSuccess": "API Key 已删除",
+    "deleteError": "删除 API Key 失败"
+  }
+}

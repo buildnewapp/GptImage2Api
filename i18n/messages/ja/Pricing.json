@@ -1,0 +1,41 @@
+{
+  "badge": {
+    "label": "価格",
+    "text": "SdanceAI の Seedance 2.0 料金プラン"
+  },
+  "title": "Seedance 2.0の料金",
+  "description": "SdanceAI で提供する Seedance 2.0 のオンライン体験と API の料金プランを確認できます。",
+  "annual": "年額",
+  "monthly": "月額",
+  "onetime": "一回限り",
+  "taskHub": {
+    "title": "タスク完了で大量の無料クレジットを獲得し、AI 生成機能を無料で体験",
+    "badgeLabel": "タスクセンター",
+    "buttonLabel": "タスクセンターへ",
+    "items": [
+      {
+        "title": "登録でクレジット"
+      },
+      {
+        "title": "チェックインでクレジット"
+      },
+      {
+        "title": "招待でクレジット"
+      }
+    ]
+  },
+  "saveTip": "20% 節約",
+  "manualCoupon": "別のクーポンコードを持っています",
+  "errors": {
+    "loginRequired": "プランを購入するにはログインが必要です。",
+    "httpStatus": "リクエストに失敗しました。ステータス: {status}",
+    "nowpaymentsOrderFailed": "NOWPayments 注文の作成に失敗しました。",
+    "checkoutSessionFailed": "チェックアウトセッションの作成に失敗しました。",
+    "checkoutUrlMissing": "チェックアウト URL を取得できませんでした。",
+    "unexpected": "予期しないエラーが発生しました。",
+    "stripePriceMissing": "このプランには Stripe の価格 ID がありません。",
+    "creemProductMissing": "このプランには Creem の商品 ID がありません。",
+    "paypalPlanMissing": "このプランには PayPal のプラン ID がありません。",
+    "recurringHigherTierRequired": "すでに同等または上位のサブスクリプションがあります。再購入できるのは、より高額なプランのみです。"
+  }
+}

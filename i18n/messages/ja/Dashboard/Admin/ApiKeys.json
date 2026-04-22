@@ -1,0 +1,33 @@
+{
+  "title": "APIキー管理",
+  "description": "全ユーザーの API キーを管理します。",
+  "searchPlaceholder": "メール、タイトル、キー、状態で検索...",
+  "table": {
+    "user": "ユーザー",
+    "title": "タイトル",
+    "key": "APIキー",
+    "status": "状態",
+    "createdAt": "作成日時",
+    "actions": "操作",
+    "untitled": "無題",
+    "empty": "APIキーが見つかりません。"
+  },
+  "status": {
+    "active": "有効",
+    "disabled": "無効"
+  },
+  "actions": {
+    "copy": "コピー",
+    "disable": "無効化",
+    "enable": "有効化",
+    "delete": "削除"
+  },
+  "toasts": {
+    "copySuccess": "APIキーをコピーしました",
+    "copyError": "APIキーのコピーに失敗しました",
+    "updateSuccess": "APIキーの状態を更新しました",
+    "updateError": "APIキーの更新に失敗しました",
+    "deleteSuccess": "APIキーを削除しました",
+    "deleteError": "APIキーの削除に失敗しました"
+  }
+}

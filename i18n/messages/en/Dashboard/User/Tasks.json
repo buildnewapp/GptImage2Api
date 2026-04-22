@@ -1,0 +1,105 @@
+{
+  "meta": {
+    "title": "Task Center",
+    "description": "Complete simple actions to unlock bonus credits."
+  },
+  "title": "Task Center",
+  "description": "Complete simple tasks to unlock bonus credits and referral rewards.",
+  "summary": {
+    "badge": "Task Progress",
+    "title": "Complete tasks and unlock more credits",
+    "subtitle": "Check back anytime, finish a task, and claim the reward when it is ready.",
+    "readyCredits": "Ready Now",
+    "readyCreditsHint": "Available to claim right away",
+    "completedTasks": "Tasks Done",
+    "completedTasksHint": "The more you complete, the more you unlock",
+    "creditValue": "{credits} credits",
+    "progressLabel": "Current Progress",
+    "completedValue": "{completed} / {total} tasks done",
+    "progressValue": "{claimableCredits} credits are ready to claim",
+    "progressPercent": "Progress"
+  },
+  "progressValue": "{current} / {required}",
+  "status": {
+    "claimable": "Claimable",
+    "claimed": "Claimed",
+    "incomplete": "Incomplete",
+    "done": "Done",
+    "readyToCheck": "Ready to Check"
+  },
+  "actions": {
+    "claim": "Claim Credits",
+    "claimed": "Claimed",
+    "goComplete": "Go Complete",
+    "goCreate": "Create Now",
+    "goPurchase": "Buy Now",
+    "inviteNow": "Invite Now",
+    "viewReferral": "View Referral",
+    "start": "Start",
+    "check": "Check"
+  },
+  "tasks": {
+    "daily_checkin": {
+      "title": "Daily Check-In",
+      "description": "Come back once a day and claim your daily credit bonus."
+    },
+    "checkin_3_days": {
+      "title": "Check In 3 Days in a Row",
+      "description": "Complete your daily check-in for three consecutive days to unlock an extra bonus."
+    },
+    "first_public_generation": {
+      "title": "First Public Creation",
+      "description": "Create your first successful public work to unlock this one-time reward."
+    },
+    "first_purchase": {
+      "title": "First Credit Pack / Subscription Purchase",
+      "description": "Complete your first successful purchase of a credit pack or subscription to claim extra credits."
+    },
+    "invite_signup": {
+      "title": "Invite 1 Friend to Sign Up",
+      "description": "Earn {signupCredit} credits for each friend who signs up, plus {firstOrderReward} back after their first paid order."
+    },
+    "invite_first_purchase": {
+      "title": "Friend Completes First Purchase",
+      "description": "When any invited friend completes their first paid order, you receive the reward defined in your referral program."
+    },
+    "github_star": {
+      "title": "Star the GitHub Project",
+      "description": "Open the GitHub project, leave a star, then come back and click Check to claim your reward."
+    },
+    "huggingface_like": {
+      "title": "Like the Hugging Face Space",
+      "description": "Open the Hugging Face Space, leave a like, then come back and click Check to claim your reward."
+    }
+  },
+  "faq": {
+    "eyebrow": "Common Questions",
+    "title": "Read these first"
+  },
+  "quickLinks": {
+    "eyebrow": "Quick Links",
+    "title": "Jump To",
+    "items": {
+      "topUp": {
+        "title": "Running out of credits?",
+        "description": "Go to subscription and top-up options"
+      },
+      "creditHistory": {
+        "title": "Where did credits go?",
+        "description": "Review your credit usage history"
+      },
+      "referrals": {
+        "title": "Still want free credits?",
+        "description": "Open the referral center and invite friends"
+      }
+    }
+  },
+  "toast": {
+    "claimed": "Claimed {credits} credits.",
+    "alreadyClaimed": "This reward has already been claimed.",
+    "notCompleted": "Task requirements are not completed yet.",
+    "syncing": "Progress is still syncing. Please try again in a moment.",
+    "externalStarted": "The page has been opened. Come back and click Check when you are done.",
+    "claimFailed": "Failed to claim task reward."
+  }
+}

@@ -1,0 +1,1 @@
+ALTER TABLE "ai_studio_generations" ADD COLUMN "user_deleted_at" timestamp with time zone;

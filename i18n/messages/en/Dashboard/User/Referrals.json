@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "title": "Referrals",
+    "description": "Manage your invite code, referral rewards, and withdrawal requests."
+  },
+  "inviteCard": {
+    "title": "Invite Code",
+    "description": "Set your invite code and share your referral link to invite new users.",
+    "codeLabel": "Your code",
+    "linkLabel": "Your invite link",
+    "noCode": "No invite code yet",
+    "noLink": "Save an invite code to unlock your invite link",
+    "inputPlaceholder": "Enter at least 4 letters or numbers",
+    "save": "Save invite code",
+    "update": "Update invite code",
+    "firstSetHint": "Your invite code must be at least 4 characters. After the first save, you can change it one more time.",
+    "oneChangeRemaining": "You have one invite code change remaining.",
+    "noChangesRemaining": "You have already used your invite code change.",
+    "copyLink": "Copy invite link"
+  },
+  "summary": {
+    "invited": "Invited users",
+    "credits": "Signup credits earned",
+    "lockedCash": "Locked cash",
+    "claimableCash": "Claimable cash"
+  },
+  "withdraw": {
+    "title": "Withdrawals",
+    "description": "Cash rewards unlock after the review period. Apply here, then contact the administrator.",
+    "claimable": "Claimable",
+    "pending": "Pending withdrawal",
+    "paid": "Paid",
+    "apply": "Apply for withdrawal",
+    "notice": "After submitting, please contact the administrator to complete manual payout."
+  },
+  "invites": {
+    "title": "Invite Records",
+    "description": "Users who registered through your invite code.",
+    "empty": "No invite records yet.",
+    "columns": {
+      "user": "User",
+      "status": "Status",
+      "registeredAt": "Registered At",
+      "qualifiedAt": "Qualified At"
+    }
+  },
+  "rewards": {
+    "title": "Reward Records",
+    "description": "Track referral credits and first-order cash rewards.",
+    "empty": "No rewards yet.",
+    "columns": {
+      "user": "Invitee",
+      "type": "Type",
+      "value": "Value",
+      "status": "Status",
+      "availableAt": "Available At"
+    }
+  },
+  "toast": {
+    "linkCopied": "Invite link copied",
+    "codeSaved": "Invite code saved",
+    "withdrawRequested": "Withdrawal request created"
+  },
+  "statuses": {
+    "registered": "Registered",
+    "qualifiedFirstOrder": "Qualified",
+    "expired": "Expired",
+    "rewarded": "Rewarded"
+  },
+  "rewardTypes": {
+    "signupCredit": "Signup credit",
+    "firstOrderCash": "First order cash"
+  },
+  "rewardStatuses": {
+    "granted": "Granted",
+    "locked": "Locked",
+    "claimable": "Claimable",
+    "pendingWithdraw": "Pending withdrawal",
+    "paid": "Paid",
+    "revoked": "Revoked",
+    "rejected": "Rejected"
+  }
+}

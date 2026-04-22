@@ -1,0 +1,1 @@
+ALTER TABLE "ai_studio_generations" ADD COLUMN "is_public" boolean DEFAULT true NOT NULL;

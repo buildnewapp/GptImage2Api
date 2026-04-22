@@ -1,0 +1,31 @@
+{
+  "list": {
+    "title": "Seedance 2.0 Showcase",
+    "description": "Browse successful public generations from the community and open any item to inspect the prompt, settings, and output.",
+    "eyebrow": "Public Creations",
+    "empty": "No public generations yet.",
+    "viewDetails": "View details",
+    "pageLabel": "Page {page} of {totalPages}"
+  },
+  "detail": {
+    "back": "Back to showcase",
+    "continueTitle": "Create Something Similar",
+    "continueDescription": "The generator below preselects the model used for this record so you can remix the idea faster.",
+    "prompt": "Prompt",
+    "settings": "Settings",
+    "result": "Result",
+    "provider": "Provider",
+    "model": "Model",
+    "createdAt": "Created",
+    "mode": "Mode",
+    "credits": "Credits",
+    "imageToVideo": "Image to video",
+    "textToVideo": "Text to video",
+    "imageGeneration": "Image generation",
+    "aspectRatio": "Aspect ratio",
+    "resolution": "Resolution",
+    "duration": "Duration",
+    "referenceImages": "Reference images",
+    "referenceVideos": "Reference videos"
+  }
+}

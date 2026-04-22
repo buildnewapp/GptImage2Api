@@ -1,0 +1,604 @@
+import type { AiStudioPricingSelectors } from "@/lib/ai-studio/catalog";
+import type { AiStudioPublicPricingRow } from "@/lib/ai-studio/public";
+import {
+  buildSeedanceDynamicPricingFields,
+  LOCAL_REFERENCE_METADATA_KEY,
+} from "@/lib/ai-studio/seedance-pricing";
+
+export function collectRuntimeModels(pricingRows: AiStudioPublicPricingRow[]) {
+  const models = new Set<string>();
+
+  for (const row of pricingRows) {
+    if (row.runtimeModel) {
+      models.add(row.runtimeModel);
+    }
+  }
+
+  return [...models];
+}
+
+export function applyPricingRowToPayload(
+  payload: Record<string, any>,
+  pricingRow: Pick<
+    AiStudioPublicPricingRow,
+    "runtimeModel" | "duration"
+  > & {
+    modelDescription?: string | null;
+  },
+) {
+  const next = structuredClone(payload);
+
+  if (pricingRow.runtimeModel) {
+    next.model = pricingRow.runtimeModel;
+  }
+
+  const duration =
+    typeof pricingRow.duration === "number" && Number.isFinite(pricingRow.duration)
+      ? Math.round(pricingRow.duration)
+      : (() => {
+          const durationMatch =
+            typeof pricingRow.modelDescription === "string"
+              ? pricingRow.modelDescription.match(/(\d+(?:\.\d+)?)s/i)
+              : null;
+          return durationMatch?.[1] ? Math.round(Number.parseFloat(durationMatch[1])) : null;
+        })();
+
+  if (duration) {
+    if (typeof next.duration === "number") {
+      next.duration = duration;
+    } else if (typeof next.duration === "string") {
+      next.duration = String(duration);
+    }
+
+    if (next.input && typeof next.input === "object") {
+      if (typeof next.input.n_frames === "string") {
+        next.input.n_frames = String(duration);
+      } else if (typeof next.input.n_frames === "number") {
+        next.input.n_frames = duration;
+      }
+    }
+  }
+
+  return next;
+}
+
+type PricingSelectionRow = {
+  modelDescription: string;
+  runtimeModel?: string | null;
+  resolution?: string | null;
+  duration?: number | null;
+  audio?: boolean | null;
+  aspectRatio?: string | null;
+};
+
+type PricingSelectionConfig = {
+  selectors?: AiStudioPricingSelectors;
+};
+
+function getPricingSpecificity(row: PricingSelectionRow) {
+  let score = 0;
+
+  if (row.runtimeModel) {
+    score += 1;
+  }
+  if (row.resolution !== undefined && row.resolution !== null) {
+    score += 1;
+  }
+  if (row.duration !== undefined && row.duration !== null) {
+    score += 1;
+  }
+  if (row.audio !== undefined && row.audio !== null) {
+    score += 1;
+  }
+  if (row.aspectRatio !== undefined && row.aspectRatio !== null) {
+    score += 1;
+  }
+
+  return score;
+}
+
+function countDistinctDefinedValues<T>(
+  rows: PricingSelectionRow[],
+  getValue: (row: PricingSelectionRow) => T | null | undefined,
+) {
+  const values = new Set<T>();
+
+  for (const row of rows) {
+    const value = getValue(row);
+    if (value !== undefined && value !== null) {
+      values.add(value);
+    }
+  }
+
+  return values.size;
+}
+
+function normalizeRuntimeModel(input: string) {
+  return input.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+function parseDurationHint(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value) && value > 0) {
+    return Math.round(value);
+  }
+
+  if (typeof value === "string") {
+    const parsed = Number.parseFloat(value);
+    if (Number.isFinite(parsed) && parsed > 0) {
+      return Math.round(parsed);
+    }
+  }
+
+  return null;
+}
+
+function getValueAtSelectorPath(payload: Record<string, any>, path: string) {
+  const segments = path.split(".").filter(Boolean);
+  let current: any = payload;
+
+  for (const segment of segments) {
+    if (!current || typeof current !== "object") {
+      return undefined;
+    }
+    current = current[segment];
+  }
+
+  return current;
+}
+
+function extractStringBySelectors(
+  payload: Record<string, any>,
+  selectors: string[] | undefined,
+) {
+  if (!Array.isArray(selectors) || selectors.length === 0) {
+    return null;
+  }
+
+  for (const selector of selectors) {
+    const value = getValueAtSelectorPath(payload, selector);
+    if (typeof value === "string" && value.trim()) {
+      return value.trim().toLowerCase();
+    }
+  }
+
+  return null;
+}
+
+function extractDurationBySelectors(
+  payload: Record<string, any>,
+  selectors: string[] | undefined,
+) {
+  if (!Array.isArray(selectors) || selectors.length === 0) {
+    return null;
+  }
+
+  for (const selector of selectors) {
+    const value = getValueAtSelectorPath(payload, selector);
+    const parsed = parseDurationHint(value);
+    if (parsed !== null) {
+      return parsed;
+    }
+  }
+
+  return null;
+}
+
+function getLocalReferenceMetadata(payload: Record<string, any>) {
+  const metadata = payload[LOCAL_REFERENCE_METADATA_KEY];
+  if (metadata && typeof metadata === "object" && !Array.isArray(metadata)) {
+    return metadata as Record<string, unknown>;
+  }
+
+  const nested = payload.input?.[LOCAL_REFERENCE_METADATA_KEY];
+  if (nested && typeof nested === "object" && !Array.isArray(nested)) {
+    return nested as Record<string, unknown>;
+  }
+
+  return null;
+}
+
+function collectReferenceUrls(payload: Record<string, any>, keys: string[]) {
+  const values: string[] = [];
+
+  for (const key of keys) {
+    const direct = payload[key];
+    const nested = payload.input?.[key];
+
+    for (const candidate of [direct, nested]) {
+      if (typeof candidate === "string" && candidate.length > 0) {
+        values.push(candidate);
+        continue;
+      }
+
+      if (Array.isArray(candidate)) {
+        values.push(
+          ...candidate.filter(
+            (item): item is string => typeof item === "string" && item.length > 0,
+          ),
+        );
+      }
+    }
+  }
+
+  return values;
+}
+
+function extractDurationFromReferenceMetadata(
+  payload: Record<string, any>,
+  input: {
+    metadataKey: "videoDurationsByUrl" | "audioDurationsByUrl";
+    payloadKeys: string[];
+  },
+) {
+  const metadata = getLocalReferenceMetadata(payload);
+  const durationsByUrl =
+    metadata?.[input.metadataKey] &&
+    typeof metadata[input.metadataKey] === "object" &&
+    !Array.isArray(metadata[input.metadataKey])
+      ? (metadata[input.metadataKey] as Record<string, unknown>)
+      : null;
+
+  if (!durationsByUrl) {
+    return null;
+  }
+
+  const durations = collectReferenceUrls(payload, input.payloadKeys)
+    .map((url) => parseDurationHint(durationsByUrl[url]))
+    .filter((value): value is number => value !== null);
+
+  if (durations.length === 0) {
+    return null;
+  }
+
+  return durations.reduce((sum, value) => sum + value, 0);
+}
+
+function extractDurationHint(
+  payload: Record<string, any>,
+  selectors?: AiStudioPricingSelectors,
+) {
+  const selected = extractDurationBySelectors(payload, selectors?.duration);
+  if (selected !== null) {
+    return selected;
+  }
+
+  return (
+    parseDurationHint(payload.duration) ??
+    parseDurationHint(payload.input?.duration) ??
+    parseDurationHint(payload.input?.extend_times) ??
+    parseDurationHint(payload.video_duration) ??
+    parseDurationHint(payload.input?.video_duration) ??
+    parseDurationHint(payload.audio_duration) ??
+    parseDurationHint(payload.input?.audio_duration) ??
+    parseDurationHint(payload.input?.n_frames) ??
+    extractDurationFromReferenceMetadata(payload, {
+      metadataKey: "videoDurationsByUrl",
+      payloadKeys: ["video_url", "video_urls", "reference_video_urls", "video_input"],
+    }) ??
+    extractDurationFromReferenceMetadata(payload, {
+      metadataKey: "audioDurationsByUrl",
+      payloadKeys: ["audio_url", "audio_urls"],
+    }) ??
+    null
+  );
+}
+
+function extractResolutionHint(
+  payload: Record<string, any>,
+  selectors?: AiStudioPricingSelectors,
+) {
+  const selected = extractStringBySelectors(payload, selectors?.resolution);
+  if (selected !== null) {
+    return selected;
+  }
+
+  const values = [
+    payload.resolution,
+    payload.input?.resolution,
+    payload.quality,
+    payload.input?.quality,
+    payload.input?.image_resolution,
+    payload.size,
+    payload.input?.size,
+    payload.mode,
+    payload.input?.mode,
+  ];
+
+  for (const value of values) {
+    if (typeof value === "string" && value.trim()) {
+      return value.trim().toLowerCase();
+    }
+  }
+
+  return null;
+}
+
+function extractAspectRatioHint(
+  payload: Record<string, any>,
+  selectors?: AiStudioPricingSelectors,
+) {
+  const selected = extractStringBySelectors(payload, selectors?.aspectRatio);
+  if (selected !== null) {
+    return selected;
+  }
+
+  const values = [
+    payload.aspect_ratio,
+    payload.input?.aspect_ratio,
+  ];
+
+  for (const value of values) {
+    if (typeof value === "string" && value.trim()) {
+      return value.trim().toLowerCase();
+    }
+  }
+
+  return null;
+}
+
+function parseAudioHint(value: unknown) {
+  if (typeof value === "boolean") {
+    return value;
+  }
+
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const normalized = value.trim().toLowerCase();
+  if (["true", "1", "yes", "with-audio", "with audio"].includes(normalized)) {
+    return true;
+  }
+  if (["false", "0", "no", "without-audio", "without audio"].includes(normalized)) {
+    return false;
+  }
+
+  return null;
+}
+
+function extractAudioHint(
+  payload: Record<string, any>,
+  selectors?: AiStudioPricingSelectors,
+) {
+  if (Array.isArray(selectors?.audio) && selectors.audio.length > 0) {
+    for (const selector of selectors.audio) {
+      const parsed = parseAudioHint(getValueAtSelectorPath(payload, selector));
+      if (parsed !== null) {
+        return parsed;
+      }
+    }
+  }
+
+  return (
+    parseAudioHint(payload.sound) ??
+    parseAudioHint(payload.input?.sound) ??
+    parseAudioHint(payload.audio) ??
+    parseAudioHint(payload.input?.audio) ??
+    parseAudioHint(payload.with_audio) ??
+    parseAudioHint(payload.input?.with_audio) ??
+    parseAudioHint(payload.generate_audio) ??
+    parseAudioHint(payload.input?.generate_audio) ??
+    null
+  );
+}
+
+export function resolveExactPricingRow<Row extends PricingSelectionRow>(
+  pricingRows: Row[],
+  payload: Record<string, any>,
+  config?: PricingSelectionConfig | null,
+) {
+  if (pricingRows.length <= 1) {
+    return pricingRows[0] ?? null;
+  }
+
+  const payloadModel =
+    typeof payload.model === "string" ? normalizeRuntimeModel(payload.model) : "";
+  const durationHint = extractDurationHint(payload, config?.selectors);
+  const resolutionHint = extractResolutionHint(payload, config?.selectors);
+  const audioHint = extractAudioHint(payload, config?.selectors);
+  const aspectRatioHint = extractAspectRatioHint(payload, config?.selectors);
+  const scopedRows = payloadModel
+    ? pricingRows.filter((row) => {
+        const runtimeModel = row.runtimeModel
+          ? normalizeRuntimeModel(row.runtimeModel)
+          : "";
+
+        return !runtimeModel || runtimeModel === payloadModel;
+      })
+    : pricingRows;
+  const requiresDurationHint =
+    countDistinctDefinedValues(scopedRows, (row) => row.duration) > 1;
+  const requiresResolutionHint =
+    countDistinctDefinedValues(scopedRows, (row) => row.resolution) > 1;
+  const requiresAudioHint =
+    countDistinctDefinedValues(scopedRows, (row) => row.audio) > 1;
+  const requiresAspectRatioHint =
+    countDistinctDefinedValues(scopedRows, (row) => row.aspectRatio) > 1;
+  const candidates = pricingRows.filter((row) => {
+    const runtimeModel = row.runtimeModel ? normalizeRuntimeModel(row.runtimeModel) : "";
+
+    if (payloadModel && runtimeModel && runtimeModel !== payloadModel) {
+      return false;
+    }
+
+    if (row.duration !== undefined && row.duration !== null) {
+      if (
+        (durationHint === null && requiresDurationHint) ||
+        (durationHint !== null && row.duration !== durationHint)
+      ) {
+        return false;
+      }
+    }
+
+    if (row.resolution !== undefined && row.resolution !== null) {
+      if (
+        (resolutionHint === null && requiresResolutionHint) ||
+        (resolutionHint !== null && row.resolution.toLowerCase() !== resolutionHint)
+      ) {
+        return false;
+      }
+    }
+
+    if (row.audio !== undefined && row.audio !== null) {
+      if (
+        (audioHint === null && requiresAudioHint) ||
+        (audioHint !== null && row.audio !== audioHint)
+      ) {
+        return false;
+      }
+    }
+
+    if (row.aspectRatio !== undefined && row.aspectRatio !== null) {
+      if (
+        (aspectRatioHint === null && requiresAspectRatioHint) ||
+        (aspectRatioHint !== null &&
+          row.aspectRatio.toLowerCase() !== aspectRatioHint)
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  if (candidates.length === 1) {
+    return candidates[0] ?? null;
+  }
+
+  if (candidates.length === 0) {
+    return null;
+  }
+
+  const exactRuntimeCandidates =
+    payloadModel
+      ? candidates.filter((row) => normalizeRuntimeModel(row.runtimeModel ?? "") === payloadModel)
+      : candidates;
+  const scopedCandidates =
+    exactRuntimeCandidates.length > 0 ? exactRuntimeCandidates : candidates;
+  const bestSpecificity = Math.max(
+    ...scopedCandidates.map((row) => getPricingSpecificity(row)),
+  );
+  const mostSpecificRows = scopedCandidates.filter(
+    (row) => getPricingSpecificity(row) === bestSpecificity,
+  );
+
+  return mostSpecificRows.length === 1 ? (mostSpecificRows[0] ?? null) : null;
+}
+
+type CommonPricingRow = {
+  modelDescription: string;
+  interfaceType: string;
+  provider: string;
+  creditPrice: string;
+  creditUnit: string;
+  usdPrice: string;
+  falPrice: string;
+  discountRate: number;
+  discountPrice: boolean;
+};
+
+export function resolveSelectedPricing<Row extends PricingSelectionRow & Partial<CommonPricingRow>>(
+  pricingRows: Row[],
+  input: {
+    modelId: string;
+    payload: Record<string, any>;
+    pricing?: PricingSelectionConfig | null;
+  },
+) {
+  const estimated = resolveExactPricingRow(pricingRows, input.payload, input.pricing);
+  const dynamicFields = buildSeedanceDynamicPricingFields(
+    input.modelId,
+    input.payload,
+  );
+
+  if (!dynamicFields) {
+    return estimated;
+  }
+
+  return {
+    ...estimated,
+    ...dynamicFields,
+    creditUnit: dynamicFields.creditUnit ?? estimated?.creditUnit ?? "per video",
+    falPrice: estimated?.falPrice ?? "",
+    discountRate: estimated?.discountRate ?? 0,
+    discountPrice: estimated?.discountPrice ?? false,
+  } as Row & CommonPricingRow;
+}
+
+export function getDisplayModelLabel(
+  config: {
+    alias?: string | null;
+    modelKeys?: string[];
+  },
+  modelValue: string | null | undefined,
+) {
+  if (!modelValue) {
+    return "";
+  }
+
+  if (
+    config.alias &&
+    Array.isArray(config.modelKeys) &&
+    config.modelKeys.length === 1 &&
+    config.modelKeys[0] === modelValue
+  ) {
+    return config.alias;
+  }
+
+  return modelValue;
+}
+
+export function resolvePublicModelId(
+  selectedId: string | null | undefined,
+  detail: Pick<{ id: string }, "id"> | null | undefined,
+) {
+  if (detail?.id) {
+    return detail.id;
+  }
+
+  return selectedId ?? "";
+}
+
+export function toBillableCredits(creditPrice: string | number | null | undefined) {
+  const amount =
+    typeof creditPrice === "number"
+      ? creditPrice
+      : Number.parseFloat(creditPrice ?? "0");
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    return 0;
+  }
+
+  // Existing usage balances are integer credits, so fractional official prices
+  // are reserved using a conservative round-up.
+  return Math.ceil(amount);
+}
+
+export function getEstimatedCreditsForPricing(
+  pricingRow:
+    | Pick<CommonPricingRow, "creditPrice" | "creditUnit">
+    | null
+    | undefined,
+  payload: Record<string, any> | null | undefined,
+) {
+  if (!pricingRow) {
+    return 0;
+  }
+
+  const rate = Number.parseFloat(pricingRow.creditPrice ?? "0");
+  if (!Number.isFinite(rate) || rate <= 0) {
+    return 0;
+  }
+
+  const creditUnit = pricingRow.creditUnit.trim().toLowerCase();
+  if (creditUnit.includes("per second")) {
+    const durationHint =
+      payload && typeof payload === "object" ? extractDurationHint(payload) : null;
+
+    if (durationHint !== null) {
+      return toBillableCredits(rate * durationHint);
+    }
+  }
+
+  return toBillableCredits(rate);
+}

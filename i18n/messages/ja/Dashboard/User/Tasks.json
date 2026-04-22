@@ -1,0 +1,105 @@
+{
+  "meta": {
+    "title": "タスクセンター",
+    "description": "簡単なタスクを完了して追加クレジットを受け取ります。"
+  },
+  "title": "タスクセンター",
+  "description": "簡単なタスクを完了して、追加クレジットと紹介報酬を受け取りましょう。",
+  "summary": {
+    "badge": "タスク進捗",
+    "title": "タスクを進めてクレジットを増やす",
+    "subtitle": "いつでも戻って進捗を確認し、条件を満たしたら報酬を受け取れます。",
+    "readyCredits": "今すぐ受け取れる",
+    "readyCreditsHint": "条件達成後すぐに受け取れます",
+    "completedTasks": "完了したタスク",
+    "completedTasksHint": "完了数が増えるほど報酬も増えます",
+    "creditValue": "{credits} クレジット",
+    "progressLabel": "現在の進捗",
+    "completedValue": "{completed} / {total} 件完了",
+    "progressValue": "今すぐ {claimableCredits} クレジット受け取れます",
+    "progressPercent": "進捗率"
+  },
+  "progressValue": "{current} / {required}",
+  "status": {
+    "claimable": "受け取り可能",
+    "claimed": "受け取り済み",
+    "incomplete": "未達成",
+    "done": "完了",
+    "readyToCheck": "確認可能"
+  },
+  "actions": {
+    "claim": "クレジットを受け取る",
+    "claimed": "受け取り済み",
+    "goComplete": "進める",
+    "goCreate": "作成する",
+    "goPurchase": "購入する",
+    "inviteNow": "招待する",
+    "viewReferral": "紹介を見る",
+    "start": "開始",
+    "check": "Check"
+  },
+  "tasks": {
+    "daily_checkin": {
+      "title": "デイリーチェックイン",
+      "description": "毎日 1 回戻ってきて、その日のボーナスクレジットを受け取ります。"
+    },
+    "checkin_3_days": {
+      "title": "3日連続チェックイン",
+      "description": "3日連続でデイリーチェックインを完了すると、追加報酬を受け取れます。"
+    },
+    "first_public_generation": {
+      "title": "初めての公開作品",
+      "description": "初めて成功した公開作品を 1 件作成すると、この一回限りの報酬を受け取れます。"
+    },
+    "first_purchase": {
+      "title": "初回クレジット購入 / サブスク登録",
+      "description": "初めてクレジットパックまたはサブスクリプションを購入すると、追加クレジットを受け取れます。"
+    },
+    "invite_signup": {
+      "title": "友達 1 人を招待して登録",
+      "description": "友達が 1 人登録するごとに {signupCredit} クレジットを獲得でき、さらに初回購入後に {firstOrderReward} の還元も受け取れます。"
+    },
+    "invite_first_purchase": {
+      "title": "招待した友達が初回購入を完了",
+      "description": "招待した友達の誰かが初回購入を完了すると、既存の紹介報酬ルールに沿って報酬を受け取れます。"
+    },
+    "github_star": {
+      "title": "GitHub プロジェクトに Star",
+      "description": "GitHub プロジェクトを開いて Star を付け、戻って Check を押すと報酬を受け取れます。"
+    },
+    "huggingface_like": {
+      "title": "Hugging Face Space に Like",
+      "description": "Hugging Face Space を開いて Like を付け、戻って Check を押すと報酬を受け取れます。"
+    }
+  },
+  "faq": {
+    "eyebrow": "よくある質問",
+    "title": "まずはこちらをご確認ください"
+  },
+  "quickLinks": {
+    "eyebrow": "クイックリンク",
+    "title": "よく使うページ",
+    "items": {
+      "topUp": {
+        "title": "クレジットが足りない？",
+        "description": "サブスクリプションやチャージを確認します"
+      },
+      "creditHistory": {
+        "title": "どこで使った？",
+        "description": "クレジット履歴を確認します"
+      },
+      "referrals": {
+        "title": "まだ無料で獲得したい？",
+        "description": "紹介センターで友達を招待します"
+      }
+    }
+  },
+  "toast": {
+    "claimed": "{credits} クレジットを受け取りました。",
+    "alreadyClaimed": "この報酬はすでに受け取り済みです。",
+    "notCompleted": "タスク条件がまだ満たされていません。",
+    "syncing": "進捗を同期中です。少し待ってからもう一度お試しください。",
+    "externalStarted": "ページを開きました。完了したら戻って Check を押してください。",
+    "claimFailed": "タスク報酬の受け取りに失敗しました。"
+  }
+}

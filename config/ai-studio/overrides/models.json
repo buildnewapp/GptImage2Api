@@ -1,0 +1,97 @@
+{
+  "models": {
+    "video:apimart-seedance-2-0": {
+      "alias": "seedance-2-0"
+    },
+    "video:apimart-seedance-2-0-fast": {
+      "alias": "seedance-2-0-fast"
+    },
+    "video:bytedance-seedance-2": {
+      "alias": "seedance-2-0-vip",
+      "title": "Seedance 2.0 VIP",
+      "provider": "ByteDance"
+    },
+    "video:bytedance-seedance-2-0-fast": {
+      "alias": "seedance-2-0-fast-vip",
+      "title": "Seedance 2.0 Fast VIP",
+      "provider": "ByteDance"
+    },
+    "video:sora2-text-to-video": {
+      "splitModels": [
+        {
+          "id": "video:sora2-text-to-video-standard",
+          "title": "Sora2 - Text to Video",
+          "schemaModel": "sora-2-text-to-video",
+          "pricingMatch": {
+            "runtimeModel": "sora-2-text-to-video"
+          }
+        },
+        {
+          "id": "video:sora2-text-to-video-stable",
+          "title": "Sora2 - Text to Video Stable",
+          "schemaModel": "sora-2-text-to-video-stable",
+          "pricingMatch": {
+            "runtimeModel": "sora-2-text-to-video-stable"
+          }
+        }
+      ]
+    },
+    "video:sora2-image-to-video": {
+      "splitModels": [
+        {
+          "id": "video:sora2-image-to-video-standard",
+          "title": "Sora2 - Image to Video",
+          "schemaModel": "sora-2-image-to-video",
+          "pricingMatch": {
+            "runtimeModel": "sora-2-image-to-video"
+          }
+        },
+        {
+          "id": "video:sora2-image-to-video-stable",
+          "title": "Sora2 - Image to Video Stable",
+          "schemaModel": "sora-2-image-to-video-stable",
+          "pricingMatch": {
+            "runtimeModel": "sora-2-image-to-video-stable"
+          }
+        }
+      ]
+    },
+    "video:generate-veo3-1-video": {
+      "splitModels": [
+        {
+          "id": "video:veo-3.1-lite",
+          "title": "Veo 3.1 Lite",
+          "schemaModel": "veo3_lite",
+          "pricingMatch": {
+            "runtimeModel": "veo3_lite_custom"
+          }
+        },
+        {
+          "id": "video:veo-3.1-fast",
+          "title": "Veo 3.1 Fast",
+          "schemaModel": "veo3_fast",
+          "pricingMatch": {
+            "runtimeModel": "veo3_fast_custom"
+          }
+        },
+        {
+          "id": "video:veo-3.1-quality",
+          "title": "Veo 3.1 Quality",
+          "schemaModel": "veo3",
+          "pricingMatch": {
+            "runtimeModel": "veo3_quality_custom"
+          }
+        }
+      ]
+    },
+    "video:kling-3-0": {
+      "schemaModel": "kling-3.0"
+    },
+    "video:kling-3-0-motion-control": {
+      "schemaModel": "kling-3.0/motion-control"
+    },
+    "video:kling-v2-5-turbo-image-to-video-pro": {
+      "schemaModel": "kling/v2-5-turbo-image-to-video-pro"
+    }
+  }
+}

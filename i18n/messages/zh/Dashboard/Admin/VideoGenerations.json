@@ -1,0 +1,42 @@
+{
+  "title": "生成记录",
+  "description": "查看所有用户的图片和视频生成记录",
+  "columns": {
+    "id": "ID",
+    "user": "用户",
+    "selectedModel": "用户选择模型",
+    "category": "类型",
+    "image": "图片",
+    "video": "视频",
+    "model": "模型",
+    "inputParams": "输入参数",
+    "preview": "预览",
+    "openPreview": "打开预览",
+    "noPreview": "无预览",
+    "viewJson": "查看 JSON",
+    "status": "状态",
+    "credits": "积分",
+    "refundStatus": "退款状态",
+    "refunded": "已退还",
+    "notRefunded": "未退款",
+    "createdAt": "创建时间"
+  },
+  "filters": {
+    "search": "搜索用户邮箱、任务 ID...",
+    "all_statuses": "全部状态",
+    "all_models": "全部模型"
+  },
+  "status": {
+    "pending": "处理中",
+    "success": "成功",
+    "failed": "失败"
+  },
+  "empty": "暂无生成记录。",
+  "copy_task_id": "复制任务 ID",
+  "task_id_copied": "任务 ID 已复制",
+  "pagination": {
+    "previous": "上一页",
+    "next": "下一页",
+    "page_info": "第 {current} / {total} 页（共 {count} 条）"
+  }
+}

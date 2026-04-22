@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "generatedAt": "2026-04-17T12:40:00.000Z",
+  "items": [
+    {
+      "id": "video:get-veo3-1-1080p-video",
+      "category": "video",
+      "title": "Get 1080P Video",
+      "docUrl": "https://docs.kie.ai/veo3-api/get-veo-3-1080-p-video",
+      "provider": "Get 1080P Video",
+      "endpoint": "/api/v1/veo/get-1080p-video",
+      "method": "GET",
+      "modelKeys": [],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string",
+            "description": "Task ID of the original successful Veo 3.1 generation.",
+            "examples": [
+              "veo_task_abcdef123456"
+            ]
+          },
+          "index": {
+            "type": "integer",
+            "description": "Video index. Defaults to 0 when omitted.",
+            "examples": [
+              0
+            ]
+          }
+        },
+        "required": [
+          "taskId"
+        ],
+        "x-apidog-orders": [
+          "taskId",
+          "index"
+        ],
+        "examples": [
+          {
+            "taskId": "veo_task_abcdef123456",
+            "index": 0
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "taskId": "veo_task_abcdef123456",
+        "index": 0
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:get-veo3-1-4k-video",
+      "category": "video",
+      "title": "Get 4K Video",
+      "docUrl": "https://docs.kie.ai/veo3-api/get-veo-3-4k-video",
+      "provider": "Get 4K Video",
+      "endpoint": "/api/v1/veo/get-4k-video",
+      "method": "POST",
+      "modelKeys": [],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string",
+            "description": "Task ID of the original successful Veo 3.1 generation.",
+            "examples": [
+              "veo_task_abcdef123456"
+            ]
+          },
+          "index": {
+            "type": "integer",
+            "description": "Video index. Defaults to 0 when omitted.",
+            "examples": [
+              0
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "description": "Callback URL for 4K generation completion.",
+            "examples": [
+              "http://your-callback-url.com/4k-callback"
+            ]
+          }
+        },
+        "required": [
+          "taskId"
+        ],
+        "x-apidog-orders": [
+          "taskId",
+          "index",
+          "callBackUrl"
+        ],
+        "examples": [
+          {
+            "taskId": "veo_task_abcdef123456",
+            "index": 0,
+            "callBackUrl": "http://your-callback-url.com/4k-callback"
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "taskId": "veo_task_abcdef123456",
+        "index": 0,
+        "callBackUrl": "http://your-callback-url.com/4k-callback"
+      },
+      "pricingRows": []
+    }
+  ]
+}

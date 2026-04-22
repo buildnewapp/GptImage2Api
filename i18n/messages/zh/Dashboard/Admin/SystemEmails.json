@@ -1,0 +1,70 @@
+{
+  "title": "系统邮件",
+  "description": "先预览命中用户，再以可续发的批次发送管理员系统通知，同时不向前端暴露完整收件人列表。",
+  "form": {
+    "title": "编写通知",
+    "description": "先在服务端预览命中用户，再开始发送；如果中途中断，可以继续同一个任务。"
+  },
+  "fields": {
+    "scope": "发送范围",
+    "singleUserQuery": "单个用户",
+    "subject": "邮件标题",
+    "body": "邮件正文"
+  },
+  "scopes": {
+    "all_users": "全部用户",
+    "all_paid_users": "全部付费用户",
+    "active_paid_users": "有效付费用户",
+    "single_user": "单用户"
+  },
+  "placeholders": {
+    "singleUserQuery": "精确用户 ID 或邮箱",
+    "subject": "服务通知",
+    "body": "在这里输入系统通知正文。"
+  },
+  "help": {
+    "scope": "预览在服务端完成，浏览器只会收到人数和脱敏样例。",
+    "singleUser": "请输入精确用户 ID 或精确邮箱地址。",
+    "body": "仅支持纯文本，空行会在邮件中保留为段落。",
+    "batch": "每次发送请求最多处理 30 个收件人；如果未完成，可继续同一个任务。"
+  },
+  "actions": {
+    "preview": "预览收件人",
+    "send": "发送第一批",
+    "continueSend": "继续发送",
+    "completed": "已完成"
+  },
+  "preview": {
+    "title": "预览",
+    "description": "收件人会存入一个短期任务，便于本次发送在部分执行后继续。",
+    "totalRecipients": "命中收件人数",
+    "sampleRecipients": "脱敏样例",
+    "jobId": "任务 ID"
+  },
+  "progress": {
+    "processed": "已处理",
+    "success": "发送成功",
+    "failure": "发送失败",
+    "remaining": "剩余"
+  },
+  "status": {
+    "draft": "草稿",
+    "running": "发送中",
+    "completed": "已完成",
+    "failed": "失败"
+  },
+  "toasts": {
+    "previewReady": "预览已生成",
+    "previewReadyDescription": "共命中 {count} 个收件人。",
+    "previewError": "预览失败",
+    "sendProgress": "本批次已处理",
+    "sendProgressDescription": "已处理 {processedCount}/{totalRecipients}。",
+    "sendCompleted": "发送完成",
+    "sendCompletedDescription": "成功 {successCount}，失败 {failureCount}。",
+    "sendError": "发送失败"
+  },
+  "errors": {
+    "previewFailed": "预览收件人失败。",
+    "sendFailed": "发送系统邮件失败。"
+  }
+}

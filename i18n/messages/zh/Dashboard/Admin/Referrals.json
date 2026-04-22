@@ -1,0 +1,96 @@
+{
+  "title": "邀请后台",
+  "description": "查看邀请关系、奖励记录和人工提现申请。",
+  "tabs": {
+    "overview": "概览",
+    "invites": "邀请关系",
+    "rewards": "奖励记录",
+    "withdrawals": "提现申请"
+  },
+  "summary": {
+    "invited": "邀请用户数",
+    "credits": "注册积分",
+    "lockedCash": "锁定返现",
+    "claimableCash": "可提现返现",
+    "pendingWithdraw": "待处理提现",
+    "paidCash": "已打款返现"
+  },
+  "actions": {
+    "refresh": "刷新",
+    "refreshOverview": "刷新概览"
+  },
+  "filters": {
+    "status": "状态",
+    "rewardType": "奖励类型",
+    "allStatuses": "全部状态",
+    "allRewardTypes": "全部奖励类型",
+    "invitesPlaceholder": "搜索邀请人、被邀请人或邀请码...",
+    "rewardsPlaceholder": "搜索邀请人或被邀请人...",
+    "withdrawalsPlaceholder": "搜索申请人邮箱..."
+  },
+  "pagination": {
+    "summary": "第 {page} / {pages} 页 · {range} / {total} 条",
+    "pageSizeOption": "每页 {count} 条",
+    "previous": "上一页",
+    "next": "下一页"
+  },
+  "table": {
+    "loading": "加载中..."
+  },
+  "errors": {
+    "loadData": "加载邀请后台数据失败。",
+    "loadOverview": "刷新概览失败。"
+  },
+  "disabled": {
+    "description": "邀请奖励当前未启用。系统仍会记录邀请关系，但不会发放邀请奖励，也不能申请提现。"
+  },
+  "invites": {
+    "title": "邀请关系",
+    "description": "查看每个注册用户的邀请来源。",
+    "empty": "暂无邀请记录。",
+    "columns": {
+      "inviter": "邀请人",
+      "invitee": "被邀请人",
+      "code": "邀请码",
+      "status": "状态",
+      "registeredAt": "注册时间",
+      "qualifiedAt": "达标时间"
+    }
+  },
+  "rewards": {
+    "title": "奖励台账",
+    "description": "查看注册积分和首单返现奖励。",
+    "empty": "暂无奖励记录。",
+    "columns": {
+      "inviter": "邀请人",
+      "invitee": "被邀请人",
+      "type": "奖励类型",
+      "value": "奖励值",
+      "status": "状态",
+      "createdAt": "创建时间",
+      "availableAt": "可提现时间"
+    }
+  },
+  "withdrawals": {
+    "title": "提现申请",
+    "description": "处理待人工打款的提现申请。",
+    "empty": "暂无提现申请。",
+    "columns": {
+      "user": "用户",
+      "amount": "金额",
+      "status": "状态",
+      "requestedAt": "申请时间",
+      "processedAt": "处理时间",
+      "notes": "备注",
+      "actions": "操作"
+    },
+    "actions": {
+      "markPaid": "标记已打款",
+      "reject": "拒绝"
+    }
+  },
+  "toasts": {
+    "markPaidSuccess": "提现已标记为已打款",
+    "rejectSuccess": "提现申请已拒绝"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "title": "生成履歴",
+  "description": "全ユーザーの画像と動画の生成記録を閲覧",
+  "columns": {
+    "id": "ID",
+    "user": "ユーザー",
+    "selectedModel": "ユーザー選択モデル",
+    "category": "種類",
+    "image": "画像",
+    "video": "動画",
+    "model": "モデル",
+    "inputParams": "入力パラメータ",
+    "preview": "プレビュー",
+    "openPreview": "プレビューを開く",
+    "noPreview": "プレビューなし",
+    "viewJson": "JSONを表示",
+    "status": "ステータス",
+    "credits": "クレジット",
+    "refundStatus": "返金ステータス",
+    "refunded": "返金済み",
+    "notRefunded": "未返金",
+    "createdAt": "作成日時"
+  },
+  "filters": {
+    "search": "メール、タスクIDで検索...",
+    "all_statuses": "すべてのステータス",
+    "all_models": "すべてのモデル"
+  },
+  "status": {
+    "pending": "処理中",
+    "success": "成功",
+    "failed": "失敗"
+  },
+  "empty": "生成記録がありません。",
+  "copy_task_id": "タスク ID をコピー",
+  "task_id_copied": "タスク ID をコピーしました",
+  "pagination": {
+    "previous": "前へ",
+    "next": "次へ",
+    "page_info": "{current} / {total} ページ（{count} 件）"
+  }
+}

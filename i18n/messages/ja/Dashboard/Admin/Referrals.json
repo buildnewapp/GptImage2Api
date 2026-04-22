@@ -1,0 +1,96 @@
+{
+  "title": "招待管理",
+  "description": "招待関係、報酬記録、手動出金申請を確認します。",
+  "tabs": {
+    "overview": "概要",
+    "invites": "招待関係",
+    "rewards": "報酬記録",
+    "withdrawals": "出金申請"
+  },
+  "summary": {
+    "invited": "招待ユーザー数",
+    "credits": "登録クレジット",
+    "lockedCash": "ロック中報酬",
+    "claimableCash": "出金可能報酬",
+    "pendingWithdraw": "未処理の出金申請",
+    "paidCash": "支払い済み報酬"
+  },
+  "actions": {
+    "refresh": "更新",
+    "refreshOverview": "概要を更新"
+  },
+  "filters": {
+    "status": "状態",
+    "rewardType": "報酬タイプ",
+    "allStatuses": "すべての状態",
+    "allRewardTypes": "すべての報酬タイプ",
+    "invitesPlaceholder": "招待者、被招待者、招待コードで検索...",
+    "rewardsPlaceholder": "招待者または被招待者で検索...",
+    "withdrawalsPlaceholder": "申請者のメールを検索..."
+  },
+  "pagination": {
+    "summary": "{total} 件中 {range} 件 · {page} / {pages} ページ",
+    "pageSizeOption": "{count} 件 / ページ",
+    "previous": "前へ",
+    "next": "次へ"
+  },
+  "table": {
+    "loading": "読み込み中..."
+  },
+  "errors": {
+    "loadData": "招待管理データの取得に失敗しました。",
+    "loadOverview": "概要の更新に失敗しました。"
+  },
+  "disabled": {
+    "description": "招待報酬は現在無効です。招待関係は引き続き記録されますが、報酬付与と出金申請は行えません。"
+  },
+  "invites": {
+    "title": "招待関係",
+    "description": "どのユーザーが誰を招待したかを確認します。",
+    "empty": "招待記録はありません。",
+    "columns": {
+      "inviter": "招待者",
+      "invitee": "被招待者",
+      "code": "招待コード",
+      "status": "状態",
+      "registeredAt": "登録日時",
+      "qualifiedAt": "達成日時"
+    }
+  },
+  "rewards": {
+    "title": "報酬台帳",
+    "description": "登録クレジットと初回注文報酬を確認します。",
+    "empty": "報酬記録はありません。",
+    "columns": {
+      "inviter": "招待者",
+      "invitee": "被招待者",
+      "type": "報酬タイプ",
+      "value": "値",
+      "status": "状態",
+      "createdAt": "作成日時",
+      "availableAt": "出金可能日時"
+    }
+  },
+  "withdrawals": {
+    "title": "出金申請",
+    "description": "手動支払いの出金申請を処理します。",
+    "empty": "出金申請はありません。",
+    "columns": {
+      "user": "ユーザー",
+      "amount": "金額",
+      "status": "状態",
+      "requestedAt": "申請日時",
+      "processedAt": "処理日時",
+      "notes": "メモ",
+      "actions": "操作"
+    },
+    "actions": {
+      "markPaid": "支払い済みにする",
+      "reject": "却下"
+    }
+  },
+  "toasts": {
+    "markPaidSuccess": "出金を支払い済みに更新しました",
+    "rejectSuccess": "出金申請を却下しました"
+  }
+}

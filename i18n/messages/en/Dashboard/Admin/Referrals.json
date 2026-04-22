@@ -1,0 +1,96 @@
+{
+  "title": "Referral Admin",
+  "description": "Review invite relationships, rewards, and manual withdrawal requests.",
+  "tabs": {
+    "overview": "Overview",
+    "invites": "Invites",
+    "rewards": "Rewards",
+    "withdrawals": "Withdrawals"
+  },
+  "summary": {
+    "invited": "Invited users",
+    "credits": "Signup credits",
+    "lockedCash": "Locked cash",
+    "claimableCash": "Claimable cash",
+    "pendingWithdraw": "Pending withdrawals",
+    "paidCash": "Paid cash"
+  },
+  "actions": {
+    "refresh": "Refresh",
+    "refreshOverview": "Refresh overview"
+  },
+  "filters": {
+    "status": "Status",
+    "rewardType": "Reward type",
+    "allStatuses": "All statuses",
+    "allRewardTypes": "All reward types",
+    "invitesPlaceholder": "Search inviter, invitee, or invite code...",
+    "rewardsPlaceholder": "Search inviter or invitee...",
+    "withdrawalsPlaceholder": "Search requester email..."
+  },
+  "pagination": {
+    "summary": "{range} of {total} results · Page {page} / {pages}",
+    "pageSizeOption": "{count} / page",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "table": {
+    "loading": "Loading..."
+  },
+  "errors": {
+    "loadData": "Failed to load referral admin data.",
+    "loadOverview": "Failed to refresh overview."
+  },
+  "disabled": {
+    "description": "Referral rewards are disabled. Invite relationships can still be captured, but no referral rewards or withdrawals are available."
+  },
+  "invites": {
+    "title": "Invite Relationships",
+    "description": "Track which users invited each signup.",
+    "empty": "No referral invites yet.",
+    "columns": {
+      "inviter": "Inviter",
+      "invitee": "Invitee",
+      "code": "Invite code",
+      "status": "Status",
+      "registeredAt": "Registered at",
+      "qualifiedAt": "Qualified at"
+    }
+  },
+  "rewards": {
+    "title": "Reward Ledger",
+    "description": "Track every signup credit and first-order cash reward.",
+    "empty": "No referral rewards yet.",
+    "columns": {
+      "inviter": "Inviter",
+      "invitee": "Invitee",
+      "type": "Reward type",
+      "value": "Value",
+      "status": "Status",
+      "createdAt": "Created at",
+      "availableAt": "Available at"
+    }
+  },
+  "withdrawals": {
+    "title": "Withdrawal Requests",
+    "description": "Process pending manual payout requests.",
+    "empty": "No withdrawal requests yet.",
+    "columns": {
+      "user": "User",
+      "amount": "Amount",
+      "status": "Status",
+      "requestedAt": "Requested at",
+      "processedAt": "Processed at",
+      "notes": "Notes",
+      "actions": "Actions"
+    },
+    "actions": {
+      "markPaid": "Mark paid",
+      "reject": "Reject"
+    }
+  },
+  "toasts": {
+    "markPaidSuccess": "Withdrawal marked as paid",
+    "rejectSuccess": "Withdrawal rejected"
+  }
+}

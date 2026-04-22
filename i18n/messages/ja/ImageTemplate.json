@@ -1,0 +1,461 @@
+{
+  "navigation": {
+    "brand": "Seedance 2.0",
+    "createVideo": "動画を作成",
+    "credits": "30 クレジット",
+    "darkModeLabel": "ダークモードに切り替える",
+    "home": "ホーム",
+    "language": "日本語",
+    "mobileMenuLabel": "メニューを開く",
+    "resources": "リソース"
+  },
+  "hero": {
+    "badge": "Seedance 2.0 web & api",
+    "ctaLabel": "動画を生成",
+    "creditCost": "25",
+    "description": "テキストまたは参照画像から短尺 AI 動画を生成できます。新規ユーザーは Seedance 2.0 をすぐに使い始められ、デイリータスクで多くのクレジットを継続的に獲得できます。現在の Web アプリの Seedance 2.0 は、最大 1080p・15 秒まで対応しています。",
+    "durationLabel": "5秒",
+    "highlight": "より明確に。",
+    "modelLabel": "Seedance 2.0",
+    "placeholder": "最大 12 件の参照素材をアップロードし、プロンプト内で @ を入力して参照できます。例: @image1 が @video1 の動きを再現し、音声は @audio1 を参照。",
+    "resolutionLabel": "480p",
+    "title": "短尺動画を直接生成",
+    "videos": [
+      "https://cdn.sdanceai.com/sdanceai/sdance_videos/4vr3llg33.mp4",
+      "https://cdn.sdanceai.com/sdanceai/sdance_videos/cslx142y0.mp4",
+      "https://cdn.sdanceai.com/sdanceai/sdance_videos/0yk60yijj.mp4",
+      "https://cdn.sdanceai.com/sdanceai/sdance_videos/598uoczz9.mp4"
+    ]
+  },
+  "featureRows": [
+    {
+      "description": "プロンプトを書き、アスペクト比・長さ・解像度を選ぶだけで、現在の Web アプリ内で短尺クリップを生成できます。新規ユーザーでも Seedance 2.0 をすぐに使い始められ、デイリータスクで多くのクレジットを継続的に獲得できます。",
+      "title": "短尺テキスト動画生成",
+      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/gomdqjkt4.mp4"
+    },
+    {
+      "description": "1 枚の静止画像を開始フレームとして使い、動き始める前に被写体、構図、アートディレクションを固定できます。現在の Web アプリは単一の参照画像による画像から動画生成をサポートしています。",
+      "reverse": true,
+      "title": "参照画像ガイダンス",
+      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/es600fg0x.mp4"
+    },
+    {
+      "description": "新規ユーザーは Seedance 2.0 をすぐに使い始められ、デイリータスクで多くのクレジットを継続的に獲得できます。モデルの制限は生成前に UI 上で確認できます。",
+      "title": "すぐに 2.0 を開始",
+      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/88jhjdm4l.mp4"
+    },
+    {
+      "description": "現在の seedance2.app の公開プランでは、Seedance 2.0 は最大 1080p・15 秒までです。クレジットを使う前に現実的なプロンプト設計ができるよう、こうした上限を UI 上で明示しています。",
+      "reverse": true,
+      "title": "出力上限を明確に表示",
+      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/nf3vdfl8a.mp4"
+    }
+  ],
+  "scope": {
+    "description": "現在 Web アプリで公開されている範囲",
+    "footerDescription": "隠れた長尺の約束はありません",
+    "footerStat": "現在は最大 1080p・15 秒",
+    "footerTitle": "短尺制作に最適化",
+    "logos": [
+      "TECHCRUNCH",
+      "PRODUCT HUNT",
+      "HACKER NEWS",
+      "THE VERGE",
+      "WIRED",
+      "AI WEEKLY"
+    ],
+    "logosLabel": "現在のアプリ制限",
+    "title": "現在のアプリ範囲をわかりやすく提示",
+    "items": [
+      {
+        "accent": "primary",
+        "description": "プロンプトから直接短いクリップを生成します。",
+        "icon": "video",
+        "title": "テキストから動画"
+      },
+      {
+        "accent": "foreground",
+        "description": "1 枚の参照画像から始めて、そこからアニメーション化します。",
+        "icon": "image",
+        "title": "画像から動画"
+      },
+      {
+        "accent": "accent",
+        "description": "新規ユーザーは Seedance 2.0 をすぐに使い始められ、デイリータスクで多くのクレジットを継続的に獲得できます。",
+        "icon": "globe",
+        "title": "モデル利用条件"
+      },
+      {
+        "accent": "foreground",
+        "description": "現在のアプリ内オプションは 480p、720p、1080p です。",
+        "icon": "award",
+        "title": "解像度上限"
+      },
+      {
+        "accent": "foreground",
+        "description": "Seedance 2.0 は最大 12 秒、Seedance 2.0 は最大 15 秒まで対応します。",
+        "icon": "users",
+        "title": "尺の上限"
+      },
+      {
+        "accent": "primary",
+        "description": "生成した動画は MP4 でダウンロードできます。",
+        "icon": "zap",
+        "title": "ダウンロード形式"
+      }
+    ]
+  },
+  "useCases": {
+    "description": "製品ローンチからブランドストーリーまで、seedance2.app はプロンプトと参照画像を使ってクリエイターの短尺動画制作を高速化します",
+    "title": "実際のクリエイターワークフロー向け",
+    "items": [
+      {
+        "accent": "primary",
+        "description": "機能紹介を短いビジュアルストーリーに変換。コンバージョンにつながる製品ヒーローショットやローンチ動画を素早く制作できます。",
+        "icon": "megaphone",
+        "title": "製品ローンチ動画"
+      },
+      {
+        "accent": "rose",
+        "description": "複数のフック案を素早く生成し、勝ちパターンだけを磨き込めます。ブランドの一貫性を保ちながら、狙った編集で A/B テストが可能です。",
+        "icon": "target",
+        "title": "広告クリエイティブ"
+      },
+      {
+        "accent": "violet",
+        "description": "一貫したスタイルでビフォーアフターの流れを見せられます。複数ショットのシーケンスで製品価値をわかりやすく伝えます。",
+        "icon": "monitor",
+        "title": "App / SaaS 解説動画"
+      },
+      {
+        "accent": "amber",
+        "description": "投稿ごとに見た目や構図を揃えられます。再利用可能なプロンプトと参照画像で、すべての素材をブランドに沿って維持できます。",
+        "icon": "palette",
+        "title": "クリエイターブランドキット"
+      },
+      {
+        "accent": "accent",
+        "description": "再撮影なしで季節感のあるビジュアルを制作。プロンプトと参照画像を差し替えるだけで新しい商品クリップを作れます。",
+        "icon": "store",
+        "title": "ストア向け販促動画"
+      },
+      {
+        "accent": "foreground",
+        "description": "人が作ったように感じられる短い物語動画を素早く下書きできます。クリエイターの速度で制作、改善、公開まで進められます。",
+        "icon": "users",
+        "title": "UGC 風スクリプト"
+      }
+    ]
+  },
+  "showcase": {
+    "ctaText": "あなた自身の短いクリップを作る準備はできましたか？",
+    "description": "このページのプレビュー素材は短いローカルクリップです。ここに表示しているメタデータは、このサイト上の実ファイル情報を反映しています。",
+    "kicker": "動画ショーケース",
+    "note": "これらのサンプルを隠れた長尺出力として見せているわけではありません。現在このページで表示している短いローカルプレビュー素材です。",
+    "title": "現在のサイトサンプルを見る",
+    "items": [
+      {
+        "category": "製品",
+        "duration": "13.0s",
+        "prompt": "@Image1 の女優をメイン被写体に設定。リズミカルな push-pull-pan-tilt のカメラワークは @Video1 を参照。女優は @Video1 の女性ダンサーの動きを再現し、ステージ上でエネルギッシュに踊る。",
+        "resolution": "720x1280",
+        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/cslx142y0.mp4",
+        "title": "カメラと動きの再現"
+      },
+      {
+        "category": "ドキュメンタリー",
+        "duration": "15.0s",
+        "prompt": "絵の中のキャラクターが後ろめたそうな表情で左右を見回し、フレームの外に手を伸ばしてコーラを取り、一口飲んで満足そうな表情を見せる。足音が聞こえると急いでコーラを元に戻す。カウボーイがそのコーラを持ち去る。カメラは純黒の背景へ前進し、缶入りコーラにスポットライトが当たり、芸術的な字幕「Yikou Cola, a must-try!」が表示される。",
+        "resolution": "1280x720",
+        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/3xh83niox.mp4",
+        "title": "基礎性能の強化"
+      },
+      {
+        "category": "解説",
+        "duration": "15.0s",
+        "prompt": "男性（@Image1）が仕事帰りに疲れた様子で廊下を歩き、次第に足取りが重くなる。玄関前で立ち止まり、顔のクローズアップ。深呼吸して気持ちを整え、穏やかな表情を作る。鍵を探して差し込む手元のアップ。家に入ると幼い娘と飼い犬が嬉しそうに駆け寄って抱きつく。室内はとても暖かく居心地がよく、全体に自然な会話が流れる。",
+        "resolution": "1280x720",
+        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/kewve4hf7.mp4",
+        "title": "ブランド解説シーケンス"
+      },
+      {
+        "category": "ファッション",
+        "duration": "10.0s",
+        "prompt": "最初の画像にあるモデルの顔立ちを参照する。モデルは参照画像 2-6 の衣装を着てカメラに向かって歩き、遊び心、クールさ、可愛らしさ、驚き、スタイリッシュさを表現するポーズを順に見せる。",
+        "resolution": "720x1280",
+        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/nnxk9k7w5.mp4",
+        "title": "クリエイティブテンプレートと効果"
+      },
+      {
+        "category": "ライフスタイル",
+        "duration": "14.0s",
+        "prompt": "Video1 の音声を参照し、Image1-5 をインスピレーションとして感情駆動型の動画を作る。BGM は @Video1 を参考にする。",
+        "resolution": "1280x720",
+        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/q3zb6o149.mp4",
+        "title": "クリエイティブな物語補完"
+      },
+      {
+        "category": "エンタメ",
+        "duration": "15.0s",
+        "prompt": "動画をさらに 15 秒延長する。@Image1 と @Image2 に登場するバイクに乗ったロバのキャラクターを参照し、破天荒な広告シーケンスを作成する。",
+        "resolution": "1280x720",
+        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/598uoczz9.mp4",
+        "title": "動画延長"
+      }
+    ]
+  },
+  "testimonials": {
+    "description": "Seedance 2.0 でより速く動画を届ける何千人ものクリエイターに参加しましょう",
+    "title": "世界中のクリエイターに支持されています",
+    "items": [
+      {
+        "accent": "primary",
+        "initials": "SC",
+        "name": "Sarah Chen",
+        "quote": "Seedance 2.0 は私たちの制作パイプラインを一変させました。マルチモーダル参照によって、すべてのキャンペーンでブランドの一貫性を保てますし、編集ワークフローのおかげで試行錯誤にかかる日数が大幅に減りました。",
+        "role": "TechStart Inc. マーケティングディレクター"
+      },
+      {
+        "accent": "accent",
+        "initials": "MR",
+        "name": "Michael Rodriguez",
+        "quote": "監督レベルのコントロール感が本当にすごいです。スタイル参照を 1 つアップロードするだけで、Seedance 2.0 は毎回しっかり雰囲気を再現してくれます。視聴者エンゲージメントは倍増しました。",
+        "role": "YouTube コンテンツクリエイター"
+      },
+      {
+        "accent": "rose",
+        "initials": "DK",
+        "name": "David Kim",
+        "quote": "参照ベース生成はゲームチェンジャーでした。構図、ライティング、カメラワークを正確に誘導しつつ、本当に必要な部分だけを後から調整できます。",
+        "role": "Design Studio X クリエイティブディレクター"
+      },
+      {
+        "accent": "amber",
+        "initials": "LT",
+        "name": "Lisa Thompson",
+        "quote": "自分でプロ品質の商品動画を作れるとは思っていませんでした。Seedance 2.0 なら商品写真を数枚参照としてアップロードするだけで、数分で洗練されたストア向けプロモーション動画が完成します。",
+        "role": "Thompson's Bakery オーナー"
+      },
+      {
+        "accent": "primary",
+        "initials": "JP",
+        "name": "James Park",
+        "quote": "音と映像の同期が驚くほど自然です。高価な撮影を組まなくても、スタジオ制作のように見える音楽ビジュアルを公開できました。",
+        "role": "Harmony Records 音楽プロデューサー"
+      },
+      {
+        "accent": "accent",
+        "initials": "AN",
+        "name": "Ava Nguyen",
+        "quote": "短尺キャンペーンにおいて、Seedance 2.0 はスピード、一貫性、そして本番制作前にコンセプト検証できるだけの十分な制御性を実用的なバランスで提供してくれます。",
+        "role": "Bright Launch グロースリード"
+      }
+    ]
+  },
+  "pricing": {
+    "comparisonRows": [
+      {
+        "feature": "Seedance 2.0 アクセス",
+        "other": "ケースによる",
+        "seedance": "利用可能"
+      },
+      {
+        "feature": "Web アプリ内の新規・タスククレジット",
+        "other": "ケースによる",
+        "seedance": "すべてのモデル"
+      },
+      {
+        "feature": "現在の公開最大尺",
+        "other": "ケースによる",
+        "seedance": "15秒"
+      },
+      {
+        "feature": "現在の公開最大解像度",
+        "other": "ケースによる",
+        "seedance": "1080p"
+      },
+      {
+        "feature": "テキストから動画",
+        "other": "通常は利用可能",
+        "seedance": "利用可能"
+      },
+      {
+        "feature": "画像から動画",
+        "other": "ケースによる",
+        "seedance": "利用可能"
+      },
+      {
+        "feature": "有料プランでの優先処理",
+        "other": "ケースによる",
+        "seedance": "利用可能"
+      },
+      {
+        "feature": "MP4 ダウンロード",
+        "other": "ケースによる",
+        "seedance": "利用可能"
+      }
+    ],
+    "comparisonTitle": "現在の公開オファー比較",
+    "creditPacks": [
+      {
+        "cta": "クレジットを購入",
+        "description": "5 秒クリップなら約 13 本、15 秒クリップなら約 4 本",
+        "price": "$50",
+        "title": "500 クレジット"
+      },
+      {
+        "cta": "クレジットを購入",
+        "description": "5 秒クリップなら約 55 本、15 秒クリップなら約 18 本",
+        "price": "$200",
+        "title": "2100 クレジット"
+      }
+    ],
+    "creditPacksDescription": "サブスクリプションなしで単発利用向けのクレジットを購入できます",
+    "cryptoPaymentLinkLabel": "こちらを確認",
+    "cryptoPaymentText": "暗号資産での支払いにも対応しています。",
+    "creditPacksTitle": "少数の動画だけ必要ですか？",
+    "description": "新規ユーザーは Seedance 2.0 をすぐに使い始められ、デイリータスクで多くのクレジットを継続的に獲得できます。",
+    "monthlyLabel": "月額",
+    "plans": [
+      {
+        "accent": "foreground",
+        "approx": "年間で約 157 本の 5 秒 Seedance 2.0 クリップ",
+        "billed": "年額課金 $490",
+        "credits": "合計 6,000 クレジット",
+        "cta": "始める",
+        "description": "個人クリエイター向け短尺動画プラン",
+        "features": [
+          { "text": "480p・720p・1080p の出力オプション" },
+          { "text": "Seedance 2.0 は最大 15 秒のクリップに対応" },
+          { "text": "クレジットベースのレンダリング" },
+          { "text": "優先処理" },
+          { "text": "MP4 ダウンロード" },
+          { "text": "透かしなし" },
+          { "highlight": true, "text": "Business Certificate Included" }
+        ],
+        "icon": "camera",
+        "name": "Basic",
+        "price": "$41"
+      },
+      {
+        "accent": "primary",
+        "approx": "年間で約 347 本の 5 秒 Seedance 2.0 クリップ",
+        "billed": "年額課金 $990",
+        "credits": "合計 13,200 クレジット",
+        "cta": "Pro を利用",
+        "description": "より多くの短尺試行向けクレジット量",
+        "featured": true,
+        "features": [
+          { "text": "480p・720p・1080p の出力オプション" },
+          { "text": "Seedance 2.0 は最大 15 秒のクリップに対応" },
+          { "text": "より大きな月間クレジット枠" },
+          { "text": "優先処理" },
+          { "text": "バッチ運用向きのボリューム" },
+          { "text": "API アクセス" },
+          { "highlight": true, "text": "Business Certificate Included" }
+        ],
+        "icon": "crown",
+        "name": "Pro",
+        "price": "$83"
+      },
+      {
+        "accent": "accent",
+        "approx": "年間で約 757 本の 5 秒 Seedance 2.0 クリップ",
+        "billed": "年額課金 $2,000",
+        "credits": "合計 28,800 クレジット",
+        "cta": "Max を利用",
+        "description": "チームと大量制作向けの最大クレジット枠",
+        "features": [
+          { "text": "480p・720p・1080p の出力オプション" },
+          { "text": "Seedance 2.0 は最大 15 秒のクリップに対応" },
+          { "text": "最大の月間クレジット枠" },
+          { "text": "優先処理" },
+          { "text": "チーム規模の運用量" },
+          { "text": "API アクセスとサポート" },
+          { "highlight": true, "text": "Business Certificate Included" }
+        ],
+        "icon": "rocket",
+        "name": "Max",
+        "price": "$167"
+      }
+    ],
+    "saveLabel": "17% お得",
+    "title": "現在のWebアプリ向け明瞭な料金体系",
+    "yearlyLabel": "年額"
+  },
+  "faq": {
+    "description": "Seedance 2.0 について知っておきたい内容をまとめました",
+    "items": [
+      {
+        "answer": "現在の seedance2.app では、Seedance は短尺動画ジェネレーターとして提供されています。テキストのみ、またはテキストプロンプト + 1 枚の参照画像からクリップを生成でき、モデル・長さ・解像度の制限は UI 上に表示されます。",
+        "question": "Seedance 2.0 とは何ですか？"
+      },
+      {
+        "answer": "現在の Web アプリでは、テキストプロンプトと、画像から動画生成用の任意の 1 枚の参照画像をサポートしています。公開 UI では今のところ動画参照や音声参照のアップロードには対応していません。",
+        "question": "どの入力が使えますか？"
+      },
+      {
+        "answer": "現在 Web アプリの Seedance 2.0 は最大 12 秒、有料の Seedance 2.0 は最大 15 秒まで対応しています。",
+        "question": "出力の長さはどれくらいですか？"
+      },
+      {
+        "answer": "現在の公開 Web アプリのワークフローでは対応していません。今の公開プロダクトは短尺動画レンダリングと MP4 書き出しに集中しています。",
+        "question": "音声も生成できますか？"
+      },
+      {
+        "answer": "現在の公開 Web アプリでは対応していません。現状では、各実行ごとにプロンプトと設定から新しいクリップを生成します。",
+        "question": "再生成ではなく編集はできますか？"
+      },
+      {
+        "answer": "現在の公開 Web アプリでは対応していません。公開出力の上限は、Seedance 2.0 が最大 12 秒、Seedance 2.0 が最大 15 秒です。",
+        "question": "動画を延長して物語を続けられますか？"
+      },
+      {
+        "answer": "同じ被写体や構図を複数の出力で維持したい場合は、再利用しやすいプロンプト構成と一貫した参照画像を使ってください。",
+        "question": "ブランドスタイルを一貫させるには？"
+      },
+      {
+        "answer": "はい。広告バリエーション、フック検証、商品ヒーローショット、解説動画などが代表的な活用例です。複数案を素早く出し、その中から勝ちパターンを狙って磨き込めます。",
+        "question": "広告や製品ローンチにも使えますか？"
+      },
+      {
+        "answer": "Seedance 2.0 は、特に複雑な動きや相互作用を含むダイナミックなシーンで、動きの安定性とリアリティを高めるよう設計されています。結果はプロンプトや参照素材によって変わります。",
+        "question": "複雑な動きに強いですか？"
+      },
+      {
+        "answer": "seedance2.app では、新規ユーザーが Seedance 2.0 をすぐに使い始められ、デイリータスクで多くのクレジットを継続的に獲得できます。",
+        "question": "どこで使えますか？"
+      },
+      {
+        "answer": "商用利用はプラットフォームの利用規約と、参照素材に対するあなたの権利に依存します。詳細は利用規約を確認してください。",
+        "question": "生成結果を商用利用できますか？"
+      },
+      {
+        "answer": "出力結果にはばらつきがあります。現在の Web アプリの公開制限では短いクリップのみ対応で、480p・720p・1080p に対応し、Seedance 2.0 では最大 15 秒までです。",
+        "question": "既知の制限は何ですか？"
+      }
+    ],
+    "title": "よくある質問"
+  },
+  "cta": {
+    "description": "ジェネレーターを開き、モデルを選び、短尺クリップを作成しましょう。新規ユーザーは Seedance 2.0 をすぐに使い始められ、デイリータスクで多くのクレジットを継続的に獲得できます。",
+    "kicker": "数分で開始",
+    "primaryLabel": "Seedance 2.0 を開く",
+    "secondaryLabel": "プロンプトパックを見る",
+    "stats": [
+      {
+        "label": "1日の生成本数",
+        "value": "10K+"
+      },
+      {
+        "label": "満足しているクリエイター",
+        "value": "50K+"
+      },
+      {
+        "label": "現在の公開上限",
+        "value": "15秒"
+      }
+    ],
+    "title": "今日、最初の一本を作ろう"
+  }
+}

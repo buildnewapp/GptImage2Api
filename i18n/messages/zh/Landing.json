@@ -1,0 +1,521 @@
+{
+  "Hero": {
+    "badge": {
+      "label": "新品",
+      "text": "多模态 AI 视频创作",
+      "href": "/#pricing"
+    },
+    "title": "Seedance 2.0",
+    "description": "体验真正的多模态 AI 视频创作。结合图像、视频、音频和文本，通过精确的参考能力、无缝的视频延展和自然语言控制，生成电影级内容。",
+    "getStarted": "立即开始",
+    "getStartedLink": "/#pricing",
+    "form": {
+      "imageToVideo": "图生视频",
+      "textToVideo": "文生视频",
+      "aiModel": "AI 模型",
+      "selectModel": "选择模型开始生成",
+      "images": "图像",
+      "referenceAudios": "参考音频",
+      "referenceImages": "参考图片",
+      "referenceVideos": "参考视频",
+      "referenceUrls": "参考链接",
+      "uploadTitle": "点击上传或拖拽文件",
+      "uploadFormats": "PNG, JPG, JPEG, WEBP",
+      "audioUploadFormats": "audio/*.mp3,.wav,.m4a,.aac,.ogg",
+      "imageUploadFormats": "image/*.png,.jpg,.jpeg,.webp",
+      "videoUploadFormats": "video/*.mp4,.mov,.webm,.mkv",
+      "uploadingImage": "上传中...",
+      "uploadingReference": "上传中...",
+      "uploadSuccess": "图片上传成功。",
+      "uploadFailed": "图片上传失败。",
+      "referenceUploadFailed": "参考素材上传失败。",
+      "uploadTooLarge": "图片大小不能超过 10MB。",
+      "referenceUploadTooLarge": "文件大小不能超过 {size}MB。",
+      "audioOnlyError": "仅支持上传音频文件。",
+      "imageOnlyError": "仅支持上传图片文件。",
+      "videoOnlyError": "仅支持上传视频文件。",
+      "videoDurationRequiredError": "无法读取该视频的时长。请使用可公开访问的直链视频文件 URL。",
+      "prompt": "提示词",
+      "promptPlaceholder": "描述你希望图像如何动起来...",
+      "promptPlaceholderImage": "描述你想生成或编辑的图片内容...",
+      "audioReferenceHint": "上传节奏、旁白或配乐参考音频，最多 {count} 个。",
+      "imageReferenceHint": "上传角色、风格或构图参考图，最多 {count} 张。",
+      "videoReferenceHint": "上传运镜、动作或转场参考视频，最多 {count} 个。",
+      "urlReferenceHint": "添加公开可访问的参考链接，最多 {count} 个。",
+      "referencesCount": "{current}/{max} 个参考",
+      "invalidUrl": "请输入有效的 URL",
+      "audioUrlPlaceholder": "https://example.com/reference-audio.mp3",
+      "imageUrlPlaceholder": "https://example.com/reference-image.png",
+      "videoUrlPlaceholder": "https://example.com/reference-video.mp4",
+      "genericUrlPlaceholder": "https://example.com/resource",
+      "resolution": "分辨率",
+      "size": "画质",
+      "duration": "时长",
+      "aspectRatio": "比例",
+      "auto": "自动",
+      "advanced": "高级/自定义",
+      "isPublic": "是否公开",
+      "public": "公开",
+      "private": "不公开",
+      "generate": "生成视频",
+      "generateImage": "生成图片",
+      "generating": "生成中...",
+      "loginRequired": "请登录后生成视频",
+      "loginRequiredImage": "请登录后生成图片",
+      "insufficientCredits": "积分不足",
+      "creditsRequired": "{count} 积分",
+      "generationSuccess": "视频生成已开始！",
+      "generationSuccessImage": "图片生成已开始！",
+      "generationQueued": "已加入生成队列。",
+      "generationCompleted": "视频生成完成！",
+      "generationFailed": "生成失败，请重试",
+      "modelUnavailable": "此接口暂未开放，如需使用请联系客服",
+      "historyHint": "提交后生成记录会显示在这里",
+      "readyToPreview": "可预览",
+      "viewResult": "在“我的视频”中查看",
+      "addEndFrame": "添加首尾帧",
+      "useUrl": "使用 URL",
+      "add": "添加",
+      "remove": "移除",
+      "seed": "种子",
+      "randomSeed": "随机 (-1)",
+      "fixCamera": "固定相机",
+      "safetyChecker": "安全检查",
+      "shots": "分镜",
+      "addShot": "添加分镜",
+      "shotNumber": "分镜 {index}",
+      "shotScene": "描述这个场景中发生的事情...",
+      "shotDuration": "时长 (秒)",
+      "totalDuration": "总计: {current}s / {total}s",
+      "modelVersion": "模型版本",
+      "soraDisclaimer": "Sora 服务目前需求量大，可能会失败。我们建议使用其他模型以获得更可靠的结果。",
+      "sora2": {
+        "name": "Sora 2",
+        "description": "标准质量，快速生成"
+      },
+      "sora2pro": {
+        "name": "Sora 2 Pro",
+        "description": "优质质量，具备高级功能"
+      },
+      "estimatedCredits": "预计积分",
+      "pricingLogicTitle": "价格计算逻辑",
+      "pricingLogicWithVideoSummary": "有视频输入：按 (输入视频时长 + 输出时长) × 费率 计算",
+      "pricingLogicWithoutVideoSummary": "无视频输入：按 输出时长 × 费率 计算",
+      "pricingLogicWithVideoFormula": "当前按 ({input}s + {output}s) × {rate} credits/s = {credits} credits",
+      "pricingLogicWithoutVideoFormula": "当前按 {output}s × {rate} credits/s = {credits} credits",
+      "currentCredits": "当前积分余额",
+      "unsupportedCombination": "当前模型组合不支持该参数，请调整设置",
+      "loadModelDetailFailed": "模型详情加载失败",
+      "provider": "渠道",
+      "loadingModelSettings": "正在加载模型配置...",
+      "tasks": "任务列表",
+      "noTasks": "暂无任务，点击生成开始创建",
+      "task": "任务 #{index}",
+      "copyTaskId": "复制任务 ID",
+      "taskIdCopied": "任务 ID 已复制",
+      "reference": "参考图",
+      "referencePreview": "参考图预览",
+      "replace": "替换",
+      "open": "打开",
+      "download": "下载",
+      "copy": "复制",
+      "openVideo": "打开视频",
+      "openImage": "打开图片",
+      "downloadVideo": "下载视频",
+      "downloadImage": "下载图片",
+      "copyPrompt": "复制提示词",
+      "remix": "Remix",
+      "promptCopied": "提示词已复制",
+      "copyFailed": "复制失败",
+      "remixApplied": "参数已填充，可直接生成",
+      "watermark": "水印",
+      "watermarkPlaceholder": "添加水印（可选）",
+      "enableTranslation": "自动翻译提示词",
+      "veoQuality": "Veo 3.1 画质版",
+      "veoFast": "Veo 3.1 速度版",
+      "submitModeForm": "表单",
+      "submitModeApi": "API",
+      "apiRequestJsonTitle": "请求 JSON",
+      "apiRequestJsonDescription": "空字段也会保留在 payload 中，提交前可手动编辑。",
+      "apiJsonRequired": "JSON payload 不能为空。",
+      "apiJsonMustBeObject": "JSON payload 必须是对象。",
+      "apiJsonInvalid": "JSON payload 格式无效。",
+      "apiFieldDocsTitle": "字段说明",
+      "apiFieldDocRequired": "必填",
+      "apiFieldDocType": "类型",
+      "apiFieldDocEnum": "可选值",
+      "apiFieldDocRange": "范围",
+      "apiFieldDocMinimum": "最小值",
+      "apiFieldDocMaximum": "最大值"
+    }
+  },
+  "Features": {
+    "badge": {
+      "label": "核心能力",
+      "text": "了解 Seedance 2.0 的关键优势"
+    },
+    "title": "Seedance 2.0 核心能力",
+    "titlePrefix": "核心能力：",
+    "titleSuffix": "Seedance 2.0",
+    "description": "从基础稳定性到复杂的多模态参考，体验 AI 视频生成的下一次进化。",
+    "items": [
+      {
+        "title": "增强的基础能力",
+        "description": "更稳定、更流畅、更逼真。更好的物理规律、自然运动、精确的指令遵循和稳定的风格保持。"
+      },
+      {
+        "title": "多模态与自由组合",
+        "description": "支持文本、图像、视频和音频输入。自由组合参考对象（最多 9 张图片、3 个视频、3 个音频文件）。"
+      },
+      {
+        "title": "卓越的一致性",
+        "description": "解决面部变形、细节丢失或场景跳跃等常见问题。在整个视频中保持角色、服装和物品细节的一致性。"
+      },
+      {
+        "title": "精确的运镜与动作复刻",
+        "description": "只需上传参考视频，即可复刻好莱坞级的运镜（推拉、摇摄、变焦）和复杂的角色动作。"
+      },
+      {
+        "title": "创意特效与模板",
+        "description": "复刻转场、广告模板和复杂的剪辑特效。模型从参考视频中识别视觉结构和节奏。"
+      },
+      {
+        "title": "叙事与情节补全",
+        "description": "按顺序解读连环画或故事板。生成具有一致角色的叙事序列视频。"
+      },
+      {
+        "title": "视频延展",
+        "description": "流畅地延展视频（向前或向后）。在保持原有风格和流畅度的同时创作更长的序列。"
+      },
+      {
+        "title": "音频生成与配音",
+        "description": "提高声音的真实感和准确性。生成匹配的音效、配音和氛围音乐。"
+      },
+      {
+        "title": "一致的长镜头（一镜到底）",
+        "description": "生成无剪辑的“一镜到底”连续视频，在更长的时间跨度内保持视觉逻辑和稳定性。"
+      },
+      {
+        "title": "视频编辑",
+        "description": "修改现有视频的特定部分（例如，更换角色、延展片段），而无需重新生成整个序列。"
+      },
+      {
+        "title": "音乐节奏同步",
+        "description": "卡点能力。生成与上传音乐节奏同步的视频剪辑。"
+      },
+      {
+        "title": "情感表达",
+        "description": "丰富的情感表现。角色可以在不同情绪之间（例如，从平静到崩溃）逼真地转换。"
+      }
+    ]
+  },
+  "UseCases": {
+    "badge": {
+      "label": "应用场景",
+      "text": "适用于创作者、营销团队与专业制作"
+    },
+    "title": "无限可能，致每一位创作者",
+    "titlePrefix": "无限可能 ",
+    "titleSuffix": "致每一位创作者",
+    "description": "从病毒式传播的内容到专业制作，Seedance 2.0 赋能各行各业的创作者，将多模态愿景变为现实。",
+    "button": "立即开始",
+    "items": [
+      {
+        "title": "广告与营销",
+        "description": "通过参考成功的广告模板创作引人注目的宣传内容。用您自己的产品和品牌复刻经过验证的创意形式。",
+        "tags": ["产品视频", "品牌内容", "商业广告", "模板复刻"]
+      },
+      {
+        "title": "教育与培训",
+        "description": "用引人入胜的视觉内容让课程生动起来。制作动画解说、历史重现和互动学习材料。",
+        "tags": ["课程内容", "教程", "演示", "视觉课程"]
+      },
+      {
+        "title": "创意叙事",
+        "description": "使用多模态输入构建独特的故事。参考电影技法，复刻电影风格，并在无缝衔接的场景中延展您的故事。",
+        "tags": ["短片", "艺术项目", "音乐视频", "视觉诗歌"]
+      },
+      {
+        "title": "社交媒体内容",
+        "description": "通过参考热门模板和特效生成让人停不下刷屏的内容。用您自己的创意转折复刻病毒式传播的形式。",
+        "tags": ["Instagram Reels", "TikTok 视频", "YouTube Shorts", "热门特效"]
+      },
+      {
+        "title": "动作与舞蹈视频",
+        "description": "上传参考编舞或动作片段，并将其应用于任何角色。非常适合舞蹈翻拍、动作复刻和动作序列。",
+        "tags": ["舞蹈翻拍", "动作序列", "动作捕捉", "编舞"]
+      },
+      {
+        "title": "视频编辑与延展",
+        "description": "无缝延展现有视频，合并多个片段，或在该特定片段进行编辑，无需从头重新生成所有内容。",
+        "tags": ["视频延展", "场景合并", "内容编辑", "片段连接"]
+      },
+      {
+        "title": "电影预可视化",
+        "description": "参考电影片段以复刻运镜、转场和视觉特效。在制作前测试电影摄影效果。",
+        "tags": ["故事板", "机位规划", "特效测试", "概念验证"]
+      },
+      {
+        "title": "房地产与建筑",
+        "description": "将房产照片转化为沉浸式虚拟导览。通过动态漫游和氛围展示呈现建筑设计。",
+        "tags": ["房产导览", "建筑可视化", "室内设计", "虚拟布景"]
+      },
+      {
+        "title": "音乐与音频同步",
+        "description": "上传音轨并创作节拍同步的视频。生成与您的视觉内容相匹配的音效和背景音乐。",
+        "tags": ["节拍同步", "音乐视频", "声音设计", "视听艺术"]
+      }
+    ],
+    "cases": [
+      {
+        "title": "广告与营销",
+        "description": "通过参考成功的广告模板创作引人注目的宣传内容。用您自己的产品和品牌复刻经过验证的创意形式。",
+        "image": "",
+        "icon": "megaphone"
+      },
+      {
+        "title": "教育与培训",
+        "description": "用引人入胜的视觉内容让课程生动起来。制作动画解说、历史重现和互动学习材料。",
+        "image": "",
+        "icon": "graduation-cap"
+      },
+      {
+        "title": "创意叙事",
+        "description": "使用多模态输入构建独特的故事。参考电影技法，复刻电影风格，并在无缝衔接的场景中延展您的故事。",
+        "image": "",
+        "icon": "clapperboard"
+      },
+      {
+        "title": "社交媒体内容",
+        "description": "通过参考热门模板和特效生成让人停不下刷屏的内容。用您自己的创意转折复刻病毒式传播的形式。",
+        "image": "",
+        "icon": "smartphone"
+      },
+      {
+        "title": "动作与舞蹈视频",
+        "description": "上传参考编舞或动作片段，并将其应用于任何角色。非常适合舞蹈翻拍、动作复刻和动作序列。",
+        "image": "",
+        "icon": "sparkles"
+      },
+      {
+        "title": "视频编辑与延展",
+        "description": "无缝延展现有视频，合并多个片段，或在该特定片段进行编辑，无需从头重新生成所有内容。",
+        "image": "",
+        "icon": "scissors"
+      },
+      {
+        "title": "电影预可视化",
+        "description": "参考电影片段以复刻运镜、转场和视觉特效。在制作前测试电影摄影效果。",
+        "image": "",
+        "icon": "film"
+      },
+      {
+        "title": "房地产与建筑",
+        "description": "将房产照片转化为沉浸式虚拟导览。通过动态漫游和氛围展示呈现建筑设计。",
+        "image": "",
+        "icon": "building-2"
+      },
+      {
+        "title": "音乐与音频同步",
+        "description": "上传音轨并创作节拍同步的视频。生成与您的视觉内容相匹配的音效和背景音乐。",
+        "image": "",
+        "icon": "headphones"
+      }
+    ]
+  },
+  "HowItWorks": {
+    "titlePrefix": "如何使用 ",
+    "titleSuffix": "Seedance 2.0 创作 AI 视频",
+    "button": "立即开始创作",
+    "items": [
+      {
+        "title": "上传素材",
+        "description": "上传图像、视频或音频文件作为参考。您可以跨不同模态组合最多 12 个文件来表达您的愿景。"
+      },
+      {
+        "title": "描述愿景",
+        "description": "使用自然语言描述您想要的内容。通过标签引用特定素材，例如“使用 @image1 作为第一帧，配合 @video1 的运镜”。"
+      },
+      {
+        "title": "生成与迭代",
+        "description": "生成 4-15 秒长度的视频。通过上传结果并进行有针对性的调整来延展、编辑或优化您的作品。"
+      }
+    ]
+  },
+  "Testimonials": {
+    "badge": {
+      "label": "用户评价"
+    },
+    "title": "深受全球创作者喜爱",
+    "description": "听听我们的客户如何评价 Seedance 2.0，以及它如何改变他们的创意工作流程。",
+    "items": [
+      {
+        "quote": "Seedance 2.0 的多模态输入改变了游戏规则。我终于可以参考舞蹈视频并将其应用到我想要的任何角色上。动作复刻简直精确得不可思议！",
+        "name": "Sarah Chen",
+        "role": "内容创作者"
+      },
+      {
+        "quote": "参考能力很强。我上传了一个电影片段，模型对运镜和节奏的复刻非常接近预期。",
+        "name": "Marcus Rodriguez",
+        "role": "电影制作人"
+      },
+      {
+        "quote": "终于有真正有效的角色一致性了！面部、服装，甚至小文字——视频全程保持一致。Seedance 2.0 解决了我们最大的痛点。",
+        "name": "Emily Watson",
+        "role": "创意总监"
+      },
+      {
+        "quote": "视频延展功能天衣无缝。我可以自然地延展片段，甚至合并不同场景。就像拥有一个通过理解连续性的 AI 剪辑师。",
+        "name": "David Kim",
+        "role": "视频制作人"
+      },
+      {
+        "quote": "能够参考热门视频模板并用我自己的风格重新创作，让我的内容产出提高了 10 倍。多模态方法简直太合理了。",
+        "name": "Priya Sharma",
+        "role": "社交媒体经理"
+      },
+      {
+        "quote": "内置音频生成功能表现出色。音效与动作匹配良好，音乐节拍同步功能对舞蹈和音乐内容很有帮助。",
+        "name": "Alex Turner",
+        "role": "音乐视频导演"
+      },
+      {
+        "quote": "我参考电影中的复杂动作序列，Seedance 2.0 用我自己的角色复刻了它们。这种动作精度是我在 AI 视频中前所未见的。",
+        "name": "Jessica Liu",
+        "role": "动画导演"
+      },
+      {
+        "quote": "自然语言控制非常直观。我只需描述参考目标和方式，模型就能较好理解，提示词编写轻松很多。",
+        "name": "Mohammed Hassan",
+        "role": "数字艺术家"
+      },
+      {
+        "quote": "Seedance 2.0 中的视频编辑是革命性的。我可以修改特定片段，替换角色，或延展场景，而无需重新生成整个视频。太省时间了！",
+        "name": "Olivia Martinez",
+        "role": "视频编辑"
+      }
+    ]
+  },
+  "Pricing": {
+    "badge": "定价",
+    "title": "简单、透明的定价",
+    "titleOnetime": "一次性积分包",
+    "description": "选择最适合您的方案。所有方案均包含核心功能的访问权限。",
+    "descriptionOnetime": "一次性购买 • 积分永不过期",
+    "monthly": "月付",
+    "annually": "年付",
+    "onetime": "一次性",
+    "discount": "-50%",
+    "limitedOffer": "年付优惠",
+    "saveOffer": "年付立省 50%",
+    "billedYearly": "按年计费 ${amount}",
+    "monthShort": "/月",
+    "subscribe": "订阅",
+    "buyNow": "立即购买",
+    "mostPopular": "最受欢迎",
+    "bestValue": "性价比最高",
+    "contactSales": "需要定制方案？联系我们的销售团队。",
+    "checkOnetime": "寻找一次性积分？查看我们的积分包",
+    "packs": {
+      "standard": {
+        "name": "标准包",
+        "desc": "适合尝鲜。",
+        "features": ["1,000 积分", "永不过期"]
+      },
+      "pro": {
+        "name": "专业包",
+        "desc": "最受欢迎的选择。",
+        "features": ["3,750 积分", "永不过期", "优先生成"]
+      },
+      "max": {
+        "name": "至尊包",
+        "desc": "适合重度用户。",
+        "features": ["12,000 积分", "永不过期", "优先生成"]
+      }
+    },
+    "plans": {
+      "standard": {
+        "name": "标准版",
+        "desc": "适合刚入门的个人。",
+        "features": ["{credits} 积分 / 月", "标准排队", "商业授权"]
+      },
+      "pro": {
+        "name": "专业版",
+        "desc": "适合需要更强能力的创作者。",
+        "features": ["{credits} 积分 / 月", "快速生成队列", "优先支持"]
+      },
+      "max": {
+        "name": "至尊版",
+        "desc": "适合工作室和专业人士。",
+        "features": ["{credits} 积分 / 月", "即时队列", "API 访问"]
+      }
+    }
+  },
+  "FAQ": {
+    "title": "常见问题",
+    "titlePrefix": "常见",
+    "titleSuffix": "问题",
+    "description": "关于 Seedance 2.0 以及如何开始的所有信息。",
+    "items": [
+      {
+        "question": "Seedance 2.0 支持哪些输入？",
+        "answer": "Seedance 2.0 支持四种输入模态：最多 9 张图片、最多 3 个视频（总时长 ≤15秒）、最多 3 个音频文件（MP3，总时长 ≤15秒），以及自然语言文本提示词。您可以跨不同模态组合总共最多 12 个文件，以获得最大的创意灵活性。"
+      },
+      {
+        "question": "我可以用 Seedance 2.0 参考什么？",
+        "answer": "您可以参考上传内容中的几乎任何东西：动作和编舞、视觉特效和转场、运镜和角度、角色外观和风格、场景构图，甚至音频/声音。只需在提示词中描述您想要参考的内容，例如“使用 @video1 的运镜配合 @image1 的角色风格”。"
+      },
+      {
+        "question": "视频延展是如何工作的？",
+        "answer": "Seedance 2.0 可以流畅地延展现有视频。上传您的视频并指定您想要增加的时长（生成时长应与延展时长匹配，例如，用 5秒生成延展 5秒）。模型保持动作、风格和内容的连续性，实现无缝结果。"
+      },
+      {
+        "question": "我可以用 Seedance 2.0 编辑现有视频吗？",
+        "answer": "可以！Seedance 2.0 支持视频编辑能力。您可以替换角色，修改特定动作或片段，添加新元素，或移除不需要的内容——同时保留视频的其余部分。这意味着您可以进行有针对性的调整，而无需从头重新生成所有内容。"
+      },
+      {
+        "question": "音频功能是如何工作的？",
+        "answer": "Seedance 2.0 包含内置音频生成功能，可创建符合上下文的音效和背景音乐。您还可以上传自己的音频文件，使视频内容与特定节拍或节奏同步，非常适合音乐视频和舞蹈内容。"
+      },
+      {
+        "question": "支持哪些视频时长和分辨率？",
+        "answer": "Seedance 2.0 生成 4 到 15 秒长度的视频。支持多种宽高比，包括 16:9, 9:16, 4:3, 3:4, 21:9 和 1:1。模型支持最高 1080p 的各种分辨率，可直接用于生产。"
+      },
+      {
+        "question": "如何保持角色一致性？",
+        "answer": "Seedance 2.0 在面部、服装和风格一致性方面有显著提升。通过参考角色图像，模型可以在更长的视频和复杂的动作中保持身份一致。"
+      },
+      {
+        "question": "如何升级我的订阅？",
+        "answer": "我们的系统目前仅允许同一时间拥有一个活跃订阅。请先在「Dashboard > 管理订阅」中取消当前订阅，再订阅新方案。如需协助，请联系 support@sdanceai.com。"
+      },
+      {
+        "question": "如何购买更多积分？",
+        "answer": "有几种方式可以获得额外积分：购买我们的一次性加餐包以立即获得积分，或者升级您的订阅方案。"
+      },
+      {
+        "question": "如何取消我的订阅？",
+        "answer": "您可以随时在「Dashboard > 管理订阅」中通过账单门户（Stripe 或 Creem）自助取消订阅。如需协助，请联系 support@sdanceai.com。"
+      },
+      {
+        "question": "是否有内容限制？",
+        "answer": "是的。出于合规要求，目前暂不支持上传包含写实真人脸部的素材（图片和视频）。为保障内容安全，此类素材将被系统拦截，无法生成视频内容。"
+      }
+    ]
+  },
+  "CTA": {
+    "title": "准备好体验多模态 AI 视频创作了吗？",
+    "description": "使用 Seedance 2.0 将创意想法转化为视频，通过自然语言控制与灵活参考流程完成创作。",
+    "button": "立即开始创作",
+    "trustText": "为需要高效、可投入生产的视频工作流的创作者而打造。",
+    "features": {
+      "deploy": "多模态工作流",
+      "production": "可用于生产的输出",
+      "updates": "快速模型更新",
+      "i18n": "多语言支持",
+      "multimodal": "支持多模态输入",
+      "watermark": "无水印下载",
+      "reference": "灵活参考控制"
+    }
+  }
+}

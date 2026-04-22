@@ -1,0 +1,57 @@
+{
+  "title": "マイ作品",
+  "description": "画像と動画の生成履歴と結果を確認",
+  "columns": {
+    "model": "モデル",
+    "status": "ステータス",
+    "credits": "クレジット",
+    "createdAt": "作成日時",
+    "actions": "操作"
+  },
+  "status": {
+    "pending": "処理中",
+    "success": "完了",
+    "failed": "失敗"
+  },
+  "credits_refunded": "返金済み",
+  "empty": "まだ画像または動画の生成履歴がありません。トップページで最初の作品を作成しましょう！",
+  "view_video": "動画を見る",
+  "make_public": "公開にする",
+  "make_private": "非公開にする",
+  "visibility_updated": "公開設定を更新しました",
+  "visibility_update_failed": "公開設定の更新に失敗しました",
+  "load_error": "生成履歴の読み込みに失敗しました",
+  "pagination": {
+    "previous": "前へ",
+    "next": "次へ",
+    "page_of": "{current} / {total} ページ",
+    "total_records": "{count} 件"
+  },
+  "filter": {
+    "all": "すべて",
+    "status_filter": "ステータスで絞り込み",
+    "model_filter": "モデルで絞り込み"
+  },
+  "download": "ダウンロード",
+  "copy": "コピー",
+  "copy_prompt": "プロンプトをコピー",
+  "delete": "削除",
+  "delete_confirm": "この項目を一覧から削除しますか？管理者には引き続き表示されます。",
+  "delete_success": "一覧から削除しました",
+  "delete_failed": "項目の削除に失敗しました",
+  "refresh": "更新",
+  "search": {
+    "placeholder": "タスク ID、モデル名、またはプロンプトを検索",
+    "submit": "検索",
+    "clear": "クリア"
+  },
+  "copy_task_id": "タスク ID をコピー",
+  "task_id_copied": "タスク ID をコピーしました",
+  "copy_request": "リクエストをコピー",
+  "request_copied": "リクエストをコピーしました",
+  "request_copy_failed": "リクエストのコピーに失敗しました",
+  "media": {
+    "text_to_image": "テキストから画像",
+    "image_to_image": "画像から画像"
+  }
+}

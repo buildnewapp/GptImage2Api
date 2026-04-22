@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "title": "招待センター",
+    "description": "招待コード、紹介報酬、出金申請を管理します。"
+  },
+  "inviteCard": {
+    "title": "招待コード",
+    "description": "招待コードを設定し、招待リンクを共有して新規ユーザーを招待します。",
+    "codeLabel": "自分のコード",
+    "linkLabel": "自分の招待リンク",
+    "noCode": "まだ招待コードがありません",
+    "noLink": "招待コードを保存すると招待リンクが使えます",
+    "inputPlaceholder": "4文字以上の英数字を入力",
+    "save": "招待コードを保存",
+    "update": "招待コードを変更",
+    "firstSetHint": "招待コードは4文字以上の英数字です。最初の保存後、さらに1回だけ変更できます。",
+    "oneChangeRemaining": "招待コードはあと1回変更できます。",
+    "noChangesRemaining": "招待コードの変更回数は使い切りました。",
+    "copyLink": "招待リンクをコピー"
+  },
+  "summary": {
+    "invited": "招待したユーザー",
+    "credits": "獲得した登録クレジット",
+    "lockedCash": "ロック中の報酬",
+    "claimableCash": "出金可能額"
+  },
+  "withdraw": {
+    "title": "出金",
+    "description": "報酬は審査期間後に出金申請できます。申請後は管理者へ連絡してください。",
+    "claimable": "出金可能",
+    "pending": "出金処理中",
+    "paid": "支払い済み",
+    "apply": "出金申請",
+    "notice": "申請後、手動支払いのため管理者へ連絡してください。"
+  },
+  "invites": {
+    "title": "招待記録",
+    "description": "あなたの招待コードで登録したユーザー一覧です。",
+    "empty": "まだ招待記録がありません。",
+    "columns": {
+      "user": "ユーザー",
+      "status": "状態",
+      "registeredAt": "登録日時",
+      "qualifiedAt": "達成日時"
+    }
+  },
+  "rewards": {
+    "title": "報酬記録",
+    "description": "紹介クレジットと初回注文報酬を確認できます。",
+    "empty": "まだ報酬記録がありません。",
+    "columns": {
+      "user": "招待ユーザー",
+      "type": "種類",
+      "value": "報酬",
+      "status": "状態",
+      "availableAt": "出金可能日時"
+    }
+  },
+  "toast": {
+    "linkCopied": "招待リンクをコピーしました",
+    "codeSaved": "招待コードを保存しました",
+    "withdrawRequested": "出金申請を作成しました"
+  },
+  "statuses": {
+    "registered": "登録済み",
+    "qualifiedFirstOrder": "達成済み",
+    "expired": "期限切れ",
+    "rewarded": "報酬付与済み"
+  },
+  "rewardTypes": {
+    "signupCredit": "登録クレジット",
+    "firstOrderCash": "初回注文報酬"
+  },
+  "rewardStatuses": {
+    "granted": "付与済み",
+    "locked": "ロック中",
+    "claimable": "出金可能",
+    "pendingWithdraw": "出金処理中",
+    "paid": "支払い済み",
+    "revoked": "取り消し",
+    "rejected": "却下"
+  }
+}

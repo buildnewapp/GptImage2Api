@@ -1,0 +1,47 @@
+{
+  "title": "API Keys",
+  "description": "Create and manage API keys for Authorization: Bearer authentication.",
+  "generate": {
+    "title": "Generate API Key",
+    "description": "Use a title to identify what this key is used for.",
+    "placeholder": "Production integration",
+    "button": "Generate",
+    "creating": "Generating...",
+    "hint": "Request header format: Authorization: Bearer YOUR_API_KEY."
+  },
+  "table": {
+    "title": "Title",
+    "key": "API Key",
+    "status": "Status",
+    "createdAt": "Created At",
+    "actions": "Actions",
+    "untitled": "Untitled",
+    "empty": "No API keys yet. Generate your first one."
+  },
+  "status": {
+    "active": "Active",
+    "disabled": "Disabled"
+  },
+  "actions": {
+    "copy": "Copy",
+    "disable": "Disable",
+    "enable": "Enable",
+    "delete": "Delete"
+  },
+  "dialog": {
+    "title": "New API Key",
+    "description": "Copy and save this key securely.",
+    "copy": "Copy Key",
+    "close": "Close"
+  },
+  "toasts": {
+    "createSuccess": "API key generated",
+    "createError": "Failed to generate API key",
+    "updateSuccess": "API key status updated",
+    "updateError": "Failed to update API key",
+    "deleteSuccess": "API key deleted",
+    "deleteError": "Failed to delete API key",
+    "copySuccess": "API key copied",
+    "copyError": "Failed to copy"
+  }
+}

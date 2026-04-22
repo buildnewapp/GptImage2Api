@@ -1,0 +1,802 @@
+import {
+  type AnyPgColumn,
+  boolean,
+  index,
+  integer,
+  jsonb,
+  numeric,
+  pgEnum,
+  pgTable,
+  primaryKey,
+  text,
+  timestamp,
+  unique,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
+
+export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
+
+export const user = pgTable("user", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  email: text("email").unique().notNull(),
+  emailVerified: boolean("email_verified").default(false).notNull(), // better-auth
+  name: text("name"), // better-auth
+  image: text("image"), // better-auth
+  role: userRoleEnum("role").default("user").notNull(),
+  isAnonymous: boolean("is_anonymous").default(false).notNull(),
+  referral: text("referral"),
+  inviteCode: text("invite_code").unique(),
+  invitedByUserId: uuid("invited_by_user_id").references(
+    (): AnyPgColumn => user.id,
+    {
+      onDelete: "set null",
+    },
+  ),
+  inviteCodeChangeCount: integer("invite_code_change_count")
+    .default(0)
+    .notNull(),
+  inviteCodeUpdatedAt: timestamp("invite_code_updated_at", {
+    withTimezone: true,
+  }),
+  stripeCustomerId: text("stripe_customer_id").unique(),
+  banned: boolean("banned"),
+  banReason: text("ban_reason"),
+  banExpires: timestamp("ban_expires"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
+export const session = pgTable("session", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  token: text("token").notNull().unique(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+});
+
+export const account = pgTable("account", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  accountId: text("account_id").notNull(),
+  providerId: text("provider_id").notNull(),
+  accessToken: text("access_token"),
+  refreshToken: text("refresh_token"),
+  idToken: text("id_token"),
+  accessTokenExpiresAt: timestamp("access_token_expires_at", {
+    withTimezone: true,
+  }),
+  refreshTokenExpiresAt: timestamp("refresh_token_expires_at", {
+    withTimezone: true,
+  }),
+  scope: text("scope"),
+  password: text("password"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
+
+export const verification = pgTable("verification", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  identifier: text("identifier").notNull(),
+  value: text("value").notNull(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
+
+// User source/attribution tracking
+export const userSource = pgTable(
+  "user_source",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
+
+    // aff code (from URL params like ref, via, aff.)
+    affCode: text("aff_code"),
+
+    // Traffic Source (UTM parameters)
+    utmSource: text("utm_source"),
+    utmMedium: text("utm_medium"),
+    utmCampaign: text("utm_campaign"),
+    utmTerm: text("utm_term"),
+    utmContent: text("utm_content"),
+    referrer: text("referrer"),
+    referrerDomain: text("referrer_domain"),
+    landingPage: text("landing_page"),
+
+    // Device & Browser
+    userAgent: text("user_agent"),
+    browser: text("browser"),
+    browserVersion: text("browser_version"),
+    os: text("os"),
+    osVersion: text("os_version"),
+    deviceType: text("device_type"), // mobile, desktop, tablet
+    deviceBrand: text("device_brand"),
+    deviceModel: text("device_model"),
+    screenWidth: integer("screen_width"),
+    screenHeight: integer("screen_height"),
+    language: text("language"),
+    timezone: text("timezone"),
+
+    // Network & Location (from Cloudflare headers)
+    ipAddress: text("ip_address"),
+    countryCode: varchar("country_code", { length: 2 }),
+
+    // Extensibility
+    metadata: jsonb("metadata"),
+
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => ({
+    userIdIdx: index("idx_user_source_user_id").on(table.userId),
+    affCodeIdx: index("idx_user_source_aff_code").on(table.affCode),
+    utmSourceIdx: index("idx_user_source_utm_source").on(table.utmSource),
+    countryCodeIdx: index("idx_user_source_country_code").on(table.countryCode),
+    createdAtIdx: index("idx_user_source_created_at").on(table.createdAt),
+  }),
+);
+
+export const pricingPlanEnvironmentEnum = pgEnum("pricing_plan_environment", [
+  "test",
+  "live",
+]);
+
+export const providerEnum = pgEnum("provider", [
+  "none", // no payment feature
+  "stripe",
+  "creem",
+  "paypal",
+]);
+export type PaymentProvider = (typeof providerEnum.enumValues)[number];
+
+export const paymentTypeEnum = pgEnum("payment_type", [
+  "one_time", // stripe
+  "onetime", // creem
+  "recurring", // stripe and creem
+]);
+export type PaymentType = (typeof paymentTypeEnum.enumValues)[number];
+
+export const recurringIntervalEnum = pgEnum("recurring_interval", [
+  "month", // stripe
+  "year", // stripe
+  "every-month", // creem recurring
+  "every-year", // creem recurring
+  "once", // creem onetime
+]);
+export type RecurringInterval =
+  (typeof recurringIntervalEnum.enumValues)[number];
+
+// Pricing plan groups for organizing plans
+// Using slug as primary key for simplicity and easier querying
+export const pricingPlanGroups = pgTable("pricing_plan_groups", {
+  slug: varchar("slug", { length: 100 }).primaryKey(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export const pricingPlans = pgTable("pricing_plans", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  environment: pricingPlanEnvironmentEnum("environment").notNull(),
+  groupSlug: varchar("group_slug", { length: 100 })
+    .references(() => pricingPlanGroups.slug, { onDelete: "restrict" })
+    .default("default")
+    .notNull(),
+  cardTitle: text("card_title").notNull(),
+  cardDescription: text("card_description"),
+  provider: providerEnum("provider").default("none"),
+  stripePriceId: varchar("stripe_price_id", { length: 255 }),
+  stripeProductId: varchar("stripe_product_id", { length: 255 }),
+  stripeCouponId: varchar("stripe_coupon_id", { length: 255 }),
+  creemProductId: varchar("creem_product_id", { length: 255 }),
+  creemDiscountCode: varchar("creem_discount_code", { length: 255 }),
+  enableManualInputCoupon: boolean("enable_manual_input_coupon")
+    .default(false)
+    .notNull(),
+  // paymentType: varchar('payment_type', { length: 50 }),
+  paymentType: paymentTypeEnum("payment_type"),
+  // recurringInterval: varchar('recurring_interval', { length: 50 }),
+  recurringInterval: recurringIntervalEnum("recurring_interval"),
+  trialPeriodDays: integer("trial_period_days"),
+  price: numeric("price"),
+  currency: varchar("currency", { length: 10 }),
+  displayPrice: varchar("display_price", { length: 50 }),
+  originalPrice: varchar("original_price", { length: 50 }),
+  priceSuffix: varchar("price_suffix", { length: 100 }),
+  features: jsonb("features").default("[]").notNull(),
+  isHighlighted: boolean("is_highlighted").default(false).notNull(),
+  highlightText: text("highlight_text"),
+  buttonText: text("button_text"),
+  buttonLink: text("button_link"),
+  displayOrder: integer("display_order").default(0).notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  langJsonb: jsonb("lang_jsonb").default("{}").notNull(),
+  benefitsJsonb: jsonb("benefits_jsonb").default("{}"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
+export const orders = pgTable(
+  "orders",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
+    provider: text("provider").notNull(),
+    providerOrderId: text("provider_order_id").notNull(),
+    orderType: text("order_type").notNull(),
+    status: text("status").notNull(),
+    stripePaymentIntentId: text("stripe_payment_intent_id"),
+    stripeInvoiceId: text("stripe_invoice_id"),
+    stripeChargeId: text("stripe_charge_id"),
+    subscriptionId: text("subscription_id"),
+    planId: uuid("plan_id").references(() => pricingPlans.id, {
+      onDelete: "set null",
+    }),
+    productId: text("product_id"),
+    priceId: varchar("price_id", { length: 255 }),
+    amountSubtotal: numeric("amount_subtotal"),
+    amountDiscount: numeric("amount_discount").default("0"),
+    amountTax: numeric("amount_tax").default("0"),
+    amountTotal: numeric("amount_total").notNull(),
+    currency: varchar("currency", { length: 10 }).notNull(),
+    metadata: jsonb("metadata"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => {
+    return {
+      userIdx: index("idx_orders_user_id").on(table.userId),
+      providerIdx: index("idx_orders_provider").on(table.provider),
+      planIdIdx: index("idx_orders_plan_id").on(table.planId),
+      providerProviderOrderIdUnique: unique(
+        "idx_orders_provider_provider_order_id_unique",
+      ).on(table.provider, table.providerOrderId),
+    };
+  },
+);
+
+export const subscriptions = pgTable(
+  "subscriptions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
+    planId: uuid("plan_id")
+      .references(() => pricingPlans.id, { onDelete: "restrict" })
+      .notNull(),
+    provider: providerEnum("provider").notNull(),
+    subscriptionId: text("subscription_id").notNull().unique(),
+    customerId: text("customer_id").notNull(),
+    productId: text("product_id"),
+    priceId: varchar("price_id"),
+    status: text("status").notNull(),
+    currentPeriodStart: timestamp("current_period_start", {
+      withTimezone: true,
+    }),
+    currentPeriodEnd: timestamp("current_period_end", { withTimezone: true }),
+    cancelAtPeriodEnd: boolean("cancel_at_period_end").default(false).notNull(),
+    canceledAt: timestamp("canceled_at", { withTimezone: true }),
+    endedAt: timestamp("ended_at", { withTimezone: true }),
+    trialStart: timestamp("trial_start", { withTimezone: true }),
+    trialEnd: timestamp("trial_end", { withTimezone: true }),
+    metadata: jsonb("metadata"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => {
+    return {
+      userIdx: index("idx_subscriptions_user_id").on(table.userId),
+      subscriptionIdIdx: index("idx_subscriptions_subscription_id").on(
+        table.subscriptionId,
+      ),
+      statusIdx: index("idx_subscriptions_status").on(table.status),
+      planIdIdx: index("idx_subscriptions_plan_id").on(table.planId),
+    };
+  },
+);
+
+export const usage = pgTable("usage", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .references(() => user.id, { onDelete: "cascade" })
+    .notNull()
+    .unique(),
+  subscriptionCreditsBalance: integer("subscription_credits_balance")
+    .default(0)
+    .notNull(),
+  oneTimeCreditsBalance: integer("one_time_credits_balance")
+    .default(0)
+    .notNull(),
+  balanceJsonb: jsonb("balance_jsonb").default("{}").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
+export const creditLogs = pgTable(
+  "credit_logs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
+    amount: integer("amount").notNull(),
+    oneTimeCreditsSnapshot: integer("one_time_credits_snapshot").notNull(),
+    subscriptionCreditsSnapshot: integer(
+      "subscription_credits_snapshot",
+    ).notNull(),
+    type: text("type").notNull(),
+    notes: text("notes"),
+    relatedOrderId: uuid("related_order_id").references(() => orders.id, {
+      onDelete: "set null",
+    }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => {
+    return {
+      userIdx: index("idx_credit_logs_user_id").on(table.userId),
+      typeIdx: index("idx_credit_logs_type").on(table.type),
+      relatedOrderIdIdx: index("idx_credit_logs_related_order_id").on(
+        table.relatedOrderId,
+      ),
+    };
+  },
+);
+
+export const taskRewardClaims = pgTable(
+  "task_reward_claims",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
+    taskKey: varchar("task_key", { length: 50 }).notNull(),
+    claimKey: varchar("claim_key", { length: 120 }).notNull().unique(),
+    creditAmount: integer("credit_amount").notNull(),
+    metadata: jsonb("metadata").default("{}").notNull(),
+    claimedAt: timestamp("claimed_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => ({
+    userIdIdx: index("idx_task_reward_claims_user_id").on(table.userId),
+    taskKeyIdx: index("idx_task_reward_claims_task_key").on(table.taskKey),
+    claimedAtIdx: index("idx_task_reward_claims_claimed_at").on(
+      table.claimedAt,
+    ),
+  }),
+);
+
+export const cacheDb = pgTable(
+  "cache_db",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    namespace: varchar("namespace", { length: 80 }).notNull(),
+    cacheKey: varchar("cache_key", { length: 128 }).notNull(),
+    valueJsonb: jsonb("value_jsonb").notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    consumedAt: timestamp("consumed_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    namespaceCacheKeyUnique: unique("cache_db_namespace_cache_key_unique").on(
+      table.namespace,
+      table.cacheKey,
+    ),
+    expiresAtIdx: index("idx_cache_db_expires_at").on(table.expiresAt),
+    consumedAtIdx: index("idx_cache_db_consumed_at").on(table.consumedAt),
+  }),
+);
+
+export const referralInviteStatusEnum = pgEnum("referral_invite_status", [
+  "registered",
+  "qualified_first_order",
+  "expired",
+  "rewarded",
+]);
+
+export const referralRewardTypeEnum = pgEnum("referral_reward_type", [
+  "signup_credit",
+  "first_order_cash",
+]);
+
+export const referralRewardStatusEnum = pgEnum("referral_reward_status", [
+  "granted",
+  "locked",
+  "claimable",
+  "pending_withdraw",
+  "paid",
+  "revoked",
+  "rejected",
+]);
+
+export const referralWithdrawStatusEnum = pgEnum("referral_withdraw_status", [
+  "pending",
+  "approved",
+  "paid",
+  "rejected",
+]);
+
+export const referralInvites = pgTable(
+  "referral_invites",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    inviterUserId: uuid("inviter_user_id")
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
+    inviteeUserId: uuid("invitee_user_id")
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull()
+      .unique(),
+    inviteCodeSnapshot: text("invite_code_snapshot").notNull(),
+    inviteLinkSnapshot: text("invite_link_snapshot"),
+    status: referralInviteStatusEnum("status").default("registered").notNull(),
+    registeredAt: timestamp("registered_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    qualifiedOrderId: uuid("qualified_order_id").references(() => orders.id, {
+      onDelete: "set null",
+    }),
+    qualifiedAt: timestamp("qualified_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    inviterUserIdIdx: index("idx_referral_invites_inviter_user_id").on(
+      table.inviterUserId,
+    ),
+    inviteeUserIdIdx: index("idx_referral_invites_invitee_user_id").on(
+      table.inviteeUserId,
+    ),
+    statusIdx: index("idx_referral_invites_status").on(table.status),
+  }),
+);
+
+export const referralRewards = pgTable(
+  "referral_rewards",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    inviterUserId: uuid("inviter_user_id")
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
+    inviteeUserId: uuid("invitee_user_id")
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
+    referralInviteId: uuid("referral_invite_id").references(
+      () => referralInvites.id,
+      { onDelete: "set null" },
+    ),
+    sourceOrderId: uuid("source_order_id").references(() => orders.id, {
+      onDelete: "set null",
+    }),
+    rewardType: referralRewardTypeEnum("reward_type").notNull(),
+    status: referralRewardStatusEnum("status").notNull(),
+    creditAmount: integer("credit_amount"),
+    cashAmountUsd: numeric("cash_amount_usd", { precision: 10, scale: 2 }),
+    cashPercentSnapshot: numeric("cash_percent_snapshot", {
+      precision: 8,
+      scale: 2,
+    }),
+    rewardConfigSnapshot: jsonb("reward_config_snapshot")
+      .default("{}")
+      .notNull(),
+    withdrawRequestId: uuid("withdraw_request_id").references(
+      (): AnyPgColumn => referralWithdrawRequests.id,
+      { onDelete: "set null" },
+    ),
+    availableAt: timestamp("available_at", { withTimezone: true }),
+    grantedAt: timestamp("granted_at", { withTimezone: true }),
+    claimedAt: timestamp("claimed_at", { withTimezone: true }),
+    notes: text("notes"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    inviterUserIdIdx: index("idx_referral_rewards_inviter_user_id").on(
+      table.inviterUserId,
+    ),
+    inviteeUserIdIdx: index("idx_referral_rewards_invitee_user_id").on(
+      table.inviteeUserId,
+    ),
+    rewardTypeIdx: index("idx_referral_rewards_reward_type").on(
+      table.rewardType,
+    ),
+    statusIdx: index("idx_referral_rewards_status").on(table.status),
+    sourceOrderIdIdx: index("idx_referral_rewards_source_order_id").on(
+      table.sourceOrderId,
+    ),
+  }),
+);
+
+export const referralWithdrawRequests = pgTable(
+  "referral_withdraw_requests",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
+    amountUsd: numeric("amount_usd", { precision: 10, scale: 2 }).notNull(),
+    status: referralWithdrawStatusEnum("status").default("pending").notNull(),
+    notes: text("notes"),
+    requestedAt: timestamp("requested_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    processedAt: timestamp("processed_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    userIdIdx: index("idx_referral_withdraw_requests_user_id").on(table.userId),
+    statusIdx: index("idx_referral_withdraw_requests_status").on(table.status),
+  }),
+);
+
+export const postTypeEnum = pgEnum("post_type", [
+  "blog",
+  "glossary",
+  "use_case",
+  "template",
+  "alternative",
+  "compare",
+]);
+export type PostType = (typeof postTypeEnum.enumValues)[number];
+
+export const postStatusEnum = pgEnum("post_status", [
+  "draft",
+  "published",
+  "archived",
+]);
+export type PostStatus = (typeof postStatusEnum.enumValues)[number];
+
+export const postVisibilityEnum = pgEnum("post_visibility", [
+  "public",
+  "logged_in",
+  "subscribers",
+]);
+
+export const posts = pgTable(
+  "posts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    language: varchar("language", { length: 10 }).notNull(),
+    postType: postTypeEnum("post_type").default("blog"),
+    authorId: uuid("author_id")
+      .references(() => user.id, { onDelete: "set null" })
+      .notNull(),
+    title: text("title").notNull(),
+    slug: text("slug").notNull(),
+    content: text("content"),
+    description: text("description"),
+    metadataJsonb: jsonb("metadata_jsonb"),
+    featuredImageUrl: text("featured_image_url"),
+    isPinned: boolean("is_pinned").default(false).notNull(),
+    status: postStatusEnum("status").default("draft").notNull(),
+    visibility: postVisibilityEnum("visibility").default("public").notNull(),
+    publishedAt: timestamp("published_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => {
+    return {
+      languageSlugPostTypeUnique: unique(
+        "posts_language_slug_post_type_unique",
+      ).on(table.language, table.slug, table.postType),
+      authorIdIdx: index("idx_posts_author_id").on(table.authorId),
+      postTypeIdx: index("idx_posts_post_type").on(table.postType),
+      statusIdx: index("idx_posts_status").on(table.status),
+      visibilityIdx: index("idx_posts_visibility").on(table.visibility),
+      languageStatusIdx: index("idx_posts_language_status").on(
+        table.language,
+        table.status,
+      ),
+      languagePostTypeStatusIdx: index(
+        "idx_posts_language_post_type_status",
+      ).on(table.language, table.postType, table.status),
+    };
+  },
+);
+
+export const tags = pgTable(
+  "tags",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: text("name").notNull(),
+    postType: postTypeEnum("post_type").default("blog"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => {
+    return {
+      nameIdx: index("idx_tags_name").on(table.name),
+      namePostTypeUnique: unique("tags_name_post_type_unique").on(
+        table.name,
+        table.postType,
+      ),
+    };
+  },
+);
+
+export const postTags = pgTable(
+  "post_tags",
+  {
+    postId: uuid("post_id")
+      .references(() => posts.id, { onDelete: "cascade" })
+      .notNull(),
+    tagId: uuid("tag_id")
+      .references(() => tags.id, { onDelete: "cascade" })
+      .notNull(),
+  },
+  (table) => {
+    return {
+      pk: primaryKey({ columns: [table.postId, table.tagId] }),
+      postIdIdx: index("idx_post_tags_post_id").on(table.postId),
+      tagIdIdx: index("idx_post_tags_tag_id").on(table.tagId),
+    };
+  },
+);
+
+export const apikeys = pgTable(
+  "apikeys",
+  {
+    id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+    apiKey: varchar("api_key", { length: 255 }).notNull().unique(),
+    title: varchar("title", { length: 100 }),
+    userUuid: varchar("user_uuid", { length: 255 }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    status: varchar("status", { length: 50 }).default("active").notNull(),
+  },
+  (table) => ({
+    userUuidIdx: index("idx_apikeys_user_uuid").on(table.userUuid),
+    statusIdx: index("idx_apikeys_status").on(table.status),
+  }),
+);
+
+export const aiStudioGenerationStatusEnum = pgEnum("ai_studio_generation_status", [
+  "created",
+  "submitted",
+  "queued",
+  "running",
+  "succeeded",
+  "failed",
+]);
+
+export const aiStudioGenerations = pgTable(
+  "ai_studio_generations",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
+    catalogModelId: varchar("catalog_model_id", { length: 255 }).notNull(),
+    category: varchar("category", { length: 32 }).notNull(),
+    titleSnapshot: varchar("title_snapshot", { length: 255 }).notNull(),
+    providerSnapshot: varchar("provider_snapshot", { length: 255 }).notNull(),
+    endpointSnapshot: varchar("endpoint_snapshot", { length: 255 }).notNull(),
+    methodSnapshot: varchar("method_snapshot", { length: 16 }).notNull(),
+    providerTaskId: varchar("provider_task_id", { length: 255 }).unique(),
+    status: aiStudioGenerationStatusEnum("status").default("created").notNull(),
+    providerState: varchar("provider_state", { length: 64 }),
+    statusReason: text("status_reason"),
+    requestPayload: jsonb("request_payload").notNull(),
+    responsePayload: jsonb("response_payload"),
+    callbackPayload: jsonb("callback_payload"),
+    resultUrls: jsonb("result_urls"),
+    officialPricingSnapshot: jsonb("official_pricing_snapshot"),
+    creditsReserved: integer("credits_reserved").default(0).notNull(),
+    creditsCaptured: integer("credits_captured").default(0).notNull(),
+    creditsRefunded: integer("credits_refunded").default(0).notNull(),
+    isPublic: boolean("is_public").default(true).notNull(),
+    userDeletedAt: timestamp("user_deleted_at", { withTimezone: true }),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
+    failedAt: timestamp("failed_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    userIdIdx: index("idx_ai_studio_generations_user_id").on(table.userId),
+    catalogModelIdIdx: index("idx_ai_studio_generations_catalog_model_id").on(
+      table.catalogModelId,
+    ),
+    providerTaskIdIdx: index("idx_ai_studio_generations_provider_task_id").on(
+      table.providerTaskId,
+    ),
+    statusIdx: index("idx_ai_studio_generations_status").on(table.status),
+    createdAtIdx: index("idx_ai_studio_generations_created_at").on(
+      table.createdAt,
+    ),
+  }),
+);

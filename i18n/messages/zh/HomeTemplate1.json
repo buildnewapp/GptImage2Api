@@ -1,0 +1,341 @@
+{
+  "hero": {
+    "title": "Nano Banana 2：新世代のビジュアルモデル",
+    "highlight_text": "Nano Banana 2",
+    "description": "Nano Banana 2 は、テキスト/画像から画像を生成し、セマンティック編集、多言語タイポグラフィ、スタイルの一貫性を実現する最新のビジュアルモデルで、1K/2K/4K出力に対応しています。Nano Banana 2 をオンラインで無料でお試しください。",
+    "announcement": {
+      "label": "NEW",
+      "title": "公開中：よりシャープなディテールとテキスト描画を備えた新しい nano banana 2 モデル",
+      "url": "/#feature"
+    },
+    "tip": "⚡ 10～30秒でレンダリング · 無料トライアル · クレジットカード不要",
+    "notice": "",
+    "buttons": [
+      {
+        "title": "無料で生成",
+        "icon": "RiVideoAddFill",
+        "url": "/dashboard",
+        "target": "_self",
+        "variant": "default"
+      },
+      {
+        "title": "作例を見る",
+        "icon": "RiPlayCircleLine",
+        "url": "/showcase",
+        "target": "_self",
+        "variant": "outline"
+      }
+    ],
+    "show_happy_users": false,
+    "show_badge": false
+  },
+  "branding": {
+    "disabled": true,
+    "title": "最先端のAI技術を採用",
+    "items": [
+      {
+        "title": "Next.js",
+        "image": {
+          "src": "/images/nextjs.svg",
+          "alt": "Next.js"
+        }
+      },
+      {
+        "title": "Cloudflare",
+        "image": {
+          "src": "/images/cloudflare.svg",
+          "alt": "cloudflare"
+        }
+      },
+      {
+        "title": "TailwindCSS",
+        "image": {
+          "src": "/images/tailwindcss.svg",
+          "alt": "TailwindCSS"
+        }
+      },
+      {
+        "title": "Shadcn/UI",
+        "image": {
+          "src": "/images/shadcn.svg",
+          "alt": "Shadcn/UI"
+        }
+      },
+      {
+        "title": "Vercel",
+        "image": {
+          "src": "/images/vercel.svg",
+          "alt": "Vercel"
+        }
+      }
+    ]
+  },
+  "introduce": {
+    "name": "introduce",
+    "title": "Nano Banana Pro とは",
+    "label": "概要",
+    "description": "Nano Banana Pro は、Gemini 3 Pro ベースのビジュアルモデルで、テキスト生成、画像編集、マルチモーダル理解を融合しています。EC向けのヒーローショット、マーケティングポスター、ストーリーボードを、高速かつ精細な反復制作でブラウザ上から直接作成できます。",
+    "image": {
+      "src": "/placeholder.svg"
+    },
+    "items": [
+      {
+        "title": "テキスト/画像から画像生成",
+        "description": "プロンプトや参照画像を、リアルさとスタイライズ表現のバランスを取った1K/2K/4Kビジュアルに変換します。",
+        "icon": "RiImageAddLine"
+      },
+      {
+        "title": "スマート編集と再ペイント",
+        "description": "オブジェクトの置換、シーンの拡張、透かしの除去、ディテールの調整をセマンティック編集で行えます。",
+        "icon": "RiMagicLine"
+      },
+      {
+        "title": "一貫したキャラクターとブランディング",
+        "description": "人物やブランド要素の一貫性をシーンをまたいで維持できるため、シリーズコンテンツやキャンペーンに最適です。",
+        "icon": "RiSparkling2Line"
+      }
+    ]
+  },
+  "benefit": {
+    "name": "benefit",
+    "title": "チームが Nano Banana Pro を選ぶ理由",
+    "label": "メリット",
+    "description": "Gemini 3 Pro 級の鮮明さ、文脈理解、処理速度により、より少ない編集でビジュアルを素早く公開できます。",
+    "items": [
+      {
+        "title": "鮮明なテキストとディテール",
+        "description": "長文の段落、表、多言語コピーでも読みやすさを維持でき、ポスター、パッケージ、インフォグラフィックに最適です。",
+        "icon": "RiFileTextLine",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      },
+      {
+        "title": "文脈を尊重するセマンティック編集",
+        "description": "プロンプトと参照画像を理解し、シーンを調整する際もライティング、遠近感、素材感を保ちます。",
+        "icon": "RiMagicLine",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      },
+      {
+        "title": "迅速な納品",
+        "description": "10～30秒で生成と編集が可能で、一貫したキャラクター、ストーリーボード、バッチワークフローにも対応します。",
+        "icon": "RiFlashlightFill",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      }
+    ]
+  },
+  "usage": {
+    "name": "usage",
+    "title": "Nano Banana Pro の仕組み",
+    "description": "テキストと画像の混合入力、および反復編集により、アイデアから納品までを数分で実現します：",
+    "image": {
+      "src": "/placeholder.svg"
+    },
+    "image_position": "left",
+    "text_align": "center",
+    "items": [
+      {
+        "title": "プロンプトと参照画像を設定",
+        "description": "要件を入力し、最大14枚の参照画像を追加して、スタイル、言語、構図を定義します。",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      },
+      {
+        "title": "ワンクリックで生成",
+        "description": "解像度と比率を選ぶだけで、被写体と構図が安定した初回生成結果を10～30秒で取得できます。",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      },
+      {
+        "title": "セマンティックに微調整",
+        "description": "ライティングの整合性を保ちながら、テキストまたはローカル選択で要素の差し替え、キャンバス拡張、マークの除去を行えます。",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      },
+      {
+        "title": "書き出しと再利用",
+        "description": "1K/2K/4K出力をダウンロードしたり、次のシリーズ向けにキャラクターやスタイルを再利用したりできます。",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      }
+    ]
+  },
+  "feature": {
+    "name": "feature",
+    "title": "Nano Banana Pro の機能セット",
+    "description": "デザイン、マーケティング、EC、ストーリーテリングのためのエンドツーエンドパイプライン。生成、編集、納品までを網羅します。",
+    "items": [
+      {
+        "title": "マルチモーダル生成（1K/2K/4K）",
+        "description": "テキストや画像を、リアル、イラスト調、商品訴求スタイルなどの高解像度ビジュアルへ変換します。",
+        "icon": "RiHdLine"
+      },
+      {
+        "title": "高精度なテキストと多言語対応",
+        "description": "英語、中国語、日本語などに対応した正確なタイポグラフィを実現し、長文コピーでも鮮明さを保ちます。",
+        "icon": "RiQuillPenLine"
+      },
+      {
+        "title": "参照画像のミックスと一貫性",
+        "description": "複数の参照をブレンドしながら、シーンをまたいでもキャラクター、ブランド、素材の一貫性を保ちます。",
+        "icon": "RiImageLine"
+      },
+      {
+        "title": "セマンティック編集とオブジェクト置換",
+        "description": "ライティング、遠近感、構図を崩さずに、オブジェクトを置き換えたり雰囲気を調整したりできます。",
+        "icon": "RiMagicLine"
+      },
+      {
+        "title": "再利用可能なスタイルとキャラクター",
+        "description": "役割、小道具、ショットの表現を固定し、ストーリーボードや広告セットをすばやく制作できます。",
+        "icon": "RiSparkling2Line"
+      },
+      {
+        "title": "クリーンな書き出しと権利",
+        "description": "デフォルトで透かしなしで納品され、印刷・デジタルの両方で商用利用に対応しています。",
+        "icon": "RiDropLine"
+      },
+      {
+        "title": "APIとワークフロー統合",
+        "description": "API経由で接続し、一括生成、自動レビュー、チームコラボレーションを実現できます。",
+        "icon": "RiCopyrightLine"
+      }
+    ]
+  },
+  "stats": {
+    "disabled": true,
+    "name": "stats",
+    "label": "統計",
+    "title": "世界中のクリエイターに信頼されています",
+    "description": "毎日AIビジュアルモデルを活用するチームに参加しましょう。",
+    "icon": "FaRegHeart",
+    "items": [
+      {
+        "title": "生成されたビジュアル",
+        "label": "100K+",
+        "description": "増加中"
+      },
+      {
+        "title": "平均レンダリング時間",
+        "label": "<30s",
+        "description": "1回の生成あたり"
+      },
+      {
+        "title": "満足度",
+        "label": "4.9/5",
+        "description": "評価"
+      }
+    ]
+  },
+  "testimonial": {
+    "disabled": true,
+    "name": "testimonial",
+    "label": "お客様の声",
+    "title": "チームがNano Bananaについて語ること",
+    "description": "Nano Banana Proでより速く成果を出すクリエイターや企業の声。",
+    "icon": "GoThumbsup",
+    "items": [
+      {
+        "title": "Sophia Wells",
+        "label": "コンテンツクリエイター兼映画制作者",
+        "description": "Free Sora Generatorは私のクリエイティブワークフローを一変させました。以前なら数日かかっていた動画コンセプトのプロトタイプを、今では数分で作れます。AI映画制作を目指す人にはぜひおすすめしたいです！",
+        "image": {
+          "src": "/images/users/user1.jpeg"
+        }
+      },
+      {
+        "title": "Daniel Kim",
+        "label": "マーケティングディレクター",
+        "description": "このツールはあらゆる作業をシンプルにしてくれます。複雑なアイデアを見事な動画に落とし込み、動画制作をずっと身近で楽しいものにしてくれます。私たちのマーケティングキャンペーンはこれまでになく魅力的になりました！",
+        "image": {
+          "src": "/images/users/user2.jpeg"
+        }
+      },
+      {
+        "title": "Isabella Chang",
+        "label": "デジタルアーティスト",
+        "description": "この品質の高さには本当に驚きました！動画は信じられないほどリアルでプロフェッショナルです。今では私のクリエイティブワークフローに欠かせない存在です。AI動画生成における純粋な傑作です！",
+        "image": {
+          "src": "/images/users/user3.png"
+        }
+      },
+      {
+        "title": "Marcus Johnson",
+        "label": "ソーシャルメディアインフルエンサー",
+        "description": "魅力的な動画コンテンツの作成がこれまでになく簡単になりました。数分で複数の動画バリエーションを生成でき、オーディエンスのエンゲージメントも急上昇しました。これこそコンテンツ制作の未来です！",
+        "image": {
+          "src": "/images/users/user1.jpeg"
+        }
+      },
+      {
+        "title": "Emma Rodriguez",
+        "label": "中小企業経営者",
+        "description": "中小企業の経営者として、私はプロの動画制作を依頼する余裕がありませんでした。Free Sora Generatorのおかげで、自分でプロ品質のマーケティング動画を作れるようになりました。私のビジネスにとって革命的な変化です！",
+        "image": {
+          "src": "/images/users/user2.jpeg"
+        }
+      },
+      {
+        "title": "Alex Thompson",
+        "label": "動画編集者兼プロデューサー",
+        "description": "品質とスピードは比類がありません。迅速なプロトタイピングやクライアントへのコンセプト提案に使っています。今では私の制作パイプラインに欠かせないツールです。本当に信じられない技術です！",
+        "image": {
+          "src": "/images/users/user3.png"
+        }
+      }
+    ]
+  },
+  "faq": {
+    "name": "faq",
+    "label": "よくある質問",
+    "title": "Nano Banana Pro FAQ",
+    "description": "Nano Banana Proについてのご質問はありますか？ぜひお知らせください。喜んでお手伝いします。",
+    "items": [
+      {
+        "title": "Nano Banana Proとは何ですか？",
+        "description": "Gemini 3 Proベースのビジュアルモデルで、テキスト/画像から画像への生成、セマンティック編集、多言語タイポグラフィ、一貫性のあるキャラクターやブランド表現に対応しています。"
+      },
+      {
+        "title": "無料プランはありますか？",
+        "description": "はい。無料トライアルとボーナスクレジットが利用可能で、コア機能の試用にクレジットカードは不要です。"
+      },
+      {
+        "title": "何を作成できますか？",
+        "description": "EC向けヒーローショット、マーケティングポスター、ブランドKV、インフォグラフィック、ストーリーボード、キャラクターシート、商品ビジュアルなどを、プロンプトと参照画像から作成できます。"
+      },
+      {
+        "title": "テキストレンダリングの品質はどのくらいですか？",
+        "description": "Gemini 3 Proは高精度なタイポグラフィを実現し、長い段落、多言語コピー、小さなフォントでも印刷・デジタルの両方で読みやすさを保ちます。"
+      },
+      {
+        "title": "一貫性や複数の参照画像に対応していますか？",
+        "description": "はい。複数の参照画像を組み合わせることで、フレームやシーンをまたいでもキャラクター、ブランド、素材の整合性を維持できます。"
+      },
+      {
+        "title": "生成速度はどのくらいですか？",
+        "description": "ほとんどの生成と編集は、解像度やシーンの複雑さに応じて10〜30秒以内に完了します。"
+      }
+    ]
+  },
+  "cta": {
+    "name": "cta",
+    "title": "Nano Banana Proを試す準備はできましたか？",
+    "description": "Gemini 3 Pro を搭載した Nano Banana Pro の無料トライアルを開始するか、API をワークフローに組み込んで生成と編集を自動化しましょう。",
+    "buttons": [
+      {
+        "title": "無料で生成を開始",
+        "url": "/dashboard",
+        "target": "_self",
+        "icon": "RiVideoAddFill"
+      }
+    ]
+  }
+}

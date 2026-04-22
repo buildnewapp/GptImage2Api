@@ -1,0 +1,22 @@
+{
+  "title": "积分明细",
+  "description": "在这里查看您所有积分的获取和使用记录。",
+  "load_error": "加载积分明细失败，请稍后重试。",
+  "no_records": "暂无积分明细。",
+  "header_date": "日期",
+  "header_type": "类型",
+  "header_details": "详情",
+  "header_amount": "变动",
+  "header_balance_one_time": "一次性积分余额",
+  "header_balance_subscription": "订阅积分余额",
+  "summary_total": "当前总积分",
+  "summary_subscription": "当前订阅积分",
+  "summary_one_time": "当前一次性积分",
+  "type_one_time_purchase": "购买积分",
+  "type_subscription_grant": "订阅授予",
+  "type_welcome_bonus": "注册赠送",
+  "type_referral_signup_bonus": "邀请注册奖励",
+  "type_feature_usage": "功能使用",
+  "type_refund_revoke": "退款回收",
+  "type_subscription_ended_revoke": "订阅积分过期"
+}

@@ -1,0 +1,31 @@
+{
+  "list": {
+    "title": "Seedance 2.0 作品展示",
+    "description": "公開され、正常に生成された作品を一覧で確認し、詳細ページでプロンプトや設定を確認できます。",
+    "eyebrow": "公開作品",
+    "empty": "公開作品はまだありません。",
+    "viewDetails": "詳細を見る",
+    "pageLabel": "{page} / {totalPages} ページ"
+  },
+  "detail": {
+    "back": "ショーケースに戻る",
+    "continueTitle": "この作品をもとに生成する",
+    "continueDescription": "下のジェネレーターはこの記録で使われたモデルを自動選択するので、すぐに試せます。",
+    "prompt": "プロンプト",
+    "settings": "設定",
+    "result": "生成結果",
+    "provider": "プロバイダー",
+    "model": "モデル",
+    "createdAt": "作成時間",
+    "mode": "モード",
+    "credits": "クレジット",
+    "imageToVideo": "画像から動画",
+    "textToVideo": "テキストから動画",
+    "imageGeneration": "画像生成",
+    "aspectRatio": "アスペクト比",
+    "resolution": "解像度",
+    "duration": "長さ",
+    "referenceImages": "参照画像",
+    "referenceVideos": "参照動画"
+  }
+}

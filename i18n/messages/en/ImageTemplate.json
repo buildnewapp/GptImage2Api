@@ -1,0 +1,482 @@
+{
+  "navigation": {
+    "brand": "Seedance 2.0",
+    "createVideo": "Create Video",
+    "credits": "30 credits",
+    "darkModeLabel": "Switch to dark mode",
+    "home": "Home",
+    "language": "English",
+    "mobileMenuLabel": "Open menu",
+    "resources": "Resources"
+  },
+  "hero": {
+    "badge": "Seedance 2.0 web & api",
+    "ctaLabel": "Generate Video",
+    "creditCost": "25",
+    "description": "Create short AI videos from text or a reference image. New users can start with Seedance 2.0 right away and keep earning plenty of credits through daily tasks. Seedance 2.0 in the current web app supports up to 1080p and 15 seconds.",
+    "durationLabel": "5s",
+    "highlight": "Clearly.",
+    "modelLabel": "Seedance 2.0",
+    "placeholder": "Upload up to 12 references, then type @ to mention them in your prompt. E.g.: @image1 imitates @video1 motion, voice references @audio1.",
+    "resolutionLabel": "480p",
+    "title": "Direct Short-Form Video—",
+    "videos": [],
+    "images": [
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/4ryp8bssv.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/sel4unt33.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/lexvi6oea.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/ge8osrp29.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/cfjoi23t5.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/tle401l4e.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/xdnerrnzc.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/daac1lyuw.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/wnjpw2sdd.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/e3gcxijib.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/4hwmlvj5n.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/g3yqkzie3.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/28tsj5taa.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/zr7zxl72k.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/eso7mkwmz.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/tm37g7lro.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/xg95yuvgm.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/orfi11egr.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/i8tkl5zgn.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/k4rrav3xz.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/vgek3ghwv.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/prg5xsp7a.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/t5bj54vt1.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/ovx52r1ct.png"
+    ]
+  },
+  "featureRows": [
+    {
+      "description": "Write a prompt, choose aspect ratio, duration, and resolution, then render a short-form clip in the current web app. New users can access Seedance 2.0 right away and keep earning plenty of credits through daily tasks.",
+      "title": "Short-Form Text to Video",
+      "imageSrc": "https://cdn.sdanceai.com/sdanceai/sdance_images/ovx52r1ct.png"
+    },
+    {
+      "description": "Use one still image as your starting frame to lock the subject, framing, or art direction before motion begins. The current web app supports image-to-video with a single reference image.",
+      "reverse": true,
+      "title": "Reference Image Guidance",
+      "imageSrc": "https://cdn.sdanceai.com/sdanceai/sdance_images/t5bj54vt1.png"
+    },
+    {
+      "description": "Start on Seedance 2.0 right away, then keep earning plenty of credits through daily tasks. Model limits are shown in the generator before you render.",
+      "title": "Start on 2.0 Right Away",
+      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/88jhjdm4l.mp4"
+    },
+    {
+      "description": "Current public plans in seedance2.app top out at 1080p and 15 seconds for Seedance 2.0. We surface those limits in the UI so you can scope prompts realistically before spending credits.",
+      "reverse": true,
+      "title": "Clear Output Limits",
+      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/nf3vdfl8a.mp4"
+    }
+  ],
+  "scope": {
+    "description": "What the web app exposes today",
+    "footerDescription": "No hidden long-form promises",
+    "footerStat": "Up to 1080p and 15s today",
+    "footerTitle": "Built for short-form production",
+    "logos": [
+      "TECHCRUNCH",
+      "PRODUCT HUNT",
+      "HACKER NEWS",
+      "THE VERGE",
+      "WIRED",
+      "AI WEEKLY"
+    ],
+    "logosLabel": "CURRENT APP LIMITS",
+    "title": "Current App Scope, Shown Clearly",
+    "items": [
+      {
+        "accent": "primary",
+        "description": "Generate a short clip directly from a prompt.",
+        "icon": "video",
+        "title": "Text to video"
+      },
+      {
+        "accent": "foreground",
+        "description": "Start from one reference image and animate from there.",
+        "icon": "image",
+        "title": "Image to video"
+      },
+      {
+        "accent": "accent",
+        "description": "New users can access Seedance 2.0 right away and keep earning plenty of credits through daily tasks.",
+        "icon": "globe",
+        "title": "Model access"
+      },
+      {
+        "accent": "foreground",
+        "description": "Current options in the app are 480p, 720p, and 1080p.",
+        "icon": "award",
+        "title": "Resolution limits"
+      },
+      {
+        "accent": "foreground",
+        "description": "Seedance 2.0 supports up to 12s. Seedance 2.0 supports up to 15s.",
+        "icon": "users",
+        "title": "Duration limits"
+      },
+      {
+        "accent": "primary",
+        "description": "Finished renders can be downloaded as MP4.",
+        "icon": "zap",
+        "title": "Download format"
+      }
+    ]
+  },
+  "useCases": {
+    "description": "From product launches to brand storytelling, seedance2.app helps creators ship short-form video faster with prompt and image guidance",
+    "title": "Built for Real Creator Workflows",
+    "items": [
+      {
+        "accent": "primary",
+        "description": "Turn a feature into a short visual story. Create product hero shots and launch clips that convert.",
+        "icon": "megaphone",
+        "title": "Product Launch Reels"
+      },
+      {
+        "accent": "rose",
+        "description": "Generate multiple hooks fast, then refine winners. A/B test variations with consistent branding and targeted edits.",
+        "icon": "target",
+        "title": "Paid Ad Creatives"
+      },
+      {
+        "accent": "violet",
+        "description": "Show before/after workflows with consistent style. Demonstrate product value in multi-shot sequences viewers remember.",
+        "icon": "monitor",
+        "title": "App / SaaS Explainers"
+      },
+      {
+        "accent": "amber",
+        "description": "Maintain look and framing across posts. Use repeatable prompts and reference images to keep every piece on-brand.",
+        "icon": "palette",
+        "title": "Creator Brand Kits"
+      },
+      {
+        "accent": "accent",
+        "description": "Seasonal visuals without reshoots. Generate fresh product clips by swapping prompts and reference images.",
+        "icon": "store",
+        "title": "Storefront Promos"
+      },
+      {
+        "accent": "foreground",
+        "description": "Quick narrative clips that feel human-led. Draft, iterate, and publish short-form content at creator speed.",
+        "icon": "users",
+        "title": "UGC-Style Scripts"
+      }
+    ]
+  },
+  "showcase": {
+    "ctaText": "Ready to create your own short clip?",
+    "description": "These preview assets on the page are short local clips. The metadata shown here reflects the actual file in this site.",
+    "kicker": "Video Showcase",
+    "note": "We are not presenting these samples as hidden long-form exports. They are short local preview assets rendered on this page.",
+    "title": "See the Current Site Samples",
+    "items": [
+      {
+        "category": "Product",
+        "duration": "13.0s",
+        "prompt": "The actress from @Image1 as the main subject. Reference @Video1 for rhythmic push-pull-pan-tilt camera work. The actress mirrors the dance movements from @Video1's female dancer, performing energetically on stage.",
+        "resolution": "720x1280",
+        "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/daac1lyuw.png",
+        "title": "Camera & Motion Replication"
+      },
+      {
+        "category": "Documentary",
+        "duration": "15.0s",
+        "prompt": "The character in the painting has a guilty expression, glances left and right, then reaches out of the frame to grab a cola and takes a sip with a satisfied look. Hearing footsteps, the character quickly puts the cola back. A cowboy picks up the cola and walks away. The camera pushes forward to a pure black background with a spotlight on the canned cola, with artistic subtitles: \"Yikou Cola, a must-try!\"",
+        "resolution": "1280x720",
+        "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/t5bj54vt1.png",
+        "title": "Enhanced Fundamentals"
+      },
+      {
+        "category": "Explainer",
+        "duration": "15.0s",
+        "prompt": "The man (@Image1) walks wearily down a corridor after work, his pace slowing. He stops at his front door, close-up shot of his face as he takes a deep breath, adjusts his emotions, puts on a relaxed expression. Close-up of him finding his keys, inserting the lock. After entering, his little daughter and pet dog run joyfully to greet and hug him. The interior is very warm and cozy, with natural dialogue throughout.",
+        "resolution": "1280x720",
+        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/kewve4hf7.mp4",
+        "title": "Brand Explainer Sequence"
+      },
+      {
+        "category": "Fashion",
+        "duration": "10.0s",
+        "prompt": "Reference the model's facial features from the first image. The model wears the outfits from reference images 2-6, approaching the camera with playful, cool, cute, surprised, and stylish poses.",
+        "resolution": "720x1280",
+        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/nnxk9k7w5.mp4",
+        "title": "Creative Templates & Effects"
+      },
+      {
+        "category": "Lifestyle",
+        "duration": "14.0s",
+        "prompt": "Reference Video1's audio, using Image1-5 as inspiration to create an emotionally-driven video. Background music references @Video1.",
+        "resolution": "1280x720",
+        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/q3zb6o149.mp4",
+        "title": "Creative Story Completion"
+      },
+      {
+        "category": "Entertainment",
+        "duration": "15.0s",
+        "prompt": "Extend the video by 15 seconds. Reference @Image1 and @Image2's donkey-on-motorcycle character for a wild ad sequence.",
+        "resolution": "1280x720",
+        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/598uoczz9.mp4",
+        "title": "Video Extension"
+      }
+    ]
+  },
+  "testimonials": {
+    "description": "Join thousands of creators shipping video faster with Seedance 2.0",
+    "title": "Loved by Creators Worldwide",
+    "items": [
+      {
+        "accent": "primary",
+        "initials": "SC",
+        "name": "Sarah Chen",
+        "quote": "Seedance 2.0 transformed our content pipeline. The multi-modal references let us maintain brand consistency across all campaigns, and the editing workflow saves us days of iteration.",
+        "role": "Marketing Director at TechStart Inc."
+      },
+      {
+        "accent": "accent",
+        "initials": "MR",
+        "name": "Michael Rodriguez",
+        "quote": "The director-level control is unreal. I upload a style reference and Seedance 2.0 nails the look and feel every time. My audience engagement has doubled.",
+        "role": "Content Creator at YouTube"
+      },
+      {
+        "accent": "rose",
+        "initials": "DK",
+        "name": "David Kim",
+        "quote": "The reference-driven generation is a game changer. I can guide composition, lighting, and camera movement precisely, then adjust only the parts that need work.",
+        "role": "Creative Director at Design Studio X"
+      },
+      {
+        "accent": "amber",
+        "initials": "LT",
+        "name": "Lisa Thompson",
+        "quote": "I never thought I could produce professional product videos. With Seedance 2.0, I upload a few product photos as references and get polished storefront promos in minutes.",
+        "role": "Small Business Owner at Thompson's Bakery"
+      },
+      {
+        "accent": "primary",
+        "initials": "JP",
+        "name": "James Park",
+        "quote": "The audio-visual sync is phenomenal. We have shipped music visuals that look like studio productions without booking expensive shoots.",
+        "role": "Music Producer at Harmony Records"
+      },
+      {
+        "accent": "accent",
+        "initials": "AN",
+        "name": "Ava Nguyen",
+        "quote": "For short-form campaigns, Seedance 2.0 gives us a practical mix of speed, consistency, and enough control to test concepts before full production.",
+        "role": "Growth Lead at Bright Launch"
+      }
+    ]
+  },
+  "pricing": {
+    "comparisonRows": [
+      {
+        "feature": "Seedance 2.0 access",
+        "other": "Varies",
+        "seedance": "Available"
+      },
+      {
+        "feature": "Starter and daily-task credits in the web app",
+        "other": "Varies",
+        "seedance": "All models"
+      },
+      {
+        "feature": "Current public max length",
+        "other": "Varies",
+        "seedance": "15s"
+      },
+      {
+        "feature": "Current public max resolution",
+        "other": "Varies",
+        "seedance": "1080p"
+      },
+      {
+        "feature": "Text-to-video",
+        "other": "Usually available",
+        "seedance": "Available"
+      },
+      {
+        "feature": "Image-to-video",
+        "other": "Varies",
+        "seedance": "Available"
+      },
+      {
+        "feature": "Priority processing on paid plans",
+        "other": "Varies",
+        "seedance": "Available"
+      },
+      {
+        "feature": "MP4 download",
+        "other": "Varies",
+        "seedance": "Available"
+      }
+    ],
+    "comparisonTitle": "Current Public Offer Comparison",
+    "creditPacks": [
+      {
+        "cta": "Buy Credits",
+        "description": "About 13 5s clips or 4 15s clips",
+        "price": "$50",
+        "title": "500 Credits"
+      },
+      {
+        "cta": "Buy Credits",
+        "description": "About 55 5s clips or 18 15s clips",
+        "price": "$200",
+        "title": "2100 Credits"
+      }
+    ],
+    "creditPacksDescription": "Buy credits for one-off runs without a subscription plan",
+    "cryptoPaymentLinkLabel": "click to view",
+    "cryptoPaymentText": "Crypto payments are supported,",
+    "creditPacksTitle": "Need just a few videos?",
+    "description": "New users can start on Seedance 2.0 right away and keep earning plenty of credits through daily tasks.",
+    "monthlyLabel": "Monthly",
+    "plans": [
+      {
+        "accent": "foreground",
+        "approx": "~157 5s Seedance 2.0 clips/year",
+        "billed": "Billed yearly at $490",
+        "credits": "6,000 credits total",
+        "cta": "Get Started",
+        "description": "Short-form video access for solo creators",
+        "features": [
+          { "text": "480p, 720p, and 1080p output options" },
+          { "text": "Up to 15 second Seedance 2.0 clips" },
+          { "text": "Credit-based rendering" },
+          { "text": "Priority processing" },
+          { "text": "MP4 download" },
+          { "text": "No watermark" },
+          { "highlight": true, "text": "Business Certificate Included" }
+        ],
+        "icon": "camera",
+        "name": "Basic",
+        "price": "$41"
+      },
+      {
+        "accent": "primary",
+        "approx": "~347 5s Seedance 2.0 clips/year",
+        "billed": "Billed yearly at $990",
+        "credits": "13,200 credits total",
+        "cta": "Get Pro",
+        "description": "More credits for heavier short-form iteration",
+        "featured": true,
+        "features": [
+          { "text": "480p, 720p, and 1080p output options" },
+          { "text": "Up to 15 second Seedance 2.0 clips" },
+          { "text": "Higher monthly credit pool" },
+          { "text": "Priority processing" },
+          { "text": "Batch-friendly volume" },
+          { "text": "API access" },
+          { "highlight": true, "text": "Business Certificate Included" }
+        ],
+        "icon": "crown",
+        "name": "Pro",
+        "price": "$83"
+      },
+      {
+        "accent": "accent",
+        "approx": "~757 5s Seedance 2.0 clips/year",
+        "billed": "Billed yearly at $2,000",
+        "credits": "28,800 credits total",
+        "cta": "Get Max",
+        "description": "Largest credit pool for teams and production volume",
+        "features": [
+          { "text": "480p, 720p, and 1080p output options" },
+          { "text": "Up to 15 second Seedance 2.0 clips" },
+          { "text": "Largest monthly credit pool" },
+          { "text": "Priority processing" },
+          { "text": "Team-scale volume" },
+          { "text": "API access & support" },
+          { "highlight": true, "text": "Business Certificate Included" }
+        ],
+        "icon": "rocket",
+        "name": "Max",
+        "price": "$167"
+      }
+    ],
+    "saveLabel": "Save 17%",
+    "title": "Transparent Pricing for the Current App",
+    "yearlyLabel": "Yearly"
+  },
+  "faq": {
+    "description": "Everything you need to know about Seedance 2.0",
+    "items": [
+      {
+        "answer": "In seedance2.app today, Seedance is exposed as a short-form video generator. You can render clips from text or from a text prompt plus one reference image, with model, duration, and resolution limits shown in the UI.",
+        "question": "What is Seedance 2.0?"
+      },
+      {
+        "answer": "The current web app supports text prompts and an optional single reference image for image-to-video. Public controls do not currently expose video-reference or audio-reference uploads.",
+        "question": "What inputs can I use?"
+      },
+      {
+        "answer": "Seedance 2.0 currently supports up to 12 seconds in the web app. Paid Seedance 2.0 access currently supports up to 15 seconds.",
+        "question": "How long are outputs?"
+      },
+      {
+        "answer": "Not in the current public web app workflow. The public product today focuses on short-form video rendering and MP4 export.",
+        "question": "Can it generate audio too?"
+      },
+      {
+        "answer": "Not in the current public web app. Each run currently generates a new clip from the prompt and selected settings.",
+        "question": "Can I edit instead of regenerating?"
+      },
+      {
+        "answer": "Not in the current public web app. Current public output limits top out at 12 seconds on Seedance 2.0 and 15 seconds on Seedance 2.0.",
+        "question": "Can I extend a video to continue the story?"
+      },
+      {
+        "answer": "Use a repeatable prompt structure and a consistent reference image when you need the same subject or framing across multiple renders.",
+        "question": "How do I keep my brand style consistent?"
+      },
+      {
+        "answer": "Yes, common creator workflows include ad variations, hooks testing, product hero shots, and explainers. Generate multiple variations fast, then refine winners with targeted edits.",
+        "question": "Does it work for ads and product launches?"
+      },
+      {
+        "answer": "Seedance 2.0 is designed to improve motion stability and realism, especially in dynamic scenes with complex movement and interactions. Results vary by prompt and references.",
+        "question": "Is it good for complex motion?"
+      },
+      {
+        "answer": "On seedance2.app, new users can start on Seedance 2.0 right away and keep earning plenty of credits through daily tasks.",
+        "question": "Where can I use it?"
+      },
+      {
+        "answer": "Commercial use depends on the platform terms and your rights to any referenced materials. Review the terms of service for full details.",
+        "question": "Can I use outputs commercially?"
+      },
+      {
+        "answer": "Outputs can vary. Current public limits in the web app are short clips only, with 480p, 720p, or 1080p output and a maximum of 15 seconds on Seedance 2.0.",
+        "question": "What are known limitations?"
+      }
+    ],
+    "title": "Frequently Asked Questions"
+  },
+  "cta": {
+    "description": "Open the generator, choose a model, and create short-form clips. New users can start on Seedance 2.0 right away and keep earning plenty of credits through daily tasks.",
+    "kicker": "Start in Minutes",
+    "primaryLabel": "Open Seedance 2.0",
+    "secondaryLabel": "View Prompt Pack",
+    "stats": [
+      {
+        "label": "Videos Created Daily",
+        "value": "10K+"
+      },
+      {
+        "label": "Happy Creators",
+        "value": "50K+"
+      },
+      {
+        "label": "Current public max",
+        "value": "15s"
+      }
+    ],
+    "title": "Create Your First Clip Today"
+  }
+}

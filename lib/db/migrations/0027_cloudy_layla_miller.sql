@@ -1,0 +1,2 @@
+ALTER TABLE "referral_rewards" ADD COLUMN "withdraw_request_id" uuid;--> statement-breakpoint
+ALTER TABLE "referral_rewards" ADD CONSTRAINT "referral_rewards_withdraw_request_id_referral_withdraw_requests_id_fk" FOREIGN KEY ("withdraw_request_id") REFERENCES "public"."referral_withdraw_requests"("id") ON DELETE set null ON UPDATE no action;
