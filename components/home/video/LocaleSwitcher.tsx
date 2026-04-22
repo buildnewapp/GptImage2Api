@@ -21,15 +21,15 @@ import { useLocale } from "next-intl";
 import { useParams } from "next/navigation";
 import { useTransition } from "react";
 
-interface Template2LocaleSwitcherProps {
+interface VideoLocaleSwitcherProps {
   fullWidth?: boolean;
   overlay?: boolean;
 }
 
-export default function Template2LocaleSwitcher({
+export default function VideoLocaleSwitcher({
   fullWidth = false,
   overlay = false,
-}: Template2LocaleSwitcherProps) {
+}: VideoLocaleSwitcherProps) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useParams();

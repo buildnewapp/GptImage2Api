@@ -9,9 +9,9 @@ import Link from "next/link";
 import { SiDiscord, SiTiktok } from "react-icons/si";
 
 import { TwitterX } from "@/components/social-icons/icons";
-import { studioPanelClass } from "@/components/home/template2/constants";
+import { studioPanelClass } from "@/components/home/video/constants";
 
-export default async function Template2Footer() {
+export default async function VideoFooter() {
   const tFooter = await getTranslations("Footer");
   const footerLinks = tFooter.raw("Links.groups") as FooterLink[];
 

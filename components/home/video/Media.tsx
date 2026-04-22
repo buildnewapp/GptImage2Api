@@ -9,19 +9,19 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { HomeTemplate2ShowcaseVideo } from "@/components/home/template2/types";
+import type { VideoTemplateShowcaseVideo } from "@/components/home/video/types";
 
-interface HomeTemplate2HeroBackgroundProps {
+interface VideoTemplateHeroBackgroundProps {
   videos: readonly string[];
 }
 
-interface Template2ShowcaseMediaProps {
-  videos: readonly HomeTemplate2ShowcaseVideo[];
+interface VideoShowcaseMediaProps {
+  videos: readonly VideoTemplateShowcaseVideo[];
 }
 
-export function Template2HeroMedia({
+export function VideoHeroMedia({
   videos,
-}: HomeTemplate2HeroBackgroundProps) {
+}: VideoTemplateHeroBackgroundProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export function Template2HeroMedia({
       <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)]"></div>
       <div
-        data-home-template2-hero-rotator
+        data-video-hero-rotator
         className="absolute inset-x-0 bottom-6 z-10 flex justify-center px-4"
       >
         <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-black/20 px-3 py-2 backdrop-blur-md">
@@ -81,11 +81,11 @@ export function Template2HeroMedia({
   );
 }
 
-export function Template2ShowcaseMedia({
+export function VideoShowcaseMedia({
   videos,
-}: Template2ShowcaseMediaProps) {
+}: VideoShowcaseMediaProps) {
   const [selectedVideo, setSelectedVideo] =
-    useState<HomeTemplate2ShowcaseVideo | null>(null);
+    useState<VideoTemplateShowcaseVideo | null>(null);
 
   return (
     <>

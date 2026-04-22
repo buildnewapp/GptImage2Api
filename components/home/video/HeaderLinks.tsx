@@ -14,7 +14,7 @@ import type { HeaderLink } from "@/types/common";
 import { ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-interface Template2HeaderLinksProps {
+interface VideoHeaderLinksProps {
   overlay?: boolean;
 }
 
@@ -42,9 +42,9 @@ function isActiveLink(pathname: string, href: string) {
   return pathname === href;
 }
 
-export default function Template2HeaderLinks({
+export default function VideoHeaderLinks({
   overlay = false,
-}: Template2HeaderLinksProps) {
+}: VideoHeaderLinksProps) {
   const tHeader = useTranslations("Header");
   const pathname = usePathname();
   const headerLinks = resolveHeaderLinks(tHeader.raw("links") as HeaderLink[]);

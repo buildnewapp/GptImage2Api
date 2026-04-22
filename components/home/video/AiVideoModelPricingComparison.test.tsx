@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import AiVideoModelPricingComparison from "@/components/home/template2/AiVideoModelPricingComparison";
+import AiVideoModelPricingComparison from "@/components/home/video/AiVideoModelPricingComparison";
 import { renderToStaticMarkup } from "react-dom/server";
 
 test("renders AI video model pricing table without usd price column", () => {

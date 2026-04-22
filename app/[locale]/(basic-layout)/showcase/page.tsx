@@ -12,7 +12,7 @@ import {
   pageShellClass,
   sectionKickerClass,
   sectionTitleClass,
-} from "@/components/home/template2/constants";
+} from "@/components/home/video/constants";
 import { Link } from "@/i18n/routing";
 import { Locale } from "@/i18n/routing";
 import { getShowcaseGenerations } from "@/lib/ai-studio/showcase";

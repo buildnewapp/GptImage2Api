@@ -4,11 +4,11 @@ import {
   faqQuestionTitleClass,
   moduleCardClass,
   sectionTitleClass,
-} from "@/components/home/template2/constants";
-import type { HomeTemplate2Faq } from "@/components/home/template2/types";
+} from "@/components/home/video/constants";
+import type { VideoTemplateFaq } from "@/components/home/video/types";
 
 interface FAQProps {
-  section: HomeTemplate2Faq;
+  section: VideoTemplateFaq;
 }
 
 export default function FAQ({ section }: FAQProps) {

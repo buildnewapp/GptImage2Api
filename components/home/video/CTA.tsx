@@ -4,12 +4,12 @@ import {
   displayTitleClass,
   heroMeshClass,
   sectionKickerClass,
-} from "@/components/home/template2/constants";
-import type { HomeTemplate2Cta } from "@/components/home/template2/types";
+} from "@/components/home/video/constants";
+import type { VideoTemplateCta } from "@/components/home/video/types";
 import { Link as I18nLink } from "@/i18n/routing";
 
 interface CTAProps {
-  section: HomeTemplate2Cta;
+  section: VideoTemplateCta;
 }
 
 export default function CTA({ section }: CTAProps) {

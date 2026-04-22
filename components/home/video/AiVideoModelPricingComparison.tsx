@@ -1,8 +1,8 @@
 import {
   moduleCardClass,
   subsectionTitleClass,
-} from "@/components/home/template2/constants";
-import { buildAiVideoModelPricingRows } from "@/components/home/template2/ai-video-model-pricing-data";
+} from "@/components/home/video/constants";
+import { buildAiVideoModelPricingRows } from "@/components/home/video/ai-video-model-pricing-data";
 
 function getCopy(locale: string) {
   if (locale === "zh") {

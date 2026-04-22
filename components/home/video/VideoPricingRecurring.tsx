@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Award, Camera, Check, Crown, Rocket } from "lucide-react";
 
-import Template2PricingAction from "@/components/home/template2/Template2PricingAction";
+import VideoPricingAction from "@/components/home/video/VideoPricingAction";
 import {
   cardHeadingClass,
   moduleCardClass,
@@ -13,15 +13,15 @@ import {
   pricingToggleActiveClass,
   pricingToggleIdleClass,
   pricingToggleShellClass,
-} from "@/components/home/template2/constants";
-import type { HomeTemplate2PricingPlan } from "@/components/home/template2/types";
+} from "@/components/home/video/constants";
+import type { VideoTemplatePricingPlan } from "@/components/home/video/types";
 
-interface Template2PricingRecurringProps {
+interface VideoPricingRecurringProps {
   monthlyLabel: string;
-  monthlyPlans: HomeTemplate2PricingPlan[];
+  monthlyPlans: VideoTemplatePricingPlan[];
   saveLabel: string;
   yearlyLabel: string;
-  yearlyPlans: HomeTemplate2PricingPlan[];
+  yearlyPlans: VideoTemplatePricingPlan[];
 }
 
 const planIconMap = {
@@ -39,13 +39,13 @@ const planIconClasses = {
     "border-[hsl(var(--primary)/0.2)] bg-[linear-gradient(145deg,hsl(var(--primary)/0.18),hsl(var(--card))_88%)] text-primary shadow-[0_18px_40px_-28px_hsl(var(--primary)/0.45)]",
 };
 
-export default function Template2PricingRecurring({
+export default function VideoPricingRecurring({
   monthlyLabel,
   monthlyPlans,
   saveLabel,
   yearlyLabel,
   yearlyPlans,
-}: Template2PricingRecurringProps) {
+}: VideoPricingRecurringProps) {
   const hasYearlyPlans = yearlyPlans.length > 0;
   const hasMonthlyPlans = monthlyPlans.length > 0;
   const defaultCycle = hasMonthlyPlans ? "monthly" : "annual";
@@ -184,7 +184,7 @@ export default function Template2PricingRecurring({
                     ))}
                   </ul>
                   {plan.checkoutPlan ? (
-                    <Template2PricingAction
+                    <VideoPricingAction
                       className={buttonClassName}
                       label={plan.cta}
                       plan={plan.checkoutPlan}

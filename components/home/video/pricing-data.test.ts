@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { buildHomeTemplate2PricingSection } from "@/components/home/template2/pricing-data";
-import type { HomeTemplate2Pricing } from "@/components/home/template2/types";
+import { buildVideoTemplatePricingSection } from "@/components/home/video/pricing-data";
+import type { VideoTemplatePricing } from "@/components/home/video/types";
 
-const baseSection: HomeTemplate2Pricing = {
+const baseSection: VideoTemplatePricing = {
   comparisonRows: [],
   comparisonTitle: "",
   creditPacks: [],
@@ -18,12 +18,12 @@ const baseSection: HomeTemplate2Pricing = {
   yearlyLabel: "",
 };
 
-test("buildHomeTemplate2PricingSection defaults to live plans when PAY_ENV is live", () => {
+test("buildVideoTemplatePricingSection defaults to live plans when PAY_ENV is live", () => {
   const originalPayEnv = process.env.PAY_ENV;
   process.env.PAY_ENV = "live";
 
   try {
-    const section = buildHomeTemplate2PricingSection({
+    const section = buildVideoTemplatePricingSection({
       baseSection,
       locale: "en",
     });

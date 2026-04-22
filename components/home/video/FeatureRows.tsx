@@ -1,8 +1,8 @@
-import { featureTitleClass } from "@/components/home/template2/constants";
-import type { HomeTemplate2FeatureRow } from "@/components/home/template2/types";
+import { featureTitleClass } from "@/components/home/video/constants";
+import type { VideoTemplateFeatureRow } from "@/components/home/video/types";
 
 interface FeatureRowsProps {
-  items: HomeTemplate2FeatureRow[];
+  items: VideoTemplateFeatureRow[];
 }
 
 export default function FeatureRows({ items }: FeatureRowsProps) {

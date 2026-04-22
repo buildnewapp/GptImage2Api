@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { buildAiVideoModelPricingRows } from "@/components/home/template2/ai-video-model-pricing-data";
+import { buildAiVideoModelPricingRows } from "@/components/home/video/ai-video-model-pricing-data";
 
 test("buildAiVideoModelPricingRows includes dynamic and static AI video pricing rows", () => {
   const rows = buildAiVideoModelPricingRows({ locale: "en" });

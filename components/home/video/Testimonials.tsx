@@ -3,11 +3,11 @@ import { Quote, Star } from "lucide-react";
 import {
   moduleCardClass,
   sectionTitleClass,
-} from "@/components/home/template2/constants";
-import type { HomeTemplate2Testimonials } from "@/components/home/template2/types";
+} from "@/components/home/video/constants";
+import type { VideoTemplateTestimonials } from "@/components/home/video/types";
 
 interface TestimonialsProps {
-  section: HomeTemplate2Testimonials;
+  section: VideoTemplateTestimonials;
 }
 
 const quoteAccentMap = {

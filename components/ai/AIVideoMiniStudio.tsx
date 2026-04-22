@@ -1,7 +1,7 @@
 "use client";
 
 import AIVideoMiniStudioTaskHistory from "@/components/ai/AIVideoMiniStudioTaskHistory";
-import type { HomeTemplate2Hero } from "@/components/home/template2/types";
+import type { VideoTemplateHero } from "@/components/home/video/types";
 import { authClient } from "@/lib/auth/auth-client";
 import {
   AI_VIDEO_STUDIO_FAMILIES,
@@ -178,7 +178,7 @@ function readFileAsDataUrl(file: File) {
 }
 
 interface AIVideoMiniStudioProps {
-  hero: HomeTemplate2Hero;
+  hero: VideoTemplateHero;
   initialModelId?: string | null;
 }
 

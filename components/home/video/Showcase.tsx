@@ -3,13 +3,13 @@ import { Sparkles } from "lucide-react";
 import {
   sectionKickerClass,
   sectionTitleClass,
-} from "@/components/home/template2/constants";
-import { Template2ShowcaseMedia } from "@/components/home/template2/Media";
-import type { HomeTemplate2ShowcaseSection } from "@/components/home/template2/types";
+} from "@/components/home/video/constants";
+import { VideoShowcaseMedia } from "@/components/home/video/Media";
+import type { VideoTemplateShowcaseSection } from "@/components/home/video/types";
 import { Link as I18nLink } from "@/i18n/routing";
 
 interface ShowcaseProps {
-  section: HomeTemplate2ShowcaseSection;
+  section: VideoTemplateShowcaseSection;
 }
 
 export default function Showcase({ section }: ShowcaseProps) {
@@ -31,7 +31,7 @@ export default function Showcase({ section }: ShowcaseProps) {
             {section.note}
           </p>
         </div>
-        <Template2ShowcaseMedia videos={section.videos} />
+        <VideoShowcaseMedia videos={section.videos} />
         <div className="text-center">
           <p className="mb-6 text-lg text-muted-foreground">{section.ctaText}</p>
           <I18nLink

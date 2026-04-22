@@ -7,12 +7,12 @@ import {
 } from "@/lib/db/seed/pricing-config";
 
 import type {
-  HomeTemplate2CheckoutPlan,
-  HomeTemplate2CreditPack,
-  HomeTemplate2Pricing,
-  HomeTemplate2PricingFeature,
-  HomeTemplate2PricingPlan,
-} from "@/components/home/template2/types";
+  VideoTemplateCheckoutPlan,
+  VideoTemplateCreditPack,
+  VideoTemplatePricing,
+  VideoTemplatePricingFeature,
+  VideoTemplatePricingPlan,
+} from "@/components/home/video/types";
 
 type PricingEnvironment = "live" | "test";
 type SupportedLocale = "en" | "zh" | "ja";
@@ -114,7 +114,7 @@ function formatBilled(plan: PricingConfigPlan, locale: SupportedLocale): string 
   return undefined;
 }
 
-function mapFeatures(features: PricingFeature[] | undefined): HomeTemplate2PricingFeature[] {
+function mapFeatures(features: PricingFeature[] | undefined): VideoTemplatePricingFeature[] {
   return (features ?? [])
     .filter((feature) => feature.included)
     .map((feature) => ({
@@ -123,7 +123,7 @@ function mapFeatures(features: PricingFeature[] | undefined): HomeTemplate2Prici
     }));
 }
 
-function buildCheckoutPlan(plan: PricingConfigPlan): HomeTemplate2CheckoutPlan {
+function buildCheckoutPlan(plan: PricingConfigPlan): VideoTemplateCheckoutPlan {
   return {
     buttonLink: plan.buttonLink ?? null,
     creemDiscountCode: plan.creemDiscountCode ?? null,
@@ -176,7 +176,7 @@ function mapRecurringPlan(
   plan: PricingConfigPlan,
   locale: SupportedLocale,
   matchingMonthlyPlan?: PricingConfigPlan,
-): HomeTemplate2PricingPlan {
+): VideoTemplatePricingPlan {
   const localizedPlan = getLocalizedPlanContent(plan, locale);
   const matchingMonthlyLocalizedPlan = matchingMonthlyPlan
     ? getLocalizedPlanContent(matchingMonthlyPlan, locale)
@@ -209,7 +209,7 @@ function mapRecurringPlan(
   };
 }
 
-function mapOneTimePlan(plan: PricingConfigPlan, locale: SupportedLocale): HomeTemplate2CreditPack {
+function mapOneTimePlan(plan: PricingConfigPlan, locale: SupportedLocale): VideoTemplateCreditPack {
   const localizedPlan = getLocalizedPlanContent(plan, locale);
   const benefits = plan.benefitsJsonb as PricingBenefits | undefined;
   const creditTitle =
@@ -227,15 +227,15 @@ function mapOneTimePlan(plan: PricingConfigPlan, locale: SupportedLocale): HomeT
   };
 }
 
-export function buildHomeTemplate2PricingSection({
+export function buildVideoTemplatePricingSection({
   baseSection,
   environment,
   locale,
 }: {
-  baseSection: HomeTemplate2Pricing;
+  baseSection: VideoTemplatePricing;
   environment?: PricingEnvironment;
   locale: string;
-}): HomeTemplate2Pricing {
+}): VideoTemplatePricing {
   const pricingLocale = resolveLocale(locale);
   const pricingEnvironment = resolvePricingEnvironment(environment);
   const activePlans = pricingPlans

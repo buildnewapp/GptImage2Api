@@ -12,11 +12,11 @@ import {
   sectionTitleClass,
   studioPanelClass,
   subsectionTitleClass,
-} from "@/components/home/template2/constants";
-import type { HomeTemplate2Scope } from "@/components/home/template2/types";
+} from "@/components/home/video/constants";
+import type { VideoTemplateScope } from "@/components/home/video/types";
 
 interface ScopeProps {
-  section: HomeTemplate2Scope;
+  section: VideoTemplateScope;
 }
 
 const iconMap = {

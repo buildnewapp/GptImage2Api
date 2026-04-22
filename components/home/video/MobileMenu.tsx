@@ -3,10 +3,10 @@
 import { DynamicIcon } from "@/components/DynamicIcon";
 import LoginButton from "@/components/header/LoginButton";
 import { UserCreditBadge } from "@/components/header/UserCreditBadge";
-import { resolveHeaderLinks } from "@/components/home/template2/HeaderLinks";
-import Template2LocaleSwitcher from "@/components/home/template2/LocaleSwitcher";
-import { ThemeToggle } from "@/components/home/template2/ThemeToggle";
-import type { HomeTemplate2Navigation } from "@/components/home/template2/types";
+import { resolveHeaderLinks } from "@/components/home/video/HeaderLinks";
+import VideoLocaleSwitcher from "@/components/home/video/LocaleSwitcher";
+import { ThemeToggle } from "@/components/home/video/ThemeToggle";
+import type { VideoTemplateNavigation } from "@/components/home/video/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link as I18nLink, useRouter } from "@/i18n/routing";
 import { authClient } from "@/lib/auth/auth-client";
@@ -26,8 +26,8 @@ type UserMenu = {
   icon?: string;
 };
 
-interface Template2MobileMenuProps {
-  navigation: HomeTemplate2Navigation;
+interface VideoMobileMenuProps {
+  navigation: VideoTemplateNavigation;
   overlay?: boolean;
   user?: User | null;
   totalAvailableCredits?: number | null;
@@ -39,7 +39,7 @@ const resourceLinks = [
   { href: "/blog", icon: Newspaper, label: "Blog" },
 ];
 
-export function Template2MobileUserCard({
+export function VideoMobileUserCard({
   overlay = false,
   onNavigate,
   totalAvailableCredits,
@@ -151,12 +151,12 @@ export function Template2MobileUserCard({
   );
 }
 
-export default function Template2MobileMenu({
+export default function VideoMobileMenu({
   navigation,
   overlay = false,
   totalAvailableCredits,
   user,
-}: Template2MobileMenuProps) {
+}: VideoMobileMenuProps) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const tHeader = useTranslations("Header");
@@ -245,7 +245,7 @@ export default function Template2MobileMenu({
             </div>
 
             <div className="flex gap-2">
-              <Template2LocaleSwitcher overlay={overlay} />
+              <VideoLocaleSwitcher overlay={overlay} />
               <ThemeToggle overlay={overlay} />
               <I18nLink
                   className="flex-1 inline-flex h-11 w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] ring-offset-background transition-all duration-300 ease-out hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -259,7 +259,7 @@ export default function Template2MobileMenu({
 
 
             <div className={cn("border-t pt-3", overlay ? "border-white/12" : "border-border/70")}>
-              <Template2MobileUserCard
+              <VideoMobileUserCard
                 overlay={overlay}
                 onNavigate={handleNavigate}
                 totalAvailableCredits={totalAvailableCredits}

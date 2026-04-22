@@ -1,4 +1,4 @@
-export interface HomeTemplate2ShowcaseVideo {
+export interface VideoTemplateShowcaseVideo {
   category: string;
   duration: string;
   prompt: string;
@@ -7,7 +7,7 @@ export interface HomeTemplate2ShowcaseVideo {
   title: string;
 }
 
-export interface HomeTemplate2Navigation {
+export interface VideoTemplateNavigation {
   brand: string;
   createVideo: string;
   credits: string;
@@ -18,7 +18,7 @@ export interface HomeTemplate2Navigation {
   resources: string;
 }
 
-export interface HomeTemplate2Hero {
+export interface VideoTemplateHero {
   badge: string;
   ctaLabel: string;
   creditCost: string;
@@ -32,21 +32,21 @@ export interface HomeTemplate2Hero {
   videos: string[];
 }
 
-export interface HomeTemplate2FeatureRow {
+export interface VideoTemplateFeatureRow {
   description: string;
   reverse?: boolean;
   title: string;
   videoSrc: string;
 }
 
-export interface HomeTemplate2ScopeItem {
+export interface VideoTemplateScopeItem {
   accent: string;
   description: string;
   icon: string;
   title: string;
 }
 
-export interface HomeTemplate2Scope {
+export interface VideoTemplateScope {
   description: string;
   footerDescription: string;
   footerStat: string;
@@ -54,32 +54,32 @@ export interface HomeTemplate2Scope {
   logos: string[];
   logosLabel: string;
   title: string;
-  items: HomeTemplate2ScopeItem[];
+  items: VideoTemplateScopeItem[];
 }
 
-export interface HomeTemplate2UseCaseItem {
+export interface VideoTemplateUseCaseItem {
   accent: string;
   description: string;
   icon: string;
   title: string;
 }
 
-export interface HomeTemplate2UseCases {
+export interface VideoTemplateUseCases {
   description: string;
   title: string;
-  items: HomeTemplate2UseCaseItem[];
+  items: VideoTemplateUseCaseItem[];
 }
 
-export interface HomeTemplate2ShowcaseSection {
+export interface VideoTemplateShowcaseSection {
   ctaText: string;
   description: string;
   kicker: string;
   note: string;
   title: string;
-  videos: HomeTemplate2ShowcaseVideo[];
+  videos: VideoTemplateShowcaseVideo[];
 }
 
-export interface HomeTemplate2TestimonialItem {
+export interface VideoTemplateTestimonialItem {
   accent: string;
   initials: string;
   name: string;
@@ -87,18 +87,18 @@ export interface HomeTemplate2TestimonialItem {
   role: string;
 }
 
-export interface HomeTemplate2Testimonials {
+export interface VideoTemplateTestimonials {
   description: string;
-  items: HomeTemplate2TestimonialItem[];
+  items: VideoTemplateTestimonialItem[];
   title: string;
 }
 
-export interface HomeTemplate2PricingFeature {
+export interface VideoTemplatePricingFeature {
   highlight?: boolean;
   text: string;
 }
 
-export interface HomeTemplate2CheckoutPlan {
+export interface VideoTemplateCheckoutPlan {
   buttonLink?: string | null;
   creemDiscountCode?: string | null;
   creemProductId?: string | null;
@@ -110,16 +110,16 @@ export interface HomeTemplate2CheckoutPlan {
   stripePriceId?: string | null;
 }
 
-export interface HomeTemplate2PricingPlan {
+export interface VideoTemplatePricingPlan {
   accent: string;
   approx?: string;
   billed?: string;
-  checkoutPlan?: HomeTemplate2CheckoutPlan;
+  checkoutPlan?: VideoTemplateCheckoutPlan;
   credits?: string;
   cta: string;
   description?: string;
   featured?: boolean;
-  features: HomeTemplate2PricingFeature[];
+  features: VideoTemplatePricingFeature[];
   highlightText?: string;
   icon: string;
   name: string;
@@ -128,8 +128,8 @@ export interface HomeTemplate2PricingPlan {
   priceSuffix?: string;
 }
 
-export interface HomeTemplate2CreditPack {
-  checkoutPlan?: HomeTemplate2CheckoutPlan;
+export interface VideoTemplateCreditPack {
+  checkoutPlan?: VideoTemplateCheckoutPlan;
   cta: string;
   description?: string;
   highlightText?: string;
@@ -137,64 +137,64 @@ export interface HomeTemplate2CreditPack {
   title: string;
 }
 
-export interface HomeTemplate2ComparisonRow {
+export interface VideoTemplateComparisonRow {
   feature: string;
   other: string;
   seedance: string;
 }
 
-export interface HomeTemplate2Pricing {
+export interface VideoTemplatePricing {
   comparisonTitle: string;
-  comparisonRows: HomeTemplate2ComparisonRow[];
-  creditPacks: HomeTemplate2CreditPack[];
+  comparisonRows: VideoTemplateComparisonRow[];
+  creditPacks: VideoTemplateCreditPack[];
   creditPacksDescription: string;
   cryptoPaymentLinkLabel?: string;
   cryptoPaymentText?: string;
   creditPacksTitle: string;
   description: string;
-  monthlyPlans?: HomeTemplate2PricingPlan[];
+  monthlyPlans?: VideoTemplatePricingPlan[];
   monthlyLabel: string;
-  plans: HomeTemplate2PricingPlan[];
+  plans: VideoTemplatePricingPlan[];
   saveLabel: string;
   title: string;
-  yearlyPlans?: HomeTemplate2PricingPlan[];
+  yearlyPlans?: VideoTemplatePricingPlan[];
   yearlyLabel: string;
 }
 
-export interface HomeTemplate2FaqItem {
+export interface VideoTemplateFaqItem {
   answer: string;
   question: string;
 }
 
-export interface HomeTemplate2Faq {
+export interface VideoTemplateFaq {
   description: string;
-  items: HomeTemplate2FaqItem[];
+  items: VideoTemplateFaqItem[];
   title: string;
 }
 
-export interface HomeTemplate2CtaStat {
+export interface VideoTemplateCtaStat {
   label: string;
   value: string;
 }
 
-export interface HomeTemplate2Cta {
+export interface VideoTemplateCta {
   description: string;
   kicker: string;
   primaryLabel: string;
   secondaryLabel: string;
-  stats: HomeTemplate2CtaStat[];
+  stats: VideoTemplateCtaStat[];
   title: string;
 }
 
-export interface HomeTemplate2Page {
-  cta: HomeTemplate2Cta;
-  faq: HomeTemplate2Faq;
-  featureRows: HomeTemplate2FeatureRow[];
-  hero: HomeTemplate2Hero;
-  navigation: HomeTemplate2Navigation;
-  pricing: HomeTemplate2Pricing;
-  scope: HomeTemplate2Scope;
-  showcase: HomeTemplate2ShowcaseSection;
-  testimonials: HomeTemplate2Testimonials;
-  useCases: HomeTemplate2UseCases;
+export interface VideoTemplatePage {
+  cta: VideoTemplateCta;
+  faq: VideoTemplateFaq;
+  featureRows: VideoTemplateFeatureRow[];
+  hero: VideoTemplateHero;
+  navigation: VideoTemplateNavigation;
+  pricing: VideoTemplatePricing;
+  scope: VideoTemplateScope;
+  showcase: VideoTemplateShowcaseSection;
+  testimonials: VideoTemplateTestimonials;
+  useCases: VideoTemplateUseCases;
 }

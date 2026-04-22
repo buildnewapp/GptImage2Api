@@ -7,7 +7,7 @@ import {
   pageShellClass,
   sectionKickerClass,
   subsectionTitleClass,
-} from "@/components/home/template2/constants";
+} from "@/components/home/video/constants";
 import { Link } from "@/i18n/routing";
 import { Locale } from "@/i18n/routing";
 import { getShowcaseGenerationById } from "@/lib/ai-studio/showcase";

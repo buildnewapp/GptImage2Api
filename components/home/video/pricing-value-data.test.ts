@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { buildPricingValueRows } from "@/components/home/template2/pricing-value-data";
+import { buildPricingValueRows } from "@/components/home/video/pricing-value-data";
 
 test("buildPricingValueRows calculates credits per dollar across active plans", () => {
   const rows = buildPricingValueRows({

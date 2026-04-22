@@ -3,24 +3,24 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
 
-import HomeTemplate2 from "@/components/home/HomeTemplate2";
-import type { HomeTemplate2Page } from "@/components/home/template2/types";
+import VideoTemplate from "@/components/home/video/VideoTemplate";
+import type { VideoTemplatePage } from "@/components/home/video/types";
 import { renderToStaticMarkup } from "react-dom/server";
 
 const projectRoot = process.cwd();
 const englishPage = JSON.parse(
   readFileSync(
-    path.join(projectRoot, "i18n/messages/en/HomeTemplate2.json"),
+    path.join(projectRoot, "i18n/messages/en/VideoTemplate.json"),
     "utf8"
   )
-) as HomeTemplate2Page;
+) as VideoTemplatePage;
 
-function renderHomeTemplate2() {
-  return renderToStaticMarkup(<HomeTemplate2 />);
+async function renderVideoTemplate() {
+  return renderToStaticMarkup(await VideoTemplate());
 }
 
-test("renders the key Seedance 2.0 homepage sections and media urls", () => {
-  const html = renderHomeTemplate2();
+test("renders the key Seedance 2.0 homepage sections and media urls", async () => {
+  const html = await renderVideoTemplate();
 
   assert.match(html, /Direct Short-Form Video/);
   assert.match(html, /Transparent Pricing for the Current App/);
@@ -29,14 +29,14 @@ test("renders the key Seedance 2.0 homepage sections and media urls", () => {
   assert.match(html, /https:\/\/cdn\.sdanceai\.com\/sdanceai\/sdance_videos\/4vr3llg33\.mp4/);
 });
 
-test("routes template2 generate entries through the localized dashboard path", () => {
-  const html = renderHomeTemplate2();
+test("routes video generate entries through the localized dashboard path", async () => {
+  const html = await renderVideoTemplate();
   const ctaSource = readFileSync(
-    path.join(projectRoot, "components/home/template2/CTA.tsx"),
+    path.join(projectRoot, "components/home/video/CTA.tsx"),
     "utf8"
   );
   const showcaseSource = readFileSync(
-    path.join(projectRoot, "components/home/template2/Showcase.tsx"),
+    path.join(projectRoot, "components/home/video/Showcase.tsx"),
     "utf8"
   );
 
@@ -48,18 +48,18 @@ test("routes template2 generate entries through the localized dashboard path", (
   assert.match(showcaseSource, /<I18nLink/);
 });
 
-test("renders hero video rotator controls for hero-1 through hero-4", () => {
-  const html = renderHomeTemplate2();
+test("renders hero video rotator controls for hero-1 through hero-4", async () => {
+  const html = await renderVideoTemplate();
 
-  assert.match(html, /data-home-template2-hero-rotator/);
+  assert.match(html, /data-video-hero-rotator/);
   assert.match(html, /Play hero background 1/);
   assert.match(html, /Play hero background 2/);
   assert.match(html, /Play hero background 3/);
   assert.match(html, /Play hero background 4/);
 });
 
-test("renders the hero ai video mini studio instead of static placeholder pills", () => {
-  const html = renderHomeTemplate2();
+test("renders the hero ai video mini studio instead of static placeholder pills", async () => {
+  const html = await renderVideoTemplate();
 
   assert.match(html, /data-ai-video-mini-studio/);
   assert.match(html, /data-ai-video-mini-studio-upload/);
@@ -71,8 +71,8 @@ test("renders the hero ai video mini studio instead of static placeholder pills"
   assert.doesNotMatch(html, /role="combobox" aria-expanded="false" aria-autocomplete="none"/);
 });
 
-test("renders showcase preview triggers for all six sample videos", () => {
-  const html = renderHomeTemplate2();
+test("renders showcase preview triggers for all six sample videos", async () => {
+  const html = await renderVideoTemplate();
 
   assert.match(html, /Open Camera &amp; Motion Replication preview/);
   assert.match(html, /Open Enhanced Fundamentals preview/);
@@ -82,22 +82,22 @@ test("renders showcase preview triggers for all six sample videos", () => {
   assert.match(html, /Open Video Extension preview/);
 });
 
-test("splits HomeTemplate2 into template2 section files", () => {
+test("splits VideoTemplate into video section files", () => {
   const requiredFiles = [
-    "components/home/template2/index.tsx",
-    "components/home/template2/types.ts",
-    "components/home/template2/constants.ts",
-    "components/home/template2/Header.tsx",
-    "components/home/template2/HeaderLinks.tsx",
-    "components/home/template2/MobileMenu.tsx",
-    "components/home/template2/LocaleSwitcher.tsx",
-    "components/home/template2/ThemeToggle.tsx",
-    "components/home/template2/Hero.tsx",
-    "components/home/template2/Showcase.tsx",
-    "components/home/template2/Pricing.tsx",
-    "components/home/template2/FAQ.tsx",
-    "components/home/template2/CTA.tsx",
-    "components/home/template2/Media.tsx",
+    "components/home/video/VideoTemplate.tsx",
+    "components/home/video/types.ts",
+    "components/home/video/constants.ts",
+    "components/home/video/Header.tsx",
+    "components/home/video/HeaderLinks.tsx",
+    "components/home/video/MobileMenu.tsx",
+    "components/home/video/LocaleSwitcher.tsx",
+    "components/home/video/ThemeToggle.tsx",
+    "components/home/video/Hero.tsx",
+    "components/home/video/Showcase.tsx",
+    "components/home/video/Pricing.tsx",
+    "components/home/video/FAQ.tsx",
+    "components/home/video/CTA.tsx",
+    "components/home/video/Media.tsx",
   ];
 
   for (const relativePath of requiredFiles) {
@@ -109,17 +109,17 @@ test("splits HomeTemplate2 into template2 section files", () => {
   }
 
   assert.equal(
-    existsSync(path.join(projectRoot, "components/home/template2/interactive.tsx")),
+    existsSync(path.join(projectRoot, "components/home/video/interactive.tsx")),
     false,
-    "Expected components/home/template2/interactive.tsx to be removed"
+    "Expected components/home/video/interactive.tsx to be removed"
   );
 });
 
-test("ships localized HomeTemplate2 message files with core sections", () => {
+test("ships localized VideoTemplate message files with core sections", () => {
   const localeFiles = [
-    "i18n/messages/en/HomeTemplate2.json",
-    "i18n/messages/zh/HomeTemplate2.json",
-    "i18n/messages/ja/HomeTemplate2.json",
+    "i18n/messages/en/VideoTemplate.json",
+    "i18n/messages/zh/VideoTemplate.json",
+    "i18n/messages/ja/VideoTemplate.json",
   ];
 
   for (const relativePath of localeFiles) {
@@ -132,7 +132,7 @@ test("ships localized HomeTemplate2 message files with core sections", () => {
 
   const englishMessages = JSON.parse(
     readFileSync(
-      path.join(projectRoot, "i18n/messages/en/HomeTemplate2.json"),
+      path.join(projectRoot, "i18n/messages/en/VideoTemplate.json"),
       "utf8"
     )
   ) as Record<string, unknown>;
@@ -144,30 +144,30 @@ test("ships localized HomeTemplate2 message files with core sections", () => {
   assert.equal("cta" in englishMessages, true);
 });
 
-test("loads HomeTemplate2 copy through next-intl instead of manual locale loaders", () => {
+test("loads VideoTemplate copy through next-intl instead of manual locale loaders", () => {
   const source = readFileSync(
-    path.join(projectRoot, "components/home/HomeTemplate2.tsx"),
+    path.join(projectRoot, "components/home/video/VideoTemplate.tsx"),
     "utf8"
   );
 
   assert.match(source, /getTranslations/);
-  assert.match(source, /getTranslations\("HomeTemplate2"\)/);
+  assert.match(source, /getTranslations\("VideoTemplate"\)/);
   assert.doesNotMatch(source, /pageLoaders/);
   assert.doesNotMatch(source, /LOCALES\.includes/);
 });
 
-test("extracts template2 header into dedicated components instead of inline nav markup", () => {
+test("extracts video header into dedicated components instead of inline nav markup", () => {
   const source = readFileSync(
-    path.join(projectRoot, "components/home/HomeTemplate2.tsx"),
+    path.join(projectRoot, "components/home/video/VideoTemplate.tsx"),
     "utf8"
   );
 
-  assert.match(source, /@\/components\/home\/template2\/Header/);
+  assert.match(source, /@\/components\/home\/video\/Header/);
   assert.doesNotMatch(source, /<nav[\s>]/);
 });
 
-test("inlines Seedance landing styles instead of relying on semantic global class names", () => {
-  const html = renderHomeTemplate2();
+test("inlines Seedance landing styles instead of relying on semantic global class names", async () => {
+  const html = await renderVideoTemplate();
 
   assert.doesNotMatch(
     html,
@@ -175,8 +175,8 @@ test("inlines Seedance landing styles instead of relying on semantic global clas
   );
 });
 
-test("renders FAQ as collapsed disclosures and keeps the primary CTA legible on white", () => {
-  const html = renderHomeTemplate2();
+test("renders FAQ as collapsed disclosures and keeps the primary CTA legible on white", async () => {
+  const html = await renderVideoTemplate();
 
   assert.match(html, /<details/);
   assert.doesNotMatch(html, /<details[^>]*\sopen(?:=|>)/);
@@ -186,8 +186,8 @@ test("renders FAQ as collapsed disclosures and keeps the primary CTA legible on 
   );
 });
 
-test("declares dark theme token overrides for the page shell", () => {
-  const html = renderHomeTemplate2();
+test("declares dark theme token overrides for the page shell", async () => {
+  const html = await renderVideoTemplate();
 
   assert.match(html, /\[--card:0_0%_100%\]/);
   assert.match(html, /\[--border:216_22%_86%\]/);
@@ -198,8 +198,8 @@ test("declares dark theme token overrides for the page shell", () => {
   assert.match(html, /dark:bg-\[radial-gradient\(circle_at_top_left,hsl\(var\(--primary\)\/0\.18\),transparent_24%\)/);
 });
 
-test("uses a consistent card shell for module backgrounds and shadows", () => {
-  const html = renderHomeTemplate2();
+test("uses a consistent card shell for module backgrounds and shadows", async () => {
+  const html = await renderVideoTemplate();
 
   const moduleShell =
     /border border-slate-200\/70 bg-white text-card-foreground shadow-\[0_28px_72px_-48px_rgba\(148,163,184,0\.36\)\] backdrop-blur-md dark:border-white\/10 dark:bg-\[hsl\(223_26%_18%\)\] dark:shadow-\[0_28px_72px_-44px_rgba\(2,8,23,0\.62\)\] group cursor-pointer overflow-hidden transition-all hover:-translate-y-1 hover:shadow-\[0_28px_58px_-42px_rgba\(148,163,184,0\.28\)\] dark:hover:shadow-\[0_28px_68px_-42px_rgba\(2,8,23,0\.72\)\]/g;
@@ -210,8 +210,8 @@ test("uses a consistent card shell for module backgrounds and shadows", () => {
   assert.doesNotMatch(html, /transition-shadow/);
 });
 
-test("renders current scope mode cards with white-light and blue-black-dark icon surfaces", () => {
-  const html = renderHomeTemplate2();
+test("renders current scope mode cards with white-light and blue-black-dark icon surfaces", async () => {
+  const html = await renderVideoTemplate();
 
   assert.match(
     html,
@@ -219,8 +219,8 @@ test("renders current scope mode cards with white-light and blue-black-dark icon
   );
 });
 
-test("styles only the pricing toggle and CTA buttons to match the reference treatment", () => {
-  const html = renderHomeTemplate2();
+test("styles only the pricing toggle and CTA buttons to match the reference treatment", async () => {
+  const html = await renderVideoTemplate();
 
   assert.match(
     html,
@@ -244,8 +244,8 @@ test("styles only the pricing toggle and CTA buttons to match the reference trea
   );
 });
 
-test("keeps the Most Popular badge visible above the Pro pricing card", () => {
-  const html = renderHomeTemplate2();
+test("keeps the Most Popular badge visible above the Pro pricing card", async () => {
+  const html = await renderVideoTemplate();
 
   assert.match(
     html,
@@ -253,7 +253,7 @@ test("keeps the Most Popular badge visible above the Pro pricing card", () => {
   );
 });
 
-test("reserves shared layout space for the fixed template2 header", () => {
+test("reserves shared layout space for the fixed video header", () => {
   const source = readFileSync(
     path.join(projectRoot, "app/[locale]/(basic-layout)/layout.tsx"),
     "utf8"
@@ -268,7 +268,7 @@ test("offsets the homepage back under the shared fixed header", () => {
     "utf8"
   );
   const templateSource = readFileSync(
-    path.join(projectRoot, "components/home/HomeTemplate2.tsx"),
+    path.join(projectRoot, "components/home/video/VideoTemplate.tsx"),
     "utf8"
   );
 
@@ -280,32 +280,32 @@ test("offsets the homepage back under the shared fixed header", () => {
 
 test("clips horizontal overflow at the homepage shell to avoid page-level sideways scrolling", () => {
   const source = readFileSync(
-    path.join(projectRoot, "components/home/HomeTemplate2.tsx"),
+    path.join(projectRoot, "components/home/video/VideoTemplate.tsx"),
     "utf8"
   );
 
   assert.match(source, /pageShellClass \+ " -mt-20 w-full overflow-x-hidden"/);
 });
 
-test("shares template2 theme tokens with HeaderShell when header is rendered outside HomeTemplate2", () => {
+test("shares video theme tokens with HeaderShell when header is rendered outside VideoTemplate", () => {
   const constantsSource = readFileSync(
-    path.join(projectRoot, "components/home/template2/constants.ts"),
+    path.join(projectRoot, "components/home/video/constants.ts"),
     "utf8"
   );
   const headerShellSource = readFileSync(
-    path.join(projectRoot, "components/home/template2/HeaderShell.tsx"),
+    path.join(projectRoot, "components/home/video/HeaderShell.tsx"),
     "utf8"
   );
 
-  assert.match(constantsSource, /export const template2ThemeVarsClass\s*=/);
-  assert.match(constantsSource, /pageShellClass\s*=\s*`w-full \$\{template2ThemeVarsClass\}[\s\S]*`;/);
-  assert.match(headerShellSource, /template2ThemeVarsClass/);
+  assert.match(constantsSource, /export const videoThemeVarsClass\s*=/);
+  assert.match(constantsSource, /pageShellClass\s*=\s*`w-full \$\{videoThemeVarsClass\}[\s\S]*`;/);
+  assert.match(headerShellSource, /videoThemeVarsClass/);
   assert.match(headerShellSource, /className=\{cn\(\s*"fixed top-0 z-50 w-full/);
 });
 
-test("recomputes template2 header overlay when the pathname changes", () => {
+test("recomputes video header overlay when the pathname changes", () => {
   const headerShellSource = readFileSync(
-    path.join(projectRoot, "components/home/template2/HeaderShell.tsx"),
+    path.join(projectRoot, "components/home/video/HeaderShell.tsx"),
     "utf8"
   );
 

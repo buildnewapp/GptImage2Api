@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
-interface Template2ThemeToggleProps {
+interface VideoThemeToggleProps {
   className?: string;
   overlay?: boolean;
 }
@@ -12,7 +12,7 @@ interface Template2ThemeToggleProps {
 export function ThemeToggle({
   className,
   overlay = false,
-}: Template2ThemeToggleProps) {
+}: VideoThemeToggleProps) {
   const { setTheme, theme } = useTheme();
 
   return (

@@ -5,20 +5,20 @@ import Image from "next/image";
 import { Sparkles } from "lucide-react";
 
 import { UserAvatar } from "@/components/header/UserAvatar";
-import Template2HeaderLinks from "@/components/home/template2/HeaderLinks";
-import Template2LocaleSwitcher from "@/components/home/template2/LocaleSwitcher";
-import Template2MobileMenu from "@/components/home/template2/MobileMenu";
-import { ThemeToggle } from "@/components/home/template2/ThemeToggle";
-import { template2ThemeVarsClass } from "@/components/home/template2/constants";
-import type { HomeTemplate2Navigation } from "@/components/home/template2/types";
+import VideoHeaderLinks from "@/components/home/video/HeaderLinks";
+import VideoLocaleSwitcher from "@/components/home/video/LocaleSwitcher";
+import VideoMobileMenu from "@/components/home/video/MobileMenu";
+import { ThemeToggle } from "@/components/home/video/ThemeToggle";
+import { videoThemeVarsClass } from "@/components/home/video/constants";
+import type { VideoTemplateNavigation } from "@/components/home/video/types";
 import { Link as I18nLink, usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { user as userSchema } from "@/lib/db/schema";
 
 type User = typeof userSchema.$inferSelect;
 
-interface Template2HeaderShellProps {
-  navigation: HomeTemplate2Navigation;
+interface VideoHeaderShellProps {
+  navigation: VideoTemplateNavigation;
   totalAvailableCredits?: number | null;
   user?: User | null;
 }
@@ -27,7 +27,7 @@ export default function HeaderShell({
   navigation,
   totalAvailableCredits,
   user,
-}: Template2HeaderShellProps) {
+}: VideoHeaderShellProps) {
   const pathname = usePathname();
   const [overlay, setOverlay] = useState(() => pathname === "/");
   const accountButtonClassName = cn(
@@ -54,7 +54,7 @@ export default function HeaderShell({
     }
 
     const heroSentinel = document.querySelector(
-      "[data-home-template2-hero-sentinel]",
+      "[data-video-hero-sentinel]",
     );
 
     if (!heroSentinel) {
@@ -79,11 +79,11 @@ export default function HeaderShell({
 
   return (
     <header
-      data-home-template2-header-shell
+      data-video-header-shell
       data-header-contrast-mode={overlay ? "overlay" : "default"}
       className={cn(
         "fixed top-0 z-50 w-full transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300",
-        template2ThemeVarsClass,
+        videoThemeVarsClass,
         overlay
           ? "border-white/12 bg-transparent"
           : "bg-background/82 shadow backdrop-blur-xl",
@@ -120,13 +120,13 @@ export default function HeaderShell({
           </I18nLink>
 
           <div className="hidden lg:block">
-            <Template2HeaderLinks overlay={overlay} />
+            <VideoHeaderLinks overlay={overlay} />
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           <div className="hidden items-center gap-2 lg:flex">
-            <Template2LocaleSwitcher overlay={overlay} />
+            <VideoLocaleSwitcher overlay={overlay} />
             <ThemeToggle overlay={overlay} />
             <UserAvatar
               user={user as User}
@@ -145,7 +145,7 @@ export default function HeaderShell({
           </div>
 
           <div className="flex items-center gap-2 lg:hidden">
-            <Template2MobileMenu
+            <VideoMobileMenu
               navigation={navigation}
               overlay={overlay}
               user={user as User}

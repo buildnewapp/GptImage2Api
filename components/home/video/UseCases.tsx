@@ -10,11 +10,11 @@ import {
 import {
   moduleCardClass,
   sectionTitleClass,
-} from "@/components/home/template2/constants";
-import type { HomeTemplate2UseCases } from "@/components/home/template2/types";
+} from "@/components/home/video/constants";
+import type { VideoTemplateUseCases } from "@/components/home/video/types";
 
 interface UseCasesProps {
-  section: HomeTemplate2UseCases;
+  section: VideoTemplateUseCases;
 }
 
 const iconMap = {

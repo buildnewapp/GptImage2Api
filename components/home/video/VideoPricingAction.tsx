@@ -6,24 +6,24 @@ import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-import type { HomeTemplate2CheckoutPlan } from "@/components/home/template2/types";
+import type { VideoTemplateCheckoutPlan } from "@/components/home/video/types";
 
 const RECURRING_PURCHASE_REQUIRES_HIGHER_TIER_ERROR =
   "RECURRING_PURCHASE_REQUIRES_HIGHER_TIER";
 
-interface Template2PricingActionProps {
+interface VideoPricingActionProps {
   className: string;
   label: string;
   manualCouponClassName?: string;
-  plan: HomeTemplate2CheckoutPlan;
+  plan: VideoTemplateCheckoutPlan;
 }
 
-export default function Template2PricingAction({
+export default function VideoPricingAction({
   className,
   label,
   manualCouponClassName,
   plan,
-}: Template2PricingActionProps) {
+}: VideoPricingActionProps) {
   const [isLoading, setIsLoading] = useState(false);
   const t = useTranslations("Pricing");
 

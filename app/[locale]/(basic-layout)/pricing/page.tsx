@@ -1,8 +1,8 @@
-import AiVideoModelPricingComparison from "@/components/home/template2/AiVideoModelPricingComparison";
-import Pricing from "@/components/home/template2/Pricing";
-import PricingValueComparison from "@/components/home/template2/PricingValueComparison";
-import { pageShellClass } from "@/components/home/template2/constants";
-import { buildHomeTemplate2PricingSection } from "@/components/home/template2/pricing-data";
+import AiVideoModelPricingComparison from "@/components/home/video/AiVideoModelPricingComparison";
+import Pricing from "@/components/home/video/Pricing";
+import PricingValueComparison from "@/components/home/video/PricingValueComparison";
+import { pageShellClass } from "@/components/home/video/constants";
+import { buildVideoTemplatePricingSection } from "@/components/home/video/pricing-data";
 import { taskRewardsConfig } from "@/config/task-rewards";
 import { Locale } from "@/i18n/routing";
 import { constructMetadata } from "@/lib/metadata";
@@ -36,9 +36,9 @@ export async function generateMetadata({
 
 export default async function PricingPage({ params }: { params: Params }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "HomeTemplate2" });
+  const t = await getTranslations({ locale, namespace: "VideoTemplate" });
   const pricingT = await getTranslations({ locale, namespace: "Pricing" });
-  const pricing = buildHomeTemplate2PricingSection({
+  const pricing = buildVideoTemplatePricingSection({
     baseSection: t.raw("pricing"),
     locale,
   });

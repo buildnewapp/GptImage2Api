@@ -1,16 +1,16 @@
-import Template2PricingAction from "@/components/home/template2/Template2PricingAction";
-import Template2PricingRecurring from "@/components/home/template2/Template2PricingRecurring";
-import PricingTaskHub from "@/components/home/template2/PricingTaskHub";
+import VideoPricingAction from "@/components/home/video/VideoPricingAction";
+import VideoPricingRecurring from "@/components/home/video/VideoPricingRecurring";
+import PricingTaskHub from "@/components/home/video/PricingTaskHub";
 import {
   moduleCardClass,
   sectionTitleClass,
   subsectionTitleClass,
-} from "@/components/home/template2/constants";
-import type { HomeTemplate2Pricing } from "@/components/home/template2/types";
+} from "@/components/home/video/constants";
+import type { VideoTemplatePricing } from "@/components/home/video/types";
 import { Link as I18nLink } from "@/i18n/routing";
 
 interface PricingProps {
-  section: HomeTemplate2Pricing;
+  section: VideoTemplatePricing;
   taskHub?: {
     badgeLabel: string;
     buttonLabel: string;
@@ -38,7 +38,7 @@ export default function Pricing({ section, taskHub }: PricingProps) {
           {taskHub ? <PricingTaskHub section={taskHub} /> : null}
         </div>
 
-        <Template2PricingRecurring
+        <VideoPricingRecurring
           monthlyLabel={section.monthlyLabel}
           monthlyPlans={monthlyPlans}
           saveLabel={section.saveLabel}
@@ -76,7 +76,7 @@ export default function Pricing({ section, taskHub }: PricingProps) {
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <span className="text-lg font-bold">{pack.price}</span>
                     {pack.checkoutPlan ? (
-                      <Template2PricingAction
+                      <VideoPricingAction
                         className="inline-flex h-9 cursor-pointer items-center justify-center whitespace-nowrap rounded-full border border-border/80 bg-background/70 px-4 text-xs font-semibold text-foreground ring-offset-background transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
                         label={pack.cta}
                         manualCouponClassName="text-[11px]"
