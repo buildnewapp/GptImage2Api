@@ -43,7 +43,7 @@ export default async function ImageTemplate() {
       <Scope section={page.scope} />
       <UseCases section={page.useCases} />
       <Showcase section={page.showcase} />
-      <Testimonials section={page.testimonials} />
+      {/*<Testimonials section={page.testimonials} />*/}
       <Pricing section={page.pricing} />
       <FAQ section={page.faq} />
       <CTA section={page.cta} />

@@ -3,6 +3,7 @@ import Pricing from "@/components/home/video/Pricing";
 import PricingValueComparison from "@/components/home/video/PricingValueComparison";
 import { pageShellClass } from "@/components/home/video/constants";
 import { buildVideoTemplatePricingSection } from "@/components/home/video/pricing-data";
+import { siteConfig } from "@/config/site";
 import { taskRewardsConfig } from "@/config/task-rewards";
 import { Locale } from "@/i18n/routing";
 import { constructMetadata } from "@/lib/metadata";
@@ -24,11 +25,10 @@ export async function generateMetadata({
   params,
 }: MetadataProps): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "Pricing" });
 
   return constructMetadata({
-    title: t("title"),
-    description: t("description"),
+    title: siteConfig.tagLine,
+    description: siteConfig.description,
     locale: locale as Locale,
     path: "/pricing",
   });

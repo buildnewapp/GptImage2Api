@@ -75,7 +75,7 @@ export function DashboardSidebar({
             height={24}
             className="rounded-md"
           />
-          {!isCollapsed && <h1 className="font-semibold">{tHome("title")}</h1>}
+          {!isCollapsed && <h1 className="font-semibold">Gpt Api</h1>}
         </I18nLink>
       </SidebarHeader>
 

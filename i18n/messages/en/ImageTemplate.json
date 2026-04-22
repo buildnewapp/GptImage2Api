@@ -22,42 +22,70 @@
     "title": "Create Production-Ready Images with GptImage2Api",
     "videos": [],
     "images": [
-      "/images/features/template1.webp",
-      "/images/features/template2.webp",
-      "/images/features/template3.webp",
-      "/images/features/ai-1.png",
-      "/images/features/ai-2.png",
-      "/images/features/other-1.png",
-      "/images/features/other-2.png",
-      "/images/features/other-3.png",
-      "/images/features/cms-1.png",
-      "/images/features/cms-3.png",
-      "/images/features/cms-4.png",
-      "/images/features/cms-5.png"
+      "https://file.gptimage2api.net/media/1776699445498_ga2ry5_HGO7H0DWkAApdKK-300x329.jpg",
+      "https://file.gptimage2api.net/media/1776756799880_c8u8w7_HGUKjjaasAAvVRa-300x240.jpg",
+      "https://file.gptimage2api.net/media/1776668143480_6f023y_HGURZgJbkAE_Kwh-300x450.jpg",
+      "https://file.gptimage2api.net/media/1776668128332_d2wtbo_HGQDh30bMAARz9E-300x300.jpg",
+      "https://file.gptimage2api.net/media/1776695123224_6cabrf_HGCZTbKawAAaS5X-300x450.jpg",
+      "https://file.gptimage2api.net/media/1776697094626_4w646d_HGE06OebMAAQxNG-300x632.jpg",
+      "https://file.gptimage2api.net/media/1776756770665_yd1s04_HGaLQTfbkAA3xpN-300x169.jpg",
+      "https://file.gptimage2api.net/media/1776756799069_v5dm3d_HGaEzbEasAAe7sy-300x200.jpg",
+      "https://file.gptimage2api.net/media/1776756796557_ls38e9_HGZxZd5a0AAqQYm-300x632.jpg",
+      "https://file.gptimage2api.net/media/1776756854427_qzcik2_HGYy_KObcAA66sM-300x200.jpg",
+      "https://file.gptimage2api.net/media/1776756858185_6z7569_HGV6FtKbwAAK6L0-300x169.jpg",
+      "https://file.gptimage2api.net/media/1776756858951_6ijm10_HGV6HyHaUAA68FT-300x169.jpg",
+      "https://file.gptimage2api.net/media/1776756856340_hxgjgr_HGV6DSDasAAyJNp-300x169.jpg",
+      "https://file.gptimage2api.net/media/1776756838105_09bui0_HGWtW5LaEAE1ao5-300x450.jpg",
+      "https://file.gptimage2api.net/media/1776756840231_wkd9n5_HGYT587bQAAg27s-300x169.jpg",
+      "https://file.gptimage2api.net/media/1776756790183_h3xfum_HGX3RW7asAA8eUG-300x632.jpg",
+      "https://file.gptimage2api.net/media/1776756826119_t8j5j6_HGXqtN3agAAiUPj-300x169.jpg",
+      "https://file.gptimage2api.net/media/1776756847890_7hxzaf_HGXpw9qbwAAXfTU-300x240.jpg",
+      "https://file.gptimage2api.net/media/1776756784553_gg0ud8_HGXlhh6akAADBnS-300x200.jpg",
+      "https://file.gptimage2api.net/media/1776756782732_rwl7km_HGXJbgbaAAQQd4O-300x533.jpg",
+      "https://file.gptimage2api.net/media/1776756811427_jbruux_HGXIcWIaAAEKUNA-300x450.jpg",
+      "https://file.gptimage2api.net/media/1776756762098_oz5z4c_HGXGwsMagAEYuqa-300x225.jpg",
+      "https://file.gptimage2api.net/media/1776756781085_e23ett_HGXBV05XwAA2yU4-300x450.jpg",
+      "https://file.gptimage2api.net/media/1776756857352_6g3wvu_HGWt7oxaYAA57lf-300x533.jpg",
+      "https://file.gptimage2api.net/media/1776756843035_0y4dr0_HGV2dbja8AA3IvB-300x400.jpg",
+      "https://file.gptimage2api.net/media/1776756787942_5sozw0_HGV1VlgWgAAdqCP-300x400.jpg",
+      "https://file.gptimage2api.net/media/1776756790900_z5i5cz_HGVyykIbAAAHxFf-300x450.jpg",
+      "https://file.gptimage2api.net/media/1776756772675_jeajpn_HGUGld9bAAAUe_s-300x400.jpg",
+      "https://file.gptimage2api.net/media/1776756793012_is3i1l_HGT54eGaMAAXD4i-300x375.jpg",
+      "https://file.gptimage2api.net/media/1776756789445_z4tzjp_HGTxSpFaMAAuxns-300x300.jpg",
+      "https://file.gptimage2api.net/media/1776661994608_2lvoxe_HGQ9NKVaMAA-xFS-300x450.jpg",
+      "https://file.gptimage2api.net/media/1776668115222_j6vl73_HGQ9NH3bQAAVUT8-300x450.jpg",
+      "https://file.gptimage2api.net/media/1776658762495_8ewb2m_HGQr7nCa8AAiaSP-300x398.jpg",
+      "https://file.gptimage2api.net/media/1776661928420_07wu78_HGPd9gcbQAACwFz-300x533.jpg",
+      "https://file.gptimage2api.net/media/1776699456474_ou4pdk_HGN-G4vawAANhtM-300x450.jpg",
+      "https://file.gptimage2api.net/media/1776662627550_b8twjr_HGNFz2LbkAA1mcT-300x300.jpg",
+      "https://file.gptimage2api.net/media/1776697139278_w5yc5q_HGGU7zebkAENfe3-300x238.jpg",
+      "https://file.gptimage2api.net/media/1776695086349_pfmtbk_HGFn2-IbsAAWHPw-300x417.jpg",
+      "https://file.gptimage2api.net/media/1776697066926_5oy9un_HGE_f9caMAAevxJ-300x450.jpg",
+      "https://file.gptimage2api.net/media/1776697140905_diw2m9_HGEa9vHaIAASEXv-300x226.jpg"
     ]
   },
   "featureRows": [
     {
       "title": "High-Fidelity Text to Image",
       "description": "Turn detailed prompts into polished visuals with stable composition, realistic materials, and strong typography readability.",
-      "imageSrc": "/images/features/template1.webp"
+      "imageSrc": "https://file.gptimage2api.net/media/1776697139278_w5yc5q_HGGU7zebkAENfe3.jpg"
     },
     {
       "title": "Precise Image Editing Workflow",
       "description": "Upload a source image, then refine only what you need: subject swap, background replacement, style updates, and local retouching.",
       "reverse": true,
-      "imageSrc": "/images/features/template2.webp"
+      "imageSrc": "https://file.gptimage2api.net/media/1776697134622_r5ybxn_HGEbqkiakAA0RKc.jpg"
     },
     {
       "title": "Readable Text in Posters and Mockups",
       "description": "Generate marketing assets with cleaner small text, structured hierarchy, and consistent spacing for real campaign usage.",
-      "imageSrc": "/images/features/template3.webp"
+      "imageSrc": "https://file.gptimage2api.net/media/1776695126103_hxglkj_HGBt0cgbAAA0hT5.jpg"
     },
     {
       "title": "Consistent Product Visual Direction",
       "description": "Keep colors, angle, and packaging details aligned across batches, so your catalog and ad creatives look unified.",
       "reverse": true,
-      "imageSrc": "/images/features/ai-1.png"
+      "imageSrc": "https://file.gptimage2api.net/media/1776701519019_wlywan_HF_bLe5XwAEdX9U.jpg"
     }
   ],
   "scope": {
@@ -168,42 +196,42 @@
         "title": "Packaging Hero Shot",
         "prompt": "Studio product photo, clean tabletop, natural shadow falloff, readable front label typography, premium but minimal composition.",
         "resolution": "1365x1024",
-        "src": "/images/features/template1.webp"
+        "src": "https://file.gptimage2api.net/media/1776697094626_4w646d_HGE06OebMAAQxNG.jpg"
       },
       {
         "category": "Marketing",
         "title": "Poster Layout with Clear Headline",
         "prompt": "A modern launch poster with high-contrast title, short subtitle, and balanced white space, suitable for paid social.",
         "resolution": "1365x1024",
-        "src": "/images/features/template2.webp"
+        "src": "https://file.gptimage2api.net/media/1776695096617_0y6goy_HF_JerSbcAAltkf.jpg"
       },
       {
         "category": "Design",
         "title": "Editorial Lifestyle Scene",
         "prompt": "Photorealistic lifestyle image with soft daylight, tactile material detail, and product naturally integrated in scene.",
         "resolution": "1365x1024",
-        "src": "/images/features/template3.webp"
+        "src": "https://file.gptimage2api.net/media/1776756777412_1un582_HGW2BEEbgAElaoi.jpg"
       },
       {
         "category": "E-commerce",
         "title": "Catalog Background Variants",
         "prompt": "Same product angle with different neutral backdrops and color themes while keeping packaging details consistent.",
         "resolution": "1170x1264",
-        "src": "/images/features/ai-1.png"
+        "src": "https://file.gptimage2api.net/media/1776701527953_prrzzk_HF8dJw0a0AAypII.jpg"
       },
       {
         "category": "UI",
         "title": "Feature Graphic Block",
         "prompt": "App feature illustration panel with clear hierarchy, icon focal point, and brand-friendly colors.",
         "resolution": "1170x1264",
-        "src": "/images/features/ai-2.png"
+        "src": "https://file.gptimage2api.net/media/1776701523987_7fdzp9_HF6bCm5bQAA3Q4J.jpg"
       },
       {
         "category": "Concept",
         "title": "Moodboard Exploration",
         "prompt": "A cohesive concept frame that combines product, texture, and lighting references for campaign direction review.",
         "resolution": "1192x1120",
-        "src": "/images/features/other-1.png"
+        "src": "https://file.gptimage2api.net/media/1776701499130_y3422y_HF6aV0RbIAAyPte.jpg"
       }
     ]
   },

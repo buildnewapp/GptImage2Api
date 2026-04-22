@@ -186,13 +186,13 @@ curl 'https://youmind.com/youhome-api/prompts' \
   -H 'referer: https://youmind.com/gpt-image-2-prompts' \
   --data-raw '{"model":"gpt-image-2","page":9,"limit":18,"locale":"en-US","campaign":"gpt-image-2-prompts","filterMode":"imageCategories"}'
 
-根据接口获取提示词，帮我整理下收集下来，保持到papi.json 中
+根据接口获取提示词，帮我整理下收集下来，保持到 content/prompts.json 中
 ```
 ```
 https://youmind.com/gpt-image-2-prompts
 这个页面有很多提示词，帮我整理下收集下来，保持到ym.json 中
 
-[papi.json](papi.json) 下载 json 中所有的资源 ，比如 https://cms-assets.youmind.com/media/1776756791925_yfoe75_HGZ3LYuaYAAkuVr.jpg
+[prompts.json](content/prompts.json) 下载 json 中所有的资源 ，比如 https://cms-assets.youmind.com/media/1776756791925_yfoe75_HGZ3LYuaYAAkuVr.jpg
 下载到 media目录下 文件名 1776756791925_yfoe75_HGZ3LYuaYAAkuVr.jpg
 
 通过.env 中的r2 配置，把media 目录上传到 r2 上
@@ -217,4 +217,20 @@ GptImage2Api provides powerful GPT Image 2 API access for developers, startups, 
 ```
 ```
 [sync-paypal-products.ts](lib/db/seed/sync-paypal-products.ts) 中上传产品和计划加上配置文件中的 ADMIN_NAME ，比如 Pro，paypal 后台应该是 GptApi Pro
+```
+```
+把 content/prompts.json 导入 页面 /prompts 提示词页面，可以根据目前接口修改，需要支持分页查看，点击提示词弹框显示详情，打乱提示词顺序，根据语言导入
+
+不要直接显示 url 地址，而是图片地址使用 url 不是缩略图；页面顶部不要有 seedance 2.0 描述，根据当前产品来修改，产品信息：
+```
+```
+页面 http://localhost:3000/showcase ，tdk 还是就的，按照最新的修改；页面中描述还是旧的，更新当前产品信息修改：
+Title
+GptImage2Api – Fast & Reliable GPT Image 2 API for Developers
+
+Description
+GptImage2Api provides powerful GPT Image 2 API access for developers, startups, and businesses to generate high-quality AI images with simple REST endpoints. Build image generation apps, automate creative workflows, and integrate GPT Image 2 API into your products instantly.
+
+
+showcase 当前没有数据，把 [prompts.json](content/prompts.json) 中 英文前 100 条、中午全部、日文全部 提示词 作为示例导入到生成记录表中，挂到用户syxchinablank@gmail.com 下，public=true，使用高清图
 ```

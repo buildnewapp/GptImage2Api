@@ -2,9 +2,9 @@ import PromptsPage from "@/components/prompts/PromptsPage";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Seedance 2.0 Prompt Gallery | SdanceAI",
+  title: "GptImage2Api – Fast & Reliable GPT Image 2 API for Developers",
   description:
-    "Explore real-world examples showcasing Seedance 2.0's multi-modal AI video creation capabilities. See prompts with input references and generated video results.",
+    "GptImage2Api provides powerful GPT Image 2 API access for developers, startups, and businesses to generate high-quality AI images with simple REST endpoints. Build image generation apps, automate creative workflows, and integrate GPT Image 2 API into your products instantly.",
 };
 
 export default function Prompts() {
