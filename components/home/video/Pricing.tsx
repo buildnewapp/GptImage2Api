@@ -117,7 +117,7 @@ export default function Pricing({ section, taskHub }: PricingProps) {
                   <tr className="border-b">
                     <th className="p-6 text-left font-semibold">Feature</th>
                     <th className="p-6 text-center font-semibold text-primary">
-                      Seedance 2.0
+                      GptImage2Api
                     </th>
                     <th className="p-6 text-center font-semibold text-muted-foreground">
                       Other Platforms

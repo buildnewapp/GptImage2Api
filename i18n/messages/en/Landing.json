@@ -2,11 +2,11 @@
   "Hero": {
     "badge": {
       "label": "NEW",
-      "text": "Multi-modal AI video creation",
+      "text": "High-fidelity AI image generation and editing",
       "href": "/#pricing"
     },
-    "title": "Seedance 2.0",
-    "description": "Experience true multi-modal AI video creation. Combine images, videos, audio, and text to generate cinematic content with precise reference capabilities, seamless video extension, and natural language control.",
+    "title": "Gpt Image 2 Api",
+    "description": "Generate and edit production-ready images with precise prompt control, cleaner text rendering, and consistent visual style.",
     "getStarted": "Get Started",
     "getStartedLink": "/#pricing",
     "form": {
@@ -88,13 +88,13 @@
       "shotDuration": "Duration (s)",
       "totalDuration": "Total: {current}s / {total}s",
       "modelVersion": "Model Version",
-      "soraDisclaimer": "Sora service is experiencing high demand and may fail. We recommend using other models for more reliable results.",
+      "soraDisclaimer": "Current Model service is experiencing high demand and may fail. We recommend using other models for more reliable results.",
       "sora2": {
-        "name": "Sora 2",
+        "name": "Standard Model",
         "description": "Standard quality, fast generation"
       },
       "sora2pro": {
-        "name": "Sora 2 Pro",
+        "name": "Advanced Model",
         "description": "Premium quality with advanced features"
       },
       "estimatedCredits": "Estimated credits",
@@ -131,8 +131,8 @@
       "watermark": "Watermark",
       "watermarkPlaceholder": "Add a watermark (optional)",
       "enableTranslation": "Auto Translate Prompt",
-      "veoQuality": "Veo 3.1 Quality",
-      "veoFast": "Veo 3.1 Fast",
+      "veoQuality": "High Quality Mode",
+      "veoFast": "Fast Mode",
       "submitModeForm": "Form",
       "submitModeApi": "API",
       "apiRequestJsonTitle": "Request JSON",
@@ -152,22 +152,28 @@
   "Features": {
     "badge": {
       "label": "Capabilities",
-      "text": "What makes Seedance 2.0 stand out"
+      "text": "What makes Gpt Image 2 Api stand out"
     },
-    "title": "Key Capabilities of Seedance 2.0",
+    "title": "Key Capabilities of Gpt Image 2 Api",
     "titlePrefix": "Key Capabilities of ",
-    "titleSuffix": "Seedance 2.0",
-    "description": "From basic stability to complex multi-modal references, experience the next evolution in AI video generation.",
+    "titleSuffix": "Gpt Image 2 Api",
+    "description": "From text rendering and photorealism to structured editing workflows, build image assets faster with stable quality.",
     "items": [
       {
         "title": "Enhanced Basic Capabilities",
         "description": "More stable, smoother, and realistic. Better physical laws, natural movement, precise instruction following, and stable style retention.",
-        "images": ["https://cdn.sdanceai.com/sdanceai/poster/44-poster.webp","https://cdn.sdanceai.com/sdanceai/poster/43-poster.webp","https://cdn.sdanceai.com/sdanceai/poster/46-poster.webp"]
+        "images": [
+          "/images/features/template1.webp",
+          "/images/features/template2.webp",
+          "/images/features/template3.webp"
+        ]
       },
       {
         "title": "Multi-Modal & Free Combination",
         "description": "Supports text, image, video, and audio inputs. Combine reference objects freely (up to 9 images, 3 videos, 3 audio files).",
-        "images": ["https://cdn.sdanceai.com/sdanceai/poster/1-poster.webp"]
+        "images": [
+          "/images/features/ai-1.png"
+        ]
       },
       {
         "title": "Superior Consistency",
@@ -219,7 +225,7 @@
     "title": "Endless Possibilities For Every Creator",
     "titlePrefix": "Endless Possibilities ",
     "titleSuffix": "For Every Creator",
-    "description": "From viral content to professional productions, Seedance 2.0 empowers creators across industries to bring their multi-modal visions to life.",
+    "description": "From campaign visuals to storefront assets, Gpt Image 2 Api helps teams ship high-quality images with less iteration.",
     "button": "Get Started Now",
     "items": [
       {
@@ -235,20 +241,30 @@
       {
         "title": "Education & Training",
         "description": "Bring lessons to life with engaging visual content. Create animated explanations, historical reconstructions, and interactive learning materials.",
-        "tags": ["Course Content", "Tutorials", "Demos", "Visual Lessons"]
+        "tags": [
+          "Course Content",
+          "Tutorials",
+          "Demos",
+          "Visual Lessons"
+        ]
       },
       {
         "title": "Creative Storytelling",
         "description": "Craft unique narratives using multi-modal inputs. Reference film techniques, replicate cinematic styles, and extend your story across seamless scenes.",
-        "tags": ["Short Films", "Art Projects", "Music Videos", "Visual Poetry"]
+        "tags": [
+          "Short Films",
+          "Art Projects",
+          "Music Videos",
+          "Visual Poetry"
+        ]
       },
       {
         "title": "Social Media Content",
         "description": "Generate scroll-stopping content by referencing trending templates and effects. Replicate viral formats with your own creative twist.",
         "tags": [
-          "Instagram Reels",
-          "TikTok Videos",
-          "YouTube Shorts",
+          "Short-form Reels",
+          "Short Video Feeds",
+          "Vertical Shorts",
           "Trending Effects"
         ]
       },
@@ -362,7 +378,7 @@
   },
   "HowItWorks": {
     "titlePrefix": "How to Create AI Videos with ",
-    "titleSuffix": "Seedance 2.0",
+    "titleSuffix": "Gpt Image 2 Api",
     "button": "Start Creating Now",
     "items": [
       {
@@ -384,10 +400,10 @@
       "label": "Testimonials"
     },
     "title": "Loved by Creators Worldwide",
-    "description": "See what our customers have to say about Seedance 2.0 and how it's transforming their creative workflows.",
+    "description": "See what our customers have to say about Gpt Image 2 Api and how it's transforming their creative workflows.",
     "items": [
       {
-        "quote": "Seedance 2.0's multi-modal input is a game-changer. I can finally reference a dance video and apply it to any character I want. The motion replication is incredibly accurate!",
+        "quote": "Gpt Image 2 Api's multi-modal input is a game-changer. I can finally reference a dance video and apply it to any character I want. The motion replication is incredibly accurate!",
         "name": "Sarah Chen",
         "role": "Content Creator"
       },
@@ -397,7 +413,7 @@
         "role": "Filmmaker"
       },
       {
-        "quote": "Finally, character consistency that actually works! Faces, clothing, even small text - everything stays consistent throughout the video. Seedance 2.0 solved our biggest problem.",
+        "quote": "Finally, character consistency that actually works! Faces, clothing, even small text - everything stays consistent throughout the video. Gpt Image 2 Api solved our biggest problem.",
         "name": "Emily Watson",
         "role": "Creative Director"
       },
@@ -417,7 +433,7 @@
         "role": "Music Video Director"
       },
       {
-        "quote": "I reference complex action sequences from films and Seedance 2.0 replicates them with my own characters. The motion precision is unlike anything I've seen in AI video.",
+        "quote": "I reference complex action sequences from films and Gpt Image 2 Api replicates them with my own characters. The motion precision is unlike anything I've seen in AI video.",
         "name": "Jessica Liu",
         "role": "Animation Director"
       },
@@ -427,7 +443,7 @@
         "role": "Digital Artist"
       },
       {
-        "quote": "Video editing in Seedance 2.0 is revolutionary. I can modify specific segments, replace characters, or extend scenes without regenerating the entire video. Huge time saver!",
+        "quote": "Video editing in Gpt Image 2 Api is revolutionary. I can modify specific segments, replace characters, or extend scenes without regenerating the entire video. Huge time saver!",
         "name": "Olivia Martinez",
         "role": "Video Editor"
       }
@@ -457,17 +473,28 @@
       "standard": {
         "name": "Standard Pack",
         "desc": "Perfect for trying out.",
-        "features": ["1,000 Credits", "Never expire"]
+        "features": [
+          "1,000 Credits",
+          "Never expire"
+        ]
       },
       "pro": {
         "name": "Pro Pack",
         "desc": "Most popular choice.",
-        "features": ["3,750 Credits", "Never expire", "Priority Generation"]
+        "features": [
+          "3,750 Credits",
+          "Never expire",
+          "Priority Generation"
+        ]
       },
       "max": {
         "name": "Max Pack",
         "desc": "For heavy users.",
-        "features": ["12,000 Credits", "Never expire", "Priority Generation"]
+        "features": [
+          "12,000 Credits",
+          "Never expire",
+          "Priority Generation"
+        ]
       }
     },
     "plans": {
@@ -492,7 +519,11 @@
       "max": {
         "name": "Max",
         "desc": "For studios and professionals.",
-        "features": ["{credits} Credits / month", "Instant Queue", "API Access"]
+        "features": [
+          "{credits} Credits / month",
+          "Instant Queue",
+          "API Access"
+        ]
       }
     }
   },
@@ -500,39 +531,39 @@
     "title": "Frequently Asked Questions",
     "titlePrefix": "Frequently Asked ",
     "titleSuffix": "Questions",
-    "description": "Everything you need to know about Seedance 2.0 and how to get started.",
+    "description": "Everything you need to know about Gpt Image 2 Api and how to get started.",
     "items": [
       {
-        "question": "What inputs does Seedance 2.0 support?",
-        "answer": "Seedance 2.0 supports four input modalities: up to 9 images, up to 3 videos (total duration ≤15s), up to 3 audio files (MP3, total duration ≤15s), and text prompts in natural language. You can combine up to 12 files total across different modalities for maximum creative flexibility."
+        "question": "What inputs does Gpt Image 2 Api support?",
+        "answer": "Gpt Image 2 Api supports four input modalities: up to 9 images, up to 3 videos (total duration ≤15s), up to 3 audio files (MP3, total duration ≤15s), and text prompts in natural language. You can combine up to 12 files total across different modalities for maximum creative flexibility."
       },
       {
-        "question": "What can I reference with Seedance 2.0?",
+        "question": "What can I reference with Gpt Image 2 Api?",
         "answer": "You can reference virtually anything from your uploaded content: motion and choreography, visual effects and transitions, camera movements and angles, character appearances and styles, scene compositions, and even audio/sound. Simply describe in your prompt what you want to reference, like 'Use the camera movement from @video1 with the character style from @image1.'"
       },
       {
         "question": "How does video extension work?",
-        "answer": "Seedance 2.0 can smoothly extend existing videos. Upload your video and specify how many seconds you want to add (the generation length should match your extension length, e.g., extend 5s with 5s generation). The model maintains continuity in motion, style, and content for seamless results."
+        "answer": "Gpt Image 2 Api can smoothly extend existing videos. Upload your video and specify how many seconds you want to add (the generation length should match your extension length, e.g., extend 5s with 5s generation). The model maintains continuity in motion, style, and content for seamless results."
       },
       {
-        "question": "Can I edit existing videos with Seedance 2.0?",
-        "answer": "Yes! Seedance 2.0 supports video editing capabilities. You can replace characters, modify specific actions or segments, add new elements, or remove unwanted content - all while preserving the rest of your video. This means you can make targeted adjustments without regenerating everything from scratch."
+        "question": "Can I edit existing videos with Gpt Image 2 Api?",
+        "answer": "Yes! Gpt Image 2 Api supports video editing capabilities. You can replace characters, modify specific actions or segments, add new elements, or remove unwanted content - all while preserving the rest of your video. This means you can make targeted adjustments without regenerating everything from scratch."
       },
       {
         "question": "How does the audio feature work?",
-        "answer": "Seedance 2.0 includes built-in audio generation that creates context-aware sound effects and background music. You can also upload your own audio files to sync video content to specific beats or rhythms, perfect for music videos and dance content."
+        "answer": "Gpt Image 2 Api includes built-in audio generation that creates context-aware sound effects and background music. You can also upload your own audio files to sync video content to specific beats or rhythms, perfect for music videos and dance content."
       },
       {
         "question": "What video lengths and resolutions are supported?",
-        "answer": "Seedance 2.0 generates videos from 4 to 15 seconds in length. Multiple aspect ratios are supported including 16:9, 9:16, 4:3, 3:4, 21:9, and 1:1. The model supports various resolutions up to 1080p for production-ready output."
+        "answer": "Gpt Image 2 Api generates videos from 4 to 15 seconds in length. Multiple aspect ratios are supported including 16:9, 9:16, 4:3, 3:4, 21:9, and 1:1. The model supports various resolutions up to 1080p for production-ready output."
       },
       {
         "question": "How is character consistency maintained?",
-        "answer": "Seedance 2.0 features significantly improved consistency for faces, clothing, and styles. By referencing character images, the model can maintain identity across longer videos and complex movements."
+        "answer": "Gpt Image 2 Api features significantly improved consistency for faces, clothing, and styles. By referencing character images, the model can maintain identity across longer videos and complex movements."
       },
       {
         "question": "How can I upgrade my subscription?",
-        "answer": "Our system currently allows only one active subscription at a time. Please cancel your current plan in Dashboard > Subscription first, then subscribe to the new plan. If you need help, email support@sdanceai.com."
+        "answer": "Our system currently allows only one active subscription at a time. Please cancel your current plan in Dashboard > Subscription first, then subscribe to the new plan. If you need help, email support@your-domain.com."
       },
       {
         "question": "How can I purchase more credits?",
@@ -540,7 +571,7 @@
       },
       {
         "question": "How do I cancel my subscription?",
-        "answer": "You can cancel your subscription at any time in Dashboard > Subscription via the billing portal (Stripe or Creem). If needed, contact support@sdanceai.com."
+        "answer": "You can cancel your subscription at any time in Dashboard > Subscription via the billing portal (billing provider). If needed, contact support@your-domain.com."
       },
       {
         "question": "Are there any content restrictions?",
@@ -550,7 +581,7 @@
   },
   "CTA": {
     "title": "Ready to Experience Multi-Modal AI Video Creation?",
-    "description": "Use Seedance 2.0 to bring your ideas to life with natural language controls and flexible reference workflows.",
+    "description": "Use Gpt Image 2 Api to turn ideas into production-ready images with flexible prompt control and fast iteration.",
     "button": "Start Creating Now",
     "trustText": "Built for creators who need fast, production-ready AI video workflows.",
     "features": {

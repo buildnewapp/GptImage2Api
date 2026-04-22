@@ -180,7 +180,7 @@
   },
   "Blogs": {
     "title": "博客列表",
-    "description": "分享 AI 视频创作经验、产品更新与创作者实战内容。",
+    "description": "分享 AI 图像创作经验、产品更新与创作者实战内容。",
     "emptyState": {
       "title": "暂无博客文章",
       "description": "我们正在创作精彩内容，敬请期待！"
@@ -208,12 +208,12 @@
     "description": "关于我们"
   },
   "Pricing": {
-    "title": "Seedance 2.0 价格",
-    "description": "查看 Seedance 2.0 的价格方案"
+    "title": "GptImage2Api 定价",
+    "description": "查看 GptImage2Api 的价格方案"
   },
   "DashboardGenerate": {
     "title": "生成",
-    "description": "使用 AI Video Studio 创建视频。"
+    "description": "使用 AI Studio 创建图像。"
   },
   "AIDemo": {
     "title": "AI 能力展示",
@@ -221,11 +221,11 @@
     "metaDescription": "探索 AI 能力，包括多提供商的聊天、图像生成和视频生成。",
     "hub": {
       "chatTitle": "AI 聊天",
-      "chatDescription": "由 OpenAI、Anthropic、Google、DeepSeek、xAI 和 OpenRouter 的 18+ 语言模型驱动的单轮和多轮对话。",
+      "chatDescription": "由多家主流语言模型驱动的单轮和多轮对话。",
       "imageTitle": "AI 图像生成",
-      "imageDescription": "使用 GPT Image、Nano Banana、Grok、Flux（通过 Replicate 和 fal.ai）进行文生图和图生图。",
+      "imageDescription": "支持文生图和图生图，适用于生产级视觉内容工作流。",
       "videoTitle": "AI 视频生成",
-      "videoDescription": "使用 Seedance、Kling 和 Wan（通过 Replicate 和 fal.ai）进行文生视频和图生视频。",
+      "videoDescription": "同一套 AI Studio 里也可选配视频生成能力。",
       "tagline": "即插即用的 AI 组件，助开发者分钟级构建 AI 功能。"
     },
     "chat": {
@@ -459,7 +459,7 @@
     ]
   },
   "Footer": {
-    "Copyright": "版权所有 © {year} {name} 保留所有权利。独立产品，与 Google/OpenAI/AI 模型提供商无关。",
+    "Copyright": "版权所有 © {year} {name} 保留所有权利。独立产品。",
     "About": "关于",
     "PrivacyPolicy": "隐私政策",
     "TermsOfService": "条款与条件",
@@ -474,12 +474,8 @@
               "name": "功能特性"
             },
             {
-              "href": "/seedance2",
-              "name": "Seedance 2"
-            },
-            {
-              "href": "/seedance-15",
-              "name": "Seedance 1.5"
+              "href": "/dashboard/generate",
+              "name": "Gpt Image 2 Generator"
             }
           ]
         },
@@ -543,6 +539,6 @@
     "privacy": "隐私政策",
     "terms": "服务条款",
     "signIn": "登录",
-    "footerAbout": "先进的可控多模态 AI 视频生成平台。"
+    "footerAbout": "面向生产场景的高保真 AI 图像生成与编辑平台。"
   }
 }

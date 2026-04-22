@@ -180,7 +180,7 @@
   },
   "Blogs": {
     "title": "Blog Posts",
-    "description": "Insights on AI video creation, product updates, and creator workflows.",
+    "description": "Insights on AI image creation, product updates, and creator workflows.",
     "emptyState": {
       "title": "No blog posts",
       "description": "We are creating exciting content, please stay tuned!"
@@ -208,12 +208,12 @@
     "description": "About the site"
   },
   "Pricing": {
-    "title": "seedance 2.0 Pricing",
-    "description": "Pricing plans for the seedance 2.0"
+    "title": "GptImage2Api Pricing",
+    "description": "Pricing plans for GptImage2Api"
   },
   "DashboardGenerate": {
     "title": "Generate",
-    "description": "Create videos with AI Video Studio."
+    "description": "Create images with AI Studio."
   },
   "AIDemo": {
     "title": "AI Capabilities",
@@ -221,11 +221,11 @@
     "metaDescription": "Explore AI capabilities including chat, image generation, and video generation with multiple providers.",
     "hub": {
       "chatTitle": "AI Chat",
-      "chatDescription": "Single-turn and multi-turn conversations powered by 18+ language models from OpenAI, Anthropic, Google, DeepSeek, xAI, and OpenRouter.",
+      "chatDescription": "Single-turn and multi-turn conversations powered by multiple leading language models.",
       "imageTitle": "AI Image Generation",
-      "imageDescription": "Text-to-image and image-to-image generation with GPT Image, Nano Banana, Grok, Flux via Replicate and fal.ai.",
+      "imageDescription": "Text-to-image and image-to-image generation for production-ready visual workflows.",
       "videoTitle": "AI Video Generation",
-      "videoDescription": "Text-to-video and image-to-video generation with Seedance, Kling, and Wan via Replicate and fal.ai.",
+      "videoDescription": "Optional video generation workflows are available in the same AI Studio experience.",
       "tagline": "Drop-in components for developers. Build AI features in minutes."
     },
     "chat": {
@@ -459,7 +459,7 @@
     ]
   },
   "Footer": {
-    "Copyright": "Copyright © {year} {name} All rights reserved. Independent product. Not affiliated with Google/OpenAI/AI model providers.",
+    "Copyright": "Copyright © {year} {name} All rights reserved. Independent product.",
     "About": "About",
     "PrivacyPolicy": "Privacy Policy",
     "TermsOfService": "Terms of Service",
@@ -474,12 +474,8 @@
               "name": "Features"
             },
             {
-              "href": "/seedance2",
-              "name": "Seedance 2"
-            },
-            {
-              "href": "/seedance-15",
-              "name": "Seedance 1.5"
+              "href": "/dashboard/generate",
+              "name": "Gpt Image 2 Generator"
             }
           ]
         },
@@ -543,6 +539,6 @@
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "signIn": "Sign In",
-    "footerAbout": "The advanced controllable multi-modal AI video generation platform."
+    "footerAbout": "A production-ready platform for high-fidelity AI image generation and editing."
   }
 }

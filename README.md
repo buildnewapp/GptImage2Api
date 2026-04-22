@@ -174,4 +174,47 @@ https://gpt-image-2-ai.org/
 
 不能暴露别人的品牌和网址
 ```
+```
+根据内容修改 common.json  Landing.json
+```
+```
+curl 'https://youmind.com/youhome-api/prompts' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7' \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json' \  
+  -H 'referer: https://youmind.com/gpt-image-2-prompts' \
+  --data-raw '{"model":"gpt-image-2","page":9,"limit":18,"locale":"en-US","campaign":"gpt-image-2-prompts","filterMode":"imageCategories"}'
 
+根据接口获取提示词，帮我整理下收集下来，保持到papi.json 中
+```
+```
+https://youmind.com/gpt-image-2-prompts
+这个页面有很多提示词，帮我整理下收集下来，保持到ym.json 中
+
+[papi.json](papi.json) 下载 json 中所有的资源 ，比如 https://cms-assets.youmind.com/media/1776756791925_yfoe75_HGZ3LYuaYAAkuVr.jpg
+下载到 media目录下 文件名 1776756791925_yfoe75_HGZ3LYuaYAAkuVr.jpg
+
+通过.env 中的r2 配置，把media 目录上传到 r2 上
+需要放到media 目录下
+```
+```
+[Footer.tsx](components/home/video/Footer.tsx) 
+Products 中去除 Showcase、Prompts
+添加 Gpt Image 2 Generator (/dashboard/generate)
+
+修改内容 参考 
+Title
+GptImage2Api – Fast & Reliable GPT Image 2 API for Developers
+
+Description
+GptImage2Api provides powerful GPT Image 2 API access for developers, startups, and businesses to generate high-quality AI images with simple REST endpoints. Build image generation apps, automate creative workflows, and integrate GPT Image 2 API into your products instantly.
+```
+```
+[pricing-config.ts](lib/db/seed/pricing-config.ts) 修改价格文件中的描述，主要是不同语言 features
+修改为符合当前项目的配置 参考 [Landing.json](i18n/messages/en/Landing.json)
+不要删减内容，改成符合当前网站的权益
+```
+```
+[sync-paypal-products.ts](lib/db/seed/sync-paypal-products.ts) 中上传产品和计划加上配置文件中的 ADMIN_NAME ，比如 Pro，paypal 后台应该是 GptApi Pro
+```

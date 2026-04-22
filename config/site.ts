@@ -12,8 +12,9 @@ const EMAIL_URL = 'support@gptimage2api.net'
 
 export const siteConfig: SiteConfig = {
   name: "GptImage2Api",
-  tagLine:"Gpt Image 2 Api",
-  description:"Core Function: Gpt Image 2 Api",
+  tagLine: "GptImage2Api – Fast & Reliable GPT Image 2 API for Developers",
+  description:
+    "GptImage2Api provides powerful GPT Image 2 API access for developers, startups, and businesses to generate high-quality AI images with simple REST endpoints. Build image generation apps, automate creative workflows, and integrate GPT Image 2 API into your products instantly.",
   url: BASE_URL,
   authors: [
     {

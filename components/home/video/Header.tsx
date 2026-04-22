@@ -8,7 +8,7 @@ import { getTranslations } from "next-intl/server";
 type User = typeof userSchema.$inferSelect;
 
 export default async function VideoHeader() {
-  const t = await getTranslations("VideoTemplate");
+  const t = await getTranslations("ImageTemplate");
   const navigation = t.raw("navigation") as VideoTemplateNavigation;
   const session = await getSession();
   const user = session?.user;

@@ -81,10 +81,16 @@ function isPayPalRecurringPlan(plan: (typeof pricingPlans)[number]) {
   )
 }
 
+function buildPayPalPlanBaseName(plan: (typeof pricingPlans)[number]) {
+  const adminName = (process.env.ADMIN_NAME ?? '').trim()
+  const cardTitle = plan.cardTitle.trim()
+  return adminName ? `${adminName} ${cardTitle}` : cardTitle
+}
+
 function buildPayPalProductPayload(plan: (typeof pricingPlans)[number]) {
   return {
     description: (plan.cardDescription ?? plan.cardTitle).trim(),
-    name: plan.cardTitle.trim(),
+    name: buildPayPalPlanBaseName(plan),
     type: 'SERVICE',
   }
 }
@@ -123,7 +129,7 @@ function buildPayPalPlanPayload(
       },
     ],
     description: (plan.cardDescription ?? plan.cardTitle).trim(),
-    name: `${plan.cardTitle.trim()} ${plan.recurringInterval === 'year' ? 'Yearly' : 'Monthly'}`,
+    name: `${buildPayPalPlanBaseName(plan)} ${plan.recurringInterval === 'year' ? 'Yearly' : 'Monthly'}`,
     payment_preferences: {
       auto_bill_outstanding: true,
       payment_failure_threshold: 1,
