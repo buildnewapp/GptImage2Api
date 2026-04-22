@@ -1359,6 +1359,42 @@
         }
       ]
     },
+    "image:gpt-image-2-text-to-image": {
+      "addRows": [
+        {
+          "modelDescription": "gpt-image-2 text-to-image",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "6",
+          "creditUnit": "per image",
+          "usdPrice": "0.03",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gpt/gpt-image-2-text-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:gpt-image-2-text-to-image",
+          "runtimeModel": "gpt-image-2-text-to-image"
+        }
+      ]
+    },
+    "image:gpt-image-2-image-to-image": {
+      "addRows": [
+        {
+          "modelDescription": "gpt-image-2 image-to-image",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "6",
+          "creditUnit": "per image",
+          "usdPrice": "0.03",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gpt/gpt-image-2-image-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:gpt-image-2-image-to-image",
+          "runtimeModel": "gpt-image-2-image-to-image"
+        }
+      ]
+    },
     "image:seedream5-0-lite-text-to-image": {
       "addRows": [
         {

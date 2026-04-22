@@ -3139,6 +3139,327 @@
       "pricingRows": []
     },
     {
+      "id": "image:gpt-image-2-text-to-image",
+      "category": "image",
+      "title": "GPT Image-2 - Text to Image",
+      "docUrl": "https://docs.kie.ai/market/gpt/gpt-image-2-text-to-image.md",
+      "provider": "GPT Image-2",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "gpt-image-2-text-to-image"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "The model name used for generation. This field is required. This endpoint must use the `gpt-image-2-text-to-image` model.",
+            "enum": [
+              "gpt-image-2-text-to-image"
+            ],
+            "default": "gpt-image-2-text-to-image",
+            "x-apidog-enum": [
+              {
+                "value": "gpt-image-2-text-to-image",
+                "name": "",
+                "description": ""
+              }
+            ],
+            "examples": [
+              "gpt-image-2-text-to-image"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Callback URL for task completion notifications. Optional parameter. If provided, the system will send a POST request to this URL when the task completes, whether it succeeds or fails. If omitted, no callback notification will be sent.",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the text-to-image task.",
+            "required": [
+              "prompt"
+            ],
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "description": "Text prompt. Required, maximum 20,000 characters.",
+                "minLength": 1,
+                "maxLength": 20000,
+                "examples": [
+                  "A cinematic night city poster with neon reflections on a rainy street."
+                ]
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "1:1",
+                  "16:9",
+                  "9:16",
+                  "3:2"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "auto",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "1:1",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "16:9",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "9:16",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "3:2",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "description": "The aspect ratio of the generated image is set to auto by default."
+              },
+              "nsfw_checker": {
+                "type": "boolean",
+                "default": false,
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.",
+                "examples": [
+                  false
+                ]
+              }
+            },
+            "x-apidog-orders": [
+              "prompt",
+              "aspect_ratio",
+              "nsfw_checker"
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "gpt-image-2-text-to-image",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "A cinematic night city poster with neon reflections on a rainy street.",
+          "nsfw_checker": false
+        }
+      },
+      "pricingRows": [
+        {
+          "modelDescription": "gpt-image-2 text-to-image",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "6",
+          "creditUnit": "per image",
+          "usdPrice": "0.03",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gpt/gpt-image-2-text-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:gpt-image-2-text-to-image",
+          "runtimeModel": "gpt-image-2-text-to-image"
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
+    },
+    {
+      "id": "image:gpt-image-2-image-to-image",
+      "category": "image",
+      "title": "GPT Image 2 - Image To Image",
+      "docUrl": "https://docs.kie.ai/market/gpt/gpt-image-2-image-to-image.md",
+      "provider": "GPT Image 2",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "gpt-image-2-image-to-image"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "gpt-image-2-image-to-image"
+            ],
+            "default": "gpt-image-2-image-to-image",
+            "description": "The model name used for generation. This field is required. This endpoint must use the `gpt-image-2-image-to-image` model.",
+            "examples": [
+              "gpt-image-2-image-to-image"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Callback URL for task completion notifications. Optional parameter. If provided, the system will send a POST request to this URL when the task completes, whether it succeeds or fails. If omitted, no callback notification will be sent.",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the image-to-image task.",
+            "required": [
+              "prompt",
+              "input_urls"
+            ],
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "description": "Text prompts, up to 20,000 characters.",
+                "examples": [
+                  "Transform this product image into a premium e-commerce poster style."
+                ]
+              },
+              "input_urls": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "description": "Array of input image URLs.",
+                "examples": [
+                  [
+                    "https://example.com/"
+                  ]
+                ],
+                "maxItems": 16
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "1:1",
+                  "16:9",
+                  "9:16",
+                  "3:2",
+                  "2:3"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "auto",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "1:1",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "16:9",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "9:16",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "3:2",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "2:3",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "description": "The aspect ratio of the generated image is set to auto by default."
+              },
+              "nsfw_checker": {
+                "type": "boolean",
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+              }
+            },
+            "x-apidog-orders": [
+              "prompt",
+              "input_urls",
+              "aspect_ratio",
+              "nsfw_checker"
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "gpt-image-2-image-to-image",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "Transform this product image into a premium e-commerce poster style.",
+          "input_urls": [
+            "https://example.png"
+          ]
+        }
+      },
+      "pricingRows": [
+        {
+          "modelDescription": "gpt-image-2 image-to-image",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "6",
+          "creditUnit": "per image",
+          "usdPrice": "0.03",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gpt/gpt-image-2-image-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:gpt-image-2-image-to-image",
+          "runtimeModel": "gpt-image-2-image-to-image"
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
+    },
+    {
       "id": "image:topaz-image-upscale",
       "category": "image",
       "title": "Topaz - Image Upscale",

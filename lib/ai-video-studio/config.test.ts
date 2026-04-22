@@ -42,6 +42,10 @@ test("exposes the Sora2 family for AI Video Studio", () => {
     true,
   );
   assert.equal(
+    AI_VIDEO_STUDIO_FAMILIES.some((family) => family.key === "gpt-image-2"),
+    true,
+  );
+  assert.equal(
     AI_VIDEO_STUDIO_FAMILIES.some((family) => family.key === "seedream-image"),
     true,
   );
@@ -141,6 +145,10 @@ test("exposes broader KIE video families with older supported variants", () => {
   assert.deepEqual(
     getAiVideoStudioVersions("nano-banana").map((version) => version.key),
     ["nano-banana-pro", "nano-banana-2"],
+  );
+  assert.deepEqual(
+    getAiVideoStudioVersions("gpt-image-2").map((version) => version.key),
+    ["gpt-image-2-text-to-image", "gpt-image-2-image-to-image"],
   );
   assert.deepEqual(
     getAiVideoStudioVersions("seedream-image").map((version) => version.key),
@@ -438,6 +446,20 @@ test("resolves version selections to a single ai-studio public model id", () => 
   );
   assert.equal(
     resolveAiVideoStudioModelId({
+      familyKey: "gpt-image-2",
+      versionKey: "gpt-image-2-text-to-image",
+    }),
+    "image:gpt-image-2-text-to-image",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "gpt-image-2",
+      versionKey: "gpt-image-2-image-to-image",
+    }),
+    "image:gpt-image-2-image-to-image",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
       familyKey: "seedream-image",
       versionKey: "seedream-5-lite-text-to-image",
     }),
@@ -672,6 +694,20 @@ test("resolves ai video studio selection metadata from a model id", () => {
     {
       familyKey: "nano-banana",
       versionKey: "nano-banana-pro",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("image:gpt-image-2-text-to-image"),
+    {
+      familyKey: "gpt-image-2",
+      versionKey: "gpt-image-2-text-to-image",
+    },
+  );
+  assert.deepEqual(
+    resolveAiVideoStudioSelectionFromModelId("image:gpt-image-2-image-to-image"),
+    {
+      familyKey: "gpt-image-2",
+      versionKey: "gpt-image-2-image-to-image",
     },
   );
   assert.deepEqual(

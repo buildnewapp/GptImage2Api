@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-04-18T05:14:33.130Z",
+  "generatedAt": "2026-04-22T09:45:15.228Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -2877,6 +2877,281 @@
       "pricingRows": []
     },
     {
+      "id": "image:gpt-image-2-text-to-image",
+      "category": "image",
+      "title": "GPT Image-2 - Text to Image",
+      "docUrl": "https://docs.kie.ai/market/gpt/gpt-image-2-text-to-image.md",
+      "provider": "GPT Image-2",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "gpt-image-2-text-to-image"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "The model name used for generation. This field is required. This endpoint must use the `gpt-image-2-text-to-image` model.",
+            "enum": [
+              "gpt-image-2-text-to-image"
+            ],
+            "default": "gpt-image-2-text-to-image",
+            "x-apidog-enum": [
+              {
+                "value": "gpt-image-2-text-to-image",
+                "name": "",
+                "description": ""
+              }
+            ],
+            "examples": [
+              "gpt-image-2-text-to-image"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Callback URL for task completion notifications. Optional parameter. If provided, the system will send a POST request to this URL when the task completes, whether it succeeds or fails. If omitted, no callback notification will be sent.",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the text-to-image task.",
+            "required": [
+              "prompt"
+            ],
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "description": "Text prompt. Required, maximum 20,000 characters.",
+                "minLength": 1,
+                "maxLength": 20000,
+                "examples": [
+                  "A cinematic night city poster with neon reflections on a rainy street."
+                ]
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "1:1",
+                  "16:9",
+                  "9:16",
+                  "3:2"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "auto",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "1:1",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "16:9",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "9:16",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "3:2",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "description": "The aspect ratio of the generated image is set to auto by default."
+              },
+              "nsfw_checker": {
+                "type": "boolean",
+                "default": false,
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.",
+                "examples": [
+                  false
+                ]
+              }
+            },
+            "x-apidog-orders": [
+              "prompt",
+              "aspect_ratio",
+              "nsfw_checker"
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "gpt-image-2-text-to-image",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "A cinematic night city poster with neon reflections on a rainy street.",
+          "nsfw_checker": false
+        }
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "image:gpt-image-2-image-to-image",
+      "category": "image",
+      "title": "GPT Image 2 - Image To Image",
+      "docUrl": "https://docs.kie.ai/market/gpt/gpt-image-2-image-to-image.md",
+      "provider": "GPT Image 2",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "gpt-image-2-image-to-image"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "gpt-image-2-image-to-image"
+            ],
+            "default": "gpt-image-2-image-to-image",
+            "description": "The model name used for generation. This field is required. This endpoint must use the `gpt-image-2-image-to-image` model.",
+            "examples": [
+              "gpt-image-2-image-to-image"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Callback URL for task completion notifications. Optional parameter. If provided, the system will send a POST request to this URL when the task completes, whether it succeeds or fails. If omitted, no callback notification will be sent.",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the image-to-image task.",
+            "required": [
+              "prompt",
+              "input_urls"
+            ],
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "description": "Text prompts, up to 20,000 characters.",
+                "examples": [
+                  "Transform this product image into a premium e-commerce poster style."
+                ]
+              },
+              "input_urls": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "description": "Array of input image URLs.",
+                "examples": [
+                  [
+                    "https://example.com/"
+                  ]
+                ],
+                "maxItems": 16
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "1:1",
+                  "16:9",
+                  "9:16",
+                  "3:2",
+                  "2:3"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "auto",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "1:1",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "16:9",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "9:16",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "3:2",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "2:3",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "description": "The aspect ratio of the generated image is set to auto by default."
+              },
+              "nsfw_checker": {
+                "type": "boolean",
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+              }
+            },
+            "x-apidog-orders": [
+              "prompt",
+              "input_urls",
+              "aspect_ratio",
+              "nsfw_checker"
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "gpt-image-2-image-to-image",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "Transform this product image into a premium e-commerce poster style.",
+          "input_urls": [
+            "https://example.png"
+          ]
+        }
+      },
+      "pricingRows": []
+    },
+    {
       "id": "image:topaz-image-upscale",
       "category": "image",
       "title": "Topaz - Image Upscale",
@@ -5546,7 +5821,7 @@
               },
               "aspect_ratio": {
                 "type": "string",
-                "description": "(Optional) Output aspect ratio when no image input is provided. When `input_urls` is present, the frontend will hide and not pass this field.",
+                "description": "(Optional) Output aspect ratio when no image input is provided. ",
                 "examples": [
                   "1:1"
                 ],
@@ -5828,7 +6103,7 @@
               },
               "aspect_ratio": {
                 "type": "string",
-                "description": "(Optional) Output aspect ratio when no image input is provided. When `input_urls` is present, the frontend will hide and not pass this field.",
+                "description": "(Optional) Output aspect ratio when no image input is provided. ",
                 "examples": [
                   "1:1"
                 ],
@@ -8278,9 +8553,6 @@
               "web_search",
               "nsfw_checker"
             ],
-            "required": [
-              "web_search"
-            ],
             "x-apidog-ignore-properties": []
           }
         },
@@ -8301,7 +8573,7 @@
           "reference_image_urls": [
             "https://templateb.aiquickdraw.com/custom-page/akr/section-images/example1.png"
           ],
-          "reference_video_urls ": [
+          "reference_video_urls": [
             "https://templateb.aiquickdraw.com/custom-page/akr/section-images/example1.mp4"
           ],
           "reference_audio_urls": [
@@ -8539,9 +8811,6 @@
               "web_search",
               "nsfw_checker"
             ],
-            "required": [
-              "web_search"
-            ],
             "x-apidog-ignore-properties": []
           }
         },
@@ -8562,7 +8831,7 @@
           "reference_image_urls": [
             "https://templateb.aiquickdraw.com/custom-page/akr/section-images/example1.png"
           ],
-          "reference_video_urls ": [
+          "reference_video_urls": [
             "https://templateb.aiquickdraw.com/custom-page/akr/section-images/example1.mp4"
           ],
           "reference_audio_urls": [
@@ -8671,17 +8940,8 @@
                 ]
               },
               "duration": {
-                "description": "Duration of the video in seconds",
-                "type": "integer",
-                "enum": [
-                  4,
-                  8,
-                  12
-                ],
-                "default": 8,
-                "examples": [
-                  8
-                ]
+                "type": "string",
+                "description": "Duration of the video in seconds"
               },
               "fixed_lens": {
                 "description": "Seedance adds dynamic camera movement. Enable this feature to lock the camera for stable, static shots.\n\n- **true**: Lock camera for static shots\n- **false**: Allow dynamic camera movement",
@@ -8738,7 +8998,7 @@
           ],
           "aspect_ratio": "1:1",
           "resolution": "720p",
-          "duration": 8,
+          "duration": "8",
           "fixed_lens": false,
           "generate_audio": false,
           "nsfw_checker": false
@@ -13187,14 +13447,6 @@
                   "https://example.com/demo/video.mp4"
                 ]
               },
-              "reference_image": {
-                "type": "string",
-                "format": "uri",
-                "description": "Optional reference image URL for character, clothing, or style guidance.\n\n- Formats: `JPEG`, `JPG`, `PNG` (no alpha channel), `BMP`, `WEBP`\n- Resolution: width and height range `[240,8000]` pixels\n- Aspect ratio: `1:8` to `8:1`\n- File size: up to `20MB`\n- Supports public `http/https` URLs or temporary `oss` URLs",
-                "examples": [
-                  "https://example.com/demo/reference.png"
-                ]
-              },
               "resolution": {
                 "type": "string",
                 "enum": [
@@ -13271,6 +13523,14 @@
               "nsfw_checker": {
                 "type": "boolean",
                 "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+              },
+              "reference_image": {
+                "type": "string",
+                "format": "uri",
+                "description": "Optional reference image URL for character, clothing, or style guidance.\n\n- Formats: `JPEG`, `JPG`, `PNG` (no alpha channel), `BMP`, `WEBP`\n- Resolution: width and height range `[240,8000]` pixels\n- Aspect ratio: `1:8` to `8:1`\n- Supports public `http/https` URLs or temporary `oss` URLs",
+                "examples": [
+                  "https://example.com/demo/reference.png"
+                ]
               }
             },
             "x-apidog-orders": [
@@ -13575,7 +13835,7 @@
             "description": "Input parameters for the generation task",
             "properties": {
               "video_url": {
-                "description": "URL of the video to upscale (File URL after upload, not file content; Accepted types: video/mp4, video/quicktime, video/x-matroska; Max size: 10.0MB)",
+                "description": "URL of the video to upscale (File URL after upload, not file content; Accepted types: video/mp4, video/quicktime, video/x-matroska; Max size: 50.0MB)",
                 "type": "string",
                 "examples": [
                   "https://file.aiquickdraw.com/custom-page/akr/section-images/1758166466095hvbwkrpw.mp4"
@@ -16295,6 +16555,14 @@
             "examples": [
               false
             ]
+          },
+          "max_tokens": {
+            "type": "number",
+            "default": 4096,
+            "examples": [
+              4096
+            ],
+            "description": "Optional Claude output token limit. Leave empty to use the default of 4096."
           }
         },
         "required": [
@@ -16306,7 +16574,8 @@
           "messages",
           "tools",
           "thinkingFlag",
-          "stream"
+          "stream",
+          "max_tokens"
         ],
         "examples": [
           {
@@ -16367,7 +16636,8 @@
           }
         ],
         "thinkingFlag": true,
-        "stream": false
+        "stream": false,
+        "max_tokens": 4096
       },
       "pricingRows": []
     },
@@ -16545,6 +16815,14 @@
             "examples": [
               false
             ]
+          },
+          "max_tokens": {
+            "type": "number",
+            "default": 4096,
+            "examples": [
+              4096
+            ],
+            "description": "Optional Claude output token limit. Leave empty to use the default of 4096."
           }
         },
         "required": [
@@ -16556,7 +16834,8 @@
           "messages",
           "tools",
           "thinkingFlag",
-          "stream"
+          "stream",
+          "max_tokens"
         ],
         "examples": [
           {
@@ -16617,7 +16896,8 @@
           }
         ],
         "thinkingFlag": true,
-        "stream": false
+        "stream": false,
+        "max_tokens": 4096
       },
       "pricingRows": []
     },
@@ -16795,6 +17075,14 @@
             "examples": [
               false
             ]
+          },
+          "max_tokens": {
+            "type": "number",
+            "default": 4096,
+            "examples": [
+              4096
+            ],
+            "description": "Optional Claude output token limit. Leave empty to use the default of 4096."
           }
         },
         "required": [
@@ -16806,7 +17094,8 @@
           "messages",
           "tools",
           "thinkingFlag",
-          "stream"
+          "stream",
+          "max_tokens"
         ],
         "examples": [
           {
@@ -16867,7 +17156,8 @@
           }
         ],
         "thinkingFlag": true,
-        "stream": false
+        "stream": false,
+        "max_tokens": 4096
       },
       "pricingRows": []
     },
@@ -17046,6 +17336,14 @@
               false
             ]
           },
+          "max_tokens": {
+            "type": "number",
+            "default": 4096,
+            "examples": [
+              4096
+            ],
+            "description": "Optional Claude output token limit. Leave empty to use the default of 4096."
+          },
           "output_config": {
             "type": "object",
             "description": "Structured output configuration.",
@@ -17090,7 +17388,8 @@
           "tools",
           "thinkingFlag",
           "stream",
-          "output_config"
+          "output_config",
+          "max_tokens"
         ],
         "examples": [
           {
@@ -17168,6 +17467,7 @@
         ],
         "thinkingFlag": true,
         "stream": false,
+        "max_tokens": 4096,
         "output_config": {
           "format": {
             "type": "json_schema",
@@ -17361,6 +17661,14 @@
             "examples": [
               false
             ]
+          },
+          "max_tokens": {
+            "type": "number",
+            "default": 4096,
+            "examples": [
+              4096
+            ],
+            "description": "Optional Claude output token limit. Leave empty to use the default of 4096."
           }
         },
         "required": [
@@ -17372,7 +17680,8 @@
           "messages",
           "tools",
           "thinkingFlag",
-          "stream"
+          "stream",
+          "max_tokens"
         ],
         "examples": [
           {
@@ -17433,7 +17742,8 @@
           }
         ],
         "thinkingFlag": true,
-        "stream": false
+        "stream": false,
+        "max_tokens": 4096
       },
       "pricingRows": []
     },
@@ -17959,15 +18269,6 @@
               "16:9"
             ]
           },
-          "seeds": {
-            "type": "integer",
-            "description": "(Optional) Random seed parameter to control the randomness of the generated content. Value range: 10000-99999. The same seed will generate similar video content, different seeds will generate different content. If not provided, the system will assign one automatically.",
-            "minimum": 10000,
-            "maximum": 99999,
-            "examples": [
-              12345
-            ]
-          },
           "callBackUrl": {
             "type": "string",
             "description": "Completion callback URL for receiving video generation status updates.\n\n- Optional but recommended for production use\n- System will POST task completion status to this URL when the video generation is completed\n- Callback will include task results, video URLs, and status information\n- Your callback endpoint should accept POST requests with JSON payload\n- For detailed callback format and implementation guide, see [Callback Documentation](https://docs.kie.ai/veo3-api/generate-veo-3-video-callbacks)\n- Alternatively, use the Get Video Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
@@ -18036,7 +18337,6 @@
           "model",
           "generationType",
           "aspect_ratio",
-          "seeds",
           "callBackUrl",
           "enableFallback",
           "enableTranslation",
@@ -18072,7 +18372,6 @@
         "watermark": "MyBrand",
         "callBackUrl": "http://your-callback-url.com/complete",
         "aspect_ratio": "16:9",
-        "seeds": 12345,
         "enableFallback": false,
         "enableTranslation": true,
         "generationType": "REFERENCE_2_VIDEO"
@@ -19647,6 +19946,8 @@
         "type": "object",
         "required": [
           "uploadUrlList",
+          "style",
+          "title",
           "customMode",
           "model",
           "callBackUrl"
@@ -20362,7 +20663,8 @@
           }
         },
         "required": [
-          "prompt"
+          "prompt",
+          "model"
         ],
         "x-apidog-orders": [
           "prompt",

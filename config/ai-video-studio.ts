@@ -510,15 +510,36 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     versions: [
       {
         key: "nano-banana-pro",
-        label: "Google - Nano Banana Pro",
+        label: "Nano Banana Pro",
         familyKey: "nano-banana",
         modelId: "image:google-nano-banana-pro",
       },
       {
         key: "nano-banana-2",
-        label: "Google - Nano Banana 2",
+        label: "Nano Banana 2",
         familyKey: "nano-banana",
         modelId: "image:google-nano-banana-2",
+      },
+    ],
+  },
+  {
+    key: "gpt-image-2",
+    label: "GPT Image 2",
+    description: "OpenAI text-to-image and image-to-image workflows",
+    icon: "sora",
+    selectable: true,
+    versions: [
+      {
+        key: "gpt-image-2-text-to-image",
+        label: "Text to Image",
+        familyKey: "gpt-image-2",
+        modelId: "image:gpt-image-2-text-to-image",
+      },
+      {
+        key: "gpt-image-2-image-to-image",
+        label: "Image to Image",
+        familyKey: "gpt-image-2",
+        modelId: "image:gpt-image-2-image-to-image",
       },
     ],
   },
