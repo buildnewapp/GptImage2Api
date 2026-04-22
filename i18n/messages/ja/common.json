@@ -1,8 +1,8 @@
 {
   "Home": {
-    "title": "SdanceAI",
-    "tagLine": "Seedance 2.0 オンライン体験版 & API サービス",
-    "description": "SdanceAI は Seedance 2.0 動画生成モデルを提供。音声同期と 1080p 生成に対応。開発者向けに安定した API を提供し、次世代の AI ビデオ制作をサポートします。"
+    "title": "GptImage2Api – 開発者向けの高速で信頼性の高い GPT Image 2 API",
+    "tagLine": "Gpt Image 2 Api",
+    "description": "GptImage2Api は、開発者・スタートアップ・企業向けに、シンプルな REST エンドポイントで高品質な AI 画像を生成できる強力な GPT Image 2 API を提供します。画像生成アプリの構築、クリエイティブワークフローの自動化、そして GPT Image 2 API の製品への即時統合を実現できます。"
   },
   "Login": {
     "title": "おかえりなさい",

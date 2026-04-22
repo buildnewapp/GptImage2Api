@@ -15,26 +15,27 @@ cp .env.example .env
 
 ```
 -- 1. 创建新用户（请替换为强密码）
-CREATE USER user_demo1 WITH ENCRYPTED PASSWORD 'tN6wN9cE4wQ0eX9k';
+CREATE USER user_gptimage2 WITH ENCRYPTED PASSWORD 'nD6jK1kM0oV2kB8j';
 
 -- 2. 创建新数据库，并将所有者直接指定为刚才创建的新用户
-CREATE DATABASE db_demo1 OWNER user_demo1;
+CREATE DATABASE db_gptimage2 OWNER user_gptimage2;
 
 -- 3. 撤销默认 PUBLIC 角色对该数据库的所有权限（这是隔离的核心）
 -- 这一步确保了其他普通用户（哪怕是以后创建的用户）无法连接到这个新库
-REVOKE ALL PRIVILEGES ON DATABASE db_demo1 FROM PUBLIC;
+REVOKE ALL PRIVILEGES ON DATABASE db_gptimage2 FROM PUBLIC;
 
 -- 4. 显式授予新用户对该库的所有权限
 -- （注意：因为该用户已经是 Owner，默认就有完整权限，但作为标准化脚本显式声明会更清晰）
-GRANT ALL PRIVILEGES ON DATABASE db_demo1 TO user_demo1;
+GRANT ALL PRIVILEGES ON DATABASE db_gptimage2 TO user_gptimage2;
 
 ```
-postgresql://user_demo1:tN6wN9cE4wQ0eX9k@31.97.65.98:9876/db_demo1
+postgresql://user_gptimage2:nD6jK1kM0oV2kB8j@31.97.65.98:9876/db_gptimage2
 
 ### 初始化数据库
 pnpm db:migrate
 
 ### 导入示例定价计划种子数据
+[pricing-config.ts](lib/db/seed/pricing-config.ts)   置空数据中所有 paypalProductId、paypalPlanId、creemProductId
 pnpm db:seed
 
 ## 配置
@@ -43,13 +44,19 @@ https://console.cloud.google.com/auth/clients
 https://nexty.dev/docs/integration/auth#configure-google-oauth
 
 http://localhost:3000
-https://demo.1000aitools.com
+https://gptimage2api.net
 http://localhost:3000/api/auth/callback/google
-https://demo.1000aitools.com/api/auth/callback/google
+https://gptimage2api.net/api/auth/callback/google
 ```
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=364893323217-m7qisfv3p482t3v3e6dbr3ckhpdir308.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=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
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
 ```
+
+### 配置 r2
+
+### 修改对外提供模型
+config/ai-video-studio.ts
+
 ### paypal
 统一使用 `PAY_ENV` 控制支付环境：
 - `PAY_ENV=test`：PayPal Sandbox
@@ -129,3 +136,42 @@ Build cache 设置成 Disabled
 注意：Variables and Secrets + Build 运行时、编译时 变量需要手动一个一个添加进去
 
 ## 部署 vps
+
+## 提示词修改
+```
+名称：GptImage2Api，网站地址：https://gptimage2api.net，邮箱：support@gptimage2api.net，核心功能：Gpt Image 2 Api
+
+根据网站和关键词，帮我生成 title、description、 Short Description、Long Description、Tagline、Slogan、Categories、Tags，宣传包含关键词，符合 producthunt 宣传文案
+```
+```
+修改首页
+
+品牌：GptImage2Api，网站地址：https://gptimage2api.net，邮箱：support@gptimage2api.net
+
+Title
+GptImage2Api – Fast & Reliable GPT Image 2 API for Developers
+
+Description
+GptImage2Api provides powerful GPT Image 2 API access for developers, startups, and businesses to generate high-quality AI images with simple REST endpoints. Build image generation apps, automate creative workflows, and integrate GPT Image 2 API into your products instantly.
+```
+```
+修改页面 /privacy-policy 、/terms-of-service、/refund-policy
+
+品牌：GptImage2Api，网站地址：https://gptimage2api.net，邮箱：support@gptimage2api.net
+
+Title
+GptImage2Api – Fast & Reliable GPT Image 2 API for Developers
+
+Description
+GptImage2Api provides powerful GPT Image 2 API access for developers, startups, and businesses to generate high-quality AI images with simple REST endpoints. Build image generation apps, automate creative workflows, and integrate GPT Image 2 API into your products instantly.
+```
+```
+[ImageTemplate.tsx](components/home/image/ImageTemplate.tsx) 修改首页内容 参考 内容：
+https://fal.ai/gpt-image-2
+https://openai.com/index/introducing-chatgpt-images-2-0/
+https://kie.ai/gpt-image-2
+https://gpt-image-2-ai.org/
+
+不能暴露别人的品牌和网址
+```
+

@@ -1,6 +1,6 @@
 {
   "navigation": {
-    "brand": "Seedance 2.0",
+    "brand": "GptImage2Api",
     "createVideo": "Create Video",
     "credits": "30 credits",
     "darkModeLabel": "Switch to dark mode",
@@ -10,16 +10,16 @@
     "resources": "Resources"
   },
   "hero": {
-    "badge": "Seedance 2.0 web & api",
+    "badge": "Gpt Image 2 Api",
     "ctaLabel": "Generate Video",
     "creditCost": "25",
-    "description": "Create short AI videos from text or a reference image. New users can start with Seedance 2.0 right away and keep earning plenty of credits through daily tasks. Seedance 2.0 in the current web app supports up to 1080p and 15 seconds.",
+    "description": "GptImage2Api focuses on Gpt Image 2 Api. Website: https://gptimage2api.net, Email: support@gptimage2api.net.",
     "durationLabel": "5s",
     "highlight": "Clearly.",
-    "modelLabel": "Seedance 2.0",
+    "modelLabel": "Gpt Image 2 Api",
     "placeholder": "Upload up to 12 references, then type @ to mention them in your prompt. E.g.: @image1 imitates @video1 motion, voice references @audio1.",
     "resolutionLabel": "480p",
-    "title": "Direct Short-Form Video—",
+    "title": "GptImage2Api",
     "videos": [],
     "images": [
       "https://cdn.sdanceai.com/sdanceai/sdance_images/4ryp8bssv.png",

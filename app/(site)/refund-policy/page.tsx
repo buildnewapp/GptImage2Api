@@ -10,8 +10,8 @@ export const revalidate = false;
 
 export async function generateMetadata(): Promise<Metadata> {
   return constructMetadata({
-    title: "Refund Policy",
-    description: `Refund policy and guidelines for ${siteConfig.name} AI video generation services, credits, and subscriptions.`,
+    title: "GptImage2Api – Fast & Reliable GPT Image 2 API for Developers",
+    description: `GptImage2Api provides powerful GPT Image 2 API access for developers, startups, and businesses to generate high-quality AI images with simple REST endpoints. Build image generation apps, automate creative workflows, and integrate GPT Image 2 API into your products instantly.`,
     path: `/refund-policy`,
     locale: "en",
     availableLocales: ["en"],
@@ -35,7 +35,7 @@ export default function RefundPolicyPage() {
               <h2 className="mb-3 text-xl font-semibold">1. Introduction</h2>
               <p className="mb-3">
                 At {siteConfig.name}, we are committed to providing
-                high-quality AI video generation services through our
+                high-quality AI image generation services through our
                 independent platform and supported third-party models. This
                 Refund Policy outlines the terms and conditions under which
                 refunds may be granted for purchases made on our platform,
@@ -60,7 +60,7 @@ export default function RefundPolicyPage() {
               </h2>
               <p className="mb-3">
                 Our platform uses a credit-based system where credits are
-                consumed when generating AI videos. The following policies apply
+                consumed when generating AI images. The following policies apply
                 to credit purchases:
               </p>
 
@@ -76,7 +76,7 @@ export default function RefundPolicyPage() {
                   </li>
                   <li>
                     <strong>Technical Failures</strong>: If credits were consumed
-                    due to technical errors on our platform (e.g., the video
+                    due to technical errors on our platform (e.g., the image
                     generation failed but credits were deducted), we will
                     restore the credits to your account or issue a refund
                   </li>
@@ -100,13 +100,13 @@ export default function RefundPolicyPage() {
                 <ul className="mb-3 list-disc space-y-1 pl-6">
                   <li>
                     <strong>Used Credits</strong>: Credits that have been
-                    consumed through successful video generation are
+                    consumed through successful image generation are
                     non-refundable, as the AI processing resources have been
                     utilized
                   </li>
                   <li>
                     <strong>Dissatisfaction with AI Output</strong>: Since AI
-                    video generation results may vary and are influenced by
+                    image generation results may vary and are influenced by
                     input quality and prompts, we generally cannot offer refunds
                     based on subjective dissatisfaction with the output quality.
                     However, we encourage you to contact support for guidance
@@ -147,10 +147,10 @@ export default function RefundPolicyPage() {
                   </Link>{" "}
                   by opening the billing portal. If you need help, contact{" "}
                   <a
-                    href="mailto:support@sdanceai.com"
+                    href="mailto:support@gptimage2api.net"
                     className="hover:underline text-blue-500"
                   >
-                    support@sdanceai.com
+                    support@gptimage2api.net
                   </a>
                   . Upon cancellation:
                 </p>
@@ -249,10 +249,10 @@ export default function RefundPolicyPage() {
               <p className="mb-3">
                 To request a refund, please contact us at{" "}
                 <a
-                  href="mailto:support@sdanceai.com"
+                  href="mailto:support@gptimage2api.net"
                   className="hover:underline text-blue-500"
                 >
-                  support@sdanceai.com
+                  support@gptimage2api.net
                 </a>{" "}
                 with the following information:
               </p>
@@ -328,7 +328,7 @@ export default function RefundPolicyPage() {
                 8. Credit Restoration vs. Monetary Refund
               </h2>
               <p className="mb-3">
-                In cases of technical failures during video generation, we
+                In cases of technical failures during image generation, we
                 generally prefer to restore credits to your account rather than
                 issue monetary refunds, as this allows you to immediately retry
                 the generation. Credit restoration is typically processed within
@@ -350,10 +350,10 @@ export default function RefundPolicyPage() {
                   If you disagree with our refund decision, you may request a
                   review by contacting us at{" "}
                   <a
-                    href="mailto:paidax@sdanceai.com"
+                    href="mailto:support@gptimage2api.net"
                     className="hover:underline text-blue-500"
                   >
-                    paidax@sdanceai.com
+                    support@gptimage2api.net
                   </a>
                   . Please provide additional information or documentation that
                   supports your case.
@@ -427,29 +427,29 @@ export default function RefundPolicyPage() {
                 <li>
                   <strong>Support Email</strong>:{" "}
                   <a
-                    href="mailto:support@sdanceai.com"
+                    href="mailto:support@gptimage2api.net"
                     className="hover:underline text-blue-500"
                   >
-                    support@sdanceai.com
+                    support@gptimage2api.net
                   </a>
                 </li>
                 <li>
                   <strong>Founder</strong>:{" "}
                   <a
-                    href="mailto:paidax@sdanceai.com"
+                    href="mailto:support@gptimage2api.net"
                     className="hover:underline text-blue-500"
                   >
-                    paidax@sdanceai.com
+                    support@gptimage2api.net
                   </a>{" "}
                   (for escalation)
                 </li>
                 <li>
                   <strong>Website</strong>:{" "}
                   <a
-                    href="https://sdanceai.com"
+                    href="https://gptimage2api.net"
                     className="text-primary hover:underline"
                   >
-                    https://sdanceai.com
+                    https://gptimage2api.net
                   </a>
                 </li>
               </ul>

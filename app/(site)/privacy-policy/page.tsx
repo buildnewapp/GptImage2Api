@@ -11,8 +11,8 @@ export const revalidate = false;
 
 export async function generateMetadata(): Promise<Metadata> {
   return constructMetadata({
-    title: "Privacy Policy",
-    description: `How ${siteConfig.name} collects, uses, and protects your information when using our AI video generation services.`,
+    title: "GptImage2Api – Fast & Reliable GPT Image 2 API for Developers",
+    description: `GptImage2Api provides powerful GPT Image 2 API access for developers, startups, and businesses to generate high-quality AI images with simple REST endpoints. Build image generation apps, automate creative workflows, and integrate GPT Image 2 API into your products instantly.`,
     path: `/privacy-policy`,
     locale: "en",
     availableLocales: ["en"],
@@ -41,17 +41,17 @@ export default function PrivacyPolicyPage() {
                 Welcome to {siteConfig.name} (&quot;we&quot;, &quot;us&quot;,
                 &quot;our&quot;, or &quot;{siteConfig.name}&quot;), accessible at{" "}
                 <a
-                  href="https://sdanceai.com"
+                  href="https://gptimage2api.net"
                   className="text-primary hover:underline"
                 >
-                  https://sdanceai.com
+                  https://gptimage2api.net
                 </a>
                 . We are committed to protecting your privacy and personal
                 information. This Privacy Policy explains how we collect, use,
-                store, share, and protect information when you use our AI video
+                store, share, and protect information when you use our AI image
                 generation platform, including our custom interface and API
-                services built on top of third-party AI models (such as
-                Seedance 1.5, Veo, and Sora).
+                services built on top of third-party AI models (including GPT
+                Image 2 and other compatible third-party models).
               </p>
               <p className="mb-3">
                 {siteConfig.name} is an independent product and is not
@@ -76,7 +76,7 @@ export default function PrivacyPolicyPage() {
                   1. Information You Provide Directly
                 </h3>
                 <p className="mb-3">
-                  When you use our AI video generation services, we may collect
+                  When you use our AI image generation services, we may collect
                   the following types of information:
                 </p>
                 <ul className="mb-3 list-disc space-y-1 pl-6">
@@ -93,12 +93,11 @@ export default function PrivacyPolicyPage() {
                   </li>
                   <li>
                     <strong>User-Uploaded Content</strong>: Images, photos, text
-                    prompts, and other input materials you upload for AI video
+                    prompts, and other input materials you upload for AI image
                     generation
                   </li>
                   <li>
-                    <strong>Generated Content</strong>: AI-generated videos,
-                    audio, and other output content created through our platform
+                    <strong>Generated Content</strong>: AI-generated images and other output content created through our platform
                   </li>
                   <li>
                     <strong>API Usage Data</strong>: If you use our API services,
@@ -130,7 +129,7 @@ export default function PrivacyPolicyPage() {
                   <li>
                     <strong>Usage Data</strong>: Information about how you
                     interact with our services, including access times, features
-                    used, pages viewed, video generation history, and session
+                    used, pages viewed, image generation history, and session
                     duration
                   </li>
                   <li>
@@ -156,10 +155,10 @@ export default function PrivacyPolicyPage() {
               </p>
               <ul className="mb-3 list-disc space-y-1 pl-6">
                 <li>
-                  <strong>Providing AI Video Generation Services</strong>:
+                  <strong>Providing AI Image Generation Services</strong>:
                   Processing your input content (images, text prompts) through
                   integrated third-party AI models via our wrapper interface to
-                  generate videos with native audio sync
+                  generate high-quality images
                 </li>
                 <li>
                   <strong>Account Management</strong>: Creating and managing your
@@ -173,7 +172,7 @@ export default function PrivacyPolicyPage() {
                 </li>
                 <li>
                   <strong>Service Improvement</strong>: Analyzing usage patterns,
-                  optimizing AI model performance, improving video quality, and
+                  optimizing AI model performance, improving image quality, and
                   developing new features
                   {COOKIE_CONSENT_ENABLED &&
                     " (only with your consent for analytics cookies)"}
@@ -209,23 +208,23 @@ export default function PrivacyPolicyPage() {
               </h2>
               <p className="mb-3">
                 Our core service involves processing user-uploaded images and
-                text prompts to generate AI videos. Regarding this content:
+                text prompts to generate AI images. Regarding this content:
               </p>
               <ul className="mb-3 list-disc space-y-1 pl-6">
                 <li>
                   <strong>Processing</strong>: Your uploaded content is processed
                   by integrated third-party AI models via our platform solely
-                  for the purpose of generating the requested video output
+                  for the purpose of generating the requested image output
                 </li>
                 <li>
-                  <strong>Storage</strong>: Generated videos and associated input
+                  <strong>Storage</strong>: Generated images and associated input
                   content are stored on our servers for a reasonable period to
                   allow you to access and download them. Content may be
                   automatically deleted after a specified retention period
                 </li>
                 <li>
                   <strong>No Training Without Consent</strong>: We do not use
-                  your uploaded personal content or generated videos to train our
+                  your uploaded personal content or generated images to train our
                   services or underlying AI models without your explicit consent
                 </li>
                 <li>
@@ -254,7 +253,7 @@ export default function PrivacyPolicyPage() {
                 </li>
                 <li>
                   <strong>AI Model Providers</strong>: Input data may be
-                  transmitted to AI model infrastructure for video generation
+                  transmitted to AI model infrastructure for image generation
                   processing, subject to strict data processing agreements
                 </li>
                 <li>
@@ -293,7 +292,7 @@ export default function PrivacyPolicyPage() {
                   card details
                 </li>
                 <li>
-                  User-uploaded content and generated videos are stored with
+                  User-uploaded content and generated images are stored with
                   access controls and encryption at rest
                 </li>
                 <li>
@@ -324,7 +323,7 @@ export default function PrivacyPolicyPage() {
                   for legal and business purposes
                 </li>
                 <li>
-                  <strong>Generated Videos</strong>: Stored for a limited period
+                  <strong>Generated Images</strong>: Stored for a limited period
                   (typically 30 days) after generation, unless you choose to save
                   them to your account
                 </li>
@@ -380,10 +379,10 @@ export default function PrivacyPolicyPage() {
               <p className="mb-3">
                 To exercise any of these rights, please contact us at{" "}
                 <a
-                  href="mailto:support@sdanceai.com"
+                  href="mailto:support@gptimage2api.net"
                   className="hover:underline text-blue-500"
                 >
-                  support@sdanceai.com
+                  support@gptimage2api.net
                 </a>
                 . We will respond to your request within 30 days.
               </p>
@@ -464,7 +463,7 @@ export default function PrivacyPolicyPage() {
                     </li>
                     <li>
                       <strong>Performance Cookies</strong>: Help us analyze and
-                      improve website and video generation performance
+                      improve website and image generation performance
                     </li>
                   </ul>
                 </>
@@ -490,10 +489,10 @@ export default function PrivacyPolicyPage() {
                 believe that we may have collected personal information from a
                 child, please contact us at{" "}
                 <a
-                  href="mailto:support@sdanceai.com"
+                  href="mailto:support@gptimage2api.net"
                   className="hover:underline text-blue-500"
                 >
-                  support@sdanceai.com
+                  support@gptimage2api.net
                 </a>
                 , and we will promptly take steps to delete that information.
               </p>
@@ -582,19 +581,19 @@ export default function PrivacyPolicyPage() {
                 <li>
                   <strong>Email</strong>:{" "}
                   <a
-                    href="mailto:support@sdanceai.com"
+                    href="mailto:support@gptimage2api.net"
                     className="hover:underline text-blue-500"
                   >
-                    support@sdanceai.com
+                    support@gptimage2api.net
                   </a>
                 </li>
                 <li>
                   <strong>Website</strong>:{" "}
                   <a
-                    href="https://sdanceai.com"
+                    href="https://gptimage2api.net"
                     className="text-primary hover:underline"
                   >
-                    https://sdanceai.com
+                    https://gptimage2api.net
                   </a>
                 </li>
               </ul>

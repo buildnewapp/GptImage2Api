@@ -1,6 +1,6 @@
 {
   "navigation": {
-    "brand": "Seedance 2.0",
+    "brand": "GptImage2Api",
     "createVideo": "動画を作成",
     "credits": "30 クレジット",
     "darkModeLabel": "ダークモードに切り替える",
@@ -10,16 +10,16 @@
     "resources": "リソース"
   },
   "hero": {
-    "badge": "Seedance 2.0 web & api",
+    "badge": "Gpt Image 2 Api",
     "ctaLabel": "動画を生成",
     "creditCost": "25",
-    "description": "テキストまたは参照画像から短尺 AI 動画を生成できます。新規ユーザーは Seedance 2.0 をすぐに使い始められ、デイリータスクで多くのクレジットを継続的に獲得できます。現在の Web アプリの Seedance 2.0 は、最大 1080p・15 秒まで対応しています。",
+    "description": "GptImage2Api は Gpt Image 2 Api に特化しています。サイト: https://gptimage2api.net、メール: support@gptimage2api.net。",
     "durationLabel": "5秒",
     "highlight": "より明確に。",
-    "modelLabel": "Seedance 2.0",
+    "modelLabel": "Gpt Image 2 Api",
     "placeholder": "最大 12 件の参照素材をアップロードし、プロンプト内で @ を入力して参照できます。例: @image1 が @video1 の動きを再現し、音声は @audio1 を参照。",
     "resolutionLabel": "480p",
-    "title": "短尺動画を直接生成",
+    "title": "GptImage2Api",
     "videos": [
       "https://cdn.sdanceai.com/sdanceai/sdance_videos/4vr3llg33.mp4",
       "https://cdn.sdanceai.com/sdanceai/sdance_videos/cslx142y0.mp4",

@@ -10,8 +10,8 @@ export const revalidate = false;
 
 export async function generateMetadata(): Promise<Metadata> {
   return constructMetadata({
-    title: "Terms of Service",
-    description: `Terms and conditions for using ${siteConfig.name} AI video generation platform and API services.`,
+    title: "GptImage2Api – Fast & Reliable GPT Image 2 API for Developers",
+    description: `GptImage2Api provides powerful GPT Image 2 API access for developers, startups, and businesses to generate high-quality AI images with simple REST endpoints. Build image generation apps, automate creative workflows, and integrate GPT Image 2 API into your products instantly.`,
     path: `/terms-of-service`,
     locale: "en",
     availableLocales: ["en"],
@@ -37,16 +37,16 @@ export default function TermsOfServicePage() {
               </h2>
               <p className="mb-3">
                 Welcome to {siteConfig.name} (&quot;we&quot;, &quot;us&quot;,
-                &quot;our&quot;, or &quot;{siteConfig.name}&quot;), an AI video
+                &quot;our&quot;, or &quot;{siteConfig.name}&quot;), an AI image
                 generation platform accessible at{" "}
                 <a
-                  href="https://sdanceai.com"
+                  href="https://gptimage2api.net"
                   className="text-primary hover:underline"
                 >
-                  https://sdanceai.com
+                  https://gptimage2api.net
                 </a>
                 . These Terms of Service (&quot;Terms&quot;) govern your access
-                to and use of our website, AI video generation services, API
+                to and use of our website, AI image generation services, API
                 services, and all related products and features (collectively,
                 the &quot;Services&quot;).
               </p>
@@ -69,24 +69,24 @@ export default function TermsOfServicePage() {
               </p>
               <ul className="mb-3 list-disc space-y-1 pl-6">
                 <li>
-                  <strong>AI Video Generation</strong>: An independent wrapper
+                  <strong>AI Image Generation</strong>: An independent wrapper
                   platform that provides a custom interface for third-party AI
-                  models (such as Seedance, Veo, and Sora) to create
-                  high-quality videos from user inputs
+                  models (including GPT Image 2 and other compatible models) to create
+                  high-quality images from user inputs
                 </li>
                 <li>
                   <strong>Online Experience Platform</strong>: A web-based
                   interface for generating, previewing, managing, and downloading
-                  AI-generated videos
+                  AI-generated images
                 </li>
                 <li>
                   <strong>API Services</strong>: Stable API access for
-                  developers to integrate AI video generation capabilities into
+                  developers to integrate AI image generation capabilities into
                   their own applications and workflows
                 </li>
                 <li>
                   <strong>Credit System</strong>: A credit-based or
-                  subscription-based system for accessing video generation
+                  subscription-based system for accessing image generation
                   resources
                 </li>
               </ul>
@@ -127,10 +127,10 @@ export default function TermsOfServicePage() {
                   account. If you suspect any unauthorized use of your account or
                   API keys, you must notify us immediately at{" "}
                   <a
-                    href="mailto:support@sdanceai.com"
+                    href="mailto:support@gptimage2api.net"
                     className="hover:underline text-blue-500"
                   >
-                    support@sdanceai.com
+                    support@gptimage2api.net
                   </a>
                   .
                 </p>
@@ -161,7 +161,7 @@ export default function TermsOfServicePage() {
                 </h3>
                 <p className="mb-3">
                   You may use our Services for lawful purposes in accordance
-                  with these Terms. This includes creating AI-generated videos
+                  with these Terms. This includes creating AI-generated images
                   for personal projects, social media content, commercial
                   marketing, artistic creation, educational materials, and other
                   legitimate applications.
@@ -278,7 +278,7 @@ export default function TermsOfServicePage() {
                 </h3>
                 <p className="mb-3">
                   Subject to your compliance with these Terms and applicable
-                  laws, you are granted rights to use the AI-generated videos
+                  laws, you are granted rights to use the AI-generated images
                   produced through our Services, including for commercial
                   purposes. However, please note:
                 </p>
@@ -337,8 +337,8 @@ export default function TermsOfServicePage() {
                   6.2 Credits and Usage
                 </h3>
                 <p className="mb-3">
-                  Video generation consumes credits based on factors such as
-                  video duration, resolution, and model complexity. Credit
+                  Image generation consumes credits based on factors such as
+                  image size, resolution, and model complexity. Credit
                   consumption rates are displayed before generation begins.
                   Credits may have an expiration date depending on the plan.
                   Unused credits are generally non-transferable.
@@ -376,10 +376,10 @@ export default function TermsOfServicePage() {
                   and open the billing portal to manage or cancel your plan.
                   If you need help, contact{" "}
                   <a
-                    href="mailto:support@sdanceai.com"
+                    href="mailto:support@gptimage2api.net"
                     className="hover:underline text-blue-500"
                   >
-                    support@sdanceai.com
+                    support@gptimage2api.net
                   </a>
                   .
                 </p>
@@ -571,10 +571,10 @@ export default function TermsOfServicePage() {
                 You may also terminate your account at any time by contacting
                 us at{" "}
                 <a
-                  href="mailto:support@sdanceai.com"
+                  href="mailto:support@gptimage2api.net"
                   className="hover:underline text-blue-500"
                 >
-                  support@sdanceai.com
+                  support@gptimage2api.net
                 </a>
                 .
               </p>
@@ -668,19 +668,19 @@ export default function TermsOfServicePage() {
                 <li>
                   <strong>General Support</strong>:{" "}
                   <a
-                    href="mailto:support@sdanceai.com"
+                    href="mailto:support@gptimage2api.net"
                     className="hover:underline text-blue-500"
                   >
-                    support@sdanceai.com
+                    support@gptimage2api.net
                   </a>
                 </li>
                 <li>
                   <strong>Website</strong>:{" "}
                   <a
-                    href="https://sdanceai.com"
+                    href="https://gptimage2api.net"
                     className="text-primary hover:underline"
                   >
-                    https://sdanceai.com
+                    https://gptimage2api.net
                   </a>
                 </li>
               </ul>

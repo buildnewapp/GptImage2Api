@@ -1,27 +1,27 @@
 import { SiteConfig } from "@/types/siteConfig";
 
-export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://sdanceai.com";
+export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://gptimage2api.net";
 
-const GITHUB_URL = 'https://github.com/sdanceai/awesome_seedance2_prompt'
+const GITHUB_URL = 'https://github.com/gpt-image2'
 const TWITTER_URL = ''
 const YOUTUBE_URL = ''
 const INSTAGRAM_URL = ''
 const TIKTOK_URL = ''
 const DISCORD_URL = process.env.NEXT_PUBLIC_DISCORD_INVITE_URL
-const EMAIL_URL = 'support@sdanceai.com'
+const EMAIL_URL = 'support@gptimage2api.net'
 
 export const siteConfig: SiteConfig = {
-  name: "Sdance AI",
-  tagLine:"Bring Any Character to Life with Seedance 2.0",
-  description:"Unleash your creativity with SdanceAI. Powered by the breakthrough Seedance 2.0 model, you can now turn ordinary photos into extraordinary performances. Whether for social media or digital art, create stunning, rhythmic videos in seconds—no motion capture suit required.",
+  name: "GptImage2Api",
+  tagLine:"Gpt Image 2 Api",
+  description:"Core Function: Gpt Image 2 Api",
   url: BASE_URL,
   authors: [
     {
-      name: "sdanceai",
+      name: "gptimage2api",
       url: BASE_URL,
     }
   ],
-  creator: '@sdanceai',
+  creator: '@gptimage2api',
   socialLinks: {
     github: GITHUB_URL,
     twitter: TWITTER_URL,

@@ -1,6 +1,6 @@
 {
   "navigation": {
-    "brand": "Seedance 2.0",
+    "brand": "GptImage2Api",
     "createVideo": "创建视频",
     "credits": "30 积分",
     "darkModeLabel": "切换到深色模式",
@@ -10,16 +10,16 @@
     "resources": "资源"
   },
   "hero": {
-    "badge": "Seedance 2.0 web & api",
+    "badge": "Gpt Image 2 Api",
     "ctaLabel": "生成视频",
     "creditCost": "25",
-    "description": "从文本或参考图片创建短篇 AI 视频。新手可以直接使用 Seedance 2.0，并通过每日任务持续获得大量积分。当前 Web 应用中的 Seedance 2.0 最多支持 1080p 和 15 秒。",
+    "description": "GptImage2Api 专注于 Gpt Image 2 Api。网站地址：https://gptimage2api.net，联系邮箱：support@gptimage2api.net。",
     "durationLabel": "5秒",
     "highlight": "更清晰呈现。",
-    "modelLabel": "Seedance 2.0",
+    "modelLabel": "Gpt Image 2 Api",
     "placeholder": "最多上传 12 个参考素材，然后在提示词中输入 @ 进行引用。例如：@image1 模仿 @video1 的运动，语音参考 @audio1。",
     "resolutionLabel": "480p",
-    "title": "直接生成短视频",
+    "title": "GptImage2Api",
     "videos": [
       "https://cdn.sdanceai.com/sdanceai/sdance_videos/4vr3llg33.mp4",
       "https://cdn.sdanceai.com/sdanceai/sdance_videos/cslx142y0.mp4",

@@ -1,8 +1,8 @@
 {
   "Home": {
-    "title": "SdanceAI",
-    "tagLine": "Seedance 2.0 在线体验 与 API 服务",
-    "description": "SdanceAI 提供 Seedance 2.0 在线创作工具与 API。支持原生音画同步、1080p 电影级生成及多模态参考。助力开发者快速集成下一代 AI 视频能力。"
+    "title": "GptImage2Api – 面向开发者的快速可靠 GPT Image 2 API",
+    "tagLine": "Gpt Image 2 Api",
+    "description": "GptImage2Api 为开发者、初创团队和企业提供强大的 GPT Image 2 API 访问能力，通过简洁的 REST 接口生成高质量 AI 图像。你可以快速构建图像生成应用、自动化创意工作流，并将 GPT Image 2 API 立即集成到你的产品中。"
   },
   "Login": {
     "title": "欢迎回来",
