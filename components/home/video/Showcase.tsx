@@ -31,7 +31,7 @@ export default function Showcase({ section }: ShowcaseProps) {
             {section.note}
           </p>
         </div>
-        <VideoShowcaseMedia videos={section.videos} />
+        <VideoShowcaseMedia items={section.items} />
         <div className="text-center">
           <p className="mb-6 text-lg text-muted-foreground">{section.ctaText}</p>
           <I18nLink

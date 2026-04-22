@@ -20,24 +20,45 @@
     "placeholder": "Upload up to 12 references, then type @ to mention them in your prompt. E.g.: @image1 imitates @video1 motion, voice references @audio1.",
     "resolutionLabel": "480p",
     "title": "Direct Short-Form Video—",
-    "videos": [
-      "https://cdn.sdanceai.com/sdanceai/sdance_videos/4vr3llg33.mp4",
-      "https://cdn.sdanceai.com/sdanceai/sdance_videos/cslx142y0.mp4",
-      "https://cdn.sdanceai.com/sdanceai/sdance_videos/0yk60yijj.mp4",
-      "https://cdn.sdanceai.com/sdanceai/sdance_videos/598uoczz9.mp4"
+    "videos": [],
+    "images": [
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/4ryp8bssv.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/sel4unt33.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/lexvi6oea.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/ge8osrp29.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/cfjoi23t5.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/tle401l4e.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/xdnerrnzc.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/daac1lyuw.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/wnjpw2sdd.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/e3gcxijib.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/4hwmlvj5n.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/g3yqkzie3.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/28tsj5taa.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/zr7zxl72k.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/eso7mkwmz.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/tm37g7lro.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/xg95yuvgm.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/orfi11egr.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/i8tkl5zgn.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/k4rrav3xz.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/vgek3ghwv.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/prg5xsp7a.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/t5bj54vt1.png",
+      "https://cdn.sdanceai.com/sdanceai/sdance_images/ovx52r1ct.png"
     ]
   },
   "featureRows": [
     {
       "description": "Write a prompt, choose aspect ratio, duration, and resolution, then render a short-form clip in the current web app. New users can access Seedance 2.0 right away and keep earning plenty of credits through daily tasks.",
       "title": "Short-Form Text to Video",
-      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/gomdqjkt4.mp4"
+      "imageSrc": "https://cdn.sdanceai.com/sdanceai/sdance_images/ovx52r1ct.png"
     },
     {
       "description": "Use one still image as your starting frame to lock the subject, framing, or art direction before motion begins. The current web app supports image-to-video with a single reference image.",
       "reverse": true,
       "title": "Reference Image Guidance",
-      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/es600fg0x.mp4"
+      "imageSrc": "https://cdn.sdanceai.com/sdanceai/sdance_images/t5bj54vt1.png"
     },
     {
       "description": "Start on Seedance 2.0 right away, then keep earning plenty of credits through daily tasks. Model limits are shown in the generator before you render.",
@@ -159,7 +180,7 @@
         "duration": "13.0s",
         "prompt": "The actress from @Image1 as the main subject. Reference @Video1 for rhythmic push-pull-pan-tilt camera work. The actress mirrors the dance movements from @Video1's female dancer, performing energetically on stage.",
         "resolution": "720x1280",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/cslx142y0.mp4",
+        "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/daac1lyuw.png",
         "title": "Camera & Motion Replication"
       },
       {
@@ -167,7 +188,7 @@
         "duration": "15.0s",
         "prompt": "The character in the painting has a guilty expression, glances left and right, then reaches out of the frame to grab a cola and takes a sip with a satisfied look. Hearing footsteps, the character quickly puts the cola back. A cowboy picks up the cola and walks away. The camera pushes forward to a pure black background with a spotlight on the canned cola, with artistic subtitles: \"Yikou Cola, a must-try!\"",
         "resolution": "1280x720",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/3xh83niox.mp4",
+        "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/t5bj54vt1.png",
         "title": "Enhanced Fundamentals"
       },
       {

@@ -26,6 +26,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       SeoContent: (await import(`./messages/${locale}/SeoContent.json`)).default,
       HomeTemplate1: (await import(`./messages/${locale}/HomeTemplate1.json`)).default,
       VideoTemplate: (await import(`./messages/${locale}/VideoTemplate.json`)).default,
+      ImageTemplate: (await import(`./messages/${locale}/ImageTemplate.json`)).default,
 
       // Dashboard - User
       Settings: (

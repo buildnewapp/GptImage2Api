@@ -1,8 +1,8 @@
-export interface VideoTemplateShowcaseVideo {
+export interface VideoTemplateShowcaseItem {
   category: string;
-  duration: string;
-  prompt: string;
-  resolution: string;
+  duration?: string;
+  prompt?: string;
+  resolution?: string;
   src: string;
   title: string;
 }
@@ -25,6 +25,7 @@ export interface VideoTemplateHero {
   description: string;
   durationLabel: string;
   highlight: string;
+  images?: string[];
   modelLabel: string;
   placeholder: string;
   resolutionLabel: string;
@@ -34,9 +35,10 @@ export interface VideoTemplateHero {
 
 export interface VideoTemplateFeatureRow {
   description: string;
+  imageSrc?: string;
   reverse?: boolean;
   title: string;
-  videoSrc: string;
+  videoSrc?: string;
 }
 
 export interface VideoTemplateScopeItem {
@@ -73,10 +75,10 @@ export interface VideoTemplateUseCases {
 export interface VideoTemplateShowcaseSection {
   ctaText: string;
   description: string;
+  items: VideoTemplateShowcaseItem[];
   kicker: string;
   note: string;
   title: string;
-  videos: VideoTemplateShowcaseVideo[];
 }
 
 export interface VideoTemplateTestimonialItem {
