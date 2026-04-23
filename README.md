@@ -97,9 +97,8 @@ EA1KrD1ljNzfA23vWKN1dGJGkEpRr2b014IHf4lOJFSD4ubR6ujOQcAkdwHsW0pUVUaiyr3jlVBsWeJZ
 pnpm db:sync-paypal-products
 查看创建成功：https://www.paypal.com/billing/plans
 查看 plan id 回写
-4 测试账户
-卖家: sb-6kvqf45985282@business.example.com 、{fS]JJ3@   
-买家：sb-bpqfs45936111@personal.example.com、 Ri&W3dVD
+4 测试
+
 
 ## 部署 cf
 
@@ -138,6 +137,21 @@ Build cache 设置成 Disabled
 注意：Variables and Secrets + Build 运行时、编译时 变量需要手动一个一个添加进去
 
 ## 部署 vps
+### merge from template
+git remote add template https://github.com/buildnewapp/nexty-cf-template.git
+git fetch template
+git checkout template/main -- .
+### 删除你当前项目里有、但模板里已经没有的文件
+git diff --name-only --diff-filter=D main..template/main -z | xargs -0 git rm --ignore-unmatch
+git commit -m "chore: sync all files from nexty-cf-template"
+### merge 流程
+git stash push -u -m "before merge template"
+
+git fetch template
+git merge --allow-unrelated-histories --no-commit template/main
+
+git commit -m "merge template/main"
+git stash pop
 
 ## 提示词修改
 ```

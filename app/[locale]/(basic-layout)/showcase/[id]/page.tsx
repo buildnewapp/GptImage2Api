@@ -100,11 +100,13 @@ export default async function ShowcaseDetailPage({
                       playsInline
                     />
                   ) : (
-                    <img
-                      src={previewUrl}
-                      alt={record.title}
-                      className="aspect-video w-full object-cover"
-                    />
+                    <div className="flex items-center justify-center p-2 sm:p-4">
+                      <img
+                        src={previewUrl}
+                        alt={record.title}
+                        className="max-h-[75vh] w-full object-contain"
+                      />
+                    </div>
                   )
                 ) : (
                   <div className="flex aspect-video items-center justify-center text-sm text-white/60">
@@ -131,11 +133,13 @@ export default async function ShowcaseDetailPage({
                           playsInline
                         />
                       ) : (
-                        <img
-                          src={url}
-                          alt={`${record.title}-${index + 2}`}
-                          className="aspect-video w-full object-cover"
-                        />
+                        <div className="flex min-h-56 items-center justify-center bg-slate-950 p-2">
+                          <img
+                            src={url}
+                            alt={`${record.title}-${index + 2}`}
+                            className="max-h-80 w-full object-contain"
+                          />
+                        </div>
                       )}
                     </a>
                   ))}
@@ -255,7 +259,7 @@ export default async function ShowcaseDetailPage({
                         key={`${url}-${index}`}
                         src={url}
                         alt={`${t("detail.referenceImages")} ${index + 1}`}
-                        className="aspect-square w-full rounded-[1.2rem] border border-border/70 object-cover"
+                        className="h-40 w-full rounded-[1.2rem] border border-border/70 bg-slate-950/5 object-contain p-2 sm:h-48"
                       />
                     ))}
                   </div>
