@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
 
+import HeroPhotoWall from "@/components/home/video/HeroPhotoWall";
 import VideoTemplate from "@/components/home/video/VideoTemplate";
 import type { VideoTemplatePage } from "@/components/home/video/types";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -198,6 +199,28 @@ test("keeps the hero server-renderable by delegating the photo wall to a client 
     /export const HERO_PHOTO_WALL_ITEMS_PER_COLUMN =/,
   );
   assert.doesNotMatch(globalStylesSource, /@keyframes image-hero-wall/);
+});
+
+test("renders a stable hero photo wall markup for hydration", () => {
+  const images = [
+    "https://example.com/a.jpg",
+    "https://example.com/b.jpg",
+    "https://example.com/c.jpg",
+    "https://example.com/d.jpg",
+  ];
+  const originalRandom = Math.random;
+
+  try {
+    Math.random = () => 0.1;
+    const serverHtml = renderToStaticMarkup(<HeroPhotoWall images={images} />);
+
+    Math.random = () => 0.9;
+    const clientHtml = renderToStaticMarkup(<HeroPhotoWall images={images} />);
+
+    assert.equal(clientHtml, serverHtml);
+  } finally {
+    Math.random = originalRandom;
+  }
 });
 
 test("extracts video header into dedicated components instead of inline nav markup", () => {

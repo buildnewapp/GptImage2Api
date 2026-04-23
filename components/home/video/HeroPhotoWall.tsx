@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface HeroPhotoWallProps {
   images: string[];
@@ -21,7 +21,14 @@ export const HERO_PHOTO_WALL_CARD_VARIANTS = [
 
 export default function HeroPhotoWall({ images }: HeroPhotoWallProps) {
   const shouldReduceMotion = useReducedMotion();
-  const shuffledImages = useMemo(() => {
+  const [displayImages, setDisplayImages] = useState(images);
+
+  useEffect(() => {
+    if (images.length < 2) {
+      setDisplayImages(images);
+      return;
+    }
+
     const nextImages = [...images];
 
     for (let index = nextImages.length - 1; index > 0; index -= 1) {
@@ -32,28 +39,28 @@ export default function HeroPhotoWall({ images }: HeroPhotoWallProps) {
       ];
     }
 
-    return nextImages;
+    setDisplayImages(nextImages);
   }, [images]);
 
   const photoColumns = useMemo(
     () =>
       Array.from({ length: HERO_PHOTO_WALL_COLUMN_COUNT }, (_, columnIndex) => {
-        if (shuffledImages.length === 0) {
+        if (displayImages.length === 0) {
           return [];
         }
 
         const startIndex =
           (columnIndex * HERO_PHOTO_WALL_COLUMN_START_STEP) %
-          shuffledImages.length;
+          displayImages.length;
         const columnImages = Array.from(
           { length: HERO_PHOTO_WALL_ITEMS_PER_COLUMN },
           (_, imageIndex) =>
-            shuffledImages[(startIndex + imageIndex) % shuffledImages.length],
+            displayImages[(startIndex + imageIndex) % displayImages.length],
         );
 
         return [...columnImages, ...columnImages, ...columnImages];
       }),
-    [shuffledImages],
+    [displayImages],
   );
 
   return (
