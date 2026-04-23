@@ -84,10 +84,12 @@ https://www.sandbox.paypal.com/billing/overview
 pnpm db:sync-paypal-products
 
 #### 真实环境
-1 新建测试应用，登录主账户
+1 新建应用，登录主账户
 https://developer.paypal.com/dashboard/applications/live
-create app → name + Merchant + Sandbox Account → get Client ID + Secret key 1
-回调地址：https://sdanceai.com/api/paypal/notify
+create app → name + Merchant → get Client ID + Secret key 1
+ASXFVl5USRt66XiwKVgjLcbzdj-UjwdnX9OFo8LsP5JcxPh7_nclIY2EjsszgXgnwqKQzUP7STuuyFWy
+EA1KrD1ljNzfA23vWKN1dGJGkEpRr2b014IHf4lOJFSD4ubR6ujOQcAkdwHsW0pUVUaiyr3jlVBsWeJZ
+回调地址：https://gptimage2api.net/api/paypal/notify
 点击查看应用详情
 添加 webhook → 填写 回调地址 + all events → save
 3 自动创建订阅产品
