@@ -36,7 +36,7 @@ export async function generateMetadata({
 
 export default async function PricingPage({ params }: { params: Params }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "VideoTemplate" });
+  const t = await getTranslations({ locale, namespace: "ImageTemplate" });
   const pricingT = await getTranslations({ locale, namespace: "Pricing" });
   const pricing = buildVideoTemplatePricingSection({
     baseSection: t.raw("pricing"),

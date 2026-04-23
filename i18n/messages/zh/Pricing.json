@@ -1,10 +1,10 @@
 {
   "badge": {
     "label": "定价",
-    "text": "SdanceAI 的 Seedance 2.0 价格方案"
+    "text": "GptImage2Api 价格方案"
   },
-  "title": "Seedance 2.0 价格",
-  "description": "查看 SdanceAI 提供的 Seedance 2.0 在线体验与 API 价格方案。",
+  "title": "GptImage2Api 价格",
+  "description": "查看 GptImage2Api 的订阅套餐、积分包和支付方式。",
   "annual": "年付",
   "monthly": "月付",
   "onetime": "一次性",

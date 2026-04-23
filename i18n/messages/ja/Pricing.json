@@ -1,10 +1,10 @@
 {
   "badge": {
     "label": "価格",
-    "text": "SdanceAI の Seedance 2.0 料金プラン"
+    "text": "GptImage2Api の料金プラン"
   },
-  "title": "Seedance 2.0の料金",
-  "description": "SdanceAI で提供する Seedance 2.0 のオンライン体験と API の料金プランを確認できます。",
+  "title": "GptImage2Api の料金",
+  "description": "GptImage2Api のサブスクリプション、クレジットパック、支払い方法を確認できます。",
   "annual": "年額",
   "monthly": "月額",
   "onetime": "一回限り",
