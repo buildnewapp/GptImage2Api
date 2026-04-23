@@ -459,7 +459,7 @@
     ]
   },
   "Footer": {
-    "Copyright": "著作権所有 © {year} {name} 全著作権保有。独立した製品です。",
+    "Copyright": "著作権所有 © {year} {name}。Powered by GPT Image 2。独立した製品です。Google、OpenAI、および各種 AI モデル提供元とは一切関係ありません。",
     "About": "サイトについて",
     "PrivacyPolicy": "プライバシーポリシー",
     "TermsOfService": "利用規約",

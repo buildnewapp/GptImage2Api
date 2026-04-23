@@ -459,7 +459,7 @@
     ]
   },
   "Footer": {
-    "Copyright": "Copyright © {year} {name} All rights reserved. Independent product.",
+    "Copyright": "Copyright © {year} {name}. Powered by GPT Image 2. Independent product. Not affiliated with Google/OpenAI/AI model providers.",
     "About": "About",
     "PrivacyPolicy": "Privacy Policy",
     "TermsOfService": "Terms of Service",
