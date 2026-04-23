@@ -1,102 +1,8 @@
 {
   "source": "https://gpt-image-2-ai.org/prompts/gpt-image-2",
   "fetchedAt": "2026-04-22T12:06:14.692Z",
-  "total": 725,
+  "total": 662,
   "items": [
-    {
-      "id": "13460",
-      "slug": "vr-headset-exploded-view-poster",
-      "title": "VR Headset Exploded View Poster",
-      "description": "Generates a high-tech exploded view diagram of a VR headset with detailed component callouts and promotional text.",
-      "prompt": "{\n  \"type\": \"exploded view product diagram poster\",\n  \"subject\": \"VR headset\",\n  \"style\": \"clean high-tech 3D render, studio lighting, glowing accents\",\n  \"background\": \"{argument name=\\\"background color\\\" default=\\\"soft purple and blue gradient\\\"}\",\n  \"header\": {\n    \"logo\": \"∞ {argument name=\\\"product name\\\" default=\\\"Meta Quest 3\\\"}\",\n    \"subtitle\": \"{argument name=\\\"main catchphrase\\\" default=\\\"まったく新しい現実を、まったく新しい構造から。\\\"}\"\n  },\n  \"layout\": {\n    \"centerpiece\": \"vertically stacked exploded view of a VR headset showing 9 distinct layers of internal components: outer shell, camera sensors, motherboard with chip, pancake lenses, internal frame, battery packs, side straps, top strap, and facial interface cushion.\",\n    \"callout_labels\": {\n      \"count\": 8,\n      \"left_side\": [\n        \"Snapdragon® XR2 Gen 2\\n圧倒的な処理性能でリアルタイムな体験を。\",\n        \"調整可能なIPD機構\\n幅広いユーザーに快適なフィット感を。\",\n        \"精密設計されたヘッドストラップ\\n快適さと安定性を追求したエルゴノミクス。\"\n      ],\n      \"right_side\": [\n        \"フェイスプレート\\n洗練されたデザインと最適な重量バランス。\",\n        \"トラッキングカメラ\\n高精度な位置トラッキングと環境認識を実現。\",\n        \"パンケーキレンズ\\n薄型設計で広い視野角と鮮明な映像を提供。\",\n        \"高性能バッテリー\\n長時間駆動を支える最適化された電源設計。\",\n        \"柔らかなフェイスインターフェース\\n長時間でも快適な装着感を実現。\"\n      ]\n    },\n    \"footer\": {\n      \"left_text_block\": {\n        \"headline\": \"{argument name=\\\"bottom headline\\\" default=\\\"体験は、構造から進化する。\\\"}\",\n        \"body\": \"一つひとつのパーツに、没入体験を支える最先端テクノロジーとこだわりの設計。Meta Quest 3は、未来を感じさせる体験を内部から生み出しています。\"\n      },\n      \"right_logo\": \"∞ Meta\"\n    }\n  }\n}",
-      "language": "en",
-      "featured": true,
-      "authorName": "wory＠ホッピング中",
-      "authorUrl": "https://x.com/wory37303852",
-      "sourceUrl": "https://x.com/wory37303852/status/2045925660401795478#reversed-0",
-      "publishedAt": "2026-04-19T18:01:03.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776658772018_lukyfw_HGSUfldbIAEiMWZ.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776658772018_lukyfw_HGSUfldbIAEiMWZ-300x450.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776658772018_lukyfw_HGSUfldbIAEiMWZ.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13515",
-      "slug": "illustrated-city-food-map",
-      "title": "Illustrated City Food Map",
-      "description": "Generates a hand-drawn, watercolor-style tourist map featuring numbered local food specialties, landmarks, and a legend.",
-      "prompt": "{\n  \"type\": \"illustrated map infographic\",\n  \"style\": \"{argument name=\\\"art style\\\" default=\\\"watercolor and ink hand-drawn illustration on vintage parchment\\\"}\",\n  \"title_section\": {\n    \"text\": \"{argument name=\\\"city name\\\" default=\\\"成都\\\"} {argument name=\\\"map title\\\" default=\\\"吃货暴走地图\\\"}\",\n    \"mascot\": \"cartoon red chili pepper wearing sunglasses and giving a thumbs up\"\n  },\n  \"border\": \"{argument name=\\\"border decoration\\\" default=\\\"vine of green leaves and red chili peppers\\\"}\",\n  \"layout\": {\n    \"background\": \"textured beige parchment paper with yellow roads, blue rivers, and green park areas\",\n    \"sections\": [\n      {\n        \"title\": \"landmarks\",\n        \"count\": 6,\n        \"illustrations\": [\"traditional pavilion\", \"traditional monastery\", \"modern skyscraper with climbing panda\", \"tall TV tower\", \"traditional gate\", \"industrial buildings\"],\n        \"labels\": [\"人民公园\", \"文殊院\", \"IFS\", \"339电视塔\", \"宽窄巷子\", \"东郊记忆\"]\n      },\n      {\n        \"title\": \"food_spots\",\n        \"count\": 12,\n        \"illustrations\": [\"mapo tofu\", \"dumplings in chili oil\", \"skewers in pot\", \"sticky rice balls\", \"egg baking cake\", \"nine-grid hotpot\", \"sweet potato noodles\", \"cold skewers\", \"spicy mixed dish\", \"covered tea bowl\", \"ice jelly dessert\", \"spicy rabbit heads\"],\n        \"labels\": [\"1 陈麻婆豆腐\", \"2 钟水饺\", \"3 春熙路\", \"4 宽窄巷子·三大炮\", \"5 建设路·叶婆婆蛋烘糕\", \"6 玉林路·小龙坎火锅\", \"7 香香巷·肥肠粉\", \"8 武侯祠大街·钵钵鸡\", \"9 东郊记忆·冒椒火辣\", \"10 人民公园·鹤鸣茶社\", \"11 锦里古街·冰粉\", \"12 双流老妈兔头\"]\n      },\n      {\n        \"title\": \"图例\",\n        \"position\": \"bottom-right\",\n        \"count\": 5,\n        \"items\": [\"red dot\", \"green house\", \"green tree\", \"blue line\", \"yellow double line\"],\n        \"labels\": [\"美食地点\", \"地标景点\", \"公园绿地\", \"河流湖泊\", \"主要道路\"]\n      }\n    ],\n    \"centerpiece\": \"giant panda sitting and eating bamboo\",\n    \"bottom_right_extras\": [\"vintage compass rose with N, S, E, W\", \"disclaimer text '温馨提示：吃辣需谨慎，肠胃要保护~' with a red chili pepper icon\"]\n  }\n}",
-      "language": "en",
-      "featured": true,
-      "authorName": "皮皮特",
-      "authorUrl": "https://x.com/mm_zzm44854",
-      "sourceUrl": "https://x.com/mm_zzm44854/status/2045861258520568230#reversed-1",
-      "publishedAt": "2026-04-19T13:45:08.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776662673014_nf0taw_HGRMNDybsAAGG88.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776662673014_nf0taw_HGRMNDybsAAGG88-300x300.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776662673014_nf0taw_HGRMNDybsAAGG88.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13983",
-      "slug": "momotaro-explainer-slide-in-hybrid-style",
-      "title": "Momotaro Explainer Slide in Hybrid Style",
-      "description": "A prompt that combines the simple, warm aesthetic of Irasutoya illustrations with the high-information density characteristic of Japanese government slides.",
-      "prompt": "Create an explanatory slide ({argument name=\"format\" default=\"ponchi-e diagram\"}) for {argument name=\"theme\" default=\"Momotaro\"} that fuses the gentle atmosphere of \"Irasutoya\" with the overwhelming information density of \"Kasumigaseki slides\".",
-      "language": "ja",
-      "featured": true,
-      "authorName": "やまもん",
-      "authorUrl": "https://x.com/yammamon",
-      "sourceUrl": "https://x.com/yammamon/status/2045778624092254603",
-      "publishedAt": "2026-04-19T08:16:47.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776699414289_t6mebs_HGQQxukbUAA_qc0.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776699414289_t6mebs_HGQQxukbUAA_qc0-300x200.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776699414289_t6mebs_HGQQxukbUAA_qc0.jpg"
-        },
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776699414149_63j8pd_HGQQy1_aQAAHSqP.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776699414149_63j8pd_HGQQy1_aQAAHSqP-300x164.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776699414149_63j8pd_HGQQy1_aQAAHSqP.jpg"
-        }
-      ]
-    },
-    {
-      "id": "14036",
-      "slug": "e-commerce-live-stream-ui-mockup",
-      "title": "E-commerce Live Stream UI Mockup",
-      "description": "Generates a realistic social media live stream interface overlaying a portrait, featuring customizable chat messages, gift popups, and a product purchase card.",
-      "prompt": "{\n  \"type\": \"live stream UI mockup\",\n  \"subject\": {\n    \"description\": \"portrait of {argument name=\\\"host name\\\" default=\\\"Elon Musk\\\"}, smiling, wearing a black t-shirt with a white technical schematic graphic\",\n    \"background\": \"left side shows a screen with '{argument name=\\\"left background logo\\\" default=\\\"SPACEX\\\"}' text, right side shows a red '{argument name=\\\"right background logo\\\" default=\\\"Tesla T logo\\\"}' and a dark car\"\n  },\n  \"ui_overlay\": {\n    \"top_header\": {\n      \"host_info\": \"avatar, name '{argument name=\\\"host name\\\" default=\\\"Elon Musk\\\"}', subtext '55.6万本场点赞', red '关注' button\",\n      \"rank_badge\": \"gold coin icon with '全站第1名'\",\n      \"viewer_stats\": \"3 top viewer avatars with '12.3w', '8.6w', '5.7w', total '68.7万', 'X' close button\",\n      \"right_links\": \"'更多直播 >', '礼物展馆 0/24' with blue '经典' tag\"\n    },\n    \"mid_left_gifts\": {\n      \"count\": 2,\n      \"items\": [\n        \"avatar '科技爱好者', '送小心心', heart icon x 1314\",\n        \"avatar '星辰大海', '送火箭', rocket icon x 666\"\n      ]\n    },\n    \"bottom_left_chat\": {\n      \"system_message\": \"level 37 badge '宇宙漫游者 加入了直播间'\",\n      \"message_count\": 7,\n      \"messages\": [\n        \"小火箭: 马斯克！未来可期！🚀\",\n        \"future: 特斯拉Model 2什么时候出？\",\n        \"星空梦想家: SpaceX今年能上火星吗？\",\n        \"AI探索者: Neuralink进展如何？\",\n        \"帅气的网友: 马总好！\",\n        \"Mars: 第一次来你的直播，超激动！\",\n        \"用户123: 讲讲AI吧，会取代人类吗？\"\n      ]\n    },\n    \"bottom_right_product_card\": {\n      \"hot_tag\": \"orange '热卖 x 1888'\",\n      \"image\": \"Tesla Cybertruck\",\n      \"title\": \"{argument name=\\\"product name\\\" default=\\\"特斯拉Cybertruck 电动皮卡\\\"}\",\n      \"price\": \"{argument name=\\\"product price\\\" default=\\\"¥ 1,618,000\\\"}\",\n      \"button\": \"red '抢' button\",\n      \"floating_animation\": \"translucent hearts floating up the right edge\"\n    },\n    \"bottom_bar\": {\n      \"input_field\": \"'说点什么...'\",\n      \"icons\": [\"smiley face\", \"three dots\", \"shopping cart\", \"gift box\", \"share\"]\n    }\n  }\n}",
-      "language": "en",
-      "featured": true,
-      "authorName": "神经病不想好转",
-      "authorUrl": "https://x.com/sjbbxhz",
-      "sourceUrl": "https://x.com/sjbbxhz/status/2045684734714380687#reversed-0",
-      "publishedAt": "2026-04-19T02:03:42.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776699445498_ga2ry5_HGO7H0DWkAApdKK.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776699445498_ga2ry5_HGO7H0DWkAApdKK-300x329.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776699445498_ga2ry5_HGO7H0DWkAApdKK.jpg"
-        }
-      ]
-    },
     {
       "id": "13467",
       "slug": "anime-martial-arts-battle-illustration",
@@ -116,28 +22,6 @@
           "url": "https://file.gptimage2api.net/media/1776756799880_c8u8w7_HGUKjjaasAAvVRa.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776756799880_c8u8w7_HGUKjjaasAAvVRa-300x240.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776756799880_c8u8w7_HGUKjjaasAAvVRa.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13491",
-      "slug": "3d-stone-staircase-evolution-infographic",
-      "title": "3D Stone Staircase Evolution Infographic",
-      "description": "Transforms a flat evolutionary timeline into a realistic 3D stone staircase infographic with detailed organism renders and structured side panels.",
-      "prompt": "{\n  \"type\": \"evolutionary timeline infographic\",\n  \"instruction\": \"Using REFERENCE_0 as a structural base, transform the flat vector design into a highly realistic 3D infographic. Replace the smooth ramps with distinct stone steps and upgrade all organisms to photorealistic 3D models.\",\n  \"style\": {\n    \"background\": \"{argument name=\\\"background style\\\" default=\\\"vintage textured parchment paper\\\"}\",\n    \"staircase\": \"{argument name=\\\"staircase material\\\" default=\\\"realistic textured stone blocks\\\"}\",\n    \"subjects\": \"{argument name=\\\"organism style\\\" default=\\\"highly detailed photorealistic 3D renders\\\"}\"\n  },\n  \"layout\": {\n    \"main_title\": \"{argument name=\\\"main title\\\" default=\\\"人类演化\\\"}\",\n    \"sections\": [\n      {\n        \"position\": \"left sidebar\",\n        \"count\": 8,\n        \"labels\": [\"L0: 单细胞生命\", \"L1: 多细胞生物\", \"L2: 动物界\", \"L3: 脊索动物\", \"L4: 上陆革命\", \"L5: 哺乳纲\", \"L6: 人科演化\", \"L7: 智人纪元\"]\n      },\n      {\n        \"position\": \"top right\",\n        \"title\": \"获得的功能 / 失去的功能\",\n        \"description\": \"Legend with plus and minus icons\"\n      },\n      {\n        \"position\": \"bottom center\",\n        \"title\": \"演化关键里程碑\",\n        \"count\": 6,\n        \"description\": \"Timeline with a silhouette graphic of 6 figures showing ape-to-human evolution\"\n      }\n    ],\n    \"centerpiece\": {\n      \"description\": \"Winding stone staircase with 25 numbered steps featuring specific organisms.\",\n      \"count\": 25,\n      \"notable_elements\": [\n        \"Step 07: Jellyfish\",\n        \"Step 09: Ammonite\",\n        \"Step 10: Trilobite\",\n        \"Step 24: Walking human\",\n        \"Step 25: {argument name=\\\"future evolution concept\\\" default=\\\"glowing cosmic silhouette with a question mark\\\"}\"\n      ]\n    }\n  }\n}",
-      "language": "en",
-      "featured": true,
-      "authorName": "知识猫图解",
-      "authorUrl": "https://x.com/GeekCatX",
-      "sourceUrl": "https://x.com/GeekCatX/status/2045792240044511277#reversed-1",
-      "publishedAt": "2026-04-19T09:10:53.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776661968404_8a5flm_HGQc_KOaMAA2vt0.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776661968404_8a5flm_HGQc_KOaMAA2vt0-300x533.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776661968404_8a5flm_HGQc_KOaMAA2vt0.jpg"
         }
       ]
     },
@@ -252,56 +136,6 @@
       ]
     },
     {
-      "id": "14125",
-      "slug": "douyin-livestream-screenshot-prompt",
-      "title": "Douyin Livestream Screenshot Prompt",
-      "description": "A prompt for generating a realistic screenshot of a Douyin livestream featuring a celebrity holding a personalized sign.",
-      "prompt": "A 9:16 aspect ratio image, generating a screenshot of a Douyin livestream where {argument name=\"celebrity\" default=\"Liu Yifei\"} is broadcasting, holding a sign that says \"{argument name=\"sign text\" default=\"Streaming tonight, welcome to join Yifei's chat!\"}\"",
-      "language": "zh",
-      "featured": false,
-      "authorName": "Kyle 不写代码",
-      "authorUrl": "https://x.com/kylegeeks",
-      "sourceUrl": "https://x.com/kylegeeks/status/2046479783765397629",
-      "publishedAt": "2026-04-21T06:42:56.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776756766083_5gpzrm_HGaNNPeb0AEXZ5K.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776756766083_5gpzrm_HGaNNPeb0AEXZ5K-300x193.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776756766083_5gpzrm_HGaNNPeb0AEXZ5K.jpg"
-        },
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776756766292_xko1mp_HGaNhpmakAATYnm.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776756766292_xko1mp_HGaNhpmakAATYnm-300x533.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776756766292_xko1mp_HGaNhpmakAATYnm.jpg"
-        }
-      ]
-    },
-    {
-      "id": "14137",
-      "slug": "eastern-mythology-infographic-manuscript",
-      "title": "Eastern Mythology Infographic Manuscript",
-      "description": "A sophisticated prompt for creating an intricate infographic about the differences between Confucianism, Buddhism, and Taoism, styled as an ancient oriental mythological manuscript.",
-      "prompt": "A breathtaking and extremely complex world-building infographic masterpiece conceptualizing the \"{argument name=\"theme\" default=\"Fundamental Differences between Confucianism, Buddhism, and Taoism\"}\", designed as a profound {argument name=\"style\" default=\"ancient Oriental mythological manuscript\"}.\nBackground: Pure white vintage textured canvas with a light beige aged parchment base color, subtle frayed edges, and water stain textures.\nCore Layout: Central vision uses a grand \"vertical egg-shaped layered structure\", with Buddhism, Taoism, and Confucianism layers from top to bottom.\nMargins: Four corners are decorated with fine micro-illustrations featuring ancient observation notes, ritual implements, and runes.\nColors: Low-saturation sage green, light gold, and off-white as main tones; overall light and soft without harsh high-saturation colors.\nDetails: Architectural lines, landscape brushwork, lotus patterns, and cloud layers are clearly visible and exquisitely detailed.\nSeamless Fusion: The three layers transition naturally through clouds and flowing water; the Buddhist halo, Taoist Taiji mist, and Confucian scholarly aura connect seamlessly.\nStyle: Classical ink line art + low-saturation digital watercolor, with a light Chinese-style ancient book manuscript texture.\nText Annotations: Authentic Traditional Chinese characters in a mottled vintage Song typeface. Each annotation includes a short title + a line of poetic description, connected to corresponding details by dark gold hair-thin lines with no overlapping pointers.\nAspect Ratio: {argument name=\"aspect ratio\" default=\"3:4\"} vertical format, independent and complete.\n\nTitle Area (Top): `儒釋道·根本區別` (Confucianism, Buddhism, Taoism: Fundamental Differences)\nCentral Layer Labels:\nTop \"Buddhism\": `釋`, `Relationship between man and self`, `Selflessness, governing the heart, letting go` \nMiddle \"Taoism\": `道`, `Relationship between man and all things`, `Non-action, governing the body, being open-minded` \nBottom \"Confucianism\": `儒`, `Relationship between man and man`, `No ego, governing the world, taking responsibility` \nSide Annotations:\nLeft: `Purity`: pure heart and clear mind, cutting off troubles; `Stillness`: following nature, returning to the original heart; `Respect`: respecting responsibility, active involvement in society.\nRight: `60+ Spiritual Cultivation`: looking lightly at gain/loss; `35-55 Conduct`: living with flexibility, following laws; `7-35 Actions`: forging ahead, building careers.\nBottom Summary: `The balance between being in the world and being out of the world is high-level life wisdom.`",
-      "language": "zh",
-      "featured": false,
-      "authorName": "知识猫图解",
-      "authorUrl": "https://x.com/GeekCatX",
-      "sourceUrl": "https://x.com/GeekCatX/status/2046477494979793046",
-      "publishedAt": "2026-04-21T06:33:51.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776756777025_yj7bdn_HGaMbaUaAAAls--.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776756777025_yj7bdn_HGaMbaUaAAAls---300x450.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776756777025_yj7bdn_HGaMbaUaAAAls--.jpg"
-        }
-      ]
-    },
-    {
       "id": "14131",
       "slug": "saint-seiya-golden-saints-card-grid",
       "title": "Saint Seiya Golden Saints Card Grid",
@@ -320,28 +154,6 @@
           "url": "https://file.gptimage2api.net/media/1776756770665_yd1s04_HGaLQTfbkAA3xpN.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776756770665_yd1s04_HGaLQTfbkAA3xpN-300x169.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776756770665_yd1s04_HGaLQTfbkAA3xpN.jpg"
-        }
-      ]
-    },
-    {
-      "id": "14171",
-      "slug": "surreal-gothic-hall-with-floating-masks",
-      "title": "Surreal Gothic Hall with Floating Masks",
-      "description": "Generates a dark fantasy scene of a kneeling figure in a grand hall filled with suspended objects, ideal for cinematic concept art.",
-      "prompt": "A highly detailed, cinematic wide shot of a grand, dark gothic hall with a {argument name=\"atmosphere\" default=\"dark fantasy\"} aesthetic. In the center, a single figure wearing a {argument name=\"clothing\" default=\"long white robe\"} kneels on a highly reflective stone floor, facing an ornate golden altar illuminated by a row of lit candles. To the right of the kneeling figure, a single {argument name=\"floor object\" default=\"wooden violin\"} rests on the ground. The cavernous room is framed by massive dark stone pillars detailed with {argument name=\"accent color\" default=\"glowing blue\"} ethereal cracks and veins. Suspended from the high ceiling are dozens of {argument name=\"floating objects\" default=\"white porcelain theatrical masks\"} hanging on thin strings, filling the upper half of the space and creating a haunting, surreal atmosphere. The lighting is dramatic and moody, featuring a rich color palette of deep blacks, tarnished golds, and cool blue accents. Format 16:9.",
-      "language": "en",
-      "featured": false,
-      "authorName": "のうめん🏗️👺生成AIパスポート認定取れた",
-      "authorUrl": "https://x.com/nomen_machine",
-      "sourceUrl": "https://x.com/nomen_machine/status/2046473998389977218#reversed-1",
-      "publishedAt": "2026-04-21T06:19:57.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776756798221_54wxb5_HGaJP6Ba4AAxWvo.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776756798221_54wxb5_HGaJP6Ba4AAxWvo-300x169.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776756798221_54wxb5_HGaJP6Ba4AAxWvo.jpg"
         }
       ]
     },
@@ -766,28 +578,6 @@
       ]
     },
     {
-      "id": "14156",
-      "slug": "satirical-4-panel-caricature-comic-strip",
-      "title": "Satirical 4-Panel Caricature Comic Strip",
-      "description": "Generates a detailed, multi-panel black and white satirical comic strip with caricatures, dialogue bubbles, and narrative captions.",
-      "prompt": "{\n  \"type\": \"4-panel vertical comic strip\",\n  \"style\": \"{argument name=\\\"art style\\\" default=\\\"black and white pencil sketch, crosshatch shading, satirical caricature comic\\\"}\",\n  \"characters\": {\n    \"subject_1\": \"{argument name=\\\"main character\\\" default=\\\"Sam Altman\\\"}, curly hair, casual sweater\",\n    \"subject_2\": \"{argument name=\\\"interviewer\\\" default=\\\"Ronan Farrow\\\"}, suit, tie, holding notepad\"\n  },\n  \"layout\": {\n    \"panels\": [\n      {\n        \"panel_number\": 1,\n        \"top_caption\": \"SAM ALTMAN THINKS THIS WILL BE A NICE LITTLE PROFILE...\",\n        \"scene\": \"subject_1 looking smug with hands steepled; subject_2 looking serious taking notes.\",\n        \"thought_bubble\": \"I'LL BE CHARMING. IT'LL BE A GREAT CHARACTER PIECE. PEOPLE WILL LOVE IT.\",\n        \"center_text\": \"THE RONAN FARROW INTERVIEW\",\n        \"inset_portraits\": {\n          \"count\": 2,\n          \"labels\": [\"HARVEY WEINSTEIN EXPOSED\", \"LESLIE MOONVES EXPOSED\"]\n        },\n        \"info_boxes\": {\n          \"count\": 3,\n          \"text\": [\n            \"RONAN FARROW: PULITZER PRIZE-WINNING REPORTER WHO EXPOSED HARVEY WEINSTEIN AT THE NEW YORKER\",\n            \"AND LESLIE MOONVES AT CBS.\",\n            \"POWER. ABUSE. ACCOUNTABILITY.\"\n          ]\n        }\n      },\n      {\n        \"panel_number\": 2,\n        \"top_caption\": \"CUT TO...\",\n        \"scene\": \"Close-up of subject_1 looking shocked and horrified.\",\n        \"article_header\": \"{argument name=\\\"publication\\\" default=\\\"THE NEW YORKER\\\"}\\nTHE SAM ALTMAN PROFILE\\nTHE OPENAI CEO'S COMPLICATED QUEST\\nBy Ronan Farrow\"\n      },\n      {\n        \"panel_number\": 3,\n        \"top_caption\": \"SOON AFTER THE ARTICLE IS PUBLISHED...\",\n        \"scene\": \"subject_1 looking extremely stressed, sweating, holding a phone to his ear. Surrounded by 6 hands holding smartphones.\",\n        \"phone_labels\": [\"VC\", \"REPORTER\", \"EX-STAFFEE\", \"INVESTOR\", \"TECH CEO\", \"FORMER COLLEAGUE\"],\n        \"shouts\": {\n          \"count\": 8,\n          \"text\": [\n            \"{argument name=\\\"main accusation\\\" default=\\\"LIAR\\\"}!\",\n            \"COMPULSIVE LIAR!\",\n            \"PATHOLOGICAL LIAR!\",\n            \"YOU CAN'T STOP LYING!\",\n            \"LIAR!!!\",\n            \"SOCIOPATH! (ALLEGEDLY)\",\n            \"EVERYTHING HE SAYS IS A LIE!\",\n            \"MANIPULATIVE LIAR!\"\n          ]\n        },\n        \"sound_effects\": \"RING! RING! RING!\"\n      },\n      {\n        \"panel_number\": 4,\n        \"top_caption\": \"AND THE REPORT CONCLUDES...\",\n        \"scene\": \"subject_1 looking utterly defeated and depressed.\",\n        \"quote_box\": \"\\\"ALTMAN FREQUENTLY AND CONSISTENTLY LIES TO INVESTORS, EMPLOYEES, THE BOARD, AND EVEN CLOSE FRIENDS.\\\"\\n\\\"HE APPEARS TO HAVE NO COMFORT TELLING FALSEHOODS.\\\"\\n\\\"HE IS, BY MANY ACCOUNTS, A COMPULSIVE LIAR AND A SOCIOPATH.\\\"\\n(ALLEGEDLY)\",\n        \"thought_bubble\": {\n          \"scene\": \"Happy subject_1 holding a 'WORLD'S BEST CEO' mug.\",\n          \"text\": \"I THOUGHT IT WOULD BE A NICE LITTLE PROFILE...\",\n          \"sparkle_words\": {\n            \"count\": 4,\n            \"text\": [\"GENIUS!\", \"VISIONARY!\", \"INSPIRING!\", \"BRILLIANT LEADER!\"]\n          }\n        },\n        \"bottom_caption\": \"INSTEAD, IT'S THE PROFILE THAT EXPOSES HIM.\"\n      }\n    ]\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "Kai",
-      "authorUrl": "https://x.com/kaikaitheaiguy",
-      "sourceUrl": "https://x.com/kaikaitheaiguy/status/2046348036394393677#reversed-1",
-      "publishedAt": "2026-04-20T21:59:25.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776756788051_n4epwt_HGYWsDJa4AE-NwU.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776756788051_n4epwt_HGYWsDJa4AE-NwU-300x450.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776756788051_n4epwt_HGYWsDJa4AE-NwU.jpg"
-        }
-      ]
-    },
-    {
       "id": "14246",
       "slug": "two-page-psychological-thriller-manga-spread",
       "title": "Two-Page Psychological Thriller Manga Spread",
@@ -906,28 +696,6 @@
           "url": "https://file.gptimage2api.net/media/1776756782892_8esyca_HGX6VAtaEAAoKOp.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776756782892_8esyca_HGX6VAtaEAAoKOp-300x200.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776756782892_8esyca_HGX6VAtaEAAoKOp.jpg"
-        }
-      ]
-    },
-    {
-      "id": "14159",
-      "slug": "soccer-match-infographic-poster",
-      "title": "Soccer Match Infographic Poster",
-      "description": "Generates a detailed sports matchup poster with player portraits, team logos, and a 5-point facts section.",
-      "prompt": "{\n  \"type\": \"sports match infographic poster\",\n  \"theme\": \"UEFA Champions League\",\n  \"background\": \"dark blue and purple cosmic sky, glowing blue hexagonal lines, illuminated stadium reflecting on water at bottom\",\n  \"header\": {\n    \"logo\": \"UEFA Champions League\",\n    \"title\": \"{argument name=\\\"stage\\\" default=\\\"HALBFINALE\\\"}\",\n    \"subtitle\": \"DAS ZIEL: {argument name=\\\"location\\\" default=\\\"BUDAPEST 2026\\\"}\",\n    \"venue\": \"PUSKÁS ARÉNA\"\n  },\n  \"matchup\": {\n    \"player_left\": \"{argument name=\\\"team 1 player\\\" default=\\\"Harry Kane\\\"} in red FC Bayern kit\",\n    \"player_right\": \"{argument name=\\\"team 2 player\\\" default=\\\"Ousmane Dembélé\\\"} in blue PSG kit\",\n    \"center_logos\": \"FC Bayern München and Paris Saint-Germain with VS\",\n    \"date_box\": \"calendar icon, MITTWOCH, {argument name=\\\"date\\\" default=\\\"06.05.2026\\\"}\"\n  },\n  \"facts_section\": {\n    \"title\": \"FACTS\",\n    \"count\": 5,\n    \"items\": [\n      \"Trophy icon: DIE KÖNIGSKLASSE 2025/26\",\n      \"Bar chart icon: KANE IN TOPFORM\",\n      \"Lightning bolt icon: DEMBÉLÉ ÜBERFLIEGER\",\n      \"Two people icon: BISHER 14 DUELLE\",\n      \"Stadium icon: BUDAPEST RUFT\"\n    ]\n  },\n  \"footer\": {\n    \"trophy\": \"Champions League trophy on right\",\n    \"stadium_image\": \"Puskás Aréna at night\",\n    \"tagline\": \"EIN TRAUM. EIN ZIEL. EIN TITEL.\",\n    \"bottom_text\": \"ROAD TO BUDAPEST 2026\"\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "MCapital",
-      "authorUrl": "https://x.com/NumeroBTC",
-      "sourceUrl": "https://x.com/NumeroBTC/status/2046313506396574102#reversed-0",
-      "publishedAt": "2026-04-20T19:42:13.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776756790183_h3xfum_HGX3RW7asAA8eUG.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776756790183_h3xfum_HGX3RW7asAA8eUG-300x632.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776756790183_h3xfum_HGX3RW7asAA8eUG.jpg"
         }
       ]
     },
@@ -1060,28 +828,6 @@
           "url": "https://file.gptimage2api.net/media/1776756826119_t8j5j6_HGXqtN3agAAiUPj.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776756826119_t8j5j6_HGXqtN3agAAiUPj-300x169.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776756826119_t8j5j6_HGXqtN3agAAiUPj.jpg"
-        }
-      ]
-    },
-    {
-      "id": "14258",
-      "slug": "superhero-costume-swap-portrait",
-      "title": "Superhero Costume Swap Portrait",
-      "description": "Generates a cinematic studio portrait of two actors wearing swapped superhero costumes facing each other.",
-      "prompt": "A cinematic studio portrait of two men facing each other in a tense stare-down against a plain dark grey background. On the left, {argument name=\"left actor\" default=\"Jensen Ackles\"} wearing {argument name=\"left costume\" default=\"a dark blue textured superhero suit with red gloves, gold eagle pauldrons, and a cape\"}. On the right, {argument name=\"right actor\" default=\"Antony Starr\"} wearing {argument name=\"right costume\" default=\"a dark green and black tactical suit with a star emblem on the chest and red gloves\"}. The man on the right has his hands on his hips. Dramatic, moody studio lighting, highly detailed, photorealistic.",
-      "language": "en",
-      "featured": false,
-      "authorName": "Lyra - e/acc",
-      "authorUrl": "https://x.com/HumanOS_v2",
-      "sourceUrl": "https://x.com/HumanOS_v2/status/2046298754157064607#reversed-0",
-      "publishedAt": "2026-04-20T18:43:36.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776756847890_7hxzaf_HGXpw9qbwAAXfTU.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776756847890_7hxzaf_HGXpw9qbwAAXfTU-300x240.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776756847890_7hxzaf_HGXpw9qbwAAXfTU.jpg"
         }
       ]
     },
@@ -1782,34 +1528,6 @@
           "url": "https://file.gptimage2api.net/media/1776756764565_tc8h7v_HGW3PphaIAEANfl.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776756764565_tc8h7v_HGW3PphaIAEANfl-300x450.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776756764565_tc8h7v_HGW3PphaIAEANfl.jpg"
-        }
-      ]
-    },
-    {
-      "id": "14139",
-      "slug": "high-quality-brand-poster-generator",
-      "title": "High-Quality Brand Poster Generator",
-      "description": "A detailed prompt for creating professional Tiffany & Co. style advertisements using reference images of a specific person.",
-      "prompt": "The two attached images are of one woman. Use these images to create 4 patterns of poster advertisements for {argument name=\"brand name\" default=\"Tiffany & Co.\"} aimed at the Japanese market. Include the copy: \"{argument name=\"ad copy\" default=\"With Love, Since 1837\\nInner strength is not something you find, it's something you build.\"}\". Change her clothes to match the {argument name=\"brand name\" default=\"Tiffany & Co.\"} visual and adjust the background. Focus on professional advertisement quality, camera aperture, and lighting.",
-      "language": "ja",
-      "featured": false,
-      "authorName": "山田イトウ｜還暦AI伴走者",
-      "authorUrl": "https://x.com/I_Yamada_AI",
-      "sourceUrl": "https://x.com/I_Yamada_AI/status/2046242959126053316",
-      "publishedAt": "2026-04-20T15:01:53.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776756777412_1un582_HGW2BEEbgAElaoi.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776756777412_1un582_HGW2BEEbgAElaoi-300x450.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776756777412_1un582_HGW2BEEbgAElaoi.jpg"
-        },
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776756777424_3k9bcu_HGW2BEPa0AAmaTI.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776756777424_3k9bcu_HGW2BEPa0AAmaTI-300x450.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776756777424_3k9bcu_HGW2BEPa0AAmaTI.jpg"
         }
       ]
     },
@@ -3786,46 +3504,6 @@
       ]
     },
     {
-      "id": "14134",
-      "slug": "e-commerce-product-page-generator",
-      "title": "E-commerce Product Page Generator",
-      "description": "A detailed prompt for creating an e-commerce product detail page for a fictional item, showing different views and features.",
-      "prompt": "A {argument name=\"platform\" default=\"Taobao\"} product detail page for {argument name=\"robot model\" default=\"T-800 robot\"}, displaying: front, side, and back three-view drawings of the robot, product price, product details, functions, and usage scenarios, etc.",
-      "language": "zh",
-      "featured": false,
-      "authorName": "阿兰AI",
-      "authorUrl": "https://x.com/alanlovelq",
-      "sourceUrl": "https://x.com/alanlovelq/status/2046048929490612464",
-      "publishedAt": "2026-04-20T02:10:53.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776756772675_jeajpn_HGUGld9bAAAUe_s.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776756772675_jeajpn_HGUGld9bAAAUe_s-300x400.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776756772675_jeajpn_HGUGld9bAAAUe_s.jpg"
-        },
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776756772449_903tnx_HGUGmoLasAAKY9V.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776756772449_903tnx_HGUGmoLasAAKY9V-300x400.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776756772449_903tnx_HGUGmoLasAAKY9V.jpg"
-        },
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776756772471_rp1k5s_HGUGnuCacAA9ROi.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776756772471_rp1k5s_HGUGnuCacAA9ROi-300x225.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776756772471_rp1k5s_HGUGnuCacAA9ROi.jpg"
-        },
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776756773769_y74wyh_HGUGoqGaEAAmaAp.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776756773769_y74wyh_HGUGoqGaEAAmaAp-300x427.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776756773769_y74wyh_HGUGoqGaEAAmaAp.jpg"
-        }
-      ]
-    },
-    {
       "id": "13449",
       "slug": "ligne-claire-suburban-landscape",
       "title": "Ligne Claire Suburban Landscape",
@@ -3866,28 +3544,6 @@
           "url": "https://file.gptimage2api.net/media/1776756768855_84mhe3_HGUBograIAAnA3K.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776756768855_84mhe3_HGUBograIAAnA3K-300x450.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776756768855_84mhe3_HGUBograIAAnA3K.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13523",
-      "slug": "live-stream-ui-mockup-with-3d-effects",
-      "title": "Live Stream UI Mockup with 3D Effects",
-      "description": "Generates a highly detailed mobile live streaming interface featuring a central subject, virtual gift effects, chat overlays, and floating 3D mascot characters.",
-      "prompt": "{\n  \"type\": \"mobile live stream interface mockup\",\n  \"main_subject\": \"{argument name=\\\"main subject\\\" default=\\\"beautiful young Asian woman smiling\\\"}\",\n  \"centerpiece_effect\": \"{argument name=\\\"centerpiece effect\\\" default=\\\"large space shuttle taking off with bright flames and smoke\\\"}\",\n  \"floating_characters\": [\n    {\"position\": \"top left\", \"description\": \"cartoon pig character Zhu Bajie holding a golden bowl\"},\n    {\"position\": \"top right\", \"description\": \"cartoon monkey character Sun Wukong holding a staff\"},\n    {\"position\": \"bottom right\", \"description\": \"cartoon man with mustache in a suit holding a glowing lightbulb\"}\n  ],\n  \"ui_layout\": {\n    \"header\": {\n      \"streamer_info\": {\"name\": \"{argument name=\\\"streamer name\\\" default=\\\"小甜心✨\\\"}\", \"likes\": \"28.5万本场点赞\", \"button\": \"关注\"},\n      \"top_viewers\": {\"count\": 3, \"labels\": [\"12.8w\", \"8.9w\", \"6.6w\"]},\n      \"total_viewers\": \"10万+\"\n    },\n    \"status_bars\": {\"count\": 3, \"labels\": [\"小时榜第1名\", \"礼物展馆 24/28\", \"心愿达成 差3.2万\"]},\n    \"gift_notifications\": {\n      \"position\": \"mid-left\",\n      \"count\": 3,\n      \"items\": [\n        {\"sender\": \"八戒哥\", \"action\": \"送 大火箭\", \"combo\": \"x188\"},\n        {\"sender\": \"齐天大圣\", \"action\": \"送 嘉年华\", \"combo\": \"x1314\"},\n        {\"sender\": \"汤森老师\", \"action\": \"送 梦幻城堡\", \"combo\": \"x520\"}\n      ]\n    },\n    \"chat_box\": {\n      \"position\": \"bottom left\",\n      \"count\": 7,\n      \"messages\": [\n        \"甜心小迷弟 加入了直播间\",\n        \"星辰大海: {argument name=\\\"top chat message\\\" default=\\\"女神好美！声音好好听！\\\"}\",\n        \"抖音用户: 666666\",\n        \"快乐每一天: 太精彩了，火箭升空！\",\n        \"富贵花开 送出 大火箭 x1\",\n        \"风清扬: 这特效绝了！\",\n        \"可可西里: 主播我爱你！\"\n      ]\n    },\n    \"bottom_right_graphic\": {\"text\": \"{argument name=\\\"bottom graphic text\\\" default=\\\"直播间 火力全开\\\"}\", \"style\": \"large 3D glowing typography\"},\n    \"bottom_bar\": {\"input_placeholder\": \"说点什么...\", \"icons_count\": 4, \"decorations\": \"floating colorful hearts on the right\"}\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "Berryxia.AI",
-      "authorUrl": "https://x.com/berryxia",
-      "sourceUrl": "https://x.com/berryxia/status/2046035090883703088#reversed-0",
-      "publishedAt": "2026-04-20T01:15:53.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776756793012_is3i1l_HGT54eGaMAAXD4i.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776756793012_is3i1l_HGT54eGaMAAXD4i-300x375.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776756793012_is3i1l_HGT54eGaMAAXD4i.jpg"
         }
       ]
     },
@@ -4328,50 +3984,6 @@
       ]
     },
     {
-      "id": "13557",
-      "slug": "livestream-e-commerce-interface-mockup",
-      "title": "Livestream E-commerce Interface Mockup",
-      "description": "Generates a mobile livestream shopping interface featuring a celebrity selling a fictional product, complete with chat overlay and UI elements.",
-      "prompt": "{\n  \"type\": \"mobile livestream e-commerce interface mockup\",\n  \"subject\": {\n    \"person\": \"Elon Musk\",\n    \"clothing\": \"black t-shirt with SPACEX logo\",\n    \"pose\": \"gesturing towards camera with both hands, explaining enthusiastically\",\n    \"watermark\": \"@Proof AI\"\n  },\n  \"background\": {\n    \"setting\": \"large display screen\",\n    \"image\": \"Mars landscape with Starship rocket and dome habitats\",\n    \"text\": [\n      \"SPACEX\",\n      \"{argument name=\\\"background title\\\" default=\\\"移民火星计划\\\"}\"\n    ]\n  },\n  \"ui_layout\": {\n    \"header\": {\n      \"broadcaster_info\": {\n        \"name\": \"{argument name=\\\"broadcaster name\\\" default=\\\"ElonMusk\\\"}\",\n        \"stats\": \"75.8万本场点赞\",\n        \"follow_button\": \"关注\"\n      },\n      \"viewer_stats\": {\n        \"avatars_count\": 3,\n        \"text\": \"10万+\",\n        \"close_button\": \"X\"\n      },\n      \"tags\": [\n        \"带货总榜第1名\",\n        \"更多直播 >\"\n      ]\n    },\n    \"product_card\": {\n      \"position\": \"mid-right\",\n      \"status\": \"讲解中\",\n      \"image\": \"Mars dome habitats\",\n      \"title\": \"{argument name=\\\"product title\\\" default=\\\"火星移民基础套餐\\\"}\",\n      \"price\": \"{argument name=\\\"product price\\\" default=\\\"¥99.00\\\"}\",\n      \"action_button\": \"抢\"\n    },\n    \"chat_overlay\": {\n      \"position\": \"bottom-left\",\n      \"join_alert\": \"星辰大海 加入了直播间\",\n      \"messages_count\": 7,\n      \"messages\": [\n        \"{argument name=\\\"top chat message\\\" default=\\\"梦想家: 支持马斯克！！🚀\\\"}\",\n        \"火星弟弟: 多少钱一位？\",\n        \"科技迷: 太酷了！想去火星！\",\n        \"未来已来: 如何报名？\",\n        \"小火箭: 🌹🌹🌹\",\n        \"宇宙无敌: 讲解一下细节\",\n        \"东方不败: 老马牛逼！👍👍👍\"\n      ]\n    },\n    \"bottom_action_bar\": {\n      \"input_placeholder\": \"说点什么...\",\n      \"icons_count\": 4,\n      \"icons\": [\"shopping cart\", \"gift box\", \"heart planet\", \"plus sign\"]\n    },\n    \"floating_reactions\": {\n      \"position\": \"bottom-right\",\n      \"elements\": \"stack of floating hearts, thumbs up, and laughing emojis\"\n    }\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "Proof · AI Productivity",
-      "authorUrl": "https://x.com/JCutcut47692",
-      "sourceUrl": "https://x.com/JCutcut47692/status/2045846999032008876#reversed-0",
-      "publishedAt": "2026-04-19T12:48:29.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776668161813_cyei4t_HGRO3rxaEAAMrny.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776668161813_cyei4t_HGRO3rxaEAAMrny-300x621.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776668161813_cyei4t_HGRO3rxaEAAMrny.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13503",
-      "slug": "mars-selfie-social-media-mockup",
-      "title": "Mars Selfie Social Media Mockup",
-      "description": "Generates a realistic social media app interface mockup featuring a customizable user post, image, and engagement statistics.",
-      "prompt": "{\n  \"type\": \"social media app interface mockup\",\n  \"platform_style\": \"Xiaohongshu\",\n  \"layout\": {\n    \"header\": {\n      \"logo\": \"red pill with '小红书'\",\n      \"tabs\": [\"关注 v\", \"发现\", \"附近\"],\n      \"active_tab\": \"发现\",\n      \"icons\": 1,\n      \"icon_types\": [\"search\"]\n    },\n    \"user_profile\": {\n      \"avatar\": \"portrait of Elon Musk\",\n      \"name\": \"{argument name=\\\"user name\\\" default=\\\"Elon Musk\\\"}\",\n      \"verified_badge\": \"blue checkmark\",\n      \"subtitle\": \"科技公司创始人/工程师\",\n      \"action_buttons\": 3,\n      \"button_labels\": [\"关注\", \"share icon\", \"ellipsis icon\"]\n    },\n    \"post_content\": {\n      \"text\": \"{argument name=\\\"post text\\\" default=\\\"在火星上看到第一缕阳光。这是人类文明的下一步。星舰 + 星链 + 可持续能源，让生命成为多行星物种。未来已来！🚀\\\"}\",\n      \"image\": {\n        \"description\": \"{argument name=\\\"image subject\\\" default=\\\"Elon Musk taking a selfie on Mars\\\"}\",\n        \"clothing\": \"black jacket with SPACEX logo\",\n        \"background\": \"{argument name=\\\"background elements\\\" default=\\\"Starship rocket, geodesic habitat domes, solar panel arrays, Martian landscape at sunrise\\\"}\",\n        \"watermark\": \"@Proof AI\",\n        \"location_overlay\": {\n          \"icon\": \"bar chart\",\n          \"text\": \"{argument name=\\\"location tag\\\" default=\\\"火星 · 乌托邦平原 >\\\"}\"\n        }\n      },\n      \"pagination_dots\": 5\n    },\n    \"footer\": {\n      \"comment_input\": \"说点什么...\",\n      \"interaction_stats\": 3,\n      \"stats_details\": [\n        {\"icon\": \"heart\", \"count\": \"12.8万\"},\n        {\"icon\": \"star\", \"count\": \"2.6万\"},\n        {\"icon\": \"speech bubble\", \"count\": \"1.5万\"}\n      ],\n      \"metadata\": \"昨天 23:42 美国\",\n      \"feedback_button\": \"不喜欢\"\n    }\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "Proof · AI Productivity",
-      "authorUrl": "https://x.com/JCutcut47692",
-      "sourceUrl": "https://x.com/JCutcut47692/status/2045846999032008876#reversed-1",
-      "publishedAt": "2026-04-19T12:48:29.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776662182499_1o983e_HGRO3rqbQAAS4cL.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776662182499_1o983e_HGRO3rqbQAAS4cL-300x450.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776662182499_1o983e_HGRO3rqbQAAS4cL.jpg"
-        }
-      ]
-    },
-    {
       "id": "13445",
       "slug": "academic-exam-paper-generator",
       "title": "Academic Exam Paper Generator",
@@ -4732,34 +4344,6 @@
           "url": "https://file.gptimage2api.net/media/1776658759466_0vvd9m_HGPgEzEbUAA6-9s.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776658759466_0vvd9m_HGPgEzEbUAA6-9s-300x398.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776658759466_0vvd9m_HGPgEzEbUAA6-9s.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13485",
-      "slug": "douyin-live-stream-ui-prompt",
-      "title": "Douyin Live Stream UI Prompt",
-      "description": "A simple prompt for generating a user interface simulation of a Douyin live streaming room, useful for app design prototyping.",
-      "prompt": "Generate a Douyin live stream interface, showing a {argument name=\"subject\" default=\"beautiful woman\"} performing a {argument name=\"activity\" default=\"live broadcast\"}",
-      "language": "zh",
-      "featured": false,
-      "authorName": "Sun phone",
-      "authorUrl": "https://x.com/Sun_yuqixx",
-      "sourceUrl": "https://x.com/Sun_yuqixx/status/2045722712497340506",
-      "publishedAt": "2026-04-19T04:34:37.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776661928420_07wu78_HGPd9gcbQAACwFz.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776661928420_07wu78_HGPd9gcbQAACwFz-300x533.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776661928420_07wu78_HGPd9gcbQAACwFz.jpg"
-        },
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776661936646_nij14f_HGPd9gYbAAAUPzV.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776661936646_nij14f_HGPd9gYbAAAUPzV-300x650.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776661936646_nij14f_HGPd9gYbAAAUPzV.jpg"
         }
       ]
     },
@@ -5944,50 +5528,6 @@
       ]
     },
     {
-      "id": "13995",
-      "slug": "e-commerce-livestream-ui-mockup",
-      "title": "E-commerce Livestream UI Mockup",
-      "description": "Generates a highly detailed Chinese e-commerce livestream interface featuring a presenter, product boxes, live chat, and promotional overlays.",
-      "prompt": "{\n  \"type\": \"e-commerce livestream screenshot mockup\",\n  \"scene\": {\n    \"subject\": \"{argument name=\\\"main subject\\\" default=\\\"Caucasian male resembling Sam Altman\\\"}\",\n    \"clothing\": \"dark green crewneck sweater\",\n    \"action\": \"holding a black product box in one hand and pointing at it with the other\",\n    \"setting\": \"dark studio with a microphone on the left, faint 'AI' text in the background\",\n    \"props\": [\n      \"black mug with white OpenAI logo\",\n      \"stack of 4 black product boxes on the right\"\n    ]\n  },\n  \"product_design\": {\n    \"box_color\": \"black\",\n    \"logo\": \"orange asterisk or sunburst\",\n    \"text\": \"{argument name=\\\"product name\\\" default=\\\"Claude Opus 4.7\\\"}\"\n  },\n  \"ui_overlays\": {\n    \"top_left_product_info\": {\n      \"brand_tag\": \"Anthropic 官方旗舰店\",\n      \"title\": \"{argument name=\\\"product name\\\" default=\\\"Claude Opus 4.7\\\"}\",\n      \"subtitle\": \"{argument name=\\\"main headline\\\" default=\\\"更强推理·更高智能\\\"}\",\n      \"sub_subtitle\": \"最强大模型: Opus 4.7 重磅发布!\",\n      \"bullet_points_count\": 3,\n      \"bullet_points\": [\"超强推理能力\", \"代码能力巅峰\", \"复杂任务轻松搞定\"]\n    },\n    \"top_right_live_status\": {\n      \"viewer_info\": \"直播中 | 52.8万人观看\",\n      \"promo_banner\": \"直播专属福利 限时折扣·错过不再有\",\n      \"countdown\": \"倒计时 00:09:47\"\n    },\n    \"middle_right_price_card\": {\n      \"header\": \"{argument name=\\\"product name\\\" default=\\\"Claude Opus 4.7\\\"} 直播间专享价\",\n      \"price_currency\": \"¥\",\n      \"price_value\": \"{argument name=\\\"promotional price\\\" default=\\\"0.47\\\"}\",\n      \"price_unit\": \"/百万tokens起\",\n      \"original_price\": \"原价: ¥1.89\",\n      \"button\": \"立即抢购\"\n    },\n    \"bottom_left_chat\": {\n      \"message_count\": 9,\n      \"input_box_placeholder\": \"说点什么...\"\n    },\n    \"bottom_right_banner\": {\n      \"headline\": \"奥特曼首推！认准Claude Opus 4.7\",\n      \"subheadline\": \"更智能 · 更安全 · 更可靠\",\n      \"feature_tags_count\": 4,\n      \"feature_tags\": [\"强大推理\", \"代码神器\", \"安全可靠\", \"极速响应\"]\n    },\n    \"floating_elements\": [\n      {\n        \"type\": \"sticker\",\n        \"position\": \"middle right over product boxes\",\n        \"text\": \"{argument name=\\\"sticker text\\\" default=\\\"史上最强 AI模型!\\\"}\"\n      }\n    ]\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "程序员Left",
-      "authorUrl": "https://x.com/coder_left",
-      "sourceUrl": "https://x.com/coder_left/status/2045416935106773045#reversed-1",
-      "publishedAt": "2026-04-18T08:19:33.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776699419558_ef89oe_HGLH29jbcAAHELr.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776699419558_ef89oe_HGLH29jbcAAHELr-300x274.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776699419558_ef89oe_HGLH29jbcAAHELr.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13992",
-      "slug": "e-commerce-livestream-ui-mockup-2",
-      "title": "E-commerce Livestream UI Mockup",
-      "description": "Generates a realistic mobile livestream screenshot featuring a host, chat interface, and product purchase card.",
-      "prompt": "{\n  \"type\": \"mobile livestream screenshot\",\n  \"subject\": {\n    \"person\": \"Sam Altman\",\n    \"action\": \"looking directly at the camera, gesturing with right hand extended forward\",\n    \"clothing\": \"dark green sweater\"\n  },\n  \"background\": \"room with a shelf containing 3 wine bottles, a sign saying 'AGI', and an OpenAI logo on the wall\",\n  \"layout\": {\n    \"top_bar\": {\n      \"time\": \"20:34\",\n      \"battery\": \"77+\"\n    },\n    \"streamer_info\": {\n      \"name\": \"{argument name=\\\"streamer name\\\" default=\\\"OpenAI\\\"}\",\n      \"likes\": \"48.3万本场点赞\",\n      \"button\": \"关注\"\n    },\n    \"viewer_stats\": {\n      \"viewers\": \"10万+\",\n      \"avatars_count\": 3\n    },\n    \"banners\": {\n      \"count\": 4,\n      \"labels\": [\"OpenAI官方旗舰店榜第1名\", \"更多直播\", \"00:12\", \"520好礼季\"]\n    },\n    \"host_label\": {\n      \"name\": \"{argument name=\\\"host name\\\" default=\\\"山姆奥特曼 Sam Altman\\\"}\",\n      \"status\": \"直播中\",\n      \"subtitle\": \"{argument name=\\\"host quote\\\" default=\\\"大家好，我是山姆奥特曼，GPT滞销，帮帮我们！\\\"}\"\n    },\n    \"chat_box\": {\n      \"message_count\": 6,\n      \"messages\": [\n        \"1号小迷妹: 来了来了\",\n        \"博士在深圳: 支持奥特曼！支持 OpenAI！\",\n        \"AI爱好者: GPTplus买起来！\",\n        \"小太阳: 先拍一单试试\",\n        \"OpenAI小助理: 点击下方小黄车，了解更多产品信息~\",\n        \"淡定哥: 已拍，支持！\"\n      ]\n    },\n    \"product_card\": {\n      \"title\": \"{argument name=\\\"product name\\\" default=\\\"OpenAI ChatGPT Plus 订阅服务 (一个月)\\\"}\",\n      \"features\": \"正品保障 7天无理由 过期自动退 随时可退\",\n      \"price\": \"{argument name=\\\"product price\\\" default=\\\"¥199\\\"}\",\n      \"button\": \"抢\"\n    },\n    \"bottom_bar\": {\n      \"input_placeholder\": \"说点什么...\",\n      \"icons_count\": 4\n    }\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "程序员Left",
-      "authorUrl": "https://x.com/coder_left",
-      "sourceUrl": "https://x.com/coder_left/status/2045416935106773045#reversed-0",
-      "publishedAt": "2026-04-18T08:19:33.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776699418123_ekn4rp_HGLH29laoAAK7_2.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776699418123_ekn4rp_HGLH29laoAAK7_2-300x649.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776699418123_ekn4rp_HGLH29laoAAK7_2.jpg"
-        }
-      ]
-    },
-    {
       "id": "13993",
       "slug": "herbal-chicken-soup-label-transformation",
       "title": "Herbal Chicken Soup Label Transformation",
@@ -6554,46 +6094,6 @@
           "url": "https://file.gptimage2api.net/media/1776699415886_xuszbw_HGKa-tcaEAAdNsM.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776699415886_xuszbw_HGKa-tcaEAAdNsM-300x300.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776699415886_xuszbw_HGKa-tcaEAAdNsM.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13982",
-      "slug": "realistic-chalkboard-text-rendering",
-      "title": "Realistic Chalkboard Text Rendering",
-      "description": "A prompt focusing on GPT-Image-2's impressive ability to render realistic handwritten Chinese characters on a chalkboard.",
-      "prompt": "A realistic photo of {argument name=\"text content\" default=\"the full text of Chu Shi Biao\"} handwritten on a classroom blackboard, with realistic chalk handwriting, taken in {argument name=\"lighting\" default=\"bright daylight\"} with an {argument name=\"device\" default=\"iPhone\"}",
-      "language": "zh",
-      "featured": false,
-      "authorName": "Rion Wu",
-      "authorUrl": "https://x.com/rionaifantasy",
-      "sourceUrl": "https://x.com/rionaifantasy/status/2045356799751303194",
-      "publishedAt": "2026-04-18T04:20:36.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776699413401_bjjn3t_HGKRDuzbMAAtLll.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776699413401_bjjn3t_HGKRDuzbMAAtLll-300x400.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776699413401_bjjn3t_HGKRDuzbMAAtLll.jpg"
-        },
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776699413439_p6f6j1_HGKRDu1bEAAZ1WJ.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776699413439_p6f6j1_HGKRDu1bEAAZ1WJ-300x400.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776699413439_p6f6j1_HGKRDu1bEAAZ1WJ.jpg"
-        },
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776699413400_8n1562_HGKRD0MagAAVzoj.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776699413400_8n1562_HGKRD0MagAAVzoj-300x225.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776699413400_8n1562_HGKRD0MagAAVzoj.jpg"
-        },
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776699414023_lltrtc_HGKRE9raQAAMoBc.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776699414023_lltrtc_HGKRE9raQAAMoBc-300x427.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776699414023_lltrtc_HGKRE9raQAAMoBc.jpg"
         }
       ]
     },
@@ -7702,50 +7202,6 @@
       ]
     },
     {
-      "id": "13903",
-      "slug": "gold-black-info-product-thumbnail",
-      "title": "Gold & Black Info-Product Thumbnail",
-      "description": "Generates a flashy, text-heavy promotional banner or YouTube thumbnail featuring a confident subject and multiple structured text callouts.",
-      "prompt": "{\n  \"type\": \"promotional banner / YouTube thumbnail\",\n  \"style\": \"high contrast, flashy, professional, {argument name=\\\"theme color\\\" default=\\\"gold and black\\\"} palette, glowing light rays, sparkling particles\",\n  \"subject\": {\n    \"description\": \"{argument name=\\\"subject description\\\" default=\\\"confident young Asian man in a dark suit with arms crossed\\\"}\",\n    \"pose\": \"looking upwards to the right\",\n    \"props\": \"glowing open laptop in front of him\"\n  },\n  \"layout\": {\n    \"background\": \"dark with radiant gold light bursts\",\n    \"text_sections\": {\n      \"top_left_badge\": \"[保存版]\",\n      \"top_header\": \"{argument name=\\\"top text\\\" default=\\\"知識ゼロからでも今日から始められる！ AIで稼ぐ力を最短で手に入れる！\\\"}\",\n      \"main_title\": {\n        \"text\": \"{argument name=\\\"main title\\\" default=\\\"AI副業 完全攻略\\\"}\",\n        \"style\": \"large, bold, 3D gold and white typography\"\n      },\n      \"subtitle_box\": \"{argument name=\\\"subtitle\\\" default=\\\"初心者でも月10万\\\"}\",\n      \"top_right_badge\": {\n        \"style\": \"gold laurel wreath\",\n        \"text\": \"2026年版 最新版\"\n      },\n      \"middle_right_tags\": {\n        \"count\": 3,\n        \"style\": \"stacked gold-bordered boxes\",\n        \"labels\": [\"最短で収益化\", \"具体例つき\", \"誰でも始めやすい\"]\n      },\n      \"middle_right_ribbon\": {\n        \"style\": \"red ribbon banner\",\n        \"text\": \"手順を徹底解説\"\n      },\n      \"bottom_left_tags\": {\n        \"count\": 6,\n        \"style\": \"2x3 grid of gold-bordered boxes\",\n        \"labels\": [\"おすすめツール紹介\", \"収益化の流れがわかる\", \"失敗しない始め方\", \"作業時間を最小化\", \"テンプレ付き\", \"再現しやすい方法\"]\n      },\n      \"bottom_footer\": \"迷わず稼げる！AI副業の教科書\",\n      \"bottom_right_badge\": {\n        \"style\": \"gold laurel wreath\",\n        \"text\": \"テンプレ付き\"\n      }\n    }\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "ナーガ@X女帝",
-      "authorUrl": "https://x.com/naga_zyashin",
-      "sourceUrl": "https://x.com/naga_zyashin/status/2045113428952678447#reversed-2",
-      "publishedAt": "2026-04-17T12:13:32.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776697106260_dl2b9r_HGGzzjmasAAub4r.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776697106260_dl2b9r_HGGzzjmasAAub4r-300x158.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776697106260_dl2b9r_HGGzzjmasAAub4r.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13901",
-      "slug": "neon-ai-side-hustle-youtube-thumbnail",
-      "title": "Neon AI Side Hustle YouTube Thumbnail",
-      "description": "Generates a vibrant, information-dense promotional thumbnail with a cosmic background, an anime-style character, and multiple customizable Japanese text badges.",
-      "prompt": "{\n  \"type\": \"promotional banner thumbnail\",\n  \"style\": \"vibrant neon, cosmic galaxy background, anime illustration style, high-density Japanese typography, glowing text effects\",\n  \"character\": {\n    \"description\": \"smiling young woman pointing upwards with right index finger\",\n    \"appearance\": \"long {argument name=\\\"character hair color\\\" default=\\\"brown\\\"} hair, purple drop earrings, textured purple sweater\",\n    \"position\": \"right side\"\n  },\n  \"layout\": {\n    \"background\": \"purple, pink, and blue starry space nebula\",\n    \"center_typography\": {\n      \"top_small_text\": \"何から始めるか迷う人へ\",\n      \"main_title\": \"{argument name=\\\"main title\\\" default=\\\"初心者でもわかる AI副業\\\"}\",\n      \"subtitle\": \"最初の1本におすすめ\",\n      \"floating_text_near_character\": \"やさしく解説♡\"\n    },\n    \"top_left\": {\n      \"yellow_ribbon\": \"{argument name=\\\"top left ribbon text\\\" default=\\\"ゼロから始める\\\"}\"\n    },\n    \"top_right\": {\n      \"pink_circle_badge\": \"初心者 OK\"\n    },\n    \"left_column\": {\n      \"count\": 7,\n      \"description\": \"stack of pill-shaped badges\",\n      \"labels\": [\n        \"スマホでもOK (with phone icon)\",\n        \"副業デビューに (with beginner mark icon)\",\n        \"具体例つき\",\n        \"テンプレ付き\",\n        \"おすすめツール紹介\",\n        \"収益化の流れ\",\n        \"失敗しない始め方\"\n      ]\n    },\n    \"bottom_left_graphics\": {\n      \"count\": 3,\n      \"items\": [\n        \"laptop displaying an AI circuit brain graphic\",\n        \"glowing lightbulb\",\n        \"rocket ship taking off\"\n      ]\n    },\n    \"bottom_center\": {\n      \"large_purple_button\": \"{argument name=\\\"bottom center button text\\\" default=\\\"完全解説\\\"}\",\n      \"checklist_text_below\": \"✓始め方 ✓稼ぎ方 ✓注意点 ✓続け方まで全部わかる！\"\n    },\n    \"bottom_right\": {\n      \"pink_cloud_shape\": {\n        \"count\": 3,\n        \"bullet_points\": [\n          \"✓難しい知識不要\",\n          \"✓今日から始められる\",\n          \"✓やさしく丁寧に解説\"\n        ]\n      },\n      \"gold_medal_seal\": \"保存版\",\n      \"purple_badge\": \"{argument name=\\\"year badge text\\\" default=\\\"2026年 最新版\\\"}\"\n    }\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "ナーガ@X女帝",
-      "authorUrl": "https://x.com/naga_zyashin",
-      "sourceUrl": "https://x.com/naga_zyashin/status/2045113428952678447#reversed-1",
-      "publishedAt": "2026-04-17T12:13:32.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776697104740_wweanp_HGGzzkLaEAA28EJ.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776697104740_wweanp_HGGzzkLaEAA28EJ-300x158.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776697104740_wweanp_HGGzzkLaEAA28EJ.jpg"
-        }
-      ]
-    },
-    {
       "id": "13900",
       "slug": "neon-business-info-product-thumbnail",
       "title": "Neon Business Info-Product Thumbnail",
@@ -8198,28 +7654,6 @@
       ]
     },
     {
-      "id": "13959",
-      "slug": "live-stream-app-ui-mockup",
-      "title": "Live Stream App UI Mockup",
-      "description": "Generates a side-by-side comparison of mobile live streaming interfaces featuring a streamer holding a personalized thank-you sign.",
-      "prompt": "{\n  \"type\": \"side-by-side mobile UI mockup\",\n  \"theme\": \"{argument name=\\\"app style\\\" default=\\\"Chinese mobile live streaming app\\\"}\",\n  \"panels\": [\n    {\n      \"position\": \"left\",\n      \"subject\": \"{argument name=\\\"streamer appearance\\\" default=\\\"young Asian woman, beautiful, smiling\\\"}, long wavy hair, holding a handwritten sign\",\n      \"sign_content\": \"{argument name=\\\"sign text\\\" default=\\\"谢谢 Ray 的大火箭！\\\"} with small rocket and heart doodles\",\n      \"ui_elements\": {\n        \"top_bar\": \"profile info, follow button, 3 viewer avatars, {argument name=\\\"viewer count\\\" default=\\\"10万+\\\"} count, close button\",\n        \"overlays\": \"popularity rank badge, gift gallery widget, floating gift animation showing {argument name=\\\"gift name\\\" default=\\\"大火箭\\\"} x1\",\n        \"chat_stream\": \"7 distinct chat message bubbles\",\n        \"bottom_bar\": \"text input field, 4 action icons, floating like hearts\"\n      }\n    },\n    {\n      \"position\": \"right\",\n      \"subject\": \"same streamer, high ponytail with scrunchie, holding a handwritten sign\",\n      \"sign_content\": \"{argument name=\\\"sign text\\\" default=\\\"谢谢 Ray 的大火箭！\\\"} with stars, hearts, and rocket doodles\",\n      \"ui_elements\": {\n        \"top_bar\": \"app logo, LIVE badge, 12.6万 viewer count, profile info, follow button\",\n        \"overlays\": \"hourly rank badge, gift goal widget, 2 floating gift animations (rocket x1, rose x10)\",\n        \"chat_stream\": \"6 distinct chat message bubbles\",\n        \"bottom_bar\": \"text input field, 4 action icons, follow button, floating like hearts\"\n      }\n    }\n  ]\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "Ray Wang",
-      "authorUrl": "https://x.com/wangray",
-      "sourceUrl": "https://x.com/wangray/status/2045079493648515072#reversed-0",
-      "publishedAt": "2026-04-17T09:58:41.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776697139278_w5yc5q_HGGU7zebkAENfe3.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776697139278_w5yc5q_HGGU7zebkAENfe3-300x238.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776697139278_w5yc5q_HGGU7zebkAENfe3.jpg"
-        }
-      ]
-    },
-    {
       "id": "13971",
       "slug": "voxel-art-bilingual-breakfast-vocabulary-poster",
       "title": "Voxel Art Bilingual Breakfast Vocabulary Poster",
@@ -8238,28 +7672,6 @@
           "url": "https://file.gptimage2api.net/media/1776697145841_leg6qn_HGGSrfhbAAAWajv.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776697145841_leg6qn_HGGSrfhbAAAWajv-300x450.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776697145841_leg6qn_HGGSrfhbAAAWajv.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13782",
-      "slug": "livestream-ui-mockup-with-host",
-      "title": "Livestream UI Mockup with Host",
-      "description": "Generates a realistic mobile livestream interface featuring a specific host, complete with chat overlays, viewer stats, and a prominent QR code call-to-action.",
-      "prompt": "{\n  \"type\": \"mobile livestream UI mockup\",\n  \"subject\": {\n    \"person\": \"{argument name=\\\"host name\\\" default=\\\"Sam Altman\\\"}\",\n    \"action\": \"reaching right hand out towards the camera\",\n    \"clothing\": \"dark green sweater\"\n  },\n  \"background\": {\n    \"setting\": \"office\",\n    \"left_wall\": \"large OpenAI logo\",\n    \"right_shelf\": \"wooden shelf with 3 dark bottles and 2 small signs reading 'AGI' and 'OpenAI'\"\n  },\n  \"layout\": {\n    \"top_bar\": {\n      \"elements\": [\"time 20:34\", \"signal bars\", \"wifi icon\", \"battery 774\"]\n    },\n    \"header\": {\n      \"left_section\": [\"profile picture\", \"{argument name=\\\"account name\\\" default=\\\"OpenAI\\\"}\", \"48.3万本场点赞\", \"关注 button\"],\n      \"right_section\": [\"3 viewer avatars\", \"10万+\", \"X close button\"],\n      \"sub_tags\": [\"OpenAI官方旗舰店榜第1名\", \"更多直播\"]\n    },\n    \"floating_widgets\": {\n      \"left\": \"red envelope icon with 00:12\",\n      \"right\": \"pink gift box icon with 520好礼季 抖音商城推荐\"\n    },\n    \"bottom_left_chat\": {\n      \"host_announcement\": [\"avatar\", \"山姆奥特曼 Sam Altman 直播中\", \"{argument name=\\\"host message\\\" default=\\\"大家好，我是山姆奥特曼，邀你加入Kevin的学堂\\\"}\"],\n      \"viewer_comments_count\": 5,\n      \"viewer_comments_labels\": [\n        \"AI新手小白: 刚好想学，来了！\",\n        \"小凯: 终于开播了，冲冲冲！\",\n        \"打工人Kevin: 一人公司太香了！\",\n        \"智创未来: 已关注，期待干货！\",\n        \"AI副业指南: 怎么加入？\"\n      ]\n    },\n    \"bottom_right_overlay\": {\n      \"qr_code\": \"large scannable QR code with blue KEVIN logo in center\",\n      \"text\": \"{argument name=\\\"qr code title\\\" default=\\\"零基础做AI一人公司 将创业变赚钱生意\\\"}\",\n      \"button\": \"{argument name=\\\"qr code button text\\\" default=\\\"扫码加入\\\"}\"\n    },\n    \"bottom_action_bar\": {\n      \"input_field\": \"说点什么...\",\n      \"icons_count\": 5,\n      \"icons_labels\": [\"smiley face\", \"shopping cart\", \"heart\", \"gift box\", \"three dots\"]\n    }\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "Kevin的学堂",
-      "authorUrl": "https://x.com/kevintao1024",
-      "sourceUrl": "https://x.com/kevintao1024/status/2045074817339052095#reversed-3",
-      "publishedAt": "2026-04-17T09:40:06.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776697100452_7lphh6_HGGQsSdaIAA42Dt.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776697100452_7lphh6_HGGQsSdaIAA42Dt-300x648.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776697100452_7lphh6_HGGQsSdaIAA42Dt.jpg"
         }
       ]
     },
@@ -8326,28 +7738,6 @@
           "url": "https://file.gptimage2api.net/media/1776697144241_x445sm_HGGN5zZbUAApaMP.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776697144241_x445sm_HGGN5zZbUAApaMP-300x300.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776697144241_x445sm_HGGN5zZbUAApaMP.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13898",
-      "slug": "e-commerce-livestream-ui-mockup-3",
-      "title": "E-commerce Livestream UI Mockup",
-      "description": "Generates a highly detailed, realistic e-commerce livestream interface featuring a celebrity broadcaster, live chat, interactive UI overlays, and a prominent product purchase card.",
-      "prompt": "{\n  \"type\": \"livestream interface mockup\",\n  \"broadcaster\": {\n    \"name\": \"{argument name=\\\"broadcaster name\\\" default=\\\"Elon Musk\\\"}\",\n    \"appearance\": \"smiling man in a black jacket\",\n    \"action\": \"holding up a green glass beer bottle with a {argument name=\\\"product brand\\\" default=\\\"TSINGTAO\\\"} label\"\n  },\n  \"environment\": {\n    \"background\": \"{argument name=\\\"city background\\\" default=\\\"Qingdao skyline at night\\\"} with illuminated skyscrapers, a river, a glowing red sculptural monument, and a neon sign reading 'I ❤️ 青岛'\",\n    \"foreground\": \"a wooden table with a glass of beer with foam, and a clear ice bucket containing 4 green beer bottles\"\n  },\n  \"ui_elements\": {\n    \"header\": {\n      \"left\": \"Profile picture, name '{argument name=\\\"broadcaster name\\\" default=\\\"Elon Musk\\\"}', subtitle '特斯拉 CEO', and a pink '关注' button\",\n      \"right\": \"3 viewer avatars, '10万+' viewer count, and an 'X' close button\",\n      \"top_right_banner\": \"Pink promotional banner reading '抖音618好物节 最高立减200元'\"\n    },\n    \"floating_badges\": [\n      \"Yellow star badge '带货第1名' on top left\",\n      \"Translucent speech bubble '直播时间 20:00-24:00' on mid right\"\n    ],\n    \"interaction_panel\": {\n      \"gifts\": [\n        \"User '飞***' sending a pink heart 'x 88'\",\n        \"User '静***' sending a fan club badge 'x 26'\"\n      ],\n      \"system_message\": \"Purple badge '32 铁粉1 Elon 加入了直播间'\",\n      \"chat_messages_count\": 7,\n      \"chat_examples\": [\"马斯克来中国直播了\", \"支持马斯克，支持青岛啤酒\", \"多少钱一箱？\"]\n    },\n    \"product_card\": {\n      \"position\": \"bottom right\",\n      \"main_title\": \"{argument name=\\\"banner headline\\\" default=\\\"青岛啤酒官方旗舰店\\\"}\",\n      \"subtitle\": \"Red banner with white text '马斯克推荐 跟着CEO买好酒'\",\n      \"purchase_button\": \"White box with red text '惊喜价: {argument name=\\\"price\\\" default=\\\"¥99.9\\\"}' and a red '立即抢购' button\"\n    },\n    \"bottom_bar\": {\n      \"input_field\": \"Text input reading '说点什么...'\",\n      \"icons_count\": 5,\n      \"icons_list\": [\"smiley face\", \"shopping cart\", \"heart\", \"gift box\", \"three dots\"]\n    }\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "PM也有春天",
-      "authorUrl": "https://x.com/PMHasSpring",
-      "sourceUrl": "https://x.com/PMHasSpring/status/2045070694934097922#reversed-0",
-      "publishedAt": "2026-04-17T09:23:43.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776697102805_4lg2i9_HGGMxW0aMAA74lh.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776697102805_4lg2i9_HGGMxW0aMAA74lh-300x400.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776697102805_4lg2i9_HGGMxW0aMAA74lh.jpg"
         }
       ]
     },
@@ -8722,28 +8112,6 @@
       ]
     },
     {
-      "id": "13849",
-      "slug": "champions-league-highlight-card-generator",
-      "title": "Champions League Highlight Card Generator",
-      "description": "An instructional prompt for GPT-Image 2 to search for sports performance data and generate a themed highlight card with stats and team colors.",
-      "prompt": "Search the web for {argument name=\"performance description\" default=\"this week’s standout individual performance in Champion’s League\"}, using exact stats and game summary, {argument name=\"colors\" default=\"bold team colors\"}, legible score breakdown, and generate a {argument name=\"card type\" default=\"Highlight card\"}.",
-      "language": "en",
-      "featured": false,
-      "authorName": "Alex Patrascu",
-      "authorUrl": "https://x.com/maxescu",
-      "sourceUrl": "https://x.com/maxescu/status/2045036186734039545",
-      "publishedAt": "2026-04-17T07:06:36.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776697063198_ngb38l_HGFtkfPbMAAJCn6.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776697063198_ngb38l_HGFtkfPbMAAJCn6-300x533.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776697063198_ngb38l_HGFtkfPbMAAJCn6.jpg"
-        }
-      ]
-    },
-    {
       "id": "13886",
       "slug": "photorealistic-korean-newspaper-front-page",
       "title": "Photorealistic Korean Newspaper Front Page",
@@ -9086,28 +8454,6 @@
       ]
     },
     {
-      "id": "13962",
-      "slug": "e-commerce-live-stream-ui-mockup-2",
-      "title": "E-commerce Live Stream UI Mockup",
-      "description": "Generates a realistic mobile e-commerce live streaming interface featuring a model, interactive product cards, and a scrolling chat overlay.",
-      "prompt": "{\n  \"type\": \"e-commerce live stream interface mockup\",\n  \"subject\": {\n    \"description\": \"young Asian woman, long wavy dark hair, wearing a white short-sleeve polo shirt and white pleated tennis skirt, holding a white tennis racket over her right shoulder, looking directly at the camera with a soft expression\",\n    \"background\": \"soft light grey studio background\"\n  },\n  \"layout\": {\n    \"header\": {\n      \"left\": {\n        \"avatar\": \"female portrait\",\n        \"name\": \"{argument name=\\\"host name\\\" default=\\\"小鹿运动优选\\\"}\",\n        \"stats\": \"12.8万本场点赞\",\n        \"button\": \"关注\",\n        \"badge\": \"带货榜第3名\"\n      },\n      \"right\": {\n        \"viewer_avatars_count\": 3,\n        \"viewer_count\": \"1.2万\",\n        \"close_icon\": \"X\"\n      }\n    },\n    \"floating_elements\": [\n      {\n        \"position\": \"top right\",\n        \"type\": \"coupon card\",\n        \"title\": \"直播间专属券\",\n        \"details\": \"¥20 满199可用\",\n        \"button\": \"领取\"\n      },\n      {\n        \"position\": \"mid left\",\n        \"type\": \"campaign text\",\n        \"subtitle\": \"夏日运动季\",\n        \"headline\": \"{argument name=\\\"main headline\\\" default=\\\"活力开场\\\"}\",\n        \"bullet_points_count\": 3,\n        \"bullet_points\": [\"透气速干\", \"弹力舒适\", \"运动百搭\"]\n      },\n      {\n        \"position\": \"mid right\",\n        \"type\": \"product card active\",\n        \"badge\": \"正在讲解\",\n        \"image\": \"white polo and skirt flat lay\",\n        \"title\": \"{argument name=\\\"product name\\\" default=\\\"运动POLO衫套装\\\"}\",\n        \"details\": \"白色·M码\",\n        \"price\": \"{argument name=\\\"price\\\" default=\\\"¥129\\\"}\",\n        \"button\": \"去抢购\"\n      },\n      {\n        \"position\": \"bottom right\",\n        \"type\": \"product card secondary\",\n        \"badge\": \"热卖 x 156\",\n        \"image\": \"model wearing the outfit\",\n        \"title\": \"运动POLO衫套装女 透气速干 显瘦百搭\",\n        \"tags\": [\"7天无理由退货\", \"运费险\"],\n        \"price\": \"¥129\",\n        \"button\": \"抢\"\n      }\n    ],\n    \"chat_overlay\": {\n      \"position\": \"bottom left\",\n      \"message_count\": 5,\n      \"messages\": [\n        \"小鹿姐姐: 欢迎新朋友们来到直播间~\",\n        \"运动达人: {argument name=\\\"chat message\\\" default=\\\"这套好看!\\\"}\",\n        \"卡卡西: 布料透气吗?\",\n        \"小鹿运动优选: 我们这个面料是冰丝速干的，运动出汗也不闷热哦~\",\n        \"用户_6789: 已拍!\"\n      ],\n      \"purchase_alert\": \"用户_6789 等3人 正在去购买\"\n    },\n    \"footer\": {\n      \"input_bar\": \"说点什么...\",\n      \"icons_count\": 5,\n      \"icons\": [\"smile\", \"shopping cart\", \"heart\", \"share\", \"more\"]\n    }\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "可可耐特coconut",
-      "authorUrl": "https://x.com/coconut_256",
-      "sourceUrl": "https://x.com/coconut_256/status/2045026556561719581#reversed-1",
-      "publishedAt": "2026-04-17T06:28:20.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776697140600_p2muso_HGFky13acAAGQCe.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776697140600_p2muso_HGFky13acAAGQCe-300x533.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776697140600_p2muso_HGFky13acAAGQCe.jpg"
-        }
-      ]
-    },
-    {
       "id": "13957",
       "slug": "retro-3d-claymation-desk-setup",
       "title": "Retro 3D Claymation Desk Setup",
@@ -9400,50 +8746,6 @@
       ]
     },
     {
-      "id": "13718",
-      "slug": "bilibili-livestream-scene",
-      "title": "Bilibili Livestream Scene",
-      "description": "A prompt for a 9:16 vertical image simulating a Bilibili livestream featuring a specific personality and custom text on a sign.",
-      "prompt": "A 9:16 image, generating a {argument name=\"platform\" default=\"Bilibili\"} livestream screenshot featuring {argument name=\"person\" default=\"Hu Chenfeng\"} streaming with a happy expression, holding a sign that reads: \"{argument name=\"text\" default=\"CEO Austin is so generous, everyone please follow him.\"} \"",
-      "language": "zh",
-      "featured": false,
-      "authorName": "Austin",
-      "authorUrl": "https://x.com/austinit",
-      "sourceUrl": "https://x.com/austinit/status/2044994519649997183",
-      "publishedAt": "2026-04-17T04:21:02.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776695074847_ul3hli_HGFHlDAbEAAm-Pb.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776695074847_ul3hli_HGFHlDAbEAAm-Pb-300x533.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776695074847_ul3hli_HGFHlDAbEAAm-Pb.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13890",
-      "slug": "gta-style-dialogue-screenshot",
-      "title": "GTA-Style Dialogue Screenshot",
-      "description": "Generates a realistic video game screenshot featuring a cinematic dialogue scene with a customizable NPC and multiple-choice conversation menu.",
-      "prompt": "{\n  \"type\": \"video game screenshot\",\n  \"style\": \"{argument name=\\\"art style\\\" default=\\\"Grand Theft Auto VI aesthetic, realistic 3D graphics\\\"}\",\n  \"setting\": \"balcony overlooking a coastal city at sunset, palm trees, skyscrapers, warm lighting\",\n  \"characters\": [\n    {\n      \"role\": \"NPC\",\n      \"description\": \"{argument name=\\\"npc description\\\" default=\\\"Omni-Man, muscular older man with a mustache and grey temples, wearing a red and white superhero suit\\\"}\",\n      \"position\": \"center-left, facing camera\"\n    },\n    {\n      \"role\": \"Player\",\n      \"description\": \"man wearing a backwards dark baseball cap and light grey t-shirt\",\n      \"position\": \"right foreground, back to camera\"\n    }\n  ],\n  \"ui_elements\": {\n    \"type\": \"dialogue menu\",\n    \"position\": \"bottom center\",\n    \"speaker_name\": \"{argument name=\\\"speaker name\\\" default=\\\"OMNI-MAN\\\"}\",\n    \"dialogue_text\": \"{argument name=\\\"npc dialogue\\\" default=\\\"This planet isn't yours to protect. Viltrumite rule is inevitable.\\\"}\",\n    \"choices_count\": 3,\n    \"choices\": [\n      \"1. {argument name=\\\"choice 1\\\" default=\\\"You're not taking over anything.\\\"}\",\n      \"2. What do you want from me?\",\n      \"3. I don't care about your politics.\"\n    ],\n    \"highlight\": \"Choice 1 has a translucent purple background bar\"\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "Chetaslua",
-      "authorUrl": "https://x.com/chetaslua",
-      "sourceUrl": "https://x.com/chetaslua/status/2044991545380905256#reversed-1",
-      "publishedAt": "2026-04-17T04:09:13.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776697091661_rre051_HGFE-POaQAA5hXm.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776697091661_rre051_HGFE-POaQAA5hXm-300x129.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776697091661_rre051_HGFE-POaQAA5hXm.jpg"
-        }
-      ]
-    },
-    {
       "id": "13895",
       "slug": "live-streaming-app-interface-mockup",
       "title": "Live-Streaming App Interface Mockup",
@@ -9506,34 +8808,6 @@
           "url": "https://file.gptimage2api.net/media/1776697083413_3qk41w_HGFBAVXakAAbabs.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776697083413_3qk41w_HGFBAVXakAAbabs-300x200.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776697083413_3qk41w_HGFBAVXakAAbabs.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13855",
-      "slug": "3d-realistic-x-profile-interface",
-      "title": "3D Realistic X Profile Interface",
-      "description": "A detailed prompt for generating a hyper-realistic 3D social media profile interface based on a reference screenshot with specific character expressions.",
-      "prompt": "Based on the uploaded screenshot of my X profile, generate a {argument name=\"style\" default=\"hyper-realistic\"} 3D Twitter/X profile interface illustration, slightly tilted, with a clean and simple background in minimalist grey. The original avatar remains unchanged. The profile interface perfectly matches a real X screenshot. At the right edge of the screen, based on the person in the uploaded avatar, he is breaking through torn paper. His facial features are identical (no changes to the face), but he now has a natural radiant smile, expressive eyes, and softly glowing skin. He is holding the torn edges of the paper, creating a dynamic 3D effect. Paper fragments are flying, creating a realistic illusion of breaking through. The lighting is soft studio lighting with cinematic shadows and depth of field. Ultra-detailed, 4K, a blend of realistic and Pixar styles, sharp focus. Important notes: - Do not change the avatar (DP) - Maintain the exact same X interface layout and text style - Maintain their original identity - Only enhance the expression to a natural smile - Aspect ratio {argument name=\"ratio\" default=\"9:16\"}",
-      "language": "zh",
-      "featured": false,
-      "authorName": "Alexander Hayes",
-      "authorUrl": "https://x.com/sfce2025",
-      "sourceUrl": "https://x.com/sfce2025/status/2044985535710872017",
-      "publishedAt": "2026-04-17T03:45:20.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776697066926_5oy9un_HGE_f9caMAAevxJ.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776697066926_5oy9un_HGE_f9caMAAevxJ-300x450.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776697066926_5oy9un_HGE_f9caMAAevxJ.jpg"
-        },
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776697066930_z99yg3_HGE_f9bbUAA_MiX.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776697066930_z99yg3_HGE_f9bbUAA_MiX-300x450.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776697066930_z99yg3_HGE_f9bbUAA_MiX.jpg"
         }
       ]
     },
@@ -9888,28 +9162,6 @@
           "url": "https://file.gptimage2api.net/media/1776697134622_r5ybxn_HGEbqkiakAA0RKc.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776697134622_r5ybxn_HGEbqkiakAA0RKc-300x200.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776697134622_r5ybxn_HGEbqkiakAA0RKc.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13963",
-      "slug": "youtube-livestream-interface-mockup",
-      "title": "YouTube Livestream Interface Mockup",
-      "description": "Generates a realistic YouTube livestream UI featuring a video player with chat overlays, channel details, and customizable text fields.",
-      "prompt": "{\n  \"type\": \"YouTube livestream UI\",\n  \"top_nav\": {\n    \"logo\": \"YouTube Premium\",\n    \"search\": \"{argument name=\\\"search query\\\" default=\\\"bilal fraiha\\\"}\",\n    \"icons\": 3\n  },\n  \"player\": {\n    \"subjects\": [\n      \"{argument name=\\\"female guest\\\" default=\\\"Sydney Sweeney\\\"} in white cardigan\",\n      \"bearded man in beige jacket laughing\"\n    ],\n    \"bg\": \"couch, 2 silver play buttons, ram logo 'SARDI'\",\n    \"overlays\": {\n      \"chat\": {\"pos\": \"left\", \"count\": 15, \"desc\": \"colored usernames, white text\"},\n      \"goal\": {\"pos\": \"top right\", \"text\": \"TONIGHT'S GOAL: 0 to 25\"},\n      \"banner\": {\"pos\": \"bottom center\", \"text\": \"K {argument name=\\\"streamer name\\\" default=\\\"MOREBILAL\\\"}\"}\n    },\n    \"controls\": {\"count\": 10}\n  },\n  \"details\": {\n    \"title\": \"{argument name=\\\"video title\\\" default=\\\"FULL STREAM | سيدني سويني مع بلال\\\"}\",\n    \"channel\": \"{argument name=\\\"channel name\\\" default=\\\"More Bilal No Filter\\\"}\",\n    \"buttons\": 5\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "Marouane Lamharzi Alaoui",
-      "authorUrl": "https://x.com/marouane53",
-      "sourceUrl": "https://x.com/marouane53/status/2044946192203923493#reversed-0",
-      "publishedAt": "2026-04-17T01:09:00.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776697140905_diw2m9_HGEa9vHaIAASEXv.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776697140905_diw2m9_HGEa9vHaIAASEXv-300x226.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776697140905_diw2m9_HGEa9vHaIAASEXv.jpg"
         }
       ]
     },
@@ -10592,28 +9844,6 @@
       ]
     },
     {
-      "id": "13834",
-      "slug": "cinematic-food-beverage-collab-poster",
-      "title": "Cinematic Food & Beverage Collab Poster",
-      "description": "Generates a dramatic, high-quality advertisement poster featuring two characters sharing a meal and competing beverage brands, complete with customizable typography.",
-      "prompt": "A cinematic, high-quality advertisement poster featuring two older Asian men sitting at a rustic wooden table in a warmly lit, moody environment. The man on the left has grey hair and a mustache, smiling enthusiastically, holding one glass of dark soda with a Pepsi logo. The man on the right has short hair and round glasses, looking forward with a subtle smile, holding one glass of dark soda with a Coca-Cola logo. Between them is one large, steaming dark ceramic pot filled with {argument name=\"dish description\" default=\"braised green beans and pork belly\"}. On the table in the front left is one blue Pepsi can, and on the front right is one red Coca-Cola can. The poster features elegant, bold Chinese typography. At the top, a collaboration logo of Pepsi and Coca-Cola sits above the main headline {argument name=\"main headline\" default=\"炖豆角 可乐\"}. Vertical text on the left reads {argument name=\"left character text\" default=\"赵本山 饰 马大帅 倾情代言\"}. Vertical text on the right reads {argument name=\"right character text\" default=\"范伟 饰 彪哥 倾情代言\"}. At the bottom center, an ornate badge contains the tagline {argument name=\"bottom tagline\" default=\"东北硬菜 遇见经典\"}, with smaller fine print below it. The lighting is dramatic, highlighting the steam rising from the food and the condensation on the cold drinks.",
-      "language": "en",
-      "featured": false,
-      "authorName": "boon陈庚阳",
-      "authorUrl": "https://x.com/A9Quant",
-      "sourceUrl": "https://x.com/A9Quant/status/2044813337905758260#reversed-0",
-      "publishedAt": "2026-04-16T16:21:05.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776695130467_c3dp7r_HGCi083a8AIx23W.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776695130467_c3dp7r_HGCi083a8AIx23W-300x400.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776695130467_c3dp7r_HGCi083a8AIx23W.jpg"
-        }
-      ]
-    },
-    {
       "id": "13735",
       "slug": "two-panel-tech-meme-comic",
       "title": "Two-Panel Tech Meme Comic",
@@ -10654,28 +9884,6 @@
           "url": "https://file.gptimage2api.net/media/1776695128029_knu47g_HGCfCqCaAAEe3eq.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776695128029_knu47g_HGCfCqCaAAEe3eq-300x647.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776695128029_knu47g_HGCfCqCaAAEe3eq.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13826",
-      "slug": "e-commerce-livestream-ui-mockup-5",
-      "title": "E-commerce Livestream UI Mockup",
-      "description": "Generates a highly detailed mobile livestream interface featuring a customizable celebrity broadcaster selling products with live chat and UI overlays.",
-      "prompt": "{\n  \"type\": \"mobile livestream interface mockup\",\n  \"broadcaster\": {\n    \"person\": \"{argument name=\\\"broadcaster name\\\" default=\\\"Elon Musk\\\"}\",\n    \"action\": \"smiling warmly, holding up a jar of {argument name=\\\"product name\\\" default=\\\"Lao Gan Ma chili crisp\\\"} to the camera\",\n    \"attire\": \"black t-shirt and black blazer\"\n  },\n  \"environment\": {\n    \"setting\": \"modern studio or office\",\n    \"background_left\": {\n      \"sign_text\": \"{argument name=\\\"promo sign text\\\" default=\\\"全网独家首发 老干妈风味 地球人都爱吃\\\"}\",\n      \"foreground_item\": \"paper shopping bag with '老干妈' branding\"\n    },\n    \"background_right\": {\n      \"shelf_items\": [\n        \"3 jars of Lao Gan Ma chili crisp\",\n        \"{argument name=\\\"background prop\\\" default=\\\"SpaceX Falcon 9 rocket model\\\"}\"\n      ]\n    }\n  },\n  \"ui_overlay\": {\n    \"top_left\": {\n      \"profile_name\": \"Elon Musk\",\n      \"subtitle\": \"1.2亿本场点赞\",\n      \"button\": \"关注\",\n      \"ranking_tag\": \"🔥 带货总榜第1名\"\n    },\n    \"top_right\": {\n      \"viewer_count\": \"10万+\",\n      \"link\": \"更多直播 >\",\n      \"banner\": \"抖音618好物节 6.1-6.18 火热抢购中\"\n    },\n    \"bottom_left_chat\": {\n      \"count\": 6,\n      \"messages\": [\n        \"@宇宙第一辣妹 加入了直播间\",\n        \"铁粉 星辰大海: 支持马总！支持老干妈！\",\n        \"火星居民: 这个一定要买，配饭绝了！\",\n        \"用户8872: 没想到马斯克也爱吃老干妈！\",\n        \"特斯拉车主: 求上链接！立刻下单！\",\n        \"老干妈真香: 从不打广告，却征服了全世界的味道！\"\n      ]\n    },\n    \"bottom_right_product_card\": {\n      \"sales_tag\": \"🔥 热卖x 18.9万\",\n      \"status\": \"讲解中\",\n      \"price\": \"{argument name=\\\"product price\\\" default=\\\"¥39.9\\\"}\",\n      \"title\": \"老干妈风味豆豉油辣椒 280g*2瓶\",\n      \"features\": \"正品保障 坏了包退 极速发货\"\n    },\n    \"bottom_bar\": {\n      \"input_placeholder\": \"说点什么...\",\n      \"icon_count\": 5,\n      \"icons\": [\"smiley face\", \"shopping cart\", \"heart\", \"gift box\", \"three dots\"]\n    }\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "serein",
-      "authorUrl": "https://x.com/you1873118",
-      "sourceUrl": "https://x.com/you1873118/status/2044809140795801689#reversed-2",
-      "publishedAt": "2026-04-16T16:04:24.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776695127018_7uzy32_HGCfCqLbcAAwNbz.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776695127018_7uzy32_HGCfCqLbcAAwNbz-300x533.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776695127018_7uzy32_HGCfCqLbcAAwNbz.jpg"
         }
       ]
     },
@@ -11258,50 +10466,6 @@
       ]
     },
     {
-      "id": "13822",
-      "slug": "livestream-app-interface-mockup",
-      "title": "Livestream App Interface Mockup",
-      "description": "Generates a realistic mobile livestream interface featuring a customizable host, chat stream, and interactive UI elements.",
-      "prompt": "{\n  \"type\": \"mobile livestream interface mockup\",\n  \"subject\": {\n    \"identity\": \"{argument name=\\\"subject name\\\" default=\\\"Elon Musk\\\"}\",\n    \"appearance\": \"wearing a black t-shirt with {argument name=\\\"t-shirt graphic\\\" default=\\\"Starship rocket and SPACEX text\\\"}\",\n    \"pose\": \"{argument name=\\\"expression\\\" default=\\\"smiling warmly, looking directly at the camera\\\"}, hands clasped on a dark table\"\n  },\n  \"environment\": \"{argument name=\\\"background\\\" default=\\\"SpaceX office with a rocket model and neon sign\\\"}\",\n  \"layout\": {\n    \"sections\": [\n      {\n        \"title\": \"Top Bar UI\",\n        \"position\": \"top\",\n        \"count\": 4,\n        \"labels\": [\n          \"Profile info with '埃隆·马斯克' and Follow button\",\n          \"Viewer avatars and count '60.6万'\",\n          \"Rank badge '全站第1名'\",\n          \"Close button 'X'\"\n        ]\n      },\n      {\n        \"title\": \"Gift Popups\",\n        \"position\": \"mid-left\",\n        \"count\": 2,\n        \"labels\": [\n          \"星辰大海 送小心心 x66 (Heart icon)\",\n          \"Dreamer 送超级火箭 x1 (Rocket icon)\"\n        ]\n      },\n      {\n        \"title\": \"Chat Stream\",\n        \"position\": \"bottom-left\",\n        \"count\": 7,\n        \"labels\": [\n          \"用户12345: 马斯克来了！🔥\",\n          \"钢铁侠本侠: 特斯拉未来规划能分享一下吗？\",\n          \"加密货币王: 会考虑接受狗狗币支付吗？🐶\",\n          \"火星移民: 什么时候去火星？🚀\",\n          \"银河系 来了\",\n          \"智者无敌: 第一排支持马斯克！\",\n          \"未来已来: 👍👍👍\"\n        ]\n      },\n      {\n        \"title\": \"Side Action Buttons\",\n        \"position\": \"bottom-right\",\n        \"count\": 4,\n        \"labels\": [\n          \"Host profile with +\",\n          \"Like heart '38.7万'\",\n          \"Comment bubble '6.2万'\",\n          \"Share arrow '3.6万'\"\n        ]\n      },\n      {\n        \"title\": \"Bottom Input Bar\",\n        \"position\": \"bottom\",\n        \"count\": 3,\n        \"labels\": [\n          \"Text input '说点什么...'\",\n          \"Gift box icon\",\n          \"More options '...'\"\n        ]\n      }\n    ]\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "LL.AI",
-      "authorUrl": "https://x.com/LLAiTrade",
-      "sourceUrl": "https://x.com/LLAiTrade/status/2044786711180484784#reversed-0",
-      "publishedAt": "2026-04-16T14:35:16.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776695125067_5u6tg7_HGCKqyMaYAA0AWX.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776695125067_5u6tg7_HGCKqyMaYAA0AWX-300x622.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776695125067_5u6tg7_HGCKqyMaYAA0AWX.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13721",
-      "slug": "live-stream-screenshot-with-celebrity",
-      "title": "Live Stream Screenshot with Celebrity",
-      "description": "A prompt designed to test text rendering in a specific layout, creating a 9:16 aspect ratio image of a live stream featuring a celebrity holding a sign with custom text.",
-      "prompt": "9:16 aspect ratio, generate a screenshot of a Douyin live stream featuring {argument name=\"character\" default=\"Liu Yifei\"}. She is holding a sign that says \"{argument name=\"sign text\" default=\"Live tonight, welcome to chat with Yifei!\"}\"",
-      "language": "zh",
-      "featured": false,
-      "authorName": "世界是棵树",
-      "authorUrl": "https://x.com/alanblogsooo",
-      "sourceUrl": "https://x.com/alanblogsooo/status/2044784762594918516",
-      "publishedAt": "2026-04-16T14:27:32.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776695076407_242s15_HGCI0k4bcAAEPrr.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776695076407_242s15_HGCI0k4bcAAEPrr-300x533.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776695076407_242s15_HGCI0k4bcAAEPrr.jpg"
-        }
-      ]
-    },
-    {
       "id": "13750",
       "slug": "vintage-film-portrait-of-girl-with-bicycle",
       "title": "Vintage Film Portrait of Girl with Bicycle",
@@ -11588,28 +10752,6 @@
       ]
     },
     {
-      "id": "13751",
-      "slug": "couple-pub-portrait-transformation",
-      "title": "Couple Pub Portrait Transformation",
-      "description": "Transforms a candid photo of a couple into a posed, stylized portrait with updated clothing, props, and a warm pub background.",
-      "prompt": "Using REFERENCE_0, transform the older couple so they are both looking directly at the camera and smiling. For the man on the left, add a {argument name=\"man's facial hair\" default=\"full white beard\"}, remove his glasses, and dress him in a {argument name=\"man's clothing\" default=\"green fleece jacket\"}. For the woman on the right, add glasses, change her hair to straight with bangs, and dress her in a {argument name=\"woman's clothing\" default=\"denim jacket and white scarf\"}. Have both subjects holding glasses of beer. On the wooden table, add 1 bowl of potato chips and 1 small lit lantern. Replace the background with a {argument name=\"background setting\" default=\"warm, blurred pub interior with 2 background patrons\"}.",
-      "language": "en",
-      "featured": false,
-      "authorName": "Floatboat.ai",
-      "authorUrl": "https://x.com/FloatboatAI",
-      "sourceUrl": "https://x.com/FloatboatAI/status/2044755011809456477#reversed-0",
-      "publishedAt": "2026-04-16T12:29:19.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776695090987_l5dd0i_HGBt1wIbAAAKw2r.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776695090987_l5dd0i_HGBt1wIbAAAKw2r-300x450.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776695090987_l5dd0i_HGBt1wIbAAAKw2r.jpg"
-        }
-      ]
-    },
-    {
       "id": "13832",
       "slug": "fps-custom-weapon-skin-screenshot",
       "title": "FPS Custom Weapon Skin Screenshot",
@@ -11650,50 +10792,6 @@
           "url": "https://file.gptimage2api.net/media/1776695128818_hdrd89_HGBt0lDaYAEUiTK.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776695128818_hdrd89_HGBt0lDaYAEUiTK-300x400.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776695128818_hdrd89_HGBt0lDaYAEUiTK.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13824",
-      "slug": "youtube-live-presentation-ui-mockup",
-      "title": "YouTube Live Presentation UI Mockup",
-      "description": "Generates a realistic YouTube desktop dark mode interface featuring a live product announcement.",
-      "prompt": "{\"type\": \"YouTube desktop dark mode UI mockup\", \"header\": {\"logo\": \"YouTube\", \"search_bar\": \"Search\", \"icons_count\": 5, \"icons\": [\"search\", \"mic\", \"create\", \"notifications\", \"profile\"]}, \"video_player\": {\"top_left_badge\": \"LIVE\", \"left_side\": {\"subject\": \"{argument name=\\\"presenter description\\\" default=\\\"man in green sweater at wooden podium\\\"}\", \"podium_logo\": \"OpenAI\"}, \"right_side_presentation\": {\"text_elements\": [\"OpenAI\", \"INTRODUCING\", \"{argument name=\\\"product name\\\" default=\\\"GPT-Image-2\\\"}\", \"{argument name=\\\"tagline\\\" default=\\\"More Realistic. More Useful. More Creative.\\\"}\"], \"sample_images_count\": 4, \"sample_images\": [\"mountain lake with boat\", \"woman portrait with dappled light\", \"cute robot with lantern in forest\", \"starry night cafe painting\"]}, \"bottom_controls_count\": 10, \"bottom_controls\": [\"pause\", \"next\", \"volume\", \"LIVE\", \"red progress bar\", \"CC\", \"settings\", \"miniplayer\", \"theater mode\", \"fullscreen\"]}, \"video_details\": {\"title\": \"{argument name=\\\"video title\\\" default=\\\"OpenAI Live: Introducing GPT-Image-2\\\"}\", \"channel\": {\"name\": \"{argument name=\\\"channel name\\\" default=\\\"OpenAI\\\"}\", \"verified\": true, \"subscribers\": \"1.36M\", \"button\": \"Subscribe\"}, \"action_buttons_count\": 5, \"action_buttons\": [\"Like 12K\", \"Dislike 497\", \"Share\", \"Save\", \"More\"], \"description_box\": {\"stats\": \"95,237 watching now Started streaming 7 minutes ago\", \"tags\": \"#OpenAI #GPTImage2 #AI\", \"text\": \"Join us for a special live event as we introduce GPT-Image-2, our latest and most advanced image generation model. See new capabilities, live demos, and hear from the team ...more\"}}}",
-      "language": "en",
-      "featured": false,
-      "authorName": "Vi",
-      "authorUrl": "https://x.com/tehno_maniak",
-      "sourceUrl": "https://x.com/tehno_maniak/status/2044754985183785208#reversed-1",
-      "publishedAt": "2026-04-16T12:29:12.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776695126103_hxglkj_HGBt0cgbAAA0hT5.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776695126103_hxglkj_HGBt0cgbAAA0hT5-300x200.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776695126103_hxglkj_HGBt0cgbAAA0hT5.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13820",
-      "slug": "youtube-video-interface-mockup",
-      "title": "YouTube Video Interface Mockup",
-      "description": "Generates a realistic desktop YouTube interface featuring a tech review video with customizable hosts, robot subject, and video metadata.",
-      "prompt": "{\n  \"type\": \"desktop video platform UI mockup\",\n  \"theme\": \"dark mode\",\n  \"header\": {\n    \"logo\": \"YouTube IN\",\n    \"search_bar\": \"centered, with magnifying glass icon\",\n    \"right_icons\": {\n      \"count\": 4,\n      \"items\": [\"microphone\", \"+ Create button\", \"notifications bell\", \"user profile picture\"]\n    }\n  },\n  \"video_player\": {\n    \"scene\": \"Studio setting with two tech reviewers at a desk.\",\n    \"subjects\": [\n      \"{argument name=\\\"left person\\\" default=\\\"Marques Brownlee (MKBHD)\\\"} in black t-shirt\",\n      \"{argument name=\\\"right person\\\" default=\\\"Arun Maini (Mrwhosetheboss)\\\"} in green overshirt\",\n      \"{argument name=\\\"robot model\\\" default=\\\"Tesla Optimus humanoid robot\\\"} standing between them\"\n    ],\n    \"props\": [\"black mug with logo\", \"background screen with glowing blue neon M logo\"],\n    \"controls_bar\": {\n      \"progress_bar\": \"red, near the beginning\",\n      \"timestamp\": \"0:01 / 18:47\",\n      \"left_icons\": {\n        \"count\": 3,\n        \"items\": [\"play/pause\", \"next track\", \"volume\"]\n      },\n      \"right_icons\": {\n        \"count\": 6,\n        \"items\": [\"CC\", \"settings with 4K badge\", \"miniplayer\", \"theater mode\", \"cast\", \"fullscreen\"]\n      }\n    }\n  },\n  \"video_details\": {\n    \"title\": \"{argument name=\\\"video title\\\" default=\\\"Tesla Optimus Robot Review: Futures Are Here!\\\"}\",\n    \"channel_info\": {\n      \"name\": \"{argument name=\\\"channel name\\\" default=\\\"Mrwhosetheboss\\\"}\",\n      \"badges\": [\"verified checkmark\"],\n      \"subscribers\": \"20.5M subscribers\",\n      \"button\": \"white Subscribe button\"\n    },\n    \"action_buttons\": {\n      \"count\": 6,\n      \"items\": [\"Like (215K) / Dislike (4.2K) pill\", \"Share\", \"Download\", \"Clip\", \"Save\", \"More (...)\"]\n    }\n  },\n  \"description_box\": {\n    \"metadata\": \"3,278,456 views Apr 12, 2024 #7 on Trending\",\n    \"text\": \"MKBHD & I review Tesla's Optimus humanoid robot. We cover the design, walk, AI, hands-on & what it means for the future!\",\n    \"links\": [\"Marques's Channel: @mkbhd\"]\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "Vi",
-      "authorUrl": "https://x.com/tehno_maniak",
-      "sourceUrl": "https://x.com/tehno_maniak/status/2044754985183785208#reversed-0",
-      "publishedAt": "2026-04-16T12:29:12.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776695124999_8rd6s4_HGBt0Y2WIAAA03L.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776695124999_8rd6s4_HGBt0Y2WIAAA03L-300x200.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776695124999_8rd6s4_HGBt0Y2WIAAA03L.jpg"
         }
       ]
     },
@@ -11814,28 +10912,6 @@
       ]
     },
     {
-      "id": "13711",
-      "slug": "tiktok-streamer-ugc-style-prompt",
-      "title": "TikTok Streamer UGC Style Prompt",
-      "description": "A prompt for generating a realistic TikTok live-stream screenshot featuring a young female streamer, styled as user-generated content (UGC).",
-      "prompt": "UGC style, random {argument name=\"subject\" default=\"young female streamer\"} doing a live on {argument name=\"platform\" default=\"TikTok\"}",
-      "language": "en",
-      "featured": false,
-      "authorName": "Patrick",
-      "authorUrl": "https://x.com/patrickassale",
-      "sourceUrl": "https://x.com/patrickassale/status/2044743743043957135",
-      "publishedAt": "2026-04-16T11:44:32.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776695072085_gz58r8_HGBjfnpXcAAGkcG.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776695072085_gz58r8_HGBjfnpXcAAGkcG-300x649.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776695072085_gz58r8_HGBjfnpXcAAGkcG.jpg"
-        }
-      ]
-    },
-    {
       "id": "13803",
       "slug": "luxury-e-commerce-landing-page-mockup",
       "title": "Luxury E-Commerce Landing Page Mockup",
@@ -11920,28 +10996,6 @@
           "url": "https://file.gptimage2api.net/media/1776695117804_3emxby_HGBc96QasAA3JMr.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776695117804_3emxby_HGBc96QasAA3JMr-300x450.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776695117804_3emxby_HGBc96QasAA3JMr.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13737",
-      "slug": "two-men-celebrating-at-a-restaurant",
-      "title": "Two Men Celebrating at a Restaurant",
-      "description": "A candid photograph of two men enthusiastically celebrating at an upscale restaurant table.",
-      "prompt": "A candid, warm-toned photograph of two men sitting at a table in a {argument name=\"setting\" default=\"dimly lit upscale restaurant at night\"}. On the left is a {argument name=\"left person description\" default=\"man with dark hair wearing a dark grey crewneck sweater\"}. On the right is a {argument name=\"right person description\" default=\"man with glasses and receding curly dark hair wearing a dark blue sweater over a collared shirt\"}. They are {argument name=\"emotion and action\" default=\"celebrating enthusiastically, mouths wide open cheering, clasping one hand together while raising their other fists in triumph\"}. The table is covered with a white tablecloth and features two menus with the text \"THE GREENE\", water glasses, a glass of red wine, and a small lit candle in a ribbed glass holder. The background shows blurred restaurant interiors and dark windows with distant city lights, creating an intimate and joyful atmosphere.",
-      "language": "en",
-      "featured": false,
-      "authorName": "BubbleBrain",
-      "authorUrl": "https://x.com/BubbleBrain",
-      "sourceUrl": "https://x.com/BubbleBrain/status/2044730353194250387#reversed-0",
-      "publishedAt": "2026-04-16T10:51:20.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776695084960_brb87t_HGBXTROasAEGtpo.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776695084960_brb87t_HGBXTROasAEGtpo-300x225.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776695084960_brb87t_HGBXTROasAEGtpo.jpg"
         }
       ]
     },
@@ -12156,28 +11210,6 @@
       ]
     },
     {
-      "id": "13709",
-      "slug": "humanoid-robot-keynote-reveal",
-      "title": "Humanoid Robot Keynote Reveal",
-      "description": "Generates an image of a commercial humanoid robot being unveiled during a major tech keynote presentation.",
-      "prompt": "What will {argument name=\"company\" default=\"Google\"}’s first commercial {argument name=\"product\" default=\"humanoid robot\"} look like? Show it being unveiled during a {argument name=\"event\" default=\"keynote presentation\"}.",
-      "language": "en",
-      "featured": false,
-      "authorName": "Patrick",
-      "authorUrl": "https://x.com/patrickassale",
-      "sourceUrl": "https://x.com/patrickassale/status/2044702346152661150",
-      "publishedAt": "2026-04-16T09:00:02.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776695071338_h0q6bv_HF_baKhWkAA9tLi.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776695071338_h0q6bv_HF_baKhWkAA9tLi-300x240.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776695071338_h0q6bv_HF_baKhWkAA9tLi.jpg"
-        }
-      ]
-    },
-    {
       "id": "13712",
       "slug": "youtube-2030-interface",
       "title": "YouTube 2030 Interface",
@@ -12328,28 +11360,6 @@
           "url": "https://file.gptimage2api.net/media/1776695112490_phpst3_HGAuWVwaIAECnjY.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776695112490_phpst3_HGAuWVwaIAECnjY-300x450.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776695112490_phpst3_HGAuWVwaIAECnjY.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13791",
-      "slug": "4-panel-woodcut-portrait-wallpaper",
-      "title": "4-Panel Woodcut Portrait Wallpaper",
-      "description": "Generates a four-panel split wallpaper featuring distinct portraits in a high-contrast printmaking style.",
-      "prompt": "A desktop wallpaper featuring a horizontal four-panel split layout with thick black borders. It showcases half-body portraits in a high-contrast {argument name=\"art style\" default=\"woodcut printmaking\"} style with thick black lines and cross-hatching, conveying a confident and elite mood. From left to right: {argument name=\"subject 1\" default=\"Jack Ma\"} against a textured orange background; {argument name=\"subject 2\" default=\"Elon Musk\"} in a suit against a textured red background; {argument name=\"subject 3\" default=\"Mark Zuckerberg\"} in a black shirt against a textured blue background; and {argument name=\"subject 4\" default=\"Pony Ma\"} wearing glasses and a suit against a textured green background. The subjects are rendered in monochromatic beige tones, contrasting sharply with the vibrant background of each pane.",
-      "language": "en",
-      "featured": false,
-      "authorName": "M",
-      "authorUrl": "https://x.com/Masss79520867",
-      "sourceUrl": "https://x.com/Masss79520867/status/2044666076861272314#reversed-2",
-      "publishedAt": "2026-04-16T06:35:55.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776695109971_3o41mo_HGAc8nbagAAKPHD.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776695109971_3o41mo_HGAc8nbagAAKPHD-300x225.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776695109971_3o41mo_HGAc8nbagAAKPHD.jpg"
         }
       ]
     },
@@ -12684,28 +11694,6 @@
       ]
     },
     {
-      "id": "13816",
-      "slug": "intimidating-press-conference-meme",
-      "title": "Intimidating Press Conference Meme",
-      "description": "A photorealistic satirical image of a superhero intimidating a tech CEO at a White House press briefing.",
-      "prompt": "A photorealistic, cinematic shot set in the {argument name=\"location\" default=\"White House press briefing room\"}. At the podium sits {argument name=\"seated character\" default=\"Sam Altman\"}, wearing a dark suit and blue tie, looking visibly uncomfortable and nervous, staring blankly ahead. Standing directly behind him is {argument name=\"standing character\" default=\"Homelander from The Boys\"}, wearing his signature blue superhero suit with red gloves and gold eagle shoulder pads. The standing character has one red-gloved hand resting heavily and intimidatingly on the seated character's shoulder, while using his other hand to drink from a {argument name=\"beverage\" default=\"glass bottle of milk\"} with a confident, slightly unhinged smirk. In the background, there is a US flag on the left and a blue oval White House seal on the wall behind them. The podium has a sign reading \"THE WHITE HOUSE WASHINGTON\".",
-      "language": "en",
-      "featured": false,
-      "authorName": "Matthew Berman",
-      "authorUrl": "https://x.com/TheMattBerman",
-      "sourceUrl": "https://x.com/TheMattBerman/status/2044611297086673006#reversed-0",
-      "publishedAt": "2026-04-16T02:58:14.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776695122015_9zpq6q_HF_rI0ga8AAer1f.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776695122015_9zpq6q_HF_rI0ga8AAer1f-300x240.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776695122015_9zpq6q_HF_rI0ga8AAer1f.jpg"
-        }
-      ]
-    },
-    {
       "id": "13839",
       "slug": "fast-food-burger-advertisement-poster",
       "title": "Fast Food Burger Advertisement Poster",
@@ -12794,50 +11782,6 @@
       ]
     },
     {
-      "id": "13756",
-      "slug": "3-panel-duct-tape-meme-comic",
-      "title": "3-Panel Duct Tape Meme Comic",
-      "description": "Generates a 3-panel comic showing a subject eating a fruit and taping the peel to a wall, parodying modern art and tech companies.",
-      "prompt": "{\n  \"type\": \"3-panel comic layout\",\n  \"subject\": \"{argument name=\\\"subject\\\" default=\\\"Sam Altman\\\"}\",\n  \"object\": \"{argument name=\\\"object\\\" default=\\\"banana\\\"}\",\n  \"layout\": {\n    \"structure\": \"left side split horizontally into two panels, right side is one large vertical panel\",\n    \"panels\": [\n      {\n        \"number\": \"1\",\n        \"position\": \"top-left\",\n        \"description\": \"The subject is smiling widely and eating the object in an office setting.\"\n      },\n      {\n        \"number\": \"2\",\n        \"position\": \"bottom-left\",\n        \"description\": \"The subject is seen in profile, using a strip of silver duct tape to attach the peel of the object to a plain white wall.\"\n      },\n      {\n        \"number\": \"3\",\n        \"position\": \"right-half\",\n        \"description\": \"Close-up of the object's peel duct-taped to the white wall. Below it is the {argument name=\\\"company logo\\\" default=\\\"OpenAI\\\"} logo and text. Below the logo is another piece of duct tape with the handwritten text '{argument name=\\\"tape text\\\" default=\\\"Duct tape\\\"}'.\"\n      }\n    ]\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "noel.index",
-      "authorUrl": "https://x.com/ian_kim58307",
-      "sourceUrl": "https://x.com/ian_kim58307/status/2044603116415521201#reversed-0",
-      "publishedAt": "2026-04-16T02:25:44.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776695093754_lhj1ma_HF_jsFSb0AAULTH.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776695093754_lhj1ma_HF_jsFSb0AAULTH-300x200.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776695093754_lhj1ma_HF_jsFSb0AAULTH.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13705",
-      "slug": "historical-figure-x-post-design",
-      "title": "Historical Figure X Post Design",
-      "description": "A prompt to generate an X (Twitter) UI layout featuring a historical figure like Sakamoto Ryoma discussing contemporary issues.",
-      "prompt": "Create an X post page featuring {argument name=\"person\" default=\"Sakamoto Ryoma\"} talking passionately about {argument name=\"topic\" default=\"the future of Japan\"}",
-      "language": "ja",
-      "featured": false,
-      "authorName": "IT navi",
-      "authorUrl": "https://x.com/itnavi2022",
-      "sourceUrl": "https://x.com/itnavi2022/status/2044596495064945144",
-      "publishedAt": "2026-04-16T01:59:25.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776701489224_3h6wbs_HF_drMYagAAQ7CL.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776701489224_3h6wbs_HF_drMYagAAQ7CL-300x450.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776701489224_3h6wbs_HF_drMYagAAQ7CL.jpg"
-        }
-      ]
-    },
-    {
       "id": "13743",
       "slug": "open-world-action-game-hud-screenshot",
       "title": "Open-World Action Game HUD Screenshot",
@@ -12922,28 +11866,6 @@
           "url": "https://file.gptimage2api.net/media/1776701515117_jf6yx7_HF_bLezXYAAiBzY.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776701515117_jf6yx7_HF_bLezXYAAiBzY-300x169.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776701515117_jf6yx7_HF_bLezXYAAiBzY.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13707",
-      "slug": "historical-figure-social-media-page",
-      "title": "Historical Figure Social Media Page",
-      "description": "A creative prompt for generating a mock Twitter/X profile page for Oda Nobunaga just before the Honno-ji Incident.",
-      "prompt": "Please create an X (Twitter) post page for Oda Nobunaga ({argument name=\"situation\" default=\"just before the Honno-ji Incident\"}).",
-      "language": "ja",
-      "featured": false,
-      "authorName": "IT navi",
-      "authorUrl": "https://x.com/itnavi2022",
-      "sourceUrl": "https://x.com/itnavi2022/status/2044592146255352100",
-      "publishedAt": "2026-04-16T01:42:09.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776701486225_dc9qfn_HF_ZuDfbwAAWdA9.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776701486225_dc9qfn_HF_ZuDfbwAAWdA9-300x240.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776701486225_dc9qfn_HF_ZuDfbwAAWdA9.jpg"
         }
       ]
     },
@@ -13278,50 +12200,6 @@
       ]
     },
     {
-      "id": "13642",
-      "slug": "iphone-photography-scene",
-      "title": "iPhone Photography Scene",
-      "description": "This prompt creates a high-fidelity, realistic photograph that captures specific environmental details like reflections and natural handwriting, ideal for corporate or tech-themed imagery.",
-      "prompt": "A wide image shot on {argument name=\"camera\" default=\"iPhone\"} of a glass whiteboard, in a room overlooking {argument name=\"landmark\" default=\"the Bay Bridge\"}. The field of view shows {argument name=\"subject\" default=\"a woman writing\"}, sporting a tshirt with a large OpenAl logo. The handwriting looks natural and a bit messy, and we see the photographer's reflection.",
-      "language": "en",
-      "featured": false,
-      "authorName": "Patrick",
-      "authorUrl": "https://x.com/patrickassale",
-      "sourceUrl": "https://x.com/patrickassale/status/2044547815351681319",
-      "publishedAt": "2026-04-15T22:45:59.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776701491712_rdtjhi_HF-xPE4W8AAOkHX.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776701491712_rdtjhi_HF-xPE4W8AAOkHX-300x165.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776701491712_rdtjhi_HF-xPE4W8AAOkHX.jpg"
-        }
-      ]
-    },
-    {
-      "id": "14073",
-      "slug": "celebrity-fast-food-worker-candid",
-      "title": "Celebrity Fast Food Worker Candid",
-      "description": "Generates a photorealistic, candid image of a famous person working an everyday job at a fast-food restaurant.",
-      "prompt": "A photorealistic candid photograph of {argument name=\"person\" default=\"Sam Altman\"} working behind the counter at a {argument name=\"restaurant brand\" default=\"McDonald's\"} restaurant. He is wearing a dark grey short-sleeve t-shirt under a black apron with yellow neck straps and the restaurant's logo, along with a white nametag reading \"{argument name=\"nametag text\" default=\"Sam\"}\". He has a slightly tired, focused expression, holding a {argument name=\"held item\" default=\"red carton of french fries\"} in his left hand while extending his right hand forward to serve a {argument name=\"served item\" default=\"white drink cup with a straw\"}. The background features a realistic, slightly blurred fast-food kitchen environment with stainless steel counters, a fry station glowing under warm heat lamps, digital order screens, a point-of-sale register, and another employee working in the distance. The lighting is typical indoor fluorescent, giving the image a documentary, everyday feel.",
-      "language": "en",
-      "featured": false,
-      "authorName": "Ellis",
-      "authorUrl": "https://x.com/eiiiis",
-      "sourceUrl": "https://x.com/eiiiis/status/2044546294383845422#reversed-0",
-      "publishedAt": "2026-04-15T22:39:57.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776701513994_avhl9k_HF-wBIGbwAA2k6V.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776701513994_avhl9k_HF-wBIGbwAA2k6V-300x200.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776701513994_avhl9k_HF-wBIGbwAA2k6V.jpg"
-        }
-      ]
-    },
-    {
       "id": "13660",
       "slug": "first-person-vrchat-meme-crossover-screenshot",
       "title": "First-Person VRChat Meme Crossover Screenshot",
@@ -13340,28 +12218,6 @@
           "url": "https://file.gptimage2api.net/media/1776680849249_wxzj36_HF-vr6abEAA8vnM.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776680849249_wxzj36_HF-vr6abEAA8vnM-300x240.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776680849249_wxzj36_HF-vr6abEAA8vnM.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13645",
-      "slug": "kylian-mbappe-devastated-photo",
-      "title": "Kylian Mbappé Devastated Photo",
-      "description": "A prompt for generating a realistic, amateur-style iPhone photo of a famous soccer player in a specific stadium setting.",
-      "prompt": "Amateur iPhone photo of {argument name=\"subject\" default=\"Kylian Mbappé\"} in tears, wearing a {argument name=\"team jersey\" default=\"Real Madrid jersey\"} on the pitch, looking devastated. In the background, {argument name=\"opponent players\" default=\"Bayern Munich players in red kits\"} are visible. Shot from the stands close to the field, at night inside the {argument name=\"stadium\" default=\"Allianz Arena\"}",
-      "language": "en",
-      "featured": false,
-      "authorName": "Patrick",
-      "authorUrl": "https://x.com/patrickassale",
-      "sourceUrl": "https://x.com/patrickassale/status/2044525891137511670",
-      "publishedAt": "2026-04-15T21:18:52.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776701281804_2u83qa_HF-dU5paMAAlEsV.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776701281804_2u83qa_HF-dU5paMAAlEsV-300x225.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776701281804_2u83qa_HF-dU5paMAAlEsV.jpg"
         }
       ]
     },
@@ -13516,34 +12372,6 @@
           "url": "https://file.gptimage2api.net/media/1776701496302_nm7f85_HF-BDI6bwAAnotg.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776701496302_nm7f85_HF-BDI6bwAAnotg-300x169.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776701496302_nm7f85_HF-BDI6bwAAnotg.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13653",
-      "slug": "photorealistic-older-couple-in-a-pub",
-      "title": "Photorealistic Older Couple in a Pub",
-      "description": "Generates a highly realistic portrait of an older couple enjoying drinks and snacks at a warmly lit pub table.",
-      "prompt": "A photorealistic portrait of a smiling older Caucasian couple sitting at a rustic wooden table inside a {argument name=\"setting\" default=\"cozy traditional pub\"}. The man on the left has white hair and a full white beard, wearing a {argument name=\"man's clothing\" default=\"green fleece jacket\"} over a maroon shirt. The woman on the right has short grey hair and glasses, wearing a {argument name=\"woman's clothing\" default=\"blue denim jacket and cream scarf\"}. They are looking directly at the camera, each holding one of the 2 {argument name=\"beverage\" default=\"glasses of beer\"}. On the table in the foreground, there is 1 small lit brass lantern and 1 {argument name=\"table snacks\" default=\"bowl of potato chips\"}. The background features warm lighting, wooden paneled walls with framed pictures, windows on the left, and blurred patrons, creating a shallow depth of field.",
-      "language": "en",
-      "featured": false,
-      "authorName": "Aidan",
-      "authorUrl": "https://x.com/aidancramer",
-      "sourceUrl": "https://x.com/aidancramer/status/2044473314362409056#reversed-0",
-      "publishedAt": "2026-04-15T17:49:57.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776701492831_ykv268_HF9tk0WXUAA-Sd9.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776701492831_ykv268_HF9tk0WXUAA-Sd9-300x431.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776701492831_ykv268_HF9tk0WXUAA-Sd9.jpg"
-        },
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776701493424_b4je0j_HF9toVuWYAAzzdO.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776701493424_b4je0j_HF9toVuWYAAzzdO-300x216.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776701493424_b4je0j_HF9toVuWYAAzzdO.jpg"
         }
       ]
     },
@@ -13724,28 +12552,6 @@
       ]
     },
     {
-      "id": "14083",
-      "slug": "youtube-dark-mode-desktop-ui-mockup",
-      "title": "YouTube Dark Mode Desktop UI Mockup",
-      "description": "Generates a highly detailed, accurate mockup of the YouTube desktop homepage in dark mode, complete with a populated sidebar, filter pills, and a 12-video grid featuring recognizable educational and entertainment channel thumbnails.",
-      "prompt": "{\n  \"type\": \"desktop UI mockup\",\n  \"application\": \"YouTube homepage\",\n  \"theme\": \"{argument name=\\\"theme\\\" default=\\\"dark mode\\\"}\",\n  \"browser_window\": {\n    \"url_bar\": \"{argument name=\\\"browser URL\\\" default=\\\"youtube.com\\\"}\",\n    \"tabs\": 1,\n    \"elements\": [\"back/forward buttons\", \"refresh\", \"extensions\", \"profile avatar\"]\n  },\n  \"layout\": {\n    \"sidebar\": {\n      \"position\": \"left\",\n      \"sections\": [\n        { \"title\": \"Main\", \"count\": 3, \"items\": [\"Home\", \"Shorts\", \"Subscriptions\"] },\n        { \"title\": \"You\", \"count\": 6, \"items\": [\"Your channel\", \"History\", \"Playlists\", \"Your videos\", \"Watch later\", \"Liked videos\"] },\n        { \"title\": \"Subscriptions\", \"count\": 8, \"items\": [\"Linus Tech Tips\", \"MrBeast\", \"Kurzgesagt - In a...\", \"ColdFusion\", \"3Blue1Brown\", \"Khan Academy\", \"Veritasium\", \"Show more\"] },\n        { \"title\": \"Explore\", \"count\": 7, \"items\": [\"Trending\", \"Music\", \"Films\", \"Live\", \"Gaming\", \"News\", \"Sport\"] },\n        { \"title\": \"More from YouTube\", \"count\": 3, \"items\": [\"YouTube Premium\", \"YouTube Music\", \"YouTube Kids\"] }\n      ]\n    },\n    \"top_filter_bar\": {\n      \"count\": 11,\n      \"labels\": [\"All\", \"Gaming\", \"Music\", \"Live\", \"Podcasts\", \"Mixes\", \"Science\", \"Lo-fi\", \"Thrillers\", \"Recently uploaded\", \"Watched\"]\n    },\n    \"video_grid\": {\n      \"layout\": \"4 rows by 3 columns\",\n      \"count\": 12,\n      \"videos\": [\n        { \"title\": \"Why Build Your Own GPU is Almost Impossible\", \"channel\": \"Linus Tech Tips\", \"thumbnail\": \"GPU chip with red arrow\" },\n        { \"title\": \"Survive 100 Days In Circle, Win $500,000\", \"channel\": \"MrBeast\", \"thumbnail\": \"MrBeast smiling with contestants in background\" },\n        { \"title\": \"What If We Nuke an Asteroid?\", \"channel\": \"Kurzgesagt - In a Nutshell\", \"thumbnail\": \"Missile approaching an asteroid in space\" },\n        { \"title\": \"How Dubai Became a $10 Billion City\", \"channel\": \"ColdFusion\", \"thumbnail\": \"Man next to Dubai skyline with text '$0 TO $10B'\" },\n        { \"title\": \"The Beautiful Math of Euler's Identity\", \"channel\": \"3Blue1Brown\", \"thumbnail\": \"Math equation and spiral graph on black background\" },\n        { \"title\": \"The World in 2040 - Population, Climate & More\", \"channel\": \"Veritasium\", \"thumbnail\": \"Lush green forest with text 'The World in 2040'\" },\n        { \"title\": \"I've Been Using Linux For 12 Years, This Is What Finally...\", \"channel\": \"DistroTube\", \"thumbnail\": \"Laptop and smartphone with a blue arrow connecting them\" },\n        { \"title\": \"Black Holes Explained - From Birth to Death\", \"channel\": \"Khan Academy\", \"thumbnail\": \"Glowing orange accretion disk of a black hole\" },\n        { \"title\": \"The Problem With Diet Advice\", \"channel\": \"Andrew Huberman\", \"thumbnail\": \"Man in black shirt with text 'the problem with diet advice'\" },\n        { \"title\": \"How to Learn Anything (Evidence-Based)\", \"channel\": \"Ali Abdaal\", \"thumbnail\": \"Flat illustration of a man reading a book surrounded by colorful leaves\" },\n        { \"title\": \"The Last of Us Part 2 is a Masterpiece\", \"channel\": \"Naughty Dog\", \"thumbnail\": \"Gritty portrait of Ellie with game logo\" },\n        { \"title\": \"lofi hip hop radio - beats to relax/study to\", \"channel\": \"Lofi Girl\", \"thumbnail\": \"Anime girl studying at a desk with city view at sunset\" }\n      ]\n    }\n  },\n  \"os_environment\": {\n    \"os\": \"{argument name=\\\"operating system\\\" default=\\\"Windows 10\\\"}\",\n    \"taskbar_position\": \"bottom\",\n    \"visible_icons\": [\"Start\", \"Search bar\", \"Task View\", \"File Explorer\", \"Edge\", \"Spotify\"],\n    \"system_tray\": [\"network\", \"volume\", \"battery\", \"clock showing 08:34 03/04/2024\"]\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "すぐる | ChatGPTガチ勢 𝕏",
-      "authorUrl": "https://x.com/SuguruKun_ai",
-      "sourceUrl": "https://x.com/SuguruKun_ai/status/2044453450235420988#reversed-0",
-      "publishedAt": "2026-04-15T16:31:01.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776701506434_k8q0nh_HFDSVnnbwAEjL9w.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776701506434_k8q0nh_HFDSVnnbwAEjL9w-300x450.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776701506434_k8q0nh_HFDSVnnbwAEjL9w.jpg"
-        }
-      ]
-    },
-    {
       "id": "14075",
       "slug": "detailed-physical-world-map-with-info-panels",
       "title": "Detailed Physical World Map with Info Panels",
@@ -13918,28 +12724,6 @@
           "url": "https://file.gptimage2api.net/media/1776701503178_27p4kb_HF9VxI2asAAuoaa.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776701503178_27p4kb_HF9VxI2asAAuoaa-300x169.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776701503178_27p4kb_HF9VxI2asAAuoaa.jpg"
-        }
-      ]
-    },
-    {
-      "id": "14068",
-      "slug": "japanese-breaking-news-broadcast-generator",
-      "title": "Japanese Breaking News Broadcast Generator",
-      "description": "Generates a photorealistic television news broadcast scene featuring an anchor, a customizable background monitor graphic, and a lower-thirds breaking news banner.",
-      "prompt": "A photorealistic television news broadcast scene. On the right, a young Japanese female news anchor with shoulder-length dark brown hair and bangs looks directly at the camera with a professional expression. She wears a dark navy blazer over a white top, small earrings, and a lavalier microphone. The studio background features modern blue and silver illuminated panels. On the left, a large monitor displays a news graphic. The top of the monitor reads \"{argument name=\"game name\" default=\"Tokitori\"}\" followed by \"{argument name=\"monitor top text\" default=\"世界でも大人気のヒヨコゲーム\"}\". The left side of the monitor shows game cover art featuring a {argument name=\"character description\" default=\"round, yellow chick character with big eyes\"} on a green field, with the title \"{argument name=\"game name\" default=\"Tokitori\"}\" and text reading \"{argument name=\"monitor achievement text\" default=\"Steam売上 宇宙1位\"}\", \"販売本数 1億本突破\", and \"同時接続数 345万人\". The right side of the monitor displays a line graph titled \"売り上げ推移\" with an upward-trending yellow arrow, y-axis labels \"0\", \"5000万\", and \"1億\", and 3 x-axis dates \"4/1\", \"4/10\", and \"4/20\". A flat 2D version of the yellow chick sits on the graph line. Across the bottom of the screen is a prominent red lower-thirds breaking news banner. The left side of the banner has a box reading \"速報\" and the main text reads \"{argument name=\"breaking news headline\" default=\"TokitoriがSteam売り上げ宇宙1位に\"}\".",
-      "language": "en",
-      "featured": false,
-      "authorName": "montego",
-      "authorUrl": "https://x.com/2f7montego",
-      "sourceUrl": "https://x.com/2f7montego/status/2044446472083812609#reversed-0",
-      "publishedAt": "2026-04-15T16:03:17.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776701504628_82b7wc_HF9VNwebkAA_Tis.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776701504628_82b7wc_HF9VNwebkAA_Tis-300x200.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776701504628_82b7wc_HF9VNwebkAA_Tis.jpg"
         }
       ]
     },
@@ -14566,28 +13350,6 @@
       ]
     },
     {
-      "id": "14089",
-      "slug": "retro-tech-ceo-with-superhero-cats",
-      "title": "Retro Tech CEO with Superhero Cats",
-      "description": "Generates a cinematic portrait of a tech leader surrounded by superhero-themed cats in a nostalgic 1990s rooftop setting with detailed props.",
-      "prompt": "A cinematic, photorealistic portrait of {argument name=\"main subject\" default=\"Sam Altman\"} on a gritty rooftop at dusk, wearing a black bomber jacket with an {argument name=\"company logo\" default=\"OpenAI\"} logo. He is flanked by exactly 4 cats in superhero costumes: a tabby Spider-Man, a black Batman, an orange Iron Man with a glowing reactor, and a tabby Captain America with a shield. The background shows a {argument name=\"city skyline\" default=\"1996 New York City skyline featuring the Twin Towers\"}. A whiteboard reads \"MISSION: {argument name=\"whiteboard mission\" default=\"MAKE INTELLIGENCE BENEFIT ALL.\"}\" and lists exactly 4 checked items: \"BETTER MODELS\", \"SAFE DEPLOYMENT\", \"REAL-WORLD IMPACT\", and \"SAVE SOME TREATS\". A foreground wooden desk holds a retro 1990s laptop with the company logo, a mug reading \"BUILD THE FUTURE TOGETHER\", a walkie-talkie, and a WIRED magazine titled \"{argument name=\"magazine headline\" default=\"THE AGE OF INTELLIGENCE IS HERE\"}\". Painted wall signs read \"NEW YORK NO SLEEP. BIG DREAMS.\" and \"THE FUTURE WILL BE BUILT 1996\".",
-      "language": "en",
-      "featured": false,
-      "authorName": "appcaster",
-      "authorUrl": "https://x.com/Himomohi",
-      "sourceUrl": "https://x.com/Himomohi/status/2044367219715666344#reversed-0",
-      "publishedAt": "2026-04-15T10:48:22.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776701521575_8yovfj_HF8NJbdbAAA7EM_.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776701521575_8yovfj_HF8NJbdbAAA7EM_-300x248.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776701521575_8yovfj_HF8NJbdbAAA7EM_.jpg"
-        }
-      ]
-    },
-    {
       "id": "14058",
       "slug": "nintendo-switch-game-cover-design",
       "title": "Nintendo Switch Game Cover Design",
@@ -14606,28 +13368,6 @@
           "url": "https://file.gptimage2api.net/media/1776701488893_fo3vww_HF8MEH-a8AAQjZU.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776701488893_fo3vww_HF8MEH-a8AAQjZU-300x533.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776701488893_fo3vww_HF8MEH-a8AAQjZU.jpg"
-        }
-      ]
-    },
-    {
-      "id": "14079",
-      "slug": "celebrity-crossover-style",
-      "title": "Celebrity Crossover Style",
-      "description": "A creative prompt using the Duct Tape 2 variation to depict Sam Altman in the cinematic style of a movie protagonist.",
-      "prompt": "{argument name=\"subject\" default=\"Sam Altman\"} looking like the main lead from {argument name=\"movie\" default=\"tropical thunder\"}",
-      "language": "en",
-      "featured": false,
-      "authorName": "Conor Dart",
-      "authorUrl": "https://x.com/Conor_D_Dart",
-      "sourceUrl": "https://x.com/Conor_D_Dart/status/2044362511047065886",
-      "publishedAt": "2026-04-15T10:29:39.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776701490487_shhtlt_HF8IwwbakAA0d1v.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776701490487_shhtlt_HF8IwwbakAA0d1v-300x200.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776701490487_shhtlt_HF8IwwbakAA0d1v.jpg"
         }
       ]
     },
@@ -14734,28 +13474,6 @@
           "url": "https://file.gptimage2api.net/media/1776701493816_62a8ur_HF76-Z3asAANcuP.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776701493816_62a8ur_HF76-Z3asAANcuP-300x200.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776701493816_62a8ur_HF76-Z3asAANcuP.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13669",
-      "slug": "tech-billionaire-boardroom-meeting",
-      "title": "Tech Billionaire Boardroom Meeting",
-      "description": "Generates a realistic, candid-style photo of famous tech figures having an intense discussion around a cluttered conference table.",
-      "prompt": "A candid, realistic smartphone photo of five men having an intense discussion around a dark wooden conference table in a modern, minimalist office. On the mid-left, a man resembling {argument name=\"mid-left person\" default=\"Sam Altman\"} in a green sweater gestures with his hands while speaking. In the center, a man resembling {argument name=\"center person\" default=\"Mark Zuckerberg\"} in a grey t-shirt listens intently. On the mid-right, a man resembling {argument name=\"mid-right person\" default=\"Elon Musk\"} in a black jacket gestures while responding. Two other men wearing glasses and dark sweaters sit at the far ends of the table, observing with their hands near their faces. The table is cluttered with 3 white ceramic mugs, 3 clear drinking glasses, 1 silver soda can, open laptops, tablets, scattered papers, notebooks, and tangled black cables. The room features plain white walls and a large black-framed window revealing trees outside. The lighting is indoor and slightly grainy, giving it an authentic, {argument name=\"photo style\" default=\"leaked behind-the-scenes\"} aesthetic.",
-      "language": "en",
-      "featured": false,
-      "authorName": "Binkg",
-      "authorUrl": "https://x.com/dummerspast39",
-      "sourceUrl": "https://x.com/dummerspast39/status/2044343760536862882#reversed-0",
-      "publishedAt": "2026-04-15T09:15:09.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776701522690_5yn5lq_HF73z6cWAAA1NRT.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776701522690_5yn5lq_HF73z6cWAAA1NRT-300x225.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776701522690_5yn5lq_HF73z6cWAAA1NRT.jpg"
         }
       ]
     },
@@ -15124,72 +13842,6 @@
       ]
     },
     {
-      "id": "13667",
-      "slug": "tech-ceo-rivalry-meme-generator",
-      "title": "Tech CEO Rivalry Meme Generator",
-      "description": "Generates a photorealistic satirical image of a confident tech CEO standing next to a dejected rival, featuring customizable shirt text and background corporate branding.",
-      "prompt": "A photorealistic image of {argument name=\"confident person\" default=\"Sam Altman\"} standing confidently on the left with his hands on his hips, wearing a black t-shirt with white text that reads \"{argument name=\"shirt text\" default=\"i ship faster than you code.\"}\". Next to him on the right is {argument name=\"dejected person\" default=\"Sundar Pichai\"}, looking dejected and sad with his head bowed and hands clasped, wearing a plain dark grey t-shirt. They are standing indoors in front of a large glass window. Outside the window is a sunny corporate campus with trees, a small pond, and a modern glass building with the {argument name=\"background company logo\" default=\"Google\"} logo prominently displayed on it.",
-      "language": "en",
-      "featured": false,
-      "authorName": "Ryan",
-      "authorUrl": "https://x.com/Ryan26334193113",
-      "sourceUrl": "https://x.com/Ryan26334193113/status/2044235956752957872#reversed-0",
-      "publishedAt": "2026-04-15T02:06:46.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776701498074_96x9p4_HF6VuTTasAYr_gT.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776701498074_96x9p4_HF6VuTTasAYr_gT-300x240.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776701498074_96x9p4_HF6VuTTasAYr_gT.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13659",
-      "slug": "tech-ceo-writing-on-whiteboard",
-      "title": "Tech CEO Writing on Whiteboard",
-      "description": "A photorealistic corporate image of a tech executive writing customizable text on a whiteboard.",
-      "prompt": "A photorealistic corporate photograph of a man resembling {argument name=\"person name\" default=\"Sam Altman\"} wearing a {argument name=\"clothing\" default=\"black long-sleeve sweater\"}, standing in profile and writing on a large whiteboard with a black marker. The whiteboard features clear, handwritten black text reading \"{argument name=\"line 1 text\" default=\"Model: ChatGPT\"}\" with \"{argument name=\"line 2 text\" default=\"Company: OpenAI\"}\" written directly below it. In the bottom right corner, smaller text reads \"{argument name=\"signature text\" default=\"- Sam Altman CEO, OpenAI\"}\". The scene is set in a bright, modern office with soft natural lighting and a softly blurred background.",
-      "language": "en",
-      "featured": false,
-      "authorName": "can",
-      "authorUrl": "https://x.com/marmaduke091",
-      "sourceUrl": "https://x.com/marmaduke091/status/2044223783427350595#reversed-0",
-      "publishedAt": "2026-04-15T01:18:24.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776701517697_lryntz_HF6KgyqXkAA11hU.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776701517697_lryntz_HF6KgyqXkAA11hU-300x240.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776701517697_lryntz_HF6KgyqXkAA11hU.jpg"
-        }
-      ]
-    },
-    {
-      "id": "14062",
-      "slug": "split-face-typography-mask-portrait",
-      "title": "Split-Face Typography Mask Portrait",
-      "description": "Generates a dramatic portrait split in half, with the right side revealed through bold, stacked typography acting as a clipping mask.",
-      "prompt": "A highly realistic, dramatic studio portrait of {argument name=\"subject\" default=\"a man resembling Sam Altman with short wavy brown hair, blue eyes, thin eyebrows, and detailed skin texture\"}, wearing a dark crew neck sweater. The composition is split vertically down the middle. The left half displays a standard photographic portrait against a dark background. The right half consists of a solid {argument name=\"background color\" default=\"dark blue\"} background with large, bold, sans-serif text acting as a clipping mask. The text reads \"{argument name=\"overlay text\" default=\"WE WANT GPT 5.5 ASAP\"}\", stacked vertically across five lines. The letters are transparent windows revealing the right half of the man's face and torso, perfectly aligned with the left side to complete the portrait through the typography.",
-      "language": "en",
-      "featured": false,
-      "authorName": "マシモGPT🤖@ChatGPT/Claude/Gemini/GrokなどLLMをこねくり回す人",
-      "authorUrl": "https://x.com/Masimo_Blue",
-      "sourceUrl": "https://x.com/Masimo_Blue/status/2044217227097043055#reversed-0",
-      "publishedAt": "2026-04-15T00:52:21.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776701508089_llp89l_HF4gGsvWIAAdzya.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776701508089_llp89l_HF4gGsvWIAAdzya-300x450.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776701508089_llp89l_HF4gGsvWIAAdzya.jpg"
-        }
-      ]
-    },
-    {
       "id": "14064",
       "slug": "dark-fantasy-game-hud-on-green-screen",
       "title": "Dark Fantasy Game HUD on Green Screen",
@@ -15300,28 +13952,6 @@
       ]
     },
     {
-      "id": "13627",
-      "slug": "ai-image-generator-ui-mockup",
-      "title": "AI Image Generator UI Mockup",
-      "description": "A detailed dark-mode web interface mockup for an AI image generation tool, featuring style galleries, feature highlights, and recent image grids.",
-      "prompt": "{\n  \"type\": \"UI/UX web application mockup\",\n  \"theme\": \"dark mode\",\n  \"sidebar\": {\n    \"logo\": \"{argument name=\\\"app name\\\" default=\\\"ChatGPT\\\"}\",\n    \"navigation_items\": 5,\n    \"recent_chats_count\": 8,\n    \"user_profile\": \"User, Free tier\"\n  },\n  \"main_content\": {\n    \"header\": \"Images\",\n    \"input_bar\": {\n      \"placeholder\": \"{argument name=\\\"input placeholder\\\" default=\\\"Describe a new image...\\\"}\",\n      \"model_selector\": \"{argument name=\\\"model name\\\" default=\\\"GPT Image 2\\\"}\"\n    },\n    \"sections\": [\n      {\n        \"title\": \"{argument name=\\\"hero title\\\" default=\\\"New: GPT Image 2 is here!\\\"}\",\n        \"description\": \"Our next-generation image model, built for greater realism, better typography, and deeper world knowledge.\",\n        \"feature_tags_count\": 4,\n        \"hero_images_count\": 3,\n        \"hero_images_descriptions\": [\"mountain lake landscape\", \"neon cyberpunk street\", \"typography poster\"]\n      },\n      {\n        \"title\": \"Apply a style to an image\",\n        \"style_thumbnails_count\": 8,\n        \"style_labels\": [\"Anime\", \"Oil painting\", \"Cinematic\", \"3D render\", \"Line art\", \"Pixel art\", \"Watercolor\", \"Cyberpunk\"]\n      },\n      {\n        \"title\": \"Discover new features\",\n        \"feature_cards_count\": 6,\n        \"feature_labels\": [\"Advanced text rendering\", \"Consistent characters & scenes\", \"Higher realism\", \"World knowledge\", \"Precise editing\", \"More creative styles\"]\n      },\n      {\n        \"title\": \"My images\",\n        \"recent_images_count\": 6,\n        \"recent_images_descriptions\": [\"anime boy portrait\", \"tabby kitten\", \"tabby kitten\", \"sleeping white arctic fox\", \"wedding invitation\", \"code editor terminal\"]\n      }\n    ]\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "Raphi-2Code",
-      "authorUrl": "https://x.com/R2Cdev_",
-      "sourceUrl": "https://x.com/R2Cdev_/status/2044130225437716921#reversed-0",
-      "publishedAt": "2026-04-14T19:06:38.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776678800203_pnbfg9_HF4X08UWkAANDqR.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776678800203_pnbfg9_HF4X08UWkAANDqR-300x169.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776678800203_pnbfg9_HF4X08UWkAANDqR.jpg"
-        }
-      ]
-    },
-    {
       "id": "13637",
       "slug": "university-campus-aerial-view",
       "title": "University Campus Aerial View",
@@ -15384,28 +14014,6 @@
           "url": "https://file.gptimage2api.net/media/1776678801131_hnc3wo_HF33f_lWMAAmzYo.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776678801131_hnc3wo_HF33f_lWMAAmzYo-300x450.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776678801131_hnc3wo_HF33f_lWMAAmzYo.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13628",
-      "slug": "youtube-dark-mode-desktop-ui-mockup-2",
-      "title": "YouTube Dark Mode Desktop UI Mockup",
-      "description": "A detailed UI mockup of a video streaming homepage in dark mode on a desktop OS, useful for web design references and layout generation.",
-      "prompt": "{\n  \"type\": \"desktop web browser UI screenshot\",\n  \"environment\": \"{argument name=\\\"os environment\\\" default=\\\"Windows 11 desktop\\\"}\",\n  \"theme\": \"{argument name=\\\"ui theme\\\" default=\\\"dark mode\\\"}\",\n  \"browser_window\": {\n    \"tabs\": [\"YouTube\", \"New Tab\"],\n    \"url_bar\": \"youtube.com\",\n    \"profile_icon\": \"{argument name=\\\"profile initial\\\" default=\\\"M\\\"}\"\n  },\n  \"app_interface\": {\n    \"header\": {\n      \"logo\": \"{argument name=\\\"website name\\\" default=\\\"YouTube\\\"} GB\",\n      \"search_bar\": \"Search\",\n      \"icons\": [\"mic\", \"create\", \"notifications\", \"profile\"]\n    },\n    \"filter_bar\": {\n      \"active_filter\": \"{argument name=\\\"active filter\\\" default=\\\"All\\\"}\",\n      \"count\": 11,\n      \"labels\": [\"All\", \"Gaming\", \"Music\", \"Live\", \"Podcasts\", \"Mixes\", \"Science\", \"Lo-fi\", \"Thrillers\", \"Recently uploaded\", \"Watched\"]\n    },\n    \"sidebar\": {\n      \"sections\": [\n        { \"title\": \"Main\", \"count\": 3, \"labels\": [\"Home\", \"Shorts\", \"Subscriptions\"] },\n        { \"title\": \"You\", \"count\": 6, \"labels\": [\"Your channel\", \"History\", \"Playlists\", \"Your videos\", \"Watch later\", \"Liked videos\"] },\n        { \"title\": \"Subscriptions\", \"count\": 8, \"labels\": [\"Linus Tech Tips\", \"MrBeast\", \"Kurzgesagt - In a Nutshell\", \"ColdFusion\", \"3Blue1Brown\", \"Khan Academy\", \"Veritasium\", \"Show more\"] },\n        { \"title\": \"Explore\", \"count\": 7, \"labels\": [\"Trending\", \"Music\", \"Films\", \"Live\", \"Gaming\", \"News\", \"Sport\"] },\n        { \"title\": \"More from YouTube\", \"count\": 3, \"labels\": [\"YouTube Premium\", \"YouTube Music\", \"YouTube Kids\"] }\n      ]\n    },\n    \"main_content\": {\n      \"layout\": \"3 columns by 4 rows grid\",\n      \"count\": 12,\n      \"video_cards\": [\n        { \"title\": \"Why Build Your Own GPU is Almost Impossible\", \"channel\": \"Linus Tech Tips\", \"stats\": \"164K views • 1 day ago\", \"thumbnail\": \"CPU/GPU chip\" },\n        { \"title\": \"Survive 100 Days In Circle, Win $500,000\", \"channel\": \"MrBeast\", \"stats\": \"40M views • 5 days ago\", \"thumbnail\": \"MrBeast with crowd in blue tracksuits\" },\n        { \"title\": \"What If We Nuke an Asteroid?\", \"channel\": \"Kurzgesagt - In a Nutshell\", \"stats\": \"4.2M views • 6 hours ago\", \"thumbnail\": \"Missile hitting asteroid in space\" },\n        { \"title\": \"How Dubai Became a $10 Billion City\", \"channel\": \"ColdFusion\", \"stats\": \"1.6M views • 2 weeks ago\", \"thumbnail\": \"Man and Dubai skyline\" },\n        { \"title\": \"The Beautiful Math of Euler's Identity\", \"channel\": \"3Blue1Brown\", \"stats\": \"2.8M views • 3 months ago\", \"thumbnail\": \"Math equation and spiral graph\" },\n        { \"title\": \"The World in 2040 - Population, Climate & More\", \"channel\": \"Veritasium\", \"stats\": \"7.7M views • 2 weeks ago\", \"thumbnail\": \"Lush green forest aerial view\" },\n        { \"title\": \"I've Been Using Linux For 12 Years, This Is What Finally...\", \"channel\": \"DistroTube\", \"stats\": \"160K views • 3 days ago\", \"thumbnail\": \"Laptop and smartphone with Linux logo\" },\n        { \"title\": \"Black Holes Explained - From Birth to Death\", \"channel\": \"Khan Academy\", \"stats\": \"3.9M views • 3 months ago\", \"thumbnail\": \"Glowing black hole accretion disk\" },\n        { \"title\": \"The Problem With Diet Advice\", \"channel\": \"Andrew Huberman\", \"stats\": \"4.4M views • 6 days ago\", \"thumbnail\": \"Man with glasses speaking\" },\n        { \"title\": \"How to Learn Anything (Evidence-Based)\", \"channel\": \"Ali Abdaal\", \"stats\": \"2.7M views • 3 months ago\", \"thumbnail\": \"Vector illustration of man reading a book\" },\n        { \"title\": \"The Last of Us Part 2 is a Masterpiece\", \"channel\": \"Naughty Dog\", \"stats\": \"2.3M views • 3 years ago\", \"thumbnail\": \"Ellie from The Last of Us\" },\n        { \"title\": \"lofi hip hop radio - beats to relax/study to\", \"channel\": \"Lofi Girl\", \"stats\": \"LIVE\", \"thumbnail\": \"Lofi girl studying at desk\" }\n      ]\n    }\n  },\n  \"taskbar\": {\n    \"os\": \"Windows\",\n    \"icons\": [\"Start\", \"Search\", \"Task View\", \"File Explorer\", \"Edge\", \"Spotify\"],\n    \"system_tray\": \"08:34 03/04/2024\"\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "Ivan Davila",
-      "authorUrl": "https://x.com/ivangdavila",
-      "sourceUrl": "https://x.com/ivangdavila/status/2044061942025724144#reversed-0",
-      "publishedAt": "2026-04-14T14:35:18.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776678800101_toevb1_HF33f_lXsAAdVqO.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776678800101_toevb1_HF33f_lXsAAdVqO-300x450.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776678800101_toevb1_HF33f_lXsAAdVqO.jpg"
         }
       ]
     },
@@ -16102,34 +14710,6 @@
       ]
     },
     {
-      "id": "13610",
-      "slug": "pub-scene-amateur-snapshot",
-      "title": "Pub Scene Amateur Snapshot",
-      "description": "A Czech language prompt for a natural snapshot of an elderly couple in a pub, used to showcase realistic human generation in GPT Image 2.",
-      "prompt": "Amateur photo of {argument name=\"subjects\" default=\"an elderly couple\"} sitting in a {argument name=\"location\" default=\"Yorkshire pub\"}, amateur composition, snapshot.",
-      "language": "en",
-      "featured": false,
-      "authorName": "Martin Balaz",
-      "authorUrl": "https://x.com/phasE89",
-      "sourceUrl": "https://x.com/phasE89/status/2043641310226042910",
-      "publishedAt": "2026-04-13T10:43:52.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776676865761_ekmln7_HFx345zXcAAX-V3.png",
-          "thumbnail": "https://file.gptimage2api.net/media/1776676865761_ekmln7_HFx345zXcAAX-V3-300x450.png",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776676865761_ekmln7_HFx345zXcAAX-V3.png"
-        },
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776676865777_6qr4gg_HFx36qeboAE-JYf.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776676865777_6qr4gg_HFx36qeboAE-JYf-300x225.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776676865777_6qr4gg_HFx36qeboAE-JYf.jpg"
-        }
-      ]
-    },
-    {
       "id": "13618",
       "slug": "anime-cat-girl-in-realistic-alpine-meadow",
       "title": "Anime Cat-Girl in Realistic Alpine Meadow",
@@ -16452,50 +15032,6 @@
           "url": "https://file.gptimage2api.net/media/1776676852679_0r21cn_HFv0OfsasAACMxK.jpg",
           "thumbnail": "https://file.gptimage2api.net/media/1776676852679_0r21cn_HFv0OfsasAACMxK-300x200.jpg",
           "sourceUrl": "https://file.gptimage2api.net/media/1776676852679_0r21cn_HFv0OfsasAACMxK.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13589",
-      "slug": "cinematic-boxing-match-poster",
-      "title": "Cinematic Boxing Match Poster",
-      "description": "Generates a gritty, high-contrast promotional poster for a fictional boxing match, featuring customizable fighters, taglines, and event details.",
-      "prompt": "A gritty, cinematic boxing promotional poster featuring a face-to-face staredown between {argument name=\"fighter 1\" default=\"Mike Tyson\"} on the left and {argument name=\"fighter 2\" default=\"Sam Altman\"} on the right. The left fighter is an older, bald man with a tribal facial tattoo, wearing a black boxing glove with \"TYSON\" printed on it. The right fighter is a younger man with dark wavy hair, wearing a black boxing glove featuring the OpenAI logo and text. Both men have intense, serious expressions, with highly detailed skin textures and sweat. The background is an out-of-focus boxing ring under bright stadium lights. The poster has a vintage, slightly scratched grunge texture. At the top, text reads \"WORLD TECH vs BOXING CHAMPIONSHIP\" in white and \"{argument name=\"top tagline\" default=\"NO CODE. ALL CHAOS.\"}\" in red. In the center, large bold typography reads \"MIKE TYSON\" in red, \"★ VS ★\" in red, and \"SAM ALTMAN\" in large cream-white letters. Below this, text reads \"{argument name=\"middle tagline\" default=\"THE BRAWN. THE BRAIN. THE FUTURE.\"}\". At the bottom, 3 columns of text display \"{argument name=\"event date\" default=\"SAT JULY 26\"}\", \"LIVE ON PAY-PER-VIEW\" in red, and \"AT&T STADIUM ARLINGTON, TX\". The very bottom footer reads \"PRESENTED BY NETFLIX | TESLA | OPENAI\".",
-      "language": "en",
-      "featured": false,
-      "authorName": "Patrick",
-      "authorUrl": "https://x.com/patrickassale",
-      "sourceUrl": "https://x.com/patrickassale/status/2043482871089013166#reversed-1",
-      "publishedAt": "2026-04-13T00:14:17.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776676855374_dq9vyj_HFvot09a0AARi8n.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776676855374_dq9vyj_HFvot09a0AARi8n-300x400.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776676855374_dq9vyj_HFvot09a0AARi8n.jpg"
-        }
-      ]
-    },
-    {
-      "id": "13591",
-      "slug": "video-streaming-platform-homepage-ui",
-      "title": "Video Streaming Platform Homepage UI",
-      "description": "Generates a detailed mockup of a video streaming website homepage, featuring a sidebar, category tags, and a grid of video thumbnails with titles and metadata.",
-      "prompt": "{\n  \"type\": \"web browser UI mockup\",\n  \"platform\": \"{argument name=\\\"platform name\\\" default=\\\"YouTube\\\"}\",\n  \"browser_window\": {\n    \"style\": \"macOS light mode\",\n    \"tab\": \"YouTube\",\n    \"url_bar\": \"youtube.com\"\n  },\n  \"layout\": {\n    \"header\": {\n      \"components\": [\"hamburger menu\", \"platform logo\", \"search bar\", \"create video icon\", \"notifications bell\", \"user profile avatar\"]\n    },\n    \"sidebar\": {\n      \"position\": \"left\",\n      \"item_count\": 11,\n      \"sections\": [\n        {\n          \"name\": \"Main\",\n          \"items\": [\"Home\", \"Shorts\", \"Subscriptions\", \"Originals\", \"YouTube Music\"]\n        },\n        {\n          \"name\": \"Explore\",\n          \"items\": [\"Trending\", \"Shopping\", \"Music\", \"Movies\", \"Live\", \"Gaming\"]\n        }\n      ]\n    },\n    \"main_content\": {\n      \"category_tags\": {\n        \"count\": 10,\n        \"labels\": [\"All\", \"Gaming\", \"Music\", \"Live\", \"Podcasts\", \"AI\", \"Cars\", \"Mixes\", \"News\", \"Recently uploaded\"]\n      },\n      \"video_grid\": {\n        \"card_count\": 5,\n        \"cards\": [\n          {\n            \"position\": \"top left\",\n            \"size\": \"large\",\n            \"thumbnail_description\": \"Sam Altman and Greg Brockman sitting on a stage next to a standing humanoid robot, text overlay 'OpenAI Introducing Our Humanoid Robot', LIVE badge\",\n            \"video_title\": \"{argument name=\\\"featured live stream title\\\" default=\\\"Introducing Our Humanoid Robot\\\"}\",\n            \"channel_name\": \"{argument name=\\\"featured live stream channel\\\" default=\\\"OpenAI\\\"}\",\n            \"metadata\": \"482K watching now\"\n          },\n          {\n            \"position\": \"top right\",\n            \"size\": \"large\",\n            \"thumbnail_description\": \"surprised man's face on the left, a large mansion hidden in a forest with an explosion on the right, bold yellow text overlay '{argument name=\\\"top right thumbnail text\\\" default=\\\"TOTAL SECRECY\\\"}'\",\n            \"video_title\": \"{argument name=\\\"top right video title\\\" default=\\\"I Bought 100 Million Dollar Secret House!\\\"}\",\n            \"channel_name\": \"MrBeast\",\n            \"metadata\": \"4.1M views, 19 hours ago, 20:49 duration\"\n          },\n          {\n            \"position\": \"bottom left\",\n            \"size\": \"small\",\n            \"thumbnail_description\": \"Steve Carell holding a laptop showing a scene from The Office\",\n            \"video_title\": \"Steve Carell Breaks Down His Most Iconic Characters | GQ\",\n            \"channel_name\": \"GQ\",\n            \"metadata\": \"987K views, 2 days ago, 17:46 duration\"\n          },\n          {\n            \"position\": \"bottom middle\",\n            \"size\": \"small\",\n            \"thumbnail_description\": \"man looking through a spyglass at a sailing ship on the ocean at sunset\",\n            \"video_title\": \"Black Sails Is Beautiful!\",\n            \"channel_name\": \"Savage Books\",\n            \"metadata\": \"606K views, 2 days ago, 17:46 duration\"\n          },\n          {\n            \"position\": \"bottom right\",\n            \"size\": \"small\",\n            \"thumbnail_description\": \"creepy masked killer character from a video game with text overlay 'DEAD OF DAYLIGHT'\",\n            \"video_title\": \"Playing As The Seekers In Dead By Daylight\",\n            \"channel_name\": \"Unknown\",\n            \"metadata\": \"806K views, 1 day ago, 28:39 duration\"\n          }\n        ]\n      }\n    }\n  }\n}",
-      "language": "en",
-      "featured": false,
-      "authorName": "Aelion",
-      "authorUrl": "https://x.com/AelionStellar",
-      "sourceUrl": "https://x.com/AelionStellar/status/2043480770954645754#reversed-0",
-      "publishedAt": "2026-04-13T00:05:56.000Z",
-      "tags": [],
-      "media": [
-        {
-          "type": "image",
-          "url": "https://file.gptimage2api.net/media/1776676856035_nz2ggd_HFvmzMYWAAEQn9M.jpg",
-          "thumbnail": "https://file.gptimage2api.net/media/1776676856035_nz2ggd_HFvmzMYWAAEQn9M-300x200.jpg",
-          "sourceUrl": "https://file.gptimage2api.net/media/1776676856035_nz2ggd_HFvmzMYWAAEQn9M.jpg"
         }
       ]
     }
