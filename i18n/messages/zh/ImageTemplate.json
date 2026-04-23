@@ -151,46 +151,67 @@
     "ctaText": "准备开始生成你的图像素材了吗？",
     "items": [
       {
-        "category": "产品",
-        "title": "包装主视觉",
-        "prompt": "棚拍产品图，干净台面，自然阴影，正面标签文字清晰可读，整体简洁高级。",
-        "resolution": "1365x1024",
-        "src": "https://file.gptimage2api.net/media/1776697094626_4w646d_HGE06OebMAAQxNG.jpg"
-      },
-      {
-        "category": "营销",
-        "title": "标题清晰的活动海报",
-        "prompt": "现代感发布海报，大标题高对比，副标题简洁，留白均衡，适合社媒投放。",
-        "resolution": "1365x1024",
-        "src": "https://file.gptimage2api.net/media/1776695096617_0y6goy_HF_JerSbcAAltkf.jpg"
-      },
-      {
-        "category": "设计",
-        "title": "写实生活方式场景",
-        "prompt": "写实生活场景，柔和日光，材质细节清楚，产品自然融入画面。",
-        "resolution": "1365x1024",
-        "src": "https://file.gptimage2api.net/media/1776756777412_1un582_HGW2BEEbgAElaoi.jpg"
-      },
-      {
         "category": "电商",
-        "title": "目录图背景变体",
-        "prompt": "保持同款产品角度不变，输出多套中性背景和色调版本，包装细节一致。",
-        "resolution": "1170x1264",
-        "src": "https://file.gptimage2api.net/media/1776701527953_prrzzk_HF8dJw0a0AAypII.jpg"
+        "title": "男士护肤品牌落地页",
+        "prompt": "深色系男士护肤电商落地页，包含人物主视觉、产品瓶身、卖点模块和统计信息。",
+        "resolution": "1792x1024",
+        "src": "https://file.gptimage2api.net/media/1776756858185_6z7569_HGV6FtKbwAAK6L0.jpg"
       },
       {
-        "category": "UI 物料",
-        "title": "功能展示图块",
-        "prompt": "应用功能插画图块，层级清楚，主体图标突出，配色统一。",
-        "resolution": "1170x1264",
-        "src": "https://file.gptimage2api.net/media/1776701523987_7fdzp9_HF6bCm5bQAA3Q4J.jpg"
+        "category": "信息图",
+        "title": "角色关系图海报",
+        "prompt": "将关键角色、阵营与剧情关系整理成高完成度角色关系海报，层级清楚、信息密度高。",
+        "resolution": "1024x1280",
+        "src": "https://file.gptimage2api.net/media/1776756766331_2wdcq7_HGXHhQcbAAAFcYA.jpg"
       },
       {
-        "category": "创意探索",
-        "title": "情绪板方向图",
-        "prompt": "将产品、纹理和光线参考整合成统一情绪板，用于活动视觉评审。",
-        "resolution": "1192x1120",
-        "src": "https://file.gptimage2api.net/media/1776701499130_y3422y_HF6aV0RbIAAyPte.jpg"
+        "category": "漫画",
+        "title": "五格悬疑快递员漫画",
+        "prompt": "全彩五格漫画页面，通过门口对话、人物表情和分镜节奏表现不适感与戏剧冲突。",
+        "resolution": "1024x1365",
+        "src": "https://file.gptimage2api.net/media/1776756843035_0y4dr0_HGV2dbja8AA3IvB.jpg"
+      },
+      {
+        "category": "角色",
+        "title": "3D 表情九宫格",
+        "prompt": "以同一角色为主体，输出九宫格表情与服装变化，统一采用撕纸探头的构图设定。",
+        "resolution": "1024x1024",
+        "src": "https://file.gptimage2api.net/media/1776756789445_z4tzjp_HGTxSpFaMAAuxns.jpg"
+      },
+      {
+        "category": "编辑",
+        "title": "时尚杂志封面人像",
+        "prompt": "高端时尚杂志封面风格人像，主标题清晰、排版完整，整体保持高级编辑感。",
+        "resolution": "1024x1536",
+        "src": "https://file.gptimage2api.net/media/1776668115222_j6vl73_HGQ9NH3bQAAVUT8.jpg"
+      },
+      {
+        "category": "广告",
+        "title": "四栏广告提案板",
+        "prompt": "把美食、时尚、旅行和 SaaS 四种广告方向放进同一画板，统一展示不同商业视觉语气。",
+        "resolution": "1024x1024",
+        "src": "https://file.gptimage2api.net/media/1776658771842_fx88g6_HGPorW_aIAA0F_y.jpg"
+      },
+      {
+        "category": "设定稿",
+        "title": "角色设定参考表",
+        "prompt": "完整角色设定页，包含三视图、表情组、细节拆解、服装变体和色板说明。",
+        "resolution": "1024x1408",
+        "src": "https://file.gptimage2api.net/media/1776695087912_me13yy_HGFn2-HacAA5QqJ.jpg"
+      },
+      {
+        "category": "人像",
+        "title": "漫展 Cosplay 人像",
+        "prompt": "写实风漫展人物肖像，突出服装细节、角色气质和带有虚化人群背景的现场感。",
+        "resolution": "1024x1024",
+        "src": "https://file.gptimage2api.net/media/1776695092623_5mm99u_HGBT7WJa0AAMxp2.jpg"
+      },
+      {
+        "category": "解说漫画",
+        "title": "八格 AI 功能科普漫画",
+        "prompt": "Q 版角色讲解型漫画，把 UI 模拟图、对比示意和功能说明组合成八格叙事版面。",
+        "resolution": "1024x1536",
+        "src": "https://file.gptimage2api.net/media/1776701513937_vtw05u_HF8YsTeaMAAqgex.jpg"
       }
     ]
   },

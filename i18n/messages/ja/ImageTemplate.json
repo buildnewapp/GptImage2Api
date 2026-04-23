@@ -151,46 +151,67 @@
     "ctaText": "あなたの画像セットを作り始めますか？",
     "items": [
       {
-        "category": "商品",
-        "title": "パッケージ主役カット",
-        "prompt": "スタジオ商品写真、整理された天板、自然な影、正面ラベルの文字を明瞭に表示。",
-        "resolution": "1365x1024",
-        "src": "https://file.gptimage2api.net/media/1776697094626_4w646d_HGE06OebMAAQxNG.jpg"
-      },
-      {
-        "category": "マーケ",
-        "title": "見出し重視ポスター",
-        "prompt": "高コントラストの見出し、短いサブコピー、余白を活かしたローンチポスター。",
-        "resolution": "1365x1024",
-        "src": "https://file.gptimage2api.net/media/1776695096617_0y6goy_HF_JerSbcAAltkf.jpg"
-      },
-      {
-        "category": "デザイン",
-        "title": "ライフスタイル演出",
-        "prompt": "柔らかい自然光と質感描写を重視し、商品を生活シーンへ自然に配置。",
-        "resolution": "1365x1024",
-        "src": "https://file.gptimage2api.net/media/1776756777412_1un582_HGW2BEEbgAElaoi.jpg"
-      },
-      {
         "category": "EC",
-        "title": "背景差分バリエーション",
-        "prompt": "同一角度の商品を、背景と色調だけ変えて複数パターン生成。",
-        "resolution": "1170x1264",
-        "src": "https://file.gptimage2api.net/media/1776701499130_y3422y_HF6aV0RbIAAyPte.jpg"
+        "title": "メンズスキンケアLPモックアップ",
+        "prompt": "男性向けスキンケアブランドのダークトーンLP。人物ビジュアル、商品ボトル、訴求ポイント、実績表示を一体化。",
+        "resolution": "1792x1024",
+        "src": "https://file.gptimage2api.net/media/1776756858185_6z7569_HGV6FtKbwAAK6L0.jpg"
       },
       {
-        "category": "UI素材",
-        "title": "機能説明ビジュアル",
-        "prompt": "情報階層が明確な機能紹介パネル、主アイコンを中心に整理。",
-        "resolution": "1170x1264",
-        "src": "https://file.gptimage2api.net/media/1776701523987_7fdzp9_HF6bCm5bQAA3Q4J.jpg"
+        "category": "図解",
+        "title": "キャラクター相関図ポスター",
+        "prompt": "主要キャラクター、勢力、関係線を整理し、作品らしい世界観でまとめた情報量の高い相関図ポスター。",
+        "resolution": "1024x1280",
+        "src": "https://file.gptimage2api.net/media/1776756766331_2wdcq7_HGXHhQcbAAAFcYA.jpg"
       },
       {
-        "category": "企画",
-        "title": "ムードボード方向性",
-        "prompt": "商品、質感、光の参照を1枚に統合したキャンペーン検討用の方向性ビジュアル。",
-        "resolution": "1192x1120",
-        "src": "https://file.gptimage2api.net/media/1776701523987_7fdzp9_HF6bCm5bQAA3Q4J.jpg"
+        "category": "マンガ",
+        "title": "5コマ配達員サスペンス漫画",
+        "prompt": "玄関先のやり取りを軸に、不穏さと感情の変化をフルカラーの5コマで見せる漫画ページ。",
+        "resolution": "1024x1365",
+        "src": "https://file.gptimage2api.net/media/1776756843035_0y4dr0_HGV2dbja8AA3IvB.jpg"
+      },
+      {
+        "category": "キャラクター",
+        "title": "3D表情グリッド",
+        "prompt": "同じキャラクターを9マスで見せる表情ボード。破れた紙から覗く構図と衣装差分を統一して展開。",
+        "resolution": "1024x1024",
+        "src": "https://file.gptimage2api.net/media/1776756789445_z4tzjp_HGTxSpFaMAAuxns.jpg"
+      },
+      {
+        "category": "エディトリアル",
+        "title": "ファッション誌表紙ポートレート",
+        "prompt": "高級感のある雑誌表紙ポートレート。誌名、見出し、本文のレイアウトまで含めて完成度高く構成。",
+        "resolution": "1024x1536",
+        "src": "https://file.gptimage2api.net/media/1776668115222_j6vl73_HGQ9NH3bQAAVUT8.jpg"
+      },
+      {
+        "category": "広告",
+        "title": "4分割広告キャンペーンボード",
+        "prompt": "フード、ファッション、旅行、SaaS の4テーマを縦4分割で見せる広告モックアップ集。",
+        "resolution": "1024x1024",
+        "src": "https://file.gptimage2api.net/media/1776658771842_fx88g6_HGPorW_aIAA0F_y.jpg"
+      },
+      {
+        "category": "設定資料",
+        "title": "総合キャラクターデザインシート",
+        "prompt": "三面図、表情差分、細部資料、衣装バリエーション、カラーパレットまで含む設定シート。",
+        "resolution": "1024x1408",
+        "src": "https://file.gptimage2api.net/media/1776695087912_me13yy_HGFn2-HacAA5QqJ.jpg"
+      },
+      {
+        "category": "ポートレート",
+        "title": "イベント会場のコスプレ写真",
+        "prompt": "コスチュームの情報量と会場の空気感を両立した、フォトリアルなコスプレイベントポートレート。",
+        "resolution": "1024x1024",
+        "src": "https://file.gptimage2api.net/media/1776695092623_5mm99u_HGBT7WJa0AAMxp2.jpg"
+      },
+      {
+        "category": "解説マンガ",
+        "title": "8コマAI機能紹介マンガ",
+        "prompt": "ちびキャラ、UIモック、比較図、説明セリフを組み合わせた8コマの機能解説マンガ。",
+        "resolution": "1024x1536",
+        "src": "https://file.gptimage2api.net/media/1776701513937_vtw05u_HF8YsTeaMAAqgex.jpg"
       }
     ]
   },

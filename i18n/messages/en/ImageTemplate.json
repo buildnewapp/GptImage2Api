@@ -151,46 +151,67 @@
     "ctaText": "Ready to build your own image set?",
     "items": [
       {
-        "category": "Product",
-        "title": "Packaging Hero Shot",
-        "prompt": "Studio product photo, clean tabletop, natural shadow falloff, readable front label typography, premium but minimal composition.",
-        "resolution": "1365x1024",
-        "src": "https://file.gptimage2api.net/media/1776697094626_4w646d_HGE06OebMAAQxNG.jpg"
-      },
-      {
-        "category": "Marketing",
-        "title": "Poster Layout with Clear Headline",
-        "prompt": "A modern launch poster with high-contrast title, short subtitle, and balanced white space, suitable for paid social.",
-        "resolution": "1365x1024",
-        "src": "https://file.gptimage2api.net/media/1776695096617_0y6goy_HF_JerSbcAAltkf.jpg"
-      },
-      {
-        "category": "Design",
-        "title": "Editorial Lifestyle Scene",
-        "prompt": "Photorealistic lifestyle image with soft daylight, tactile material detail, and product naturally integrated in scene.",
-        "resolution": "1365x1024",
-        "src": "https://file.gptimage2api.net/media/1776756777412_1un582_HGW2BEEbgAElaoi.jpg"
-      },
-      {
         "category": "E-commerce",
-        "title": "Catalog Background Variants",
-        "prompt": "Same product angle with different neutral backdrops and color themes while keeping packaging details consistent.",
-        "resolution": "1170x1264",
-        "src": "https://file.gptimage2api.net/media/1776701527953_prrzzk_HF8dJw0a0AAypII.jpg"
+        "title": "Men's Skincare Landing Page Mockup",
+        "prompt": "Dark-mode skincare landing page with a model portrait, product bottle, feature highlights, and ecommerce-style statistics.",
+        "resolution": "1792x1024",
+        "src": "https://file.gptimage2api.net/media/1776756858185_6z7569_HGV6FtKbwAAK6L0.jpg"
       },
       {
-        "category": "UI",
-        "title": "Feature Graphic Block",
-        "prompt": "App feature illustration panel with clear hierarchy, icon focal point, and brand-friendly colors.",
-        "resolution": "1170x1264",
-        "src": "https://file.gptimage2api.net/media/1776701523987_7fdzp9_HF6bCm5bQAA3Q4J.jpg"
+        "category": "Infographic",
+        "title": "Character Relationship Map Poster",
+        "prompt": "A polished relationship diagram poster that organizes key characters, factions, and narrative ties with strong visual hierarchy.",
+        "resolution": "1024x1280",
+        "src": "https://file.gptimage2api.net/media/1776756766331_2wdcq7_HGXHhQcbAAAFcYA.jpg"
       },
       {
-        "category": "Concept",
-        "title": "Moodboard Exploration",
-        "prompt": "A cohesive concept frame that combines product, texture, and lighting references for campaign direction review.",
-        "resolution": "1192x1120",
-        "src": "https://file.gptimage2api.net/media/1776701499130_y3422y_HF6aV0RbIAAyPte.jpg"
+        "category": "Comic",
+        "title": "Five-Panel Creepy Delivery Manga",
+        "prompt": "Full-color manga page with a staged doorstep encounter, expressive reactions, and clean multi-panel storytelling.",
+        "resolution": "1024x1365",
+        "src": "https://file.gptimage2api.net/media/1776756843035_0y4dr0_HGV2dbja8AA3IvB.jpg"
+      },
+      {
+        "category": "Character",
+        "title": "3D Expression Grid",
+        "prompt": "A 3x3 expression board showing one stylized character in different outfits and poses peeking through torn paper.",
+        "resolution": "1024x1024",
+        "src": "https://file.gptimage2api.net/media/1776756789445_z4tzjp_HGTxSpFaMAAuxns.jpg"
+      },
+      {
+        "category": "Editorial",
+        "title": "Fashion Magazine Cover Portrait",
+        "prompt": "Luxury magazine cover portrait with readable serif masthead, elegant studio styling, and premium fashion copy layout.",
+        "resolution": "1024x1536",
+        "src": "https://file.gptimage2api.net/media/1776668115222_j6vl73_HGQ9NH3bQAAVUT8.jpg"
+      },
+      {
+        "category": "Advertising",
+        "title": "Four-Panel Ad Campaign Board",
+        "prompt": "Four vertical ad concepts for food, fashion, travel, and SaaS, each with its own typography and campaign mood.",
+        "resolution": "1024x1024",
+        "src": "https://file.gptimage2api.net/media/1776658771842_fx88g6_HGPorW_aIAA0F_y.jpg"
+      },
+      {
+        "category": "Design Sheet",
+        "title": "Comprehensive Character Design Sheet",
+        "prompt": "Anime character reference sheet with turnarounds, expressions, detail callouts, outfit variants, and palette notes.",
+        "resolution": "1024x1408",
+        "src": "https://file.gptimage2api.net/media/1776695087912_me13yy_HGFn2-HacAA5QqJ.jpg"
+      },
+      {
+        "category": "Portrait",
+        "title": "Convention Cosplayer Portrait",
+        "prompt": "Photorealistic cosplay portrait with costume detail, convention crowd bokeh, and event-style character presentation.",
+        "resolution": "1024x1024",
+        "src": "https://file.gptimage2api.net/media/1776695092623_5mm99u_HGBT7WJa0AAMxp2.jpg"
+      },
+      {
+        "category": "Explainer",
+        "title": "Eight-Panel AI Feature Manga",
+        "prompt": "Chibi explainer comic that mixes UI mockups, comparison diagrams, and feature narration in an eight-panel layout.",
+        "resolution": "1024x1536",
+        "src": "https://file.gptimage2api.net/media/1776701513937_vtw05u_HF8YsTeaMAAqgex.jpg"
       }
     ]
   },
