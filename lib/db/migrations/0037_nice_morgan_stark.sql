@@ -1,0 +1,1 @@
+ALTER TABLE "prompt_gallery_items" ADD COLUMN "results" jsonb DEFAULT '[]' NOT NULL;

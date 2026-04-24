@@ -1,12 +1,30 @@
 import PromptsPage from "@/components/prompts/PromptsPage";
+import { Locale } from "@/i18n/routing";
+import { getPublicPromptGalleryItems } from "@/lib/prompt-gallery";
+import { constructMetadata } from "@/lib/metadata";
 import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Seedance 2.0 Prompt Gallery | SdanceAI",
-  description:
-    "Explore real-world examples showcasing Seedance 2.0's multi-modal AI video creation capabilities. See prompts with input references and generated video results.",
-};
+type Params = Promise<{ locale: string }>;
 
-export default function Prompts() {
-  return <PromptsPage />;
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Showcase" });
+
+  return constructMetadata({
+    title: t("list.title"),
+    description: t("list.description"),
+    locale: locale as Locale,
+    path: "/prompts",
+  });
+}
+
+export default async function Prompts() {
+  const items = await getPublicPromptGalleryItems();
+
+  return <PromptsPage items={items} />;
 }

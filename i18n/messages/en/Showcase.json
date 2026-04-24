@@ -27,5 +27,21 @@
     "duration": "Duration",
     "referenceImages": "Reference images",
     "referenceVideos": "Reference videos"
+  },
+  "prompts": {
+    "allCategories": "All Categories",
+    "searchPlaceholder": "Search title, description, prompt",
+    "search": "Search",
+    "resultCount": "Results: {count}",
+    "emptyDescription": "Try another keyword or category.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "noPrompt": "No prompt content",
+    "prev": "Prev",
+    "next": "Next",
+    "inputAudios": "Input Audios",
+    "author": "Author",
+    "unknownAuthor": "-",
+    "language": "Language"
   }
 }

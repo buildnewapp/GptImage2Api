@@ -1,509 +1,799 @@
 "use client";
 
 import {
-  AlertCircle,
-  ArrowUpRight,
-  ChevronDown,
-  ChevronUp,
+  AudioLines,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Copy,
   FileText,
   ImageIcon,
-  Play,
+  Search,
   Sparkles,
   Video,
   X,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
-import { useCallback, useMemo, useState } from "react";
-import { createPortal } from "react-dom";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState, type MouseEvent } from "react";
 
 import {
-  cardHeadingClass,
   displayTitleClass,
-  heroMeshClass,
   pageShellClass,
   sectionKickerClass,
 } from "@/components/home/video/constants";
-import { Link } from "@/i18n/routing";
+import type { PromptGalleryItem } from "@/lib/prompt-gallery-shared";
 
 import {
-  getNextVisibleCategoryCount,
-  getVisiblePromptCategories,
-  PROMPTS_CATEGORY_BATCH_SIZE,
-  shouldShowLoadMoreCategories,
-} from "./pagination";
-import { type PromptCategory, promptCategories } from "./promptsData";
+  getPromptPreviewMedia,
+  inferResultMediaType,
+  resolveMediaUrl,
+} from "./promptGalleryUi";
 
-const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL || "";
-const HERO_PREVIEW_CATEGORIES = promptCategories.slice(0, 3);
-const TOTAL_PROMPT_COUNT = promptCategories.reduce(
-  (sum, category) => sum + category.cases.length,
-  0,
-);
+const PAGE_SIZE = 40;
 
-function MediaThumbnail({
-  src,
-  type,
-  onClick,
-  alt,
-}: {
-  src: string;
-  type: "image" | "video";
-  onClick?: () => void;
-  alt: string;
-}) {
-  const interactiveClassName = onClick
-    ? "cursor-pointer hover:-translate-y-0.5 hover:shadow-[0_18px_42px_-28px_rgba(15,23,42,0.28)]"
-    : "";
+function parsePositiveInt(value: string | null, fallback: number) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed >= 1 ? Math.floor(parsed) : fallback;
+}
+
+function PromptPreview({ item }: { item: PromptGalleryItem }) {
+  const media = getPromptPreviewMedia(item);
+
+  if (!media) {
+    return (
+      <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-4 text-sm leading-7 text-slate-600 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300">
+        {item.prompt}
+      </div>
+    );
+  }
+
+  if (media.type === "image") {
+    return (
+      <img
+        src={resolveMediaUrl(media.src)}
+        alt={item.title}
+        className="max-h-[360px] w-full rounded-2xl border border-slate-200/80 object-cover dark:border-white/10"
+      />
+    );
+  }
 
   return (
-    <div
-      className={`group relative overflow-hidden rounded-[1.25rem] border border-slate-200/80 bg-white/80 transition-all duration-300 dark:border-white/10 dark:bg-white/[0.04] ${interactiveClassName}`}
-      onClick={onClick}
-    >
-      {type === "image" ? (
-        <Image
-          src={`${CDN_URL}${src}`}
-          alt={alt}
-          width={200}
-          height={200}
-          className="h-28 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] sm:h-28"
-          unoptimized
+    <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-black dark:border-white/10">
+      <video
+        src={resolveMediaUrl(media.src)}
+        preload="metadata"
+        muted
+        playsInline
+        className="aspect-video w-full object-cover"
+      />
+    </div>
+  );
+}
+
+function DetailPreview({ item }: { item: PromptGalleryItem }) {
+  const media = getPromptPreviewMedia(item);
+
+  if (!media) {
+    return null;
+  }
+
+  if (media.type === "image") {
+    return (
+      <div className="overflow-hidden rounded-xl border border-slate-200/80 bg-slate-100 dark:border-white/10 dark:bg-slate-900/30">
+        <img
+          src={resolveMediaUrl(media.src)}
+          alt={item.title}
+          className="w-full object-contain"
         />
-      ) : (
-        <div className="relative flex h-28 w-full items-center justify-center bg-slate-200/80 sm:h-28 dark:bg-slate-700/50">
-          <video
-            src={`${CDN_URL}${src}`}
-            className="h-full w-full object-cover"
-            muted
-            preload="metadata"
-          />
-          <div className="absolute inset-0 flex items-center justify-center bg-slate-950/20">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/20 backdrop-blur-md">
-              <Play className="ml-0.5 h-4 w-4 fill-white text-white" />
+      </div>
+    );
+  }
+
+  return (
+    <video
+      src={resolveMediaUrl(media.src)}
+      controls
+      preload="metadata"
+      className="aspect-video w-full rounded-xl border border-slate-200/80 bg-black dark:border-white/10"
+    />
+  );
+}
+
+function PromptMediaBlock({
+  title,
+  items,
+  type,
+}: {
+  title: string;
+  items: string[];
+  type: "image" | "video" | "audio";
+}) {
+  if (items.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="space-y-3 rounded-[1.4rem] border border-slate-200/80 bg-white/70 p-4 dark:border-white/10 dark:bg-white/[0.04]">
+      <div className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
+        {type === "image" ? (
+          <ImageIcon className="h-4 w-4 text-sky-500" />
+        ) : type === "video" ? (
+          <Video className="h-4 w-4 text-emerald-500" />
+        ) : (
+          <AudioLines className="h-4 w-4 text-amber-500" />
+        )}
+        <span>{title}</span>
+      </div>
+
+      {type === "image" ? (
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          {items.map((item, index) => (
+            <div
+              key={`${type}-${index}`}
+              className="overflow-hidden rounded-xl border border-slate-200/80 bg-slate-100 dark:border-white/10 dark:bg-slate-900/30"
+            >
+              <img
+                src={resolveMediaUrl(item)}
+                alt={`${title} ${index + 1}`}
+                className="w-full object-contain"
+              />
             </div>
-          </div>
+          ))}
+        </div>
+      ) : type === "video" ? (
+        <div className="grid gap-3">
+          {items.map((item, index) => (
+            <video
+              key={`${type}-${index}`}
+              src={resolveMediaUrl(item)}
+              controls
+              preload="metadata"
+              className="aspect-video w-full rounded-xl border border-slate-200/80 bg-black dark:border-white/10"
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="grid gap-3">
+          {items.map((item, index) => (
+            <audio
+              key={`${type}-${index}`}
+              src={resolveMediaUrl(item)}
+              controls
+              className="w-full"
+            />
+          ))}
         </div>
       )}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/10 via-transparent to-white/10 opacity-70" />
+    </div>
+  );
+}
+
+function PromptResultsBlock({
+  title,
+  items,
+}: {
+  title: string;
+  items: string[];
+}) {
+  if (items.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="space-y-3 rounded-[1.4rem] border border-slate-200/80 bg-white/70 p-4 dark:border-white/10 dark:bg-white/[0.04]">
+      <div className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
+        <Sparkles className="h-4 w-4 text-fuchsia-500" />
+        <span>{title}</span>
+      </div>
+
+      <div className="grid gap-3">
+        {items.map((item, index) => {
+          const type = inferResultMediaType(item);
+          const src = resolveMediaUrl(item);
+
+          return type === "image" ? (
+            <div
+              key={`result-${index}`}
+              className="overflow-hidden rounded-xl border border-slate-200/80 bg-slate-100 dark:border-white/10 dark:bg-slate-900/30"
+            >
+              <img
+                src={src}
+                alt={`${title} ${index + 1}`}
+                className="w-full object-contain"
+              />
+            </div>
+          ) : (
+            <video
+              key={`result-${index}`}
+              src={src}
+              controls
+              preload="metadata"
+              className="aspect-video w-full rounded-xl border border-slate-200/80 bg-black dark:border-white/10"
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
 
 function PromptCard({
-  promptCase,
-  index,
-  categoryId,
-  onPlayVideo,
-  t,
+  item,
+  copied,
+  labels,
+  onOpen,
+  onCopy,
 }: {
-  promptCase: PromptCategory["cases"][0];
-  index: number;
-  categoryId: string;
-  onPlayVideo: (src: string) => void;
-  t: ReturnType<typeof useTranslations<"Prompts">>;
+  item: PromptGalleryItem;
+  copied: boolean;
+  labels: {
+    viewDetails: string;
+    prompt: string;
+    copy: string;
+    copied: string;
+    noPrompt: string;
+    author: string;
+    unknownAuthor: string;
+  };
+  onOpen: (item: PromptGalleryItem) => void;
+  onCopy: (event: MouseEvent<HTMLButtonElement>, item: PromptGalleryItem) => void;
 }) {
-  const [expanded, setExpanded] = useState(false);
-  const hasInputMedia =
-    promptCase.images.length > 0 || promptCase.inputVideos.length > 0;
-  const promptText = t(`prompts.${categoryId}.${index}` as any);
-  const isLong = promptText.length > 120;
-  const displayText =
-    isLong && !expanded ? `${promptText.slice(0, 120)}...` : promptText;
+  const authorName = item.author?.name?.trim() || labels.unknownAuthor;
+  const authorLink = item.author?.link?.trim() || "";
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius)+0.45rem)] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.94)_0%,rgba(240,244,248,0.92)_100%)] p-4 shadow-[0_26px_70px_-46px_rgba(15,23,42,0.28)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_80px_-44px_rgba(15,23,42,0.34)] dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(31,41,55,0.82)_0%,rgba(15,23,42,0.88)_100%)] dark:shadow-[0_28px_82px_-44px_rgba(2,8,23,0.72)] sm:p-6">
-      <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_70%)] opacity-80 transition-opacity duration-300 group-hover:opacity-100" />
-
-      <div className="relative flex flex-col items-start gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-        <div className="inline-flex min-h-11 items-center gap-2 rounded-full border border-slate-200/80 bg-white/75 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.22em] text-slate-500 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-300">
-          <FileText className="h-3.5 w-3.5 text-[hsl(var(--primary))]" />
-          {t("card.prompt")}
-        </div>
-        {promptCase.duration && (
-          <span className="inline-flex min-h-11 items-center rounded-full border border-amber-200/80 bg-amber-50 px-2.5 py-1 text-[0.72rem] font-semibold text-amber-700 dark:border-amber-400/20 dark:bg-amber-500/10 dark:text-amber-200">
-            {t("card.duration")}: {promptCase.duration}
-          </span>
-        )}
-      </div>
-
-      <div className="relative mt-5 flex-1">
-        <p className="text-[15px] leading-7 text-slate-700 dark:text-slate-200 sm:text-sm">
-          {displayText}
-        </p>
-        {isLong && (
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className="mt-2 inline-flex min-h-11 items-center gap-1 text-xs font-semibold text-[hsl(var(--primary))] transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] focus-visible:ring-offset-2 dark:hover:text-white"
-          >
-            {expanded ? (
-              <>
-                <ChevronUp className="h-3.5 w-3.5" />
-                {t("card.collapse")}
-              </>
-            ) : (
-              <>
-                <ChevronDown className="h-3.5 w-3.5" />
-                {t("card.expand")}
-              </>
-            )}
-          </button>
-        )}
-      </div>
-
-      {hasInputMedia && (
-        <div className="relative mt-5 rounded-[1.5rem] border border-slate-200/80 bg-white/65 p-3 dark:border-white/10 dark:bg-white/[0.04] sm:p-4">
-          <div className="mb-3 flex flex-wrap items-center gap-4">
-            {promptCase.images.length > 0 && (
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-sky-600 dark:text-sky-300">
-                <ImageIcon className="h-3.5 w-3.5" />
-                <span>
-                  {promptCase.images.length}{" "}
-                  {promptCase.images.length > 1
-                    ? t("card.images")
-                    : t("card.image")}
-                </span>
-              </div>
-            )}
-            {promptCase.inputVideos.length > 0 && (
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-300">
-                <Video className="h-3.5 w-3.5" />
-                <span>
-                  {promptCase.inputVideos.length}{" "}
-                  {promptCase.inputVideos.length > 1
-                    ? t("card.videos")
-                    : t("card.video")}
-                </span>
-              </div>
-            )}
-          </div>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {promptCase.images.map((img, imageIndex) => (
-              <MediaThumbnail
-                key={`img-${imageIndex}`}
-                src={img}
-                type="image"
-                alt={`Reference image ${imageIndex + 1}`}
-              />
-            ))}
-            {promptCase.inputVideos.map((vid, videoIndex) => (
-              <MediaThumbnail
-                key={`vid-${videoIndex}`}
-                src={vid}
-                type="video"
-                alt={`Reference video ${videoIndex + 1}`}
-                onClick={() => onPlayVideo(`${CDN_URL}${vid}`)}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="relative mt-5 rounded-[1.5rem] border border-slate-200/80 bg-slate-950 p-3.5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] dark:border-white/10 sm:p-5">
-        <div className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-white/70">
-          <Sparkles className="h-3.5 w-3.5 text-[hsl(var(--accent))]" />
-          {t("card.generatedResult")}
-        </div>
-        <div className="grid grid-cols-1 gap-2">
-          {promptCase.resultVideos.map((vid, resultIndex) => (
-            <button
-              key={`result-${resultIndex}`}
-              type="button"
-              className="group/result relative aspect-video overflow-hidden rounded-[1.25rem] border border-white/10 bg-black text-left transition-all duration-300 hover:border-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-              onClick={() => onPlayVideo(`${CDN_URL}${vid}`)}
+    <article
+      role="button"
+      tabIndex={0}
+      onClick={() => onOpen(item)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onOpen(item);
+        }
+      }}
+      className="group mb-4 block cursor-pointer break-inside-avoid overflow-hidden rounded-[calc(var(--radius)+0.45rem)] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.95)_0%,rgba(245,248,252,0.92)_100%)] shadow-[0_22px_54px_-42px_rgba(15,23,42,0.32)] transition-all duration-200 hover:-translate-y-0.5 dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(31,41,55,0.82)_0%,rgba(15,23,42,0.9)_100%)]"
+    >
+      <div className="space-y-4 p-4 sm:p-5">
+        <div className="flex flex-wrap gap-2">
+          {item.categories.map((category) => (
+            <span
+              key={`${item.id}-${category}`}
+              className="inline-flex items-center rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-700 dark:bg-sky-500/10 dark:text-sky-200"
             >
-              <video
-                src={`${CDN_URL}${vid}`}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover/result:scale-[1.02]"
-                muted
-                preload="metadata"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-              <div className="absolute inset-0 flex items-center justify-center opacity-100 transition-all duration-300 group-hover/result:scale-105">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/20 bg-white/14 backdrop-blur-md">
-                  <Play className="ml-1 h-6 w-6 fill-white text-white" />
-                </div>
-              </div>
-            </button>
+              {category}
+            </span>
           ))}
         </div>
-        {promptCase.note && (
-          <div className="mt-3 flex items-start gap-2 rounded-2xl border border-amber-400/15 bg-amber-300/10 px-3 py-2 text-xs leading-5 text-amber-100">
-            <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
-            <span>{promptCase.note}</span>
+
+        <div className="space-y-2">
+          <h2 className="text-xl font-semibold tracking-tight text-slate-950 dark:text-white">
+            {item.title}
+          </h2>
+          {item.description ? (
+            <p className="text-sm leading-6 text-slate-600 dark:text-slate-300 line-clamp-2">
+              {item.description}
+            </p>
+          ) : null}
+        </div>
+
+        <PromptPreview item={item} />
+
+        <div className="rounded-2xl border border-slate-200/80 bg-white/75 p-3 dark:border-white/10 dark:bg-white/[0.04]">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-100">
+              <FileText className="h-4 w-4 text-[hsl(var(--primary))]" />
+              <span>{labels.prompt}</span>
+            </div>
+            <button
+              type="button"
+              onClick={(event) => onCopy(event, item)}
+              className="inline-flex h-8 items-center gap-1 rounded-md border border-slate-200/80 bg-white px-2.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-white/10 dark:bg-white/[0.08] dark:text-slate-100"
+            >
+              {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+              {copied ? labels.copied : labels.copy}
+            </button>
           </div>
-        )}
+          <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-slate-700 dark:text-slate-200 line-clamp-2">
+            {item.prompt || labels.noPrompt}
+          </p>
+        </div>
+
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0 text-sm text-slate-600 dark:text-slate-300">
+            <span className="mr-1">{labels.author}:</span>
+            {authorLink ? (
+              <a
+                href={authorLink}
+                target="_blank"
+                rel="noreferrer"
+                onClick={(event) => event.stopPropagation()}
+                className="truncate text-sky-600 underline underline-offset-4 hover:text-sky-500 dark:text-sky-300"
+              >
+                {authorName}
+              </a>
+            ) : (
+              <span className="truncate">{authorName}</span>
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              onOpen(item);
+            }}
+            className="inline-flex h-8 shrink-0 items-center rounded-md bg-[linear-gradient(135deg,#1f2a44_0%,#2e4f84_100%)] px-2.5 text-xs font-semibold text-white"
+          >
+            {labels.viewDetails}
+          </button>
+        </div>
       </div>
     </article>
   );
 }
 
-export default function PromptsPage() {
-  const t = useTranslations("Prompts");
-  const [activeCategory, setActiveCategory] = useState<string>("all");
-  const [visibleCategoryCount, setVisibleCategoryCount] = useState(() =>
-    Math.min(PROMPTS_CATEGORY_BATCH_SIZE, promptCategories.length),
+function PromptDetailModal({
+  item,
+  copied,
+  labels,
+  onClose,
+  onCopy,
+}: {
+  item: PromptGalleryItem;
+  copied: boolean;
+  labels: {
+    prompt: string;
+    copy: string;
+    copied: string;
+    noPrompt: string;
+    inputImages: string;
+    inputVideos: string;
+    inputAudios: string;
+    results: string;
+    model: string;
+    language: string;
+    author: string;
+    unknownAuthor: string;
+  };
+  onClose: () => void;
+  onCopy: (event: MouseEvent<HTMLButtonElement>, item: PromptGalleryItem) => void;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/60 p-2 sm:items-center sm:p-4"
+      onClick={onClose}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        className="max-h-[94vh] w-full max-w-5xl overflow-hidden rounded-[calc(var(--radius)+0.45rem)] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.97)_0%,rgba(245,248,252,0.95)_100%)] shadow-[0_28px_80px_-44px_rgba(15,23,42,0.42)] dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(31,41,55,0.92)_0%,rgba(15,23,42,0.95)_100%)]"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="flex items-center justify-between border-b border-slate-200/80 px-4 py-3 dark:border-white/10 sm:px-6">
+          <h2 className="line-clamp-1 text-base font-semibold text-slate-900 dark:text-white sm:text-lg">
+            {item.title}
+          </h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-slate-200/80 bg-white/80 text-slate-700 transition-colors hover:bg-slate-100 dark:border-white/10 dark:bg-white/[0.08] dark:text-slate-100"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="max-h-[calc(94vh-72px)] space-y-4 overflow-y-auto p-4 sm:p-6">
+          <div className="flex flex-wrap gap-2">
+            {item.categories.map((category) => (
+              <span
+                key={`${item.id}-${category}`}
+                className="inline-flex items-center rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-700 dark:bg-sky-500/10 dark:text-sky-200"
+              >
+                {category}
+              </span>
+            ))}
+          </div>
+
+          {item.description ? (
+            <p className="text-sm leading-7 text-slate-600 dark:text-slate-300">
+              {item.description}
+            </p>
+          ) : null}
+
+          <div className="grid gap-2 rounded-[1.2rem] border border-slate-200/80 bg-white/75 p-4 text-sm text-slate-700 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-200 sm:grid-cols-3">
+            <div>{labels.model}: {item.model || "-"}</div>
+            <div>{labels.language}: {item.language || "-"}</div>
+            <div>{labels.author}: {item.author?.name || labels.unknownAuthor}</div>
+          </div>
+
+          <DetailPreview item={item} />
+
+          <div className="rounded-[1.4rem] border border-slate-200/80 bg-white/75 p-4 dark:border-white/10 dark:bg-white/[0.04]">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-100">
+                <FileText className="h-4 w-4 text-[hsl(var(--primary))]" />
+                <span>{labels.prompt}</span>
+              </div>
+              <button
+                type="button"
+                onClick={(event) => onCopy(event, item)}
+                className="inline-flex h-8 items-center gap-1 rounded-md border border-slate-200/80 bg-white px-2.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-white/10 dark:bg-white/[0.08] dark:text-slate-100"
+              >
+                {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                {copied ? labels.copied : labels.copy}
+              </button>
+            </div>
+            <pre className="overflow-x-auto whitespace-pre-wrap break-words text-sm leading-7 text-slate-700 dark:text-slate-200">
+              {item.prompt || labels.noPrompt}
+            </pre>
+          </div>
+
+          <PromptMediaBlock title={labels.inputImages} items={item.inputImages} type="image" />
+          <PromptMediaBlock title={labels.inputVideos} items={item.inputVideos} type="video" />
+          <PromptMediaBlock title={labels.inputAudios} items={item.inputAudios} type="audio" />
+          <PromptResultsBlock title={labels.results} items={item.results} />
+
+          {item.note ? (
+            <div className="rounded-[1.25rem] border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-7 text-amber-800 dark:border-amber-400/20 dark:bg-amber-500/10 dark:text-amber-100">
+              {item.note}
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </div>
   );
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+}
 
-  const visibleCategories = useMemo(() => {
-    return getVisiblePromptCategories({
-      categories: promptCategories,
-      activeCategory,
-      visibleCategoryCount,
+export default function PromptsPage({ items }: { items: PromptGalleryItem[] }) {
+  const tShowcase = useTranslations("Showcase");
+  const tPrompts = useTranslations("Showcase.prompts");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const qParam = (searchParams.get("q") || "").trim();
+  const categoryParam = searchParams.get("category") || "all";
+  const pageParam = parsePositiveInt(searchParams.get("page"), 1);
+
+  const [keywordInput, setKeywordInput] = useState(qParam);
+  const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [activeItem, setActiveItem] = useState<PromptGalleryItem | null>(null);
+
+  const categories = useMemo(() => {
+    return Array.from(
+      new Set(items.flatMap((item) => item.categories).filter(Boolean)),
+    ).sort((left, right) => left.localeCompare(right));
+  }, [items]);
+
+  const activeCategory =
+    categoryParam !== "all" && categories.includes(categoryParam)
+      ? categoryParam
+      : "all";
+
+  const filteredItems = useMemo(() => {
+    const normalizedKeyword = qParam.toLowerCase();
+
+    return items.filter((item) => {
+      if (activeCategory !== "all" && !item.categories.includes(activeCategory)) {
+        return false;
+      }
+
+      if (!normalizedKeyword) {
+        return true;
+      }
+
+      const haystack = [
+        item.title,
+        item.description,
+        item.prompt,
+        item.model,
+        item.language,
+        item.categories.join(" "),
+      ]
+        .join(" ")
+        .toLowerCase();
+
+      return haystack.includes(normalizedKeyword);
     });
-  }, [activeCategory, visibleCategoryCount]);
+  }, [activeCategory, items, qParam]);
 
-  const showLoadMoreButton = useMemo(() => {
-    return shouldShowLoadMoreCategories({
-      activeCategory,
-      visibleCategoryCount,
-      totalCategoryCount: promptCategories.length,
-    });
-  }, [activeCategory, visibleCategoryCount]);
+  const totalPages = Math.max(1, Math.ceil(filteredItems.length / PAGE_SIZE));
+  const currentPage = Math.min(Math.max(pageParam, 1), totalPages);
+  const pageItems = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filteredItems.slice(start, start + PAGE_SIZE);
+  }, [currentPage, filteredItems]);
 
-  const handlePlayVideo = useCallback((src: string) => {
-    setSelectedVideo(src);
-  }, []);
+  const updateUrl = (
+    next: {
+      q?: string;
+      category?: string;
+      page?: number;
+    },
+    replace = false,
+  ) => {
+    const params = new URLSearchParams(searchParams.toString());
 
-  const handleLoadMoreCategories = useCallback(() => {
-    setVisibleCategoryCount((currentVisibleCategoryCount) =>
-      getNextVisibleCategoryCount({
-        currentVisibleCategoryCount,
-        totalCategoryCount: promptCategories.length,
-      }),
-    );
-  }, []);
+    const nextKeyword = next.q ?? qParam;
+    const nextCategory = next.category ?? activeCategory;
+    const nextPage = next.page ?? currentPage;
 
-  const getCategoryTitle = (id: string) => {
-    return t(`categories.${id}.title` as any);
+    if (nextKeyword) {
+      params.set("q", nextKeyword);
+    } else {
+      params.delete("q");
+    }
+
+    if (nextCategory && nextCategory !== "all") {
+      params.set("category", nextCategory);
+    } else {
+      params.delete("category");
+    }
+
+    if (nextPage > 1) {
+      params.set("page", String(nextPage));
+    } else {
+      params.delete("page");
+    }
+
+    const query = params.toString();
+    const nextUrl = query ? `${pathname}?${query}` : pathname;
+    const currentUrl = searchParams.toString()
+      ? `${pathname}?${searchParams.toString()}`
+      : pathname;
+
+    if (nextUrl === currentUrl) {
+      return;
+    }
+
+    if (replace) {
+      router.replace(nextUrl, { scroll: false });
+      return;
+    }
+
+    router.push(nextUrl, { scroll: false });
   };
 
-  const getCategoryDescription = (id: string) => {
-    return t(`categories.${id}.description` as any);
+  useEffect(() => {
+    setKeywordInput(qParam);
+  }, [qParam]);
+
+  useEffect(() => {
+    if (activeItem) {
+      return;
+    }
+
+    if (currentPage !== pageParam || activeCategory !== categoryParam) {
+      updateUrl(
+        {
+          q: qParam,
+          category: activeCategory,
+          page: currentPage,
+        },
+        true,
+      );
+    }
+  }, [activeCategory, activeItem, categoryParam, currentPage, pageParam, qParam]);
+
+  useEffect(() => {
+    if (!activeItem) {
+      return;
+    }
+
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setActiveItem(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleEsc);
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [activeItem]);
+
+  const applyKeyword = () => {
+    updateUrl({ q: keywordInput.trim(), page: 1 });
+  };
+
+  const handleCopyPrompt = async (
+    event: MouseEvent<HTMLButtonElement>,
+    item: PromptGalleryItem,
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    try {
+      await navigator.clipboard.writeText(item.prompt || "");
+      setCopiedId(item.id);
+      window.setTimeout(() => {
+        setCopiedId((current) => (current === item.id ? null : current));
+      }, 1200);
+    } catch {
+      setCopiedId(null);
+    }
   };
 
   return (
     <div className={`${pageShellClass} min-h-screen`}>
-      <section className="relative overflow-hidden px-3 pb-8 pt-20 sm:px-6 sm:pb-10 sm:pt-24 lg:px-8 lg:pb-14 lg:pt-32">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute left-[8%] top-10 h-48 w-48 rounded-full bg-sky-400/15 blur-3xl" />
-          <div className="absolute bottom-0 right-[10%] h-56 w-56 rounded-full bg-cyan-400/10 blur-3xl" />
+      <section className="relative overflow-hidden px-3 pb-4 pt-14 sm:px-6 sm:pb-6 sm:pt-16 lg:px-8 lg:pb-8 lg:pt-20">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute left-[10%] top-8 h-40 w-40 rounded-full bg-sky-400/12 blur-3xl" />
+          <div className="absolute right-[12%] top-5 h-32 w-32 rounded-full bg-cyan-400/10 blur-3xl" />
         </div>
 
         <div className="relative z-10 mx-auto w-full max-w-7xl">
-          <div className="grid gap-6 sm:gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] lg:items-end">
-            <div className="max-w-4xl">
-              <div className={sectionKickerClass}>
-                <Sparkles className="h-3.5 w-3.5 text-[hsl(var(--primary))]" />
-                {t("hero.badge")}
-              </div>
-              <h1
-                className={`${displayTitleClass} mt-5 max-w-4xl text-[clamp(2.5rem,14vw,6.2rem)] leading-[0.96] text-slate-950 dark:text-white sm:mt-6 sm:leading-[0.99]`}
-              >
-                {t("hero.title")}
-                <span className="mt-2 block bg-gradient-to-r from-[hsl(var(--primary))] via-sky-500 to-[hsl(var(--accent))] bg-clip-text text-transparent">
-                  {t("hero.titleHighlight")}
-                </span>
-              </h1>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300 sm:mt-6 sm:leading-8 sm:text-lg">
-                {t("hero.description")}
-              </p>
+          <div className="max-w-4xl">
+            <div className={sectionKickerClass}>
+              <Sparkles className="h-3.5 w-3.5 text-[hsl(var(--primary))]" />
+              {tShowcase("list.eyebrow")}
             </div>
-
-            <div
-              className={`${heroMeshClass} rounded-[calc(var(--radius)+0.8rem)] border border-white/10 p-4 text-white shadow-[0_30px_90px_-48px_rgba(15,23,42,0.72)] sm:p-6`}
+            <h1
+              className={`${displayTitleClass} mt-4 text-[clamp(2rem,9vw,3.8rem)] leading-[1.02] text-slate-950 dark:text-white`}
             >
-              <div className="mb-4 flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/58">
-                    {t("hero.badge")}
-                  </p>
-                  <p className="mt-1 text-lg font-semibold text-white">
-                    {activeCategory === "all"
-                      ? t("nav.all")
-                      : getCategoryTitle(activeCategory)}
-                  </p>
-                </div>
-                <div className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-white/80">
-                  {TOTAL_PROMPT_COUNT}
-                </div>
-              </div>
-
-              <div className="space-y-2.5 sm:space-y-3">
-                {HERO_PREVIEW_CATEGORIES.map((category) => (
-                  <button
-                    key={category.id}
-                    type="button"
-                    onClick={() => setActiveCategory(category.id)}
-                    className="flex min-h-11 w-full items-start justify-between gap-3 rounded-[1.25rem] border border-white/10 bg-white/8 px-4 py-3.5 text-left transition-all duration-300 hover:bg-white/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:gap-4 sm:rounded-[1.4rem] sm:py-4"
-                  >
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-white">
-                        {getCategoryTitle(category.id)}
-                      </p>
-                      <p className="mt-1 line-clamp-2 text-sm leading-6 text-white/66">
-                        {getCategoryDescription(category.id)}
-                      </p>
-                    </div>
-                    <ArrowUpRight className="mt-0.5 h-4 w-4 flex-shrink-0 text-white/72" />
-                  </button>
-                ))}
-              </div>
-            </div>
+              {tShowcase("list.title")}
+            </h1>
+            <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300 sm:text-base">
+              {tShowcase("list.description")}
+            </p>
           </div>
         </div>
       </section>
 
-      <section className="sticky top-20 z-30 border-y border-slate-200/70 bg-[color-mix(in_srgb,hsl(var(--background))_78%,white_22%)]/80 backdrop-blur-2xl dark:border-white/10 dark:bg-[color-mix(in_srgb,hsl(var(--background))_82%,black_18%)]/78">
-        <div className="mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8">
-          <div className="-mx-3 overflow-x-auto px-3 py-3 sm:mx-0 sm:px-0 sm:py-4">
-            <div className="flex min-w-max gap-2">
+      <section className="sticky top-[80px] z-30 border-y border-slate-200/70 bg-[color-mix(in_srgb,hsl(var(--background))_82%,white_18%)]/85 backdrop-blur-2xl dark:border-white/10 dark:bg-[color-mix(in_srgb,hsl(var(--background))_86%,black_14%)]/82">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 px-3 py-3 sm:px-6 lg:px-8">
+          <div
+            className="flex items-center gap-1 overflow-x-scroll pb-1 whitespace-nowrap touch-pan-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-x" }}
+          >
             <button
-              onClick={() => setActiveCategory("all")}
-              className={`min-h-11 flex-none rounded-full px-4 py-2 text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] focus-visible:ring-offset-2 ${
+              type="button"
+              onClick={() => updateUrl({ category: "all", page: 1 })}
+              className={`inline-flex h-9 shrink-0 items-center rounded-full px-2 text-xs font-semibold transition-all ${
                 activeCategory === "all"
-                  ? "bg-[linear-gradient(135deg,#1f2a44_0%,#253a64_100%)] text-white shadow-[0_18px_32px_-24px_rgba(15,23,42,0.52)]"
-                  : "border border-slate-200/80 bg-white/80 text-slate-600 hover:bg-slate-100 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 dark:hover:bg-white/[0.08]"
+                  ? "bg-[linear-gradient(135deg,#1f2a44_0%,#253a64_100%)] text-white"
+                  : "border border-slate-200/80 bg-white/80 text-slate-600 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300"
               }`}
             >
-              {t("nav.all")}
+              {tPrompts("allCategories")}
             </button>
-            {promptCategories.map((category) => (
+            {categories.map((category) => (
               <button
-                key={category.id}
-                onClick={() => setActiveCategory(category.id)}
-                className={`min-h-11 flex-none rounded-full px-4 py-2 text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] focus-visible:ring-offset-2 ${
-                  activeCategory === category.id
-                    ? "bg-[linear-gradient(135deg,#2d6cdf_0%,#39a7d8_100%)] text-white shadow-[0_18px_32px_-24px_rgba(59,130,246,0.52)]"
-                    : "border border-slate-200/80 bg-white/80 text-slate-600 hover:bg-slate-100 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 dark:hover:bg-white/[0.08]"
+                key={category}
+                type="button"
+                onClick={() => updateUrl({ category, page: 1 })}
+                className={`inline-flex h-9 shrink-0 items-center rounded-full px-2 text-xs font-semibold transition-all ${
+                  activeCategory === category
+                    ? "bg-[linear-gradient(135deg,#2d6cdf_0%,#39a7d8_100%)] text-white"
+                    : "border border-slate-200/80 bg-white/80 text-slate-600 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300"
                 }`}
               >
-                {getCategoryTitle(category.id)}
+                {category}
               </button>
             ))}
+          </div>
+
+          <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2">
+            <div className="relative min-w-0">
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <input
+                value={keywordInput}
+                onChange={(event) => setKeywordInput(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    applyKeyword();
+                  }
+                }}
+                placeholder={tPrompts("searchPlaceholder")}
+                className="h-10 w-full rounded-full border border-slate-200/80 bg-white/80 pl-11 pr-4 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-sky-400 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-100"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={applyKeyword}
+              className="inline-flex h-10 items-center justify-center rounded-full bg-[linear-gradient(135deg,#1f2a44_0%,#2e4f84_100%)] px-4 text-sm font-semibold text-white"
+            >
+              {tPrompts("search")}
+            </button>
+            <div className="inline-flex h-10 items-center rounded-full border border-slate-200/80 bg-white/80 px-3 text-sm text-slate-600 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-300">
+              {tPrompts("resultCount", { count: filteredItems.length })}
             </div>
           </div>
         </div>
       </section>
 
-      <section className="px-3 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-14">
+      <section className="px-3 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
         <div className="mx-auto w-full max-w-7xl">
-          {visibleCategories.map((category, categoryIndex) => (
-            <div
-              key={category.id}
-              className="mb-6 rounded-[calc(var(--radius)+0.8rem)] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.88)_0%,rgba(244,247,250,0.84)_100%)] p-3.5 shadow-[0_30px_90px_-56px_rgba(15,23,42,0.25)] backdrop-blur-md dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(30,41,59,0.6)_0%,rgba(15,23,42,0.78)_100%)] dark:shadow-[0_30px_90px_-56px_rgba(2,8,23,0.75)] sm:mb-8 sm:p-6 lg:mb-10 lg:p-8"
-            >
-              <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:gap-5 lg:flex-row lg:items-end lg:justify-between">
-                <div className="max-w-3xl">
-                  <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/75 px-3 py-1.5 text-[0.72rem] font-bold uppercase tracking-[0.22em] text-slate-500 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300">
-                    <span className="text-[hsl(var(--primary))]">
-                      {String(categoryIndex + 1).padStart(2, "0")}
-                    </span>
-                    {getCategoryTitle(category.id)}
-                  </div>
-                  <h2
-                    className={`${cardHeadingClass} text-[clamp(2rem,3vw,3rem)] text-slate-950 dark:text-white`}
-                  >
-                    {getCategoryTitle(category.id)}
-                  </h2>
-                  <p className="mt-3 max-w-2xl text-[15px] leading-7 text-slate-600 dark:text-slate-300 sm:text-base">
-                    {getCategoryDescription(category.id)}
-                  </p>
-                </div>
-
-                <div className="w-fit rounded-[1.5rem] border border-slate-200/80 bg-white/80 px-4 py-3 text-sm font-medium text-slate-600 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300">
-                  {String(category.cases.length).padStart(2, "0")}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-                {category.cases.map((promptCase, index) => (
+          {filteredItems.length === 0 ? (
+            <div className="rounded-[calc(var(--radius)+0.7rem)] border border-dashed border-slate-300 bg-white/70 px-6 py-12 text-center dark:border-white/10 dark:bg-white/[0.03]">
+              <h2 className="text-2xl font-semibold text-slate-950 dark:text-white">
+                {tShowcase("list.empty")}
+              </h2>
+              <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                {tPrompts("emptyDescription")}
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="columns-1 [column-gap:1rem] sm:columns-2 sm:[column-gap:1rem] xl:columns-3">
+                {pageItems.map((item) => (
                   <PromptCard
-                    key={index}
-                    promptCase={promptCase}
-                    index={index}
-                    categoryId={category.id}
-                    onPlayVideo={handlePlayVideo}
-                    t={t}
+                    key={item.id}
+                    item={item}
+                    copied={copiedId === item.id}
+                    labels={{
+                      viewDetails: tShowcase("list.viewDetails"),
+                      prompt: tShowcase("detail.prompt"),
+                      copy: tPrompts("copy"),
+                      copied: tPrompts("copied"),
+                      noPrompt: tPrompts("noPrompt"),
+                      author: tPrompts("author"),
+                      unknownAuthor: tPrompts("unknownAuthor"),
+                    }}
+                    onOpen={setActiveItem}
+                    onCopy={handleCopyPrompt}
                   />
                 ))}
               </div>
-            </div>
-          ))}
 
-          {showLoadMoreButton && (
-            <div className="mt-10 flex justify-center">
-              <button
-                onClick={handleLoadMoreCategories}
-                className="inline-flex min-h-11 items-center justify-center rounded-full bg-[linear-gradient(135deg,#1f2a44_0%,#253a64_100%)] px-6 py-3 text-sm font-semibold text-white shadow-[0_18px_34px_-22px_rgba(15,23,42,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] focus-visible:ring-offset-2"
-              >
-                {t("pagination.loadMore")}
-              </button>
-            </div>
+              {totalPages > 1 ? (
+                <div className="mt-7 flex flex-wrap items-center justify-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => updateUrl({ page: Math.max(1, currentPage - 1) })}
+                    disabled={currentPage <= 1}
+                    className="inline-flex min-h-9 items-center gap-2 rounded-full border border-slate-200/80 bg-white/85 px-3 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-100"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    {tPrompts("prev")}
+                  </button>
+
+                  <span className="px-3 text-sm text-slate-600 dark:text-slate-300">
+                    {tShowcase("list.pageLabel", { page: currentPage, totalPages })}
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={() => updateUrl({ page: Math.min(totalPages, currentPage + 1) })}
+                    disabled={currentPage >= totalPages}
+                    className="inline-flex min-h-9 items-center gap-2 rounded-full border border-slate-200/80 bg-white/85 px-3 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-100"
+                  >
+                    {tPrompts("next")}
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              ) : null}
+            </>
           )}
         </div>
       </section>
 
-      <section className="px-3 pb-14 sm:px-6 lg:px-8 lg:pb-20">
-        <div className="mx-auto w-full max-w-7xl">
-          <div
-            className={`${heroMeshClass} overflow-hidden rounded-[calc(var(--radius)+1rem)] border border-white/10 px-5 py-10 text-center text-white shadow-[0_34px_90px_-54px_rgba(15,23,42,0.72)] sm:px-8 lg:px-12 lg:py-14`}
-          >
-            <div className="mx-auto max-w-3xl">
-              <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.22em] text-white/70">
-                <Sparkles className="h-3.5 w-3.5" />
-                {t("hero.badge")}
-              </div>
-              <h2
-                className={`${cardHeadingClass} mt-6 text-[clamp(2.2rem,4vw,3.8rem)] text-white`}
-              >
-                {t("cta.title")}
-              </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-white/70 sm:text-lg">
-                {t("cta.description")}
-              </p>
-              <Link
-                href="/"
-                className="mt-8 inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-semibold text-slate-900 shadow-[0_22px_42px_-24px_rgba(255,255,255,0.48)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
-              >
-                <Sparkles className="h-5 w-5" />
-                {t("cta.button")}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {selectedVideo &&
-        typeof document !== "undefined" &&
-        createPortal(
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/88 p-4 backdrop-blur-md animate-in fade-in duration-200">
-            <button
-              onClick={() => setSelectedVideo(null)}
-              className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white/70 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-              aria-label="Close video dialog"
-            >
-              <X className="h-6 w-6" />
-            </button>
-
-            <div className="relative aspect-video w-full max-w-5xl overflow-hidden rounded-[1.75rem] border border-white/10 bg-black shadow-2xl">
-              <video
-                src={selectedVideo}
-                className="h-full w-full object-contain"
-                controls
-                autoPlay
-                playsInline
-              />
-            </div>
-
-            <div
-              className="absolute inset-0 -z-10"
-              onClick={() => setSelectedVideo(null)}
-            />
-          </div>,
-          document.body,
-        )}
+      {activeItem ? (
+        <PromptDetailModal
+          item={activeItem}
+          copied={copiedId === activeItem.id}
+          labels={{
+            prompt: tShowcase("detail.prompt"),
+            copy: tPrompts("copy"),
+            copied: tPrompts("copied"),
+            noPrompt: tPrompts("noPrompt"),
+            inputImages: tShowcase("detail.referenceImages"),
+            inputVideos: tShowcase("detail.referenceVideos"),
+            inputAudios: tPrompts("inputAudios"),
+            results: tShowcase("detail.result"),
+            model: tShowcase("detail.model"),
+            language: tPrompts("language"),
+            author: tPrompts("author"),
+            unknownAuthor: tPrompts("unknownAuthor"),
+          }}
+          onClose={() => setActiveItem(null)}
+          onCopy={handleCopyPrompt}
+        />
+      ) : null}
     </div>
   );
 }

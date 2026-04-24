@@ -160,6 +160,11 @@
         "name": "AI Studio管理",
         "href": "/dashboard/ai-studio-admin",
         "icon": "Bot"
+      },
+      {
+        "name": "Prompt管理",
+        "href": "/dashboard/prompts-admin",
+        "icon": "FileText"
       }
     ],
     "AdminContentTabs": {

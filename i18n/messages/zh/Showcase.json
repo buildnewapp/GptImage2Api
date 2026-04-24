@@ -27,5 +27,21 @@
     "duration": "时长",
     "referenceImages": "参考图片",
     "referenceVideos": "参考视频"
+  },
+  "prompts": {
+    "allCategories": "全部分类",
+    "searchPlaceholder": "搜索标题、简介、Prompt",
+    "search": "搜索",
+    "resultCount": "结果：{count}",
+    "emptyDescription": "可以换个关键词或切换分类再试。",
+    "copy": "复制",
+    "copied": "已复制",
+    "noPrompt": "暂无 Prompt 内容",
+    "prev": "上一页",
+    "next": "下一页",
+    "inputAudios": "输入音频",
+    "author": "作者",
+    "unknownAuthor": "-",
+    "language": "语言"
   }
 }
