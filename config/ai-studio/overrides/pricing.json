@@ -1362,36 +1362,98 @@
     "image:gpt-image-2-text-to-image": {
       "addRows": [
         {
-          "modelDescription": "gpt-image-2 text-to-image",
+          "modelDescription": "gpt-image-2 text-to-image, 1K",
           "interfaceType": "image",
           "provider": "GPT Image 2",
           "creditPrice": "3",
           "creditUnit": "per image",
-          "usdPrice": "0.03",
+          "usdPrice": "0.015",
           "falPrice": "",
           "discountRate": 0,
           "anchor": "https://docs.kie.ai/market/gpt/gpt-image-2-text-to-image.md",
           "discountPrice": false,
           "catalogModelId": "image:gpt-image-2-text-to-image",
-          "runtimeModel": "gpt-image-2-text-to-image"
+          "runtimeModel": "gpt-image-2-text-to-image",
+          "resolution": "1k"
+        },
+        {
+          "modelDescription": "gpt-image-2 text-to-image, 2K",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "5",
+          "creditUnit": "per image",
+          "usdPrice": "0.025",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gpt/gpt-image-2-text-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:gpt-image-2-text-to-image",
+          "runtimeModel": "gpt-image-2-text-to-image",
+          "resolution": "2k"
+        },
+        {
+          "modelDescription": "gpt-image-2 text-to-image, 4K",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "8",
+          "creditUnit": "per image",
+          "usdPrice": "0.040",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gpt/gpt-image-2-text-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:gpt-image-2-text-to-image",
+          "runtimeModel": "gpt-image-2-text-to-image",
+          "resolution": "4k"
         }
       ]
     },
     "image:gpt-image-2-image-to-image": {
       "addRows": [
         {
-          "modelDescription": "gpt-image-2 image-to-image",
+          "modelDescription": "gpt-image-2 image-to-image, 1K",
           "interfaceType": "image",
           "provider": "GPT Image 2",
           "creditPrice": "3",
           "creditUnit": "per image",
-          "usdPrice": "0.03",
+          "usdPrice": "0.015",
           "falPrice": "",
           "discountRate": 0,
           "anchor": "https://docs.kie.ai/market/gpt/gpt-image-2-image-to-image.md",
           "discountPrice": false,
           "catalogModelId": "image:gpt-image-2-image-to-image",
-          "runtimeModel": "gpt-image-2-image-to-image"
+          "runtimeModel": "gpt-image-2-image-to-image",
+          "resolution": "1k"
+        },
+        {
+          "modelDescription": "gpt-image-2 image-to-image, 2K",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "5",
+          "creditUnit": "per image",
+          "usdPrice": "0.025",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gpt/gpt-image-2-image-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:gpt-image-2-image-to-image",
+          "runtimeModel": "gpt-image-2-image-to-image",
+          "resolution": "2k"
+        },
+        {
+          "modelDescription": "gpt-image-2 image-to-image, 4K",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "8",
+          "creditUnit": "per image",
+          "usdPrice": "0.040",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gpt/gpt-image-2-image-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:gpt-image-2-image-to-image",
+          "runtimeModel": "gpt-image-2-image-to-image",
+          "resolution": "4k"
         }
       ]
     },

@@ -211,7 +211,9 @@ Pricing: WAN-2.7 Image Pro costs 12 credits per image (≈ $0.06), while WAN-2.7
 wan/2-7-image-pro
 Pricing: WAN-2.7 Image Pro costs 12 credits per image (≈ $0.06), while WAN-2.7 Image costs 4.8 credits per image (≈ $0.024). 
 
+
 gpt-image-2-text-to-image
-Pricing: GPT-2 Image costs 6 credits ($0.03) per image.
+Pricing: GPT-2 Image — now just 3 credits ($0.015) for 1 K, 5 credits ($0.025) for 2 K, and 8 credits ($0.040) for 4 K.
+
 gpt-image-2-image-to-image
-Pricing: GPT-2 Image costs 6 credits ($0.03) per image.
+Pricing: GPT-2 Image — now just 3 credits ($0.015) for 1 K, 5 credits ($0.025) for 2 K, and 8 credits ($0.040) for 4 K.
