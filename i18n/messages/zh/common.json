@@ -2,7 +2,9 @@
   "Home": {
     "title": "SdanceAI",
     "tagLine": "Seedance 2.0 在线体验 与 API 服务",
-    "description": "SdanceAI 提供 Seedance 2.0 在线创作工具与 API。支持原生音画同步、1080p 电影级生成及多模态参考。助力开发者快速集成下一代 AI 视频能力。"
+    "description": "SdanceAI 提供 Seedance 2.0 在线创作工具与 API。支持原生音画同步、1080p 电影级生成及多模态参考。助力开发者快速集成下一代 AI 视频能力。",
+    "createVideo": "生成",
+    "mobileMenuLabel": "打开菜单"
   },
   "Login": {
     "title": "欢迎回来",

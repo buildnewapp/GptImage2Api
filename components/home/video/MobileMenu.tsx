@@ -6,7 +6,6 @@ import { UserCreditBadge } from "@/components/header/UserCreditBadge";
 import { resolveHeaderLinks } from "@/components/home/video/HeaderLinks";
 import VideoLocaleSwitcher from "@/components/home/video/LocaleSwitcher";
 import { ThemeToggle } from "@/components/home/video/ThemeToggle";
-import type { VideoTemplateNavigation } from "@/components/home/video/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link as I18nLink, useRouter } from "@/i18n/routing";
 import { authClient } from "@/lib/auth/auth-client";
@@ -27,7 +26,6 @@ type UserMenu = {
 };
 
 interface VideoMobileMenuProps {
-  navigation: VideoTemplateNavigation;
   overlay?: boolean;
   user?: User | null;
   totalAvailableCredits?: number | null;
@@ -152,13 +150,13 @@ export function VideoMobileUserCard({
 }
 
 export default function VideoMobileMenu({
-  navigation,
   overlay = false,
   totalAvailableCredits,
   user,
 }: VideoMobileMenuProps) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const tHome = useTranslations("Home");
   const tHeader = useTranslations("Header");
   const topLinks = resolveHeaderLinks(tHeader.raw("links") as HeaderLink[]);
 
@@ -183,7 +181,7 @@ export default function VideoMobileMenu({
             ? "border-white/16 bg-white/8 text-white hover:bg-white/12"
             : "border-border/75 bg-background/70 text-foreground hover:bg-card"
         )}
-        aria-label={navigation.mobileMenuLabel}
+        aria-label={tHome("mobileMenuLabel")}
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
       >
@@ -223,27 +221,6 @@ export default function VideoMobileMenu({
               </I18nLink>
             ))}
 
-            <div className="hidden space-y-2 border-t border-border/70 pt-3">
-              <p className="px-1 pb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                {navigation.resources}
-              </p>
-              {resourceLinks.map((item) => {
-                const Icon = item.icon;
-
-                return (
-                  <I18nLink
-                    key={item.href}
-                    className="flex items-center gap-2 rounded-xl px-2 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-primary"
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                  >
-                    <Icon className="h-4 w-4" />
-                    {item.label}
-                  </I18nLink>
-                );
-              })}
-            </div>
-
             <div className="flex gap-2">
               <VideoLocaleSwitcher overlay={overlay} />
               <ThemeToggle overlay={overlay} />
@@ -253,7 +230,7 @@ export default function VideoMobileMenu({
                   onClick={() => setOpen(false)}
               >
                 <Sparkles className="mr-2 h-4 w-4" />
-                {navigation.createVideo}
+                {tHome("createVideo")}
               </I18nLink>
             </div>
 

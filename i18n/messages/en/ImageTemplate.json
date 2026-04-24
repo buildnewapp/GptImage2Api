@@ -1,14 +1,4 @@
 {
-  "navigation": {
-    "brand": "Seedance 2.0",
-    "createVideo": "Create Video",
-    "credits": "30 credits",
-    "darkModeLabel": "Switch to dark mode",
-    "home": "Home",
-    "language": "English",
-    "mobileMenuLabel": "Open menu",
-    "resources": "Resources"
-  },
   "hero": {
     "badge": "Seedance 2.0 web & api",
     "ctaLabel": "Generate Video",

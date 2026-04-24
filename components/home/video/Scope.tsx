@@ -13,6 +13,7 @@ import {
   studioPanelClass,
   subsectionTitleClass,
 } from "@/components/home/video/constants";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import type { VideoTemplateScope } from "@/components/home/video/types";
 
 interface ScopeProps {
@@ -33,6 +34,14 @@ const accentMap = {
   foreground: "text-foreground",
   primary: "text-primary",
 };
+
+const footerAvatars = [
+  "/images/users/user1.jpeg",
+  "/images/users/user2.jpeg",
+  "/images/users/user3.png",
+  "/logo.png",
+  "/images/google.svg",
+];
 
 export default function Scope({ section }: ScopeProps) {
   return (
@@ -78,11 +87,13 @@ export default function Scope({ section }: ScopeProps) {
           </p>
           <div className="mt-6 flex items-center justify-center gap-2">
             <div className="flex -space-x-2">
-              {Array.from({ length: 5 }).map((_, index) => (
-                <div
+              {footerAvatars.map((src, index) => (
+                <Avatar
                   key={index}
-                  className="h-10 w-10 rounded-full border-2 border-background bg-[linear-gradient(145deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)]"
-                ></div>
+                  className="h-10 w-10 border-2 border-background"
+                >
+                  <AvatarImage src={src} alt={`Happy user ${index + 1}`} />
+                </Avatar>
               ))}
             </div>
             <span className="ml-2 text-sm text-muted-foreground">

@@ -18,7 +18,6 @@ export default async function ImageTemplate() {
   const locale = await getLocale();
   const t = await getTranslations("ImageTemplate");
   const page = {
-    navigation: t.raw("navigation"),
     hero: t.raw("hero"),
     featureRows: t.raw("featureRows"),
     scope: t.raw("scope"),

@@ -1,17 +1,7 @@
 {
-  "navigation": {
-    "brand": "Seedance 2.0",
-    "createVideo": "创建视频",
-    "credits": "30 积分",
-    "darkModeLabel": "切换到深色模式",
-    "home": "首页",
-    "language": "简体中文",
-    "mobileMenuLabel": "打开菜单",
-    "resources": "资源"
-  },
   "hero": {
     "badge": "Seedance 2.0 web & api",
-    "ctaLabel": "生成视频",
+    "ctaLabel": "生成",
     "creditCost": "25",
     "description": "从文本或参考图片创建短篇 AI 视频。新手可以直接使用 Seedance 2.0，并通过每日任务持续获得大量积分。当前 Web 应用中的 Seedance 2.0 最多支持 1080p 和 15 秒。",
     "durationLabel": "5秒",

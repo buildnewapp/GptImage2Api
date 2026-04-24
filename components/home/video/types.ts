@@ -7,17 +7,6 @@ export interface VideoTemplateShowcaseItem {
   title: string;
 }
 
-export interface VideoTemplateNavigation {
-  brand: string;
-  createVideo: string;
-  credits: string;
-  darkModeLabel: string;
-  home: string;
-  language: string;
-  mobileMenuLabel: string;
-  resources: string;
-}
-
 export interface VideoTemplateHero {
   badge: string;
   ctaLabel: string;
@@ -193,7 +182,6 @@ export interface VideoTemplatePage {
   faq: VideoTemplateFaq;
   featureRows: VideoTemplateFeatureRow[];
   hero: VideoTemplateHero;
-  navigation: VideoTemplateNavigation;
   pricing: VideoTemplatePricing;
   scope: VideoTemplateScope;
   showcase: VideoTemplateShowcaseSection;

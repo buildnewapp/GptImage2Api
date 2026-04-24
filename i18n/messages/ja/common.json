@@ -2,7 +2,9 @@
   "Home": {
     "title": "SdanceAI",
     "tagLine": "Seedance 2.0 オンライン体験版 & API サービス",
-    "description": "SdanceAI は Seedance 2.0 動画生成モデルを提供。音声同期と 1080p 生成に対応。開発者向けに安定した API を提供し、次世代の AI ビデオ制作をサポートします。"
+    "description": "SdanceAI は Seedance 2.0 動画生成モデルを提供。音声同期と 1080p 生成に対応。開発者向けに安定した API を提供し、次世代の AI ビデオ制作をサポートします。",
+    "createVideo": "生成",
+    "mobileMenuLabel": "メニューを開く"
   },
   "Login": {
     "title": "おかえりなさい",

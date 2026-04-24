@@ -2,7 +2,9 @@
   "Home": {
     "title": "SdanceAI",
     "tagLine": "Seedance 2.0 Online Experience & API Service",
-    "description": "Experience Seedance 2.0 on SdanceAI. Create high-quality AI videos with native audio sync. We provide stable API access for developers to integrate AI video."
+    "description": "Experience Seedance 2.0 on SdanceAI. Create high-quality AI videos with native audio sync. We provide stable API access for developers to integrate AI video.",
+    "createVideo": "Generate",
+    "mobileMenuLabel": "Open menu"
   },
   "Login": {
     "title": "Welcome back",

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-04-19T12:18:06.062Z",
+  "generatedAt": "2026-04-24T07:01:28.661Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -3200,12 +3200,14 @@
               },
               "aspect_ratio": {
                 "type": "string",
+                "description": "The aspect ratio of the generated image is set to auto by default.",
                 "enum": [
                   "auto",
                   "1:1",
-                  "16:9",
                   "9:16",
-                  "3:2"
+                  "16:9",
+                  "4:3",
+                  "3:4"
                 ],
                 "x-apidog-enum": [
                   {
@@ -3219,22 +3221,52 @@
                     "description": ""
                   },
                   {
-                    "value": "16:9",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
                     "value": "9:16",
                     "name": "",
                     "description": ""
                   },
                   {
-                    "value": "3:2",
+                    "value": "16:9",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "4:3",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "3:4",
+                    "name": "",
+                    "description": ""
+                  }
+                ]
+              },
+              "resolution": {
+                "type": "string",
+                "enum": [
+                  "1K",
+                  "2K",
+                  "4K"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "1K",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "2K",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "4K",
                     "name": "",
                     "description": ""
                   }
                 ],
-                "description": "The aspect ratio of the generated image is set to auto by default."
+                "description": "Image resolution: Note: Images with a 1:1 aspect ratio cannot be converted to 4K images. Images with the aspect ratio set to \"auto\" or without a specified aspect ratio parameter will only be converted to 1K images; otherwise, the task will fail to create."
               },
               "nsfw_checker": {
                 "type": "boolean",
@@ -3248,6 +3280,7 @@
             "x-apidog-orders": [
               "prompt",
               "aspect_ratio",
+              "resolution",
               "nsfw_checker"
             ],
             "x-apidog-ignore-properties": []
@@ -3265,28 +3298,63 @@
         "callBackUrl": "https://your-domain.com/api/callback",
         "input": {
           "prompt": "A cinematic night city poster with neon reflections on a rainy street.",
+          "aspect_ratio": "auto",
           "nsfw_checker": false
         }
       },
       "pricingRows": [
         {
-          "modelDescription": "gpt-image-2 text-to-image",
+          "modelDescription": "gpt-image-2 text-to-image, 1K",
           "interfaceType": "image",
           "provider": "GPT Image 2",
-          "creditPrice": "6",
+          "creditPrice": "3",
           "creditUnit": "per image",
-          "usdPrice": "0.03",
+          "usdPrice": "0.015",
           "falPrice": "",
           "discountRate": 0,
           "anchor": "https://docs.kie.ai/market/gpt/gpt-image-2-text-to-image.md",
           "discountPrice": false,
           "catalogModelId": "image:gpt-image-2-text-to-image",
-          "runtimeModel": "gpt-image-2-text-to-image"
+          "runtimeModel": "gpt-image-2-text-to-image",
+          "resolution": "1k"
+        },
+        {
+          "modelDescription": "gpt-image-2 text-to-image, 2K",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "5",
+          "creditUnit": "per image",
+          "usdPrice": "0.025",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gpt/gpt-image-2-text-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:gpt-image-2-text-to-image",
+          "runtimeModel": "gpt-image-2-text-to-image",
+          "resolution": "2k"
+        },
+        {
+          "modelDescription": "gpt-image-2 text-to-image, 4K",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "8",
+          "creditUnit": "per image",
+          "usdPrice": "0.040",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gpt/gpt-image-2-text-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:gpt-image-2-text-to-image",
+          "runtimeModel": "gpt-image-2-text-to-image",
+          "resolution": "4k"
         }
       ],
       "pricing": {
         "strategy": "exact",
         "selectors": {
+          "resolution": [
+            "input.resolution"
+          ],
           "aspectRatio": [
             "input.aspect_ratio"
           ]
@@ -3361,13 +3429,14 @@
               },
               "aspect_ratio": {
                 "type": "string",
+                "description": "The aspect ratio of the generated image is set to auto by default.",
                 "enum": [
                   "auto",
                   "1:1",
-                  "16:9",
                   "9:16",
-                  "3:2",
-                  "2:3"
+                  "16:9",
+                  "4:3",
+                  "3:4"
                 ],
                 "x-apidog-enum": [
                   {
@@ -3381,27 +3450,52 @@
                     "description": ""
                   },
                   {
-                    "value": "16:9",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
                     "value": "9:16",
                     "name": "",
                     "description": ""
                   },
                   {
-                    "value": "3:2",
+                    "value": "16:9",
                     "name": "",
                     "description": ""
                   },
                   {
-                    "value": "2:3",
+                    "value": "4:3",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "3:4",
+                    "name": "",
+                    "description": ""
+                  }
+                ]
+              },
+              "resolution": {
+                "type": "string",
+                "enum": [
+                  "1K",
+                  "2K",
+                  "4K"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "1K",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "2K",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "4K",
                     "name": "",
                     "description": ""
                   }
                 ],
-                "description": "The aspect ratio of the generated image is set to auto by default."
+                "description": "Image resolution: Note: Images with a 1:1 aspect ratio cannot be converted to 4K images. Images with the aspect ratio set to \"auto\" or without a specified aspect ratio parameter will only be converted to 1K images; otherwise, the task will fail to create."
               },
               "nsfw_checker": {
                 "type": "boolean",
@@ -3412,6 +3506,7 @@
               "prompt",
               "input_urls",
               "aspect_ratio",
+              "resolution",
               "nsfw_checker"
             ],
             "x-apidog-ignore-properties": []
@@ -3428,31 +3523,67 @@
         "model": "gpt-image-2-image-to-image",
         "callBackUrl": "https://your-domain.com/api/callback",
         "input": {
-          "prompt": "Transform this product image into a premium e-commerce poster style.",
+          "prompt": "take a photo with Sam Altman in the conference room",
           "input_urls": [
-            "https://example.png"
-          ]
+            "https://static.aiquickdraw.com/tools/example/1776782793756_wrogXTdd.png"
+          ],
+          "aspect_ratio": "auto",
+          "nsfw_checker": true
         }
       },
       "pricingRows": [
         {
-          "modelDescription": "gpt-image-2 image-to-image",
+          "modelDescription": "gpt-image-2 image-to-image, 1K",
           "interfaceType": "image",
           "provider": "GPT Image 2",
-          "creditPrice": "6",
+          "creditPrice": "3",
           "creditUnit": "per image",
-          "usdPrice": "0.03",
+          "usdPrice": "0.015",
           "falPrice": "",
           "discountRate": 0,
           "anchor": "https://docs.kie.ai/market/gpt/gpt-image-2-image-to-image.md",
           "discountPrice": false,
           "catalogModelId": "image:gpt-image-2-image-to-image",
-          "runtimeModel": "gpt-image-2-image-to-image"
+          "runtimeModel": "gpt-image-2-image-to-image",
+          "resolution": "1k"
+        },
+        {
+          "modelDescription": "gpt-image-2 image-to-image, 2K",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "5",
+          "creditUnit": "per image",
+          "usdPrice": "0.025",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gpt/gpt-image-2-image-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:gpt-image-2-image-to-image",
+          "runtimeModel": "gpt-image-2-image-to-image",
+          "resolution": "2k"
+        },
+        {
+          "modelDescription": "gpt-image-2 image-to-image, 4K",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "8",
+          "creditUnit": "per image",
+          "usdPrice": "0.040",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gpt/gpt-image-2-image-to-image.md",
+          "discountPrice": false,
+          "catalogModelId": "image:gpt-image-2-image-to-image",
+          "runtimeModel": "gpt-image-2-image-to-image",
+          "resolution": "4k"
         }
       ],
       "pricing": {
         "strategy": "exact",
         "selectors": {
+          "resolution": [
+            "input.resolution"
+          ],
           "aspectRatio": [
             "input.aspect_ratio"
           ]
@@ -6159,7 +6290,7 @@
               },
               "aspect_ratio": {
                 "type": "string",
-                "description": "(Optional) Output aspect ratio when no image input is provided. When `input_urls` is present, the frontend will hide and not pass this field.",
+                "description": "(Optional) Output aspect ratio when no image input is provided. ",
                 "examples": [
                   "1:1"
                 ],
@@ -6464,7 +6595,7 @@
               },
               "aspect_ratio": {
                 "type": "string",
-                "description": "(Optional) Output aspect ratio when no image input is provided. When `input_urls` is present, the frontend will hide and not pass this field.",
+                "description": "(Optional) Output aspect ratio when no image input is provided. ",
                 "examples": [
                   "1:1"
                 ],
@@ -9744,9 +9875,6 @@
               "web_search",
               "nsfw_checker"
             ],
-            "required": [
-              "web_search"
-            ],
             "x-apidog-ignore-properties": []
           }
         },
@@ -9767,7 +9895,7 @@
           "reference_image_urls": [
             "https://templateb.aiquickdraw.com/custom-page/akr/section-images/example1.png"
           ],
-          "reference_video_urls ": [
+          "reference_video_urls": [
             "https://templateb.aiquickdraw.com/custom-page/akr/section-images/example1.mp4"
           ],
           "reference_audio_urls": [
@@ -10041,9 +10169,6 @@
               "web_search",
               "nsfw_checker"
             ],
-            "required": [
-              "web_search"
-            ],
             "x-apidog-ignore-properties": []
           }
         },
@@ -10064,7 +10189,7 @@
           "reference_image_urls": [
             "https://templateb.aiquickdraw.com/custom-page/akr/section-images/example1.png"
           ],
-          "reference_video_urls ": [
+          "reference_video_urls": [
             "https://templateb.aiquickdraw.com/custom-page/akr/section-images/example1.mp4"
           ],
           "reference_audio_urls": [
@@ -10206,17 +10331,8 @@
                 ]
               },
               "duration": {
-                "description": "Duration of the video in seconds",
-                "type": "integer",
-                "enum": [
-                  4,
-                  8,
-                  12
-                ],
-                "default": 8,
-                "examples": [
-                  8
-                ]
+                "type": "string",
+                "description": "Duration of the video in seconds"
               },
               "fixed_lens": {
                 "description": "Seedance adds dynamic camera movement. Enable this feature to lock the camera for stable, static shots.\n\n- **true**: Lock camera for static shots\n- **false**: Allow dynamic camera movement",
@@ -10273,7 +10389,7 @@
           ],
           "aspect_ratio": "1:1",
           "resolution": "720p",
-          "duration": 8,
+          "duration": "8",
           "fixed_lens": false,
           "generate_audio": false,
           "nsfw_checker": false
@@ -17060,14 +17176,6 @@
                   "https://example.com/demo/video.mp4"
                 ]
               },
-              "reference_image": {
-                "type": "string",
-                "format": "uri",
-                "description": "Optional reference image URL for character, clothing, or style guidance.\n\n- Formats: `JPEG`, `JPG`, `PNG` (no alpha channel), `BMP`, `WEBP`\n- Resolution: width and height range `[240,8000]` pixels\n- Aspect ratio: `1:8` to `8:1`\n- File size: up to `20MB`\n- Supports public `http/https` URLs or temporary `oss` URLs",
-                "examples": [
-                  "https://example.com/demo/reference.png"
-                ]
-              },
               "resolution": {
                 "type": "string",
                 "enum": [
@@ -17144,6 +17252,14 @@
               "nsfw_checker": {
                 "type": "boolean",
                 "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+              },
+              "reference_image": {
+                "type": "string",
+                "format": "uri",
+                "description": "Optional reference image URL for character, clothing, or style guidance.\n\n- Formats: `JPEG`, `JPG`, `PNG` (no alpha channel), `BMP`, `WEBP`\n- Resolution: width and height range `[240,8000]` pixels\n- Aspect ratio: `1:8` to `8:1`\n- Supports public `http/https` URLs or temporary `oss` URLs",
+                "examples": [
+                  "https://example.com/demo/reference.png"
+                ]
               }
             },
             "x-apidog-orders": [
@@ -17532,7 +17648,7 @@
             "description": "Input parameters for the generation task",
             "properties": {
               "video_url": {
-                "description": "URL of the video to upscale (File URL after upload, not file content; Accepted types: video/mp4, video/quicktime, video/x-matroska; Max size: 10.0MB)",
+                "description": "URL of the video to upscale (File URL after upload, not file content; Accepted types: video/mp4, video/quicktime, video/x-matroska; Max size: 50.0MB)",
                 "type": "string",
                 "examples": [
                   "https://file.aiquickdraw.com/custom-page/akr/section-images/1758166466095hvbwkrpw.mp4"
@@ -19161,7 +19277,7 @@
                 ]
               },
               "voice": {
-                "description": "The voice to use for speech generation. Can be a preset voice name (e.g. Rachel, Adam) or a voice ID. You can preview a voice by opening https://static.aiquickdraw.com/elevenlabs/voice/<voice_id>.mp3 in your browser (replace <voice_id> with the actual voice ID). For example: https://static.aiquickdraw.com/elevenlabs/voice/N2lVS1w4EtoT3dr4eOWO.mp3\n\nAvailable voices:\n\nRachel\nAria\nRoger\nSarah\nLaura\nCharlie\nGeorge\nCallum\nRiver\nLiam\nCharlotte\nAlice\nMatilda\nWill\nJessica\nEric\nChris\nBrian\nDaniel\nLily\nBill\nEkK5I93UQWFDigLMpZcX - James - Husky, Engaging and Bold\nZ3R5wn05IrDiVCyEkUrK - Arabella - Mysterious and Emotive\nNNl6r8mD7vthiJatiJt1 - Bradford - Expressive and Articulate\nYOq2y2Up4RgXP2HyXjE5 - Xavier - Dominating, Metallic Announcer\nB8gJV1IhpuegLxdpXFOE - Kuon - Cheerful, Clear and Steady\n2zRM7PkgwBPiau2jvVXc - Monika Sogam - Deep and Natural\n1SM7GgM6IMuvQlz2BwM3 - Mark - Casual, Relaxed and Light\n5l5f8iK3YPeGga21rQIX - Adeline - Feminine and Conversational\nscOwDtmlUjD3prqpp97I - Sam - Support Agent\nNOpBlnGInO9m6vDvFkFC - Spuds Oxley - Wise and Approachable\nBZgkqPqms7Kj9ulSkVzn - Eve - Authentic, Energetic and Happy\nwo6udizrrtpIxWGp2qJk - Northern Terry\ngU0LNdkMOQCOrPrwtbee - British Football Announcer\nDGzg6RaUqxGRTHSBjfgF - Brock - Commanding and Loud Sergeant\nx70vRnQBMBu4FAYhjJbO - Nathan - Virtual Radio Host\nSm1seazb4gs7RSlUVw7c - Anika - Animated, Friendly and Engaging\nP1bg08DkjqiVEzOn76yG - Viraj - Rich and Soft\nqDuRKMlYmrm8trt5QyBn - Taksh - Calm, Serious and Smooth\nqXpMhyvQqiRxWQs4qSSB - Horatius - Energetic Character Voice\nTX3LPaxmHKxFdv7VOQHJ - Liam - Energetic, Social Media Creator\nN2lVS1w4EtoT3dr4eOWO - Callum - Husky Trickster\nFGY2WhTYpPnrIDTdsKH5 - Laura - Enthusiast, Quirky Attitude\nkPzsL2i3teMYv0FxEYQ6 - Brittney - Social Media Voice - Fun, Youthful & Informative\nUgBBYS2sOqTuMpoF3BR0 - Mark - Natural Conversations\nhpp4J3VqNfWAUOO0d1Us - Bella - Professional, Bright, Warm\nnPczCjzI2devNBz1zQrb - Brian - Deep, Resonant and Comforting\nuYXf8XasLslADfZ2MB4u - Hope - Bubbly, Gossipy and Girly\ngs0tAILXbY5DNrJrsM6F - Jeff - Classy, Resonating and Strong\nDTKMou8ccj1ZaWGBiotd - Jamahal - Young, Vibrant, and Natural\nvBKc2FfBKJfcZNyEt1n6 - Finn - Youthful, Eager and Energetic\nDYkrAHD8iwork3YSUBbs - Tom - Conversations & Books\n56AoDkrOh6qfVPDXZ7Pt - Cassidy - Crisp, Direct and Clear\neR40ATw9ArzDf9h3v7t7 - Addison 2.0 - Australian Audiobook & Podcast\ng6xIsTj2HwM6VR4iXFCw - Jessica Anne Bogart - Chatty and Friendly\nlcMyyd2HUfFzxdCaC4Ta - Lucy - Fresh & Casual\n6aDn1KB0hjpdcocrUkmq - Tiffany - Natural and Welcoming\nSq93GQT4X1lKDXsQcixO - Felix - Warm, Positive & Contemporary RP\nflHkNRp1BlvT73UL6gyz - Jessica Anne Bogart - Eloquent Villain\n9yzdeviXkFddZ4Oz8Mok - Lutz - Chuckling, Giggly and Cheerful\npPdl9cQBQq4p6mRkZy2Z - Emma - Adorable and Upbeat\nzYcjlYFOd3taleS0gkk3 - Edward - Loud, Confident and Cocky\nnzeAacJi50IvxcyDnMXa - Marshal - Friendly, Funny Professor\nruirxsoakN0GWmGNIo04 - John Morgan - Gritty, Rugged Cowboy\nTC0Zp7WVFzhA8zpTlRqV - Aria - Sultry Villain\nljo9gAlSqKOvF6D8sOsX - Viking Bjorn - Epic Medieval Raider\nPPzYpIqttlTYA83688JI - Pirate Marshal\n8JVbfL6oEdmuxKn5DK2C - Johnny Kid - Serious and Calm Narrator\niCrDUkL56s3C8sCRl7wb - Hope - Poetic, Romantic and Captivating\nwJqPPQ618aTW29mptyoc - Ana Rita - Smooth, Expressive and Bright\nEiNlNiXeDU1pqqOPrYMO - John Doe - Deep\n4YYIPFl9wE5c4L2eu2Gb - Burt Reynolds™ - Deep, Smooth and Clear\n6F5Zhi321D3Oq7v1oNT4 - Hank - Deep and Engaging Narrator\nYXpFCvM1S3JbWEJhoskW - Wyatt - Wise Rustic Cowboy\nLG95yZDEHg6fCZdQjLqj - Phil - Explosive, Passionate Announcer\nCeNX9CMwmxDxUF5Q2Inm - Johnny Dynamite - Vintage Radio DJ\naD6riP1btT197c6dACmy - Rachel M - Pro British Radio Presenter\nmtrellq69YZsNwzUSyXh - Rex Thunder - Deep N Tough\ndHd5gvgSOzSfduK4CvEg - Ed - Late Night Announcer\neVItLK1UvXctxuaRV2Oq - Jean - Alluring and Playful Femme Fatale\nesy0r39YPLQjOczyOib8 - Britney - Calm and Calculative Villain\nD2jw4N9m4xePLTQ3IHjU - Ian - Strange and Distorted Alien\nTsns2HvNFKfGiNjllgqo - Sven - Emotional and Nice\n1U02n4nD6AdIZ9CjF053 - Viraj - Smooth and Gentle\nAeRdCCKzvd23BpJoofzx - Nathaniel - Engaging, British and Calm\nLruHrtVF6PSyGItzMNHS - Benjamin - Deep, Warm, Calming\n1wGbFxmAM3Fgw63G1zZJ - Allison - Calm, Soothing and Meditative\nhqfrgApggtO1785R4Fsn - Theodore HQ - Serene and Grounded\nMJ0RnG71ty4LH3dvNfSd - Leon - Soothing and Grounded",
+                "description": "The voice to use for speech generation. Can be a preset voice name (e.g. Rachel, Adam) or a voice ID. You can preview a voice by opening https://static.aiquickdraw.com/elevenlabs/voice/<voice_id>.mp3 in your browser (replace <voice_id> with the actual voice ID). For example: https://static.aiquickdraw.com/elevenlabs/voice/N2lVS1w4EtoT3dr4eOWO.mp3\n\nAvailable voices:\n\nRachel\nAria\nRoger\nSarah\nLaura\nCharlie\nGeorge\nCallum\nRiver\nLiam\nCharlotte\nAlice\nMatilda\nWill\nJessica\nEric\nChris\nBrian\nDaniel\nLily\nBill\nEkK5I93UQWFDigLMpZcX - James - Husky, Engaging and Bold\nZ3R5wn05IrDiVCyEkUrK - Arabella - Mysterious and Emotive\nNNl6r8mD7vthiJatiJt1 - Bradford - Expressive and Articulate\nYOq2y2Up4RgXP2HyXjE5 - Xavier - Dominating, Metallic Announcer\nB8gJV1IhpuegLxdpXFOE - Kuon - Cheerful, Clear and Steady\n2zRM7PkgwBPiau2jvVXc - Monika Sogam - Deep and Natural\n1SM7GgM6IMuvQlz2BwM3 - Mark - Casual, Relaxed and Light\n5l5f8iK3YPeGga21rQIX - Adeline - Feminine and Conversational\nscOwDtmlUjD3prqpp97I - Sam - Support Agent\nNOpBlnGInO9m6vDvFkFC - Spuds Oxley - Wise and Approachable\nBZgkqPqms7Kj9ulSkVzn - Eve - Authentic, Energetic and Happy\nwo6udizrrtpIxWGp2qJk - Northern Terry\ngU0LNdkMOQCOrPrwtbee - British Football Announcer\nDGzg6RaUqxGRTHSBjfgF - Brock - Commanding and Loud Sergeant\nx70vRnQBMBu4FAYhjJbO - Nathan - Virtual Radio Host\nSm1seazb4gs7RSlUVw7c - Anika - Animated, Friendly and Engaging\nP1bg08DkjqiVEzOn76yG - Viraj - Rich and Soft\nqDuRKMlYmrm8trt5QyBn - Taksh - Calm, Serious and Smooth\nqXpMhyvQqiRxWQs4qSSB - Horatius - Energetic Character Voice\nTX3LPaxmHKxFdv7VOQHJ - Liam - Energetic, Social Media Creator\nN2lVS1w4EtoT3dr4eOWO - Callum - Husky Trickster\nFGY2WhTYpPnrIDTdsKH5 - Laura - Enthusiast, Quirky Attitude\nkPzsL2i3teMYv0FxEYQ6 - Brittney - Social Media Voice - Fun, Youthful & Informative\nUgBBYS2sOqTuMpoF3BR0 - Mark - Natural Conversations\nhpp4J3VqNfWAUOO0d1Us - Bella - Professional, Bright, Warm\nnPczCjzI2devNBz1zQrb - Brian - Deep, Resonant and Comforting\nuYXf8XasLslADfZ2MB4u - Hope - Bubbly, Gossipy and Girly\ngs0tAILXbY5DNrJrsM6F - Jeff - Classy, Resonating and Strong\nDTKMou8ccj1ZaWGBiotd - Jamahal - Young, Vibrant, and Natural\nvBKc2FfBKJfcZNyEt1n6 - Finn - Youthful, Eager and Energetic\nDYkrAHD8iwork3YSUBbs - Tom - Conversations & Books\n56AoDkrOh6qfVPDXZ7Pt - Cassidy - Crisp, Direct and Clear\neR40ATw9ArzDf9h3v7t7 - Addison 2.0 - Australian Audiobook & Podcast\ng6xIsTj2HwM6VR4iXFCw - Jessica Anne Bogart - Chatty and Friendly\nlcMyyd2HUfFzxdCaC4Ta - Lucy - Fresh & Casual\n6aDn1KB0hjpdcocrUkmq - Tiffany - Natural and Welcoming\nSq93GQT4X1lKDXsQcixO - Felix - Warm, Positive & Contemporary RP\nflHkNRp1BlvT73UL6gyz - Jessica Anne Bogart - Eloquent Villain\n9yzdeviXkFddZ4Oz8Mok - Lutz - Chuckling, Giggly and Cheerful\npPdl9cQBQq4p6mRkZy2Z - Emma - Adorable and Upbeat\nzYcjlYFOd3taleS0gkk3 - Edward - Loud, Confident and Cocky\nnzeAacJi50IvxcyDnMXa - Marshal - Friendly, Funny Professor\nruirxsoakN0GWmGNIo04 - John Morgan - Gritty, Rugged Cowboy\nTC0Zp7WVFzhA8zpTlRqV - Aria - Sultry Villain\nljo9gAlSqKOvF6D8sOsX - Viking Bjorn - Epic Medieval Raider\nPPzYpIqttlTYA83688JI - Pirate Marshal\n8JVbfL6oEdmuxKn5DK2C - Johnny Kid - Serious and Calm Narrator\niCrDUkL56s3C8sCRl7wb - Hope - Poetic, Romantic and Captivating\nwJqPPQ618aTW29mptyoc - Ana Rita - Smooth, Expressive and Bright\nEiNlNiXeDU1pqqOPrYMO - John Doe - Deep\n4YYIPFl9wE5c4L2eu2Gb - Burt Reynolds™ - Deep, Smooth and Clear\n6F5Zhi321D3Oq7v1oNT4 - Hank - Deep and Engaging Narrator\nYXpFCvM1S3JbWEJhoskW - Wyatt - Wise Rustic Cowboy\nLG95yZDEHg6fCZdQjLqj - Phil - Explosive, Passionate Announcer\nCeNX9CMwmxDxUF5Q2Inm - Johnny Dynamite - Vintage Radio DJ\naD6riP1btT197c6dACmy - Rachel M - Pro British Radio Presenter\nmtrellq69YZsNwzUSyXh - Rex Thunder - Deep N Tough\ndHd5gvgSOzSfduK4CvEg - Ed - Late Night Announcer\neVItLK1UvXctxuaRV2Oq - Jean - Alluring and Playful Femme Fatale\nesy0r39YPLQjOczyOib8 - Britney - Calm and Calculative Villain\nTsns2HvNFKfGiNjllgqo - Sven - Emotional and Nice\n1U02n4nD6AdIZ9CjF053 - Viraj - Smooth and Gentle\nAeRdCCKzvd23BpJoofzx - Nathaniel - Engaging, British and Calm\nLruHrtVF6PSyGItzMNHS - Benjamin - Deep, Warm, Calming\n1wGbFxmAM3Fgw63G1zZJ - Allison - Calm, Soothing and Meditative\nhqfrgApggtO1785R4Fsn - Theodore HQ - Serene and Grounded\nMJ0RnG71ty4LH3dvNfSd - Leon - Soothing and Grounded",
                 "type": "string",
                 "enum": [
                   "Rachel",
@@ -19245,7 +19361,6 @@
                   "dHd5gvgSOzSfduK4CvEg",
                   "eVItLK1UvXctxuaRV2Oq",
                   "esy0r39YPLQjOczyOib8",
-                  "D2jw4N9m4xePLTQ3IHjU",
                   "Tsns2HvNFKfGiNjllgqo",
                   "1U02n4nD6AdIZ9CjF053",
                   "AeRdCCKzvd23BpJoofzx",
@@ -19665,11 +19780,6 @@
                     "description": ""
                   },
                   {
-                    "value": "D2jw4N9m4xePLTQ3IHjU",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
                     "value": "Tsns2HvNFKfGiNjllgqo",
                     "name": "",
                     "description": ""
@@ -19871,7 +19981,7 @@
                 ]
               },
               "voice": {
-                "description": "The voice to use for speech generation. Can be a preset voice name (e.g. Rachel, Adam) or a voice ID. You can preview a voice by opening `https://static.aiquickdraw.com/elevenlabs/voice/<voice_id>.mp3` in your browser (replace <voice_id> with the actual voice ID). For example: `https://static.aiquickdraw.com/elevenlabs/voice/BIvP0GN1cAtSRTxNHnWS.mp3`\n\n**Available voices:**\n- `Rachel`\n- `Aria`\n- `Roger`\n- `Sarah`\n- `Laura`\n- `Charlie`\n- `George`\n- `Callum`\n- `River`\n- `Liam`\n- `Charlotte`\n- `Alice`\n- `Matilda`\n- `Will`\n- `Jessica`\n- `Eric`\n- `Chris`\n- `Brian`\n- `Daniel`\n- `Lily`\n- `Bill`\n- `BIvP0GN1cAtSRTxNHnWS` - Ellen - Serious, Direct and Confident\n- `aMSt68OGf4xUZAnLpTU8` - Juniper - Grounded and Professional\n- `RILOU7YmBhvwJGDGjNmP` - Jane - Professional Audiobook Reader\n- `EkK5I93UQWFDigLMpZcX` - James - Husky, Engaging and Bold\n- `Z3R5wn05IrDiVCyEkUrK` - Arabella - Mysterious and Emotive\n- `tnSpp4vdxKPjI9w0GnoV` - Hope - Upbeat and Clear\n- `NNl6r8mD7vthiJatiJt1` - Bradford - Expressive and Articulate\n- `YOq2y2Up4RgXP2HyXjE5` - Xavier - Dominating, Metallic Announcer\n- `Bj9UqZbhQsanLzgalpEG` - Austin - Deep, Raspy and Authentic\n- `c6SfcYrb2t09NHXiT80T` - Jarnathan - Confident and Versatile\n- `B8gJV1IhpuegLxdpXFOE` - Kuon - Cheerful, Clear and Steady\n- `exsUS4vynmxd379XN4yO` - Blondie - Conversational\n- `BpjGufoPiobT79j2vtj4` - Priyanka - Calm, Neutral and Relaxed\n- `2zRM7PkgwBPiau2jvVXc` - Monika Sogam - Deep and Natural\n- `1SM7GgM6IMuvQlz2BwM3` - Mark - Casual, Relaxed and Light\n- `ouL9IsyrSnUkCmfnD02u` - Grimblewood Thornwhisker - Snarky Gnome & Magical Maintainer\n- `5l5f8iK3YPeGga21rQIX` - Adeline - Feminine and Conversational\n- `scOwDtmlUjD3prqpp97I` - Sam - Support Agent\n- `NOpBlnGInO9m6vDvFkFC` - Spuds Oxley - Wise and Approachable\n- `BZgkqPqms7Kj9ulSkVzn` - Eve - Authentic, Energetic and Happy\n- `wo6udizrrtpIxWGp2qJk` - Northern Terry\n- `yjJ45q8TVCrtMhEKurxY` - Dr. Von - Quirky, Mad Scientist\n- `gU0LNdkMOQCOrPrwtbee` - British Football Announcer\n- `DGzg6RaUqxGRTHSBjfgF` - Brock - Commanding and Loud Sergeant\n- `DGTOOUoGpoP6UZ9uSWfA` - Célian - Documentary Narrator\n- `x70vRnQBMBu4FAYhjJbO` - Nathan - Virtual Radio Host\n- `P1bg08DkjqiVEzOn76yG` - Viraj - Rich and Soft\n- `qDuRKMlYmrm8trt5QyBn` - Taksh - Calm, Serious and Smooth\n- `kUUTqKQ05NMGulF08DDf` - Guadeloupe Merryweather - Emotional\n- `qXpMhyvQqiRxWQs4qSSB` - Horatius - Energetic Character Voice\n- `TX3LPaxmHKxFdv7VOQHJ` - Liam - Energetic, Social Media Creator\n- `iP95p4xoKVk53GoZ742B` - Chris - Charming, Down-to-Earth\n- `SOYHLrjzK2X1ezoPC6cr` - Harry - Fierce Warrior\n- `N2lVS1w4EtoT3dr4eOWO` - Callum - Husky Trickster\n- `FGY2WhTYpPnrIDTdsKH5` - Laura - Enthusiast, Quirky Attitude\n- `XB0fDUnXU5powFXDhCwa` - Charlotte\n- `cgSgspJ2msm6clMCkdW9` - Jessica - Playful, Bright, Warm\n- `MnUw1cSnpiLoLhpd3Hqp` - Heather Rey - Rushed and Friendly\n- `kPzsL2i3teMYv0FxEYQ6` - Brittney - Social Media Voice - Fun, Youthful & Informative\n- `UgBBYS2sOqTuMpoF3BR0` - Mark - Natural Conversations\n- `IjnA9kwZJHJ20Fp7Vmy6` - Matthew - Casual, Friendly and Smooth\n- `KoQQbl9zjAdLgKZjm8Ol` - Pro Narrator - Convincing Story Teller\n- `hpp4J3VqNfWAUOO0d1Us` - Bella - Professional, Bright, Warm\n- `pNInz6obpgDQGcFmaJgB` - Adam - Dominant, Firm\n- `nPczCjzI2devNBz1zQrb` - Brian - Deep, Resonant and Comforting\n- `L0Dsvb3SLTyegXwtm47J` - Archer\n- `uYXf8XasLslADfZ2MB4u` - Hope - Bubbly, Gossipy and Girly\n- `gs0tAILXbY5DNrJrsM6F` - Jeff - Classy, Resonating and Strong\n- `DTKMou8ccj1ZaWGBiotd` - Jamahal - Young, Vibrant, and Natural\n- `vBKc2FfBKJfcZNyEt1n6` - Finn - Youthful, Eager and Energetic\n- `TmNe0cCqkZBMwPWOd3RD` - Smith - Mellow, Spontaneous, and Bassy\n- `DYkrAHD8iwork3YSUBbs` - Tom - Conversations & Books\n- `56AoDkrOh6qfVPDXZ7Pt` - Cassidy - Crisp, Direct and Clear\n- `eR40ATw9ArzDf9h3v7t7` - Addison 2.0 - Australian Audiobook & Podcast\n- `g6xIsTj2HwM6VR4iXFCw` - Jessica Anne Bogart - Chatty and Friendly\n- `lcMyyd2HUfFzxdCaC4Ta` - Lucy - Fresh & Casual\n- `6aDn1KB0hjpdcocrUkmq` - Tiffany - Natural and Welcoming\n- `Sq93GQT4X1lKDXsQcixO` - Felix - Warm, Positive & Contemporary RP\n- `vfaqCOvlrKi4Zp7C2IAm` - Malyx - Echoey, Menacing and Deep Demon\n- `piI8Kku0DcvcL6TTSeQt` - Flicker - Cheerful Fairy & Sparkly Sweetness\n- `KTPVrSVAEUSJRClDzBw7` - Bob - Rugged and Warm Cowboy\n- `flHkNRp1BlvT73UL6gyz` - Jessica Anne Bogart - Eloquent Villain\n- `9yzdeviXkFddZ4Oz8Mok` - Lutz - Chuckling, Giggly and Cheerful\n- `pPdl9cQBQq4p6mRkZy2Z` - Emma - Adorable and Upbeat\n- `0SpgpJ4D3MpHCiWdyTg3` - Matthew Schmitz - Elitist, Arrogant, Conniving Tyrant\n- `UFO0Yv86wqRxAt1DmXUu` - Sarcastic and Sultry Villain\n- `oR4uRy4fHDUGGISL0Rev` - Myrrdin - Wise and Magical Narrator\n- `zYcjlYFOd3taleS0gkk3` - Edward - Loud, Confident and Cocky\n- `nzeAacJi50IvxcyDnMXa` - Marshal - Friendly, Funny Professor\n- `ruirxsoakN0GWmGNIo04` - John Morgan - Gritty, Rugged Cowboy\n- `1KFdM0QCwQn4rmn5nn9C` - Parasyte - Whispers from the Deep Dark\n- `TC0Zp7WVFzhA8zpTlRqV` - Aria - Sultry Villain\n- `ljo9gAlSqKOvF6D8sOsX` - Viking Bjorn - Epic Medieval Raider\n- `PPzYpIqttlTYA83688JI` - Pirate Marshal\n- `ZF6FPAbjXT4488VcRRnw` - Amelia - Enthusiastic and Expressive\n- `8JVbfL6oEdmuxKn5DK2C` - Johnny Kid - Serious and Calm Narrator\n- `iCrDUkL56s3C8sCRl7wb` - Hope - Poetic, Romantic and Captivating\n- `1hlpeD1ydbI2ow0Tt3EW` - Olivia - Smooth, Warm and Engaging\n- `wJqPPQ618aTW29mptyoc` - Ana Rita - Smooth, Expressive and Bright\n- `EiNlNiXeDU1pqqOPrYMO` - John Doe - Deep\n- `FUfBrNit0NNZAwb58KWH` - Angela - Conversational and Friendly\n- `4YYIPFl9wE5c4L2eu2Gb` - Burt Reynolds™ - Deep, Smooth and Clear\n- `OYWwCdDHouzDwiZJWOOu` - David - Gruff Cowboy\n- `6F5Zhi321D3Oq7v1oNT4` - Hank - Deep and Engaging Narrator\n- `qNkzaJoHLLdpvgh5tISm` - Carter - Rich, Smooth and Rugged\n- `YXpFCvM1S3JbWEJhoskW` - Wyatt - Wise Rustic Cowboy\n- `9PVP7ENhDskL0KYHAKtD` - Jerry B. - Southern/Cowboy\n- `LG95yZDEHg6fCZdQjLqj` - Phil - Explosive, Passionate Announcer\n- `CeNX9CMwmxDxUF5Q2Inm` - Johnny Dynamite - Vintage Radio DJ\n- `st7NwhTPEzqo2riw7qWC` - Blondie - Radio Host\n- `aD6riP1btT197c6dACmy` - Rachel M - Pro British Radio Presenter\n- `FF7KdobWPaiR0vkcALHF` - David - Movie Trailer Narrator\n- `mtrellq69YZsNwzUSyXh` - Rex Thunder - Deep N Tough\n- `dHd5gvgSOzSfduK4CvEg` - Ed - Late Night Announcer\n- `cTNP6ZM2mLTKj2BFhxEh` - Paul French - Podcaster\n- `eVItLK1UvXctxuaRV2Oq` - Jean - Alluring and Playful Femme Fatale\n- `U1Vk2oyatMdYs096Ety7` - Michael - Deep, Dark and Urban\n- `esy0r39YPLQjOczyOib8` - Britney - Calm and Calculative Villain\n- `bwCXcoVxWNYMlC6Esa8u` - Matthew Schmitz - Gravel, Deep Anti-Hero\n- `D2jw4N9m4xePLTQ3IHjU` - Ian - Strange and Distorted Alien\n- `Tsns2HvNFKfGiNjllgqo` - Sven - Emotional and Nice\n- `Atp5cNFg1Wj5gyKD7HWV` - Natasha - Gentle Meditation\n- `1cxc5c3E9K6F1wlqOJGV` - Emily - Gentle, Soft and Meditative\n- `1U02n4nD6AdIZ9CjF053` - Viraj - Smooth and Gentle\n- `HgyIHe81F3nXywNwkraY` - Nate - Sultry, Whispery and Seductive\n- `AeRdCCKzvd23BpJoofzx` - Nathaniel - Engaging, British and Calm\n- `LruHrtVF6PSyGItzMNHS` - Benjamin - Deep, Warm, Calming\n- `Qggl4b0xRMiqOwhPtVWT` - Clara - Relaxing, Calm and Soothing\n- `zA6D7RyKdc2EClouEMkP` - AImee - Tranquil ASMR and Meditation\n- `1wGbFxmAM3Fgw63G1zZJ` - Allison - Calm, Soothing and Meditative\n- `hqfrgApggtO1785R4Fsn` - Theodore HQ - Serene and Grounded\n- `sH0WdfE5fsKuM2otdQZr` - Koraly - Soft-spoken and Gentle\n- `MJ0RnG71ty4LH3dvNfSd` - Leon - Soothing and Grounded",
+                "description": "The voice to use for speech generation. Can be a preset voice name (e.g. Rachel, Adam) or a voice ID. You can preview a voice by opening `https://static.aiquickdraw.com/elevenlabs/voice/<voice_id>.mp3` in your browser (replace <voice_id> with the actual voice ID). For example: `https://static.aiquickdraw.com/elevenlabs/voice/BIvP0GN1cAtSRTxNHnWS.mp3`\n\n**Available voices:**\n- `Rachel`\n- `Aria`\n- `Roger`\n- `Sarah`\n- `Laura`\n- `Charlie`\n- `George`\n- `Callum`\n- `River`\n- `Liam`\n- `Charlotte`\n- `Alice`\n- `Matilda`\n- `Will`\n- `Jessica`\n- `Eric`\n- `Chris`\n- `Brian`\n- `Daniel`\n- `Lily`\n- `Bill`\n- `BIvP0GN1cAtSRTxNHnWS` - Ellen - Serious, Direct and Confident\n- `aMSt68OGf4xUZAnLpTU8` - Juniper - Grounded and Professional\n- `RILOU7YmBhvwJGDGjNmP` - Jane - Professional Audiobook Reader\n- `EkK5I93UQWFDigLMpZcX` - James - Husky, Engaging and Bold\n- `Z3R5wn05IrDiVCyEkUrK` - Arabella - Mysterious and Emotive\n- `tnSpp4vdxKPjI9w0GnoV` - Hope - Upbeat and Clear\n- `NNl6r8mD7vthiJatiJt1` - Bradford - Expressive and Articulate\n- `YOq2y2Up4RgXP2HyXjE5` - Xavier - Dominating, Metallic Announcer\n- `Bj9UqZbhQsanLzgalpEG` - Austin - Deep, Raspy and Authentic\n- `c6SfcYrb2t09NHXiT80T` - Jarnathan - Confident and Versatile\n- `B8gJV1IhpuegLxdpXFOE` - Kuon - Cheerful, Clear and Steady\n- `exsUS4vynmxd379XN4yO` - Blondie - Conversational\n- `BpjGufoPiobT79j2vtj4` - Priyanka - Calm, Neutral and Relaxed\n- `2zRM7PkgwBPiau2jvVXc` - Monika Sogam - Deep and Natural\n- `1SM7GgM6IMuvQlz2BwM3` - Mark - Casual, Relaxed and Light\n- `5l5f8iK3YPeGga21rQIX` - Adeline - Feminine and Conversational\n- `scOwDtmlUjD3prqpp97I` - Sam - Support Agent\n- `NOpBlnGInO9m6vDvFkFC` - Spuds Oxley - Wise and Approachable\n- `BZgkqPqms7Kj9ulSkVzn` - Eve - Authentic, Energetic and Happy\n- `wo6udizrrtpIxWGp2qJk` - Northern Terry\n- `gU0LNdkMOQCOrPrwtbee` - British Football Announcer\n- `DGzg6RaUqxGRTHSBjfgF` - Brock - Commanding and Loud Sergeant\n- `DGTOOUoGpoP6UZ9uSWfA` - Célian - Documentary Narrator\n- `x70vRnQBMBu4FAYhjJbO` - Nathan - Virtual Radio Host\n- `P1bg08DkjqiVEzOn76yG` - Viraj - Rich and Soft\n- `qDuRKMlYmrm8trt5QyBn` - Taksh - Calm, Serious and Smooth\n- `qXpMhyvQqiRxWQs4qSSB` - Horatius - Energetic Character Voice\n- `TX3LPaxmHKxFdv7VOQHJ` - Liam - Energetic, Social Media Creator\n- `iP95p4xoKVk53GoZ742B` - Chris - Charming, Down-to-Earth\n- `SOYHLrjzK2X1ezoPC6cr` - Harry - Fierce Warrior\n- `N2lVS1w4EtoT3dr4eOWO` - Callum - Husky Trickster\n- `FGY2WhTYpPnrIDTdsKH5` - Laura - Enthusiast, Quirky Attitude\n- `cgSgspJ2msm6clMCkdW9` - Jessica - Playful, Bright, Warm\n- `kPzsL2i3teMYv0FxEYQ6` - Brittney - Social Media Voice - Fun, Youthful & Informative\n- `UgBBYS2sOqTuMpoF3BR0` - Mark - Natural Conversations\n- `hpp4J3VqNfWAUOO0d1Us` - Bella - Professional, Bright, Warm\n- `pNInz6obpgDQGcFmaJgB` - Adam - Dominant, Firm\n- `nPczCjzI2devNBz1zQrb` - Brian - Deep, Resonant and Comforting\n- `uYXf8XasLslADfZ2MB4u` - Hope - Bubbly, Gossipy and Girly\n- `gs0tAILXbY5DNrJrsM6F` - Jeff - Classy, Resonating and Strong\n- `DTKMou8ccj1ZaWGBiotd` - Jamahal - Young, Vibrant, and Natural\n- `vBKc2FfBKJfcZNyEt1n6` - Finn - Youthful, Eager and Energetic\n- `DYkrAHD8iwork3YSUBbs` - Tom - Conversations & Books\n- `56AoDkrOh6qfVPDXZ7Pt` - Cassidy - Crisp, Direct and Clear\n- `eR40ATw9ArzDf9h3v7t7` - Addison 2.0 - Australian Audiobook & Podcast\n- `g6xIsTj2HwM6VR4iXFCw` - Jessica Anne Bogart - Chatty and Friendly\n- `lcMyyd2HUfFzxdCaC4Ta` - Lucy - Fresh & Casual\n- `6aDn1KB0hjpdcocrUkmq` - Tiffany - Natural and Welcoming\n- `Sq93GQT4X1lKDXsQcixO` - Felix - Warm, Positive & Contemporary RP\n- `flHkNRp1BlvT73UL6gyz` - Jessica Anne Bogart - Eloquent Villain\n- `9yzdeviXkFddZ4Oz8Mok` - Lutz - Chuckling, Giggly and Cheerful\n- `pPdl9cQBQq4p6mRkZy2Z` - Emma - Adorable and Upbeat\n- `zYcjlYFOd3taleS0gkk3` - Edward - Loud, Confident and Cocky\n- `nzeAacJi50IvxcyDnMXa` - Marshal - Friendly, Funny Professor\n- `ruirxsoakN0GWmGNIo04` - John Morgan - Gritty, Rugged Cowboy\n- `TC0Zp7WVFzhA8zpTlRqV` - Aria - Sultry Villain\n- `ljo9gAlSqKOvF6D8sOsX` - Viking Bjorn - Epic Medieval Raider\n- `PPzYpIqttlTYA83688JI` - Pirate Marshal\n- `ZF6FPAbjXT4488VcRRnw` - Amelia - Enthusiastic and Expressive\n- `8JVbfL6oEdmuxKn5DK2C` - Johnny Kid - Serious and Calm Narrator\n- `iCrDUkL56s3C8sCRl7wb` - Hope - Poetic, Romantic and Captivating\n- `1hlpeD1ydbI2ow0Tt3EW` - Olivia - Smooth, Warm and Engaging\n- `wJqPPQ618aTW29mptyoc` - Ana Rita - Smooth, Expressive and Bright\n- `EiNlNiXeDU1pqqOPrYMO` - John Doe - Deep\n- `4YYIPFl9wE5c4L2eu2Gb` - Burt Reynolds™ - Deep, Smooth and Clear\n- `6F5Zhi321D3Oq7v1oNT4` - Hank - Deep and Engaging Narrator\n- `YXpFCvM1S3JbWEJhoskW` - Wyatt - Wise Rustic Cowboy\n- `LG95yZDEHg6fCZdQjLqj` - Phil - Explosive, Passionate Announcer\n- `CeNX9CMwmxDxUF5Q2Inm` - Johnny Dynamite - Vintage Radio DJ\n- `st7NwhTPEzqo2riw7qWC` - Blondie - Radio Host\n- `aD6riP1btT197c6dACmy` - Rachel M - Pro British Radio Presenter\n- `mtrellq69YZsNwzUSyXh` - Rex Thunder - Deep N Tough\n- `dHd5gvgSOzSfduK4CvEg` - Ed - Late Night Announcer\n- `eVItLK1UvXctxuaRV2Oq` - Jean - Alluring and Playful Femme Fatale\n- `esy0r39YPLQjOczyOib8` - Britney - Calm and Calculative Villain\n- `Tsns2HvNFKfGiNjllgqo` - Sven - Emotional and Nice\n- `1U02n4nD6AdIZ9CjF053` - Viraj - Smooth and Gentle\n- `AeRdCCKzvd23BpJoofzx` - Nathaniel - Engaging, British and Calm\n- `LruHrtVF6PSyGItzMNHS` - Benjamin - Deep, Warm, Calming\n- `Qggl4b0xRMiqOwhPtVWT` - Clara - Relaxing, Calm and Soothing\n- `zA6D7RyKdc2EClouEMkP` - AImee - Tranquil ASMR and Meditation\n- `1wGbFxmAM3Fgw63G1zZJ` - Allison - Calm, Soothing and Meditative\n- `hqfrgApggtO1785R4Fsn` - Theodore HQ - Serene and Grounded\n- `MJ0RnG71ty4LH3dvNfSd` - Leon - Soothing and Grounded",
                 "type": "string",
                 "enum": [
                   "Rachel",
@@ -19910,42 +20020,33 @@
                   "BpjGufoPiobT79j2vtj4",
                   "2zRM7PkgwBPiau2jvVXc",
                   "1SM7GgM6IMuvQlz2BwM3",
-                  "ouL9IsyrSnUkCmfnD02u",
                   "5l5f8iK3YPeGga21rQIX",
                   "scOwDtmlUjD3prqpp97I",
                   "NOpBlnGInO9m6vDvFkFC",
                   "BZgkqPqms7Kj9ulSkVzn",
                   "wo6udizrrtpIxWGp2qJk",
-                  "yjJ45q8TVCrtMhEKurxY",
                   "gU0LNdkMOQCOrPrwtbee",
                   "DGzg6RaUqxGRTHSBjfgF",
                   "DGTOOUoGpoP6UZ9uSWfA",
                   "x70vRnQBMBu4FAYhjJbO",
                   "P1bg08DkjqiVEzOn76yG",
                   "qDuRKMlYmrm8trt5QyBn",
-                  "kUUTqKQ05NMGulF08DDf",
                   "qXpMhyvQqiRxWQs4qSSB",
                   "TX3LPaxmHKxFdv7VOQHJ",
                   "iP95p4xoKVk53GoZ742B",
                   "SOYHLrjzK2X1ezoPC6cr",
                   "N2lVS1w4EtoT3dr4eOWO",
                   "FGY2WhTYpPnrIDTdsKH5",
-                  "XB0fDUnXU5powFXDhCwa",
                   "cgSgspJ2msm6clMCkdW9",
-                  "MnUw1cSnpiLoLhpd3Hqp",
                   "kPzsL2i3teMYv0FxEYQ6",
                   "UgBBYS2sOqTuMpoF3BR0",
-                  "IjnA9kwZJHJ20Fp7Vmy6",
-                  "KoQQbl9zjAdLgKZjm8Ol",
                   "hpp4J3VqNfWAUOO0d1Us",
                   "pNInz6obpgDQGcFmaJgB",
                   "nPczCjzI2devNBz1zQrb",
-                  "L0Dsvb3SLTyegXwtm47J",
                   "uYXf8XasLslADfZ2MB4u",
                   "gs0tAILXbY5DNrJrsM6F",
                   "DTKMou8ccj1ZaWGBiotd",
                   "vBKc2FfBKJfcZNyEt1n6",
-                  "TmNe0cCqkZBMwPWOd3RD",
                   "DYkrAHD8iwork3YSUBbs",
                   "56AoDkrOh6qfVPDXZ7Pt",
                   "eR40ATw9ArzDf9h3v7t7",
@@ -19953,19 +20054,12 @@
                   "lcMyyd2HUfFzxdCaC4Ta",
                   "6aDn1KB0hjpdcocrUkmq",
                   "Sq93GQT4X1lKDXsQcixO",
-                  "vfaqCOvlrKi4Zp7C2IAm",
-                  "piI8Kku0DcvcL6TTSeQt",
-                  "KTPVrSVAEUSJRClDzBw7",
                   "flHkNRp1BlvT73UL6gyz",
                   "9yzdeviXkFddZ4Oz8Mok",
                   "pPdl9cQBQq4p6mRkZy2Z",
-                  "0SpgpJ4D3MpHCiWdyTg3",
-                  "UFO0Yv86wqRxAt1DmXUu",
-                  "oR4uRy4fHDUGGISL0Rev",
                   "zYcjlYFOd3taleS0gkk3",
                   "nzeAacJi50IvxcyDnMXa",
                   "ruirxsoakN0GWmGNIo04",
-                  "1KFdM0QCwQn4rmn5nn9C",
                   "TC0Zp7WVFzhA8zpTlRqV",
                   "ljo9gAlSqKOvF6D8sOsX",
                   "PPzYpIqttlTYA83688JI",
@@ -19975,38 +20069,25 @@
                   "1hlpeD1ydbI2ow0Tt3EW",
                   "wJqPPQ618aTW29mptyoc",
                   "EiNlNiXeDU1pqqOPrYMO",
-                  "FUfBrNit0NNZAwb58KWH",
                   "4YYIPFl9wE5c4L2eu2Gb",
-                  "OYWwCdDHouzDwiZJWOOu",
                   "6F5Zhi321D3Oq7v1oNT4",
-                  "qNkzaJoHLLdpvgh5tISm",
                   "YXpFCvM1S3JbWEJhoskW",
-                  "9PVP7ENhDskL0KYHAKtD",
                   "LG95yZDEHg6fCZdQjLqj",
                   "CeNX9CMwmxDxUF5Q2Inm",
                   "st7NwhTPEzqo2riw7qWC",
                   "aD6riP1btT197c6dACmy",
-                  "FF7KdobWPaiR0vkcALHF",
                   "mtrellq69YZsNwzUSyXh",
                   "dHd5gvgSOzSfduK4CvEg",
-                  "cTNP6ZM2mLTKj2BFhxEh",
                   "eVItLK1UvXctxuaRV2Oq",
-                  "U1Vk2oyatMdYs096Ety7",
                   "esy0r39YPLQjOczyOib8",
-                  "bwCXcoVxWNYMlC6Esa8u",
-                  "D2jw4N9m4xePLTQ3IHjU",
                   "Tsns2HvNFKfGiNjllgqo",
-                  "Atp5cNFg1Wj5gyKD7HWV",
-                  "1cxc5c3E9K6F1wlqOJGV",
                   "1U02n4nD6AdIZ9CjF053",
-                  "HgyIHe81F3nXywNwkraY",
                   "AeRdCCKzvd23BpJoofzx",
                   "LruHrtVF6PSyGItzMNHS",
                   "Qggl4b0xRMiqOwhPtVWT",
                   "zA6D7RyKdc2EClouEMkP",
                   "1wGbFxmAM3Fgw63G1zZJ",
                   "hqfrgApggtO1785R4Fsn",
-                  "sH0WdfE5fsKuM2otdQZr",
                   "MJ0RnG71ty4LH3dvNfSd"
                 ],
                 "default": "Rachel",
@@ -20326,6 +20407,14 @@
             "examples": [
               false
             ]
+          },
+          "max_tokens": {
+            "type": "number",
+            "default": 4096,
+            "examples": [
+              4096
+            ],
+            "description": "Optional Claude output token limit. Leave empty to use the default of 4096."
           }
         },
         "required": [
@@ -20337,7 +20426,8 @@
           "messages",
           "tools",
           "thinkingFlag",
-          "stream"
+          "stream",
+          "max_tokens"
         ],
         "examples": [
           {
@@ -20398,7 +20488,8 @@
           }
         ],
         "thinkingFlag": true,
-        "stream": false
+        "stream": false,
+        "max_tokens": 4096
       },
       "pricingRows": []
     },
@@ -20576,6 +20667,14 @@
             "examples": [
               false
             ]
+          },
+          "max_tokens": {
+            "type": "number",
+            "default": 4096,
+            "examples": [
+              4096
+            ],
+            "description": "Optional Claude output token limit. Leave empty to use the default of 4096."
           }
         },
         "required": [
@@ -20587,7 +20686,8 @@
           "messages",
           "tools",
           "thinkingFlag",
-          "stream"
+          "stream",
+          "max_tokens"
         ],
         "examples": [
           {
@@ -20648,7 +20748,8 @@
           }
         ],
         "thinkingFlag": true,
-        "stream": false
+        "stream": false,
+        "max_tokens": 4096
       },
       "pricingRows": []
     },
@@ -20826,6 +20927,14 @@
             "examples": [
               false
             ]
+          },
+          "max_tokens": {
+            "type": "number",
+            "default": 4096,
+            "examples": [
+              4096
+            ],
+            "description": "Optional Claude output token limit. Leave empty to use the default of 4096."
           }
         },
         "required": [
@@ -20837,7 +20946,8 @@
           "messages",
           "tools",
           "thinkingFlag",
-          "stream"
+          "stream",
+          "max_tokens"
         ],
         "examples": [
           {
@@ -20898,7 +21008,8 @@
           }
         ],
         "thinkingFlag": true,
-        "stream": false
+        "stream": false,
+        "max_tokens": 4096
       },
       "pricingRows": []
     },
@@ -21077,6 +21188,14 @@
               false
             ]
           },
+          "max_tokens": {
+            "type": "number",
+            "default": 4096,
+            "examples": [
+              4096
+            ],
+            "description": "Optional Claude output token limit. Leave empty to use the default of 4096."
+          },
           "output_config": {
             "type": "object",
             "description": "Structured output configuration.",
@@ -21121,7 +21240,8 @@
           "tools",
           "thinkingFlag",
           "stream",
-          "output_config"
+          "output_config",
+          "max_tokens"
         ],
         "examples": [
           {
@@ -21199,6 +21319,7 @@
         ],
         "thinkingFlag": true,
         "stream": false,
+        "max_tokens": 4096,
         "output_config": {
           "format": {
             "type": "json_schema",
@@ -21392,6 +21513,14 @@
             "examples": [
               false
             ]
+          },
+          "max_tokens": {
+            "type": "number",
+            "default": 4096,
+            "examples": [
+              4096
+            ],
+            "description": "Optional Claude output token limit. Leave empty to use the default of 4096."
           }
         },
         "required": [
@@ -21403,7 +21532,8 @@
           "messages",
           "tools",
           "thinkingFlag",
-          "stream"
+          "stream",
+          "max_tokens"
         ],
         "examples": [
           {
@@ -21464,7 +21594,8 @@
           }
         ],
         "thinkingFlag": true,
-        "stream": false
+        "stream": false,
+        "max_tokens": 4096
       },
       "pricingRows": []
     },
@@ -21986,15 +22117,6 @@
               "16:9"
             ]
           },
-          "seeds": {
-            "type": "integer",
-            "description": "(Optional) Random seed parameter to control the randomness of the generated content. Value range: 10000-99999. The same seed will generate similar video content, different seeds will generate different content. If not provided, the system will assign one automatically.",
-            "minimum": 10000,
-            "maximum": 99999,
-            "examples": [
-              12345
-            ]
-          },
           "callBackUrl": {
             "type": "string",
             "description": "Completion callback URL for receiving video generation status updates.\n\n- Optional but recommended for production use\n- System will POST task completion status to this URL when the video generation is completed\n- Callback will include task results, video URLs, and status information\n- Your callback endpoint should accept POST requests with JSON payload\n- For detailed callback format and implementation guide, see [Callback Documentation](https://docs.kie.ai/veo3-api/generate-veo-3-video-callbacks)\n- Alternatively, use the Get Video Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
@@ -22046,7 +22168,6 @@
           "model",
           "generationType",
           "aspect_ratio",
-          "seeds",
           "callBackUrl",
           "enableFallback",
           "enableTranslation",
@@ -22082,7 +22203,6 @@
         "watermark": "MyBrand",
         "callBackUrl": "http://your-callback-url.com/complete",
         "aspect_ratio": "16:9",
-        "seeds": 12345,
         "enableFallback": false,
         "enableTranslation": true,
         "generationType": "REFERENCE_2_VIDEO"
@@ -22234,15 +22354,6 @@
               "16:9"
             ]
           },
-          "seeds": {
-            "type": "integer",
-            "description": "(Optional) Random seed parameter to control the randomness of the generated content. Value range: 10000-99999. The same seed will generate similar video content, different seeds will generate different content. If not provided, the system will assign one automatically.",
-            "minimum": 10000,
-            "maximum": 99999,
-            "examples": [
-              12345
-            ]
-          },
           "callBackUrl": {
             "type": "string",
             "description": "Completion callback URL for receiving video generation status updates.\n\n- Optional but recommended for production use\n- System will POST task completion status to this URL when the video generation is completed\n- Callback will include task results, video URLs, and status information\n- Your callback endpoint should accept POST requests with JSON payload\n- For detailed callback format and implementation guide, see [Callback Documentation](https://docs.kie.ai/veo3-api/generate-veo-3-video-callbacks)\n- Alternatively, use the Get Video Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
@@ -22294,7 +22405,6 @@
           "model",
           "generationType",
           "aspect_ratio",
-          "seeds",
           "callBackUrl",
           "enableFallback",
           "enableTranslation",
@@ -22330,7 +22440,6 @@
         "watermark": "MyBrand",
         "callBackUrl": "http://your-callback-url.com/complete",
         "aspect_ratio": "16:9",
-        "seeds": 12345,
         "enableFallback": false,
         "enableTranslation": true,
         "generationType": "REFERENCE_2_VIDEO"
@@ -22482,15 +22591,6 @@
               "16:9"
             ]
           },
-          "seeds": {
-            "type": "integer",
-            "description": "(Optional) Random seed parameter to control the randomness of the generated content. Value range: 10000-99999. The same seed will generate similar video content, different seeds will generate different content. If not provided, the system will assign one automatically.",
-            "minimum": 10000,
-            "maximum": 99999,
-            "examples": [
-              12345
-            ]
-          },
           "callBackUrl": {
             "type": "string",
             "description": "Completion callback URL for receiving video generation status updates.\n\n- Optional but recommended for production use\n- System will POST task completion status to this URL when the video generation is completed\n- Callback will include task results, video URLs, and status information\n- Your callback endpoint should accept POST requests with JSON payload\n- For detailed callback format and implementation guide, see [Callback Documentation](https://docs.kie.ai/veo3-api/generate-veo-3-video-callbacks)\n- Alternatively, use the Get Video Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
@@ -22542,7 +22642,6 @@
           "model",
           "generationType",
           "aspect_ratio",
-          "seeds",
           "callBackUrl",
           "enableFallback",
           "enableTranslation",
@@ -22578,7 +22677,6 @@
         "watermark": "MyBrand",
         "callBackUrl": "http://your-callback-url.com/complete",
         "aspect_ratio": "16:9",
-        "seeds": 12345,
         "enableFallback": false,
         "enableTranslation": true,
         "generationType": "REFERENCE_2_VIDEO"
@@ -24114,7 +24212,8 @@
           "tags",
           "title",
           "infillStartS",
-          "infillEndS"
+          "infillEndS",
+          "fullLyrics"
         ],
         "properties": {
           "taskId": {
@@ -24254,6 +24353,8 @@
         "type": "object",
         "required": [
           "uploadUrlList",
+          "style",
+          "title",
           "customMode",
           "model",
           "callBackUrl"
@@ -24969,7 +25070,8 @@
           }
         },
         "required": [
-          "prompt"
+          "prompt",
+          "model"
         ],
         "x-apidog-orders": [
           "prompt",

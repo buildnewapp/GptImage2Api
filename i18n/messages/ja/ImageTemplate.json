@@ -1,14 +1,4 @@
 {
-  "navigation": {
-    "brand": "Seedance 2.0",
-    "createVideo": "動画を作成",
-    "credits": "30 クレジット",
-    "darkModeLabel": "ダークモードに切り替える",
-    "home": "ホーム",
-    "language": "日本語",
-    "mobileMenuLabel": "メニューを開く",
-    "resources": "リソース"
-  },
   "hero": {
     "badge": "Seedance 2.0 web & api",
     "ctaLabel": "動画を生成",

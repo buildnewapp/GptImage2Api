@@ -18,7 +18,6 @@ export default async function VideoTemplate() {
   const locale = await getLocale();
   const t = await getTranslations("VideoTemplate");
   const page = {
-    navigation: t.raw("navigation"),
     hero: t.raw("hero"),
     featureRows: t.raw("featureRows"),
     scope: t.raw("scope"),

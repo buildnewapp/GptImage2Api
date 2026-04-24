@@ -79,7 +79,7 @@ export function DashboardSidebar({
         </I18nLink>
       </SidebarHeader>
 
-      <SidebarContent className={"overflow-hidden"}>
+      <SidebarContent className={"overflow-x-hidden"}>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
