@@ -509,6 +509,10 @@
               "id": "pricing",
               "href": "/#pricing",
               "name": "Pricing"
+            },
+            {
+              "href": "/apidoc",
+              "name": "API Docs"
             }
           ]
         },

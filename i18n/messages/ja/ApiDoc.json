@@ -1,0 +1,244 @@
+{
+  "seo": {
+    "title": "AI Studio API ドキュメント",
+    "description": "AI Studio API の認証、AI動画生成、タスク結果の確認、生成履歴、ユーザークレジット確認方法を説明します。",
+    "keywords": [
+      "AI Studio API",
+      "AI video API",
+      "video generation API",
+      "AI API documentation",
+      "Seedance API",
+      "Sora API"
+    ]
+  },
+  "hero": {
+    "badge": "Quick Start",
+    "title": "AI Studio API",
+    "subtitle": "数ステップで AI 動画生成をアプリに接続し、進行状況を確認しながらクレジットで利用できます。",
+    "ctas": [
+      {
+        "label": "Get API Key",
+        "href": "/dashboard/apikeys"
+      },
+      {
+        "label": "Start Building",
+        "href": "/dashboard/generate"
+      },
+      {
+        "label": "View Pricing",
+        "href": "/pricing"
+      }
+    ],
+    "valueProps": [
+      {
+        "title": "簡単に接続",
+        "icon": "code"
+      },
+      {
+        "title": "AI 動画生成",
+        "icon": "sparkles"
+      },
+      {
+        "title": "クレジット課金",
+        "icon": "coins"
+      },
+      {
+        "title": "わかりやすい流れ",
+        "icon": "workflow"
+      }
+    ]
+  },
+  "flow": {
+    "kicker": "Quick Start",
+    "title": "API 利用フロー",
+    "description": "アカウント準備から生成結果取得までの基本フローです。",
+    "steps": [
+      "ログインまたはアカウント登録",
+      "ダッシュボードで API Key を作成",
+      "API Key を使って動画生成 API を呼び出す",
+      "キュー投入後に生成結果を確認",
+      "最近の生成履歴を取得",
+      "ユーザー情報、クレジット、メンバーシップを確認"
+    ]
+  },
+  "auth": {
+    "kicker": "Authentication",
+    "title": "API Key で認証",
+    "description": "ログイン後に API Key を作成し、すべてのリクエストの Authorization ヘッダーに設定します。",
+    "cardTitle": "必須リクエストヘッダー",
+    "cardDescription": "ログイン後に API Key を作成し、すべての API リクエストに含めます。",
+    "replaceHint": "サンプルのドメインは NEXT_PUBLIC_SITE_URL から自動解決されます。YOUR_API_KEY のみアカウントで発行した値に置き換えてください。",
+    "getApiKeyCta": "Get API Key"
+  },
+  "endpoints": {
+    "kicker": "Endpoints",
+    "title": "利用できる API",
+    "description": "以下は AI Studio で現在使われている実際のエンドポイントです。",
+    "execute": {
+      "description": "AI Studio 生成リクエストを送信します。リクエストボディは AIVideoStudio.tsx が送信する modelId、isPublic、payload と同じ形です。"
+    },
+    "task": {
+      "description": "キュー中または実行中の provider タスクを確認します。/api/ai-studio/execute が taskId を返し、statusSupported が true の場合に呼び出します。"
+    },
+    "history": {
+      "description": "現在のユーザーの最近の AI Studio 生成履歴を取得します。Studio UI が使用する軽量履歴 API です。"
+    },
+    "videoHistory": {
+      "description": "ダッシュボード向けに動画/画像生成履歴をページング取得し、ステータスと検索フィルターを使用できます。"
+    },
+    "user": {
+      "description": "認証済みユーザー、現在のクレジット残高、メンバーシップ概要を返します。"
+    }
+  },
+  "endpointLabels": {
+    "headers": "Request Headers",
+    "parameters": "Request Parameters"
+  },
+  "table": {
+    "name": "Name",
+    "type": "Type",
+    "required": "Required",
+    "defaultValue": "Default",
+    "options": "Options",
+    "description": "Description",
+    "yes": "Yes",
+    "no": "No",
+    "none": "No request parameters."
+  },
+  "codeLabels": {
+    "request": "Request",
+    "response": "Response Example",
+    "error": "Error Example",
+    "copy": "コピー",
+    "copied": "コピーしました"
+  },
+  "parameters": {
+    "modelId": "選択した動画モデルの ID です。",
+    "modelIdQuery": "このタスクで使われる modelId です。",
+    "isPublic": "生成結果を公開するかどうか。既定値は true です。",
+    "payload": "生成時に送る入力データです。ネストされた項目はモデルごとに異なります。",
+    "payloadAnchor": "Dynamic payload fields by model を見る",
+    "taskId": "生成開始後に返るタスク ID です。",
+    "limit": "最近の履歴の取得件数（1〜50）。",
+    "videoHistoryLimit": "履歴の 1 ページ件数（1〜50）。",
+    "page": "履歴のページ番号。",
+    "historyStatus": "履歴のステータス絞り込み。",
+    "q": "履歴検索の任意キーワード。"
+  },
+  "models": {
+    "kicker": "Models",
+    "title": "利用可能な modelId",
+    "description": "作りたい動画に合うモデル ID を選んでください。",
+    "family": "Family",
+    "version": "Version",
+    "modelId": "modelId"
+  },
+  "modelSchema": {
+    "kicker": "Model Schema",
+    "title": "モデルごとの payload フィールド",
+    "description": "モデルを選ぶと /api/ai-studio/models/{modelId} の内容にもとづいて、入力できる項目を表示します。",
+    "selectLabel": "モデル選択",
+    "selectPlaceholder": "モデルを選択してください",
+    "endpointLabel": "モデル詳細エンドポイント",
+    "loading": "モデル schema を読み込み中...",
+    "loadError": "モデル schema の読み込みに失敗しました:",
+    "fieldDocsTitle": "入力フィールド説明",
+    "noFields": "このモデルでは表示可能な入力フィールド説明が見つかりませんでした。",
+    "requestExampleTitle": "リクエスト payload サンプル",
+    "docMeta": {
+      "required": "Required",
+      "type": "Type",
+      "enum": "Options",
+      "range": "Range",
+      "minimum": "Minimum",
+      "maximum": "Maximum"
+    }
+  },
+  "statuses": {
+    "kicker": "Task States",
+    "title": "タスク進行状態",
+    "description": "待機中・生成中・完了・失敗など、現在の進行状況を示します。"
+  },
+  "pricing": {
+    "kicker": "Pricing",
+    "title": "クレジットベースの API 課金",
+    "description": "生成リクエストは既存の AI Studio 生成フローでクレジットを予約・確定します。",
+    "items": [
+      "API 利用はクレジットで課金されます。",
+      "生成ごとの消費クレジットは、モデル、長さ、品質、解像度、価格行によって変わります。",
+      "残高はアカウント画面または /api/auth/user で確認できます。",
+      "クレジット不足の場合、新しい生成を続行できません。"
+    ],
+    "ctas": [
+      {
+        "label": "Buy Credits",
+        "href": "/pricing"
+      },
+      {
+        "label": "Upgrade Plan",
+        "href": "/dashboard/subscription"
+      },
+      {
+        "label": "View Pricing",
+        "href": "/pricing"
+      }
+    ]
+  },
+  "faq": {
+    "kicker": "FAQ",
+    "title": "AI Studio API FAQ",
+    "description": "接続方法、課金、進行確認でよくある質問をまとめています。",
+    "items": [
+      {
+        "question": "How do I get an API key?",
+        "answer": "ログイン後、API Keys ダッシュボードで有効な Key を作成し、Authorization: Bearer YOUR_API_KEY として使用します。"
+      },
+      {
+        "question": "How do I authenticate API requests?",
+        "answer": "すべてのリクエストで Authorization ヘッダーに Bearer 形式の API Key を送信します。"
+      },
+      {
+        "question": "How is API usage billed?",
+        "answer": "生成 API はアカウントのクレジットを使用します。消費量はモデルと価格オプションによって変わります。"
+      },
+      {
+        "question": "How do I check video generation status?",
+        "answer": "execute API が taskId を返し statusSupported が true の場合、/api/ai-studio/tasks/{taskId}?modelId={modelId} をポーリングします。"
+      },
+      {
+        "question": "Where can I view my generation history?",
+        "answer": "/api/ai-studio/video-history でページングされた生成履歴を確認できます。"
+      },
+      {
+        "question": "What happens if I run out of credits?",
+        "answer": "クレジット不足の場合、新しい生成リクエストは続行できません。"
+      },
+      {
+        "question": "Can I use the API for commercial projects?",
+        "answer": "アカウントプランと利用規約に従って、本番ワークフローへ統合できます。"
+      },
+      {
+        "question": "Does the API support different video models?",
+        "answer": "はい。利用可能な modelId は config/ai-video-studio.ts に設定されたモデルです。"
+      }
+    ]
+  },
+  "finalCta": {
+    "title": "AI Studio API を始める",
+    "description": "API Key を作成し、最初の生成リクエストを試してみましょう。",
+    "ctas": [
+      {
+        "label": "Get API Key",
+        "href": "/dashboard/apikeys"
+      },
+      {
+        "label": "Start Building",
+        "href": "/dashboard/generate"
+      },
+      {
+        "label": "View Pricing",
+        "href": "/pricing"
+      }
+    ]
+  }
+}

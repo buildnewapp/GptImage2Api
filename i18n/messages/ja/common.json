@@ -509,6 +509,10 @@
               "id": "pricing",
               "href": "/#pricing",
               "name": "料金プラン"
+            },
+            {
+              "href": "/apidoc",
+              "name": "API ドキュメント"
             }
           ]
         },

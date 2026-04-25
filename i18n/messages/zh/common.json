@@ -509,6 +509,10 @@
               "id": "pricing",
               "href": "/#pricing",
               "name": "定价"
+            },
+            {
+              "href": "/apidoc",
+              "name": "API 文档"
             }
           ]
         },

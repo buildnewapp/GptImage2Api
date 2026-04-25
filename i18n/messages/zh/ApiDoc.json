@@ -1,0 +1,244 @@
+{
+  "seo": {
+    "title": "AI Studio API 文档",
+    "description": "了解 AI Studio API 的鉴权、AI 视频生成、任务状态查询、生成记录读取和用户积分查询方式。",
+    "keywords": [
+      "AI Studio API",
+      "AI 视频 API",
+      "视频生成 API",
+      "AI API 文档",
+      "Seedance API",
+      "Sora API"
+    ]
+  },
+  "hero": {
+    "badge": "快速上手",
+    "title": "AI Studio API",
+    "subtitle": "几步即可把 AI 视频生成功能接入你的网站或应用，随时查看进度，并按积分计费。",
+    "ctas": [
+      {
+        "label": "获取 API Key",
+        "href": "/dashboard/apikeys"
+      },
+      {
+        "label": "开始接入",
+        "href": "/dashboard/generate"
+      },
+      {
+        "label": "查看价格",
+        "href": "/pricing"
+      }
+    ],
+    "valueProps": [
+      {
+        "title": "接入简单",
+        "icon": "code"
+      },
+      {
+        "title": "快速生成视频",
+        "icon": "sparkles"
+      },
+      {
+        "title": "积分计费",
+        "icon": "coins"
+      },
+      {
+        "title": "流程清晰",
+        "icon": "workflow"
+      }
+    ]
+  },
+  "flow": {
+    "kicker": "快速上手",
+    "title": "使用流程",
+    "description": "从开通账号到拿到最终结果，一共 6 步。",
+    "steps": [
+      "登录或注册账号",
+      "在控制台创建 API Key",
+      "携带 API Key 调用视频生成接口",
+      "任务进入队列后查询生成结果",
+      "读取最近生成记录",
+      "查询用户信息、积分和会员状态"
+    ]
+  },
+  "auth": {
+    "kicker": "鉴权",
+    "title": "用 API Key 鉴权",
+    "description": "登录后创建 API Key，并在每次请求里带上 Authorization 请求头即可。",
+    "cardTitle": "必需请求头",
+    "cardDescription": "登录后创建 API Key，并在每次接口请求中携带。",
+    "replaceHint": "示例域名会自动读取 NEXT_PUBLIC_SITE_URL。你只需要把 YOUR_API_KEY 替换为账号中生成的 API Key。",
+    "getApiKeyCta": "获取 API Key"
+  },
+  "endpoints": {
+    "kicker": "接口",
+    "title": "可用接口",
+    "description": "以下都是 AI Studio 当前在线使用的真实接口。",
+    "execute": {
+      "description": "发起一次新的生成任务。请求体包含 modelId、isPublic、payload。"
+    },
+    "task": {
+      "description": "查询任务进度。创建任务后拿到 taskId 且 statusSupported=true 时调用。"
+    },
+    "history": {
+      "description": "读取当前账号最近的生成记录。"
+    },
+    "videoHistory": {
+      "description": "分页读取视频/图片历史，支持状态筛选和关键词搜索。"
+    },
+    "user": {
+      "description": "读取账号信息、剩余积分和会员状态。"
+    }
+  },
+  "endpointLabels": {
+    "headers": "请求头",
+    "parameters": "请求参数"
+  },
+  "table": {
+    "name": "参数名",
+    "type": "类型",
+    "required": "必填",
+    "defaultValue": "默认值",
+    "options": "可选值",
+    "description": "说明",
+    "yes": "是",
+    "no": "否",
+    "none": "无请求参数。"
+  },
+  "codeLabels": {
+    "request": "请求示例",
+    "response": "响应示例",
+    "error": "错误示例",
+    "copy": "复制",
+    "copied": "已复制"
+  },
+  "parameters": {
+    "modelId": "你选择的视频模型 ID。",
+    "modelIdQuery": "该任务使用的 modelId。",
+    "isPublic": "是否公开展示这次生成结果。默认 true。",
+    "payload": "生成时提交的主要输入内容，不同模型的嵌套字段会不同。",
+    "payloadAnchor": "查看「Dynamic payload fields by model」",
+    "taskId": "创建任务后返回的任务 ID。",
+    "limit": "返回最近记录数量（1-50）。",
+    "videoHistoryLimit": "历史列表每页数量（1-50）。",
+    "page": "历史列表页码。",
+    "historyStatus": "历史记录状态筛选。",
+    "q": "可选关键词，用于搜索历史记录。"
+  },
+  "models": {
+    "kicker": "Models",
+    "title": "可用模型列表",
+    "description": "选择最符合你效果预期的模型 ID。",
+    "family": "模型系列",
+    "version": "版本",
+    "modelId": "模型 ID"
+  },
+  "modelSchema": {
+    "kicker": "模型字段",
+    "title": "按模型查看可填写字段",
+    "description": "选择模型后，会显示该模型当前支持的输入字段（来自 /api/ai-studio/models/{modelId}）。",
+    "selectLabel": "选择模型",
+    "selectPlaceholder": "请选择模型",
+    "endpointLabel": "模型详情接口",
+    "loading": "正在加载模型 schema...",
+    "loadError": "模型 schema 加载失败：",
+    "fieldDocsTitle": "输入字段说明",
+    "noFields": "当前模型未返回可展示的输入字段说明。",
+    "requestExampleTitle": "请求 payload 示例",
+    "docMeta": {
+      "required": "必填",
+      "type": "类型",
+      "enum": "可选值",
+      "range": "范围",
+      "minimum": "最小值",
+      "maximum": "最大值"
+    }
+  },
+  "statuses": {
+    "kicker": "任务状态",
+    "title": "任务进度状态",
+    "description": "这些状态用于判断任务是排队中、生成中、已完成还是失败。"
+  },
+  "pricing": {
+    "kicker": "计费",
+    "title": "基于积分的 API 计费",
+    "description": "生成请求会复用现有 AI Studio 生成流程进行积分预留和结算。",
+    "items": [
+      "API 使用积分计费。",
+      "每次生成会根据所选模型、时长、质量、分辨率和价格行消耗积分。",
+      "用户可以在账户中或通过 /api/auth/user 查看剩余积分。",
+      "积分不足时无法继续发起生成。"
+    ],
+    "ctas": [
+      {
+        "label": "购买积分",
+        "href": "/pricing"
+      },
+      {
+        "label": "升级套餐",
+        "href": "/dashboard/subscription"
+      },
+      {
+        "label": "查看价格",
+        "href": "/pricing"
+      }
+    ]
+  },
+  "faq": {
+    "kicker": "FAQ",
+    "title": "AI Studio API 常见问题",
+    "description": "覆盖接入、计费和任务进度的高频问题。",
+    "items": [
+      {
+        "question": "如何获取 API Key？",
+        "answer": "登录后进入 API Keys 控制台创建有效 Key，并按 Authorization: Bearer YOUR_API_KEY 格式使用。"
+      },
+      {
+        "question": "API 请求如何鉴权？",
+        "answer": "每次请求都在 Authorization 请求头中使用 Bearer 格式携带 API Key。"
+      },
+      {
+        "question": "API 使用如何计费？",
+        "answer": "生成接口使用账户积分计费，消耗数量取决于模型和选定的价格参数。"
+      },
+      {
+        "question": "如何查询视频生成状态？",
+        "answer": "当 execute 接口返回 taskId 且 statusSupported 为 true 后，轮询 /api/ai-studio/tasks/{taskId}?modelId={modelId}。"
+      },
+      {
+        "question": "在哪里查看生成历史？",
+        "answer": "使用 /api/ai-studio/video-history 查看分页生成历史。"
+      },
+      {
+        "question": "积分不足时会怎样？",
+        "answer": "账户积分不足时，新的生成请求无法继续。"
+      },
+      {
+        "question": "可以用于商业项目吗？",
+        "answer": "可以接入生产工作流，但需要遵守当前账号套餐和服务条款。"
+      },
+      {
+        "question": "API 支持不同的视频模型吗？",
+        "answer": "支持。可用 modelId 来自 config/ai-video-studio.ts 中配置的模型。"
+      }
+    ]
+  },
+  "finalCta": {
+    "title": "开始使用 AI Studio API",
+    "description": "先创建 API Key，跑通一次生成，再接入任务状态查询。",
+    "ctas": [
+      {
+        "label": "获取 API Key",
+        "href": "/dashboard/apikeys"
+      },
+      {
+        "label": "开始接入",
+        "href": "/dashboard/generate"
+      },
+      {
+        "label": "查看价格",
+        "href": "/pricing"
+      }
+    ]
+  }
+}
