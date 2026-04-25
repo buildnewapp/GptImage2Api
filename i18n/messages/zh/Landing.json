@@ -63,6 +63,7 @@
       "loginRequired": "请登录后生成视频",
       "loginRequiredImage": "请登录后生成图片",
       "insufficientCredits": "积分不足",
+      "membershipRequired": "该模型需要 {level} 会员等级。",
       "creditsRequired": "{count} 积分",
       "generationSuccess": "视频生成已开始！",
       "generationSuccessImage": "图片生成已开始！",

@@ -6,7 +6,11 @@
     "status": "Status",
     "credits": "Credits",
     "createdAt": "Created",
-    "actions": "Actions"
+    "actions": "Actions",
+    "preview": "Preview",
+    "task": "Task",
+    "user_actions": "User Actions",
+    "usedCredits": "Used"
   },
   "status": {
     "pending": "Processing",
@@ -83,5 +87,9 @@
   "media": {
     "text_to_image": "Text to Image",
     "image_to_image": "Image to Image"
+  },
+  "view": {
+    "card": "Card",
+    "list": "List"
   }
 }

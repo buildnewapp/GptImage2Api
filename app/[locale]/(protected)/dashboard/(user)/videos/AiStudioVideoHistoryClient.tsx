@@ -23,6 +23,14 @@ import {
   PaginationEllipsis,
   PaginationItem,
 } from "@/components/ui/pagination";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -41,6 +49,8 @@ import {
   EyeOff,
   Film,
   ImageIcon,
+  LayoutGrid,
+  List,
   Loader2,
   MoreHorizontal,
   RefreshCcw,
@@ -127,6 +137,7 @@ export default function AiStudioVideoHistoryClient() {
       ? rawStatusFilter
       : "all";
   const searchQuery = searchParams.get("q")?.trim() ?? "";
+  const viewMode = searchParams.get("view") === "list" ? "list" : "card";
   const [searchInput, setSearchInput] = useState(searchQuery);
   const paginationItems = buildPaginationItems(page, totalPages);
 
@@ -135,7 +146,7 @@ export default function AiStudioVideoHistoryClient() {
   }, [searchQuery]);
 
   const updateQueryParams = useCallback(
-    (updates: { page?: number; status?: string; q?: string }) => {
+    (updates: { page?: number; status?: string; q?: string; view?: string }) => {
       const params = new URLSearchParams(searchParams.toString());
 
       if (updates.page && updates.page > 1) {
@@ -156,6 +167,12 @@ export default function AiStudioVideoHistoryClient() {
         params.delete("q");
       }
 
+      if (updates.view && updates.view !== "card") {
+        params.set("view", updates.view);
+      } else if (updates.view !== undefined) {
+        params.delete("view");
+      }
+
       const nextQuery = params.toString();
       router.push(nextQuery ? `${pathname}?${nextQuery}` : pathname, {
         scroll: false,
@@ -169,7 +186,7 @@ export default function AiStudioVideoHistoryClient() {
     try {
       const params = new URLSearchParams({
         page: String(page),
-        limit: "12",
+        limit: "20",
       });
       if (statusFilter !== "all") {
         params.set("status", statusFilter);
@@ -668,6 +685,133 @@ export default function AiStudioVideoHistoryClient() {
       ]
     : [];
 
+  const renderUserActions = (
+    record: VideoGeneration,
+    options?: { compact?: boolean; stopPropagation?: boolean },
+  ) => {
+    const compact = options?.compact ?? false;
+    const stopPropagation = options?.stopPropagation ?? false;
+    const visibilityDisabled =
+      !record.visibilityAvailable || updatingVisibilityId === record.id;
+
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          {compact ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label={t("columns.user_actions")}
+              onClick={(event) => {
+                if (stopPropagation) {
+                  event.stopPropagation();
+                }
+              }}
+            >
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              size="xs"
+              aria-label={t("columns.actions")}
+              onClick={(event) => {
+                if (stopPropagation) {
+                  event.stopPropagation();
+                }
+              }}
+            >
+              <Settings className="w-3 h-3" />
+              {t("columns.actions")}
+            </Button>
+          )}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align="end"
+          className="w-44"
+          onClick={(event) => {
+            if (stopPropagation) {
+              event.stopPropagation();
+            }
+          }}
+        >
+          <DropdownMenuItem
+            onClick={() =>
+              handleDownloadMedia(record.resultUrl, record.taskId, record.category)
+            }
+            disabled={!record.resultUrl}
+          >
+            <Download className="w-4 h-4" />
+            {t("download")}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={async () => {
+              if (!record.taskId) {
+                return;
+              }
+
+              await navigator.clipboard.writeText(record.taskId);
+              toast.success(t("task_id_copied"));
+            }}
+            disabled={!record.taskId}
+          >
+            <Copy className="w-4 h-4" />
+            {t("copy_task_id")}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => void handleCopyPrompt(record.prompt)}
+            disabled={!record.prompt}
+          >
+            <Copy className="w-4 h-4" />
+            {t("copy_prompt")}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => void handleCopyRequest(record.requestPayload)}
+            disabled={!record.requestPayload}
+          >
+            <Copy className="w-4 h-4" />
+            {t("copy_request")}
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => void handleToggleVisibility(record)}
+            disabled={visibilityDisabled}
+          >
+            {updatingVisibilityId === record.id ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : record.isPublic ? (
+              <EyeOff className="w-4 h-4" />
+            ) : (
+              <Eye className="w-4 h-4" />
+            )}
+            {record.isPublic ? t("make_private") : t("make_public")}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => handleRemix(record)}
+            disabled={!record.modelKey || !record.versionKey}
+          >
+            <WandSparkles className="w-4 h-4" />
+            {tLanding("form.remix")}
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => void handleDelete(record)}
+            disabled={deletingId === record.id}
+            variant="destructive"
+          >
+            {deletingId === record.id ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Trash2 className="w-4 h-4" />
+            )}
+            {t("delete")}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  };
+
   if (loading && records.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -745,6 +889,42 @@ export default function AiStudioVideoHistoryClient() {
               {status === "all" ? t("filter.all") : t(`status.${status}`)}
             </Button>
           ))}
+          <div className="inline-flex items-center overflow-hidden rounded-lg border bg-card">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className={cn(
+                "rounded-none border-r",
+                viewMode === "card" && "bg-muted text-foreground",
+              )}
+              onClick={() =>
+                updateQueryParams({
+                  view: "card",
+                })
+              }
+            >
+              <LayoutGrid className="h-4 w-4" />
+              {t("view.card")}
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className={cn(
+                "rounded-none",
+                viewMode === "list" && "bg-muted text-foreground",
+              )}
+              onClick={() =>
+                updateQueryParams({
+                  view: "list",
+                })
+              }
+            >
+              <List className="h-4 w-4" />
+              {t("view.list")}
+            </Button>
+          </div>
           <Button
             type="button"
             variant="outline"
@@ -764,11 +944,9 @@ export default function AiStudioVideoHistoryClient() {
           <ImageIcon className="w-12 h-12 mx-auto text-muted-foreground/40 mb-4" />
           <p className="text-muted-foreground">{t("empty")}</p>
         </div>
-      ) : (
+      ) : viewMode === "card" ? (
         <div className="mx-auto grid max-w-[120rem] grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 [@media(min-width:2200px)]:grid-cols-6">
           {records.map((record) => {
-            const visibilityDisabled =
-              !record.visibilityAvailable || updatingVisibilityId === record.id;
             const imageResultUrls =
               record.category === "image"
                 ? record.resultUrls.filter(
@@ -912,110 +1090,172 @@ export default function AiStudioVideoHistoryClient() {
                     <span className="shrink-0">
                       {formatCompactDateTime(record.createdAt)}
                     </span>
-
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="xs"
-                          aria-label={t("columns.actions")}
-                          onClick={(event) => event.stopPropagation()}
-                        >
-                          <Settings className="w-3 h-3" />
-                          {t("columns.actions")}
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="w-44"
-                        onClick={(event) => event.stopPropagation()}
-                      >
-                        <DropdownMenuItem
-                          onClick={() =>
-                            handleDownloadMedia(
-                              record.resultUrl,
-                              record.taskId,
-                              record.category,
-                            )
-                          }
-                          disabled={!record.resultUrl}
-                        >
-                          <Download className="w-4 h-4" />
-                          {t("download")}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={async () => {
-                            if (!record.taskId) {
-                              return;
-                            }
-
-                            await navigator.clipboard.writeText(record.taskId);
-                            toast.success(t("task_id_copied"));
-                          }}
-                          disabled={!record.taskId}
-                        >
-                          <Copy className="w-4 h-4" />
-                          {t("copy_task_id")}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => void handleCopyPrompt(record.prompt)}
-                          disabled={!record.prompt}
-                        >
-                          <Copy className="w-4 h-4" />
-                          {t("copy_prompt")}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() =>
-                            void handleCopyRequest(record.requestPayload)
-                          }
-                          disabled={!record.requestPayload}
-                        >
-                          <Copy className="w-4 h-4" />
-                          {t("copy_request")}
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          onClick={() => void handleToggleVisibility(record)}
-                          disabled={visibilityDisabled}
-                        >
-                          {updatingVisibilityId === record.id ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : record.isPublic ? (
-                            <EyeOff className="w-4 h-4" />
-                          ) : (
-                            <Eye className="w-4 h-4" />
-                          )}
-                          {record.isPublic
-                            ? t("make_private")
-                            : t("make_public")}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handleRemix(record)}
-                          disabled={!record.modelKey || !record.versionKey}
-                        >
-                          <WandSparkles className="w-4 h-4" />
-                          {tLanding("form.remix")}
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          onClick={() => void handleDelete(record)}
-                          disabled={deletingId === record.id}
-                          variant="destructive"
-                        >
-                          {deletingId === record.id ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : (
-                            <Trash2 className="w-4 h-4" />
-                          )}
-                          {t("delete")}
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    {renderUserActions(record, { stopPropagation: true })}
                   </div>
                 </div>
               </div>
             );
           })}
+        </div>
+      ) : (
+        <div className="rounded-xl border overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t("columns.task")}</TableHead>
+                <TableHead className="w-[300px] min-w-[300px] max-w-[300px]">
+                  {t("columns.model")}
+                </TableHead>
+                <TableHead>{t("columns.preview")}</TableHead>
+                <TableHead>{t("columns.status")}</TableHead>
+                <TableHead>{t("columns.credits")}</TableHead>
+                <TableHead>{t("columns.createdAt")}</TableHead>
+                <TableHead>{t("columns.user_actions")}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {records.map((record) => {
+                const imageResultUrls =
+                  record.category === "image"
+                    ? record.resultUrls.filter(
+                        (url) => typeof url === "string" && url.length > 0,
+                      )
+                    : [];
+
+                return (
+                  <TableRow
+                    key={record.id}
+                    className="cursor-pointer"
+                    onClick={() => setSelectedRecord(record)}
+                  >
+                    <TableCell className="align-top">
+                      <div className="space-y-1 font-mono text-xs">
+                        <div>{record.taskId || "-"}</div>
+                        <div className="text-muted-foreground">
+                          {record.providerTaskId || "-"}
+                        </div>
+                        <div className="flex items-center gap-2 font-sans">
+                          <button
+                            type="button"
+                            className="text-xs text-primary hover:underline underline-offset-4"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              setSelectedRecord(record);
+                            }}
+                          >
+                            Request
+                          </button>
+                          <button
+                            type="button"
+                            className="text-xs text-primary hover:underline underline-offset-4"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              setSelectedRecord(record);
+                            }}
+                          >
+                            Response
+                          </button>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="align-top w-[300px] min-w-[300px] max-w-[300px]">
+                      <div className="space-y-1">
+                        <div className="font-medium">
+                          {record.modelLabel || formatModelName(record.model)}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {getTaskParamsLine(record)}
+                        </div>
+                        {record.prompt ? (
+                          <div className="line-clamp-2 max-w-[420px] text-xs text-muted-foreground">
+                            {record.prompt}
+                          </div>
+                        ) : null}
+                      </div>
+                    </TableCell>
+                    <TableCell className="align-top">
+                      {record.status === "success" ? (
+                        record.category === "image" ? (
+                          imageResultUrls.length > 0 ? (
+                            <div className="relative h-12 w-20 overflow-hidden rounded-md border bg-muted">
+                              <img
+                                src={imageResultUrls[0]}
+                                alt={
+                                  record.prompt ||
+                                  record.modelLabel ||
+                                  formatModelName(record.model)
+                                }
+                                className="h-full w-full object-cover"
+                              />
+                              {imageResultUrls.length > 1 ? (
+                                <div className="absolute right-1 top-1 rounded bg-black/60 px-1 text-[10px] text-white">
+                                  +{imageResultUrls.length - 1}
+                                </div>
+                              ) : null}
+                            </div>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">-</span>
+                          )
+                        ) : record.resultUrl ? (
+                          <video
+                            src={record.resultUrl}
+                            className="h-12 w-20 rounded-md border object-cover"
+                            muted
+                            playsInline
+                            preload="metadata"
+                          />
+                        ) : (
+                          <span className="text-xs text-muted-foreground">-</span>
+                        )
+                      ) : record.status === "pending" ? (
+                        <Loader2 className="h-4 w-4 animate-spin text-amber-500" />
+                      ) : (
+                        <span className="text-xs text-muted-foreground">-</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="align-top">
+                      <div className="flex flex-col gap-1">
+                        {getStatusBadge(
+                          record.status,
+                          record.creditsRefunded,
+                          record.category,
+                        )}
+                        <Badge variant="secondary">
+                          {record.isPublic
+                            ? tLanding("form.public")
+                            : tLanding("form.private")}
+                        </Badge>
+                      </div>
+                    </TableCell>
+                    <TableCell className="align-top text-sm font-medium">
+                      {record.creditsRequired ?? record.creditsUsed}
+                    </TableCell>
+                    <TableCell className="align-top text-sm text-muted-foreground">
+                      <div>
+                        {t("columns.generatedAt")}:{" "}
+                        {formatCompactDateTime(record.createdAt)}
+                      </div>
+                      <div>
+                        {t("columns.completedAt")}:{" "}
+                        {record.completedAt
+                          ? formatCompactDateTime(record.completedAt)
+                          : "-"}
+                      </div>
+                    </TableCell>
+                    <TableCell
+                      className="align-top"
+                      onClick={(event) => event.stopPropagation()}
+                    >
+                      {renderUserActions(record, {
+                        compact: true,
+                        stopPropagation: true,
+                      })}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
         </div>
       )}
 

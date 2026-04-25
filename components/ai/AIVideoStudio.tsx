@@ -13,9 +13,13 @@ import {
 } from "@/components/ui/accordion";
 import {
   AI_VIDEO_STUDIO_FAMILIES,
+  canUseAiVideoStudioModelForMembership,
+  getAiVideoStudioLevelLabel,
+  getAiVideoStudioLevelLimit,
   getAiVideoStudioSelectionFromModelId,
   getAiVideoStudioVersions,
   type AiVideoStudioFamilyKey,
+  type AiVideoStudioLevelLimit,
   type AiVideoStudioVersionKey,
   resolveAiVideoStudioModelId,
 } from "@/config/ai-video-studio";
@@ -119,6 +123,16 @@ type HistoryResponse = {
       createdAt: string;
       requestPayload: Record<string, any>;
     }>;
+  };
+  error?: string;
+};
+
+type UserProfileResponse = {
+  success: boolean;
+  data?: {
+    membership?: {
+      level?: AiVideoStudioLevelLimit | null;
+    };
   };
   error?: string;
 };
@@ -591,6 +605,8 @@ export default function AIVideoStudio({
   const [selectedPreview, setSelectedPreview] =
     useState<AIVideoStudioPreview | null>(null);
   const [hasClientMounted, setHasClientMounted] = useState(false);
+  const [membershipLevel, setMembershipLevel] =
+    useState<AiVideoStudioLevelLimit>("none");
 
   const availableFamilies = AI_VIDEO_STUDIO_FAMILIES;
   const availableVersions = useMemo(
@@ -614,10 +630,55 @@ export default function AIVideoStudio({
         : null,
     [selectedFamilyKey, selectedVersionKey, selectedVersion],
   );
+  const selectedVersionLevelLimit = useMemo(
+    () => getAiVideoStudioLevelLimit(selectedVersion?.levelLimit),
+    [selectedVersion],
+  );
 
   useEffect(() => {
     setHasClientMounted(true);
   }, []);
+
+  useEffect(() => {
+    const userId = session?.user?.id;
+    if (!userId) {
+      setMembershipLevel("none");
+      return;
+    }
+
+    let mounted = true;
+
+    async function loadMembershipLevel() {
+      try {
+        const response = await fetch("/api/auth/user");
+        const json = (await response.json()) as UserProfileResponse;
+        if (!response.ok || !json.success) {
+          if (mounted) {
+            setMembershipLevel("none");
+          }
+          return;
+        }
+
+        if (!mounted) {
+          return;
+        }
+
+        setMembershipLevel(
+          getAiVideoStudioLevelLimit(json.data?.membership?.level),
+        );
+      } catch {
+        if (mounted) {
+          setMembershipLevel("none");
+        }
+      }
+    }
+
+    void loadMembershipLevel();
+
+    return () => {
+      mounted = false;
+    };
+  }, [session?.user?.id]);
 
   useEffect(() => {
     if (availableVersions.length === 0) {
@@ -1176,6 +1237,19 @@ export default function AIVideoStudio({
       return;
     }
 
+    if (
+      !canUseAiVideoStudioModelForMembership({
+        currentLevel: membershipLevel,
+        requiredLevel: selectedVersionLevelLimit,
+      })
+    ) {
+      const requiredLevel =
+        getAiVideoStudioLevelLabel(selectedVersionLevelLimit) ??
+        selectedVersionLevelLimit.toUpperCase();
+      toast.error(t("form.membershipRequired", { level: requiredLevel }));
+      return;
+    }
+
     if (availableCredits !== null && availableCredits < estimatedCredits) {
       toast.error(t("form.insufficientCredits"));
       return;
@@ -1317,6 +1391,8 @@ export default function AIVideoStudio({
     selectedFamilyKey,
     selectedPricing,
     selectedVersionKey,
+    membershipLevel,
+    selectedVersionLevelLimit,
     session,
     t,
     updateGenerationTask,
@@ -1448,6 +1524,7 @@ export default function AIVideoStudio({
       availableVersions.map((version) => ({
         id: version.key,
         name: version.label,
+        levelLimit: getAiVideoStudioLevelLimit(version.levelLimit),
       })),
     [availableVersions],
   );

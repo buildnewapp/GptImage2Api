@@ -6,7 +6,11 @@
     "status": "状态",
     "credits": "积分",
     "createdAt": "创建时间",
-    "actions": "操作"
+    "actions": "操作",
+    "preview": "预览",
+    "task": "任务",
+    "user_actions": "用户操作",
+    "usedCredits": "实际积分"
   },
   "status": {
     "pending": "生成中",
@@ -83,5 +87,9 @@
   "media": {
     "text_to_image": "文生图",
     "image_to_image": "图生图"
+  },
+  "view": {
+    "card": "卡片",
+    "list": "列表"
   }
 }

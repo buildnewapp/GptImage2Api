@@ -30,6 +30,7 @@ export type AiStudioUserHistoryItem = {
   refundedCredits: number;
   resultUrls: string[];
   createdAt: string;
+  completedAt?: string | null;
   requestPayload: Record<string, any>;
   responsePayload: unknown | null;
 };
@@ -59,6 +60,7 @@ export type LegacyVideoHistoryRecord = {
   resultUrl: string | null;
   resultUrls: string[];
   createdAt: string;
+  completedAt?: string | null;
   requestPayload: Record<string, any>;
   responsePayload: unknown | null;
 };
@@ -273,6 +275,7 @@ export function mapAiStudioUserRecordToLegacyVideoHistoryRecord(
     resultUrl: record.resultUrls[0] ?? null,
     resultUrls: record.resultUrls,
     createdAt: record.createdAt,
+    completedAt: record.completedAt ?? null,
     requestPayload: record.requestPayload,
     responsePayload: record.responsePayload,
   };

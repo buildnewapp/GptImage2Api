@@ -1,5 +1,6 @@
 export type AiVideoStudioFamilyKey = string;
 export type AiVideoStudioVersionKey = string;
+export type AiVideoStudioLevelLimit = "none" | "standard" | "pro" | "max";
 
 export type AiVideoStudioTag = {
   text: string;
@@ -34,6 +35,7 @@ export type AiVideoStudioVersion = {
   familyKey: AiVideoStudioFamilyKey;
   modelId: string;
   aliases?: string[];
+  levelLimit?: AiVideoStudioLevelLimit;
 };
 
 export type AiVideoStudioModelOption = {
@@ -43,6 +45,15 @@ export type AiVideoStudioModelOption = {
   versionKey: AiVideoStudioVersionKey;
   versionLabel: string;
   label: string;
+  levelLimit: AiVideoStudioLevelLimit;
+  levelLimitLabel: string | null;
+};
+
+const AI_VIDEO_STUDIO_LEVEL_LIMIT_RANK: Record<AiVideoStudioLevelLimit, number> = {
+  none: 0,
+  standard: 1,
+  pro: 2,
+  max: 3,
 };
 
 export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
@@ -174,6 +185,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "Sora 2 Pro Storyboard",
         familyKey: "sora2",
         modelId: "video:sora2-pro-storyboard",
+        levelLimit: "pro",
       },
     ],
   },
@@ -630,6 +642,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "Wan 2.7 Image",
         familyKey: "wan-image",
         modelId: "image:wan-2-7-image",
+        levelLimit: "pro",
       },
       {
         key: "wan-2.7-image-pro",
@@ -662,6 +675,31 @@ export function getAiVideoStudioSelectionFromModelId(modelId: string) {
 export const resolveAiVideoStudioSelectionFromModelId =
   getAiVideoStudioSelectionFromModelId;
 
+export function getAiVideoStudioLevelLimit(
+  levelLimit?: AiVideoStudioLevelLimit | null,
+): AiVideoStudioLevelLimit {
+  return levelLimit ?? "none";
+}
+
+export function getAiVideoStudioLevelLabel(
+  levelLimit?: AiVideoStudioLevelLimit | null,
+) {
+  const normalized = getAiVideoStudioLevelLimit(levelLimit);
+  return normalized === "none" ? null : normalized.toUpperCase();
+}
+
+export function canUseAiVideoStudioModelForMembership(input: {
+  currentLevel?: AiVideoStudioLevelLimit | null;
+  requiredLevel?: AiVideoStudioLevelLimit | null;
+}) {
+  const current = getAiVideoStudioLevelLimit(input.currentLevel);
+  const required = getAiVideoStudioLevelLimit(input.requiredLevel);
+  return (
+    AI_VIDEO_STUDIO_LEVEL_LIMIT_RANK[current] >=
+    AI_VIDEO_STUDIO_LEVEL_LIMIT_RANK[required]
+  );
+}
+
 export function getAiVideoStudioVersions(
   familyKey: AiVideoStudioFamilyKey,
 ) {
@@ -680,13 +718,20 @@ export function listAiVideoStudioModelOptions(): AiVideoStudioModelOption[] {
     }
 
     for (const version of getAiVideoStudioVersions(family.key)) {
+      const levelLimit = getAiVideoStudioLevelLimit(version.levelLimit);
+      const levelLimitLabel = getAiVideoStudioLevelLabel(levelLimit);
+
       options.push({
         familyKey: family.key,
         familyLabel: family.label,
         value: `${family.key}::${version.key}`,
         versionKey: version.key,
         versionLabel: version.label,
-        label: version.label,
+        label: levelLimitLabel
+          ? `${version.label} (${levelLimitLabel})`
+          : version.label,
+        levelLimit,
+        levelLimitLabel,
       });
     }
   }
@@ -703,4 +748,17 @@ export function resolveAiVideoStudioModelId(input: {
   );
 
   return version?.modelId ?? null;
+}
+
+export function resolveAiVideoStudioLevelLimitFromModelId(modelId: string) {
+  const selection = getAiVideoStudioSelectionFromModelId(modelId);
+  if (!selection) {
+    return "none";
+  }
+
+  const version = getAiVideoStudioVersions(selection.familyKey).find(
+    (item) => item.key === selection.versionKey,
+  );
+
+  return getAiVideoStudioLevelLimit(version?.levelLimit);
 }

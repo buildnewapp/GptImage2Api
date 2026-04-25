@@ -6,7 +6,11 @@
     "status": "ステータス",
     "credits": "クレジット",
     "createdAt": "作成日時",
-    "actions": "操作"
+    "actions": "操作",
+    "preview": "プレビュー",
+    "task": "タスク",
+    "user_actions": "ユーザー操作",
+    "usedCredits": "使用クレジット"
   },
   "status": {
     "pending": "処理中",
@@ -53,5 +57,9 @@
   "media": {
     "text_to_image": "テキストから画像",
     "image_to_image": "画像から画像"
+  },
+  "view": {
+    "card": "カード",
+    "list": "リスト"
   }
 }
