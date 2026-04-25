@@ -131,7 +131,10 @@ export default function HeaderShell({
 
         <div className="flex items-center gap-2">
           <div className="hidden items-center gap-2 lg:flex">
-            <VideoLocaleSwitcher overlay={overlay} />
+            <VideoLocaleSwitcher
+              overlay={overlay}
+              triggerId="video-header-locale-switcher-trigger"
+            />
             <ThemeToggle overlay={overlay} />
             {user && typeof totalAvailableCredits === "number" ? (
               <I18nLink
@@ -150,6 +153,7 @@ export default function HeaderShell({
               avatarClassName={avatarClassName}
               loginButtonClassName={accountButtonClassName}
               triggerClassName={avatarTriggerClassName}
+              triggerId="video-header-user-menu-trigger"
             />
             <I18nLink
               href="/dashboard/generate"

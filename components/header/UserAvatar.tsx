@@ -20,12 +20,14 @@ export function UserAvatar({
   avatarClassName,
   loginButtonClassName,
   triggerClassName,
+  triggerId,
 }: {
   user: User;
   totalAvailableCredits?: number | null;
   avatarClassName?: string;
   loginButtonClassName?: string;
   triggerClassName?: string;
+  triggerId?: string;
 }) {
   if (!user) {
     return <LoginButton className={loginButtonClassName} />;
@@ -38,6 +40,7 @@ export function UserAvatar({
       <DropdownMenuTrigger asChild>
         <button
           type="button"
+          id={triggerId}
           aria-label="Open user menu"
           className={cn(
             triggerClassName
