@@ -14,6 +14,8 @@ export type RequestUser = {
   id: string;
   email: string;
   role: string;
+  name: string | null;
+  image: string | null;
   authType: "session" | "apikey" | "client_token";
 };
 
@@ -29,6 +31,8 @@ export async function getRequestUser(
             id: userSchema.id,
             email: userSchema.email,
             role: userSchema.role,
+            name: userSchema.name,
+            image: userSchema.image,
             banned: userSchema.banned,
           })
           .from(apikeysSchema)
@@ -53,6 +57,8 @@ export async function getRequestUser(
         id: matchedUser.id,
         email: matchedUser.email,
         role: matchedUser.role,
+        name: matchedUser.name ?? null,
+        image: matchedUser.image ?? null,
         authType: "apikey",
       };
     }
@@ -79,6 +85,8 @@ export async function getRequestUser(
         id: userSchema.id,
         email: userSchema.email,
         role: userSchema.role,
+        name: userSchema.name,
+        image: userSchema.image,
         banned: userSchema.banned,
       })
       .from(userSchema)
@@ -94,6 +102,8 @@ export async function getRequestUser(
       id: matchedUser.id,
       email: matchedUser.email,
       role: matchedUser.role,
+      name: matchedUser.name ?? null,
+      image: matchedUser.image ?? null,
       authType: "client_token",
     };
   }
@@ -106,10 +116,18 @@ export async function getRequestUser(
     return null;
   }
 
+  const sessionUser = session.user as unknown as {
+    role?: string;
+    name?: string | null;
+    image?: string | null;
+  };
+
   return {
     id: session.user.id,
     email: session.user.email,
-    role:  (session.user as unknown as { role: string }).role ?? "user",
+    role: sessionUser.role ?? "user",
+    name: sessionUser.name ?? null,
+    image: sessionUser.image ?? null,
     authType: "session",
   };
 }
