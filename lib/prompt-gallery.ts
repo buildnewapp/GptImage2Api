@@ -44,11 +44,18 @@ export function mapPromptGalleryItem(row: PromptGalleryRow): PromptGalleryItem {
   };
 }
 
-export async function getPublicPromptGalleryItems() {
+export async function getPublicPromptGalleryItems(language?: string) {
+  const conditions = [eq(promptGalleryItems.status, "online")];
+  const normalizedLanguage = language?.trim();
+
+  if (normalizedLanguage) {
+    conditions.push(eq(promptGalleryItems.language, normalizedLanguage));
+  }
+
   const rows = await getDb()
     .select()
     .from(promptGalleryItems)
-    .where(eq(promptGalleryItems.status, "online"))
+    .where(and(...conditions))
     .orderBy(
       desc(promptGalleryItems.featured),
       asc(promptGalleryItems.sort),

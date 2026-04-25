@@ -13,7 +13,7 @@ export async function generateMetadata({
   params: Params;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "Showcase" });
+  const t = await getTranslations({ locale, namespace: "Prompts" });
 
   return constructMetadata({
     title: t("list.title"),
@@ -23,8 +23,9 @@ export async function generateMetadata({
   });
 }
 
-export default async function Prompts() {
-  const items = await getPublicPromptGalleryItems();
+export default async function Prompts({ params }: { params: Params }) {
+  const { locale } = await params;
+  const items = await getPublicPromptGalleryItems(locale);
 
   return <PromptsPage items={items} />;
 }

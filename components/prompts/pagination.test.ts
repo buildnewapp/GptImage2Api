@@ -1,13 +1,21 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import type { PromptCategory } from "@/components/prompts/promptsData";
 import {
   PROMPTS_CATEGORY_BATCH_SIZE,
   getNextVisibleCategoryCount,
   getVisiblePromptCategories,
   shouldShowLoadMoreCategories,
 } from "@/components/prompts/pagination";
+
+type PromptCategory = {
+  id: string;
+  title: string;
+  titleEn: string;
+  description: string;
+  gradient: string;
+  cases: unknown[];
+};
 
 const categories: PromptCategory[] = [
   {

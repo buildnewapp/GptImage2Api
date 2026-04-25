@@ -30,7 +30,7 @@ import {
   resolveMediaUrl,
 } from "./promptGalleryUi";
 
-const PAGE_SIZE = 40;
+const PAGE_SIZE = 16;
 
 function parsePositiveInt(value: string | null, fallback: number) {
   const parsed = Number(value);
@@ -411,6 +411,8 @@ function PromptDetailModal({
 
           <DetailPreview item={item} />
 
+          <PromptResultsBlock title={labels.results} items={item.results} />
+
           <div className="rounded-[1.4rem] border border-slate-200/80 bg-white/75 p-4 dark:border-white/10 dark:bg-white/[0.04]">
             <div className="mb-3 flex items-center justify-between gap-3">
               <div className="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-100">
@@ -434,7 +436,6 @@ function PromptDetailModal({
           <PromptMediaBlock title={labels.inputImages} items={item.inputImages} type="image" />
           <PromptMediaBlock title={labels.inputVideos} items={item.inputVideos} type="video" />
           <PromptMediaBlock title={labels.inputAudios} items={item.inputAudios} type="audio" />
-          <PromptResultsBlock title={labels.results} items={item.results} />
 
           {item.note ? (
             <div className="rounded-[1.25rem] border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-7 text-amber-800 dark:border-amber-400/20 dark:bg-amber-500/10 dark:text-amber-100">
@@ -448,8 +449,8 @@ function PromptDetailModal({
 }
 
 export default function PromptsPage({ items }: { items: PromptGalleryItem[] }) {
-  const tShowcase = useTranslations("Showcase");
-  const tPrompts = useTranslations("Showcase.prompts");
+  const tPromptsPage = useTranslations("Prompts");
+  const tPrompts = useTranslations("Prompts.prompts");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -629,24 +630,24 @@ export default function PromptsPage({ items }: { items: PromptGalleryItem[] }) {
           <div className="max-w-4xl">
             <div className={sectionKickerClass}>
               <Sparkles className="h-3.5 w-3.5 text-[hsl(var(--primary))]" />
-              {tShowcase("list.eyebrow")}
+              {tPromptsPage("list.eyebrow")}
             </div>
             <h1
               className={`${displayTitleClass} mt-4 text-[clamp(2rem,9vw,3.8rem)] leading-[1.02] text-slate-950 dark:text-white`}
             >
-              {tShowcase("list.title")}
+              {tPromptsPage("list.title")}
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300 sm:text-base">
-              {tShowcase("list.description")}
+              {tPromptsPage("list.description")}
             </p>
           </div>
         </div>
       </section>
 
-      <section className="sticky top-[80px] z-30 border-y border-slate-200/70 bg-[color-mix(in_srgb,hsl(var(--background))_82%,white_18%)]/85 backdrop-blur-2xl dark:border-white/10 dark:bg-[color-mix(in_srgb,hsl(var(--background))_86%,black_14%)]/82">
+      <section className="sticky top-20 z-30 border-y border-slate-200/70 bg-[color-mix(in_srgb,hsl(var(--background))_82%,white_18%)]/85 backdrop-blur-2xl dark:border-white/10 dark:bg-[color-mix(in_srgb,hsl(var(--background))_86%,black_14%)]/82">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 px-3 py-3 sm:px-6 lg:px-8">
           <div
-            className="flex items-center gap-1 overflow-x-scroll pb-1 whitespace-nowrap touch-pan-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="flex flex-wrap items-center gap-2 pb-1 touch-pan-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-x" }}
           >
             <button
@@ -711,7 +712,7 @@ export default function PromptsPage({ items }: { items: PromptGalleryItem[] }) {
           {filteredItems.length === 0 ? (
             <div className="rounded-[calc(var(--radius)+0.7rem)] border border-dashed border-slate-300 bg-white/70 px-6 py-12 text-center dark:border-white/10 dark:bg-white/[0.03]">
               <h2 className="text-2xl font-semibold text-slate-950 dark:text-white">
-                {tShowcase("list.empty")}
+                {tPromptsPage("list.empty")}
               </h2>
               <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
                 {tPrompts("emptyDescription")}
@@ -726,8 +727,8 @@ export default function PromptsPage({ items }: { items: PromptGalleryItem[] }) {
                     item={item}
                     copied={copiedId === item.id}
                     labels={{
-                      viewDetails: tShowcase("list.viewDetails"),
-                      prompt: tShowcase("detail.prompt"),
+                      viewDetails: tPromptsPage("list.viewDetails"),
+                      prompt: tPromptsPage("detail.prompt"),
                       copy: tPrompts("copy"),
                       copied: tPrompts("copied"),
                       noPrompt: tPrompts("noPrompt"),
@@ -753,7 +754,7 @@ export default function PromptsPage({ items }: { items: PromptGalleryItem[] }) {
                   </button>
 
                   <span className="px-3 text-sm text-slate-600 dark:text-slate-300">
-                    {tShowcase("list.pageLabel", { page: currentPage, totalPages })}
+                    {tPromptsPage("list.pageLabel", { page: currentPage, totalPages })}
                   </span>
 
                   <button
@@ -777,15 +778,15 @@ export default function PromptsPage({ items }: { items: PromptGalleryItem[] }) {
           item={activeItem}
           copied={copiedId === activeItem.id}
           labels={{
-            prompt: tShowcase("detail.prompt"),
+            prompt: tPromptsPage("detail.prompt"),
             copy: tPrompts("copy"),
             copied: tPrompts("copied"),
             noPrompt: tPrompts("noPrompt"),
-            inputImages: tShowcase("detail.referenceImages"),
-            inputVideos: tShowcase("detail.referenceVideos"),
+            inputImages: tPromptsPage("detail.referenceImages"),
+            inputVideos: tPromptsPage("detail.referenceVideos"),
             inputAudios: tPrompts("inputAudios"),
-            results: tShowcase("detail.result"),
-            model: tShowcase("detail.model"),
+            results: tPromptsPage("detail.result"),
+            model: tPromptsPage("detail.model"),
             language: tPrompts("language"),
             author: tPrompts("author"),
             unknownAuthor: tPrompts("unknownAuthor"),

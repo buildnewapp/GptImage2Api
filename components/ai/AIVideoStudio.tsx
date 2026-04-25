@@ -66,7 +66,6 @@ import {
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import HeroPromptCarousel from "@/components/home/seedance/HeroPromptCarousel";
 import {
   ModelSelector,
   type ModelSelectorItem,
@@ -2081,12 +2080,15 @@ export default function AIVideoStudio({
               </div>
             </div>
           ) : (
-            <div className="w-full min-w-0 overflow-hidden">
-              <HeroPromptCarousel
-                onPlayVideo={(url) =>
-                  setSelectedPreview({ kind: "video", url })
-                }
-              />
+            <div className="flex h-full min-h-[420px] w-full min-w-0 items-center justify-center rounded-xl border border-border/50 bg-muted/10 p-6">
+              <div className="flex max-w-md flex-col items-center gap-3 text-center">
+                <div className="flex size-14 items-center justify-center rounded-2xl border border-border/60 bg-background/70">
+                  <Sparkles className="size-7 text-muted-foreground" />
+                </div>
+                <div className="text-base font-semibold text-foreground">
+                  {t("form.historyHint")}
+                </div>
+              </div>
             </div>
           )}
         </div>
