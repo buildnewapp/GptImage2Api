@@ -2,15 +2,19 @@
   "title": "我的作品",
   "description": "查看图片和视频生成历史及结果",
   "columns": {
+    "id": "ID",
     "model": "模型",
     "status": "状态",
     "credits": "积分",
     "createdAt": "创建时间",
+    "duration": "时长",
     "actions": "操作",
     "preview": "预览",
-    "task": "任务",
+    "task": "任务 ID",
     "user_actions": "用户操作",
-    "usedCredits": "实际积分"
+    "usedCredits": "实际积分",
+    "generatedAt": "生成时间",
+    "completedAt": "完成时间"
   },
   "status": {
     "pending": "生成中",
@@ -51,9 +55,18 @@
   },
   "copy_task_id": "复制任务 ID",
   "task_id_copied": "任务 ID 已复制",
+  "copy_id": "复制 ID",
+  "id_copied": "ID 已复制",
   "copy_request": "复制请求",
+  "copy_response": "复制响应",
   "request_copied": "请求已复制",
   "request_copy_failed": "复制请求失败",
+  "response_copied": "响应已复制",
+  "response_copy_failed": "复制响应失败",
+  "copy_failed": "复制失败",
+  "failure_reason": "失败原因",
+  "view_reason": "查看原因",
+  "unknown_failure_reason": "未知失败原因",
   "detail": {
     "close": "关闭详情",
     "preview": "结果预览",
@@ -70,6 +83,7 @@
       "video": "视频"
     },
     "fields": {
+      "id": "ID",
       "status": "状态",
       "category": "类型",
       "model": "模型",
@@ -80,6 +94,8 @@
       "credits": "预扣积分",
       "used_credits": "实际积分",
       "created_at": "创建时间",
+      "completed_at": "结束时间",
+      "duration": "时长",
       "mode": "生成方式",
       "prompt": "Prompt"
     }

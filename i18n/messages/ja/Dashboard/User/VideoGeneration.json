@@ -2,15 +2,19 @@
   "title": "マイ作品",
   "description": "画像と動画の生成履歴と結果を確認",
   "columns": {
+    "id": "ID",
     "model": "モデル",
     "status": "ステータス",
     "credits": "クレジット",
     "createdAt": "作成日時",
+    "duration": "所要時間",
     "actions": "操作",
     "preview": "プレビュー",
-    "task": "タスク",
+    "task": "タスク ID",
     "user_actions": "ユーザー操作",
-    "usedCredits": "使用クレジット"
+    "usedCredits": "使用クレジット",
+    "generatedAt": "生成時間",
+    "completedAt": "完了時間"
   },
   "status": {
     "pending": "処理中",
@@ -51,9 +55,51 @@
   },
   "copy_task_id": "タスク ID をコピー",
   "task_id_copied": "タスク ID をコピーしました",
+  "copy_id": "ID をコピー",
+  "id_copied": "ID をコピーしました",
   "copy_request": "リクエストをコピー",
+  "copy_response": "レスポンスをコピー",
   "request_copied": "リクエストをコピーしました",
   "request_copy_failed": "リクエストのコピーに失敗しました",
+  "response_copied": "レスポンスをコピーしました",
+  "response_copy_failed": "レスポンスのコピーに失敗しました",
+  "copy_failed": "コピーに失敗しました",
+  "failure_reason": "失敗理由",
+  "view_reason": "理由を表示",
+  "unknown_failure_reason": "不明な失敗理由",
+  "detail": {
+    "close": "詳細を閉じる",
+    "preview": "プレビュー",
+    "basic_info": "基本情報",
+    "request": "Request",
+    "response": "Response",
+    "empty_result": "現在プレビュー可能な結果はありません。",
+    "empty_response": "現在利用可能なレスポンスデータはありません。",
+    "uploaded_images": "アップロード画像",
+    "input_videos": "入力動画",
+    "result_urls": "結果リンク",
+    "category": {
+      "image": "画像",
+      "video": "動画"
+    },
+    "fields": {
+      "id": "ID",
+      "status": "ステータス",
+      "category": "種類",
+      "model": "モデル",
+      "catalog_model": "モデル ID",
+      "task_id": "タスク ID",
+      "provider_task_id": "プロバイダータスク ID",
+      "visibility": "公開範囲",
+      "credits": "予約クレジット",
+      "used_credits": "使用クレジット",
+      "created_at": "作成時間",
+      "completed_at": "終了時間",
+      "duration": "所要時間",
+      "mode": "生成方式",
+      "prompt": "Prompt"
+    }
+  },
   "media": {
     "text_to_image": "テキストから画像",
     "image_to_image": "画像から画像"

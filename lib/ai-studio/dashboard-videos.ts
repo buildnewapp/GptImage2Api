@@ -40,6 +40,7 @@ export type LegacyVideoHistoryRecord = {
   taskId: string;
   providerTaskId?: string | null;
   category: string;
+  provider?: string;
   catalogModelId?: string;
   model: string;
   modelLabel: string | null;
@@ -258,6 +259,7 @@ export function mapAiStudioUserRecordToLegacyVideoHistoryRecord(
     taskId,
     providerTaskId: record.providerTaskId,
     category,
+    provider: record.provider,
     catalogModelId: record.catalogModelId,
     model,
     modelLabel: record.title,

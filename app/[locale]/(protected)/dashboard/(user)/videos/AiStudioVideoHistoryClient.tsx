@@ -11,6 +11,12 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -110,6 +116,8 @@ function parsePage(value: string | null) {
   return Number.isFinite(parsed) && parsed >= 1 ? Math.floor(parsed) : 1;
 }
 
+const AI_STUDIO_HISTORY_VIEW_MODE_STORAGE_KEY = "ai-studio-history-view-mode";
+
 export default function AiStudioVideoHistoryClient() {
   const t = useTranslations("VideoGeneration");
   const tLanding = useTranslations("Landing.Hero");
@@ -124,6 +132,10 @@ export default function AiStudioVideoHistoryClient() {
   const [selectedRecord, setSelectedRecord] = useState<VideoGeneration | null>(
     null,
   );
+  const [selectedPayload, setSelectedPayload] = useState<{
+    title: string;
+    value: unknown;
+  } | null>(null);
   const [updatingVisibilityId, setUpdatingVisibilityId] = useState<
     string | null
   >(null);
@@ -137,13 +149,55 @@ export default function AiStudioVideoHistoryClient() {
       ? rawStatusFilter
       : "all";
   const searchQuery = searchParams.get("q")?.trim() ?? "";
-  const viewMode = searchParams.get("view") === "list" ? "list" : "card";
+  const viewParam = searchParams.get("view");
+  const viewMode = viewParam === "list" ? "list" : "card";
   const [searchInput, setSearchInput] = useState(searchQuery);
   const paginationItems = buildPaginationItems(page, totalPages);
 
   useEffect(() => {
     setSearchInput(searchQuery);
   }, [searchQuery]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if (viewParam === "list" || viewParam === "card") {
+      try {
+        window.localStorage.setItem(AI_STUDIO_HISTORY_VIEW_MODE_STORAGE_KEY, viewMode);
+      } catch {
+        // ignore storage failure
+      }
+      return;
+    }
+
+    let storedMode: string | null = null;
+    try {
+      storedMode = window.localStorage.getItem(AI_STUDIO_HISTORY_VIEW_MODE_STORAGE_KEY);
+    } catch {
+      return;
+    }
+
+    if (storedMode !== "list" && storedMode !== "card") {
+      return;
+    }
+
+    const params = new URLSearchParams(searchParams.toString());
+    if (storedMode === "card") {
+      params.delete("view");
+    } else {
+      params.set("view", storedMode);
+    }
+    const nextQuery = params.toString();
+    const currentQuery = searchParams.toString();
+    if (nextQuery === currentQuery) {
+      return;
+    }
+    router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, {
+      scroll: false,
+    });
+  }, [pathname, router, searchParams, viewMode, viewParam]);
 
   const updateQueryParams = useCallback(
     (updates: { page?: number; status?: string; q?: string; view?: string }) => {
@@ -180,6 +234,14 @@ export default function AiStudioVideoHistoryClient() {
     },
     [pathname, router, searchParams],
   );
+
+  const persistViewMode = useCallback((mode: "card" | "list") => {
+    try {
+      window.localStorage.setItem(AI_STUDIO_HISTORY_VIEW_MODE_STORAGE_KEY, mode);
+    } catch {
+      // ignore storage failure
+    }
+  }, []);
 
   const fetchHistory = useCallback(async () => {
     setLoading(true);
@@ -377,6 +439,29 @@ export default function AiStudioVideoHistoryClient() {
     [tLanding],
   );
 
+  const copyText = useCallback(
+    async (value: string, successMessage: string) => {
+      try {
+        await navigator.clipboard.writeText(value);
+        toast.success(successMessage);
+      } catch {
+        toast.error(t("copy_failed"));
+      }
+    },
+    [t],
+  );
+
+  const handleCopyTaskId = useCallback(
+    async (taskId: string | null | undefined) => {
+      if (!taskId) {
+        return;
+      }
+
+      await copyText(taskId, t("task_id_copied"));
+    },
+    [copyText, t],
+  );
+
   const handleCopyRequest = useCallback(
     async (requestPayload: unknown) => {
       if (!requestPayload) {
@@ -394,13 +479,36 @@ export default function AiStudioVideoHistoryClient() {
           return;
         }
 
-        await navigator.clipboard.writeText(serialized);
-        toast.success(t("request_copied"));
+        await copyText(serialized, t("request_copied"));
       } catch {
         toast.error(t("request_copy_failed"));
       }
     },
-    [t],
+    [copyText, t],
+  );
+
+  const handleCopyResponse = useCallback(
+    async (responsePayload: unknown) => {
+      if (responsePayload == null) {
+        return;
+      }
+
+      try {
+        const serialized =
+          typeof responsePayload === "string"
+            ? responsePayload
+            : JSON.stringify(responsePayload, null, 2);
+
+        if (!serialized) {
+          return;
+        }
+
+        await copyText(serialized, t("response_copied"));
+      } catch {
+        toast.error(t("response_copy_failed"));
+      }
+    },
+    [copyText, t],
   );
 
   const handleRemix = useCallback(
@@ -620,13 +728,115 @@ export default function AiStudioVideoHistoryClient() {
     }
   }, []);
 
-  const detailFields = selectedRecord
+  const formatTableDateTime = useCallback((value: string | Date | null | undefined) => {
+    if (!value) {
+      return "-";
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return "-";
+    }
+
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hour = String(date.getHours()).padStart(2, "0");
+    const minute = String(date.getMinutes()).padStart(2, "0");
+    const second = String(date.getSeconds()).padStart(2, "0");
+    return `${year}/${month}/${day} ${hour}:${minute}:${second}`;
+  }, []);
+
+  const getDurationSeconds = useCallback((record: VideoGeneration) => {
+    if (!record.completedAt) {
+      return null;
+    }
+
+    const createdAt = new Date(record.createdAt);
+    const completedAt = new Date(record.completedAt);
+    if (
+      Number.isNaN(createdAt.getTime()) ||
+      Number.isNaN(completedAt.getTime())
+    ) {
+      return null;
+    }
+
+    return Math.max(0, Math.round((completedAt.getTime() - createdAt.getTime()) / 1000));
+  }, []);
+
+  const getFailureReason = useCallback((record: VideoGeneration) => {
+    if (record.status !== "failed") {
+      return null;
+    }
+
+    const candidates: string[] = [];
+    const addCandidate = (value: unknown) => {
+      if (typeof value !== "string") {
+        return;
+      }
+
+      const nextValue = value.trim();
+      if (nextValue.length > 0) {
+        candidates.push(nextValue);
+      }
+    };
+
+    addCandidate(record.responsePayload);
+
+    if (
+      record.responsePayload &&
+      typeof record.responsePayload === "object" &&
+      !Array.isArray(record.responsePayload)
+    ) {
+      const payload = record.responsePayload as Record<string, unknown>;
+      addCandidate(payload.statusReason);
+      addCandidate(payload.reason);
+      addCandidate(payload.message);
+      addCandidate(payload.error);
+
+      if (
+        payload.error &&
+        typeof payload.error === "object" &&
+        !Array.isArray(payload.error)
+      ) {
+        const errorPayload = payload.error as Record<string, unknown>;
+        addCandidate(errorPayload.reason);
+        addCandidate(errorPayload.message);
+      }
+    }
+
+    return candidates[0] ?? t("unknown_failure_reason");
+  }, [t]);
+
+  const selectedDurationSeconds = selectedRecord
+    ? getDurationSeconds(selectedRecord)
+    : null;
+  const selectedFailureReason = selectedRecord
+    ? getFailureReason(selectedRecord)
+    : null;
+
+  const detailRows: Array<{
+    key: string;
+    label: string;
+    value: string;
+    copyValue?: string;
+    copySuccessMessage?: string;
+  }> = selectedRecord
     ? [
         {
+          key: "id",
+          label: t("detail.fields.id"),
+          value: selectedRecord.id,
+          copyValue: selectedRecord.id,
+          copySuccessMessage: t("id_copied"),
+        },
+        {
+          key: "status",
           label: t("detail.fields.status"),
           value: t(`status.${selectedRecord.status}`),
         },
         {
+          key: "category",
           label: t("detail.fields.category"),
           value:
             selectedRecord.category === "image"
@@ -634,6 +844,7 @@ export default function AiStudioVideoHistoryClient() {
               : t("detail.category.video"),
         },
         {
+          key: "model",
           label: t("detail.fields.model"),
           value:
             selectedRecord.modelLabel ||
@@ -641,46 +852,65 @@ export default function AiStudioVideoHistoryClient() {
             "-",
         },
         {
+          key: "catalog_model",
           label: t("detail.fields.catalog_model"),
           value: selectedRecord.catalogModelId || "-",
         },
         {
+          key: "task_id",
           label: t("detail.fields.task_id"),
           value: selectedRecord.taskId || "-",
+          copyValue: selectedRecord.taskId || undefined,
+          copySuccessMessage: t("task_id_copied"),
         },
         {
+          key: "provider_task_id",
           label: t("detail.fields.provider_task_id"),
           value: selectedRecord.providerTaskId || "-",
         },
         {
+          key: "visibility",
           label: t("detail.fields.visibility"),
           value: selectedRecord.isPublic
             ? tLanding("form.public")
             : tLanding("form.private"),
         },
         {
+          key: "credits",
           label: t("detail.fields.credits"),
           value: String(selectedRecord.creditsRequired ?? selectedRecord.creditsUsed),
         },
         {
+          key: "used_credits",
           label: t("detail.fields.used_credits"),
           value: String(selectedRecord.creditsUsed),
         },
         {
+          key: "created_at",
           label: t("detail.fields.created_at"),
           value: formatDetailDateTime(selectedRecord.createdAt),
         },
         {
+          key: "completed_at",
+          label: t("detail.fields.completed_at"),
+          value: selectedRecord.completedAt
+            ? formatDetailDateTime(selectedRecord.completedAt)
+            : "-",
+        },
+        {
+          key: "duration",
+          label: t("detail.fields.duration"),
+          value:
+            selectedDurationSeconds == null ? "-" : `${selectedDurationSeconds}s`,
+        },
+        {
+          key: "mode",
           label: t("detail.fields.mode"),
           value: selectedRecord.mode
             ? selectedRecord.mode === "image-to-video"
               ? tLanding("form.imageToVideo")
               : tLanding("form.textToVideo")
             : "-",
-        },
-        {
-          label: t("detail.fields.prompt"),
-          value: selectedRecord.prompt || "-",
         },
       ]
     : [];
@@ -747,12 +977,7 @@ export default function AiStudioVideoHistoryClient() {
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={async () => {
-              if (!record.taskId) {
-                return;
-              }
-
-              await navigator.clipboard.writeText(record.taskId);
-              toast.success(t("task_id_copied"));
+              await handleCopyTaskId(record.taskId);
             }}
             disabled={!record.taskId}
           >
@@ -898,11 +1123,12 @@ export default function AiStudioVideoHistoryClient() {
                 "rounded-none border-r",
                 viewMode === "card" && "bg-muted text-foreground",
               )}
-              onClick={() =>
+              onClick={() => {
+                persistViewMode("card");
                 updateQueryParams({
                   view: "card",
-                })
-              }
+                });
+              }}
             >
               <LayoutGrid className="h-4 w-4" />
               {t("view.card")}
@@ -915,11 +1141,12 @@ export default function AiStudioVideoHistoryClient() {
                 "rounded-none",
                 viewMode === "list" && "bg-muted text-foreground",
               )}
-              onClick={() =>
+              onClick={() => {
+                persistViewMode("list");
                 updateQueryParams({
                   view: "list",
-                })
-              }
+                });
+              }}
             >
               <List className="h-4 w-4" />
               {t("view.list")}
@@ -1110,17 +1337,13 @@ export default function AiStudioVideoHistoryClient() {
                 <TableHead>{t("columns.status")}</TableHead>
                 <TableHead>{t("columns.credits")}</TableHead>
                 <TableHead>{t("columns.createdAt")}</TableHead>
-                <TableHead>{t("columns.user_actions")}</TableHead>
+                <TableHead>{t("columns.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {records.map((record) => {
-                const imageResultUrls =
-                  record.category === "image"
-                    ? record.resultUrls.filter(
-                        (url) => typeof url === "string" && url.length > 0,
-                      )
-                    : [];
+                const failureReason = getFailureReason(record);
+                const durationSeconds = getDurationSeconds(record);
 
                 return (
                   <TableRow
@@ -1130,116 +1353,160 @@ export default function AiStudioVideoHistoryClient() {
                   >
                     <TableCell className="align-top">
                       <div className="space-y-1 font-mono text-xs">
-                        <div>{record.taskId || "-"}</div>
-                        <div className="text-muted-foreground">
-                          {record.providerTaskId || "-"}
-                        </div>
+                        {record.taskId ? (
+                          <button
+                            type="button"
+                            className="break-all text-left font-mono text-xs transition-colors hover:text-foreground"
+                            title={t("copy_task_id")}
+                            onClick={async (event) => {
+                              event.stopPropagation();
+                              await handleCopyTaskId(record.taskId);
+                            }}
+                          >
+                            {record.taskId}
+                          </button>
+                        ) : (
+                          <span>—</span>
+                        )}
                         <div className="flex items-center gap-2 font-sans">
                           <button
                             type="button"
                             className="text-xs text-primary hover:underline underline-offset-4"
                             onClick={(event) => {
                               event.stopPropagation();
-                              setSelectedRecord(record);
+                              setSelectedPayload({
+                                title: t("detail.request"),
+                                value: record.requestPayload,
+                              });
                             }}
                           >
-                            Request
+                            {t("detail.request")}
                           </button>
                           <button
                             type="button"
                             className="text-xs text-primary hover:underline underline-offset-4"
                             onClick={(event) => {
                               event.stopPropagation();
-                              setSelectedRecord(record);
+                              setSelectedPayload({
+                                title: t("detail.response"),
+                                value: record.responsePayload ?? {},
+                              });
                             }}
                           >
-                            Response
+                            {t("detail.response")}
                           </button>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell className="align-top w-[300px] min-w-[300px] max-w-[300px]">
-                      <div className="space-y-1">
-                        <div className="font-medium">
+                      <div className="flex flex-col gap-1">
+                        <span className="font-medium">
                           {record.modelLabel || formatModelName(record.model)}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {getTaskParamsLine(record)}
-                        </div>
-                        {record.prompt ? (
-                          <div className="line-clamp-2 max-w-[420px] text-xs text-muted-foreground">
-                            {record.prompt}
-                          </div>
-                        ) : null}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {record.category} · {record.provider || "-"}
+                        </span>
+                        <span className="text-[10px] font-mono text-muted-foreground">
+                          {record.catalogModelId || "-"}
+                        </span>
                       </div>
                     </TableCell>
                     <TableCell className="align-top">
-                      {record.status === "success" ? (
-                        record.category === "image" ? (
-                          imageResultUrls.length > 0 ? (
-                            <div className="relative h-12 w-20 overflow-hidden rounded-md border bg-muted">
-                              <img
-                                src={imageResultUrls[0]}
-                                alt={
-                                  record.prompt ||
-                                  record.modelLabel ||
-                                  formatModelName(record.model)
-                                }
-                                className="h-full w-full object-cover"
-                              />
-                              {imageResultUrls.length > 1 ? (
-                                <div className="absolute right-1 top-1 rounded bg-black/60 px-1 text-[10px] text-white">
-                                  +{imageResultUrls.length - 1}
-                                </div>
-                              ) : null}
-                            </div>
-                          ) : (
-                            <span className="text-xs text-muted-foreground">-</span>
-                          )
-                        ) : record.resultUrl ? (
-                          <video
-                            src={record.resultUrl}
-                            className="h-12 w-20 rounded-md border object-cover"
-                            muted
-                            playsInline
-                            preload="metadata"
-                          />
-                        ) : (
-                          <span className="text-xs text-muted-foreground">-</span>
-                        )
-                      ) : record.status === "pending" ? (
-                        <Loader2 className="h-4 w-4 animate-spin text-amber-500" />
+                      {record.resultUrls.length > 0 ? (
+                        <div className="flex flex-wrap gap-2">
+                          {record.resultUrls.map((url, index) => (
+                            <a
+                              key={`${record.id}-${index}`}
+                              href={url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="block overflow-hidden rounded-md border bg-muted transition-opacity hover:opacity-80"
+                              onClick={(event) => event.stopPropagation()}
+                            >
+                              {record.category === "image" ? (
+                                <img
+                                  src={url}
+                                  alt={`${record.modelLabel || formatModelName(record.model)} preview ${index + 1}`}
+                                  className="h-8 w-12 object-cover"
+                                />
+                              ) : (
+                                <video
+                                  src={url}
+                                  className="h-8 w-12 object-cover"
+                                  muted
+                                  playsInline
+                                  preload="metadata"
+                                />
+                              )}
+                            </a>
+                          ))}
+                        </div>
                       ) : (
-                        <span className="text-xs text-muted-foreground">-</span>
+                        <span className="text-xs text-muted-foreground">—</span>
                       )}
                     </TableCell>
                     <TableCell className="align-top">
-                      <div className="flex flex-col gap-1">
-                        {getStatusBadge(
-                          record.status,
-                          record.creditsRefunded,
-                          record.category,
-                        )}
-                        <Badge variant="secondary">
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2">
+                          <Badge
+                            variant="outline"
+                            className={cn(
+                              record.status === "success" &&
+                                "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-400",
+                              record.status === "failed" &&
+                                "border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-800 dark:bg-rose-950/30 dark:text-rose-400",
+                              record.status === "pending" &&
+                                "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-400",
+                            )}
+                          >
+                            {record.status === "success"
+                              ? t("status.success")
+                              : record.status === "failed"
+                                ? t("status.failed")
+                                : t("status.pending")}
+                          </Badge>
+                          {record.status === "failed" ? (
+                            <button
+                              type="button"
+                              className="text-xs text-primary hover:underline underline-offset-4"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                setSelectedPayload({
+                                  title: t("failure_reason"),
+                                  value: failureReason,
+                                });
+                              }}
+                            >
+                              {t("view_reason")}
+                            </button>
+                          ) : null}
+                        </div>
+                        <Badge variant={record.isPublic ? "default" : "outline"}>
                           {record.isPublic
                             ? tLanding("form.public")
                             : tLanding("form.private")}
                         </Badge>
                       </div>
                     </TableCell>
-                    <TableCell className="align-top text-sm font-medium">
-                      {record.creditsRequired ?? record.creditsUsed}
+                    <TableCell className="align-top">
+                      <div className="flex flex-col text-sm">
+                        <span>Reserved {record.creditsRequired ?? record.creditsUsed}</span>
+                        <span className="text-muted-foreground">
+                          Refunded{" "}
+                          {record.creditsRefunded
+                            ? (record.creditsRequired ?? record.creditsUsed)
+                            : 0}
+                        </span>
+                      </div>
                     </TableCell>
                     <TableCell className="align-top text-sm text-muted-foreground">
-                      <div>
-                        {t("columns.generatedAt")}:{" "}
-                        {formatCompactDateTime(record.createdAt)}
-                      </div>
-                      <div>
-                        {t("columns.completedAt")}:{" "}
-                        {record.completedAt
-                          ? formatCompactDateTime(record.completedAt)
-                          : "-"}
+                      <div className="flex flex-col gap-0.5">
+                        <span>{formatTableDateTime(record.createdAt)}</span>
+                        <span>{formatTableDateTime(record.completedAt)}</span>
+                        <span>
+                          {t("columns.duration")}：
+                          {durationSeconds == null ? "-" : `${durationSeconds}s`}
+                        </span>
                       </div>
                     </TableCell>
                     <TableCell
@@ -1258,6 +1525,24 @@ export default function AiStudioVideoHistoryClient() {
           </Table>
         </div>
       )}
+
+      <Dialog
+        open={Boolean(selectedPayload)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelectedPayload(null);
+          }
+        }}
+      >
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>{selectedPayload?.title}</DialogTitle>
+          </DialogHeader>
+          <pre className="max-h-[70vh] overflow-auto rounded-md bg-muted p-4 text-xs leading-5">
+            {formatJsonBlock(selectedPayload?.value ?? {})}
+          </pre>
+        </DialogContent>
+      </Dialog>
 
       <Drawer
         open={!!selectedRecord}
@@ -1355,20 +1640,80 @@ export default function AiStudioVideoHistoryClient() {
 
                   <section className="space-y-3">
                     <h3 className="text-sm font-semibold">{t("detail.basic_info")}</h3>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      {detailFields.map((item) => (
+                    <div className="space-y-1">
+                      {detailRows.map((item) => (
                         <div
-                          key={item.label}
-                          className="rounded-lg border bg-muted/30 px-3 py-2"
+                          key={item.key}
+                          className="grid grid-cols-[108px_minmax(0,1fr)_auto] items-start gap-3 border-b border-border/50 py-1.5 text-sm last:border-b-0"
                         >
-                          <div className="text-xs text-muted-foreground">{item.label}</div>
-                          <div className="mt-1 break-all text-sm leading-6">
+                          <span className="pt-1 text-xs text-muted-foreground">
+                            {item.label}
+                          </span>
+                          <span
+                            className={cn(
+                              "break-all leading-6",
+                              (item.key === "id" || item.key === "task_id") &&
+                                "font-mono text-xs",
+                            )}
+                          >
                             {item.value}
-                          </div>
+                          </span>
+                          {item.copyValue ? (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="xs"
+                              onClick={() => {
+                                if (!item.copyValue) {
+                                  return;
+                                }
+                                void copyText(
+                                  item.copyValue,
+                                  item.copySuccessMessage || t("copy"),
+                                );
+                              }}
+                            >
+                              <Copy className="w-3 h-3" />
+                              {t("copy")}
+                            </Button>
+                          ) : (
+                            <span />
+                          )}
                         </div>
                       ))}
+
+                      <div className="grid grid-cols-[108px_minmax(0,1fr)_auto] items-start gap-3 border-b border-border/50 py-1.5 text-sm last:border-b-0">
+                        <span className="pt-1 text-xs text-muted-foreground">
+                          {t("detail.fields.prompt")}
+                        </span>
+                        <span className="whitespace-pre-wrap break-words leading-6">
+                          {selectedRecord.prompt || "-"}
+                        </span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="xs"
+                          disabled={!selectedRecord.prompt}
+                          onClick={() => void handleCopyPrompt(selectedRecord.prompt)}
+                        >
+                          <Copy className="w-3 h-3" />
+                          {t("copy")}
+                        </Button>
+                      </div>
                     </div>
                   </section>
+
+                  {selectedRecord.status === "failed" ? (
+                    <>
+                      <Separator />
+                      <section className="space-y-3">
+                        <h3 className="text-sm font-semibold">{t("failure_reason")}</h3>
+                        <pre className="max-h-[280px] overflow-auto rounded-md border bg-muted/20 px-3 py-2 text-sm leading-6 text-rose-700 dark:text-rose-300">
+                          {selectedFailureReason}
+                        </pre>
+                      </section>
+                    </>
+                  ) : null}
 
                   {(selectedRecord.uploadedImages?.length ||
                     selectedRecord.inputVideos?.length ||
@@ -1466,7 +1811,21 @@ export default function AiStudioVideoHistoryClient() {
                   <Separator />
 
                   <section className="space-y-3">
-                    <h3 className="text-sm font-semibold">{t("detail.response")}</h3>
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 className="text-sm font-semibold">{t("detail.response")}</h3>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="xs"
+                        onClick={() =>
+                          void handleCopyResponse(selectedRecord.responsePayload)
+                        }
+                        disabled={selectedRecord.responsePayload == null}
+                      >
+                        <Copy className="w-3 h-3" />
+                        {t("copy_response")}
+                      </Button>
+                    </div>
                     {selectedRecord.responsePayload ? (
                       <pre className="max-h-[360px] overflow-auto rounded-lg bg-slate-950 p-4 font-mono text-xs leading-6 text-slate-100">
                         {formatJsonBlock(selectedRecord.responsePayload)}
