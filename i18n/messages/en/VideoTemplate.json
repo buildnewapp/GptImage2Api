@@ -5,11 +5,11 @@
     "creditCost": "25",
     "description": "Create short AI videos from text or a reference image. New users can start with Seedance 2.0 right away and keep earning plenty of credits through daily tasks. Seedance 2.0 in the current web app supports up to 1080p and 15 seconds.",
     "durationLabel": "5s",
-    "highlight": "Clearly.",
+    "highlight": "Online & API.",
     "modelLabel": "Seedance 2.0",
     "placeholder": "Upload up to 12 references, then type @ to mention them in your prompt. E.g.: @image1 imitates @video1 motion, voice references @audio1.",
     "resolutionLabel": "480p",
-    "title": "Direct Short-Form Video—",
+    "title": "Seedance 2.0 AI Video Generator—",
     "videos": [
       "https://cdn.sdanceai.com/sdanceai/sdance_videos/4vr3llg33.mp4",
       "https://cdn.sdanceai.com/sdanceai/sdance_videos/cslx142y0.mp4",

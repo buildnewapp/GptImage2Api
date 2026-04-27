@@ -468,6 +468,7 @@
   "Footer": {
     "Copyright": "著作権所有 © {year} {name} 全著作権保有。独立した製品です。Google/OpenAI/AI モデルプロバイダーとは関係ありません。",
     "About": "サイトについて",
+    "Contact": "お問い合わせ",
     "PrivacyPolicy": "プライバシーポリシー",
     "TermsOfService": "利用規約",
     "RefundPolicy": "返金ポリシー",
@@ -513,6 +514,10 @@
             {
               "href": "/apidoc",
               "name": "API ドキュメント"
+            },
+            {
+              "href": "/about#contact-us",
+              "name": "お問い合わせ"
             }
           ]
         },

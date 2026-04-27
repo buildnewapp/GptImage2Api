@@ -1,451 +1,353 @@
 {
   "hero": {
-    "badge": "Seedance 2.0 web & api",
-    "ctaLabel": "生成视频",
+    "badge": "Gpt Image 2 Api",
+    "ctaLabel": "生成图像",
     "creditCost": "25",
-    "description": "从文本或参考图片创建短篇 AI 视频。新手可以直接使用 Seedance 2.0，并通过每日任务持续获得大量积分。当前 Web 应用中的 Seedance 2.0 最多支持 1080p 和 15 秒。",
-    "durationLabel": "5秒",
-    "highlight": "更清晰呈现。",
-    "modelLabel": "Seedance 2.0",
-    "placeholder": "最多上传 12 个参考素材，然后在提示词中输入 @ 进行引用。例如：@image1 模仿 @video1 的运动，语音参考 @audio1。",
-    "resolutionLabel": "480p",
-    "title": "直接生成短视频",
-    "videos": [
-      "https://cdn.sdanceai.com/sdanceai/sdance_videos/4vr3llg33.mp4",
-      "https://cdn.sdanceai.com/sdanceai/sdance_videos/cslx142y0.mp4",
-      "https://cdn.sdanceai.com/sdanceai/sdance_videos/0yk60yijj.mp4",
-      "https://cdn.sdanceai.com/sdanceai/sdance_videos/598uoczz9.mp4"
-    ]
+    "description": "面向生产场景的高质量图像生成与编辑，适用于海报、电商主图、社媒素材和设计样机。",
+    "durationLabel": "4秒",
+    "highlight": "文字可读、细节稳定、风格一致。",
+    "modelLabel": "Gpt Image 2 Api",
+    "placeholder": "描述主体、构图、镜头、光线和氛围。例如：一张咖啡包装发布海报，主标题清晰可读，棚拍光线，材质真实。",
+    "resolutionLabel": "1024x1024",
+    "title": "用 GptImage2Api 快速生成可商用图像",
+    "videos": [],
+    "images": ["https://file.gptimage2api.net/media/1776756799880_c8u8w7_HGUKjjaasAAvVRa-300x240.jpg","https://file.gptimage2api.net/media/1776668128332_d2wtbo_HGQDh30bMAARz9E-300x300.jpg","https://file.gptimage2api.net/media/1776695123224_6cabrf_HGCZTbKawAAaS5X-300x450.jpg","https://file.gptimage2api.net/media/1776756799069_v5dm3d_HGaEzbEasAAe7sy-300x200.jpg","https://file.gptimage2api.net/media/1776756854427_qzcik2_HGYy_KObcAA66sM-300x200.jpg","https://file.gptimage2api.net/media/1776756858185_6z7569_HGV6FtKbwAAK6L0-300x169.jpg","https://file.gptimage2api.net/media/1776756838105_09bui0_HGWtW5LaEAE1ao5-300x450.jpg","https://file.gptimage2api.net/media/1776756778810_dclrin_HGYS0HYakAAO1Kt-300x200.jpg","https://file.gptimage2api.net/media/1776756845933_k4n9y9_HGXxMxeawAE11LJ-300x200.jpg","https://file.gptimage2api.net/media/1776756852880_v094nl_HGXcdOPbUAA06XY-300x300.jpg","https://file.gptimage2api.net/media/1776756809391_6lhkiq_HGXR9V_bIAARJPu-300x240.jpg","https://file.gptimage2api.net/media/1776756782732_rwl7km_HGXJbgbaAAQQd4O-300x533.jpg","https://file.gptimage2api.net/media/1776756762098_oz5z4c_HGXGwsMagAEYuqa-300x225.jpg","https://file.gptimage2api.net/media/1776756781085_e23ett_HGXBV05XwAA2yU4-300x450.jpg","https://file.gptimage2api.net/media/1776756843035_0y4dr0_HGV2dbja8AA3IvB-300x400.jpg","https://file.gptimage2api.net/media/1776756855692_stwo0a_HGT1-4Bb0AA312i-300x424.jpg","https://file.gptimage2api.net/media/1776756789445_z4tzjp_HGTxSpFaMAAuxns-300x300.jpg","https://file.gptimage2api.net/media/1776668159375_sd2tyn_HGTivWjXkAAt6tk-300x375.jpg","https://file.gptimage2api.net/media/1776661915237_r1emn3_HGRFgTdaEAAt63O-300x450.jpg","https://file.gptimage2api.net/media/1776756775486_4fd52x_HGRomaeboAA-DR6-300x450.jpg","https://file.gptimage2api.net/media/1776662628547_pc62qe_HGRnQTja8AASNom-300x533.jpg","https://file.gptimage2api.net/media/1776668115222_j6vl73_HGQ9NH3bQAAVUT8-300x450.jpg","https://file.gptimage2api.net/media/1776661994608_2lvoxe_HGQ9NKVaMAA-xFS-300x450.jpg","https://file.gptimage2api.net/media/1776658762495_8ewb2m_HGQr7nCa8AAiaSP-300x398.jpg","https://file.gptimage2api.net/media/1776662581155_jmf49d_HGPvP8vacAADS5B-300x300.jpg","https://file.gptimage2api.net/media/1776658759466_0vvd9m_HGPgEzEbUAA6-9s-300x398.jpg","https://file.gptimage2api.net/media/1776662627550_b8twjr_HGNFz2LbkAA1mcT-300x300.jpg","https://file.gptimage2api.net/media/1776699416625_76138j_HGLw5u2aMAIkzeF-300x450.jpg","https://file.gptimage2api.net/media/1776699450623_5ct1le_HGK8gRMX0AATb8O-300x240.jpg","https://file.gptimage2api.net/media/1776699445902_sfhrjh_HGHBOIrb0AAkXJR-300x450.jpg","https://file.gptimage2api.net/media/1776697099289_x4jdgx_HGGQsN5aMAAAjT0-300x532.jpg","https://file.gptimage2api.net/media/1776695089047_tujkw0_HGFn2-NbkAA-tXK-300x450.jpg","https://file.gptimage2api.net/media/1776695086349_pfmtbk_HGFn2-IbsAAWHPw-300x417.jpg","https://file.gptimage2api.net/media/1776697064224_fs22qb_HGE_FK_WwAAOsAo-300x169.jpg","https://file.gptimage2api.net/media/1776695100409_im47dt_HGCY5CSbMAAdw_G-300x533.jpg","https://file.gptimage2api.net/media/1776695097319_qo1ro9_HGCTzyHaQAAyN76-300x533.jpg","https://file.gptimage2api.net/media/1776695112490_phpst3_HGAuWVwaIAECnjY-300x450.jpg","https://file.gptimage2api.net/media/1776695094646_as3wii_HF_Qx-fWAAA--l6-300x450.jpg","https://file.gptimage2api.net/media/1776701503291_06vsnv_HF-1mIabEAMQ5Ej-300x300.jpg","https://file.gptimage2api.net/media/1776701488942_vgrwp4_HF9SpBnbsAAeF4g-300x300.jpg","https://file.gptimage2api.net/media/1776701513937_vtw05u_HF8YsTeaMAAqgex-300x450.jpg"]
   },
   "featureRows": [
     {
-      "description": "编写提示词，选择画幅比例、时长和分辨率，然后在当前 Web 应用中渲染短视频片段。新手即可直接使用 Seedance 2.0，并可通过每日任务持续获得大量积分。",
-      "title": "短视频文生视频",
-      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/gomdqjkt4.mp4"
+      "title": "高保真文生图",
+      "description": "把复杂提示词直接转换为可用视觉结果，在构图、材质和文字排版上保持更稳定的质量。",
+      "imageSrc": "https://file.gptimage2api.net/media/1776756799069_v5dm3d_HGaEzbEasAAe7sy.jpg"
     },
     {
-      "description": "用一张静态图片作为起始帧，在运动开始前锁定主体、构图或美术方向。当前 Web 应用支持使用单张参考图进行图生视频。",
+      "title": "精细化图像编辑",
+      "description": "上传原图后按需修改局部或整体内容，包括换主体、换背景、改风格和细节修饰。",
       "reverse": true,
-      "title": "参考图引导",
-      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/es600fg0x.mp4"
+      "imageSrc": "https://file.gptimage2api.net/media/1776695106960_424uv9_HGBnGc4bgAA2vft.jpg"
     },
     {
-      "description": "新手可以直接使用 Seedance 2.0，后续也可以通过每日任务持续获得大量积分。渲染前，生成器里会显示模型限制。",
-      "title": "直接开始使用 2.0",
-      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/88jhjdm4l.mp4"
+      "title": "海报与排版文字更清晰",
+      "description": "更适合生成包含标题、副标题和说明文案的营销物料，减少文字错乱和断裂。",
+      "imageSrc": "https://file.gptimage2api.net/media/1776756858951_6ijm10_HGV6HyHaUAA68FT.jpg"
     },
     {
-      "description": "当前 seedance2.app 的公开方案中，Seedance 2.0 最高支持 1080p 和 15 秒。我们会在界面中直接展示这些限制，方便你在消耗积分前合理规划提示词。",
+      "title": "产品视觉风格一致",
+      "description": "在批量出图时保持角度、配色与包装细节统一，方便用于店铺和广告素材。",
       "reverse": true,
-      "title": "输出限制一目了然",
-      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/nf3vdfl8a.mp4"
+      "imageSrc": "https://file.gptimage2api.net/media/1776661915237_r1emn3_HGRFgTdaEAAt63O.jpg"
     }
   ],
   "scope": {
-    "description": "当前 Web 应用今天实际开放的能力",
-    "footerDescription": "没有隐藏的长视频承诺",
-    "footerStat": "目前最高 1080p 与 15 秒",
-    "footerTitle": "专为短视频生产而建",
+    "title": "当前应用可用能力",
+    "description": "面向图像生成与编辑的核心功能，已在本页工作流中可直接使用。",
+    "logosLabel": "常见应用场景",
     "logos": [
-      "TECHCRUNCH",
-      "PRODUCT HUNT",
-      "HACKER NEWS",
-      "THE VERGE",
-      "WIRED",
-      "AI WEEKLY"
+      "电商",
+      "营销",
+      "设计",
+      "教育",
+      "媒体",
+      "团队协作"
     ],
-    "logosLabel": "当前应用限制",
-    "title": "当前应用范围，展示得足够清楚",
     "items": [
       {
         "accent": "primary",
-        "description": "直接通过提示词生成短视频片段。",
-        "icon": "video",
-        "title": "文生视频"
+        "icon": "image",
+        "title": "文生图",
+        "description": "通过提示词直接生成高质量图像。"
       },
       {
         "accent": "foreground",
-        "description": "从一张参考图出发，再将其动态化。",
-        "icon": "image",
-        "title": "图生视频"
+        "icon": "video",
+        "title": "图像编辑",
+        "description": "对已有图像进行局部或全局修改。"
       },
       {
         "accent": "accent",
-        "description": "新手可以直接使用 Seedance 2.0，并可通过每日任务持续获得大量积分。",
-        "icon": "globe",
-        "title": "模型访问"
-      },
-      {
-        "accent": "foreground",
-        "description": "当前应用中的公开选项为 480p、720p 和 1080p。",
         "icon": "award",
-        "title": "分辨率上限"
+        "title": "文字渲染",
+        "description": "标题、标签和密集文案的可读性更稳定。"
       },
       {
         "accent": "foreground",
-        "description": "Seedance 2.0 最长支持 12 秒。Seedance 2.0 最长支持 15 秒。",
         "icon": "users",
-        "title": "时长上限"
+        "title": "风格一致性",
+        "description": "多张图保持统一视觉语言，便于批量产出。"
+      },
+      {
+        "accent": "foreground",
+        "icon": "globe",
+        "title": "商用场景",
+        "description": "适用于广告、店铺物料与内部设计流程。"
       },
       {
         "accent": "primary",
-        "description": "渲染完成后可下载为 MP4。",
         "icon": "zap",
-        "title": "下载格式"
+        "title": "PNG/JPEG 下载",
+        "description": "可导出常见生产格式，便于直接投放和交付。"
       }
-    ]
+    ],
+    "footerTitle": "为快速图像生产而设计",
+    "footerDescription": "从创意草稿到可交付素材，一条链路完成。",
+    "footerStat": "提示词 + 编辑 + 导出，几分钟完成"
   },
   "useCases": {
-    "description": "从产品发布到品牌叙事，seedance2.app 通过提示词和参考图帮助创作者更快交付短视频内容",
-    "title": "为真实创作者工作流而生",
+    "title": "面向真实创作与营销流程",
+    "description": "同一套工具完成社媒海报、产品图、广告图与活动视觉，减少反复返工。",
     "items": [
       {
         "accent": "primary",
-        "description": "把一个功能点转成简洁的视觉故事。快速制作能带来转化的产品主视觉和发布短片。",
         "icon": "megaphone",
-        "title": "产品发布短片"
+        "title": "广告创意",
+        "description": "快速产出多套方向并保留有效风格。"
       },
       {
         "accent": "rose",
-        "description": "快速生成多个开场钩子，再集中打磨表现最佳的版本。用统一品牌视觉和定向修改做 A/B 测试。",
         "icon": "target",
-        "title": "付费广告创意"
+        "title": "投放测试",
+        "description": "批量生成可控变量图，提升 A/B 测试效率。"
       },
       {
         "accent": "violet",
-        "description": "以统一风格展示前后对比流程。通过多镜头序列把产品价值讲清楚，让观众更容易记住。",
         "icon": "monitor",
-        "title": "App / SaaS 讲解视频"
+        "title": "产品样机",
+        "description": "生成可读标签与包装细节更完整的产品主图。"
       },
       {
         "accent": "amber",
-        "description": "在多条内容中保持统一视觉和构图。借助可复用提示词和参考图，让每一条作品都保持品牌一致。",
         "icon": "palette",
-        "title": "创作者品牌素材包"
+        "title": "品牌视觉包",
+        "description": "统一色调、构图和风格，跨团队复用更容易。"
       },
       {
         "accent": "accent",
-        "description": "无需重新拍摄也能产出季节性视觉内容。只要更换提示词和参考图，就能快速生成新的产品短片。",
         "icon": "store",
-        "title": "店铺促销视频"
+        "title": "店铺物料",
+        "description": "无需重拍即可快速更新季节性和活动素材。"
       },
       {
         "accent": "foreground",
-        "description": "快速起草更有人味的叙事短片。以创作者节奏完成草稿、迭代和发布。",
         "icon": "users",
-        "title": "UGC 风格脚本"
+        "title": "社媒内容",
+        "description": "把想法快速转成可发布的图文素材。"
       }
     ]
   },
   "showcase": {
-    "ctaText": "准备好创建你自己的短片了吗？",
-    "description": "本页展示的预览素材都是站内短视频片段。这里显示的元数据反映的是本站实际文件信息。",
-    "kicker": "视频展示",
-    "note": "这些样片并不是隐藏的长视频导出。它们就是当前页面上渲染的本地短视频预览素材。",
-    "title": "看看当前网站里的示例素材",
+    "kicker": "图像示例",
+    "title": "本站页面示例视觉方向",
+    "description": "以下均为本页展示用的静态图像示例，可作为提示词方向参考。",
+    "note": "你可以按这些结构替换主体、文案和色调，快速得到自定义版本。",
+    "ctaText": "准备开始生成你的图像素材了吗？",
     "items": [
       {
-        "category": "产品",
-        "duration": "13.0s",
-        "prompt": "以 @Image1 中的女演员为主体。参考 @Video1 的节奏型推拉摇移镜头。女演员复现 @Video1 中女舞者的舞蹈动作，在舞台上充满活力地表演。",
-        "resolution": "720x1280",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/cslx142y0.mp4",
-        "title": "镜头与动作复刻"
+        "category": "电商",
+        "title": "男士护肤品牌落地页",
+        "prompt": "深色系男士护肤电商落地页，包含人物主视觉、产品瓶身、卖点模块和统计信息。",
+        "resolution": "1792x1024",
+        "src": "https://file.gptimage2api.net/media/1776756858185_6z7569_HGV6FtKbwAAK6L0.jpg"
       },
       {
-        "category": "纪录片",
-        "duration": "15.0s",
-        "prompt": "画中的角色露出心虚的表情，左右张望后伸手到画框外拿起一罐可乐，满足地喝了一口。听到脚步声后，角色迅速把可乐放回去。一个牛仔拿起可乐后离开。镜头继续向前推进到纯黑背景，聚光灯打在罐装可乐上，并出现艺术字幕：“一口可乐，必须试试！”",
-        "resolution": "1280x720",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/3xh83niox.mp4",
-        "title": "基础能力增强"
+        "category": "信息图",
+        "title": "角色关系图海报",
+        "prompt": "将关键角色、阵营与剧情关系整理成高完成度角色关系海报，层级清楚、信息密度高。",
+        "resolution": "1024x1280",
+        "src": "https://file.gptimage2api.net/media/1776756766331_2wdcq7_HGXHhQcbAAAFcYA.jpg"
       },
       {
-        "category": "讲解",
-        "duration": "15.0s",
-        "prompt": "男人（@Image1）下班后疲惫地走在走廊里，步伐越来越慢。他站在家门口，面部特写，深呼吸一口，整理情绪，露出放松的表情。镜头特写他寻找钥匙并插入门锁。进门后，他的小女儿和宠物狗欢快地跑来拥抱他。室内氛围温暖舒适，全程带有自然对白。",
-        "resolution": "1280x720",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/kewve4hf7.mp4",
-        "title": "品牌讲解序列"
+        "category": "漫画",
+        "title": "五格悬疑快递员漫画",
+        "prompt": "全彩五格漫画页面，通过门口对话、人物表情和分镜节奏表现不适感与戏剧冲突。",
+        "resolution": "1024x1365",
+        "src": "https://file.gptimage2api.net/media/1776756843035_0y4dr0_HGV2dbja8AA3IvB.jpg"
       },
       {
-        "category": "时尚",
-        "duration": "10.0s",
-        "prompt": "参考第一张图中的模特五官特征。模特穿着参考图 2-6 中的服装走向镜头，依次摆出俏皮、冷酷、可爱、惊讶和时髦的姿势。",
-        "resolution": "720x1280",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/nnxk9k7w5.mp4",
-        "title": "创意模板与特效"
+        "category": "角色",
+        "title": "3D 表情九宫格",
+        "prompt": "以同一角色为主体，输出九宫格表情与服装变化，统一采用撕纸探头的构图设定。",
+        "resolution": "1024x1024",
+        "src": "https://file.gptimage2api.net/media/1776756789445_z4tzjp_HGTxSpFaMAAuxns.jpg"
       },
       {
-        "category": "生活方式",
-        "duration": "14.0s",
-        "prompt": "参考 Video1 的音频，并以 Image1-5 为灵感创作一支情绪驱动的视频。背景音乐参考 @Video1。",
-        "resolution": "1280x720",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/q3zb6o149.mp4",
-        "title": "创意故事补全"
+        "category": "编辑",
+        "title": "时尚杂志封面人像",
+        "prompt": "高端时尚杂志封面风格人像，主标题清晰、排版完整，整体保持高级编辑感。",
+        "resolution": "1024x1536",
+        "src": "https://file.gptimage2api.net/media/1776668115222_j6vl73_HGQ9NH3bQAAVUT8.jpg"
       },
       {
-        "category": "娱乐",
-        "duration": "15.0s",
-        "prompt": "将视频再延长 15 秒。参考 @Image1 和 @Image2 中骑摩托车的驴子角色，制作一段夸张又疯狂的广告序列。",
-        "resolution": "1280x720",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/598uoczz9.mp4",
-        "title": "视频延展"
+        "category": "广告",
+        "title": "四栏广告提案板",
+        "prompt": "把美食、时尚、旅行和 SaaS 四种广告方向放进同一画板，统一展示不同商业视觉语气。",
+        "resolution": "1024x1024",
+        "src": "https://file.gptimage2api.net/media/1776658771842_fx88g6_HGPorW_aIAA0F_y.jpg"
+      },
+      {
+        "category": "设定稿",
+        "title": "角色设定参考表",
+        "prompt": "完整角色设定页，包含三视图、表情组、细节拆解、服装变体和色板说明。",
+        "resolution": "1024x1408",
+        "src": "https://file.gptimage2api.net/media/1776695087912_me13yy_HGFn2-HacAA5QqJ.jpg"
+      },
+      {
+        "category": "人像",
+        "title": "漫展 Cosplay 人像",
+        "prompt": "写实风漫展人物肖像，突出服装细节、角色气质和带有虚化人群背景的现场感。",
+        "resolution": "1024x1024",
+        "src": "https://file.gptimage2api.net/media/1776695092623_5mm99u_HGBT7WJa0AAMxp2.jpg"
+      },
+      {
+        "category": "解说漫画",
+        "title": "八格 AI 功能科普漫画",
+        "prompt": "Q 版角色讲解型漫画，把 UI 模拟图、对比示意和功能说明组合成八格叙事版面。",
+        "resolution": "1024x1536",
+        "src": "https://file.gptimage2api.net/media/1776701513937_vtw05u_HF8YsTeaMAAqgex.jpg"
       }
     ]
   },
   "testimonials": {
-    "description": "加入数千位使用 Seedance 2.0 更快产出视频的创作者",
-    "title": "全球创作者都在使用",
+    "title": "用于高频产图团队的实际反馈",
+    "description": "创作者和营销团队用这套流程减少迭代时间，并提升成片稳定性。",
     "items": [
       {
         "accent": "primary",
-        "initials": "SC",
-        "name": "Sarah Chen",
-        "quote": "Seedance 2.0 重塑了我们的内容生产流程。多模态参考让我们能在所有营销活动中保持品牌一致性，而编辑工作流让我们节省了数天迭代时间。",
-        "role": "TechStart Inc. 市场总监"
+        "initials": "LQ",
+        "name": "林青",
+        "role": "增长营销负责人",
+        "quote": "从概念到可投放视觉基本可以一轮完成，尤其是文字可读性明显提升。"
       },
       {
         "accent": "accent",
-        "initials": "MR",
-        "name": "Michael Rodriguez",
-        "quote": "导演级控制真的很夸张。我上传一个风格参考，Seedance 2.0 几乎每次都能准确还原质感和氛围。我的受众互动率已经翻倍。",
-        "role": "YouTube 内容创作者"
+        "initials": "WY",
+        "name": "王越",
+        "role": "品牌设计师",
+        "quote": "做包装和海报迭代时，跨批次风格一致性更好，返工次数少了很多。"
       },
       {
         "accent": "rose",
-        "initials": "DK",
-        "name": "David Kim",
-        "quote": "基于参考素材的生成方式完全改变了我的工作流。我可以精准引导构图、光线和镜头运动，然后只修改真正需要调整的部分。",
-        "role": "Design Studio X 创意总监"
+        "initials": "ZX",
+        "name": "赵溪",
+        "role": "电商运营经理",
+        "quote": "编辑能力让我们能复用旧素材，活动期的上新图更新速度快了不少。"
       },
       {
         "accent": "amber",
-        "initials": "LT",
-        "name": "Lisa Thompson",
-        "quote": "我以前从没想过自己也能做出专业级产品视频。有了 Seedance 2.0，我上传几张产品图作为参考，几分钟内就能得到精致的店铺宣传片。",
-        "role": "Thompson's Bakery 小企业主"
+        "initials": "CM",
+        "name": "陈敏",
+        "role": "创意策略",
+        "quote": "海报和社媒图产能更稳定，复杂版式里的文字也更容易一次成图。"
       },
       {
         "accent": "primary",
-        "initials": "JP",
-        "name": "James Park",
-        "quote": "音画同步效果非常出色。我们已经交付了看起来像专业棚拍制作的音乐视觉内容，却不需要再预订昂贵拍摄。",
-        "role": "Harmony Records 音乐制作人"
+        "initials": "HS",
+        "name": "何山",
+        "role": "产品市场经理",
+        "quote": "批量生成产品图时能保持统一视觉方向，评审和交付都更顺畅。"
       },
       {
         "accent": "accent",
-        "initials": "AN",
-        "name": "Ava Nguyen",
-        "quote": "对短视频营销来说，Seedance 2.0 在速度、一致性和可控性之间给了我们很实用的平衡，让我们能在正式制作前快速验证创意方向。",
-        "role": "Bright Launch 增长负责人"
+        "initials": "TY",
+        "name": "唐毅",
+        "role": "内容运营",
+        "quote": "日常图像生产里，这套能力在质量、速度和可控性之间很实用。"
       }
     ]
   },
   "pricing": {
+    "title": "适合图像工作流的简洁定价",
+    "description": "按产量选择套餐，覆盖营销团队、产品团队和设计协作场景。",
+    "monthlyLabel": "月付",
+    "yearlyLabel": "年付",
+    "saveLabel": "年付更划算",
+    "comparisonTitle": "为什么团队选择本平台",
     "comparisonRows": [
       {
-        "feature": "Seedance 2.0 访问",
-        "other": "视情况而定",
-        "seedance": "可用"
+        "feature": "图像质量",
+        "seedance": "高保真输出",
+        "other": "视模型而定"
       },
       {
-        "feature": "Web 应用内新手与任务积分",
-        "other": "视情况而定",
-        "seedance": "所有模型"
+        "feature": "文字渲染",
+        "seedance": "更清晰可读",
+        "other": "稳定性一般"
       },
       {
-        "feature": "当前公开最长时长",
-        "other": "视情况而定",
-        "seedance": "15 秒"
+        "feature": "图像编辑",
+        "seedance": "支持",
+        "other": "部分工具受限"
       },
       {
-        "feature": "当前公开最高分辨率",
-        "other": "视情况而定",
-        "seedance": "1080p"
+        "feature": "风格一致性",
+        "seedance": "批量更稳定",
+        "other": "易出现漂移"
       },
       {
-        "feature": "文生视频",
-        "other": "通常可用",
-        "seedance": "可用"
+        "feature": "商用流程",
+        "seedance": "适配营销生产",
+        "other": "常需额外清理"
       },
       {
-        "feature": "图生视频",
-        "other": "视情况而定",
-        "seedance": "可用"
-      },
-      {
-        "feature": "付费方案优先处理",
-        "other": "视情况而定",
-        "seedance": "可用"
-      },
-      {
-        "feature": "MP4 下载",
-        "other": "视情况而定",
-        "seedance": "可用"
+        "feature": "下载格式",
+        "seedance": "PNG/JPEG",
+        "other": "因平台而异"
       }
     ],
-    "comparisonTitle": "当前公开方案对比",
-    "creditPacks": [
-      {
-        "cta": "购买积分",
-        "description": "约可生成 13 个 5 秒片段或 4 个 15 秒片段",
-        "price": "$50",
-        "title": "500 积分"
-      },
-      {
-        "cta": "购买积分",
-        "description": "约可生成 55 个 5 秒片段或 18 个 15 秒片段",
-        "price": "$200",
-        "title": "2100 积分"
-      }
-    ],
-    "creditPacksDescription": "无需订阅，也可以按次购买积分",
-    "cryptoPaymentLinkLabel": "点击查看",
-    "cryptoPaymentText": "支持虚拟货币支付，",
-    "creditPacksTitle": "只需要少量视频？",
-    "description": "新手可直接使用 Seedance 2.0，并通过每日任务持续获得大量积分。",
-    "monthlyLabel": "月付",
-    "plans": [
-      {
-        "accent": "foreground",
-        "approx": "每年约可生成 157 个 5 秒 Seedance 2.0 片段",
-        "billed": "按年计费 $490",
-        "credits": "总计 6,000 积分",
-        "cta": "开始使用",
-        "description": "面向个人创作者的短视频访问方案",
-        "features": [
-          { "text": "480p、720p 与 1080p 输出选项" },
-          { "text": "Seedance 2.0 最长支持 15 秒片段" },
-          { "text": "按积分消耗渲染" },
-          { "text": "优先处理" },
-          { "text": "支持 MP4 下载" },
-          { "text": "无水印" },
-          { "highlight": true, "text": "含企业证书" }
-        ],
-        "icon": "camera",
-        "name": "基础版",
-        "price": "$41"
-      },
-      {
-        "accent": "primary",
-        "approx": "每年约可生成 347 个 5 秒 Seedance 2.0 片段",
-        "billed": "按年计费 $990",
-        "credits": "总计 13,200 积分",
-        "cta": "升级 Pro",
-        "description": "适合高频短视频迭代的更多积分",
-        "featured": true,
-        "features": [
-          { "text": "480p、720p 与 1080p 输出选项" },
-          { "text": "Seedance 2.0 最长支持 15 秒片段" },
-          { "text": "更高的月度积分池" },
-          { "text": "优先处理" },
-          { "text": "适合批量生成" },
-          { "text": "API 访问" },
-          { "highlight": true, "text": "含企业证书" }
-        ],
-        "icon": "crown",
-        "name": "Pro",
-        "price": "$83"
-      },
-      {
-        "accent": "accent",
-        "approx": "每年约可生成 757 个 5 秒 Seedance 2.0 片段",
-        "billed": "按年计费 $2,000",
-        "credits": "总计 28,800 积分",
-        "cta": "升级 Max",
-        "description": "为团队与更大产量准备的最大积分池",
-        "features": [
-          { "text": "480p、720p 与 1080p 输出选项" },
-          { "text": "Seedance 2.0 最长支持 15 秒片段" },
-          { "text": "最大的月度积分池" },
-          { "text": "优先处理" },
-          { "text": "团队级产能" },
-          { "text": "API 访问与支持" },
-          { "highlight": true, "text": "含企业证书" }
-        ],
-        "icon": "rocket",
-        "name": "Max",
-        "price": "$167"
-      }
-    ],
-    "saveLabel": "节省 17%",
-    "title": "当前应用的透明定价",
-    "yearlyLabel": "年付"
+    "creditPacksTitle": "一次性积分包",
+    "creditPacksDescription": "按需补充积分，适合活动高峰期。",
+    "cryptoPaymentText": "需要加密货币支付？",
+    "cryptoPaymentLinkLabel": "使用加密货币支付",
+    "plans": [],
+    "creditPacks": []
   },
   "faq": {
-    "description": "你需要了解的 Seedance 2.0 信息都在这里",
+    "title": "常见问题",
+    "description": "开始生成和编辑图像前，你可能关心的重点。",
     "items": [
       {
-        "answer": "在今天的 seedance2.app 中，Seedance 以短视频生成器的形式提供。你可以通过文本，或文本提示词加单张参考图来生成片段，模型、时长和分辨率限制都会直接显示在界面里。",
-        "question": "什么是 Seedance 2.0？"
+        "question": "Gpt Image 2 Api 可以做什么？",
+        "answer": "支持文生图和图像编辑，你可以按提示词生成新图，也可以基于原图做定向修改。"
       },
       {
-        "answer": "当前 Web 应用支持文本提示词，以及用于图生视频的可选单张参考图。公开控制项目前不支持上传视频参考或音频参考。",
-        "question": "我可以使用哪些输入？"
+        "question": "能处理文字较多的视觉稿吗？",
+        "answer": "可以，重点优化了标题、标签和密集文案的渲染可读性，适合海报和信息图场景。"
       },
       {
-        "answer": "目前 Web 应用中的 Seedance 2.0 最长支持 12 秒。付费 Seedance 2.0 当前最长支持 15 秒。",
-        "question": "输出时长有多长？"
+        "question": "如何保持多张图风格一致？",
+        "answer": "建议复用结构化提示词与参考素材，统一色调、构图和语气，可显著减少风格偏移。"
       },
       {
-        "answer": "当前公开 Web 应用流程不支持。现在的公开产品主要聚焦短视频渲染和 MP4 导出。",
-        "question": "它也可以生成音频吗？"
+        "question": "支持局部编辑吗？",
+        "answer": "支持，可对局部元素进行替换、增强和细化，不必每次整张重生。"
       },
       {
-        "answer": "当前公开 Web 应用还不支持。每次运行都会根据提示词和所选设置生成一个新片段。",
-        "question": "我可以编辑已有视频，而不是重新生成吗？"
+        "question": "可导出哪些格式？",
+        "answer": "可导出 PNG/JPEG 等常见格式，方便直接用于投放、展示和交付。"
       },
       {
-        "answer": "当前公开 Web 应用不支持。现在公开输出上限是 Seedance 2.0 最长 12 秒，Seedance 2.0 最长 15 秒。",
-        "question": "我可以延长视频继续讲故事吗？"
-      },
-      {
-        "answer": "当你需要在多次渲染中保持相同主体或构图时，请使用可复用的提示词结构，并持续使用同一张参考图。",
-        "question": "如何保持品牌风格一致？"
-      },
-      {
-        "answer": "可以。常见创作者工作流包括广告变体、开场钩子测试、产品主视觉短片和讲解视频。你可以先快速生成多种版本，再对表现最好的版本做定向优化。",
-        "question": "它适合做广告和产品发布吗？"
-      },
-      {
-        "answer": "Seedance 2.0 的设计重点之一是提升运动稳定性和真实感，尤其适合具有复杂运动和互动的动态场景。实际结果仍会因提示词和参考素材而异。",
-        "question": "它擅长复杂运动吗？"
-      },
-      {
-        "answer": "在 seedance2.app 中，新手可以直接使用 Seedance 2.0，并通过每日任务持续获得大量积分。",
-        "question": "我可以在哪里使用它？"
-      },
-      {
-        "answer": "商业使用取决于平台条款以及你对参考素材拥有的权利。完整细节请查看服务条款。",
-        "question": "我可以将输出用于商业用途吗？"
-      },
-      {
-        "answer": "输出效果会有所波动。当前 Web 应用的公开限制是仅支持短片，输出分辨率支持 480p、720p 和 1080p，Seedance 2.0 最长支持 15 秒。",
-        "question": "目前已知的限制有哪些？"
+        "question": "适合商业使用吗？",
+        "answer": "适合，常用于营销物料、产品视觉和设计探索等商用流程。"
       }
-    ],
-    "title": "常见问题"
+    ]
   },
   "cta": {
-    "description": "打开生成器，选择模型，开始创建短视频片段。新手可以直接使用 Seedance 2.0，并通过每日任务持续获得大量积分。",
-    "kicker": "几分钟即可开始",
-    "primaryLabel": "打开 Seedance 2.0",
-    "secondaryLabel": "查看提示词包",
+    "kicker": "开始创作",
+    "title": "几分钟产出可交付图像素材",
+    "description": "打开生成器，输入视觉方向，再通过快速编辑迭代到可用结果。",
+    "primaryLabel": "打开图像生成器",
+    "secondaryLabel": "查看功能详情",
     "stats": [
       {
-        "label": "每日生成视频数",
-        "value": "10K+"
+        "value": "文生图 + 图编辑",
+        "label": "核心模式"
       },
       {
-        "label": "满意创作者",
-        "value": "50K+"
+        "value": "高保真",
+        "label": "质量目标"
       },
       {
-        "label": "当前公开上限",
-        "value": "15秒"
+        "value": "快速迭代",
+        "label": "工作方式"
       }
-    ],
-    "title": "今天就创建你的第一支短片"
+    ]
   }
 }

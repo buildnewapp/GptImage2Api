@@ -109,7 +109,7 @@ export function VideoShowcaseMedia({
                   {isImage ? (
                     <img
                       src={item.src}
-                      alt=""
+                      alt={`${item.title} preview image`}
                       loading="lazy"
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
@@ -191,7 +191,7 @@ export function VideoShowcaseMedia({
                   {IMAGE_FILE_RE.test(selectedItem.src) ? (
                     <img
                       src={selectedItem.src}
-                      alt=""
+                      alt={`${selectedItem.title} preview image`}
                       className="max-h-full w-full bg-black object-contain"
                     />
                   ) : (

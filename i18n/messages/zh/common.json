@@ -468,6 +468,7 @@
   "Footer": {
     "Copyright": "版权所有 © {year} {name} 保留所有权利。独立产品，与 Google/OpenAI/AI 模型提供商无关。",
     "About": "关于",
+    "Contact": "联系我们",
     "PrivacyPolicy": "隐私政策",
     "TermsOfService": "条款与条件",
     "RefundPolicy": "退款政策",
@@ -513,6 +514,10 @@
             {
               "href": "/apidoc",
               "name": "API 文档"
+            },
+            {
+              "href": "/about#contact-us",
+              "name": "联系我们"
             }
           ]
         },

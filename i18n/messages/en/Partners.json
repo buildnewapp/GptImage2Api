@@ -1,0 +1,65 @@
+{
+  "seo": {
+    "title": "Partners",
+    "description": "A manually reviewed partner and resource page for AI video creators."
+  },
+  "hero": {
+    "eyebrow": "Partner Program",
+    "title": "Partners",
+    "description": "A manually reviewed partner and resource page for AI video creators.",
+    "updatedAt": "Updated Apr 9, 2026"
+  },
+  "content": {
+    "about": {
+      "title": "About This Page",
+      "paragraph1": "This page is reserved for a small number of manually reviewed resources that may be useful to people working with AI video, motion content, prompts, and creator workflows.",
+      "paragraph2": "We do not run an open directory. Listings are selective, editorially reviewed, and may be updated or removed at any time."
+    },
+    "submission": {
+      "title": "Submission Process",
+      "step1": "Add Sdance AI to your site before submitting your request.",
+      "step2Prefix": "Email",
+      "step2Suffix": "with all required information for review.",
+      "step3": "Every submission is manually reviewed. We only approve sites that meet all of the requirements below."
+    },
+    "guidelines": {
+      "title": "Listing Guidelines",
+      "items": [
+        "AI-related products, tools, educational resources, or creator workflows with clear relevance to AI video",
+        "Original content or a real product with clear value for creators",
+        "Clean user experience, working HTTPS, and no obvious spam patterns",
+        "Stable branding and a site we would feel comfortable referencing publicly",
+        "No malware, deceptive redirects, auto-generated spam, or thin affiliate pages"
+      ]
+    },
+    "notes": {
+      "title": "Important Notes",
+      "items": [
+        "Placement on this page is not guaranteed.",
+        "External links from this page may use rel=\"nofollow\" or rel=\"sponsored\" when appropriate.",
+        "We may decline or remove a listing if the site's quality, ownership, or topical relevance changes."
+      ]
+    },
+    "policy": {
+      "title": "Publication Policy",
+      "description": "Approved outbound partner links are published in the dedicated list at the bottom of this page. We keep all exchanged links in one place rather than spreading them across blog posts or core landing pages."
+    },
+    "contact": {
+      "title": "Contact",
+      "introPrefix": "If you'd like us to review your site for a possible partnership, email",
+      "introSuffix": "with:",
+      "items": [
+        "Your site URL",
+        "A short description of your audience or product",
+        "Why it is relevant to AI video creators",
+        "The page where you already mention Sdance AI"
+      ],
+      "replyNote": "We review requests manually and only reply when there is a fit."
+    }
+  },
+  "partners": {
+    "title": "Our Partners",
+    "description": "These are reviewed partner platforms and communities where you can discover more quality AI tools and resources.",
+    "note": "Click a card to open the partner page."
+  }
+}

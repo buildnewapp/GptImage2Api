@@ -468,6 +468,7 @@
   "Footer": {
     "Copyright": "Copyright © {year} {name} All rights reserved. Independent product. Not affiliated with Google/OpenAI/AI model providers.",
     "About": "About",
+    "Contact": "Contact",
     "PrivacyPolicy": "Privacy Policy",
     "TermsOfService": "Terms of Service",
     "RefundPolicy": "Refund Policy",
@@ -513,6 +514,10 @@
             {
               "href": "/apidoc",
               "name": "API Docs"
+            },
+            {
+              "href": "/about#contact-us",
+              "name": "Contact"
             }
           ]
         },

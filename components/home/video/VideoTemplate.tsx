@@ -1,5 +1,6 @@
 import { getLocale, getTranslations } from "next-intl/server";
 
+import TemplateJsonLd from "@/components/home/image/TemplateJsonLd";
 import { buildVideoTemplatePricingSection } from "@/components/home/video/pricing-data";
 import type { VideoTemplatePage } from "@/components/home/video/types";
 import { pageShellClass } from "@/components/home/video/constants";
@@ -34,6 +35,7 @@ export default async function VideoTemplate() {
 
   return (
     <div className={pageShellClass + " -mt-20 w-full overflow-x-hidden"}>
+      <TemplateJsonLd templateName="VideoTemplate" />
       {/*<Header />*/}
       <Hero hero={page.hero} />
       <div id="features">

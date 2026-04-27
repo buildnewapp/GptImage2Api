@@ -23,6 +23,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       Glossary: (await import(`./messages/${locale}/Glossary.json`)).default,
       Prompts: (await import(`./messages/${locale}/Prompts.json`)).default,
       Showcase: (await import(`./messages/${locale}/Showcase.json`)).default,
+      Partners: (await import(`./messages/${locale}/Partners.json`)).default,
       SeoContent: (await import(`./messages/${locale}/SeoContent.json`)).default,
       HomeTemplate1: (await import(`./messages/${locale}/HomeTemplate1.json`)).default,
       VideoTemplate: (await import(`./messages/${locale}/VideoTemplate.json`)).default,
