@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-04-24T07:01:28.661Z",
+  "generatedAt": "2026-04-27T08:23:05.921Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -26063,6 +26063,370 @@
           "catalogModelId": "video:get-veo3-1-4k-video"
         }
       ]
+    },
+    {
+      "id": "chat:qwen3-6-flash-openrouter",
+      "category": "chat",
+      "title": "Qwen 3.6 Flash (OpenRouter)",
+      "docUrl": "https://openrouter.ai/qwen/qwen3.6-flash/api",
+      "provider": "OpenRouter",
+      "vendor": "openrouter",
+      "endpoint": "/api/v1/chat/completions",
+      "method": "POST",
+      "modelKeys": [
+        "qwen/qwen3.6-flash"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "The model id.",
+            "enum": [
+              "qwen/qwen3.6-flash"
+            ]
+          },
+          "messages": {
+            "type": "array",
+            "description": "Chat messages.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "system",
+                    "user",
+                    "assistant"
+                  ]
+                },
+                "content": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "x-apidog-orders": []
+                      }
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "role",
+                "content"
+              ],
+              "x-apidog-orders": [
+                "role",
+                "content"
+              ],
+              "x-apidog-ignore-properties": []
+            }
+          },
+          "stream": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "model",
+          "messages"
+        ],
+        "x-apidog-orders": [
+          "model",
+          "messages",
+          "stream"
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "qwen/qwen3.6-flash",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Hello!"
+          }
+        ],
+        "stream": true
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "chat:deepseek-v4-flash-openrouter",
+      "category": "chat",
+      "title": "DeepSeek V4 Flash (OpenRouter)",
+      "docUrl": "https://openrouter.ai/deepseek/deepseek-v4-flash/api",
+      "provider": "OpenRouter",
+      "vendor": "openrouter",
+      "endpoint": "/api/v1/chat/completions",
+      "method": "POST",
+      "modelKeys": [
+        "deepseek/deepseek-v4-flash"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "The model id.",
+            "enum": [
+              "deepseek/deepseek-v4-flash"
+            ]
+          },
+          "messages": {
+            "type": "array",
+            "description": "Chat messages.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "system",
+                    "user",
+                    "assistant"
+                  ]
+                },
+                "content": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "x-apidog-orders": []
+                      }
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "role",
+                "content"
+              ],
+              "x-apidog-orders": [
+                "role",
+                "content"
+              ],
+              "x-apidog-ignore-properties": []
+            }
+          },
+          "stream": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "model",
+          "messages"
+        ],
+        "x-apidog-orders": [
+          "model",
+          "messages",
+          "stream"
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "deepseek/deepseek-v4-flash",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Hello!"
+          }
+        ],
+        "stream": true
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "chat:kimi-k2-6-openrouter",
+      "category": "chat",
+      "title": "Kimi K2.6 (OpenRouter)",
+      "docUrl": "https://openrouter.ai/moonshotai/kimi-k2.6",
+      "provider": "OpenRouter",
+      "vendor": "openrouter",
+      "endpoint": "/api/v1/chat/completions",
+      "method": "POST",
+      "modelKeys": [
+        "moonshotai/kimi-k2.6"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "The model id.",
+            "enum": [
+              "moonshotai/kimi-k2.6"
+            ]
+          },
+          "messages": {
+            "type": "array",
+            "description": "Chat messages.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "system",
+                    "user",
+                    "assistant"
+                  ]
+                },
+                "content": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "x-apidog-orders": []
+                      }
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "role",
+                "content"
+              ],
+              "x-apidog-orders": [
+                "role",
+                "content"
+              ],
+              "x-apidog-ignore-properties": []
+            }
+          },
+          "stream": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "model",
+          "messages"
+        ],
+        "x-apidog-orders": [
+          "model",
+          "messages",
+          "stream"
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "moonshotai/kimi-k2.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Hello!"
+          }
+        ],
+        "stream": true
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "chat:gpt-5-4-mini-openrouter",
+      "category": "chat",
+      "title": "GPT 5.4 Mini (OpenRouter)",
+      "docUrl": "https://openrouter.ai/openai/gpt-5.4-mini",
+      "provider": "OpenRouter",
+      "vendor": "openrouter",
+      "endpoint": "/api/v1/chat/completions",
+      "method": "POST",
+      "modelKeys": [
+        "openai/gpt-5.4-mini"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "The model id.",
+            "enum": [
+              "openai/gpt-5.4-mini"
+            ]
+          },
+          "messages": {
+            "type": "array",
+            "description": "Chat messages.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "system",
+                    "user",
+                    "assistant"
+                  ]
+                },
+                "content": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "x-apidog-orders": []
+                      }
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "role",
+                "content"
+              ],
+              "x-apidog-orders": [
+                "role",
+                "content"
+              ],
+              "x-apidog-ignore-properties": []
+            }
+          },
+          "stream": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "model",
+          "messages"
+        ],
+        "x-apidog-orders": [
+          "model",
+          "messages",
+          "stream"
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "openai/gpt-5.4-mini",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Hello!"
+          }
+        ],
+        "stream": true
+      },
+      "pricingRows": []
     }
   ]
 }
