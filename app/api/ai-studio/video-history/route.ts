@@ -28,7 +28,7 @@ import { z } from "zod";
 
 const querySchema = z.object({
   page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).max(50).optional().default(12),
+  limit: z.coerce.number().int().min(1).max(50).optional().default(20),
   status: z.enum(["all", "pending", "success", "failed"]).optional().default("all"),
   q: z.string().optional().default(""),
 });
@@ -46,7 +46,7 @@ export async function GET(request: Request) {
       limit:
         searchParams.get("limit") ??
         searchParams.get("pageSize") ??
-        12,
+        20,
       status: searchParams.get("status") ?? "all",
       q: searchParams.get("q") ?? "",
     });
@@ -94,6 +94,7 @@ export async function GET(request: Request) {
           refundedCredits: aiStudioGenerations.creditsRefunded,
           resultUrls: aiStudioGenerations.resultUrls,
           createdAt: aiStudioGenerations.createdAt,
+          completedAt: aiStudioGenerations.completedAt,
           requestPayload: aiStudioGenerations.requestPayload,
           responsePayload: aiStudioGenerations.responsePayload,
         })
@@ -128,6 +129,7 @@ export async function GET(request: Request) {
         refundedCredits: row.refundedCredits,
         resultUrls: Array.isArray(row.resultUrls) ? (row.resultUrls as string[]) : [],
         createdAt: row.createdAt.toISOString(),
+        completedAt: row.completedAt?.toISOString() ?? null,
         requestPayload:
           row.requestPayload && typeof row.requestPayload === "object"
             ? (row.requestPayload as Record<string, any>)

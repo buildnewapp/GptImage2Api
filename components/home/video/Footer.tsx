@@ -12,6 +12,7 @@ import { TwitterX } from "@/components/social-icons/icons";
 import { studioPanelClass } from "@/components/home/video/constants";
 
 export default async function VideoFooter() {
+  const t = await getTranslations("Home");
   const tFooter = await getTranslations("Footer");
   const footerLinks = tFooter.raw("Links.groups") as FooterLink[];
 
@@ -55,8 +56,6 @@ export default async function VideoFooter() {
     },
   ].filter((item) => item.href);
 
-  const logoSrc =
-    siteConfig.icons.shortcut || siteConfig.icons.apple || siteConfig.icons.icon;
 
   return (
     <footer className={`pt-8`}>
@@ -72,20 +71,20 @@ export default async function VideoFooter() {
               <div data-aos="fade-up" className="flex items-center gap-3">
                 <span className="flex h-11 w-11 items-center justify-center rounded-full border border-border/75 bg-background/72">
                   <Image
-                    src={logoSrc}
-                    alt={`${siteConfig.name} logo`}
+                    src="/logo.png"
+                    alt={t("title")}
                     width={20}
                     height={20}
                     className="h-5 w-5"
                   />
                 </span>
                 <span className="[font-family:var(--font-instrument-serif),serif] text-[clamp(1.38rem,1.18rem+0.62vw,1.56rem)] leading-[1.08] tracking-[-0.01em] text-foreground">
-                  {siteConfig.name}
+                  {t("title")}
                 </span>
               </div>
 
               <p data-aos="fade-up" className="max-w-md text-sm leading-7 text-muted-foreground">
-                {siteConfig.tagLine || siteConfig.description}
+                {t("tagLine")}
               </p>
 
 

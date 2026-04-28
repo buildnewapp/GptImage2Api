@@ -100,7 +100,7 @@ export default function HeroPhotoWall({ images }: HeroPhotoWallProps) {
                 >
                   <img
                     src={src}
-                    alt=""
+                    alt="AI-generated showcase sample"
                     loading="lazy"
                     decoding="async"
                     fetchPriority="low"

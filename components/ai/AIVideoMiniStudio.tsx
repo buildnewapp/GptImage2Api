@@ -1,7 +1,6 @@
 "use client";
 
 import AIVideoMiniStudioTaskHistory from "@/components/ai/AIVideoMiniStudioTaskHistory";
-import type { VideoTemplateHero } from "@/components/home/video/types";
 import { authClient } from "@/lib/auth/auth-client";
 import {
   AI_VIDEO_STUDIO_FAMILIES,
@@ -178,14 +177,12 @@ function readFileAsDataUrl(file: File) {
 }
 
 interface AIVideoMiniStudioProps {
-  hero: VideoTemplateHero;
   initialModelId?: string | null;
 }
 
 const LoginDialog = lazy(() => import("@/components/auth/LoginDialog"));
 
 export default function AIVideoMiniStudio({
-  hero,
   initialModelId = null,
 }: AIVideoMiniStudioProps) {
   const t = useTranslations("Landing.Hero");
@@ -455,24 +452,11 @@ export default function AIVideoMiniStudio({
   const durationOptions = getAiVideoMiniStudioFieldOptions(
     primaryFields.durationField,
   );
-  const showFallbackControls = !normalizedSchema && !detailError;
-  const displayedAspectRatioOptions =
-    aspectRatioOptions.length > 0 ? aspectRatioOptions : showFallbackControls ? ["16:9"] : [];
-  const displayedDurationOptions =
-    durationOptions.length > 0
-      ? durationOptions
-      : showFallbackControls
-        ? [hero.durationLabel.replace(/s$/i, "")]
-        : [];
-  const displayedResolutionOptions =
-    resolutionOptions.length > 0
-      ? resolutionOptions
-      : showFallbackControls
-        ? [hero.resolutionLabel]
-        : [];
+  const displayedAspectRatioOptions = aspectRatioOptions;
+  const displayedDurationOptions = durationOptions;
+  const displayedResolutionOptions = resolutionOptions;
   const currentImagePreview = getImageValue(imageValue);
-  const priceLabel =
-    estimatedCredits > 0 ? `${estimatedCredits}` : `${hero.creditCost}`;
+  const priceLabel = estimatedCredits > 0 ? `${estimatedCredits}` : "-";
   const isGenerateDisabled =
     submitState.reason !== null && (!session?.user || submitState.reason !== "insufficient-credits");
 
@@ -764,7 +748,7 @@ export default function AIVideoMiniStudio({
                 value={typeof promptValue === "string" ? promptValue : ""}
                 onChange={(event) => updateFormValue(promptFieldKey, event.target.value)}
                 className="flex min-h-[110px] w-full resize-none border-0 border-none bg-transparent p-0 text-base text-white shadow-none ring-0 ring-offset-0 transition-all duration-200 placeholder:text-white/25 focus-visible:outline-none focus-visible:ring-0 sm:min-h-[120px] sm:text-lg"
-                placeholder={hero.placeholder}
+                placeholder={t("form.promptPlaceholder")}
               />
               {detailError ? (
                 <p className="mt-2 text-xs text-amber-200/80">{detailError}</p>
@@ -916,7 +900,7 @@ export default function AIVideoMiniStudio({
             ) : (
               <Sparkles className="mr-1.5 h-3.5 w-3.5" />
             )}
-            {isSubmitting ? t("form.generating") : hero.ctaLabel}
+            {isSubmitting ? t("form.generating") : t("form.generate")}
           </button>
         </div>
       </div>

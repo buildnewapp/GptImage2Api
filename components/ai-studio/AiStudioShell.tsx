@@ -44,7 +44,9 @@ import {
   ImageIcon,
   LoaderCircle,
   Search,
+  Send,
   Sparkles,
+  Trash2,
 } from "lucide-react";
 import {
   useDeferredValue,
@@ -283,18 +285,117 @@ function looksLikeAudio(url: string) {
   return /\.(mp3|wav|flac|aac|m4a|ogg)(\?|$)/i.test(url);
 }
 
+function extractTextFromContent(value: unknown): string {
+  if (!value) {
+    return "";
+  }
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => extractTextFromContent(item))
+      .filter(Boolean)
+      .join("\n");
+  }
+
+  if (typeof value !== "object") {
+    return "";
+  }
+
+  const record = value as Record<string, unknown>;
+  if (typeof record.text === "string") {
+    return record.text;
+  }
+
+  if (typeof record.output_text === "string") {
+    return record.output_text;
+  }
+
+  return extractTextFromContent(record.content);
+}
+
 function extractChatText(raw: unknown) {
   if (!raw || typeof raw !== "object") {
     return "";
   }
 
   const record = raw as Record<string, any>;
-  return (
-    record.choices?.[0]?.message?.content ||
-    record.data?.choices?.[0]?.message?.content ||
-    record.message ||
-    ""
-  );
+  const geminiCandidatesText = record.candidates?.[0]?.content?.parts
+    ?.map((part: any) => part?.text)
+    ?.filter(Boolean)
+    ?.join("") || "";
+  const geminiDataCandidatesText = record.data?.candidates?.[0]?.content?.parts
+    ?.map((part: any) => part?.text)
+    ?.filter(Boolean)
+    ?.join("") || "";
+  const candidates = [
+    record.output_text,
+    record.data?.output_text,
+    record.response?.output_text,
+    record.choices?.[0]?.message?.content,
+    record.data?.choices?.[0]?.message?.content,
+    record.delta?.text,
+    record.content_block?.text,
+    record.data?.delta?.text,
+    record.data?.content_block?.text,
+    geminiCandidatesText,
+    geminiDataCandidatesText,
+    record.message?.content,
+    record.content,
+    record.output?.[0]?.content,
+    record.data?.output?.[0]?.content,
+    record.message,
+  ];
+
+  for (const candidate of candidates) {
+    const text = extractTextFromContent(candidate).trim();
+    if (text) {
+      return text;
+    }
+  }
+
+  return "";
+}
+
+function extractChatDelta(raw: unknown) {
+  if (!raw || typeof raw !== "object") {
+    return "";
+  }
+
+  const record = raw as Record<string, any>;
+  const geminiCandidatesText = record.candidates?.[0]?.content?.parts
+    ?.map((part: any) => part?.text)
+    ?.filter(Boolean)
+    ?.join("") || "";
+  const geminiDataCandidatesText = record.data?.candidates?.[0]?.content?.parts
+    ?.map((part: any) => part?.text)
+    ?.filter(Boolean)
+    ?.join("") || "";
+  const candidates = [
+    record.choices?.[0]?.delta?.content,
+    record.data?.choices?.[0]?.delta?.content,
+    record.delta?.content,
+    record.delta?.text,
+    record.content_block?.text,
+    record.data?.delta?.text,
+    record.data?.content_block?.text,
+    geminiCandidatesText,
+    geminiDataCandidatesText,
+    record.output_text,
+    record.text,
+  ];
+
+  for (const candidate of candidates) {
+    const text = extractTextFromContent(candidate).trim();
+    if (text) {
+      return text;
+    }
+  }
+
+  return "";
 }
 
 export default function AiStudioShell({
@@ -337,6 +438,12 @@ export default function AiStudioShell({
   const [taskRaw, setTaskRaw] = useState<unknown>(null);
   const [historyItems, setHistoryItems] = useState<HistoryResponse["data"]["items"]>([]);
   const [historyLoading, setHistoryLoading] = useState(true);
+  const [chatMessages, setChatMessages] = useState<
+    Array<{ role: "user" | "assistant"; content: string }>
+  >([]);
+  const [chatInput, setChatInput] = useState("");
+  const [chatError, setChatError] = useState<string | null>(null);
+  const chatViewportRef = useRef<HTMLDivElement>(null);
 
   async function refreshHistory() {
     try {
@@ -535,6 +642,35 @@ export default function AiStudioShell({
   }, [selectedId]);
 
   useEffect(() => {
+    if (activeCategory !== "chat") {
+      return;
+    }
+
+    setChatMessages([]);
+    setChatInput("");
+    setChatError(null);
+    setTaskState(null);
+    setTaskRaw(null);
+    setExecuteResult(null);
+  }, [activeCategory, selectedId]);
+
+  useEffect(() => {
+    if (activeCategory !== "chat") {
+      return;
+    }
+
+    const el = chatViewportRef.current;
+    if (!el) {
+      return;
+    }
+
+    el.scrollTo({
+      top: el.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [activeCategory, chatMessages, runLoading]);
+
+  useEffect(() => {
     const taskId = executeResult?.taskId;
     const modelId = resolvePublicModelId(selectedId, detail);
     if (!taskId || !modelId || !executeResult?.statusSupported) {
@@ -647,6 +783,235 @@ export default function AiStudioShell({
     }
   }
 
+  async function handleChatSend() {
+    const modelId = resolvePublicModelId(selectedId, detail);
+    const text = chatInput.trim();
+    if (!modelId || !detail || !text || runLoading) {
+      return;
+    }
+
+    const nextMessages = [...chatMessages, {
+      role: "user" as const,
+      content: text,
+    }];
+
+    const nextPayload = structuredClone(payload);
+    if (!nextPayload.model && detail.modelKeys[0]) {
+      nextPayload.model = detail.modelKeys[0];
+    }
+
+    nextPayload.messages = nextMessages;
+
+    setChatError(null);
+    setChatInput("");
+    setChatMessages([
+      ...nextMessages,
+      {
+        role: "assistant",
+        content: "",
+      },
+    ]);
+    setRunLoading(true);
+    setTaskState("running");
+    setTaskRaw(null);
+    setExecuteResult(null);
+
+    let shouldRefreshCredits = false;
+
+    try {
+      const {
+        messages: _ignoredMessages,
+        model: _ignoredModel,
+        stream: _ignoredStream,
+        ...chatOptions
+      } = nextPayload;
+
+      const response = await fetch("/api/ai-studio/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          modelId,
+          model:
+            typeof nextPayload.model === "string"
+              ? nextPayload.model
+              : undefined,
+          messages: nextMessages,
+          stream: true,
+          ...chatOptions,
+        }),
+      });
+
+      if (!response.ok) {
+        const failedText = await response.text();
+        try {
+          const failedJson = JSON.parse(failedText);
+          throw new Error(failedJson?.error || "Chat failed");
+        } catch {
+          throw new Error(failedText || "Chat failed");
+        }
+      }
+
+      const contentType = response.headers.get("content-type") || "";
+      if (contentType.includes("text/event-stream") && response.body) {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+        let fullText = "";
+        let billing: Record<string, unknown> | null = null;
+
+        const applyAssistantText = (nextText: string) => {
+          setChatMessages((current) => {
+            if (current.length === 0) {
+              return current;
+            }
+            const last = current[current.length - 1];
+            if (last?.role !== "assistant") {
+              return [
+                ...current,
+                { role: "assistant", content: nextText },
+              ];
+            }
+            const next = [...current];
+            next[next.length - 1] = {
+              ...last,
+              content: nextText,
+            };
+            return next;
+          });
+        };
+
+        let done = false;
+        while (!done) {
+          const { value, done: readDone } = await reader.read();
+          if (readDone) {
+            break;
+          }
+          buffer += decoder.decode(value, { stream: true });
+
+          const lines = buffer.split("\n");
+          buffer = lines.pop() ?? "";
+
+          for (const rawLine of lines) {
+            const line = rawLine.trim();
+            if (!line.startsWith("data:")) {
+              continue;
+            }
+
+            const data = line.slice(5).trim();
+            if (!data) {
+              continue;
+            }
+            if (data === "[DONE]") {
+              done = true;
+              break;
+            }
+
+            try {
+              const chunk = JSON.parse(data);
+              if (
+                chunk &&
+                typeof chunk === "object" &&
+                (chunk.type === "billing" ||
+                  ("credits" in chunk && "inputTokens" in chunk))
+              ) {
+                billing = chunk as Record<string, unknown>;
+                shouldRefreshCredits = true;
+                continue;
+              }
+              const delta = extractChatDelta(chunk);
+              if (delta) {
+                if (delta.startsWith(fullText)) {
+                  fullText = delta;
+                } else if (!fullText.startsWith(delta)) {
+                  fullText += delta;
+                }
+                applyAssistantText(fullText);
+              }
+            } catch {
+              // Ignore malformed chunk and continue streaming.
+            }
+          }
+        }
+
+        setTaskState("succeeded");
+        setTaskRaw({
+          stream: true,
+          text: fullText,
+          billing,
+        });
+        if (billing) {
+          shouldRefreshCredits = true;
+        }
+      } else {
+        const rawText = await response.text();
+        let raw: unknown = rawText;
+        try {
+          raw = JSON.parse(rawText);
+        } catch {
+          // Keep text fallback.
+        }
+
+        const assistantText = extractChatText(raw).trim();
+        if (assistantText) {
+          setChatMessages((current) => {
+            if (current.length === 0) {
+              return current;
+            }
+            const last = current[current.length - 1];
+            if (last?.role === "assistant") {
+              const next = [...current];
+              next[next.length - 1] = {
+                ...last,
+                content: assistantText,
+              };
+              return next;
+            }
+            return [...current, { role: "assistant", content: assistantText }];
+          });
+        }
+        setTaskState("succeeded");
+        setTaskRaw(raw);
+
+        if (
+          raw &&
+          typeof raw === "object" &&
+          (raw as Record<string, any>).billing
+        ) {
+          shouldRefreshCredits = true;
+        }
+      }
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Chat failed";
+      setChatError(message);
+      setTaskState("failed");
+      setTaskRaw({ error: message });
+      setChatMessages((current) => {
+        const last = current[current.length - 1];
+        if (last?.role === "assistant" && !last.content) {
+          return current.slice(0, -1);
+        }
+        return current;
+      });
+    } finally {
+      setRunLoading(false);
+      if (shouldRefreshCredits) {
+        refreshBenefits();
+      }
+    }
+  }
+
+  function handleClearChat() {
+    setChatMessages([]);
+    setChatInput("");
+    setChatError(null);
+    setTaskState(null);
+    setTaskRaw(null);
+    setExecuteResult(null);
+  }
+
   function updateField(path: string[], value: unknown) {
     setPayload((current) => setValueAtPath(current, path, value));
   }
@@ -681,6 +1046,7 @@ export default function AiStudioShell({
       },
       modelValue,
     );
+  const isChatCategory = activeCategory === "chat";
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(15,118,110,0.15),transparent_28%),radial-gradient(circle_at_top_right,rgba(249,115,22,0.14),transparent_24%),linear-gradient(180deg,#f5f7fb_0%,#eef4ff_42%,#f6f9fc_100%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.18),transparent_26%),radial-gradient(circle_at_top_right,rgba(251,146,60,0.18),transparent_22%),linear-gradient(180deg,#020617_0%,#0f172a_42%,#111827_100%)]">
@@ -837,7 +1203,147 @@ export default function AiStudioShell({
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="grid gap-6 p-6 lg:grid-cols-[1.1fr_0.9fr]">
+              {isChatCategory ? (
+                <CardContent className="space-y-4 p-6">
+                  {detailLoading ? (
+                    <div className="flex min-h-[280px] items-center justify-center rounded-3xl border border-dashed border-slate-200 text-sm text-slate-500 dark:border-white/10 dark:text-slate-400">
+                      <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                      Loading model detail…
+                    </div>
+                  ) : !detail ? (
+                    <div className="flex min-h-[280px] items-center justify-center rounded-3xl border border-dashed border-slate-200 text-sm text-slate-500 dark:border-white/10 dark:text-slate-400">
+                      Pick a model to begin.
+                    </div>
+                  ) : (
+                    <>
+                      {runtimeModels.length > 1 && (
+                        <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 dark:border-white/10 dark:bg-slate-900/70">
+                          <div className="mb-2 text-sm font-medium text-slate-900 dark:text-white">
+                            Runtime Model Variant
+                          </div>
+                          <select
+                            value={typeof payload.model === "string" ? payload.model : ""}
+                            onChange={(event) => updateField(["model"], event.target.value)}
+                            className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none ring-0 dark:border-white/10 dark:bg-slate-950 dark:text-white"
+                          >
+                            {runtimeModels.map((runtimeModel) => (
+                              <option key={runtimeModel} value={runtimeModel}>
+                                {displayModelLabel(runtimeModel)}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+
+                      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-white/10 dark:bg-slate-950">
+                        <div
+                          ref={chatViewportRef}
+                          className="h-[460px] space-y-4 overflow-y-auto p-4"
+                        >
+                          {chatMessages.length === 0 ? (
+                            <div className="flex h-full items-center justify-center text-sm text-slate-500 dark:text-slate-400">
+                              发送第一条消息开始对话
+                            </div>
+                          ) : (
+                            chatMessages.map((message, index) => (
+                              <div
+                                key={`${message.role}-${index}`}
+                                className={cn(
+                                  "flex",
+                                  message.role === "user" ? "justify-end" : "justify-start",
+                                )}
+                              >
+                                <div
+                                  className={cn(
+                                    "max-w-[82%] rounded-2xl px-4 py-3 text-sm whitespace-pre-wrap",
+                                    message.role === "user"
+                                      ? "bg-slate-900 text-white dark:bg-teal-300 dark:text-slate-950"
+                                      : "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100",
+                                  )}
+                                >
+                                  {message.content}
+                                </div>
+                              </div>
+                            ))
+                          )}
+
+                          {runLoading && (
+                            <div className="flex justify-start">
+                              <div className="rounded-2xl bg-slate-100 px-4 py-3 text-sm text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                                思考中...
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="border-t border-slate-200 p-3 dark:border-white/10">
+                          <div className="flex items-end gap-2">
+                            <Textarea
+                              value={chatInput}
+                              onChange={(event) => setChatInput(event.target.value)}
+                              placeholder="输入消息，回车发送"
+                              rows={1}
+                              className="min-h-[44px] max-h-[140px] resize-none"
+                              onKeyDown={(event) => {
+                                if (event.key === "Enter" && !event.shiftKey) {
+                                  event.preventDefault();
+                                  if (!runLoading && chatInput.trim()) {
+                                    void handleChatSend();
+                                  }
+                                }
+                              }}
+                              disabled={runLoading}
+                            />
+                            <Button
+                              onClick={() => void handleChatSend()}
+                              disabled={runLoading || !chatInput.trim()}
+                              className="h-11 w-11 shrink-0 rounded-xl px-0"
+                            >
+                              {runLoading ? (
+                                <LoaderCircle className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <Send className="h-4 w-4" />
+                              )}
+                            </Button>
+                          </div>
+                          <div className="mt-2 flex items-center justify-between">
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
+                              Enter 发送，Shift+Enter 换行
+                            </p>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 gap-1.5"
+                              onClick={handleClearChat}
+                              disabled={runLoading || (chatMessages.length === 0 && !chatInput)}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                              清空
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {chatError && (
+                        <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-500/40 dark:bg-rose-950/40 dark:text-rose-200">
+                          {chatError}
+                        </div>
+                      )}
+
+                      <div className="rounded-2xl border border-slate-200 bg-slate-950 p-4 dark:border-white/10">
+                        <div className="mb-2 text-xs uppercase tracking-[0.2em] text-slate-400">
+                          Raw Response
+                        </div>
+                        <pre className="max-h-[260px] overflow-auto whitespace-pre-wrap break-all text-xs leading-6 text-slate-100">
+                          {JSON.stringify(taskRaw ?? executeResult?.raw ?? {}, null, 2)}
+                        </pre>
+                      </div>
+                    </>
+                  )}
+                </CardContent>
+              ) : (
+                <CardContent className="grid gap-6 p-6 lg:grid-cols-[1.1fr_0.9fr]">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
@@ -1242,7 +1748,8 @@ export default function AiStudioShell({
                     </CardContent>
                   </Card>
                 </div>
-              </CardContent>
+                </CardContent>
+              )}
             </Card>
           </div>
         </section>

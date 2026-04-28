@@ -30,6 +30,7 @@ export type AiStudioUserHistoryItem = {
   refundedCredits: number;
   resultUrls: string[];
   createdAt: string;
+  completedAt?: string | null;
   requestPayload: Record<string, any>;
   responsePayload: unknown | null;
 };
@@ -39,6 +40,7 @@ export type LegacyVideoHistoryRecord = {
   taskId: string;
   providerTaskId?: string | null;
   category: string;
+  provider?: string;
   catalogModelId?: string;
   model: string;
   modelLabel: string | null;
@@ -59,43 +61,9 @@ export type LegacyVideoHistoryRecord = {
   resultUrl: string | null;
   resultUrls: string[];
   createdAt: string;
+  completedAt?: string | null;
   requestPayload: Record<string, any>;
   responsePayload: unknown | null;
-};
-
-export type AiStudioAdminVideoItem = {
-  id: string;
-  userId: string;
-  userEmail: string | null;
-  userName: string | null;
-  category: string;
-  catalogModelId: string;
-  title: string;
-  providerTaskId: string | null;
-  status: string;
-  requestPayload: Record<string, any>;
-  resultUrls: string[];
-  reservedCredits: number;
-  refundedCredits: number;
-  createdAt: string;
-};
-
-export type LegacyAdminVideoRecord = {
-  id: string;
-  taskId: string;
-  userId: string;
-  userEmail: string | null;
-  userName: string | null;
-  category: string;
-  model: string;
-  selectedModel: string;
-  status: LegacyVideoStatus;
-  creditsUsed: number;
-  creditsRefunded: boolean;
-  inputParams: unknown;
-  prompt: string | null;
-  resultUrl: string | null;
-  createdAt: string;
 };
 
 function asRecord(value: unknown) {
@@ -256,6 +224,7 @@ export function mapAiStudioUserRecordToLegacyVideoHistoryRecord(
     taskId,
     providerTaskId: record.providerTaskId,
     category,
+    provider: record.provider,
     catalogModelId: record.catalogModelId,
     model,
     modelLabel: record.title,
@@ -273,6 +242,7 @@ export function mapAiStudioUserRecordToLegacyVideoHistoryRecord(
     resultUrl: record.resultUrls[0] ?? null,
     resultUrls: record.resultUrls,
     createdAt: record.createdAt,
+    completedAt: record.completedAt ?? null,
     requestPayload: record.requestPayload,
     responsePayload: record.responsePayload,
   };
@@ -297,30 +267,4 @@ export function mapAiStudioUserRecordToLegacyVideoHistoryRecord(
   nextRecord.inputVideos = [...inputVideos];
 
   return nextRecord;
-}
-
-export function mapAiStudioAdminRecordToLegacyAdminVideoRecord(
-  record: AiStudioAdminVideoItem,
-): LegacyAdminVideoRecord {
-  const providerValues = mapAiStudioStoredPayloadToLegacyVideoInput(
-    record.requestPayload,
-  );
-
-  return {
-    id: record.id,
-    taskId: record.providerTaskId ?? record.id,
-    userId: record.userId,
-    userEmail: record.userEmail,
-    userName: record.userName,
-    category: record.category,
-    model: asString(record.requestPayload?.model) ?? record.catalogModelId,
-    selectedModel: record.title,
-    status: mapAiStudioStatusToLegacyVideoStatus(record.status),
-    creditsUsed: record.reservedCredits,
-    creditsRefunded: record.refundedCredits > 0,
-    inputParams: record.requestPayload,
-    prompt: providerValues.prompt ?? null,
-    resultUrl: record.resultUrls[0] ?? null,
-    createdAt: record.createdAt,
-  };
 }

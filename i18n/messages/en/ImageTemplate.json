@@ -1,14 +1,4 @@
 {
-  "navigation": {
-    "brand": "GptImage2Api",
-    "createVideo": "Generate Image",
-    "credits": "30 credits",
-    "darkModeLabel": "Switch to dark mode",
-    "home": "Home",
-    "language": "English",
-    "mobileMenuLabel": "Open menu",
-    "resources": "Resources"
-  },
   "hero": {
     "badge": "Gpt Image 2 Api",
     "ctaLabel": "Generate Image",

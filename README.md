@@ -9,6 +9,9 @@ pnpm install
 cp .env.example .env.local
 cp .env.example .env
 ```
+修改配置中域名、名称、邮箱
+修改网站配置 config/site.ts
+
 ## 创建数据库
 
 ### vps 创建数据库

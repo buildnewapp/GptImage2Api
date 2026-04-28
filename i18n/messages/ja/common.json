@@ -1,8 +1,10 @@
 {
   "Home": {
-    "title": "Gpt Image 2 Api – 開発者向けの高速で信頼性の高い GPT Image 2 API",
-    "tagLine": "Gpt Image 2 Api",
-    "description": "GptImage2Api は、開発者・スタートアップ・企業向けに、シンプルな REST エンドポイントで高品質な AI 画像を生成できる強力な GPT Image 2 API を提供します。画像生成アプリの構築、クリエイティブワークフローの自動化、そして GPT Image 2 API の製品への即時統合を実現できます。"
+    "title": "Gpt Image 2 Api",
+    "tagLine": "Gpt Image 2 Api – 開発者向けの高速で信頼性の高い GPT Image 2 API",
+    "description": "GptImage2Api は、開発者・スタートアップ・企業向けに、シンプルな REST エンドポイントで高品質な AI 画像を生成できる強力な GPT Image 2 API を提供します。画像生成アプリの構築、クリエイティブワークフローの自動化、そして GPT Image 2 API の製品への即時統合を実現できます。",
+    "createVideo": "生成",
+    "mobileMenuLabel": "メニューを開く"
   },
   "Login": {
     "title": "おかえりなさい",
@@ -150,14 +152,14 @@
         "icon": "FileBox"
       },
       {
-        "name": "生成履歴",
-        "href": "/dashboard/admin-videos",
-        "icon": "Video"
-      },
-      {
         "name": "AI Studio管理",
         "href": "/dashboard/ai-studio-admin",
         "icon": "Bot"
+      },
+      {
+        "name": "Prompt管理",
+        "href": "/dashboard/prompts-admin",
+        "icon": "FileText"
       }
     ],
     "AdminContentTabs": {
@@ -461,6 +463,7 @@
   "Footer": {
     "Copyright": "著作権所有 © {year} {name}。Powered by GPT Image 2。独立した製品です。Google、OpenAI、および各種 AI モデル提供元とは一切関係ありません。",
     "About": "サイトについて",
+    "Contact": "お問い合わせ",
     "PrivacyPolicy": "プライバシーポリシー",
     "TermsOfService": "利用規約",
     "RefundPolicy": "返金ポリシー",
@@ -498,6 +501,14 @@
               "id": "pricing",
               "href": "/#pricing",
               "name": "料金プラン"
+            },
+            {
+              "href": "/apidoc",
+              "name": "API ドキュメント"
+            },
+            {
+              "href": "/about#contact-us",
+              "name": "お問い合わせ"
             }
           ]
         },

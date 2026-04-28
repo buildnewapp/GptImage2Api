@@ -12,7 +12,10 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import {Check, ChevronDown, Sparkles, Video} from "lucide-react";
 import { useMemo, useState, type ReactNode } from "react";
-import type { AiVideoStudioFamilyIconKey } from "@/config/ai-video-studio";
+import type {
+  AiVideoStudioFamilyIconKey,
+  AiVideoStudioLevelLimit,
+} from "@/config/ai-video-studio";
 import Image from "next/image";
 
 export type ModelSelectorItem = {
@@ -27,6 +30,7 @@ export type ModelSelectorItem = {
 export type ModelSelectorVersionItem = {
   id: string;
   name: string;
+  levelLimit?: AiVideoStudioLevelLimit;
 };
 
 type ModelSelectorProps = {
@@ -66,6 +70,7 @@ export function ModelSelector({
     () => versions?.find((item) => item.id === activeVersionId),
     [activeVersionId, versions],
   );
+  const activeVersionLevelLimit = activeVersion?.levelLimit;
 
   if (!selectedModel) return null;
 
@@ -156,15 +161,30 @@ export function ModelSelector({
             <Select value={activeVersionId} onValueChange={onSelectVersion}>
               <SelectTrigger className="w-full !h-11 rounded-xl border-border/50 bg-background/50">
                 <SelectValue placeholder={versionLabel || "Version"}>
-                  <span className="truncate font-semibold">
-                    {activeVersion?.name}
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span className="truncate font-semibold">
+                      {activeVersion?.name}
+                    </span>
+                    {activeVersionLevelLimit &&
+                    activeVersionLevelLimit !== "none" ? (
+                      <span className="rounded-md border border-amber-500/40 bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-300">
+                        {activeVersionLevelLimit}
+                      </span>
+                    ) : null}
                   </span>
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {versions.map((version) => (
                   <SelectItem key={version.id} value={version.id}>
-                    {version.name}
+                    <span className="flex items-center gap-2">
+                      <span>{version.name}</span>
+                      {version.levelLimit && version.levelLimit !== "none" ? (
+                        <span className="rounded-md border border-amber-500/40 bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-300">
+                          {version.levelLimit}
+                        </span>
+                      ) : null}
+                    </span>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -183,8 +203,15 @@ export function ModelSelector({
                       : "border-transparent hover:bg-muted/50",
                   )}
                 >
-                  <span className="font-semibold text-foreground text-xs sm:text-sm truncate">
-                    {version.name}
+                  <span className="flex min-w-0 items-center gap-1.5">
+                    <span className="font-semibold text-foreground text-xs sm:text-sm truncate">
+                      {version.name}
+                    </span>
+                    {version.levelLimit && version.levelLimit !== "none" ? (
+                      <span className="rounded-md border border-amber-500/40 bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-300">
+                        {version.levelLimit}
+                      </span>
+                    ) : null}
                   </span>
                 </button>
               ))}

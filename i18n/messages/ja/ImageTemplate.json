@@ -1,14 +1,4 @@
 {
-  "navigation": {
-    "brand": "GptImage2Api",
-    "createVideo": "画像を生成",
-    "credits": "30 クレジット",
-    "darkModeLabel": "ダークモードに切り替える",
-    "home": "ホーム",
-    "language": "日本語",
-    "mobileMenuLabel": "メニューを開く",
-    "resources": "リソース"
-  },
   "hero": {
     "badge": "Gpt Image 2 Api",
     "ctaLabel": "画像を生成",

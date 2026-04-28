@@ -1,17 +1,7 @@
 {
-  "navigation": {
-    "brand": "Seedance 2.0",
-    "createVideo": "動画を作成",
-    "credits": "30 クレジット",
-    "darkModeLabel": "ダークモードに切り替える",
-    "home": "ホーム",
-    "language": "日本語",
-    "mobileMenuLabel": "メニューを開く",
-    "resources": "リソース"
-  },
   "hero": {
     "badge": "Seedance 2.0 web & api",
-    "ctaLabel": "動画を生成",
+    "ctaLabel": "生成",
     "creditCost": "25",
     "description": "テキストまたは参照画像から短尺 AI 動画を生成できます。新規ユーザーは Seedance 2.0 をすぐに使い始められ、デイリータスクで多くのクレジットを継続的に獲得できます。現在の Web アプリの Seedance 2.0 は、最大 1080p・15 秒まで対応しています。",
     "durationLabel": "5秒",

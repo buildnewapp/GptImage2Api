@@ -33,6 +33,8 @@ const STATIC_PAGE_CONFIG: StaticPageConfig[] = [
   { path: '/blog', priority: 0.8, changeFrequency: 'daily' },
   { path: '/showcase', priority: 0.85, changeFrequency: 'weekly' },
   { path: '/prompts', priority: 0.8, changeFrequency: 'weekly' },
+  { path: '/pricing', priority: 0.8, changeFrequency: 'weekly' },
+  { path: '/apidoc', priority: 0.8, changeFrequency: 'weekly' },
 ]
 
 const CMS_MODULES = {

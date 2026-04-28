@@ -1,9 +1,9 @@
 import { getLocale, getTranslations } from "next-intl/server";
 
+import TemplateJsonLd from "@/components/home/image/TemplateJsonLd";
 import { buildVideoTemplatePricingSection } from "@/components/home/video/pricing-data";
 import type { VideoTemplatePage } from "@/components/home/video/types";
 import { pageShellClass } from "@/components/home/video/constants";
-import Header from "@/components/home/video/Header";
 import Hero from "@/components/home/video/Hero";
 import FeatureRows from "@/components/home/video/FeatureRows";
 import Scope from "@/components/home/video/Scope";
@@ -18,7 +18,6 @@ export default async function ImageTemplate() {
   const locale = await getLocale();
   const t = await getTranslations("ImageTemplate");
   const page = {
-    navigation: t.raw("navigation"),
     hero: t.raw("hero"),
     featureRows: t.raw("featureRows"),
     scope: t.raw("scope"),
@@ -35,6 +34,7 @@ export default async function ImageTemplate() {
 
   return (
     <div className={pageShellClass + " -mt-20 w-full overflow-x-hidden"}>
+      <TemplateJsonLd templateName="ImageTemplate" />
       {/*<Header />*/}
       <Hero hero={page.hero} />
       <div id="features">

@@ -52,6 +52,14 @@ export function getAiStudioApiKey(vendor = "kie") {
     return apiKey;
   }
 
+  if (vendor === "openrouter") {
+    const apiKey = process.env.OPENROUTER_API_KEY;
+    if (!apiKey) {
+      throw new Error("OPENROUTER_API_KEY is not configured");
+    }
+    return apiKey;
+  }
+
   throw new Error(`Unsupported AI Studio vendor: ${vendor}`);
 }
 
@@ -62,6 +70,10 @@ export function getAiStudioApiBaseUrl(vendor = "kie") {
 
   if (vendor === "apimart") {
     return "https://api.apimart.ai";
+  }
+
+  if (vendor === "openrouter") {
+    return "https://openrouter.ai";
   }
 
   throw new Error(`Unsupported AI Studio vendor: ${vendor}`);

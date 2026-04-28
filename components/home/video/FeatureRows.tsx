@@ -22,13 +22,21 @@ export default function FeatureRows({ items }: FeatureRowsProps) {
               >
                 {item.reverse ? (
                   <>
-                    <FeaturePreview imageSrc={item.imageSrc} videoSrc={item.videoSrc} />
+                    <FeaturePreview
+                      imageSrc={item.imageSrc}
+                      title={item.title}
+                      videoSrc={item.videoSrc}
+                    />
                     <FeatureCopy title={item.title} description={item.description} />
                   </>
                 ) : (
                   <>
                     <FeatureCopy title={item.title} description={item.description} />
-                    <FeaturePreview imageSrc={item.imageSrc} videoSrc={item.videoSrc} />
+                    <FeaturePreview
+                      imageSrc={item.imageSrc}
+                      title={item.title}
+                      videoSrc={item.videoSrc}
+                    />
                   </>
                 )}
               </div>
@@ -57,16 +65,23 @@ function FeatureCopy({
 
 function FeaturePreview({
   imageSrc,
+  title,
   videoSrc,
 }: {
   imageSrc?: string;
+  title: string;
   videoSrc?: string;
 }) {
   return (
     <div data-aos="fade-left" className="flex items-center justify-center">
       <div className="relative aspect-video overflow-hidden rounded-[2rem] border border-border/70 shadow-[0_30px_60px_-42px_rgba(15,23,42,0.56)]">
         {imageSrc ? (
-          <img src={imageSrc} alt="" className="h-full w-full object-cover" loading="lazy" />
+          <img
+            src={imageSrc}
+            alt={`${title} preview image`}
+            className="h-full w-full object-cover"
+            loading="lazy"
+          />
         ) : videoSrc ? (
           <video
             src={videoSrc}

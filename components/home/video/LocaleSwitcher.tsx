@@ -24,11 +24,13 @@ import { useTransition } from "react";
 interface VideoLocaleSwitcherProps {
   fullWidth?: boolean;
   overlay?: boolean;
+  triggerId?: string;
 }
 
 export default function VideoLocaleSwitcher({
   fullWidth = false,
   overlay = false,
+  triggerId,
 }: VideoLocaleSwitcherProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -52,6 +54,7 @@ export default function VideoLocaleSwitcher({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
+        id={triggerId}
         className={cn(
           "flex items-center justify-between gap-2 rounded-full border px-3 py-2 text-sm shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring/70 focus:ring-offset-2",
           overlay

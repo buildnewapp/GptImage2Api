@@ -1,0 +1,244 @@
+{
+  "seo": {
+    "title": "AI Studio API Documentation",
+    "description": "Learn how to authenticate, generate AI videos, poll task results, read generation history, and check user credits with the AI Studio API.",
+    "keywords": [
+      "AI Studio API",
+      "AI video API",
+      "video generation API",
+      "AI API documentation",
+      "Seedance API",
+      "Sora API"
+    ]
+  },
+  "hero": {
+    "badge": "Quick Start",
+    "title": "AI Studio API",
+    "subtitle": "Connect AI video generation to your app in a few steps, check progress anytime, and pay with credits.",
+    "ctas": [
+      {
+        "label": "Get API Key",
+        "href": "/dashboard/apikeys"
+      },
+      {
+        "label": "Start Building",
+        "href": "/dashboard/generate"
+      },
+      {
+        "label": "View Pricing",
+        "href": "/pricing"
+      }
+    ],
+    "valueProps": [
+      {
+        "title": "Easy integration",
+        "icon": "code"
+      },
+      {
+        "title": "Create AI videos",
+        "icon": "sparkles"
+      },
+      {
+        "title": "Pay with credits",
+        "icon": "coins"
+      },
+      {
+        "title": "Simple workflow",
+        "icon": "workflow"
+      }
+    ]
+  },
+  "flow": {
+    "kicker": "Quick Start",
+    "title": "How it works",
+    "description": "From account setup to getting your final video result.",
+    "steps": [
+      "Log in or create an account",
+      "Create an API Key in the dashboard",
+      "Call the video generation endpoint with your API Key",
+      "Poll the generation result when a task is queued",
+      "Read recent generation records",
+      "Check user profile, credits, and membership status"
+    ]
+  },
+  "auth": {
+    "kicker": "Authentication",
+    "title": "Use your API key",
+    "description": "Create an API key after login, then include it in the Authorization header for every request.",
+    "cardTitle": "Required request header",
+    "cardDescription": "Create an API Key after login, then include it in every API request.",
+    "replaceHint": "The example domain is automatically resolved from NEXT_PUBLIC_SITE_URL. Replace only YOUR_API_KEY with the key generated in your account.",
+    "getApiKeyCta": "Get API Key"
+  },
+  "endpoints": {
+    "kicker": "Endpoints",
+    "title": "Available API calls",
+    "description": "These are the live endpoints currently used by AI Video Studio.",
+    "execute": {
+      "description": "Start a new generation task. The request uses modelId, isPublic, and payload."
+    },
+    "task": {
+      "description": "Check task progress after create returns taskId and statusSupported=true."
+    },
+    "history": {
+      "description": "Get your recent generation records."
+    },
+    "videoHistory": {
+      "description": "Get paginated generation history with status and keyword filters."
+    },
+    "user": {
+      "description": "Get your account profile, remaining credits, and membership summary."
+    }
+  },
+  "endpointLabels": {
+    "headers": "Request Headers",
+    "parameters": "Request Parameters"
+  },
+  "table": {
+    "name": "Name",
+    "type": "Type",
+    "required": "Required",
+    "defaultValue": "Default",
+    "options": "Options",
+    "description": "Description",
+    "yes": "Yes",
+    "no": "No",
+    "none": "No request parameters."
+  },
+  "codeLabels": {
+    "request": "Request",
+    "response": "Response Example",
+    "error": "Error Example",
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "parameters": {
+    "modelId": "Model ID for the video style/version you choose.",
+    "modelIdQuery": "The modelId used by this task.",
+    "isPublic": "Whether this result can be shown publicly. Default is true.",
+    "payload": "Main input data for generation. Nested fields change with the selected model.",
+    "payloadAnchor": "See Dynamic payload fields by model",
+    "taskId": "Task ID returned after starting generation.",
+    "limit": "How many recent records to return (1-50).",
+    "videoHistoryLimit": "Page size for history list (1-50).",
+    "page": "History page number.",
+    "historyStatus": "Status filter for history list.",
+    "q": "Optional keyword for searching your history."
+  },
+  "models": {
+    "kicker": "Models",
+    "title": "Available model IDs",
+    "description": "Choose a model ID that matches your desired output.",
+    "family": "Family",
+    "version": "Version",
+    "modelId": "modelId"
+  },
+  "modelSchema": {
+    "kicker": "Model Schema",
+    "title": "Dynamic payload fields by model",
+    "description": "Pick a model to view the exact input fields supported by /api/ai-studio/models/{modelId}.",
+    "selectLabel": "Select model",
+    "selectPlaceholder": "Choose a model",
+    "endpointLabel": "Model detail endpoint",
+    "loading": "Loading model schema...",
+    "loadError": "Failed to load model schema:",
+    "fieldDocsTitle": "Input field docs",
+    "noFields": "No input field docs were found for this model.",
+    "requestExampleTitle": "Example request payload",
+    "docMeta": {
+      "required": "Required",
+      "type": "Type",
+      "enum": "Options",
+      "range": "Range",
+      "minimum": "Minimum",
+      "maximum": "Maximum"
+    }
+  },
+  "statuses": {
+    "kicker": "Task States",
+    "title": "Task progress states",
+    "description": "These states tell you whether your generation is waiting, running, done, or failed."
+  },
+  "pricing": {
+    "kicker": "Pricing",
+    "title": "Credits-based API billing",
+    "description": "Generation requests reserve and settle credits through the existing AI Studio generation flow.",
+    "items": [
+      "API usage is billed with credits.",
+      "Each generation can consume credits based on the selected model, duration, quality, resolution, and pricing row.",
+      "Users can check remaining credits from the account or /api/auth/user.",
+      "Generation is blocked when the account has insufficient credits."
+    ],
+    "ctas": [
+      {
+        "label": "Buy Credits",
+        "href": "/pricing"
+      },
+      {
+        "label": "Upgrade Plan",
+        "href": "/dashboard/subscription"
+      },
+      {
+        "label": "View Pricing",
+        "href": "/pricing"
+      }
+    ]
+  },
+  "faq": {
+    "kicker": "FAQ",
+    "title": "AI Studio API FAQ",
+    "description": "Quick answers for setup, billing, and generation progress.",
+    "items": [
+      {
+        "question": "How do I get an API key?",
+        "answer": "Log in, open the API Keys dashboard, and create an active key. Use it as Authorization: Bearer YOUR_API_KEY."
+      },
+      {
+        "question": "How do I authenticate API requests?",
+        "answer": "Send the API key in the Authorization header using the Bearer format on every request."
+      },
+      {
+        "question": "How is API usage billed?",
+        "answer": "Generation calls use account credits. The consumed amount depends on the model and selected pricing options."
+      },
+      {
+        "question": "How do I check video generation status?",
+        "answer": "After the execute endpoint returns taskId and statusSupported is true, poll /api/ai-studio/tasks/{taskId}?modelId={modelId}."
+      },
+      {
+        "question": "Where can I view my generation history?",
+        "answer": "Use /api/ai-studio/video-history for your paginated generation history."
+      },
+      {
+        "question": "What happens if I run out of credits?",
+        "answer": "New generation requests cannot continue when the account does not have enough credits."
+      },
+      {
+        "question": "Can I use the API for commercial projects?",
+        "answer": "The API can be integrated into production workflows, subject to your account plan and the service terms."
+      },
+      {
+        "question": "Does the API support different video models?",
+        "answer": "Yes. Available model IDs are the models configured in config/ai-video-studio.ts."
+      }
+    ]
+  },
+  "finalCta": {
+    "title": "Start using AI Studio API",
+    "description": "Create your API key, run your first request, and track progress in real time.",
+    "ctas": [
+      {
+        "label": "Get API Key",
+        "href": "/dashboard/apikeys"
+      },
+      {
+        "label": "Start Building",
+        "href": "/dashboard/generate"
+      },
+      {
+        "label": "View Pricing",
+        "href": "/pricing"
+      }
+    ]
+  }
+}

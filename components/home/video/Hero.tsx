@@ -51,7 +51,7 @@ export default function Hero({ hero }: HeroProps) {
         </div>
         <div className="w-full space-y-4">
           <div data-aos="fade-up">
-            <AIVideoMiniStudio hero={hero} />
+            <AIVideoMiniStudio />
           </div>
         </div>
       </div>

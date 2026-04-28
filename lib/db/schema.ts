@@ -289,6 +289,11 @@ export const orders = pgTable(
   (table) => {
     return {
       userIdx: index("idx_orders_user_id").on(table.userId),
+      userStatusCreatedAtIdx: index("idx_orders_user_status_created_at").on(
+        table.userId,
+        table.status,
+        table.createdAt,
+      ),
       providerIdx: index("idx_orders_provider").on(table.provider),
       planIdIdx: index("idx_orders_plan_id").on(table.planId),
       providerProviderOrderIdUnique: unique(
@@ -748,6 +753,60 @@ export const aiStudioGenerationStatusEnum = pgEnum("ai_studio_generation_status"
   "succeeded",
   "failed",
 ]);
+
+export const promptGalleryStatusEnum = pgEnum("prompt_gallery_status", [
+  "draft",
+  "online",
+  "offline",
+]);
+
+export const promptGalleryItems = pgTable(
+  "prompt_gallery_items",
+  {
+    id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+    language: varchar("language", { length: 10 }).default("en").notNull(),
+    categories: jsonb("categories").default("[]").notNull(),
+    model: varchar("model", { length: 100 }).notNull(),
+    sourceId: integer("source_id"),
+    title: text("title").notNull(),
+    description: text("description"),
+    sourceLink: text("source_link"),
+    sourcePublishedAt: timestamp("source_published_at", { withTimezone: true }),
+    sourcePlatform: varchar("source_platform", { length: 50 }),
+    author: jsonb("author").default("{}").notNull(),
+    coverUrl: text("cover_url"),
+    inputVideos: jsonb("input_videos").default("[]").notNull(),
+    inputImages: jsonb("input_images").default("[]").notNull(),
+    inputAudios: jsonb("input_audios").default("[]").notNull(),
+    results: jsonb("results").default("[]").notNull(),
+    prompt: text("prompt").notNull(),
+    note: text("note"),
+    featured: boolean("featured").default(false).notNull(),
+    sort: integer("sort").default(0).notNull(),
+    searchIndex: text("search_index").default("").notNull(),
+    ups: integer("ups").default(0).notNull(),
+    downs: integer("downs").default(0).notNull(),
+    status: promptGalleryStatusEnum("status").default("draft").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    languageIdx: index("idx_prompt_gallery_items_language").on(table.language),
+    modelIdx: index("idx_prompt_gallery_items_model").on(table.model),
+    sourceIdIdx: index("idx_prompt_gallery_items_source_id").on(table.sourceId),
+    featuredIdx: index("idx_prompt_gallery_items_featured").on(table.featured),
+    sortIdx: index("idx_prompt_gallery_items_sort").on(table.sort),
+    statusIdx: index("idx_prompt_gallery_items_status").on(table.status),
+    sourcePublishedAtIdx: index("idx_prompt_gallery_items_source_published_at").on(
+      table.sourcePublishedAt,
+    ),
+  }),
+);
 
 export const aiStudioGenerations = pgTable(
   "ai_studio_generations",

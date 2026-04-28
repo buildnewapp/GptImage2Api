@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Zap } from "lucide-react";
 
 import { UserAvatar } from "@/components/header/UserAvatar";
 import VideoHeaderLinks from "@/components/home/video/HeaderLinks";
@@ -10,24 +10,23 @@ import VideoLocaleSwitcher from "@/components/home/video/LocaleSwitcher";
 import VideoMobileMenu from "@/components/home/video/MobileMenu";
 import { ThemeToggle } from "@/components/home/video/ThemeToggle";
 import { videoThemeVarsClass } from "@/components/home/video/constants";
-import type { VideoTemplateNavigation } from "@/components/home/video/types";
 import { Link as I18nLink, usePathname } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { user as userSchema } from "@/lib/db/schema";
+import { useTranslations } from "next-intl";
 
 type User = typeof userSchema.$inferSelect;
 
 interface VideoHeaderShellProps {
-  navigation: VideoTemplateNavigation;
   totalAvailableCredits?: number | null;
   user?: User | null;
 }
 
 export default function HeaderShell({
-  navigation,
   totalAvailableCredits,
   user,
 }: VideoHeaderShellProps) {
+  const t = useTranslations("Home");
   const pathname = usePathname();
   const [overlay, setOverlay] = useState(() => pathname === "/");
   const accountButtonClassName = cn(
@@ -45,6 +44,12 @@ export default function HeaderShell({
   const avatarClassName = cn(
     "h-10 w-10 border",
     overlay ? "border-white/12" : "border-border/60",
+  );
+  const creditsButtonClassName = cn(
+    "inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/70 focus-visible:ring-offset-2",
+    overlay
+      ? "border-white/16 bg-white/10 text-white/80 hover:border-white/24 hover:bg-white/12"
+      : "border-border/75 bg-background/80 text-foreground/80 hover:border-border hover:bg-card/90",
   );
 
   useEffect(() => {
@@ -93,7 +98,7 @@ export default function HeaderShell({
         <div className="flex items-center gap-4 lg:gap-8">
           <I18nLink
             href="/"
-            title={navigation.brand}
+            title={t("title")}
             prefetch={true}
             className="flex items-center gap-3"
           >
@@ -115,7 +120,7 @@ export default function HeaderShell({
                   : "text-foreground",
               )}
             >
-              {navigation.brand}
+              {t("title")}
             </span>
           </I18nLink>
 
@@ -126,27 +131,41 @@ export default function HeaderShell({
 
         <div className="flex items-center gap-2">
           <div className="hidden items-center gap-2 lg:flex">
-            <VideoLocaleSwitcher overlay={overlay} />
+            <VideoLocaleSwitcher
+              overlay={overlay}
+              triggerId="video-header-locale-switcher-trigger"
+            />
             <ThemeToggle overlay={overlay} />
+            {user && typeof totalAvailableCredits === "number" ? (
+              <I18nLink
+                href="/dashboard/credit-history"
+                className={creditsButtonClassName}
+              >
+                <Zap className="h-4 w-4 text-primary" />
+                <span>
+                  {totalAvailableCredits.toLocaleString()}
+                </span>
+              </I18nLink>
+            ) : null}
             <UserAvatar
               user={user as User}
               totalAvailableCredits={totalAvailableCredits}
               avatarClassName={avatarClassName}
               loginButtonClassName={accountButtonClassName}
               triggerClassName={avatarTriggerClassName}
+              triggerId="video-header-user-menu-trigger"
             />
             <I18nLink
               href="/dashboard/generate"
               className="inline-flex h-11 items-center justify-center rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-5 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110"
             >
               <Sparkles className="mr-2 h-4 w-4" />
-              {navigation.createVideo}
+              {t("createVideo")}
             </I18nLink>
           </div>
 
           <div className="flex items-center gap-2 lg:hidden">
             <VideoMobileMenu
-              navigation={navigation}
               overlay={overlay}
               user={user as User}
               totalAvailableCredits={totalAvailableCredits}

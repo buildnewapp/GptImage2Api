@@ -13,9 +13,13 @@ import {
 } from "@/components/ui/accordion";
 import {
   AI_VIDEO_STUDIO_FAMILIES,
+  canUseAiVideoStudioModelForMembership,
+  getAiVideoStudioLevelLabel,
+  getAiVideoStudioLevelLimit,
   getAiVideoStudioSelectionFromModelId,
   getAiVideoStudioVersions,
   type AiVideoStudioFamilyKey,
+  type AiVideoStudioLevelLimit,
   type AiVideoStudioVersionKey,
   resolveAiVideoStudioModelId,
 } from "@/config/ai-video-studio";
@@ -66,7 +70,6 @@ import {
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import HeroPromptCarousel from "@/components/home/seedance/HeroPromptCarousel";
 import {
   ModelSelector,
   type ModelSelectorItem,
@@ -101,6 +104,8 @@ type TaskResponse = {
   data: {
     state: string;
     mediaUrls: string[];
+    raw?: unknown;
+    reason?: string | null;
   };
   error?: string;
 };
@@ -124,6 +129,16 @@ type HistoryResponse = {
   error?: string;
 };
 
+type UserProfileResponse = {
+  success: boolean;
+  data?: {
+    membership?: {
+      level?: AiVideoStudioLevelLimit | null;
+    };
+  };
+  error?: string;
+};
+
 type GenerationTaskState = "queued" | "running" | "succeeded" | "failed";
 
 type GenerationTask = {
@@ -131,6 +146,7 @@ type GenerationTask = {
   taskId?: string;
   state: GenerationTaskState;
   mediaUrls: string[];
+  failureReason?: string | null;
   familyKey: AiVideoStudioFamilyKey;
   versionKey: AiVideoStudioVersionKey;
   modelId: string;
@@ -189,6 +205,34 @@ function resolveGenerationTaskState(
   }
 
   return state === "queued" ? "queued" : "running";
+}
+
+function extractFailureReason(raw: unknown): string | null {
+  if (!raw || typeof raw !== "object") {
+    return null;
+  }
+
+  const record = raw as Record<string, unknown>;
+  const data =
+    record.data && typeof record.data === "object"
+      ? (record.data as Record<string, unknown>)
+      : null;
+
+  const candidates = [
+    record.reason,
+    record.error,
+    record.message,
+    data?.failMsg,
+    data?.errorMessage,
+    data?.message,
+  ];
+
+  const match = candidates.find(
+    (value): value is string =>
+      typeof value === "string" && value.trim().length > 0,
+  );
+
+  return match?.trim() ?? null;
 }
 
 function hasRequiredFieldValue(value: unknown) {
@@ -592,6 +636,8 @@ export default function AIVideoStudio({
   const [selectedPreview, setSelectedPreview] =
     useState<AIVideoStudioPreview | null>(null);
   const [hasClientMounted, setHasClientMounted] = useState(false);
+  const [membershipLevel, setMembershipLevel] =
+    useState<AiVideoStudioLevelLimit>("none");
 
   const availableFamilies = AI_VIDEO_STUDIO_FAMILIES;
   const availableVersions = useMemo(
@@ -615,10 +661,55 @@ export default function AIVideoStudio({
         : null,
     [selectedFamilyKey, selectedVersionKey, selectedVersion],
   );
+  const selectedVersionLevelLimit = useMemo(
+    () => getAiVideoStudioLevelLimit(selectedVersion?.levelLimit),
+    [selectedVersion],
+  );
 
   useEffect(() => {
     setHasClientMounted(true);
   }, []);
+
+  useEffect(() => {
+    const userId = session?.user?.id;
+    if (!userId) {
+      setMembershipLevel("none");
+      return;
+    }
+
+    let mounted = true;
+
+    async function loadMembershipLevel() {
+      try {
+        const response = await fetch("/api/auth/user");
+        const json = (await response.json()) as UserProfileResponse;
+        if (!response.ok || !json.success) {
+          if (mounted) {
+            setMembershipLevel("none");
+          }
+          return;
+        }
+
+        if (!mounted) {
+          return;
+        }
+
+        setMembershipLevel(
+          getAiVideoStudioLevelLimit(json.data?.membership?.level),
+        );
+      } catch {
+        if (mounted) {
+          setMembershipLevel("none");
+        }
+      }
+    }
+
+    void loadMembershipLevel();
+
+    return () => {
+      mounted = false;
+    };
+  }, [session?.user?.id]);
 
   useEffect(() => {
     if (availableVersions.length === 0) {
@@ -1014,6 +1105,7 @@ export default function AIVideoStudio({
               state: "succeeded",
               mediaUrls: json.data.mediaUrls,
               progress: 100,
+              failureReason: null,
             });
             setActiveTaskLocalId(localId);
             toast.success(
@@ -1026,12 +1118,17 @@ export default function AIVideoStudio({
             void refreshBenefits();
           } else if (json.data.state === "failed") {
             clearTaskPolling(localId);
+            const failureReason =
+              json.data.reason ||
+              extractFailureReason(json.data.raw) ||
+              t("form.generationFailed");
             updateGenerationTask(localId, {
               state: "failed",
               mediaUrls: json.data.mediaUrls,
               progress: 100,
+              failureReason,
             });
-            toast.error(t("form.generationFailed"));
+            toast.error(failureReason);
             void refreshBenefits();
           } else {
             updateGenerationTask(localId, {
@@ -1050,6 +1147,7 @@ export default function AIVideoStudio({
             updateGenerationTask(localId, {
               state: "failed",
               progress: 100,
+              failureReason: t("form.generationFailed"),
             });
             toast.error(t("form.generationFailed"));
             void refreshBenefits();
@@ -1177,6 +1275,19 @@ export default function AIVideoStudio({
       return;
     }
 
+    if (
+      !canUseAiVideoStudioModelForMembership({
+        currentLevel: membershipLevel,
+        requiredLevel: selectedVersionLevelLimit,
+      })
+    ) {
+      const requiredLevel =
+        getAiVideoStudioLevelLabel(selectedVersionLevelLimit) ??
+        selectedVersionLevelLimit.toUpperCase();
+      toast.error(t("form.membershipRequired", { level: requiredLevel }));
+      return;
+    }
+
     if (availableCredits !== null && availableCredits < estimatedCredits) {
       toast.error(t("form.insufficientCredits"));
       return;
@@ -1211,6 +1322,7 @@ export default function AIVideoStudio({
         localId: localTaskId,
         state: "queued",
         mediaUrls: [],
+        failureReason: null,
         familyKey: selectedFamilyKey,
         versionKey: selectedVersionKey,
         modelId: resolvedModelId,
@@ -1267,7 +1379,11 @@ export default function AIVideoStudio({
       });
 
       if (nextState === "failed") {
-        toast.error(t("form.generationFailed"));
+        const failureReason = json.error || t("form.generationFailed");
+        updateGenerationTask(localTaskId, {
+          failureReason,
+        });
+        toast.error(failureReason);
         void refreshBenefits();
       } else if (!shouldPoll) {
         toast.success(
@@ -1299,6 +1415,7 @@ export default function AIVideoStudio({
       updateGenerationTask(localTaskId, {
         state: "failed",
         progress: 100,
+        failureReason: error?.message || t("form.generationFailed"),
       });
       toast.error(error?.message || t("form.generationFailed"));
     } finally {
@@ -1318,6 +1435,8 @@ export default function AIVideoStudio({
     selectedFamilyKey,
     selectedPricing,
     selectedVersionKey,
+    membershipLevel,
+    selectedVersionLevelLimit,
     session,
     t,
     updateGenerationTask,
@@ -1449,6 +1568,7 @@ export default function AIVideoStudio({
       availableVersions.map((version) => ({
         id: version.key,
         name: version.label,
+        levelLimit: getAiVideoStudioLevelLimit(version.levelLimit),
       })),
     [availableVersions],
   );
@@ -1812,7 +1932,9 @@ export default function AIVideoStudio({
                     ) : activeTask?.state === "failed" ? (
                       <div className="flex flex-col items-center justify-center h-full w-full gap-3 text-white/75">
                         <X className="w-8 h-8" />
-                        <p className="text-sm">{t("form.generationFailed")}</p>
+                        <p className="text-sm text-center px-4 text-red-400">
+                          {activeTask.failureReason || t("form.generationFailed")}
+                        </p>
                       </div>
                     ) : null}
                   </div>
@@ -1969,9 +2091,15 @@ export default function AIVideoStudio({
                                   task.state === "running" ? (
                                     <Loader2 className="w-3 h-3 animate-spin" />
                                   ) : null}
-                                  <span>
+                                  <span
+                                    className={
+                                      task.state === "failed"
+                                        ? "text-red-500"
+                                        : undefined
+                                    }
+                                  >
                                     {task.state === "failed"
-                                      ? t("form.generationFailed")
+                                      ? task.failureReason || t("form.generationFailed")
                                       : `${t("form.generating")} ${task.progress}%`}
                                   </span>
                                 </div>
@@ -2081,12 +2209,15 @@ export default function AIVideoStudio({
               </div>
             </div>
           ) : (
-            <div className="w-full min-w-0 overflow-hidden">
-              <HeroPromptCarousel
-                onPlayVideo={(url) =>
-                  setSelectedPreview({ kind: "video", url })
-                }
-              />
+            <div className="flex h-full min-h-[420px] w-full min-w-0 items-center justify-center rounded-xl border border-border/50 bg-muted/10 p-6">
+              <div className="flex max-w-md flex-col items-center gap-3 text-center">
+                <div className="flex size-14 items-center justify-center rounded-2xl border border-border/60 bg-background/70">
+                  <Sparkles className="size-7 text-muted-foreground" />
+                </div>
+                <div className="text-base font-semibold text-foreground">
+                  {t("form.historyHint")}
+                </div>
+              </div>
             </div>
           )}
         </div>

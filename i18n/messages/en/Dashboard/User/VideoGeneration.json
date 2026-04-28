@@ -2,11 +2,19 @@
   "title": "My Creations",
   "description": "View your image and video generation history and results",
   "columns": {
+    "id": "ID",
     "model": "Model",
     "status": "Status",
     "credits": "Credits",
     "createdAt": "Created",
-    "actions": "Actions"
+    "duration": "Duration",
+    "actions": "Actions",
+    "preview": "Preview",
+    "task": "Task ID",
+    "user_actions": "User Actions",
+    "usedCredits": "Used",
+    "generatedAt": "Generated",
+    "completedAt": "Completed"
   },
   "status": {
     "pending": "Processing",
@@ -47,9 +55,18 @@
   },
   "copy_task_id": "Copy Task ID",
   "task_id_copied": "Task ID copied",
+  "copy_id": "Copy ID",
+  "id_copied": "ID copied",
   "copy_request": "Copy Request",
+  "copy_response": "Copy Response",
   "request_copied": "Request copied",
   "request_copy_failed": "Failed to copy request",
+  "response_copied": "Response copied",
+  "response_copy_failed": "Failed to copy response",
+  "copy_failed": "Copy failed",
+  "failure_reason": "Failure reason",
+  "view_reason": "View reason",
+  "unknown_failure_reason": "Unknown failure reason",
   "detail": {
     "close": "Close details",
     "preview": "Preview",
@@ -66,6 +83,7 @@
       "video": "Video"
     },
     "fields": {
+      "id": "ID",
       "status": "Status",
       "category": "Category",
       "model": "Model",
@@ -76,6 +94,8 @@
       "credits": "Reserved Credits",
       "used_credits": "Used Credits",
       "created_at": "Created At",
+      "completed_at": "Completed At",
+      "duration": "Duration",
       "mode": "Mode",
       "prompt": "Prompt"
     }
@@ -83,5 +103,9 @@
   "media": {
     "text_to_image": "Text to Image",
     "image_to_image": "Image to Image"
+  },
+  "view": {
+    "card": "Card",
+    "list": "List"
   }
 }

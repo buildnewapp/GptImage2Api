@@ -22,6 +22,8 @@ interface CopyButtonProps {
   variant?: CopyButtonVariant;
   /** Label shown next to the icon in "ghost" variant. Defaults to "Copy". */
   label?: string;
+  /** Label shown after copying in "ghost" variant. Defaults to "Copied". */
+  copiedLabel?: string;
   /** Milliseconds before the copied state resets. Defaults to 2000. */
   resetDelay?: number;
 }
@@ -31,16 +33,20 @@ const CopyButton = ({
   className,
   variant = "icon",
   label = "Copy",
+  copiedLabel = "Copied",
   resetDelay = 2000,
 }: CopyButtonProps) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const copy = useCallback(() => {
     if (!text) return;
-    navigator.clipboard.writeText(text).then(() => {
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), resetDelay);
-    });
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), resetDelay);
+      })
+      .catch(() => {});
   }, [text, resetDelay]);
 
   if (variant === "ghost") {
@@ -50,14 +56,16 @@ const CopyButton = ({
         className={cn(
           "inline-flex items-center gap-1 h-7 px-2 text-xs rounded-md",
           "hover:bg-accent transition-colors",
+          className,
           isCopied ? "text-green-500" : "text-muted-foreground",
-          className
         )}
+        title={isCopied ? copiedLabel : label}
+        aria-label={isCopied ? copiedLabel : label}
       >
         {isCopied ? (
           <>
             <Check className="h-3 w-3" />
-            <span>Copied</span>
+            <span>{copiedLabel}</span>
           </>
         ) : (
           <>
@@ -75,8 +83,10 @@ const CopyButton = ({
         onClick={copy}
         className={cn(
           "bg-background border rounded-md p-1 shadow-sm hover:bg-muted transition-colors",
-          className
+          className,
         )}
+        title={isCopied ? copiedLabel : label}
+        aria-label={isCopied ? copiedLabel : label}
       >
         {isCopied ? (
           <Check className="h-3 w-3 text-green-500" />
@@ -89,7 +99,12 @@ const CopyButton = ({
 
   // "icon" variant — original MDX code block style
   return (
-    <button className={className} onClick={copy}>
+    <button
+      className={className}
+      onClick={copy}
+      title={isCopied ? copiedLabel : label}
+      aria-label={isCopied ? copiedLabel : label}
+    >
       {isCopied ? (
         <CopyCheck className="w-4 h-4 text-muted-foreground" />
       ) : (

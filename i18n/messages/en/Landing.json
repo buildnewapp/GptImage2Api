@@ -63,6 +63,7 @@
       "loginRequired": "Please sign in to generate videos",
       "loginRequiredImage": "Please sign in to generate images",
       "insufficientCredits": "Insufficient credits",
+      "membershipRequired": "This model requires {level} membership.",
       "creditsRequired": "{count} credits",
       "generationSuccess": "Video generation started!",
       "generationSuccessImage": "Image generation started!",

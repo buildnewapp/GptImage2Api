@@ -201,23 +201,28 @@ test("keeps the hero server-renderable by delegating the photo wall to a client 
   assert.doesNotMatch(globalStylesSource, /@keyframes image-hero-wall/);
 });
 
-test("renders a stable hero photo wall markup for hydration", () => {
-  const images = [
-    "https://example.com/a.jpg",
-    "https://example.com/b.jpg",
-    "https://example.com/c.jpg",
-    "https://example.com/d.jpg",
-  ];
+test("renders the hero photo wall deterministically for the same image input", () => {
   const originalRandom = Math.random;
+  let randomCallCount = 0;
+
+  Math.random = () => {
+    randomCallCount += 1;
+    return (randomCallCount % 10) / 10;
+  };
 
   try {
-    Math.random = () => 0.1;
-    const serverHtml = renderToStaticMarkup(<HeroPhotoWall images={images} />);
+    const images = [
+      "https://cdn.example.com/a.png",
+      "https://cdn.example.com/b.png",
+      "https://cdn.example.com/c.png",
+      "https://cdn.example.com/d.png",
+      "https://cdn.example.com/e.png",
+      "https://cdn.example.com/f.png",
+    ];
+    const firstRender = renderToStaticMarkup(<HeroPhotoWall images={images} />);
+    const secondRender = renderToStaticMarkup(<HeroPhotoWall images={images} />);
 
-    Math.random = () => 0.9;
-    const clientHtml = renderToStaticMarkup(<HeroPhotoWall images={images} />);
-
-    assert.equal(clientHtml, serverHtml);
+    assert.equal(firstRender, secondRender);
   } finally {
     Math.random = originalRandom;
   }

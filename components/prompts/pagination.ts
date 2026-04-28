@@ -1,4 +1,6 @@
-import type { PromptCategory } from "@/components/prompts/promptsData";
+type PromptCategory = {
+  id: string;
+};
 
 export const PROMPTS_CATEGORY_BATCH_SIZE = 2;
 
