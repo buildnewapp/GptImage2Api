@@ -99,6 +99,19 @@ pnpm db:sync-paypal-products
 查看 plan id 回写
 4 测试
 
+### creem
+回调地址
+https://gptimage2api.net/api/paypal/notify
+# moderation provider: none | creem
+MODERATION=creem
+
+
+### creem
+回调地址
+https://gptimage2api.net/api/paypal/notify
+# moderation provider: none | creem
+MODERATION=creem
+
 
 ## 部署 cf
 

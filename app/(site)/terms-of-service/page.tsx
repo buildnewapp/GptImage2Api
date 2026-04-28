@@ -27,7 +27,7 @@ export default function TermsOfServicePage() {
             Terms of Service
           </h1>
           <p className="mb-6 text-sm text-muted-foreground">
-            Last Updated: February 15, 2026
+            Last Updated: April 28, 2026
           </p>
 
           <div className="space-y-6">
@@ -190,6 +190,10 @@ export default function TermsOfServicePage() {
                   </li>
                   <li>
                     Produce non-consensual intimate imagery of real individuals
+                  </li>
+                  <li>
+                    Generate sexually explicit, pornographic, or NSFW content,
+                    including explicit nudity or sexual acts
                   </li>
                   <li>
                     Create content that infringes on the intellectual property
