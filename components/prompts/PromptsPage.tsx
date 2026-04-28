@@ -30,7 +30,7 @@ import {
   resolveMediaUrl,
 } from "./promptGalleryUi";
 
-const PAGE_SIZE = 16;
+const PAGE_SIZE = 30;
 
 function parsePositiveInt(value: string | null, fallback: number) {
   const parsed = Number(value);
@@ -53,7 +53,7 @@ function PromptPreview({ item }: { item: PromptGalleryItem }) {
       <img
         src={resolveMediaUrl(media.src)}
         alt={item.title}
-        className="max-h-[360px] w-full rounded-2xl border border-slate-200/80 object-cover dark:border-white/10"
+        className="mx-auto h-auto max-h-[70vh] w-full rounded-2xl border border-slate-200/80 dark:border-white/10"
       />
     );
   }

@@ -187,6 +187,23 @@ Description
 GptImage2Api provides powerful GPT Image 2 API access for developers, startups, and businesses to generate high-quality AI images with simple REST endpoints. Build image generation apps, automate creative workflows, and integrate GPT Image 2 API into your products instantly.
 ```
 ```
+修改页面 /about，修改根据提供的信息修改，可以增加信息，只是修改内容，不要删除内容；现在产品信息如下：
+
+品牌：GptImage2Api，网站地址：https://gptimage2api.net，邮箱：support@gptimage2api.net
+
+Title
+GptImage2Api – Fast & Reliable GPT Image 2 API for Developers
+
+Description
+GptImage2Api provides powerful GPT Image 2 API access for developers, startups, and businesses to generate high-quality AI images with simple REST endpoints. Build image generation apps, automate creative workflows, and integrate GPT Image 2 API into your products instantly.
+```
+```
+修改页面/prompts，修改页面上的描述文案，主要是 
+GPT Image 2 API awesome prompts
+🚀 Curated GPT Image 2 3000+ prompt library — pixel-perfect text rendering, cross-image consistency, and commercial-grade illustration. Free & open source.
+
+```
+```
 修改页面 /privacy-policy 、/terms-of-service、/refund-policy
 
 品牌：GptImage2Api，网站地址：https://gptimage2api.net，邮箱：support@gptimage2api.net
@@ -265,4 +282,67 @@ GptImage2Api provides powerful GPT Image 2 API access for developers, startups, 
 
 
 showcase 当前没有数据，把 [prompts.json](content/prompts.json) 中 英文前 100 条、中午全部、日文全部 提示词 作为示例导入到生成记录表中，挂到用户syxchinablank@gmail.com 下，public=true，使用高清图
+```
+```
+帮我生成一个提示词同步脚本，提示词接口：
+fetch("https://youmind.com/youhome-api/prompts", {
+  "headers": {
+    "content-type": "application/json",
+    "sec-ch-ua": "\"Google Chrome\";v=\"147\", \"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"147\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"macOS\""
+  },
+  "referrer": "https://youmind.com/gpt-image-2-prompts?sortBy=time&sortOrder=desc",
+  "body": "{\"model\":\"gpt-image-2\",\"page\":1,\"limit\":50,\"locale\":\"en-US\",\"campaign\":\"gpt-image-2-prompts\",\"filterMode\":\"imageCategories\",\"sortBy\":\"time\",\"sortOrder\":\"desc\"}",
+  "method": "POST",
+  "mode": "cors",
+  "credentials": "omit"
+});
+返回
+{
+"prompts":[
+{
+            "id": 16714,
+            "title": "Anime Rapunzel Tower Scene",
+            "description": "A polished fantasy anime illustration of a Rapunzel-like princess with an extremely long braid leaning from an ivy-covered tower above a scenic river valley, ideal for fairytale-themed character art or storybook visuals.",
+            "sourceLink": "https://x.com/masukarasulove/status/2048888925352288465#reversed-0",
+            "sourcePublishedAt": "2026-04-27T22:16:00.000Z",
+            "author": {
+                "name": "さつき＠AIお絵描き(うさぎ好き）",
+                "link": "https://x.com/masukarasulove"
+            },
+            "content": "A whimsical anime fairytale illustration of {argument name=\"character name\" default=\"Rapunzel\"} leaning out from a high stone tower window, viewed from outside at a slightly elevated angle. She wears a soft lavender medieval-inspired princess dress with puff sleeves, white lace trim, and a fitted bodice, plus a pink-and-white bunny ear headband. Her extremely long {argument name=\"hair color\" default=\"dark brown\"} hair is styled into a single enormous thick braid that spills over the windowsill and drops straight down the full height of the image. A small fluffy white rabbit sits on her right shoulder, adding a cute fantasy touch. The tower is pale beige stone with a rounded balcony-like window ledge, an arched opening, deep purple interior curtains, and green ivy climbing around the walls and window frame. In the background, show a bright sunlit storybook landscape with a vivid blue sky, scattered white clouds, rolling green hills, a winding river, a stone bridge with 3 arches, and a distant European-style town with a castle or cathedral. The mood is triumphant, charming, and magical, like a polished high-end fantasy anime key visual. Detailed painterly rendering, soft natural daylight, clean linework, gentle atmospheric perspective, lush foliage, elegant composition, vertical format.",
+            "media": [
+                "https://cms-assets.youmind.com/media/1777367348035_d0q7fw_HG8dbSAacAAV452.jpg"
+            ],
+            "mediaThumbnails": [
+                "https://cms-assets.youmind.com/media/1777367348035_d0q7fw_HG8dbSAacAAV452-300x400.jpg"
+            ],
+            "language": "en",
+            "translatedContent": "A whimsical anime fairytale illustration of {argument name=\"character name\" default=\"Rapunzel\"} leaning out from a high stone tower window, viewed from outside at a slightly elevated angle. She wears a soft lavender medieval-inspired princess dress with puff sleeves, white lace trim, and a fitted bodice, plus a pink-and-white bunny ear headband. Her extremely long {argument name=\"hair color\" default=\"dark brown\"} hair is styled into a single enormous thick braid that spills over the windowsill and drops straight down the full height of the image. A small fluffy white rabbit sits on her right shoulder, adding a cute fantasy touch. The tower is pale beige stone with a rounded balcony-like window ledge, an arched opening, deep purple interior curtains, and green ivy climbing around the walls and window frame. In the background, show a bright sunlit storybook landscape with a vivid blue sky, scattered white clouds, rolling green hills, a winding river, a stone bridge with 3 arches, and a distant European-style town with a castle or cathedral. The mood is triumphant, charming, and magical, like a polished high-end fantasy anime key visual. Detailed painterly rendering, soft natural daylight, clean linework, gentle atmospheric perspective, lush foliage, elegant composition, vertical format.",
+            "sourcePlatform": "twitter",
+            "searchIndex": "anime rapunzel tower scene a polished fantasy anime illustration of a rapunzel-like princess with an extremely long braid leaning from an ivy-covered tower above a scenic river valley, ideal for fairytale-themed character art or storybook visuals. a whimsical anime fairytale illustration of {argument name=\"character name\" default=\"rapunzel\"} leaning out from a high stone tower window, viewed from outside at a slightly elevated angle. she wears a soft lavender medieval-inspired princess dress with puff sleeves, white lace trim, and a fitted bodice, plus a pink-and-white bunny ear headband. her extremely long {argument name=\"hair color\" default=\"dark brown\"} hair is styled into a single enormous thick braid that spills over the windowsill and drops straight down the full height of the image. a small fluffy white rabbit sits on her right shoulder, adding a cute fantasy touch. the tower is pale beige stone with a rounded balcony-like window ledge, an arched opening, deep purple interior curtains, and green ivy climbing around the walls and window frame. in the background, show a bright sunlit storybook landscape with a vivid blue sky, scattered white clouds, rolling green hills, a winding river, a stone bridge with 3 arches, and a distant european-style town with a castle or cathedral. the mood is triumphant, charming, and magical, like a polished high-end fantasy anime key visual. detailed painterly rendering, soft natural daylight, clean linework, gentle atmospheric perspective, lush foliage, elegant composition, vertical format. a whimsical anime fairytale illustration of {argument name=\"character name\" default=\"rapunzel\"} leaning out from a high stone tower window, viewed from outside at a slightly elevated angle. she wears a soft lavender medieval-inspired princess dress with puff sleeves, white lace trim, and a fitted bodice, plus a pink-and-white bunny ear headband. her extremely long {argument name=\"hair color\" default=\"dark brown\"} hair is styled into a single enormous thick braid that spills over the windowsill and drops straight down the full height of the image. a small fluffy white rabbit sits on her right shoulder, adding a cute fantasy touch. the tower is pale beige stone with a rounded balcony-like window ledge, an arched opening, deep purple interior curtains, and green ivy climbing around the walls and window frame. in the background, show a bright sunlit storybook landscape with a vivid blue sky, scattered white clouds, rolling green hills, a winding river, a stone bridge with 3 arches, and a distant european-style town with a castle or cathedral. the mood is triumphant, charming, and magical, like a polished high-end fantasy anime key visual. detailed painterly rendering, soft natural daylight, clean linework, gentle atmospheric perspective, lush foliage, elegant composition, vertical format. さつき＠aiお絵描き(うさぎ好き） 16714",
+            "likes": 0,
+            "resultsCount": 0,
+            "needReferenceImages": true,
+            "promptCategories": []
+        }
+]
+}
+
+主要修改参数page，需要把数据导入表 prompt_gallery_items中，接口有防爬机制，注意规避；
+如果接口一页中有 20% 已经存在数据库中了，说明已经爬起完成了，第一次应该是全量导入，后面执行是增量；
+导入不要考虑原数据中的translatedContent、searchIndex字段
+
+帮我给所有数据添加分类：
+Profile / Avatar
+Social Media Post
+Infographic / Edu Visual
+YouTube Thumbnail
+Comic / Storyboard
+Product Marketing
+E-commerce Main Image
+Game Asset
+Poster / Flyer
+App / Web Design
 ```

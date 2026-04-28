@@ -24,6 +24,8 @@
     "ai-studio:build": "tsx scripts/ai-studio/build-runtime-catalog.ts",
     "ai-studio:validate": "tsx scripts/ai-studio/validate-runtime-catalog.ts",
     "blog:build-data": "tsx scripts/build-blog-data.ts",
+    "prompts:sync-youmind": "tsx scripts/sync-youmind-prompts.ts",
+    "prompts:categorize": "tsx scripts/categorize-prompt-gallery-items.ts",
     "cf:sync-env": "node scripts/sync-env-to-cloudflare.mjs",
     "cf:build": "pnpm blog:build-data && opennextjs-cloudflare build",
     "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
