@@ -103,6 +103,13 @@ pnpm db:sync-paypal-products
 卖家: sb-6kvqf45985282@business.example.com 、{fS]JJ3@   
 买家：sb-bpqfs45936111@personal.example.com、 Ri&W3dVD
 
+### creem
+回调地址
+https://gptimage2api.net/api/paypal/notify
+# moderation provider: none | creem
+MODERATION=creem
+
+
 ## 部署 cf
 
 ### 配置

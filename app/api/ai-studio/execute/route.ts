@@ -27,12 +27,14 @@ import { apiResponse } from "@/lib/api-response";
 import { getRequestUser } from "@/lib/auth/request-user";
 import { getDb } from "@/lib/db";
 import { orders as ordersSchema, pricingPlans as pricingPlansSchema } from "@/lib/db/schema";
+import { assertGenerationPromptAllowed } from "@/lib/moderation";
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { z } from "zod";
 
 const inputSchema = z.object({
   modelId: z.string().min(1),
   isPublic: z.boolean().optional().default(true),
+  moderation: z.string().optional(),
   payload: z.record(z.string(), z.any()),
 });
 
@@ -106,6 +108,14 @@ export async function POST(request: Request) {
     if (!canAccessAiStudioModel(prepared.detail, { role: user.role, config: policy })) {
       return apiResponse.error("This model is unavailable for your account.", 403);
     }
+
+    await assertGenerationPromptAllowed({
+      category: prepared.detail.category,
+      payload: prepared.pricingPayload,
+      requestModeration: input.moderation ?? null,
+      externalId: `ai_studio:${user.id}:${prepared.detail.id}:${Date.now()}`,
+    });
+
     const { generation, reservedCredits } = await reserveAiStudioGeneration({
       userId: user.id,
       modelId: input.modelId,
