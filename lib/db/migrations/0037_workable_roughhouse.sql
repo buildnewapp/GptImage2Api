@@ -1,5 +1,4 @@
 CREATE TYPE "public"."prompt_gallery_status" AS ENUM('draft', 'online', 'offline');--> statement-breakpoint
-
 CREATE TABLE "prompt_gallery_items" (
 	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "prompt_gallery_items_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
 	"language" varchar(10) DEFAULT 'en' NOT NULL,
@@ -18,6 +17,7 @@ CREATE TABLE "prompt_gallery_items" (
 	"input_audios" jsonb DEFAULT '[]' NOT NULL,
 	"prompt" text NOT NULL,
 	"note" text,
+	"results" jsonb DEFAULT '[]' NOT NULL,
 	"featured" boolean DEFAULT false NOT NULL,
 	"sort" integer DEFAULT 0 NOT NULL,
 	"search_index" text DEFAULT '' NOT NULL,
