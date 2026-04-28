@@ -6,6 +6,20 @@ import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 type Params = Promise<{ locale: string }>;
+type SearchParams = Promise<{
+  q?: string | string[];
+  category?: string | string[];
+  page?: string | string[];
+}>;
+
+function getSearchParamValue(value: string | string[] | undefined) {
+  return Array.isArray(value) ? (value[0] ?? "") : (value ?? "");
+}
+
+function parsePage(value: string) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed >= 1 ? Math.floor(parsed) : 1;
+}
 
 export async function generateMetadata({
   params,
@@ -23,9 +37,33 @@ export async function generateMetadata({
   });
 }
 
-export default async function Prompts({ params }: { params: Params }) {
+export default async function Prompts({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
   const { locale } = await params;
-  const items = await getPublicPromptGalleryItems(locale);
+  const resolvedSearchParams = await searchParams;
 
-  return <PromptsPage items={items} />;
+  const q = getSearchParamValue(resolvedSearchParams.q).trim();
+  const category = getSearchParamValue(resolvedSearchParams.category).trim();
+  const page = parsePage(getSearchParamValue(resolvedSearchParams.page));
+
+  const data = await getPublicPromptGalleryItems({
+    language: locale,
+    q,
+    category,
+    page,
+  });
+
+  return (
+    <PromptsPage
+      items={data.items}
+      categories={data.categories}
+      totalCount={data.total}
+      pageSize={data.pageSize}
+    />
+  );
 }
