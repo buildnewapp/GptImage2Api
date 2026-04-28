@@ -78,9 +78,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
       SystemEmails: (
         await import(`./messages/${locale}/Dashboard/Admin/SystemEmails.json`)
       ).default,
-      AdminVideoGenerations: (
-        await import(`./messages/${locale}/Dashboard/Admin/VideoGenerations.json`)
-      ).default,
     },
   };
 });

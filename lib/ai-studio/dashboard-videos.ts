@@ -66,41 +66,6 @@ export type LegacyVideoHistoryRecord = {
   responsePayload: unknown | null;
 };
 
-export type AiStudioAdminVideoItem = {
-  id: string;
-  userId: string;
-  userEmail: string | null;
-  userName: string | null;
-  category: string;
-  catalogModelId: string;
-  title: string;
-  providerTaskId: string | null;
-  status: string;
-  requestPayload: Record<string, any>;
-  resultUrls: string[];
-  reservedCredits: number;
-  refundedCredits: number;
-  createdAt: string;
-};
-
-export type LegacyAdminVideoRecord = {
-  id: string;
-  taskId: string;
-  userId: string;
-  userEmail: string | null;
-  userName: string | null;
-  category: string;
-  model: string;
-  selectedModel: string;
-  status: LegacyVideoStatus;
-  creditsUsed: number;
-  creditsRefunded: boolean;
-  inputParams: unknown;
-  prompt: string | null;
-  resultUrl: string | null;
-  createdAt: string;
-};
-
 function asRecord(value: unknown) {
   return value && typeof value === "object" && !Array.isArray(value)
     ? (value as Record<string, unknown>)
@@ -302,30 +267,4 @@ export function mapAiStudioUserRecordToLegacyVideoHistoryRecord(
   nextRecord.inputVideos = [...inputVideos];
 
   return nextRecord;
-}
-
-export function mapAiStudioAdminRecordToLegacyAdminVideoRecord(
-  record: AiStudioAdminVideoItem,
-): LegacyAdminVideoRecord {
-  const providerValues = mapAiStudioStoredPayloadToLegacyVideoInput(
-    record.requestPayload,
-  );
-
-  return {
-    id: record.id,
-    taskId: record.providerTaskId ?? record.id,
-    userId: record.userId,
-    userEmail: record.userEmail,
-    userName: record.userName,
-    category: record.category,
-    model: asString(record.requestPayload?.model) ?? record.catalogModelId,
-    selectedModel: record.title,
-    status: mapAiStudioStatusToLegacyVideoStatus(record.status),
-    creditsUsed: record.reservedCredits,
-    creditsRefunded: record.refundedCredits > 0,
-    inputParams: record.requestPayload,
-    prompt: providerValues.prompt ?? null,
-    resultUrl: record.resultUrls[0] ?? null,
-    createdAt: record.createdAt,
-  };
 }

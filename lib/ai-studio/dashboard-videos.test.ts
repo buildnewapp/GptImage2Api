@@ -3,7 +3,6 @@ import test from "node:test";
 
 import {
   getAiStudioStatusesForLegacyVideoFilter,
-  mapAiStudioAdminRecordToLegacyAdminVideoRecord,
   mapAiStudioStatusToLegacyVideoStatus,
   mapAiStudioStoredPayloadToLegacyVideoInput,
   mapAiStudioUserRecordToLegacyVideoHistoryRecord,
@@ -282,52 +281,5 @@ test("maps ai studio image history records into the shared dashboard card shape"
       prompt: "A cinematic portrait of a robot",
       aspectRatio: "1:1",
     },
-  });
-});
-
-test("maps ai studio admin records into the legacy admin table shape", () => {
-  const record = mapAiStudioAdminRecordToLegacyAdminVideoRecord({
-    id: "gen_2",
-    userId: "user_1",
-    userEmail: "user@example.com",
-    userName: "Video User",
-    category: "image",
-    catalogModelId: "video:sora2-pro-text-to-video",
-    title: "Sora 2 Pro",
-    providerTaskId: "task_2",
-    status: "failed",
-    requestPayload: {
-      model: "sora-2-pro-text-to-video",
-      input: {
-        prompt: "Storm over the ocean",
-      },
-    },
-    resultUrls: [],
-    reservedCredits: 120,
-    refundedCredits: 120,
-    createdAt: new Date("2026-03-09T01:00:00.000Z").toISOString(),
-  });
-
-  assert.deepEqual(record, {
-    id: "gen_2",
-    taskId: "task_2",
-    userId: "user_1",
-    userEmail: "user@example.com",
-    userName: "Video User",
-    category: "image",
-    model: "sora-2-pro-text-to-video",
-    selectedModel: "Sora 2 Pro",
-    status: "failed",
-    creditsUsed: 120,
-    creditsRefunded: true,
-    inputParams: {
-      model: "sora-2-pro-text-to-video",
-      input: {
-        prompt: "Storm over the ocean",
-      },
-    },
-    prompt: "Storm over the ocean",
-    resultUrl: null,
-    createdAt: new Date("2026-03-09T01:00:00.000Z").toISOString(),
   });
 });

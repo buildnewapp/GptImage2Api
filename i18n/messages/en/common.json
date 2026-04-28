@@ -152,11 +152,6 @@
         "icon": "FileBox"
       },
       {
-        "name": "Generation Records",
-        "href": "/dashboard/admin-videos",
-        "icon": "Video"
-      },
-      {
         "name": "AI Studio",
         "href": "/dashboard/ai-studio-admin",
         "icon": "Bot"

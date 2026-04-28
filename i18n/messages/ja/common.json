@@ -152,11 +152,6 @@
         "icon": "FileBox"
       },
       {
-        "name": "生成履歴",
-        "href": "/dashboard/admin-videos",
-        "icon": "Video"
-      },
-      {
         "name": "AI Studio管理",
         "href": "/dashboard/ai-studio-admin",
         "icon": "Bot"
