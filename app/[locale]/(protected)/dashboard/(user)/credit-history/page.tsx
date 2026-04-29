@@ -1,6 +1,7 @@
 import { getUserBenefits } from "@/actions/usage/benefits";
 import { getCreditLogs } from "@/actions/usage/logs";
 import { getSession } from "@/lib/auth/server";
+import { settleExpiredSubscriptionCreditsForUser } from "@/lib/payments/credit-manager";
 import { buildCreditHistorySummaryItems } from "@/lib/usage/credit-history-summary";
 import { Loader2 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
@@ -14,6 +15,14 @@ export default async function CreditHistoryPage() {
   const t = await getTranslations("CreditHistory");
   const session = await getSession();
   const user = session?.user;
+
+  /*
+  过期积分 导入creditLogsSchema表，这样用户积分流水可以对账成功
+  暂时不用，防止用户看到投诉
+  if (user) {
+    await settleExpiredSubscriptionCreditsForUser(user.id);
+  }
+  */
 
   const [initialResult, benefits] = await Promise.all([
     getCreditLogs({

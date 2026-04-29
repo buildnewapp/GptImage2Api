@@ -7,6 +7,25 @@ import {
 } from "@/lib/paypal/service";
 import type { PayPalWebhookEvent } from "@/lib/paypal/types";
 
+function extractSubscriptionId(resource: any): string | null {
+  return (
+    resource?.id ??
+    resource?.billing_agreement_id ??
+    resource?.subscription_id ??
+    resource?.supplementary_data?.related_ids?.subscription_id ??
+    null
+  );
+}
+
+function isPayPalResourceMissingError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  const normalized = message.toLowerCase();
+  return (
+    normalized.includes("the specified resource does not exist") ||
+    normalized.includes("resource_not_found")
+  );
+}
+
 async function tryCaptureOrder(client: PayPalClient, orderId: string) {
   try {
     await client.captureOrder(orderId);
@@ -49,12 +68,25 @@ async function processWebhookEvent(payload: PayPalWebhookEvent) {
     case "BILLING.SUBSCRIPTION.CANCELLED":
     case "BILLING.SUBSCRIPTION.EXPIRED":
     case "BILLING.SUBSCRIPTION.SUSPENDED": {
-      const subscriptionId = payload.resource?.id;
+      const subscriptionId = extractSubscriptionId(payload.resource);
       if (!subscriptionId) {
+        console.warn(
+          `[PayPal webhook] Missing subscription ID for event ${payload.event_type}`,
+        );
         return;
       }
 
-      await syncPayPalSubscriptionData(subscriptionId);
+      try {
+        await syncPayPalSubscriptionData(subscriptionId);
+      } catch (error) {
+        if (isPayPalResourceMissingError(error)) {
+          console.warn(
+            `[PayPal webhook] Subscription ${subscriptionId} not found for event ${payload.event_type}, skipped.`,
+          );
+          return;
+        }
+        throw error;
+      }
       return;
     }
     case "BILLING.SUBSCRIPTION.PAYMENT.COMPLETED":

@@ -5,9 +5,10 @@ import { getSession } from '@/lib/auth/server';
 import { getDb } from '@/lib/db';
 import {
   creditLogs as creditLogsSchema,
+  subscriptionCreditBuckets as subscriptionCreditBucketsSchema,
   usage as usageSchema,
 } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
+import { and, asc, eq, gt } from 'drizzle-orm';
 import { getUserBenefits, UserBenefits } from './benefits';
 
 export interface DeductCreditsData {
@@ -41,38 +42,77 @@ export async function deductCredits(
 
   try {
     await db.transaction(async (tx) => {
-      // Lock the user's usage row for the duration of the transaction
-      const usageResults = await tx.select({
-        oneTimeCreditsBalance: usageSchema.oneTimeCreditsBalance,
-        subscriptionCreditsBalance: usageSchema.subscriptionCreditsBalance,
-      })
+      const usageResults = await tx
+        .select({
+          oneTimeCreditsBalance: usageSchema.oneTimeCreditsBalance,
+        })
         .from(usageSchema)
         .where(eq(usageSchema.userId, user.id))
         .for('update');
-
       const usage = usageResults[0];
+      const oneTimeBalance = usage?.oneTimeCreditsBalance ?? 0;
 
-      if (!usage) {
-        throw new Error('INSUFFICIENT_CREDITS');
-      }
+      const now = new Date();
+      const buckets = await tx
+        .select({
+          id: subscriptionCreditBucketsSchema.id,
+          creditsRemaining: subscriptionCreditBucketsSchema.creditsRemaining,
+        })
+        .from(subscriptionCreditBucketsSchema)
+        .where(
+          and(
+            eq(subscriptionCreditBucketsSchema.userId, user.id),
+            gt(subscriptionCreditBucketsSchema.creditsRemaining, 0),
+            gt(subscriptionCreditBucketsSchema.expiresAt, now),
+          ),
+        )
+        .orderBy(asc(subscriptionCreditBucketsSchema.expiresAt))
+        .for('update');
 
-      const totalCredits = usage.oneTimeCreditsBalance + usage.subscriptionCreditsBalance;
+      const availableSubscriptionCredits = buckets.reduce(
+        (sum, bucket) => sum + bucket.creditsRemaining,
+        0,
+      );
+      const totalCredits = oneTimeBalance + availableSubscriptionCredits;
       if (totalCredits < amountToDeduct) {
         throw new Error('INSUFFICIENT_CREDITS');
       }
 
-      const deductedFromSub = Math.min(usage.subscriptionCreditsBalance, amountToDeduct);
+      const deductedFromSub = Math.min(availableSubscriptionCredits, amountToDeduct);
       const deductedFromOneTime = amountToDeduct - deductedFromSub;
+      const newSubBalance = availableSubscriptionCredits - deductedFromSub;
+      const newOneTimeBalance = oneTimeBalance - deductedFromOneTime;
 
-      const newSubBalance = usage.subscriptionCreditsBalance - deductedFromSub;
-      const newOneTimeBalance = usage.oneTimeCreditsBalance - deductedFromOneTime;
+      let remainingSubToDeduct = deductedFromSub;
+      for (const bucket of buckets) {
+        if (remainingSubToDeduct <= 0) {
+          break;
+        }
+        const deduction = Math.min(bucket.creditsRemaining, remainingSubToDeduct);
+        remainingSubToDeduct -= deduction;
+        await tx
+          .update(subscriptionCreditBucketsSchema)
+          .set({
+            creditsRemaining: bucket.creditsRemaining - deduction,
+          })
+          .where(eq(subscriptionCreditBucketsSchema.id, bucket.id));
+      }
 
-      await tx.update(usageSchema)
-        .set({
+      if (usage) {
+        await tx
+          .update(usageSchema)
+          .set({
+            subscriptionCreditsBalance: newSubBalance,
+            oneTimeCreditsBalance: newOneTimeBalance,
+          })
+          .where(eq(usageSchema.userId, user.id));
+      } else {
+        await tx.insert(usageSchema).values({
+          userId: user.id,
           subscriptionCreditsBalance: newSubBalance,
           oneTimeCreditsBalance: newOneTimeBalance,
-        })
-        .where(eq(usageSchema.userId, user.id));
+        });
+      }
 
       await tx.insert(creditLogsSchema)
         .values({

@@ -281,6 +281,20 @@
       "when": 1777440292363,
       "tag": "0039_small_eternity",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1777443900000,
+      "tag": "0040_subscription_credit_buckets",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1777447200000,
+      "tag": "0041_ai_studio_bucket_allocations",
+      "breakpoints": true
     }
   ]
 }

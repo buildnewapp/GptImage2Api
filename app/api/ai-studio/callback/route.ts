@@ -5,6 +5,7 @@ import {
   normalizeTaskState,
 } from "@/lib/ai-studio/execute";
 import {
+  archiveAiStudioGenerationMediaUrlsInBackground,
   getAiStudioGenerationByTaskId,
   setAiStudioGenerationCallback,
   settleAiStudioGenerationFailure,
@@ -46,6 +47,7 @@ export async function POST(request: NextRequest) {
         mediaUrls,
         providerState: state,
       });
+      archiveAiStudioGenerationMediaUrlsInBackground(generation.id);
     } else if (state === "failed") {
       await settleAiStudioGenerationFailure(generation.id, {
         raw: body,

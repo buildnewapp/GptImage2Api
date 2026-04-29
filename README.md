@@ -109,6 +109,9 @@ https://gptimage2api.net/api/paypal/notify
 # moderation provider: none | creem
 MODERATION=creem
 
+### 定时任务
+GET /api/ai-studio/archive-r2?secret=YOUR_SECRET&limit=10
+定时把资源传到R2，5分钟
 
 ## 部署 cf
 

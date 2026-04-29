@@ -139,6 +139,23 @@ type FieldDescriptor = {
   depth: number;
 };
 
+const FAST_TASK_POLLING_MS = 4000;
+const SLOW_TASK_POLLING_MS = 10000;
+const HIDDEN_TASK_POLLING_MS = 20000;
+const SLOW_TASK_POLLING_AFTER_MS = 30000;
+
+function getTaskPollingDelay(startedAt: number) {
+  const isHidden =
+    typeof document !== "undefined" && document.visibilityState === "hidden";
+  const baseDelay = isHidden
+    ? HIDDEN_TASK_POLLING_MS
+    : Date.now() - startedAt > SLOW_TASK_POLLING_AFTER_MS
+      ? SLOW_TASK_POLLING_MS
+      : FAST_TASK_POLLING_MS;
+
+  return baseDelay + Math.floor(Math.random() * 1000);
+}
+
 const CATEGORY_META: Record<
   AiStudioCategory,
   {
@@ -679,6 +696,7 @@ export default function AiStudioShell({
 
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | null = null;
+    const startedAt = Date.now();
 
     async function poll() {
       try {
@@ -706,7 +724,7 @@ export default function AiStudioShell({
         );
 
         if (json.data.state === "queued" || json.data.state === "running") {
-          timer = setTimeout(poll, 4000);
+          timer = setTimeout(poll, getTaskPollingDelay(startedAt));
         } else {
           refreshBenefits();
           refreshHistory();
@@ -718,7 +736,7 @@ export default function AiStudioShell({
       }
     }
 
-    timer = setTimeout(poll, 2000);
+    timer = setTimeout(poll, 2000 + Math.floor(Math.random() * 500));
     return () => {
       cancelled = true;
       if (timer) {

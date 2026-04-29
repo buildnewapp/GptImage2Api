@@ -89,6 +89,7 @@ async function resolveExistingSubscriptionContext(subscriptionId: string) {
   const [subscription] = await db
     .select({
       planId: subscriptionsSchema.planId,
+      currentPeriodEnd: subscriptionsSchema.currentPeriodEnd,
       userId: subscriptionsSchema.userId,
     })
     .from(subscriptionsSchema)
@@ -217,6 +218,11 @@ async function createInitialPayPalSubscriptionOrder(subscription: {
     planId,
     insertedOrder.id,
     getSubscriptionCurrentPeriodStart(subscription as PayPalSubscription),
+    {
+      provider: "paypal",
+      subscriptionId: subscription.id,
+      periodEnd: getSubscriptionCurrentPeriodEnd(subscription as PayPalSubscription),
+    },
   );
 
   await grantConfiguredFirstOrderReward({
@@ -237,6 +243,15 @@ function getSubscriptionCurrentPeriodStart(subscription: PayPalSubscription): nu
         new Date().toISOString(),
     ) || Date.now()
   );
+}
+
+function getSubscriptionCurrentPeriodEnd(subscription: PayPalSubscription): number | null {
+  const nextBillingTime = subscription.billing_info?.next_billing_time;
+  if (!nextBillingTime) {
+    return null;
+  }
+  const parsed = Date.parse(nextBillingTime);
+  return Number.isNaN(parsed) ? null : parsed;
 }
 
 function isEndedPayPalSubscription(status: string | null | undefined): boolean {
@@ -269,6 +284,7 @@ export async function syncPayPalSubscriptionData(
   }
 
   const status = mapPayPalSubscriptionStatus(subscription.status);
+  const isCanceled = isEndedPayPalSubscription(subscription.status);
 
   const subscriptionData: InferInsertModel<typeof subscriptionsSchema> = {
     userId,
@@ -288,12 +304,12 @@ export async function syncPayPalSubscriptionData(
         subscription.create_time ??
         null,
     ),
-    currentPeriodEnd: toDate(
-      subscription.billing_info?.next_billing_time ?? null,
-    ),
-    cancelAtPeriodEnd: isEndedPayPalSubscription(subscription.status),
-    canceledAt: null,
-    endedAt: isEndedPayPalSubscription(subscription.status) ? new Date() : null,
+    currentPeriodEnd: isCanceled
+      ? (existing?.currentPeriodEnd ?? toDate(subscription.billing_info?.next_billing_time ?? null))
+      : toDate(subscription.billing_info?.next_billing_time ?? null),
+    cancelAtPeriodEnd: isCanceled,
+    canceledAt: isCanceled ? new Date() : null,
+    endedAt: isCanceled ? new Date() : null,
     trialStart: null,
     trialEnd: null,
     metadata: {
@@ -323,7 +339,7 @@ export async function syncPayPalSubscriptionData(
 
   if (isEndedPayPalSubscription(subscription.status)) {
     console.log(
-      `[PayPal] Subscription ${subscription.id} ended. Order/subscription state synced without credit changes.`,
+      `[PayPal] Subscription ${subscription.id} ended. Order/subscription state synced.`,
     );
   }
 }
@@ -506,6 +522,11 @@ export async function handlePayPalSubscriptionPaymentCompleted(resource: any) {
     planId,
     insertedOrder.id,
     getSubscriptionCurrentPeriodStart(subscription),
+    {
+      provider: "paypal",
+      subscriptionId,
+      periodEnd: getSubscriptionCurrentPeriodEnd(subscription),
+    },
   );
 
   await grantConfiguredFirstOrderReward({

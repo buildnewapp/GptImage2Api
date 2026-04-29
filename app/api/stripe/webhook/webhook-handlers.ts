@@ -15,10 +15,13 @@ import {
   grantConfiguredFirstOrderReward,
 } from '@/lib/referrals/first-order';
 import {
+  revokeOneTimeCredits,
+  revokeSubscriptionCredits,
   upgradeOneTimeCredits,
   upgradeSubscriptionCredits,
 } from '@/lib/payments/credit-manager';
-import { ORDER_TYPES } from '@/lib/payments/provider-utils';
+import { isOneTimePurchase, isSubscriptionOrder, ORDER_TYPES } from '@/lib/payments/provider-utils';
+import type { Order } from '@/lib/payments/types';
 import {
   createOrderWithIdempotency,
   findOriginalOrderForRefund,
@@ -251,7 +254,12 @@ export async function handleInvoicePaid(invoice: Stripe.Invoice) {
       const orderId = insertedOrder.id;
       try {
         const currentPeriodStart = subscription.items.data[0].current_period_start * 1000;
-        await upgradeSubscriptionCredits(userId, planId, orderId, currentPeriodStart);
+        const currentPeriodEnd = subscription.items.data[0].current_period_end * 1000;
+        await upgradeSubscriptionCredits(userId, planId, orderId, currentPeriodStart, {
+          provider: 'stripe',
+          subscriptionId: subscriptionId,
+          periodEnd: currentPeriodEnd,
+        });
         await grantConfiguredFirstOrderReward({
           inviteeUserId: userId,
           sourceOrderId: orderId,
@@ -293,7 +301,7 @@ export async function handleSubscriptionUpdate(subscription: Stripe.Subscription
     await syncSubscriptionData(subscription.id, customerId, subscription.metadata);
 
     if (isDeleted) {
-      console.log(`Subscription ${subscription.id} deleted. Order/subscription state synced without credit changes.`);
+      console.log(`Subscription ${subscription.id} deleted. Order/subscription state synced.`);
     }
   } catch (error) {
     console.error(`Error syncing subscription ${subscription.id} during update event:`, error);
@@ -440,7 +448,19 @@ export async function handleRefund(charge: Stripe.Charge) {
     throw new Error(`Error inserting refund order for refund ${chargeId}`);
   }
 
-  console.log(`Refund ${chargeId} recorded for original order ${originalOrder.id} without credit changes.`);
+  const originalTotalCents = Math.round(parseFloat(originalOrder.amountTotal ?? '0') * 100);
+
+  if (isOneTimePurchase(originalOrder.orderType)) {
+    await revokeOneTimeCredits(charge.amount_refunded, originalOrder as Order, refundOrder.id);
+  } else if (isSubscriptionOrder(originalOrder.orderType)) {
+    if (charge.amount_refunded >= originalTotalCents) {
+      await revokeSubscriptionCredits(originalOrder as Order);
+    } else {
+      console.warn(`Stripe partial subscription refund ${chargeId} detected. Skipping subscription credit revocation.`);
+    }
+  }
+
+  console.log(`Refund ${chargeId} recorded for original order ${originalOrder.id} with credit revocation.`);
 }
 
 /**

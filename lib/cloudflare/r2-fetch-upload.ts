@@ -1,4 +1,5 @@
 import { serverUploadFile, type UploadResult } from "@/lib/cloudflare/r2";
+import { fetchWithTimeout } from "@/lib/fetch/with-timeout";
 
 /**
  * Fetch content from an external URL (e.g. a provider-generated video/image URL)
@@ -25,7 +26,9 @@ export async function fetchExternalUrlToR2(
   externalUrl: string,
   key: string
 ): Promise<UploadResult> {
-  const response = await fetch(externalUrl);
+  const response = await fetchWithTimeout(externalUrl, {
+    timeoutMs: 20000,
+  });
   if (!response.ok) {
     throw new Error(
       `Failed to fetch external URL (${response.status}): ${externalUrl}`

@@ -371,6 +371,42 @@ export const usage = pgTable("usage", {
     .$onUpdate(() => new Date()),
 });
 
+export const subscriptionCreditBuckets = pgTable(
+  "subscription_credit_buckets",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
+    provider: providerEnum("provider").notNull(),
+    subscriptionId: text("subscription_id").notNull(),
+    periodStart: timestamp("period_start", { withTimezone: true }).notNull(),
+    periodEnd: timestamp("period_end", { withTimezone: true }).notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    creditsTotal: integer("credits_total").notNull(),
+    creditsRemaining: integer("credits_remaining").notNull(),
+    relatedOrderId: uuid("related_order_id").references(() => orders.id, {
+      onDelete: "set null",
+    }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    userIdIdx: index("idx_subscription_credit_buckets_user_id").on(table.userId),
+    expiresAtIdx: index("idx_subscription_credit_buckets_expires_at").on(
+      table.expiresAt,
+    ),
+    subscriptionPeriodUnique: unique(
+      "subscription_credit_buckets_subscription_period_unique",
+    ).on(table.provider, table.subscriptionId, table.periodStart),
+  }),
+);
+
 export const creditLogs = pgTable(
   "credit_logs",
   {
@@ -838,6 +874,9 @@ export const aiStudioGenerations = pgTable(
       .notNull(),
     creditsReservedFromOneTime: integer("credits_reserved_from_one_time")
       .default(0)
+      .notNull(),
+    creditsBucketAllocations: jsonb("credits_bucket_allocations")
+      .default("[]")
       .notNull(),
     creditsCaptured: integer("credits_captured").default(0).notNull(),
     creditsRefunded: integer("credits_refunded").default(0).notNull(),

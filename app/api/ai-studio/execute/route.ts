@@ -9,6 +9,7 @@ import {
   submitAiStudioExecution,
 } from "@/lib/ai-studio/execute";
 import {
+  archiveAiStudioGenerationMediaUrlsInBackground,
   markAiStudioGenerationSubmitted,
   reserveAiStudioGeneration,
   settleAiStudioGenerationFailure,
@@ -146,6 +147,7 @@ export async function POST(request: Request) {
           mediaUrls: result.mediaUrls,
           providerState: "succeeded",
         });
+        archiveAiStudioGenerationMediaUrlsInBackground(generation.id);
         if (Array.isArray(settled?.resultUrls)) {
           settledMediaUrls = settled.resultUrls as string[];
         }

@@ -18,9 +18,13 @@ import {
   grantConfiguredFirstOrderReward,
 } from '@/lib/referrals/first-order';
 import {
+  revokeOneTimeCredits,
+  revokeSubscriptionCredits,
   upgradeOneTimeCredits,
   upgradeSubscriptionCredits,
 } from '@/lib/payments/credit-manager';
+import { isOneTimePurchase, isSubscriptionOrder } from '@/lib/payments/provider-utils';
+import type { Order } from '@/lib/payments/types';
 import {
   createOrderWithIdempotency,
   findOriginalOrderForRefund,
@@ -198,7 +202,12 @@ export async function handleCreemInvoicePaid(
       userId,
       planId,
       insertedOrder.id,
-      lastTransaction.period_start
+      lastTransaction.period_start,
+      {
+        provider: 'creem',
+        subscriptionId,
+        periodEnd: lastTransaction.period_end,
+      },
     );
     await grantConfiguredFirstOrderReward({
       inviteeUserId: userId,
@@ -235,7 +244,7 @@ export async function handleCreemSubscriptionUpdated(
   try {
     await syncCreemSubscriptionData(subscriptionId, subscription?.metadata);
     if (isDeleted) {
-      console.log(`[Creem webhook] Subscription ${subscriptionId} deleted. Order/subscription state synced without credit changes.`);
+      console.log(`[Creem webhook] Subscription ${subscriptionId} deleted. Order/subscription state synced.`);
     }
   } catch (error) {
     console.error(
@@ -308,7 +317,17 @@ export async function handleCreemPaymentRefunded(
     );
   }
 
+  if (isOneTimePurchase(originalOrder.orderType)) {
+    await revokeOneTimeCredits(refundAmountCents, originalOrder as Order, refundOrder.id);
+  } else if (isSubscriptionOrder(originalOrder.orderType)) {
+    if (refundAmountCents >= paidAmountCents) {
+      await revokeSubscriptionCredits(originalOrder as Order);
+    } else {
+      console.warn(`[Creem webhook] Partial subscription refund ${refundId} detected. Skipping subscription credit revocation.`);
+    }
+  }
+
   console.log(
-    `[Creem webhook] Refund ${refundId} recorded for original order ${originalOrder.id} without credit changes`
+    `[Creem webhook] Refund ${refundId} recorded for original order ${originalOrder.id} with credit revocation`
   );
 }

@@ -12,9 +12,10 @@ import { getRequestUser } from "@/lib/auth/request-user";
 import { getDb } from "@/lib/db";
 import {
   creditLogs,
+  subscriptionCreditBuckets,
   usage,
 } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { and, asc, eq, gt, sql } from "drizzle-orm";
 import { z } from "zod";
 
 const CHAT_BILLING_INPUT_USD_PER_M = 5;
@@ -292,22 +293,30 @@ function buildCreditNotes(input: {
 }
 
 async function assertChatCreditsAvailable(userId: string) {
-  const usageRows = await getDb()
+  const db = getDb();
+  const usageRows = await db
     .select({
       oneTimeCreditsBalance: usage.oneTimeCreditsBalance,
-      subscriptionCreditsBalance: usage.subscriptionCreditsBalance,
     })
     .from(usage)
     .where(eq(usage.userId, userId))
     .limit(1);
+  const oneTimeBalance = usageRows[0]?.oneTimeCreditsBalance ?? 0;
 
-  const usageRecord = usageRows[0];
-  if (!usageRecord) {
-    throw Object.assign(new Error("Insufficient credits."), { status: 402 });
-  }
-
-  const totalCredits =
-    usageRecord.oneTimeCreditsBalance + usageRecord.subscriptionCreditsBalance;
+  const subRows = await db
+    .select({
+      balance: sql<number>`coalesce(sum(${subscriptionCreditBuckets.creditsRemaining}), 0)`,
+    })
+    .from(subscriptionCreditBuckets)
+    .where(
+      and(
+        eq(subscriptionCreditBuckets.userId, userId),
+        gt(subscriptionCreditBuckets.creditsRemaining, 0),
+        gt(subscriptionCreditBuckets.expiresAt, new Date()),
+      ),
+    );
+  const subBalance = Number(subRows[0]?.balance ?? 0);
+  const totalCredits = oneTimeBalance + subBalance;
 
   if (totalCredits <= 0) {
     throw Object.assign(
@@ -330,41 +339,80 @@ async function settleChatBillingCredits(input: {
     const usageRows = await tx
       .select({
         oneTimeCreditsBalance: usage.oneTimeCreditsBalance,
-        subscriptionCreditsBalance: usage.subscriptionCreditsBalance,
       })
       .from(usage)
       .where(eq(usage.userId, input.userId))
       .for("update");
 
     const usageRecord = usageRows[0];
-    if (!usageRecord) {
-      throw Object.assign(new Error("Insufficient credits."), { status: 402 });
-    }
+    const oneTimeBalance = usageRecord?.oneTimeCreditsBalance ?? 0;
+
+    const buckets = await tx
+      .select({
+        id: subscriptionCreditBuckets.id,
+        creditsRemaining: subscriptionCreditBuckets.creditsRemaining,
+      })
+      .from(subscriptionCreditBuckets)
+      .where(
+        and(
+          eq(subscriptionCreditBuckets.userId, input.userId),
+          gt(subscriptionCreditBuckets.creditsRemaining, 0),
+          gt(subscriptionCreditBuckets.expiresAt, new Date()),
+        ),
+      )
+      .orderBy(asc(subscriptionCreditBuckets.expiresAt))
+      .for("update");
+
+    const subBalance = buckets.reduce(
+      (sum, bucket) => sum + bucket.creditsRemaining,
+      0,
+    );
 
     const totalCredits =
-      usageRecord.oneTimeCreditsBalance + usageRecord.subscriptionCreditsBalance;
+      oneTimeBalance + subBalance;
     if (totalCredits < chargedCredits) {
       throw Object.assign(new Error("Insufficient credits."), { status: 402 });
     }
 
     const chargedFromSubscription = Math.min(
-      usageRecord.subscriptionCreditsBalance,
+      subBalance,
       chargedCredits,
     );
     const chargedFromOneTime = chargedCredits - chargedFromSubscription;
 
-    const nextSubscriptionBalance =
-      usageRecord.subscriptionCreditsBalance - chargedFromSubscription;
-    const nextOneTimeBalance =
-      usageRecord.oneTimeCreditsBalance - chargedFromOneTime;
+    const nextSubscriptionBalance = subBalance - chargedFromSubscription;
+    const nextOneTimeBalance = oneTimeBalance - chargedFromOneTime;
 
-    await tx
-      .update(usage)
-      .set({
+    let remainingSubToDeduct = chargedFromSubscription;
+    for (const bucket of buckets) {
+      if (remainingSubToDeduct <= 0) {
+        break;
+      }
+      const deduction = Math.min(bucket.creditsRemaining, remainingSubToDeduct);
+      remainingSubToDeduct -= deduction;
+      await tx
+        .update(subscriptionCreditBuckets)
+        .set({
+          creditsRemaining: bucket.creditsRemaining - deduction,
+        })
+        .where(eq(subscriptionCreditBuckets.id, bucket.id));
+    }
+
+    if (usageRecord) {
+      await tx
+        .update(usage)
+        .set({
+          subscriptionCreditsBalance: nextSubscriptionBalance,
+          oneTimeCreditsBalance: nextOneTimeBalance,
+        })
+        .where(eq(usage.userId, input.userId));
+    } else {
+      await tx.insert(usage).values({
+        userId: input.userId,
         subscriptionCreditsBalance: nextSubscriptionBalance,
         oneTimeCreditsBalance: nextOneTimeBalance,
-      })
-      .where(eq(usage.userId, input.userId));
+      });
+    }
 
     const availableCredits = nextOneTimeBalance + nextSubscriptionBalance;
 

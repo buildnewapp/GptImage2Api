@@ -4,7 +4,7 @@ import {
   subscriptions as subscriptionsSchema,
 } from "@/lib/db/schema";
 import { isRecurringPaymentType } from "@/lib/payments/provider-utils";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, gt, inArray, or } from "drizzle-orm";
 
 export const RECURRING_PURCHASE_REQUIRES_HIGHER_TIER_ERROR =
   "RECURRING_PURCHASE_REQUIRES_HIGHER_TIER";
@@ -29,6 +29,7 @@ export async function assertRecurringPurchaseIsHigherTier(
   userId: string,
   planId: string,
 ): Promise<void> {
+  const now = new Date();
   const db = getDb();
   const [targetPlan] = await db
     .select({
@@ -57,7 +58,13 @@ export async function assertRecurringPurchaseIsHigherTier(
     .where(
       and(
         eq(subscriptionsSchema.userId, userId),
-        inArray(subscriptionsSchema.status, ["active", "trialing"]),
+        or(
+          inArray(subscriptionsSchema.status, ["active", "trialing"]),
+          and(
+            inArray(subscriptionsSchema.status, ["canceled", "cancelled"]),//canceled -> creem , cancelled -> paypal
+            gt(subscriptionsSchema.currentPeriodEnd, now),
+          ),
+        ),
         eq(pricingPlansSchema.paymentType, "recurring"),
       ),
     );

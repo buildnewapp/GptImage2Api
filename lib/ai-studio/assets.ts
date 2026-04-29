@@ -25,13 +25,20 @@ function normalizePublicUrl(url: string | null | undefined) {
   return url ? url.replace(/\/+$/, "") : null;
 }
 
-function isR2PublicUrl(url: string, r2PublicUrl: string | null | undefined) {
+export function isAiStudioR2PublicUrl(url: string, r2PublicUrl: string | null | undefined) {
   const normalizedPublicUrl = normalizePublicUrl(r2PublicUrl);
   if (!normalizedPublicUrl) {
     return false;
   }
 
   return url === normalizedPublicUrl || url.startsWith(`${normalizedPublicUrl}/`);
+}
+
+export function hasNonR2AiStudioMediaUrls(
+  mediaUrls: string[],
+  r2PublicUrl: string | null | undefined = process.env.R2_PUBLIC_URL,
+) {
+  return mediaUrls.some((url) => !isAiStudioR2PublicUrl(url, r2PublicUrl));
 }
 
 function getUploadFileName(url: string, directory: string) {
@@ -73,7 +80,7 @@ export async function persistAiStudioMediaUrls(input: {
 
   const persistedUrls = await Promise.all(
     input.mediaUrls.map(async (url) => {
-      if (isR2PublicUrl(url, r2PublicUrl)) {
+      if (isAiStudioR2PublicUrl(url, r2PublicUrl)) {
         return url;
       }
 
@@ -81,8 +88,17 @@ export async function persistAiStudioMediaUrls(input: {
         fileName: getUploadFileName(url, directory),
         path: datedPath,
       });
-      const uploaded = await uploadExternalUrl(url, key);
-      return uploaded.url;
+      try {
+        const uploaded = await uploadExternalUrl(url, key);
+        return uploaded.url;
+      } catch (error) {
+        console.warn("AI Studio media upload to R2 failed, fallback to source URL", {
+          url,
+          key,
+          error,
+        });
+        return url;
+      }
     }),
   );
 

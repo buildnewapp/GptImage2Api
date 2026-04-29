@@ -23,18 +23,18 @@ import {
   creditLogs as creditLogsSchema,
   PaymentProvider,
   pricingPlans as pricingPlansSchema,
+  subscriptionCreditBuckets as subscriptionCreditBucketsSchema,
   usage as usageSchema,
 } from '@/lib/db/schema';
-import { isMonthlyInterval, isYearlyInterval } from '@/lib/payments/provider-utils';
+import { isYearlyInterval } from '@/lib/payments/provider-utils';
 import {
-  addSubscriptionCreditsBalance,
   buildYearlyAllocationEntry,
   mergeYearlyAllocation,
 } from '@/lib/payments/subscription-credits';
 import type {
   Order,
 } from '@/lib/payments/types';
-import { eq, sql } from 'drizzle-orm';
+import { and, asc, eq, gt, lte, sql } from 'drizzle-orm';
 
 // ============================================================================
 // One-Time Credit Operations
@@ -254,7 +254,75 @@ export async function revokeOneTimeCredits(refundAmountCents: number, originalOr
  * @param orderId - The order's ID
  * @param currentPeriodStart - The subscription period start time (13-digit timestamp)
  */
-export async function upgradeSubscriptionCredits(userId: string, planId: string, orderId: string, currentPeriodStart: number) {
+interface UpgradeSubscriptionCreditsOptions {
+  provider?: PaymentProvider;
+  subscriptionId?: string | null;
+  periodEnd?: number | string | Date | null;
+}
+
+function parseDateInput(value: number | string | Date | null | undefined): Date | null {
+  if (value === null || value === undefined) {
+    return null;
+  }
+  const normalizedValue =
+    typeof value === 'number' && value > 0 && value < 1_000_000_000_000
+      ? value * 1000
+      : value;
+  const date = normalizedValue instanceof Date ? new Date(normalizedValue) : new Date(normalizedValue);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function addMonths(date: Date, months: number) {
+  const next = new Date(date);
+  next.setUTCMonth(next.getUTCMonth() + months);
+  return next;
+}
+
+function removeYearlyAllocationByOrderId(balanceJsonb: any, orderId: string) {
+  const source =
+    typeof balanceJsonb === 'object' && balanceJsonb !== null
+      ? { ...balanceJsonb }
+      : {};
+
+  const next = { ...source };
+  const yearlyAllocations =
+    typeof next.yearlyAllocations === 'object' && next.yearlyAllocations !== null
+      ? { ...next.yearlyAllocations }
+      : {};
+
+  delete yearlyAllocations[orderId];
+  if (Object.keys(yearlyAllocations).length > 0) {
+    next.yearlyAllocations = yearlyAllocations;
+  } else {
+    delete next.yearlyAllocations;
+  }
+
+  if (next.yearlyAllocationDetails?.relatedOrderId === orderId) {
+    delete next.yearlyAllocationDetails;
+  }
+
+  return next;
+}
+
+function removeYearlyAllocationsByOrderIds(balanceJsonb: any, relatedOrderIds: string[]) {
+  if (relatedOrderIds.length === 0) {
+    return balanceJsonb;
+  }
+
+  let next = balanceJsonb;
+  for (const orderId of relatedOrderIds) {
+    next = removeYearlyAllocationByOrderId(next, orderId);
+  }
+  return next;
+}
+
+export async function upgradeSubscriptionCredits(
+  userId: string,
+  planId: string,
+  orderId: string,
+  currentPeriodStart: number,
+  options?: UpgradeSubscriptionCreditsOptions,
+) {
   const db = getDb();
 
   // --- TODO: [custom] Upgrade the user's benefits ---
@@ -275,7 +343,7 @@ export async function upgradeSubscriptionCredits(userId: string, planId: string,
     const planDataResults = await db
       .select({
         recurringInterval: pricingPlansSchema.recurringInterval,
-        benefitsJsonb: pricingPlansSchema.benefitsJsonb
+        benefitsJsonb: pricingPlansSchema.benefitsJsonb,
       })
       .from(pricingPlansSchema)
       .where(eq(pricingPlansSchema.id, planId))
@@ -283,170 +351,149 @@ export async function upgradeSubscriptionCredits(userId: string, planId: string,
     const planData = planDataResults[0];
 
     if (!planData) {
-      console.error(`Error fetching plan benefits for planId ${planId} during order ${orderId} processing`);
       throw new Error(`Could not fetch plan benefits for ${planId}`);
     }
 
     const benefits = planData.benefitsJsonb as any;
     const recurringInterval = planData.recurringInterval;
-
     const creditsToGrant = benefits?.monthlyCredits || 0;
 
-    if (isMonthlyInterval(recurringInterval) && creditsToGrant) {
-      let attempts = 0;
-      const maxAttempts = 3;
-      let lastError: any = null;
-
-      while (attempts < maxAttempts) {
-        attempts++;
-        try {
-          await db.transaction(async (tx) => {
-            const existingUsage = await tx
-              .select()
-              .from(usageSchema)
-              .where(eq(usageSchema.userId, userId))
-              .for('update');
-            const usage = existingUsage[0];
-            const nextSubscriptionBalance = addSubscriptionCreditsBalance(
-              usage?.subscriptionCreditsBalance,
-              creditsToGrant,
-            );
-
-            const updatedUsage = usage
-              ? await tx
-                  .update(usageSchema)
-                  .set({
-                    subscriptionCreditsBalance: nextSubscriptionBalance,
-                  })
-                  .where(eq(usageSchema.userId, userId))
-                  .returning({
-                    oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
-                    subscriptionCreditsSnapshot: usageSchema.subscriptionCreditsBalance,
-                  })
-              : await tx
-                  .insert(usageSchema)
-                  .values({
-                    userId,
-                    subscriptionCreditsBalance: nextSubscriptionBalance,
-                  })
-                  .returning({
-                    oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
-                    subscriptionCreditsSnapshot: usageSchema.subscriptionCreditsBalance,
-                  });
-
-            const balances = updatedUsage[0];
-            if (!balances) { throw new Error('Failed to update usage for monthly subscription'); }
-
-            await tx.insert(creditLogsSchema).values({
-              userId: userId,
-              amount: creditsToGrant,
-              oneTimeCreditsSnapshot: balances.oneTimeCreditsSnapshot,
-              subscriptionCreditsSnapshot: balances.subscriptionCreditsSnapshot,
-              type: 'subscription_grant',
-              notes: 'Subscription credits granted/reset',
-              relatedOrderId: orderId,
-            });
-          });
-          console.log(`Successfully granted subscription credits for user ${userId} on attempt ${attempts}.`);
-          lastError = null;
-          break;
-        } catch (error) {
-          lastError = error;
-          console.warn(`Attempt ${attempts} failed for grant subscription credits and log for user ${userId}. Retrying in ${attempts}s...`, (lastError as Error).message);
-          if (attempts < maxAttempts) {
-            await new Promise(resolve => setTimeout(resolve, attempts * 1000));
-          }
-        }
-      }
-
-      if (lastError) {
-        console.error(`Error setting subscription credits for user ${userId} (order ${orderId}) after ${maxAttempts} attempts:`, lastError);
-        throw lastError;
-      }
-      return
+    if (!creditsToGrant || creditsToGrant <= 0) {
+      return;
     }
 
-    if (isYearlyInterval(recurringInterval) && benefits?.totalMonths && benefits?.monthlyCredits) {
-      let attempts = 0;
-      const maxAttempts = 3;
-      let lastError: any = null;
+    const provider = options?.provider ?? 'stripe';
+    const subscriptionId = options?.subscriptionId ?? `fallback_${orderId}`;
+    const periodStart = parseDateInput(currentPeriodStart) ?? new Date();
+    const explicitPeriodEnd = parseDateInput(options?.periodEnd);
+    const defaultMonthlyEnd = addMonths(periodStart, 1);
+    const bucketPeriodEnd = isYearlyInterval(recurringInterval)
+      ? defaultMonthlyEnd
+      : explicitPeriodEnd && explicitPeriodEnd > periodStart
+        ? explicitPeriodEnd
+        : defaultMonthlyEnd;
 
-      while (attempts < maxAttempts) {
-        attempts++;
-        try {
-          await db.transaction(async (tx) => {
-            const existingUsage = await tx
-              .select()
-              .from(usageSchema)
-              .where(eq(usageSchema.userId, userId))
-              .for('update');
-            const usage = existingUsage[0];
+    let attempts = 0;
+    const maxAttempts = 3;
+    let lastError: any = null;
+
+    while (attempts < maxAttempts) {
+      attempts++;
+      try {
+        await db.transaction(async (tx) => {
+          const usageRows = await tx
+            .select()
+            .from(usageSchema)
+            .where(eq(usageSchema.userId, userId))
+            .for('update');
+          const usage = usageRows[0];
+
+          let nextBalanceJsonb = usage?.balanceJsonb ?? {};
+          if (isYearlyInterval(recurringInterval) && benefits?.totalMonths && benefits?.monthlyCredits) {
             const yearlyEntry = buildYearlyAllocationEntry({
               currentPeriodStart,
               monthlyCredits: benefits.monthlyCredits,
               orderId,
               totalMonths: benefits.totalMonths,
             });
-            const nextSubscriptionBalance = addSubscriptionCreditsBalance(
-              usage?.subscriptionCreditsBalance,
-              benefits.monthlyCredits,
-            );
-            const nextBalanceJsonb = mergeYearlyAllocation(usage?.balanceJsonb, yearlyEntry);
-
-            const updatedUsage = usage
-              ? await tx
-                  .update(usageSchema)
-                  .set({
-                    subscriptionCreditsBalance: nextSubscriptionBalance,
-                    balanceJsonb: nextBalanceJsonb,
-                  })
-                  .where(eq(usageSchema.userId, userId))
-                  .returning({
-                    oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
-                    subscriptionCreditsSnapshot: usageSchema.subscriptionCreditsBalance,
-                  })
-              : await tx
-                  .insert(usageSchema)
-                  .values({
-                    userId,
-                    subscriptionCreditsBalance: nextSubscriptionBalance,
-                    balanceJsonb: nextBalanceJsonb,
-                  })
-                  .returning({
-                    oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
-                    subscriptionCreditsSnapshot: usageSchema.subscriptionCreditsBalance,
-                  });
-
-            const balances = updatedUsage[0];
-            if (!balances) { throw new Error('Failed to update usage for yearly subscription'); }
-
-            await tx.insert(creditLogsSchema).values({
-              userId: userId,
-              amount: benefits.monthlyCredits,
-              oneTimeCreditsSnapshot: balances.oneTimeCreditsSnapshot,
-              subscriptionCreditsSnapshot: balances.subscriptionCreditsSnapshot,
-              type: 'subscription_grant',
-              notes: 'Yearly plan initial credits granted',
-              relatedOrderId: orderId,
-            });
-          });
-          console.log(`Successfully initialized yearly allocation for user ${userId} on attempt ${attempts}.`);
-          lastError = null;
-          break;
-        } catch (error) {
-          lastError = error;
-          console.warn(`Attempt ${attempts} failed for initialize or reset yearly allocation for user ${userId}. Retrying in ${attempts}s...`, (lastError as Error).message);
-          if (attempts < maxAttempts) {
-            await new Promise(resolve => setTimeout(resolve, attempts * 1000));
+            nextBalanceJsonb = mergeYearlyAllocation(nextBalanceJsonb, yearlyEntry);
           }
+
+          await tx
+            .insert(subscriptionCreditBucketsSchema)
+            .values({
+              userId,
+              provider,
+              subscriptionId,
+              periodStart,
+              periodEnd: bucketPeriodEnd,
+              expiresAt: bucketPeriodEnd,
+              creditsTotal: creditsToGrant,
+              creditsRemaining: creditsToGrant,
+              relatedOrderId: orderId,
+            })
+            .onConflictDoUpdate({
+              target: [
+                subscriptionCreditBucketsSchema.provider,
+                subscriptionCreditBucketsSchema.subscriptionId,
+                subscriptionCreditBucketsSchema.periodStart,
+              ],
+              set: {
+                periodEnd: bucketPeriodEnd,
+                expiresAt: bucketPeriodEnd,
+                creditsTotal: creditsToGrant,
+                creditsRemaining: creditsToGrant,
+                relatedOrderId: orderId,
+              },
+            });
+
+          const now = new Date();
+          const activeSubRows = await tx
+            .select({
+              balance: sql<number>`coalesce(sum(${subscriptionCreditBucketsSchema.creditsRemaining}), 0)`,
+            })
+            .from(subscriptionCreditBucketsSchema)
+            .where(
+              and(
+                eq(subscriptionCreditBucketsSchema.userId, userId),
+                gt(subscriptionCreditBucketsSchema.creditsRemaining, 0),
+                gt(subscriptionCreditBucketsSchema.expiresAt, now),
+              ),
+            );
+          const nextSubscriptionBalance = Number(activeSubRows[0]?.balance ?? 0);
+
+          const updatedUsage = usage
+            ? await tx
+                .update(usageSchema)
+                .set({
+                  subscriptionCreditsBalance: nextSubscriptionBalance,
+                  balanceJsonb: nextBalanceJsonb,
+                })
+                .where(eq(usageSchema.userId, userId))
+                .returning({
+                  oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
+                  subscriptionCreditsSnapshot: usageSchema.subscriptionCreditsBalance,
+                })
+            : await tx
+                .insert(usageSchema)
+                .values({
+                  userId,
+                  oneTimeCreditsBalance: 0,
+                  subscriptionCreditsBalance: nextSubscriptionBalance,
+                  balanceJsonb: nextBalanceJsonb,
+                })
+                .returning({
+                  oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
+                  subscriptionCreditsSnapshot: usageSchema.subscriptionCreditsBalance,
+                });
+
+          const balances = updatedUsage[0];
+          if (!balances) {
+            throw new Error('Failed to update usage for subscription grant');
+          }
+
+          await tx.insert(creditLogsSchema).values({
+            userId,
+            amount: creditsToGrant,
+            oneTimeCreditsSnapshot: balances.oneTimeCreditsSnapshot,
+            subscriptionCreditsSnapshot: balances.subscriptionCreditsSnapshot,
+            type: 'subscription_grant',
+            notes: 'Subscription credits granted',
+            relatedOrderId: orderId,
+          });
+        });
+        lastError = null;
+        break;
+      } catch (error) {
+        lastError = error;
+        if (attempts < maxAttempts) {
+          await new Promise((resolve) => setTimeout(resolve, attempts * 1000));
         }
       }
+    }
 
-      if (lastError) {
-        console.error(`Failed to initialize yearly allocation for user ${userId} after ${maxAttempts} attempts:`, lastError);
-        throw lastError;
-      }
-      return
+    if (lastError) {
+      throw lastError;
     }
   } catch (creditError) {
     console.error(`Error processing credits for user ${userId} (order ${orderId}):`, creditError);
@@ -475,28 +522,87 @@ export async function revokeSubscriptionCredits(originalOrder: Order) {
    * 
    * お客様のビジネスロジックに基づいて、ユーザーのサブスクリプション特典を取消してください。
    */
-  const planId = originalOrder.planId as string;
   const userId = originalOrder.userId as string;
-  const subscriptionId = originalOrder.subscriptionId as string;
+  const orderId = originalOrder.id;
 
   try {
-    const ctx = await getSubscriptionRevokeContext(planId, userId);
-    if (!ctx) { return; }
+    await db.transaction(async (tx) => {
+      const usageRows = await tx
+        .select()
+        .from(usageSchema)
+        .where(eq(usageSchema.userId, userId))
+        .for('update');
+      const usage = usageRows[0];
+      if (!usage) {
+        return;
+      }
 
-    if (ctx.subscriptionToRevoke > 0) {
-      await applySubscriptionCreditsRevocation({
+      const buckets = await tx
+        .select({
+          id: subscriptionCreditBucketsSchema.id,
+          creditsRemaining: subscriptionCreditBucketsSchema.creditsRemaining,
+        })
+        .from(subscriptionCreditBucketsSchema)
+        .where(
+          and(
+            eq(subscriptionCreditBucketsSchema.userId, userId),
+            eq(subscriptionCreditBucketsSchema.relatedOrderId, orderId),
+            gt(subscriptionCreditBucketsSchema.creditsRemaining, 0),
+          ),
+        )
+        .for('update');
+
+      if (buckets.length === 0) {
+        return;
+      }
+
+      const amountRevoked = buckets.reduce(
+        (sum, bucket) => sum + bucket.creditsRemaining,
+        0,
+      );
+
+      for (const bucket of buckets) {
+        await tx
+          .update(subscriptionCreditBucketsSchema)
+          .set({ creditsRemaining: 0 })
+          .where(eq(subscriptionCreditBucketsSchema.id, bucket.id));
+      }
+
+      const activeSubRows = await tx
+        .select({
+          balance: sql<number>`coalesce(sum(${subscriptionCreditBucketsSchema.creditsRemaining}), 0)`,
+        })
+        .from(subscriptionCreditBucketsSchema)
+        .where(
+          and(
+            eq(subscriptionCreditBucketsSchema.userId, userId),
+            gt(subscriptionCreditBucketsSchema.creditsRemaining, 0),
+            gt(subscriptionCreditBucketsSchema.expiresAt, new Date()),
+          ),
+        );
+      const nextSubscriptionBalance = Number(activeSubRows[0]?.balance ?? 0);
+      const nextBalanceJsonb = removeYearlyAllocationByOrderId(usage.balanceJsonb, orderId);
+
+      await tx
+        .update(usageSchema)
+        .set({
+          subscriptionCreditsBalance: nextSubscriptionBalance,
+          balanceJsonb: nextBalanceJsonb,
+        })
+        .where(eq(usageSchema.userId, userId));
+
+      await tx.insert(creditLogsSchema).values({
         userId,
-        amountToRevoke: ctx.subscriptionToRevoke,
-        clearMonthly: ctx.clearMonthly,
-        clearYearly: ctx.clearYearly,
-        logType: 'refund_revoke',
-        notes: `Full refund for subscription order ${originalOrder.id}.`,
-        relatedOrderId: originalOrder.id,
+        amount: -amountRevoked,
+        oneTimeCreditsSnapshot: usage.oneTimeCreditsBalance,
+        subscriptionCreditsSnapshot: nextSubscriptionBalance,
+        type: 'refund_revoke',
+        notes: `Full refund for subscription order ${orderId}.`,
+        relatedOrderId: orderId,
       });
-      console.log(`Successfully revoked subscription credits for user ${userId} related to subscription ${subscriptionId} refund.`);
-    }
+    });
   } catch (error) {
-    console.error(`Error during revokeSubscriptionCredits for user ${userId}, subscription ${subscriptionId}:`, error);
+    console.error(`Error during revokeSubscriptionCredits for user ${userId}, order ${orderId}:`, error);
   }
   // --- End: [custom] Revoke the user's subscription benefits ---
 }
@@ -517,136 +623,76 @@ export async function revokeRemainingSubscriptionCreditsOnEnd(provider: PaymentP
   const db = getDb();
 
   try {
-    const usageRows = await db
-      .select({ subscriptionCreditsBalance: usageSchema.subscriptionCreditsBalance })
-      .from(usageSchema)
-      .where(eq(usageSchema.userId, userId))
-      .limit(1);
-    const amountToRevoke = usageRows[0]?.subscriptionCreditsBalance ?? 0;
+    await db.transaction(async (tx) => {
+      const usageRows = await tx
+        .select()
+        .from(usageSchema)
+        .where(eq(usageSchema.userId, userId))
+        .for('update');
+      const usage = usageRows[0];
+      if (!usage) {
+        return;
+      }
 
-    if (amountToRevoke > 0) {
-      await applySubscriptionCreditsRevocation({
-        userId,
-        amountToRevoke,
-        clearMonthly: true,
-        clearYearly: true,
-        logType: 'subscription_ended_revoke',
-        notes: `${provider} subscription ${subscriptionId} ended; remaining credits revoked.`,
-        relatedOrderId: null,
-      });
-    }
+      const buckets = await tx
+        .select({
+          id: subscriptionCreditBucketsSchema.id,
+          creditsRemaining: subscriptionCreditBucketsSchema.creditsRemaining,
+          relatedOrderId: subscriptionCreditBucketsSchema.relatedOrderId,
+        })
+        .from(subscriptionCreditBucketsSchema)
+        .where(
+          and(
+            eq(subscriptionCreditBucketsSchema.userId, userId),
+            eq(subscriptionCreditBucketsSchema.provider, provider),
+            eq(subscriptionCreditBucketsSchema.subscriptionId, subscriptionId),
+            gt(subscriptionCreditBucketsSchema.creditsRemaining, 0),
+          ),
+        )
+        .for('update');
 
-    console.log(`Revoked remaining subscription credits on end for subscription ${subscriptionId}, user ${userId}`);
-  } catch (error) {
-    console.error(`Error revoking remaining credits for subscription ${subscriptionId}:`, error);
-  }
-}
+      if (buckets.length === 0) {
+        return;
+      }
 
-// ============================================================================
-// Internal Helper Functions
-// ============================================================================
+      const amountRevoked = buckets.reduce(
+        (sum, bucket) => sum + bucket.creditsRemaining,
+        0,
+      );
+      for (const bucket of buckets) {
+        await tx
+          .update(subscriptionCreditBucketsSchema)
+          .set({ creditsRemaining: 0 })
+          .where(eq(subscriptionCreditBucketsSchema.id, bucket.id));
+      }
 
-/**
- * Gets the context for revoking subscription credits based on plan and usage data.
- * 
- * 根据计划和用量数据获取撤销订阅积分的上下文。
- * 
- * プランと使用量データに基づいて、サブスクリプションクレジットを取り消すためのコンテキストを取得します。
- */
-async function getSubscriptionRevokeContext(planId: string, userId: string) {
-  const db = getDb();
+      const activeSubRows = await tx
+        .select({
+          balance: sql<number>`coalesce(sum(${subscriptionCreditBucketsSchema.creditsRemaining}), 0)`,
+        })
+        .from(subscriptionCreditBucketsSchema)
+        .where(
+          and(
+            eq(subscriptionCreditBucketsSchema.userId, userId),
+            gt(subscriptionCreditBucketsSchema.creditsRemaining, 0),
+            gt(subscriptionCreditBucketsSchema.expiresAt, new Date()),
+          ),
+        );
+      const nextSubscriptionBalance = Number(activeSubRows[0]?.balance ?? 0);
 
-  const planDataResults = await db
-    .select({ recurringInterval: pricingPlansSchema.recurringInterval })
-    .from(pricingPlansSchema)
-    .where(eq(pricingPlansSchema.id, planId))
-    .limit(1);
-  const planData = planDataResults[0];
+      const orderIds = buckets
+        .map((bucket) => bucket.relatedOrderId)
+        .filter((value): value is string => Boolean(value));
+      const nextBalanceJsonb = removeYearlyAllocationsByOrderIds(
+        usage.balanceJsonb,
+        orderIds,
+      );
 
-  if (!planData) {
-    console.error(`Error fetching plan benefits for planId ${planId} while computing revoke context`);
-    return null;
-  }
-
-  const usageDataResults = await db
-    .select({ balanceJsonb: usageSchema.balanceJsonb })
-    .from(usageSchema)
-    .where(eq(usageSchema.userId, userId))
-    .limit(1);
-  const usageData = usageDataResults[0];
-
-  if (!usageData) {
-    console.error(`Error fetching usage data for user ${userId} while computing revoke context`);
-    return { recurringInterval: planData.recurringInterval, subscriptionToRevoke: 0, clearMonthly: false, clearYearly: false };
-  }
-
-  let subscriptionToRevoke = 0;
-  let clearYearly = false;
-  let clearMonthly = false;
-
-  if (isYearlyInterval(planData.recurringInterval)) {
-    const yearlyDetails = (usageData.balanceJsonb as any)?.yearlyAllocationDetails;
-    subscriptionToRevoke = yearlyDetails?.monthlyCredits || 0;
-    clearYearly = true;
-  } else if (isMonthlyInterval(planData.recurringInterval)) {
-    const monthlyDetails = (usageData.balanceJsonb as any)?.monthlyAllocationDetails;
-    subscriptionToRevoke = monthlyDetails?.monthlyCredits || 0;
-    clearMonthly = true;
-  }
-
-  return {
-    recurringInterval: planData.recurringInterval,
-    subscriptionToRevoke,
-    clearMonthly,
-    clearYearly,
-  };
-}
-
-/**
- * Applies subscription credits revocation to the user's account.
- * 
- * 将订阅积分撤销应用到用户账户。
- * 
- * ユーザーアカウントにサブスクリプションクレジットの取り消しを適用します。
- */
-async function applySubscriptionCreditsRevocation(params: {
-  userId: string;
-  amountToRevoke: number;
-  clearMonthly?: boolean;
-  clearYearly?: boolean;
-  logType: string;
-  notes: string;
-  relatedOrderId?: string | null;
-}) {
-  const db = getDb();
-
-  const { userId, amountToRevoke, clearMonthly, clearYearly, logType, notes, relatedOrderId } = params;
-
-  if (!amountToRevoke || amountToRevoke <= 0) {
-    return;
-  }
-
-  await db.transaction(async (tx) => {
-    const usageResults = await tx.select().from(usageSchema).where(eq(usageSchema.userId, userId)).for('update');
-    const usage = usageResults[0];
-    if (!usage) { return; }
-
-    const newSubBalance = Math.max(0, usage.subscriptionCreditsBalance - amountToRevoke);
-    const amountRevoked = usage.subscriptionCreditsBalance - newSubBalance;
-
-    let newBalanceJsonb = usage.balanceJsonb as any;
-    if (clearYearly) {
-      delete newBalanceJsonb?.yearlyAllocationDetails;
-    }
-    if (clearMonthly) {
-      delete newBalanceJsonb?.monthlyAllocationDetails;
-    }
-
-    if (amountRevoked > 0) {
-      await tx.update(usageSchema)
+      await tx
+        .update(usageSchema)
         .set({
-          subscriptionCreditsBalance: newSubBalance,
-          balanceJsonb: newBalanceJsonb,
+          subscriptionCreditsBalance: nextSubscriptionBalance,
+          balanceJsonb: nextBalanceJsonb,
         })
         .where(eq(usageSchema.userId, userId));
 
@@ -654,11 +700,121 @@ async function applySubscriptionCreditsRevocation(params: {
         userId,
         amount: -amountRevoked,
         oneTimeCreditsSnapshot: usage.oneTimeCreditsBalance,
-        subscriptionCreditsSnapshot: newSubBalance,
-        type: logType,
-        notes,
-        relatedOrderId: relatedOrderId ?? null,
+        subscriptionCreditsSnapshot: nextSubscriptionBalance,
+        type: 'subscription_ended_revoke',
+        notes: `${provider} subscription ${subscriptionId} ended; remaining credits revoked.`,
+        relatedOrderId: null,
       });
-    }
-  });
+    });
+  } catch (error) {
+    console.error(`Error revoking remaining credits for subscription ${subscriptionId}:`, error);
+  }
+}
+
+/**
+ * 过期积分 导入creditLogsSchema表，这样用户积分流水可以对账成功
+ * 暂时不用，防止用户看到投诉
+ * Settles expired subscription credit buckets for a user.
+ * This is designed for lazy-settlement scenarios (for example, when opening credit history page).
+ */
+export async function settleExpiredSubscriptionCreditsForUser(userId: string) {
+  if (!userId) {
+    return { expiredCredits: 0, expiredBuckets: 0 };
+  }
+
+  const db = getDb();
+  const now = new Date();
+
+  try {
+    return await db.transaction(async (tx) => {
+      const usageRows = await tx
+        .select()
+        .from(usageSchema)
+        .where(eq(usageSchema.userId, userId))
+        .for('update');
+
+      const usage = usageRows[0];
+      if (!usage) {
+        return { expiredCredits: 0, expiredBuckets: 0 };
+      }
+
+      const expiredBuckets = await tx
+        .select({
+          id: subscriptionCreditBucketsSchema.id,
+          creditsRemaining: subscriptionCreditBucketsSchema.creditsRemaining,
+          relatedOrderId: subscriptionCreditBucketsSchema.relatedOrderId,
+          expiresAt: subscriptionCreditBucketsSchema.expiresAt,
+        })
+        .from(subscriptionCreditBucketsSchema)
+        .where(
+          and(
+            eq(subscriptionCreditBucketsSchema.userId, userId),
+            gt(subscriptionCreditBucketsSchema.creditsRemaining, 0),
+            lte(subscriptionCreditBucketsSchema.expiresAt, now),
+          ),
+        )
+        .orderBy(asc(subscriptionCreditBucketsSchema.expiresAt))
+        .for('update');
+
+      const expiredCredits = expiredBuckets.reduce(
+        (sum, bucket) => sum + bucket.creditsRemaining,
+        0,
+      );
+
+      const activeSubRows = await tx
+        .select({
+          balance: sql<number>`coalesce(sum(${subscriptionCreditBucketsSchema.creditsRemaining}), 0)`,
+        })
+        .from(subscriptionCreditBucketsSchema)
+        .where(
+          and(
+            eq(subscriptionCreditBucketsSchema.userId, userId),
+            gt(subscriptionCreditBucketsSchema.creditsRemaining, 0),
+            gt(subscriptionCreditBucketsSchema.expiresAt, now),
+          ),
+        );
+      const nextSubscriptionBalance = Number(activeSubRows[0]?.balance ?? 0);
+
+      const runningSnapshotStart =
+        nextSubscriptionBalance + expiredCredits;
+      let runningSubscriptionSnapshot = runningSnapshotStart;
+
+      for (const bucket of expiredBuckets) {
+        await tx
+          .update(subscriptionCreditBucketsSchema)
+          .set({ creditsRemaining: 0 })
+          .where(eq(subscriptionCreditBucketsSchema.id, bucket.id));
+
+        if (bucket.creditsRemaining > 0) {
+          runningSubscriptionSnapshot = Math.max(
+            0,
+            runningSubscriptionSnapshot - bucket.creditsRemaining,
+          );
+
+          const orderIdText = bucket.relatedOrderId ?? 'unknown';
+          await tx.insert(creditLogsSchema).values({
+            userId,
+            amount: -bucket.creditsRemaining,
+            oneTimeCreditsSnapshot: usage.oneTimeCreditsBalance,
+            subscriptionCreditsSnapshot: runningSubscriptionSnapshot,
+            type: 'subscription_ended_revoke',
+            notes: `Subscription credits expired, orderId=${orderIdText}`,
+            relatedOrderId: bucket.relatedOrderId ?? null,
+          });
+        }
+      }
+
+      if (usage.subscriptionCreditsBalance !== nextSubscriptionBalance) {
+        await tx
+          .update(usageSchema)
+          .set({ subscriptionCreditsBalance: nextSubscriptionBalance })
+          .where(eq(usageSchema.userId, userId));
+      }
+
+      return { expiredCredits, expiredBuckets: expiredBuckets.length };
+    });
+  } catch (error) {
+    console.error(`Error settling expired subscription credits for user ${userId}:`, error);
+    return { expiredCredits: 0, expiredBuckets: 0 };
+  }
 }
