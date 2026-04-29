@@ -74,7 +74,7 @@ async function runSyncCommand() {
 
 async function handle(request: Request) {
   try {
-    const user = await getRequestUser(toBearerRequest(request));
+    const user = await getRequestUser(request);
     if (!user) {
       return apiResponse.unauthorized("Admin API key required.");
     }
