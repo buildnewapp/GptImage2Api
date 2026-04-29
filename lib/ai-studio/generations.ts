@@ -63,6 +63,8 @@ export async function reserveAiStudioGeneration(input: ReserveInput) {
   const generation = await getDb().transaction(async (tx) => {
     let nextOneTime = 0;
     let nextSubscription = 0;
+    let reservedFromSubscription = 0;
+    let reservedFromOneTime = 0;
 
     if (reservedCredits > 0) {
       const usageResults = await tx
@@ -94,6 +96,8 @@ export async function reserveAiStudioGeneration(input: ReserveInput) {
         reservedCredits,
       );
       const deductedFromOneTime = reservedCredits - deductedFromSubscription;
+      reservedFromSubscription = deductedFromSubscription;
+      reservedFromOneTime = deductedFromOneTime;
 
       nextSubscription =
         usageRecord.subscriptionCreditsBalance - deductedFromSubscription;
@@ -135,6 +139,8 @@ export async function reserveAiStudioGeneration(input: ReserveInput) {
         requestPayload: input.payload,
         officialPricingSnapshot: input.selectedPricing,
         creditsReserved: reservedCredits,
+        creditsReservedFromSubscription: reservedFromSubscription,
+        creditsReservedFromOneTime: reservedFromOneTime,
       })
       .returning();
 
@@ -200,16 +206,34 @@ async function refundReservedCredits(
     return generation;
   }
 
+  const totalReservedFromSubscription =
+    generation.creditsReservedFromSubscription ?? 0;
+  const alreadyRefundedFromSubscription = Math.min(
+    generation.creditsRefunded,
+    totalReservedFromSubscription,
+  );
+  const remainingRefundableFromSubscription = Math.max(
+    0,
+    totalReservedFromSubscription - alreadyRefundedFromSubscription,
+  );
+  const refundToSubscription = Math.min(
+    refundable,
+    remainingRefundableFromSubscription,
+  );
+  const refundToOneTime = refundable - refundToSubscription;
+
   const updatedUsage = await tx
     .insert(usage)
     .values({
       userId: generation.userId,
-      oneTimeCreditsBalance: refundable,
+      oneTimeCreditsBalance: refundToOneTime,
+      subscriptionCreditsBalance: refundToSubscription,
     })
     .onConflictDoUpdate({
       target: usage.userId,
       set: {
-        oneTimeCreditsBalance: sql`${usage.oneTimeCreditsBalance} + ${refundable}`,
+        oneTimeCreditsBalance: sql`${usage.oneTimeCreditsBalance} + ${refundToOneTime}`,
+        subscriptionCreditsBalance: sql`${usage.subscriptionCreditsBalance} + ${refundToSubscription}`,
       },
     })
     .returning({
@@ -228,6 +252,8 @@ async function refundReservedCredits(
       generationId: generation.id,
       providerTaskId: generation.providerTaskId,
       credits: refundable,
+      refundToOneTime,
+      refundToSubscription,
     }),
   });
 

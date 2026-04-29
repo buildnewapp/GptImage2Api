@@ -831,6 +831,14 @@ export const aiStudioGenerations = pgTable(
     resultUrls: jsonb("result_urls"),
     officialPricingSnapshot: jsonb("official_pricing_snapshot"),
     creditsReserved: integer("credits_reserved").default(0).notNull(),
+    creditsReservedFromSubscription: integer(
+      "credits_reserved_from_subscription",
+    )
+      .default(0)
+      .notNull(),
+    creditsReservedFromOneTime: integer("credits_reserved_from_one_time")
+      .default(0)
+      .notNull(),
     creditsCaptured: integer("credits_captured").default(0).notNull(),
     creditsRefunded: integer("credits_refunded").default(0).notNull(),
     isPublic: boolean("is_public").default(true).notNull(),
