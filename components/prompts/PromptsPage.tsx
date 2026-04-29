@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState, type MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 
 import {
   displayTitleClass,
@@ -29,8 +29,6 @@ import {
   inferResultMediaType,
   resolveMediaUrl,
 } from "./promptGalleryUi";
-
-const PAGE_SIZE = 30;
 
 function parsePositiveInt(value: string | null, fallback: number) {
   const parsed = Number(value);
@@ -448,7 +446,17 @@ function PromptDetailModal({
   );
 }
 
-export default function PromptsPage({ items }: { items: PromptGalleryItem[] }) {
+export default function PromptsPage({
+  items,
+  categories,
+  totalCount,
+  pageSize,
+}: {
+  items: PromptGalleryItem[];
+  categories: string[];
+  totalCount: number;
+  pageSize: number;
+}) {
   const tPromptsPage = useTranslations("Prompts");
   const tPrompts = useTranslations("Prompts.prompts");
   const router = useRouter();
@@ -463,50 +471,12 @@ export default function PromptsPage({ items }: { items: PromptGalleryItem[] }) {
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const [activeItem, setActiveItem] = useState<PromptGalleryItem | null>(null);
 
-  const categories = useMemo(() => {
-    return Array.from(
-      new Set(items.flatMap((item) => item.categories).filter(Boolean)),
-    ).sort((left, right) => left.localeCompare(right));
-  }, [items]);
-
   const activeCategory =
     categoryParam !== "all" && categories.includes(categoryParam)
       ? categoryParam
       : "all";
-
-  const filteredItems = useMemo(() => {
-    const normalizedKeyword = qParam.toLowerCase();
-
-    return items.filter((item) => {
-      if (activeCategory !== "all" && !item.categories.includes(activeCategory)) {
-        return false;
-      }
-
-      if (!normalizedKeyword) {
-        return true;
-      }
-
-      const haystack = [
-        item.title,
-        item.description,
-        item.prompt,
-        item.model,
-        item.language,
-        item.categories.join(" "),
-      ]
-        .join(" ")
-        .toLowerCase();
-
-      return haystack.includes(normalizedKeyword);
-    });
-  }, [activeCategory, items, qParam]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredItems.length / PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
   const currentPage = Math.min(Math.max(pageParam, 1), totalPages);
-  const pageItems = useMemo(() => {
-    const start = (currentPage - 1) * PAGE_SIZE;
-    return filteredItems.slice(start, start + PAGE_SIZE);
-  }, [currentPage, filteredItems]);
 
   const updateUrl = (
     next: {
@@ -701,7 +671,7 @@ export default function PromptsPage({ items }: { items: PromptGalleryItem[] }) {
               {tPrompts("search")}
             </button>
             <div className="inline-flex h-10 items-center rounded-full border border-slate-200/80 bg-white/80 px-3 text-sm text-slate-600 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-300">
-              {tPrompts("resultCount", { count: filteredItems.length })}
+              {tPrompts("resultCount", { count: totalCount })}
             </div>
           </div>
         </div>
@@ -709,7 +679,7 @@ export default function PromptsPage({ items }: { items: PromptGalleryItem[] }) {
 
       <section className="px-3 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
         <div className="mx-auto w-full max-w-7xl">
-          {filteredItems.length === 0 ? (
+          {items.length === 0 ? (
             <div className="rounded-[calc(var(--radius)+0.7rem)] border border-dashed border-slate-300 bg-white/70 px-6 py-12 text-center dark:border-white/10 dark:bg-white/[0.03]">
               <h2 className="text-2xl font-semibold text-slate-950 dark:text-white">
                 {tPromptsPage("list.empty")}
@@ -721,7 +691,7 @@ export default function PromptsPage({ items }: { items: PromptGalleryItem[] }) {
           ) : (
             <>
               <div className="columns-1 [column-gap:1rem] sm:columns-2 sm:[column-gap:1rem] xl:columns-3">
-                {pageItems.map((item) => (
+                {items.map((item) => (
                   <PromptCard
                     key={item.id}
                     item={item}

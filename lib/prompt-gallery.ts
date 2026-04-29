@@ -12,6 +12,23 @@ import {
 } from "@/lib/prompt-gallery-shared";
 
 type PromptGalleryRow = typeof promptGalleryItems.$inferSelect;
+const PUBLIC_PROMPT_GALLERY_DEFAULT_PAGE_SIZE = 30;
+
+export type PublicPromptGalleryListInput = {
+  language?: string;
+  q?: string;
+  category?: string;
+  page?: number;
+  pageSize?: number;
+};
+
+export type PublicPromptGalleryPageData = {
+  items: PromptGalleryItem[];
+  total: number;
+  categories: string[];
+  page: number;
+  pageSize: number;
+};
 
 export function mapPromptGalleryItem(row: PromptGalleryRow): PromptGalleryItem {
   return {
@@ -44,26 +61,89 @@ export function mapPromptGalleryItem(row: PromptGalleryRow): PromptGalleryItem {
   };
 }
 
-export async function getPublicPromptGalleryItems(language?: string) {
-  const conditions = [eq(promptGalleryItems.status, "online")];
-  const normalizedLanguage = language?.trim();
+export async function getPublicPromptGalleryItems(
+  input?: PublicPromptGalleryListInput,
+): Promise<PublicPromptGalleryPageData> {
+  const normalizedLanguage = input?.language?.trim() || "";
+  const normalizedKeyword = input?.q?.trim().toLowerCase() || "";
+  const normalizedCategory = input?.category?.trim() || "";
+  const pageSize = Math.min(Math.max(input?.pageSize ?? PUBLIC_PROMPT_GALLERY_DEFAULT_PAGE_SIZE, 1), 48);
+  const requestedPage = Math.max(input?.page ?? 1, 1);
+
+  const baseConditions = [eq(promptGalleryItems.status, "online")];
 
   if (normalizedLanguage) {
-    conditions.push(eq(promptGalleryItems.language, normalizedLanguage));
+    baseConditions.push(eq(promptGalleryItems.language, normalizedLanguage));
   }
 
-  const rows = await getDb()
+  const listConditions = [...baseConditions];
+
+  if (normalizedCategory && normalizedCategory !== "all") {
+    listConditions.push(
+      sql`exists (
+        select 1
+        from jsonb_array_elements_text(${promptGalleryItems.categories}) as category
+        where category = ${normalizedCategory}
+      )`,
+    );
+  }
+
+  if (normalizedKeyword) {
+    listConditions.push(ilike(promptGalleryItems.searchIndex, `%${normalizedKeyword}%`));
+  }
+
+  const whereCondition = and(...listConditions);
+  const db = getDb();
+
+  const [countRows, categoryRows] = await Promise.all([
+    db
+      .select({ value: count() })
+      .from(promptGalleryItems)
+      .where(whereCondition),
+    db
+      .select({
+        category: sql<string>`jsonb_array_elements_text(${promptGalleryItems.categories})`,
+      })
+      .from(promptGalleryItems)
+      .where(and(...baseConditions)),
+  ]);
+
+  const total = countRows[0]?.value ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const page = Math.min(requestedPage, totalPages);
+
+  const rows = await db
     .select()
     .from(promptGalleryItems)
-    .where(and(...conditions))
+    .where(whereCondition)
     .orderBy(
-      desc(promptGalleryItems.featured),
-      asc(promptGalleryItems.sort),
-      desc(promptGalleryItems.sourcePublishedAt),
-      desc(promptGalleryItems.id),
-    );
+      ...(page === 1
+        ? [sql`random()`]
+        : [
+            desc(promptGalleryItems.featured),
+            asc(promptGalleryItems.sort),
+            desc(promptGalleryItems.sourcePublishedAt),
+            desc(promptGalleryItems.id),
+          ]),
+    )
+    .limit(pageSize)
+    .offset((page - 1) * pageSize);
 
-  return rows.map(mapPromptGalleryItem);
+  const categories = Array.from(
+    new Set(
+      categoryRows
+        .map((row) => (typeof row.category === "string" ? row.category.trim() : ""))
+        .filter(Boolean),
+    ),
+  ).sort((left, right) => left.localeCompare(right));
+
+  return {
+    items: rows.map(mapPromptGalleryItem),
+    total,
+    categories,
+    page,
+    pageSize,
+  };
 }
 
 export async function getAdminPromptGalleryItems(
