@@ -143,6 +143,7 @@ dist
 
 .backup/
 .worktrees/
+.cursor
 
 docs/kie
 docs/plans

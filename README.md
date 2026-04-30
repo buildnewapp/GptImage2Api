@@ -208,6 +208,189 @@ git merge --allow-unrelated-histories --no-commit template/main
 git commit -m "merge template/main"
 git stash pop
 
+### create-new-site skill
+方式一，使用提示词，推荐，修改更全面
+
+```
+create-new-site 是干什么的？
+-------------------------------------------
+产品名  tikdek，域名 tikdek.com， 邮箱 support@tikdek.com， 描述：ai 视频、图片生成平台，提供免费使用机会，提供实名上主流模型，价格低，提供稳定的 api 服务
+核心关键词：ai video generator，ai image genrator, ai video api, ai image api
+主要功能：ai 视频生成、ai 图片生成、ai 视频生成 api、ai 图片生成 api
+pricing 根据当前产品跳转，保留 demo，语言 en/zh/ja ，竞品： https://pollo.ai/
+
+帮我写个使用技能的完整详细的提示词
+```
+新项目使用以下题词是
+```
+请使用 create-new-site 技能，基于当前 NEXTY.DEV 模板，把站点完整定制为 Tikdek 产品站。
+
+请严格遵守以下工作规则：
+1. 所有沟通和总结使用中文。
+2. 不要自动创建 git 分支或 worktree。
+3. 不要过度设计，不要做无关重构。
+4. 不要随意抽离函数，不要主动新增测试文件，除非确实是完成任务必需。
+5. 不要修改 `.env`、`.env.local` 等环境配置文件，除非我明确确认。
+6. 不要替换 demo 图片、视频、poster、CDN 资源，除非我明确提供新资源。
+7. 保留现有 demo 展示内容，但文案、SEO、站点品牌需要改成 Tikdek。
+8. Header / Footer 尽量保留现有结构，只修正明显属于旧产品、旧域名、旧品牌的内容。
+9. 每个重要阶段完成后，先给我确认摘要，再继续下一阶段。
+10. 最后创建或更新 `new_site.md`，记录修改内容、生成文案、跳过项、需要人工确认项和验证结果。
+
+产品信息如下：
+
+产品名：
+Tikdek
+
+域名：
+https://tikdek.com
+
+支持邮箱：
+support@tikdek.com
+
+产品描述：
+Tikdek 是一个 AI 视频和 AI 图片生成平台。它提供免费使用机会，支持实名接入主流 AI 视频和图片模型，价格低，并提供稳定的 API 服务，适合普通创作者、营销团队、开发者和需要批量生成视觉内容的业务使用。
+
+核心关键词：
+- ai video generator
+- ai image generator
+- ai video api
+- ai image api
+
+注意：如果仓库里已有拼写错误 `ai image genrator`，请统一修正为 `ai image generator`。
+
+主要功能：
+1. AI 视频生成
+   - 用户可以通过文本、图片或参考素材生成 AI 视频。
+2. AI 图片生成
+   - 用户可以通过文本提示词生成或编辑 AI 图片。
+3. AI 视频生成 API
+   - 为开发者和业务系统提供稳定的视频生成 API。
+4. AI 图片生成 API
+   - 为开发者和业务系统提供稳定的图片生成 API。
+
+目标用户：
+- 内容创作者
+- 社交媒体运营
+- 营销团队
+- 独立开发者
+- SaaS 产品团队
+- 需要批量生成视频和图片的企业用户
+
+竞品参考：
+https://pollo.ai/
+
+请把竞品作为定位和文案参考，但不要复制其文案。需要分析它如何表达 AI video generator、AI image generator、API、pricing、use cases、templates、showcase 等页面结构，然后结合 Tikdek 的卖点生成原创文案。
+
+语言要求：
+站点保留并完整支持：
+- en
+- zh
+- ja
+
+需要更新三种语言下的主要文案，包括但不限于：
+- `i18n/messages/en/common.json`
+- `i18n/messages/zh/common.json`
+- `i18n/messages/ja/common.json`
+- 当前启用首页模板对应的 i18n 文件
+- pricing 相关文案
+- API 文档相关文案
+- prompts / showcase / blog / alternatives / compare / templates / use-cases 等内容营销页面的 SEO 和页面文案
+- legal pages，包括 privacy-policy、terms-of-service、refund-policy
+
+首页内容要求：
+1. Hero 要突出 Tikdek 是 AI video generator 和 AI image generator。
+2. 明确表达免费使用机会。
+3. 明确表达支持主流模型。
+4. 明确表达价格低。
+5. 明确表达提供稳定 API。
+6. FAQ 尽量生成 12 个问题，如果当前模板不支持 12 个，则填满现有支持数量并说明限制。
+7. CTA 要引导用户开始生成或查看 API。
+
+Pricing 要求：
+1. Pricing 保留现有产品逻辑和跳转方式。
+2. 根据当前产品 Tikdek 更新套餐文案、权益描述、按钮文案、SEO 文案。
+3. 不要破坏现有支付、checkout、product id、plan id 等逻辑。
+4. 如果需要清理旧 provider id 或 seed pricing，请先列出计划让我确认。
+
+Demo / Showcase 要求：
+1. 保留当前 demo 资源。
+2. 只把展示文案改成 Tikdek 相关。
+3. 不要替换已有图片、视频、poster 或 CDN URL。
+
+API 页面要求：
+1. 更新为 Tikdek API。
+2. 覆盖 AI video API 和 AI image API。
+3. 强调稳定、低价、适合开发者集成。
+4. 不要虚构实际不存在的 endpoint。如果页面已有 endpoint，就基于现有真实路由改文案。
+
+Legal 页面要求：
+1. 更新品牌名、域名、邮箱。
+2. 不要虚构公司注册信息、地址、法人、监管编号。
+3. 如果需要公司主体信息，请标记为待人工补充。
+
+LLM 文件要求：
+更新：
+- `public/llms.txt`
+- `public/llms-full.txt`
+
+要求内容使用 Tikdek、tikdek.com、support@tikdek.com，并基于真实路由生成，不要写不存在的公开链接。
+
+最终清理要求：
+1. 全局搜索旧品牌、旧域名、旧邮箱、旧关键词。
+2. 对明显需要替换的旧品牌内容替换为 Tikdek。
+3. 不要改动无关代码。
+4. 生成 `new_site.md`，包含：
+   - 产品信息
+   - SEO 关键词
+   - 主要生成文案
+   - 修改文件列表
+   - 保留未改的 demo 资源说明
+   - pricing 是否改动说明
+   - legal 页面中需要人工确认的信息
+   - verification 结果
+   - 仍需人工处理的事项
+
+执行流程：
+1. 先读取 create-new-site 技能说明。
+2. 分析当前仓库结构，识别当前启用的首页模板、语言文件、pricing 文件、legal 页面、内容营销页面和 API 文档页面。
+3. 基于 Tikdek 信息和竞品 https://pollo.ai/ 做市场与 SEO 研究。
+4. 先输出一版英文、中文、日文的核心定位、Hero、Features、FAQ、CTA、SEO title/description 给我确认。
+5. 我确认后再开始修改文件。
+6. 修改完成后运行必要的类型检查、构建或轻量验证；如果某些验证无法运行，请说明原因。
+7. 最终给出修改总结和 `new_site.md` 路径。
+```
+
+方式二，直接使用skill
+```
+[SKILL.md](.cursor/skills/create-new-site/SKILL.md) 使用这个 skill 网站网站初始化：
+
+项目信息：
+- 产品名：Tikdek
+- 域名：https://tikdek.com
+- 联系邮箱：support@tikdek.com
+- 产品描述：Tikdek 是一个 AI 视频和 AI 图片生成平台，提供免费使用机会，支持主流 AI 视频/图片模型，价格更低，并提供稳定的 API 服务。
+- 目标用户：AI 创作者、内容创作者、开发者、SaaS 创业者、需要集成 AI 视频/图片生成能力的团队。
+- 核心关键词：
+  - ai video generator
+  - ai image generator
+  - ai video api
+  - ai image api
+
+主要功能：
+1. AI 视频生成
+2. AI 图片生成
+3. AI 视频生成 API
+4. AI 图片生成 API
+5. 免费试用机会
+6. 支持主流 AI 模型
+7. 低价稳定的 API 服务
+
+竞品参考：
+- https://pollo.ai/
+```
+
+
 ## 提示词修改
 ```
 名称：GptImage2Api，网站地址：https://gptimage2api.net，邮箱：support@gptimage2api.net，核心功能：Gpt Image 2 Api
