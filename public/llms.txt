@@ -1,0 +1,27 @@
+# Sdance AI
+
+Sdance AI is an independent AI creation website for Seedance video workflows, image generation/editing, public examples, prompts, pricing, and developer documentation.
+
+## Primary Pages
+
+- [Home](https://sdanceai.com)
+- [Features](https://sdanceai.com/#features)
+- [Showcase](https://sdanceai.com/showcase)
+- [Prompts](https://sdanceai.com/prompts)
+- [Blog](https://sdanceai.com/blog)
+- [Pricing](https://sdanceai.com/pricing)
+- [API Docs](https://sdanceai.com/apidoc)
+- [Seedance 2](https://sdanceai.com/seedance2)
+- [Seedance 1.5](https://sdanceai.com/seedance-15)
+- [About / Contact](https://sdanceai.com/about#contact-us)
+
+## Localized Versions
+
+- [English](https://sdanceai.com) - default locale
+- [中文](https://sdanceai.com/zh)
+- [日本語](https://sdanceai.com/ja)
+
+## Resources
+
+- [GitHub prompt repository](https://github.com/sdanceai/awesome_seedance2_prompt)
+- [Support email](mailto:support@sdanceai.com)
