@@ -104,6 +104,7 @@ export const columns: ColumnDef<PricingPlan>[] = [
       const provider = plan.provider;
       const stripePriceId = plan.stripePriceId;
       const creemProductId = plan.creemProductId;
+      const paypalPlanId = plan.paypalPlanId;
       const environment = plan.environment;
 
       if (!provider || provider === "none") {
@@ -146,8 +147,8 @@ export const columns: ColumnDef<PricingPlan>[] = [
               <ExternalLink className="h-3 w-3 text-muted-foreground hover:text-primary" />
             </Link>
           )}
-          {provider === "paypal" && creemProductId && (
-            <span className="text-xs">{creemProductId}</span>
+          {provider === "paypal" && paypalPlanId && (
+            <span className="text-xs">{paypalPlanId}</span>
           )}
         </div>
       );

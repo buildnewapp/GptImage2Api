@@ -221,6 +221,8 @@ export const pricingPlans = pgTable("pricing_plans", {
   stripeCouponId: varchar("stripe_coupon_id", { length: 255 }),
   creemProductId: varchar("creem_product_id", { length: 255 }),
   creemDiscountCode: varchar("creem_discount_code", { length: 255 }),
+  paypalProductId: varchar("paypal_product_id", { length: 255 }),
+  paypalPlanId: varchar("paypal_plan_id", { length: 255 }),
   enableManualInputCoupon: boolean("enable_manual_input_coupon")
     .default(false)
     .notNull(),

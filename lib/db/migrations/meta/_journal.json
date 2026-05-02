@@ -295,6 +295,13 @@
       "when": 1777447200000,
       "tag": "0041_ai_studio_bucket_allocations",
       "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1777651200000,
+      "tag": "0042_paypal_pricing_ids",
+      "breakpoints": true
     }
   ]
 }

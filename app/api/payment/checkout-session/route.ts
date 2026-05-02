@@ -128,7 +128,7 @@ export async function POST(req: Request) {
         .select({
           id: pricingPlansSchema.id,
           cardTitle: pricingPlansSchema.cardTitle,
-          creemProductId: pricingPlansSchema.creemProductId,
+          paypalPlanId: pricingPlansSchema.paypalPlanId,
           currency: pricingPlansSchema.currency,
           paymentType: pricingPlansSchema.paymentType,
           price: pricingPlansSchema.price,
@@ -158,7 +158,7 @@ export async function POST(req: Request) {
       const returnUrl = getURL('api/paypal/callback');
 
       if (isRecurringPaymentType(plan.paymentType)) {
-        const paypalPlanId = plan.creemProductId?.trim();
+        const paypalPlanId = plan.paypalPlanId?.trim();
 
         if (!paypalPlanId) {
           return apiResponse.badRequest('Missing PayPal plan ID');

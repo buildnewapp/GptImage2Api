@@ -99,12 +99,18 @@ function convertPlanToConfig(plan: DbPricingPlan): string {
 
   // Creem fields
   if (plan.creemProductId) {
-    const providerProductField =
-      plan.provider === 'paypal' ? 'paypalPlanId' : 'creemProductId'
-    lines.push(`${indent}${providerProductField}: '${plan.creemProductId}',`)
+    lines.push(`${indent}creemProductId: '${plan.creemProductId}',`)
   }
   if (plan.creemDiscountCode) {
     lines.push(`${indent}creemDiscountCode: '${plan.creemDiscountCode}',`)
+  }
+
+  // PayPal fields
+  if (plan.paypalProductId) {
+    lines.push(`${indent}paypalProductId: '${plan.paypalProductId}',`)
+  }
+  if (plan.paypalPlanId) {
+    lines.push(`${indent}paypalPlanId: '${plan.paypalPlanId}',`)
   }
 
   // Payment fields

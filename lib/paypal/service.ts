@@ -62,7 +62,7 @@ async function resolvePayPalPlanId({
     .where(
       and(
         eq(pricingPlansSchema.provider, "paypal"),
-        eq(pricingPlansSchema.creemProductId, paypalPlanId),
+        eq(pricingPlansSchema.paypalPlanId, paypalPlanId),
       ),
     )
     .limit(1);

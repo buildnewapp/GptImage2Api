@@ -129,15 +129,20 @@ export async function createPricingPlanAction({
   if (planData.provider === 'stripe') {
     planData.creemProductId = null
     planData.creemDiscountCode = null
+    planData.paypalProductId = null
+    planData.paypalPlanId = null
   } else if (planData.provider === 'creem') {
     planData.stripePriceId = null
     planData.stripeProductId = null
     planData.stripeCouponId = null
+    planData.paypalProductId = null
+    planData.paypalPlanId = null
     planData.enableManualInputCoupon = false
   } else if (planData.provider === 'paypal') {
     planData.stripePriceId = null
     planData.stripeProductId = null
     planData.stripeCouponId = null
+    planData.creemProductId = null
     planData.creemDiscountCode = null
     planData.enableManualInputCoupon = false
   } else if (planData.provider === 'none') {
@@ -146,6 +151,8 @@ export async function createPricingPlanAction({
     planData.stripeCouponId = null
     planData.creemProductId = null
     planData.creemDiscountCode = null
+    planData.paypalProductId = null
+    planData.paypalPlanId = null
     planData.enableManualInputCoupon = false
     planData.paymentType = null
     planData.recurringInterval = null
@@ -165,6 +172,8 @@ export async function createPricingPlanAction({
         stripeCouponId: planData.stripeCouponId,
         creemProductId: planData.creemProductId,
         creemDiscountCode: planData.creemDiscountCode,
+        paypalProductId: planData.paypalProductId,
+        paypalPlanId: planData.paypalPlanId,
         enableManualInputCoupon:
           planData.enableManualInputCoupon ?? false,
         paymentType: planData.paymentType || null,
@@ -258,15 +267,20 @@ export async function updatePricingPlanAction({
   if (planData.provider === 'stripe') {
     planData.creemProductId = null
     planData.creemDiscountCode = null
+    planData.paypalProductId = null
+    planData.paypalPlanId = null
   } else if (planData.provider === 'creem') {
     planData.stripePriceId = null
     planData.stripeProductId = null
     planData.stripeCouponId = null
+    planData.paypalProductId = null
+    planData.paypalPlanId = null
     planData.enableManualInputCoupon = false
   } else if (planData.provider === 'paypal') {
     planData.stripePriceId = null
     planData.stripeProductId = null
     planData.stripeCouponId = null
+    planData.creemProductId = null
     planData.creemDiscountCode = null
     planData.enableManualInputCoupon = false
   } else if (planData.provider === 'none') {
@@ -275,6 +289,8 @@ export async function updatePricingPlanAction({
     planData.stripeCouponId = null
     planData.creemProductId = null
     planData.creemDiscountCode = null
+    planData.paypalProductId = null
+    planData.paypalPlanId = null
     planData.enableManualInputCoupon = false
     planData.paymentType = null
     planData.recurringInterval = null
@@ -305,6 +321,12 @@ export async function updatePricingPlanAction({
     }
     if (planData.creemDiscountCode !== undefined) {
       dataToUpdate.creemDiscountCode = planData.creemDiscountCode || null
+    }
+    if (planData.paypalProductId !== undefined) {
+      dataToUpdate.paypalProductId = planData.paypalProductId || null
+    }
+    if (planData.paypalPlanId !== undefined) {
+      dataToUpdate.paypalPlanId = planData.paypalPlanId || null
     }
     if (planData.langJsonb !== undefined) {
       dataToUpdate.langJsonb = (planData.langJsonb || {})
