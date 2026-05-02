@@ -14,6 +14,7 @@ import { PricingCardDisplay } from "@/components/pricing/PricingCardDisplay";
 import FeatureBadge from "@/components/shared/FeatureBadge";
 import { DEFAULT_LOCALE } from "@/i18n/routing";
 import { pricingPlans as pricingPlansSchema } from "@/lib/db/schema";
+import { isPayPalEnabled } from "@/lib/paypal/client";
 import { PricingPlanLangJsonb } from "@/types/pricing";
 import { getLocale, getTranslations } from "next-intl/server";
 
@@ -21,6 +22,10 @@ type PricingPlan = typeof pricingPlansSchema.$inferSelect;
 
 export default async function PricingAll() {
   const t = await getTranslations("Pricing");
+  const checkoutAvailabilityEnv = {
+    nowpaymentsEnabled: Boolean(process.env.NOWPAYMENTS_API_KEY),
+    paypalEnabled: isPayPalEnabled,
+  };
 
   const locale = await getLocale();
 
@@ -69,6 +74,7 @@ export default async function PricingAll() {
 
             return (
               <PricingCardDisplay
+                checkoutAvailabilityEnv={checkoutAvailabilityEnv}
                 key={plan.id}
                 plan={plan}
                 localizedPlan={localizedPlan}

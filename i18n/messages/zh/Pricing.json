@@ -26,6 +26,29 @@
   },
   "saveTip": "节省 20%",
   "manualCoupon": "我有其他优惠码",
+  "paymentDialog": {
+    "title": "选择支付方式",
+    "description": "请选择最适合你的支付方式。",
+    "recommended": "推荐"
+  },
+  "paymentMethods": {
+    "stripe": {
+      "label": "银行卡",
+      "description": "使用信用卡或借记卡安全支付。"
+    },
+    "paypal": {
+      "label": "PayPal",
+      "description": "使用你的 PayPal 账户继续支付。"
+    },
+    "creem": {
+      "label": "Creem",
+      "description": "使用信用卡或借记卡安全支付。"
+    },
+    "nowpayments": {
+      "label": "虚拟币",
+      "description": "通过 NOWPayments 使用虚拟币支付。"
+    }
+  },
   "errors": {
     "loginRequired": "请先登录后再购买套餐。",
     "httpStatus": "请求失败，状态码：{status}",
@@ -36,6 +59,7 @@
     "stripePriceMissing": "当前套餐缺少 Stripe 价格 ID。",
     "creemProductMissing": "当前套餐缺少 Creem 商品 ID。",
     "paypalPlanMissing": "当前套餐缺少 PayPal 套餐 ID。",
+    "noPaymentMethods": "当前套餐没有可用的支付方式。",
     "recurringHigherTierRequired": "你已有更高或同级的订阅，重复购买订阅时只能购买价格更高的套餐。"
   }
 }

@@ -174,6 +174,7 @@ export const pricingPlanEnvironmentEnum = pgEnum("pricing_plan_environment", [
 
 export const providerEnum = pgEnum("provider", [
   "none", // no payment feature
+  "all", // let users choose from configured payment methods
   "stripe",
   "creem",
   "paypal",

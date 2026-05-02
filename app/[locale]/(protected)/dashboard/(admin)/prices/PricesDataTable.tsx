@@ -121,10 +121,10 @@ export function PricesDataTable<TData extends PricingPlan, TValue>({
           </Select>
           <Select
             value={
-              (table.getColumn("provider")?.getFilterValue() as string) ?? "all"
+              (table.getColumn("provider")?.getFilterValue() as string) ?? "__all"
             }
             onValueChange={(value) => {
-              const filterValue = value === "all" ? null : value;
+              const filterValue = value === "__all" ? null : value;
               table.getColumn("provider")?.setFilterValue(filterValue);
             }}
           >
@@ -132,9 +132,11 @@ export function PricesDataTable<TData extends PricingPlan, TValue>({
               <SelectValue placeholder="Filter Provider" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Providers</SelectItem>
+              <SelectItem value="__all">All Providers</SelectItem>
+              <SelectItem value="all">All Payment Methods</SelectItem>
               <SelectItem value="stripe">Stripe</SelectItem>
               <SelectItem value="creem">Creem</SelectItem>
+              <SelectItem value="paypal">PayPal</SelectItem>
               <SelectItem value="none">None</SelectItem>
             </SelectContent>
           </Select>

@@ -145,6 +145,8 @@ export async function createPricingPlanAction({
     planData.creemProductId = null
     planData.creemDiscountCode = null
     planData.enableManualInputCoupon = false
+  } else if (planData.provider === 'all') {
+    // Keep all provider IDs so the public pricing card can offer choices.
   } else if (planData.provider === 'none') {
     planData.stripePriceId = null
     planData.stripeProductId = null
@@ -283,6 +285,8 @@ export async function updatePricingPlanAction({
     planData.creemProductId = null
     planData.creemDiscountCode = null
     planData.enableManualInputCoupon = false
+  } else if (planData.provider === 'all') {
+    // Keep all provider IDs so the public pricing card can offer choices.
   } else if (planData.provider === 'none') {
     planData.stripePriceId = null
     planData.stripeProductId = null
@@ -301,12 +305,19 @@ export async function updatePricingPlanAction({
     delete planData.createdAt
     delete planData.updatedAt
 
-    planData.currency = planData.currency?.toUpperCase() || null
+    if (planData.currency !== undefined) {
+      planData.currency = planData.currency?.toUpperCase() || null
+    }
 
     const dataToUpdate: { [key: string]: any } = {
       ...planData,
-      paymentType: planData.paymentType || null,
-      recurringInterval: planData.recurringInterval || null,
+    }
+
+    if (planData.paymentType !== undefined) {
+      dataToUpdate.paymentType = planData.paymentType || null
+    }
+    if (planData.recurringInterval !== undefined) {
+      dataToUpdate.recurringInterval = planData.recurringInterval || null
     }
 
     if (dataToUpdate.price) {

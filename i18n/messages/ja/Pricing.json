@@ -26,6 +26,29 @@
   },
   "saveTip": "20% 節約",
   "manualCoupon": "別のクーポンコードを持っています",
+  "paymentDialog": {
+    "title": "支払い方法を選択",
+    "description": "利用しやすい支払い方法を選択してください。",
+    "recommended": "おすすめ"
+  },
+  "paymentMethods": {
+    "stripe": {
+      "label": "カード",
+      "description": "クレジットカードまたはデビットカードで安全に支払います。"
+    },
+    "paypal": {
+      "label": "PayPal",
+      "description": "PayPal アカウントで続行します。"
+    },
+    "creem": {
+      "label": "Creem",
+      "description": "クレジットカードまたはデビットカードで安全に支払います。"
+    },
+    "nowpayments": {
+      "label": "暗号資産",
+      "description": "NOWPayments 経由で暗号資産決済を行います。"
+    }
+  },
   "errors": {
     "loginRequired": "プランを購入するにはログインが必要です。",
     "httpStatus": "リクエストに失敗しました。ステータス: {status}",
@@ -36,6 +59,7 @@
     "stripePriceMissing": "このプランには Stripe の価格 ID がありません。",
     "creemProductMissing": "このプランには Creem の商品 ID がありません。",
     "paypalPlanMissing": "このプランには PayPal のプラン ID がありません。",
+    "noPaymentMethods": "このプランで利用できる支払い方法がありません。",
     "recurringHigherTierRequired": "すでに同等または上位のサブスクリプションがあります。再購入できるのは、より高額なプランのみです。"
   }
 }

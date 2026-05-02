@@ -1,6 +1,8 @@
 import { getDb } from "@/lib/db";
 import {
+  orders as ordersSchema,
   pricingPlans as pricingPlansSchema,
+  subscriptionCreditBuckets as subscriptionCreditBucketsSchema,
   subscriptions as subscriptionsSchema,
 } from "@/lib/db/schema";
 import { isRecurringPaymentType } from "@/lib/payments/provider-utils";
@@ -23,6 +25,37 @@ export function isHigherTierRecurringPlan(
   currentPrice: string | null | undefined,
 ): boolean {
   return parsePlanPrice(targetPrice) > parsePlanPrice(currentPrice);
+}
+
+export function requiresHigherTierRecurringPurchase(
+  targetPrice: string | null | undefined,
+  currentPrices: Array<string | null | undefined>,
+): boolean {
+  if (currentPrices.length === 0) {
+    return false;
+  }
+
+  const highestCurrentPrice = currentPrices.reduce((max, price) => {
+    return Math.max(max, parsePlanPrice(price));
+  }, 0);
+
+  return !isHigherTierRecurringPlan(targetPrice, String(highestCurrentPrice));
+}
+
+export function getActiveRecurringPrices(
+  subscriptionPlans: Array<{ price: string | null | undefined }>,
+  orderPlans: Array<{
+    expiresAt: Date | null | undefined;
+    price: string | null | undefined;
+  }>,
+  now = new Date(),
+): Array<string | null | undefined> {
+  return [
+    ...subscriptionPlans.map((item) => item.price),
+    ...orderPlans
+      .filter((item) => item.expiresAt && item.expiresAt > now)
+      .map((item) => item.price),
+  ];
 }
 
 export async function assertRecurringPurchaseIsHigherTier(
@@ -49,7 +82,7 @@ export async function assertRecurringPurchaseIsHigherTier(
     return;
   }
 
-  const existingSubscriptions = await db
+  const existingSubscriptionPlans = await db
     .select({
       price: pricingPlansSchema.price,
     })
@@ -69,15 +102,37 @@ export async function assertRecurringPurchaseIsHigherTier(
       ),
     );
 
-  if (existingSubscriptions.length === 0) {
+  const existingRecurringOrderPlans = await db
+    .select({
+      expiresAt: subscriptionCreditBucketsSchema.expiresAt,
+      price: pricingPlansSchema.price,
+    })
+    .from(ordersSchema)
+    .innerJoin(pricingPlansSchema, eq(ordersSchema.planId, pricingPlansSchema.id))
+    .innerJoin(
+      subscriptionCreditBucketsSchema,
+      eq(subscriptionCreditBucketsSchema.relatedOrderId, ordersSchema.id),
+    )
+    .where(
+      and(
+        eq(ordersSchema.userId, userId),
+        eq(ordersSchema.status, "succeeded"),
+        eq(pricingPlansSchema.paymentType, "recurring"),
+        gt(subscriptionCreditBucketsSchema.expiresAt, now),
+      ),
+    );
+
+  const currentPrices = getActiveRecurringPrices(
+    existingSubscriptionPlans,
+    existingRecurringOrderPlans,
+    now,
+  );
+
+  if (currentPrices.length === 0) {
     return;
   }
 
-  const highestCurrentPrice = existingSubscriptions.reduce((max, item) => {
-    return Math.max(max, parsePlanPrice(item.price));
-  }, 0);
-
-  if (!isHigherTierRecurringPlan(targetPlan.price, String(highestCurrentPrice))) {
+  if (requiresHigherTierRecurringPurchase(targetPlan.price, currentPrices)) {
     throw new Error(RECURRING_PURCHASE_REQUIRES_HIGHER_TIER_ERROR);
   }
 }

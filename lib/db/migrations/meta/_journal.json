@@ -302,6 +302,13 @@
       "when": 1777651200000,
       "tag": "0042_paypal_pricing_ids",
       "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1777722201050,
+      "tag": "0043_wandering_santa_claus",
+      "breakpoints": true
     }
   ]
 }

@@ -8,7 +8,12 @@ import { getDb } from '@/lib/db';
 import { pricingPlans as pricingPlansSchema } from '@/lib/db/schema';
 import { getErrorMessage } from '@/lib/error-utils';
 import { encodePayPalCustomId, getPayPalApprovalUrl } from '@/lib/paypal';
-import { PayPalClient } from '@/lib/paypal/client';
+import { isPayPalEnabled, PayPalClient } from '@/lib/paypal/client';
+import {
+  getAvailableCheckoutProviders,
+  hasUsableProviderId,
+  hasUsablePriceAndCurrency,
+} from '@/lib/payments/checkout-availability';
 import { isRecurringPaymentType } from '@/lib/payments/provider-utils';
 import { assertRecurringPurchaseIsHigherTier } from '@/lib/payments/subscription-purchase';
 import { getURL } from '@/lib/url';
@@ -42,16 +47,18 @@ export async function POST(req: Request) {
   }
 
   const provider = requestData.provider;
+  const nowpaymentsEnabled = Boolean(process.env.NOWPAYMENTS_API_KEY);
 
   try {
     if (provider === 'stripe') {
-      const { stripePriceId } = requestData;
-      if (!stripePriceId) {
+      const stripePriceId = requestData.stripePriceId?.trim();
+      if (!hasUsableProviderId(stripePriceId)) {
         return apiResponse.badRequest('Missing stripePriceId');
       }
+      const validStripePriceId = stripePriceId!;
       const result = await createStripeCheckoutSession({
         userId: user.id,
-        priceId: stripePriceId,
+        priceId: validStripePriceId,
         couponCode: requestData.couponCode,
         referral: requestData.referral,
       });
@@ -59,10 +66,12 @@ export async function POST(req: Request) {
     }
 
     if (provider === 'creem') {
-      const { creemProductId, couponCode } = requestData;
-      if (!creemProductId) {
+      const creemProductId = requestData.creemProductId?.trim();
+      const { couponCode } = requestData;
+      if (!hasUsableProviderId(creemProductId)) {
         return apiResponse.badRequest('Missing creemProductId');
       }
+      const validCreemProductId = creemProductId!;
 
       const results = await db
         .select({
@@ -73,7 +82,7 @@ export async function POST(req: Request) {
           creemProductId: pricingPlansSchema.creemProductId,
         })
         .from(pricingPlansSchema)
-        .where(eq(pricingPlansSchema.creemProductId, creemProductId))
+        .where(eq(pricingPlansSchema.creemProductId, validCreemProductId))
         .limit(1);
 
       const plan = results[0];
@@ -87,7 +96,7 @@ export async function POST(req: Request) {
       }
 
       const sessionParams = {
-        product_id: creemProductId,
+        product_id: validCreemProductId,
         units: 1,
         discount_code: couponCode,
         customer: {
@@ -138,13 +147,22 @@ export async function POST(req: Request) {
         .where(eq(pricingPlansSchema.id, planId))
         .limit(1);
 
-      console.log('paypal plan', plan)
-      if (!plan || plan.provider !== 'paypal') {
+      if (!plan || (plan.provider !== 'paypal' && plan.provider !== 'all')) {
         return apiResponse.notFound('Plan not found for PayPal');
       }
 
+      if (!isPayPalEnabled) {
+        return apiResponse.badRequest('PayPal is not configured');
+      }
+
       if (isRecurringPaymentType(plan.paymentType)) {
+        if (!hasUsableProviderId(plan.paypalPlanId)) {
+          return apiResponse.badRequest('Missing PayPal plan ID');
+        }
+
         await assertRecurringPurchaseIsHigherTier(user.id, plan.id);
+      } else if (!hasUsablePriceAndCurrency(plan)) {
+        return apiResponse.badRequest('PayPal one-time plan price is incomplete');
       }
 
       const localeHeader = req.headers.get('accept-language') ?? 'en-US';
@@ -229,6 +247,39 @@ export async function POST(req: Request) {
         sessionId: order.id,
         url: approvalUrl,
       });
+    }
+
+    if (provider === 'all') {
+      const { planId } = requestData;
+      if (!planId) {
+        return apiResponse.badRequest('Missing planId');
+      }
+
+      const [plan] = await db
+        .select({
+          id: pricingPlansSchema.id,
+          creemProductId: pricingPlansSchema.creemProductId,
+          currency: pricingPlansSchema.currency,
+          paypalPlanId: pricingPlansSchema.paypalPlanId,
+          paymentType: pricingPlansSchema.paymentType,
+          price: pricingPlansSchema.price,
+          provider: pricingPlansSchema.provider,
+          stripePriceId: pricingPlansSchema.stripePriceId,
+        })
+        .from(pricingPlansSchema)
+        .where(eq(pricingPlansSchema.id, planId))
+        .limit(1);
+
+      if (!plan || plan.provider !== 'all') {
+        return apiResponse.notFound('Plan not found for payment selection');
+      }
+
+      const availableProviders = getAvailableCheckoutProviders(plan, {
+        nowpaymentsEnabled,
+        paypalEnabled: isPayPalEnabled,
+      });
+
+      return apiResponse.success({ providers: availableProviders });
     }
 
     return apiResponse.badRequest(

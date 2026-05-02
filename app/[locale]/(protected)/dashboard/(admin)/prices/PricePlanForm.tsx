@@ -94,7 +94,7 @@ const pricingPlanFormSchema = z.object({
   groupSlug: z.string().optional(),
   cardTitle: z.string().min(1, "Card title is required."),
   cardDescription: z.string().optional().nullable(),
-  provider: z.enum(["none", "stripe", "creem", "paypal"]),
+  provider: z.enum(["none", "all", "stripe", "creem", "paypal"]),
   stripePriceId: z.string().optional().nullable(),
   stripeProductId: z.string().optional().nullable(),
   stripeCouponId: z.string().optional().nullable(),
@@ -285,7 +285,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
   };
 
   useEffect(() => {
-    if (watchProvider === "stripe") {
+    if (watchProvider === "stripe" || watchProvider === "all") {
       handleFetchCoupons();
     }
   }, [watchEnvironment, watchProvider]);
@@ -681,6 +681,8 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
         payload.creemProductId = null;
         payload.creemDiscountCode = null;
         payload.enableManualInputCoupon = false;
+      } else if (payload.provider === "all") {
+        // Keep all provider IDs so users can choose at checkout.
       } else if (payload.provider === "none") {
         // Remove all fields when provider is none
         payload.stripePriceId = null;
@@ -824,12 +826,6 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                       const newValue =
                         typeof value === "string" ? value : value[0];
                       field.onChange(newValue);
-
-                      // Clear shared fields in this card when provider changes
-                      form.setValue("paymentType", "");
-                      form.setValue("recurringInterval", "");
-                      form.setValue("price", undefined);
-                      form.setValue("currency", "");
                     };
                     return (
                       <FormItem>
@@ -850,6 +846,11 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                               title="No Payment"
                             />
                             <ChoiceboxGroup.Item
+                              value="all"
+                              title="All"
+                              description="Let users choose"
+                            />
+                            <ChoiceboxGroup.Item
                               value="stripe"
                               title="Stripe"
                             />
@@ -868,7 +869,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
 
                 {watchProvider !== "none" && (
                   <>
-                    {watchProvider === "stripe" && (
+                    {(watchProvider === "stripe" || watchProvider === "all") && (
                       <>
                         <FormField
                           control={form.control}
@@ -932,7 +933,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                         />
                       </>
                     )}
-                    {watchProvider === "creem" && (
+                    {(watchProvider === "creem" || watchProvider === "all") && (
                       <FormField
                         control={form.control}
                         name="creemProductId"
@@ -972,7 +973,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                         )}
                       />
                     )}
-                    {watchProvider === "paypal" && (
+                    {(watchProvider === "paypal" || watchProvider === "all") && (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <FormField
                           control={form.control}
@@ -1026,7 +1027,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Payment Type</FormLabel>
-                            {watchProvider === "paypal" ? (
+                            {watchProvider === "paypal" || watchProvider === "all" ? (
                               <Select
                                 onValueChange={field.onChange}
                                 value={field.value ?? ""}
@@ -1067,7 +1068,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Recurring Interval</FormLabel>
-                            {watchProvider === "paypal" ? (
+                            {watchProvider === "paypal" || watchProvider === "all" ? (
                               <Select
                                 onValueChange={field.onChange}
                                 value={field.value ?? ""}
@@ -1124,10 +1125,18 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                                       : Number(event.target.value)
                                   )
                                 }
-                                readOnly={watchProvider !== "paypal"}
-                                disabled={watchProvider !== "paypal" || isLoading}
+                                readOnly={
+                                  watchProvider !== "paypal" &&
+                                  watchProvider !== "all"
+                                }
+                                disabled={
+                                  (watchProvider !== "paypal" &&
+                                    watchProvider !== "all") ||
+                                  isLoading
+                                }
                                 placeholder={
-                                  watchProvider === "paypal"
+                                  watchProvider === "paypal" ||
+                                  watchProvider === "all"
                                     ? "Enter plan price"
                                     : "Fetched from provider"
                                 }
@@ -1147,10 +1156,18 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                               <Input
                                 {...field}
                                 value={field.value ?? ""}
-                                readOnly={watchProvider !== "paypal"}
-                                disabled={watchProvider !== "paypal" || isLoading}
+                                readOnly={
+                                  watchProvider !== "paypal" &&
+                                  watchProvider !== "all"
+                                }
+                                disabled={
+                                  (watchProvider !== "paypal" &&
+                                    watchProvider !== "all") ||
+                                  isLoading
+                                }
                                 placeholder={
-                                  watchProvider === "paypal"
+                                  watchProvider === "paypal" ||
+                                  watchProvider === "all"
                                     ? "USD"
                                     : "Fetched from provider"
                                 }
@@ -1162,7 +1179,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                       />
                     </div>
 
-                    {watchProvider === "stripe" && (
+                    {(watchProvider === "stripe" || watchProvider === "all") && (
                       <>
                         <FormField
                           control={form.control}
@@ -1272,7 +1289,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                         )}
                       </>
                     )}
-                    {watchProvider === "creem" && (
+                    {(watchProvider === "creem" || watchProvider === "all") && (
                       <>
                         <FormField
                           control={form.control}

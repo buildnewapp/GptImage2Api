@@ -15,6 +15,7 @@ import { PricingCardDisplay } from "@/components/pricing/PricingCardDisplay";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DEFAULT_LOCALE } from "@/i18n/routing";
 import { pricingPlans as pricingPlansSchema } from "@/lib/db/schema";
+import { isPayPalEnabled } from "@/lib/paypal/client";
 import { PricingPlanLangJsonb } from "@/types/pricing";
 import { Sparkles } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -29,6 +30,10 @@ export default async function PricingByGroup({
   checkoutMode = "default",
 }: PricingByGroupProps = {}) {
   const t = await getTranslations("Landing.Pricing");
+  const checkoutAvailabilityEnv = {
+    nowpaymentsEnabled: Boolean(process.env.NOWPAYMENTS_API_KEY),
+    paypalEnabled: isPayPalEnabled,
+  };
 
   const locale = await getLocale();
 
@@ -86,6 +91,7 @@ export default async function PricingByGroup({
 
           return (
             <PricingCardDisplay
+              checkoutAvailabilityEnv={checkoutAvailabilityEnv}
               checkoutMode={checkoutMode}
               id={plan.isHighlighted ? "highlight-card" : undefined}
               key={plan.id}
