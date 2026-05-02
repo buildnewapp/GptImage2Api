@@ -5,6 +5,10 @@ import { actionResponse } from "@/lib/action-response";
 import { isAdmin } from "@/lib/auth/server";
 import { getDb } from "@/lib/db";
 import {
+  getManualOrderTypeForPlan,
+  isRecurringManualBenefitPlan,
+} from "@/lib/admin/dashboard-users";
+import {
   aiStudioGenerations as aiStudioGenerationsSchema,
   creditLogs as creditLogsSchema,
   orders as ordersSchema,
@@ -17,7 +21,9 @@ import {
   userSource as userSourceSchema,
 } from "@/lib/db/schema";
 import { getErrorMessage } from "@/lib/error-utils";
-import { and, count, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
+import { randomUUID } from "node:crypto";
+import { and, asc, count, desc, eq, gt, ilike, inArray, or, sql } from "drizzle-orm";
+import { z } from "zod";
 
 type UserType = typeof userSchema.$inferSelect;
 
@@ -53,6 +59,7 @@ export interface GetUsersResult {
 
 export type AdminUserDetails = {
   user: UserWithSource;
+  manualBenefitPlans: AdminManualBenefitPlan[];
   buckets: Array<typeof subscriptionCreditBucketsSchema.$inferSelect>;
   subscriptions: Array<
     typeof subscriptionsSchema.$inferSelect & {
@@ -76,6 +83,18 @@ export type AdminUserDetails = {
 };
 
 export type GetUserDetailsResult = ActionResult<AdminUserDetails>;
+
+export type AdminManualBenefitPlan = {
+  id: string;
+  cardTitle: string;
+  provider: string | null;
+  paymentType: string | null;
+  recurringInterval: string | null;
+  price: string | null;
+  currency: string | null;
+  displayPrice: string | null;
+  benefitsJsonb: unknown;
+};
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -230,6 +249,7 @@ export async function getUserDetails({
     }
 
     const [
+      manualBenefitPlans,
       buckets,
       subscriptions,
       orders,
@@ -237,6 +257,30 @@ export async function getUserDetails({
       consumedCreditResults,
       purchasedCreditResults,
     ] = await Promise.all([
+      db
+        .select({
+          id: pricingPlansSchema.id,
+          cardTitle: pricingPlansSchema.cardTitle,
+          provider: pricingPlansSchema.provider,
+          paymentType: pricingPlansSchema.paymentType,
+          recurringInterval: pricingPlansSchema.recurringInterval,
+          price: pricingPlansSchema.price,
+          currency: pricingPlansSchema.currency,
+          displayPrice: pricingPlansSchema.displayPrice,
+          benefitsJsonb: pricingPlansSchema.benefitsJsonb,
+        })
+        .from(pricingPlansSchema)
+        .where(
+          and(
+            eq(pricingPlansSchema.isActive, true),
+            eq(pricingPlansSchema.environment, "live"),
+          ),
+        )
+        .orderBy(
+          asc(pricingPlansSchema.environment),
+          asc(pricingPlansSchema.displayOrder),
+          asc(pricingPlansSchema.cardTitle),
+        ),
       db
         .select()
         .from(subscriptionCreditBucketsSchema)
@@ -361,6 +405,7 @@ export async function getUserDetails({
 
     return actionResponse.success({
       user,
+      manualBenefitPlans,
       buckets,
       subscriptions,
       orders,
@@ -448,6 +493,274 @@ export async function unbanUser({
 
     return actionResponse.success();
   } catch (error: any) {
+    return actionResponse.error(getErrorMessage(error));
+  }
+}
+
+const ManualGrantSchema = z.object({
+  userId: z.string().uuid(),
+  planId: z.string().uuid().nullable().optional(),
+  subscriptionPeriodEnd: z.string().nullable().optional(),
+  creditType: z.enum(["none", "one_time", "subscription"]),
+  creditAmount: z.coerce.number().int().min(0).default(0),
+  creditExpiresAt: z.string().nullable().optional(),
+  notes: z.string().trim().max(500).optional(),
+});
+
+function parseManualDate(value: string | null | undefined) {
+  if (!value) {
+    return null;
+  }
+
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function getManualPlanPriceValue(value: string | null | undefined) {
+  return value && Number.isFinite(Number(value)) ? value : "0";
+}
+
+export async function grantManualUserBenefits(
+  input: z.infer<typeof ManualGrantSchema>,
+): Promise<ActionResult<{ orderId: string | null; subscriptionId: string | null }>> {
+  if (!(await isAdmin())) {
+    return actionResponse.forbidden("Admin privileges required.");
+  }
+
+  const parsed = ManualGrantSchema.safeParse(input);
+  if (!parsed.success) {
+    return actionResponse.badRequest(parsed.error.issues[0]?.message || "Invalid input.");
+  }
+
+  const {
+    userId,
+    planId,
+    subscriptionPeriodEnd,
+    creditType,
+    creditAmount,
+    creditExpiresAt,
+    notes,
+  } = parsed.data;
+
+  if (!planId && creditType === "none") {
+    return actionResponse.badRequest("请选择产品或填写积分调整。");
+  }
+
+  if (creditType !== "none" && creditAmount <= 0) {
+    return actionResponse.badRequest("积分数量必须大于 0。");
+  }
+
+  const now = new Date();
+  const db = getDb();
+
+  try {
+    const [targetUser] = await db
+      .select({ id: userSchema.id })
+      .from(userSchema)
+      .where(eq(userSchema.id, userId))
+      .limit(1);
+
+    if (!targetUser) {
+      return actionResponse.notFound("User not found.");
+    }
+
+    const planRows = planId
+      ? await db
+          .select()
+          .from(pricingPlansSchema)
+          .where(eq(pricingPlansSchema.id, planId))
+          .limit(1)
+      : [];
+    const plan = planRows[0] ?? null;
+
+    if (planId && !plan) {
+      return actionResponse.notFound("Pricing plan not found.");
+    }
+
+    const shouldCreateSubscription = plan
+      ? isRecurringManualBenefitPlan(plan)
+      : false;
+    const periodEnd = shouldCreateSubscription
+      ? parseManualDate(subscriptionPeriodEnd)
+      : null;
+
+    if (shouldCreateSubscription && (!periodEnd || periodEnd <= now)) {
+      return actionResponse.badRequest("会员结束时间必须晚于当前时间。");
+    }
+
+    const subscriptionCreditEnd =
+      creditType === "subscription" ? parseManualDate(creditExpiresAt) : null;
+    if (creditType === "subscription" && (!subscriptionCreditEnd || subscriptionCreditEnd <= now)) {
+      return actionResponse.badRequest("订阅积分结束时间必须晚于当前时间。");
+    }
+
+    const manualId = randomUUID();
+    let createdOrderId: string | null = null;
+    let createdSubscriptionId: string | null = null;
+
+    await db.transaction(async (tx) => {
+      if (plan) {
+        const orderType = getManualOrderTypeForPlan(plan);
+        const manualSubscriptionId = shouldCreateSubscription
+          ? `manual:${manualId}:subscription`
+          : null;
+
+        const [insertedOrder] = await tx
+          .insert(ordersSchema)
+          .values({
+            userId,
+            provider: "manual",
+            providerOrderId: `manual:${manualId}:order`,
+            orderType,
+            status: shouldCreateSubscription ? "active" : "succeeded",
+            subscriptionId: manualSubscriptionId,
+            planId: plan.id,
+            productId: plan.stripeProductId ?? plan.creemProductId ?? null,
+            priceId: plan.stripePriceId ?? null,
+            amountSubtotal: getManualPlanPriceValue(plan.price),
+            amountDiscount: "0",
+            amountTax: "0",
+            amountTotal: getManualPlanPriceValue(plan.price),
+            currency: plan.currency ?? "USD",
+            metadata: {
+              source: "manual_admin_grant",
+              notes: notes || null,
+              paymentType: plan.paymentType,
+              recurringInterval: plan.recurringInterval,
+            },
+          })
+          .returning({ id: ordersSchema.id });
+
+        createdOrderId = insertedOrder?.id ?? null;
+
+        if (shouldCreateSubscription && periodEnd && manualSubscriptionId) {
+          await tx.insert(subscriptionsSchema).values({
+            userId,
+            planId: plan.id,
+            provider: "none",
+            subscriptionId: manualSubscriptionId,
+            customerId: `manual:${userId}`,
+            productId: plan.stripeProductId ?? plan.creemProductId ?? null,
+            priceId: plan.stripePriceId ?? null,
+            status: "active",
+            currentPeriodStart: now,
+            currentPeriodEnd: periodEnd,
+            cancelAtPeriodEnd: false,
+            metadata: {
+              source: "manual_admin_grant",
+              relatedOrderId: createdOrderId,
+              notes: notes || null,
+            },
+          });
+          createdSubscriptionId = manualSubscriptionId;
+        }
+      }
+
+      if (creditType === "one_time" && creditAmount > 0) {
+        const updatedUsage = await tx
+          .insert(usageSchema)
+          .values({
+            userId,
+            oneTimeCreditsBalance: creditAmount,
+          })
+          .onConflictDoUpdate({
+            target: usageSchema.userId,
+            set: {
+              oneTimeCreditsBalance: sql`${usageSchema.oneTimeCreditsBalance} + ${creditAmount}`,
+            },
+          })
+          .returning({
+            oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
+            subscriptionCreditsSnapshot: usageSchema.subscriptionCreditsBalance,
+          });
+
+        const balances = updatedUsage[0];
+        if (!balances) {
+          throw new Error("Failed to update one-time credits.");
+        }
+
+        await tx.insert(creditLogsSchema).values({
+          userId,
+          amount: creditAmount,
+          oneTimeCreditsSnapshot: balances.oneTimeCreditsSnapshot,
+          subscriptionCreditsSnapshot: balances.subscriptionCreditsSnapshot,
+          type: "manual_one_time_grant",
+          notes: notes || "Manual one-time credit grant",
+          relatedOrderId: createdOrderId,
+        });
+      }
+
+      if (creditType === "subscription" && creditAmount > 0 && subscriptionCreditEnd) {
+        const creditSubscriptionId =
+          createdSubscriptionId ?? `manual:${manualId}:credits`;
+
+        await tx.insert(subscriptionCreditBucketsSchema).values({
+          userId,
+          provider: "none",
+          subscriptionId: creditSubscriptionId,
+          periodStart: now,
+          periodEnd: subscriptionCreditEnd,
+          expiresAt: subscriptionCreditEnd,
+          creditsTotal: creditAmount,
+          creditsRemaining: creditAmount,
+          relatedOrderId: createdOrderId,
+        });
+
+        const activeSubRows = await tx
+          .select({
+            balance: sql<number>`coalesce(sum(${subscriptionCreditBucketsSchema.creditsRemaining}), 0)`,
+          })
+          .from(subscriptionCreditBucketsSchema)
+          .where(
+            and(
+              eq(subscriptionCreditBucketsSchema.userId, userId),
+              gt(subscriptionCreditBucketsSchema.creditsRemaining, 0),
+              gt(subscriptionCreditBucketsSchema.expiresAt, now),
+            ),
+          );
+        const nextSubscriptionBalance = Number(activeSubRows[0]?.balance ?? 0);
+
+        const updatedUsage = await tx
+          .insert(usageSchema)
+          .values({
+            userId,
+            oneTimeCreditsBalance: 0,
+            subscriptionCreditsBalance: nextSubscriptionBalance,
+          })
+          .onConflictDoUpdate({
+            target: usageSchema.userId,
+            set: {
+              subscriptionCreditsBalance: nextSubscriptionBalance,
+            },
+          })
+          .returning({
+            oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
+            subscriptionCreditsSnapshot: usageSchema.subscriptionCreditsBalance,
+          });
+
+        const balances = updatedUsage[0];
+        if (!balances) {
+          throw new Error("Failed to update subscription credits.");
+        }
+
+        await tx.insert(creditLogsSchema).values({
+          userId,
+          amount: creditAmount,
+          oneTimeCreditsSnapshot: balances.oneTimeCreditsSnapshot,
+          subscriptionCreditsSnapshot: balances.subscriptionCreditsSnapshot,
+          type: "manual_subscription_grant",
+          notes: notes || "Manual subscription credit grant",
+          relatedOrderId: createdOrderId,
+        });
+      }
+    });
+
+    return actionResponse.success({
+      orderId: createdOrderId,
+      subscriptionId: createdSubscriptionId,
+    });
+  } catch (error) {
+    console.error("Error granting manual user benefits:", error);
     return actionResponse.error(getErrorMessage(error));
   }
 }

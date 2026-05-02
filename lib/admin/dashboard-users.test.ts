@@ -4,7 +4,11 @@ import test from "node:test";
 import {
   buildAdminUserQuickActionLinks,
   buildAdminUserScopeLabel,
+  getManualBenefitPeriodEnd,
+  getManualCreditDefaultsFromPlan,
+  getManualOrderTypeForPlan,
   getAdminUserTotalCredits,
+  isRecurringManualBenefitPlan,
 } from "@/lib/admin/dashboard-users";
 
 test("sums subscription and one-time credits into a current total", () => {
@@ -65,5 +69,61 @@ test("prefers name and email when rendering the current user scope label", () =>
       email: null,
     }),
     "user-3",
+  );
+});
+
+test("resolves manual benefit order and subscription behavior from plan type", () => {
+  assert.equal(
+    getManualOrderTypeForPlan({ paymentType: "recurring" }),
+    "subscription_initial",
+  );
+  assert.equal(
+    getManualOrderTypeForPlan({ paymentType: "one_time" }),
+    "one_time_purchase",
+  );
+  assert.equal(
+    isRecurringManualBenefitPlan({ paymentType: "recurring" }),
+    true,
+  );
+  assert.equal(
+    isRecurringManualBenefitPlan({ paymentType: "onetime" }),
+    false,
+  );
+});
+
+test("builds default manual credit input from selected product benefits", () => {
+  assert.deepEqual(
+    getManualCreditDefaultsFromPlan({
+      paymentType: "one_time",
+      benefitsJsonb: { oneTimeCredits: 300, monthlyCredits: 20 },
+    }),
+    {
+      creditType: "one_time",
+      amount: 300,
+    },
+  );
+
+  assert.deepEqual(
+    getManualCreditDefaultsFromPlan({
+      paymentType: "recurring",
+      benefitsJsonb: { oneTimeCredits: 300, monthlyCredits: 20 },
+    }),
+    {
+      creditType: "subscription",
+      amount: 20,
+    },
+  );
+});
+
+test("builds default manual benefit period end from recurring interval", () => {
+  const now = new Date("2026-05-02T00:00:00.000Z");
+
+  assert.equal(
+    getManualBenefitPeriodEnd({ recurringInterval: "month" }, now).toISOString(),
+    "2026-06-02T00:00:00.000Z",
+  );
+  assert.equal(
+    getManualBenefitPeriodEnd({ recurringInterval: "every-year" }, now).toISOString(),
+    "2027-05-02T00:00:00.000Z",
   );
 });

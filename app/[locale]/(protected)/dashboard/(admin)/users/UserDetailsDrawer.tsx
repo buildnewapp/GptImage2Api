@@ -1,10 +1,23 @@
 "use client";
 
-import { getUserDetails } from "@/actions/users/admin";
-import type { AdminUserDetails, UserWithSource } from "@/actions/users/admin";
+import { getUserDetails, grantManualUserBenefits } from "@/actions/users/admin";
+import type {
+  AdminManualBenefitPlan,
+  AdminUserDetails,
+  UserWithSource,
+} from "@/actions/users/admin";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Drawer,
   DrawerClose,
@@ -13,14 +26,31 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { buildAdminUserQuickActionLinks } from "@/lib/admin/dashboard-users";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  buildAdminUserQuickActionLinks,
+  getManualBenefitPeriodEnd,
+  getManualCreditDefaultsFromPlan,
+  isRecurringManualBenefitPlan,
+  type ManualCreditType,
+} from "@/lib/admin/dashboard-users";
 import dayjs from "dayjs";
-import { Copy, ExternalLink, X } from "lucide-react";
+import { Copy, ExternalLink, Gift, X } from "lucide-react";
 import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 function formatDate(value: Date | string | null | undefined) {
@@ -128,7 +158,280 @@ function EmptyState() {
   return <div className="text-sm text-muted-foreground">暂无记录</div>;
 }
 
-function UserDetailsContent({ details }: { details: AdminUserDetails }) {
+function formatDateTimeLocal(value: Date) {
+  return dayjs(value).format("YYYY-MM-DDTHH:mm");
+}
+
+function toIsoDateTime(value: string) {
+  if (!value) {
+    return null;
+  }
+
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+}
+
+function ManualBenefitDialog({
+  userId,
+  plans,
+  onCompleted,
+}: {
+  userId: string;
+  plans: AdminManualBenefitPlan[];
+  onCompleted: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [selectedPlanId, setSelectedPlanId] = useState("none");
+  const [subscriptionEnd, setSubscriptionEnd] = useState("");
+  const [creditType, setCreditType] = useState<ManualCreditType>("none");
+  const [creditAmount, setCreditAmount] = useState("");
+  const [creditExpiresAt, setCreditExpiresAt] = useState("");
+  const [notes, setNotes] = useState("");
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
+  const selectedPlan =
+    plans.find((plan) => plan.id === selectedPlanId) ?? null;
+  const isRecurringPlan =
+    selectedPlan ? isRecurringManualBenefitPlan(selectedPlan) : false;
+
+  function resetForm() {
+    setSelectedPlanId("none");
+    setSubscriptionEnd("");
+    setCreditType("none");
+    setCreditAmount("");
+    setCreditExpiresAt("");
+    setNotes("");
+  }
+
+  function applyPlanDefaults(planId: string) {
+    setSelectedPlanId(planId);
+
+    if (planId === "none") {
+      setSubscriptionEnd("");
+      return;
+    }
+
+    const plan = plans.find((item) => item.id === planId);
+    if (!plan) {
+      return;
+    }
+
+    const creditDefaults = getManualCreditDefaultsFromPlan(plan);
+    setCreditType(creditDefaults.creditType);
+    setCreditAmount(creditDefaults.amount > 0 ? String(creditDefaults.amount) : "");
+
+    if (isRecurringManualBenefitPlan(plan)) {
+      const defaultEnd = getManualBenefitPeriodEnd(plan);
+      const defaultEndValue = formatDateTimeLocal(defaultEnd);
+      setSubscriptionEnd(defaultEndValue);
+      setCreditExpiresAt(
+        creditDefaults.creditType === "subscription" ? defaultEndValue : "",
+      );
+    } else {
+      setSubscriptionEnd("");
+      setCreditExpiresAt("");
+    }
+  }
+
+  function updateCreditType(value: ManualCreditType) {
+    setCreditType(value);
+    if (value === "subscription" && !creditExpiresAt) {
+      setCreditExpiresAt(
+        subscriptionEnd || formatDateTimeLocal(getManualBenefitPeriodEnd({})),
+      );
+    }
+    if (value !== "subscription") {
+      setCreditExpiresAt("");
+    }
+  }
+
+  function submit() {
+    const amount = Number(creditAmount || 0);
+
+    if (isRecurringPlan && !subscriptionEnd) {
+      toast.error("请填写会员结束时间");
+      return;
+    }
+    if (creditType !== "none" && (!Number.isFinite(amount) || amount <= 0)) {
+      toast.error("请填写有效的积分数量");
+      return;
+    }
+    if (creditType === "subscription" && !creditExpiresAt) {
+      toast.error("请填写订阅积分结束时间");
+      return;
+    }
+
+    startTransition(async () => {
+      const result = await grantManualUserBenefits({
+        userId,
+        planId: selectedPlanId === "none" ? null : selectedPlanId,
+        subscriptionPeriodEnd: isRecurringPlan
+          ? toIsoDateTime(subscriptionEnd)
+          : null,
+        creditType,
+        creditAmount: amount,
+        creditExpiresAt:
+          creditType === "subscription" ? toIsoDateTime(creditExpiresAt) : null,
+        notes: notes || undefined,
+      });
+
+      if (result.success) {
+        toast.success("权益已添加");
+        resetForm();
+        setOpen(false);
+        onCompleted();
+        router.refresh();
+      } else {
+        toast.error("添加权益失败", { description: result.error });
+      }
+    });
+  }
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen && !isPending) {
+          resetForm();
+        }
+        setOpen(nextOpen);
+      }}
+    >
+      <DialogTrigger asChild>
+        <Button size="xs" variant="outline" className="gap-1.5">
+          <Gift className="h-3.5 w-3.5" />
+          添加权益
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-xl">
+        <DialogHeader>
+          <DialogTitle>添加权益</DialogTitle>
+          <DialogDescription>
+            产品和积分都可以单独填写；一次性产品不会创建订阅记录。
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label>产品</Label>
+            <Select value={selectedPlanId} onValueChange={applyPlanDefaults}>
+              <SelectTrigger>
+                <SelectValue placeholder="不选择产品" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">不选择产品</SelectItem>
+                {plans.map((plan) => (
+                  <SelectItem key={plan.id} value={plan.id}>
+                    {plan.cardTitle}
+                    {plan.displayPrice ? ` · ${plan.displayPrice}` : ""}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {isRecurringPlan ? (
+            <div className="space-y-2">
+              <Label htmlFor="manual-benefit-subscription-end">
+                会员结束时间
+              </Label>
+              <Input
+                id="manual-benefit-subscription-end"
+                type="datetime-local"
+                value={subscriptionEnd}
+                onChange={(event) => {
+                  setSubscriptionEnd(event.target.value);
+                  if (creditType === "subscription") {
+                    setCreditExpiresAt(event.target.value);
+                  }
+                }}
+              />
+            </div>
+          ) : null}
+
+          <div className="grid gap-3 sm:grid-cols-[1fr_140px]">
+            <div className="space-y-2">
+              <Label>积分类型</Label>
+              <Select
+                value={creditType}
+                onValueChange={(value) =>
+                  updateCreditType(value as ManualCreditType)
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">不添加积分</SelectItem>
+                  <SelectItem value="one_time">一次性积分</SelectItem>
+                  <SelectItem value="subscription">订阅积分</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="manual-benefit-credit-amount">数量</Label>
+              <Input
+                id="manual-benefit-credit-amount"
+                type="number"
+                min={0}
+                step={1}
+                value={creditAmount}
+                disabled={creditType === "none"}
+                onChange={(event) => setCreditAmount(event.target.value)}
+              />
+            </div>
+          </div>
+
+          {creditType === "subscription" ? (
+            <div className="space-y-2">
+              <Label htmlFor="manual-benefit-credit-end">
+                订阅积分结束时间
+              </Label>
+              <Input
+                id="manual-benefit-credit-end"
+                type="datetime-local"
+                value={creditExpiresAt}
+                onChange={(event) => setCreditExpiresAt(event.target.value)}
+              />
+            </div>
+          ) : null}
+
+          <div className="space-y-2">
+            <Label htmlFor="manual-benefit-notes">备注</Label>
+            <Textarea
+              id="manual-benefit-notes"
+              value={notes}
+              onChange={(event) => setNotes(event.target.value)}
+              placeholder="例如：人工补偿、线下付款、测试账号权益"
+            />
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button
+            variant="outline"
+            disabled={isPending}
+            onClick={() => setOpen(false)}
+          >
+            取消
+          </Button>
+          <Button disabled={isPending} onClick={submit}>
+            确认添加
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function UserDetailsContent({
+  details,
+  onRefresh,
+}: {
+  details: AdminUserDetails;
+  onRefresh: () => void;
+}) {
   const { user, buckets, subscriptions, orders } = details;
   const locale = useLocale();
   const links = buildAdminUserQuickActionLinks({ locale, userId: user.id });
@@ -187,7 +490,16 @@ function UserDetailsContent({ details }: { details: AdminUserDetails }) {
 
       <Section
         title="用户积分信息"
-        action={<SectionLink href={links.credits} label="打开积分列表" />}
+        action={
+          <div className="flex flex-wrap items-center gap-2">
+            <ManualBenefitDialog
+              userId={user.id}
+              plans={details.manualBenefitPlans}
+              onCompleted={onRefresh}
+            />
+            <SectionLink href={links.credits} label="打开积分列表" />
+          </div>
+        }
       >
         <div className="grid gap-3 sm:grid-cols-3">
           <div>
@@ -394,21 +706,12 @@ export function UserDetailsDrawer({ user }: { user: UserWithSource }) {
   const [isLoading, setIsLoading] = useState(false);
   const displayName = user.name || user.email || user.id;
 
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    let cancelled = false;
+  const loadDetails = useCallback(() => {
     setIsLoading(true);
     setError(null);
 
-    getUserDetails({ userId: user.id })
+    return getUserDetails({ userId: user.id })
       .then((result) => {
-        if (cancelled) {
-          return;
-        }
-
         if (result.success && result.data) {
           setDetails(result.data);
         } else {
@@ -419,25 +722,23 @@ export function UserDetailsDrawer({ user }: { user: UserWithSource }) {
         }
       })
       .catch((err) => {
-        if (cancelled) {
-          return;
-        }
-
         setDetails(null);
         setError(
           err instanceof Error ? err.message : "Failed to load user details",
         );
       })
       .finally(() => {
-        if (!cancelled) {
-          setIsLoading(false);
-        }
+        setIsLoading(false);
       });
+  }, [user.id]);
 
-    return () => {
-      cancelled = true;
-    };
-  }, [open, user.id]);
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    loadDetails();
+  }, [loadDetails, open]);
 
   return (
     <Drawer direction="right" open={open} onOpenChange={setOpen}>
@@ -514,7 +815,7 @@ export function UserDetailsDrawer({ user }: { user: UserWithSource }) {
                 {error}
               </div>
             ) : details ? (
-              <UserDetailsContent details={details} />
+              <UserDetailsContent details={details} onRefresh={loadDetails} />
             ) : null}
           </div>
         </ScrollArea>
