@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This is a Next.js 16 / React 19 app with Cloudflare deployment support. Pages and route handlers live under `app/`, including localized routes in `app/[locale]` and APIs in `app/api`. Shared UI is in `components/`, hooks in `hooks/`, business logic in `lib/`, and server actions in `actions/`. Internationalization files are under `i18n/messages/{en,zh,ja}`. Content sources live in `content/`, `docs/`, and `blogs/`; static assets are in `public/`. Database migrations and seeds are under `lib/db`.
+This is a Next.js 16 / React 19 app currently run with Docker. Do not add Cloudflare Worker cron or Cloudflare scheduled-event code unless explicitly requested. Pages and route handlers live under `app/`, including localized routes in `app/[locale]` and APIs in `app/api`. Shared UI is in `components/`, hooks in `hooks/`, business logic in `lib/`, and server actions in `actions/`. Internationalization files are under `i18n/messages/{en,zh,ja}`. Content sources live in `content/`, `docs/`, and `blogs/`; static assets are in `public/`. Database migrations and seeds are under `lib/db`.
 
 ## Build, Test, and Development Commands
 
