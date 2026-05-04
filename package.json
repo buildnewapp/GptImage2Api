@@ -23,12 +23,7 @@
     "ai-studio:sync": "tsx scripts/ai-studio/sync-catalog.ts",
     "ai-studio:build": "tsx scripts/ai-studio/build-runtime-catalog.ts",
     "ai-studio:validate": "tsx scripts/ai-studio/validate-runtime-catalog.ts",
-    "blog:build-data": "tsx scripts/build-blog-data.ts",
-    "cf:sync-env": "node scripts/sync-env-to-cloudflare.mjs",
-    "cf:build": "pnpm blog:build-data && opennextjs-cloudflare build",
-    "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "cf:deploy": "pnpm cf:build && opennextjs-cloudflare deploy && npx opennextjs-cloudflare populateCache remote",
-    "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
+    "blog:build-data": "tsx scripts/build-blog-data.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.45",

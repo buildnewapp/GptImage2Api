@@ -155,42 +155,6 @@ MODERATION=creem
 GET /api/ai-studio/archive-r2?secret=YOUR_SECRET&limit=10
 定时把资源传到R2，5分钟
 
-## 部署 cf
-
-### 配置
-```
-npx wrangler login
-cp wrangler.example.jsonc wrangler.jsonc
-```
-<YOUR_WORKER_APP_NAME>:cf-demo1
-<YOUR_WORKER_APP_NAME>:cf-demo1
-<YOUR_ACCOUNT_ID>:5303b4fd7e98dd71905ec635471689fc
-Dashboard → Workers & Pages → Overview → Account ID
-<YOUR_BUCKET_NAME>:cf-demo1-r2
-npx wrangler r2 bucket create cf-demo1-r2
-<YOUR_D1_DATABASE_NAME>:cf-demo1-d1
-npx wrangler d1 create cf-demo1-d1
-<YOUR_D1_DATABASE_ID>:95a48d8a-76ac-4fc2-ba12-0303121881bc
-
-open chrome : https://dash.cloudflare.com/5303b4fd7e98dd71905ec635471689fc/workers/hyperdrive
-Create Hyperdrive configuration
-cf-demo1-pg
-postgresql://user_demo1:tN6wN9cE4wQ0eX9k@31.97.65.98:9876/db_demo1
-Caching: false
-<YOUR_HYPERDRIVE_ID>:ec811d6f40d24dd3b98c7e14288237cc
-<YOUR_POOLER_CONNECTION_STRING>:postgresql://user_demo1:tN6wN9cE4wQ0eX9k@31.97.65.98:9876/db_demo1
-
-### 创建 worker
-node scripts/sync-env-to-cloudflare.mjs .env
-会自动创建 worker
-pnpm cf:deploy
-
-### 自动部署，提交 github 自动
-cf -> worker -> setting -> Build
-把所有生产环境的环境变量添加进来，这一步只能手动操作；NEXT_PUBLIC_ 开头的环境变量直接添加，其他环境变量要点击 Encrypt 按钮加密。添加环境变量时，不要把引号复制进去。
-Build cache 设置成 Disabled
-注意：Variables and Secrets + Build 运行时、编译时 变量需要手动一个一个添加进去
-
 ## 部署 vps
 ## merge from template
 git remote add template https://github.com/buildnewapp/nexty-cf-template.git
