@@ -332,6 +332,14 @@ export async function syncSubscriptionData(
     }
 
     const priceId = subscription.items.data[0]?.price.id;
+    const [existingSubscription] = await db
+      .select({
+        currentPeriodEnd: subscriptionsSchema.currentPeriodEnd,
+      })
+      .from(subscriptionsSchema)
+      .where(eq(subscriptionsSchema.subscriptionId, subscription.id))
+      .limit(1);
+    const isCanceled = subscription.cancel_at_period_end || subscription.status === 'canceled';
 
     type SubscriptionInsert = InferInsertModel<typeof subscriptionsSchema>;
     const subscriptionData: SubscriptionInsert = {
@@ -343,9 +351,11 @@ export async function syncSubscriptionData(
       priceId: priceId,
       status: subscription.status,
       currentPeriodStart: subscription.items.data[0].current_period_start ? new Date(subscription.items.data[0].current_period_start * 1000) : null,
-      currentPeriodEnd: subscription.items.data[0].current_period_end ? new Date(subscription.items.data[0].current_period_end * 1000) : null,
+      currentPeriodEnd: isCanceled
+        ? (existingSubscription?.currentPeriodEnd ?? (subscription.items.data[0].current_period_end ? new Date(subscription.items.data[0].current_period_end * 1000) : null))
+        : (subscription.items.data[0].current_period_end ? new Date(subscription.items.data[0].current_period_end * 1000) : null),
       cancelAtPeriodEnd: subscription.cancel_at_period_end,
-      canceledAt: subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : null,
+      canceledAt: isCanceled ? new Date() : (subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : null),
       endedAt: subscription.ended_at ? new Date(subscription.ended_at * 1000) : null,
       trialStart: subscription.trial_start ? new Date(subscription.trial_start * 1000) : null,
       trialEnd: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,

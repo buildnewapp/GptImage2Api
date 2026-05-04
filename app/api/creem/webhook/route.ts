@@ -68,8 +68,10 @@ async function processWebhookEvent(payload: CreemWebhookEvent) {
       break;
     case 'subscription.active':
     case 'subscription.update':
-    case 'subscription.expired':
       await handleCreemSubscriptionUpdated(payload as CreemSubscriptionUpdateEvent | CreemSubscriptionActiveEvent | CreemSubscriptionExpiredEvent);
+      break;
+    case 'subscription.expired':
+      await handleCreemSubscriptionUpdated(payload as CreemSubscriptionExpiredEvent, true);
       break;
     case 'subscription.canceled':
       await handleCreemSubscriptionUpdated(payload as CreemSubscriptionCanceledEvent, true);

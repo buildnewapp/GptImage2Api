@@ -6,6 +6,7 @@ import test from "node:test";
 
 import {
   applyAiStudioSystemFields,
+  clearAiStudioTaskStatusCacheForTests,
   estimatePricingRow,
   extractMediaUrls,
   extractProviderFailureReason,
@@ -573,6 +574,82 @@ test("queries apimart task status using the task path template", async () => {
   ]);
 
   global.fetch = originalFetch;
+  if (originalRuntimeCatalogPath === undefined) {
+    delete process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
+  } else {
+    process.env.AI_STUDIO_RUNTIME_CATALOG_PATH = originalRuntimeCatalogPath;
+  }
+  await rm(tempDir, { recursive: true, force: true });
+});
+
+test("deduplicates concurrent task status queries for the same task", async () => {
+  clearAiStudioTaskStatusCacheForTests();
+  const originalFetch = global.fetch;
+  const originalRuntimeCatalogPath = process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
+  process.env.APIMART_API_KEY = "apimart-test-key";
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), "ai-studio-task-cache-"));
+  const runtimePath = path.join(tempDir, "catalog.json");
+
+  await writeFile(
+    runtimePath,
+    JSON.stringify({
+      version: 1,
+      generatedAt: "2026-04-29T00:00:00.000Z",
+      items: [
+        {
+          id: "video:apimart-seedance-2-0",
+          vendor: "apimart",
+          category: "video",
+          title: "Seedance 2.0",
+          docUrl: "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
+          provider: "ByteDance",
+          endpoint: "/v1/videos/generations",
+          method: "POST",
+          statusEndpoint: "/v1/tasks/{taskId}?language=en",
+          modelKeys: ["doubao-seedance-2.0"],
+          requestSchema: null,
+          examplePayload: {},
+          pricingRows: [],
+        },
+      ],
+    }),
+    "utf8",
+  );
+  process.env.AI_STUDIO_RUNTIME_CATALOG_PATH = runtimePath;
+
+  let fetchCount = 0;
+  global.fetch = async () => {
+    fetchCount += 1;
+    await new Promise((resolve) => setTimeout(resolve, 25));
+
+    return new Response(
+      JSON.stringify({
+        code: 200,
+        data: {
+          id: "task_apimart_123",
+          status: "running",
+        },
+      }),
+      {
+        status: 200,
+        headers: {
+          "content-type": "application/json",
+        },
+      },
+    ) as Response;
+  };
+
+  const [first, second] = await Promise.all([
+    queryAiStudioTask("video:apimart-seedance-2-0", "task_apimart_123"),
+    queryAiStudioTask("video:apimart-seedance-2-0", "task_apimart_123"),
+  ]);
+
+  assert.equal(fetchCount, 1);
+  assert.equal(first.state, "running");
+  assert.equal(second.state, "running");
+
+  global.fetch = originalFetch;
+  clearAiStudioTaskStatusCacheForTests();
   if (originalRuntimeCatalogPath === undefined) {
     delete process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
   } else {

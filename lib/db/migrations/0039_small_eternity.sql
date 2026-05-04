@@ -1,0 +1,2 @@
+ALTER TABLE "ai_studio_generations" ADD COLUMN "credits_reserved_from_subscription" integer DEFAULT 0 NOT NULL;--> statement-breakpoint
+ALTER TABLE "ai_studio_generations" ADD COLUMN "credits_reserved_from_one_time" integer DEFAULT 0 NOT NULL;

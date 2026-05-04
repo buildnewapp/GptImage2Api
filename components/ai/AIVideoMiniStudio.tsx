@@ -35,6 +35,7 @@ import type {
   AiStudioPublicDocDetail,
   AiStudioPublicPricingRow,
 } from "@/lib/ai-studio/public";
+import { fetchWithTimeout } from "@/lib/fetch/with-timeout";
 import { cn } from "@/lib/utils";
 import { useRouter } from "@/i18n/routing";
 import { ImagePlus, Loader2, Sparkles, X, Zap } from "lucide-react";
@@ -77,6 +78,23 @@ type TaskResponse = {
   };
   error?: string;
 };
+
+const FAST_TASK_POLLING_MS = 5000;
+const SLOW_TASK_POLLING_MS = 10000;
+const HIDDEN_TASK_POLLING_MS = 20000;
+const SLOW_TASK_POLLING_AFTER_MS = 30000;
+
+function getTaskPollingDelay(startedAt: number) {
+  const isHidden =
+    typeof document !== "undefined" && document.visibilityState === "hidden";
+  const baseDelay = isHidden
+    ? HIDDEN_TASK_POLLING_MS
+    : Date.now() - startedAt > SLOW_TASK_POLLING_AFTER_MS
+      ? SLOW_TASK_POLLING_MS
+      : FAST_TASK_POLLING_MS;
+
+  return baseDelay + Math.floor(Math.random() * 1000);
+}
 
 function getFirstSelectableFamily() {
   return (
@@ -195,7 +213,8 @@ export default function AIVideoMiniStudio({
   const { data: session } = authClient.useSession();
   const hasInitializedFromStorageRef = useRef(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const pollingTimersRef = useRef<Map<string, ReturnType<typeof setInterval>>>(new Map());
+  const pollingTimersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+  const pollingInFlightRef = useRef<Set<string>>(new Set());
 
   const [selectedFamilyKey, setSelectedFamilyKey] = useState<AiVideoStudioFamilyKey>(
     defaultSelection.familyKey,
@@ -491,29 +510,40 @@ export default function AIVideoMiniStudio({
 
   const clearTaskPolling = useCallback((localId: string) => {
     const timer = pollingTimersRef.current.get(localId);
+    pollingInFlightRef.current.delete(localId);
     if (!timer) {
       return;
     }
 
-    clearInterval(timer);
+    clearTimeout(timer);
     pollingTimersRef.current.delete(localId);
   }, []);
 
   useEffect(() => {
     return () => {
-      pollingTimersRef.current.forEach((timer) => clearInterval(timer));
+      pollingTimersRef.current.forEach((timer) => clearTimeout(timer));
       pollingTimersRef.current.clear();
+      pollingInFlightRef.current.clear();
     };
   }, []);
 
   const pollStatus = useCallback(
     (localId: string, taskId: string, modelId: string) => {
       clearTaskPolling(localId);
+      const startedAt = Date.now();
 
-      const timer = setInterval(async () => {
+      const poll = async () => {
+        if (pollingInFlightRef.current.has(localId)) {
+          return;
+        }
+
+        pollingInFlightRef.current.add(localId);
+        let shouldContinue = true;
+
         try {
-          const response = await fetch(
+          const response = await fetchWithTimeout(
             `/api/ai-studio/tasks/${taskId}?modelId=${encodeURIComponent(modelId)}`,
+            { timeoutMs: 15000 },
           );
           const json = (await response.json()) as TaskResponse;
           if (!response.ok || !json.success) {
@@ -523,6 +553,7 @@ export default function AIVideoMiniStudio({
           const nextState = resolveAiVideoMiniStudioTaskState(json.data.state);
 
           if (nextState === "succeeded") {
+            shouldContinue = false;
             clearTaskPolling(localId);
             updateGenerationTask(localId, {
               state: "succeeded",
@@ -535,6 +566,7 @@ export default function AIVideoMiniStudio({
           }
 
           if (nextState === "failed") {
+            shouldContinue = false;
             clearTaskPolling(localId);
             updateGenerationTask(localId, {
               state: "failed",
@@ -552,9 +584,16 @@ export default function AIVideoMiniStudio({
           increaseTaskProgress(localId);
         } catch {
           increaseTaskProgress(localId);
+        } finally {
+          pollingInFlightRef.current.delete(localId);
+          if (shouldContinue && pollingTimersRef.current.has(localId)) {
+            const nextTimer = setTimeout(poll, getTaskPollingDelay(startedAt));
+            pollingTimersRef.current.set(localId, nextTimer);
+          }
         }
-      }, 5000);
+      };
 
+      const timer = setTimeout(poll, getTaskPollingDelay(startedAt));
       pollingTimersRef.current.set(localId, timer);
     },
     [clearTaskPolling, increaseTaskProgress, t, updateGenerationTask],

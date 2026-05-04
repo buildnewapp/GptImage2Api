@@ -17,6 +17,7 @@ import {
 } from "@/lib/ai-studio/provider-metadata";
 import { resolveExactPricingRow, resolveSelectedPricing } from "@/lib/ai-studio/runtime";
 import { stripLocalReferenceMetadata } from "@/lib/ai-studio/seedance-pricing";
+import { fetchWithTimeout } from "@/lib/fetch/with-timeout";
 
 export {
   applyAiStudioSystemFields,
@@ -30,6 +31,29 @@ export type AiStudioNormalizedState =
   | "succeeded"
   | "failed"
   | "unknown";
+
+export type AiStudioTaskQueryResult = {
+  detail: AiStudioDocDetail;
+  raw: unknown;
+  state: AiStudioNormalizedState;
+  mediaUrls: string[];
+};
+
+const TASK_STATUS_CACHE_TTL_MS = 5000;
+const taskStatusCache = new Map<
+  string,
+  { expiresAt: number; result: AiStudioTaskQueryResult }
+>();
+const taskStatusInFlight = new Map<string, Promise<AiStudioTaskQueryResult>>();
+
+function getTaskStatusCacheKey(modelId: string, taskId: string) {
+  return `${modelId}:${taskId}`;
+}
+
+export function clearAiStudioTaskStatusCacheForTests() {
+  taskStatusCache.clear();
+  taskStatusInFlight.clear();
+}
 
 function getAiStudioVendor(detail: Pick<AiStudioDocDetail, "vendor"> | null | undefined) {
   return detail?.vendor ?? "kie";
@@ -429,13 +453,14 @@ export async function submitAiStudioExecution(
     }
   }
 
-  const response = await fetch(requestUrl.toString(), {
+  const response = await fetchWithTimeout(requestUrl.toString(), {
     method: detail.method,
     headers: {
       Authorization: `Bearer ${getAiStudioApiKey(vendor)}`,
       "Content-Type": "application/json",
     },
     body: detail.method === "GET" ? undefined : JSON.stringify(body),
+    timeoutMs: 30000,
   });
 
   const contentType = response.headers.get("content-type") ?? "";
@@ -479,7 +504,10 @@ export async function executeAiStudioModel(modelId: string, payload: Record<stri
   };
 }
 
-export async function queryAiStudioTask(modelId: string, taskId: string) {
+async function queryAiStudioTaskUncached(
+  modelId: string,
+  taskId: string,
+): Promise<AiStudioTaskQueryResult> {
   const catalog = await getCachedAiStudioCatalog();
   const canonicalModelId = getCanonicalAiStudioModelId(catalog, modelId);
   const detail = await getCachedAiStudioCatalogDetail(canonicalModelId);
@@ -488,10 +516,11 @@ export async function queryAiStudioTask(modelId: string, taskId: string) {
   }
 
   const vendor = getAiStudioVendor(detail);
-  const response = await fetch(buildAiStudioTaskStatusUrl(detail, taskId), {
+  const response = await fetchWithTimeout(buildAiStudioTaskStatusUrl(detail, taskId), {
     headers: {
       Authorization: `Bearer ${getAiStudioApiKey(vendor)}`,
     },
+    timeoutMs: 15000,
   });
 
   const contentType = response.headers.get("content-type") ?? "";
@@ -513,4 +542,36 @@ export async function queryAiStudioTask(modelId: string, taskId: string) {
     state: normalizeTaskState(raw),
     mediaUrls: extractMediaUrls(raw),
   };
+}
+
+export async function queryAiStudioTask(
+  modelId: string,
+  taskId: string,
+): Promise<AiStudioTaskQueryResult> {
+  const cacheKey = getTaskStatusCacheKey(modelId, taskId);
+  const now = Date.now();
+  const cached = taskStatusCache.get(cacheKey);
+  if (cached && cached.expiresAt > now) {
+    return cached.result;
+  }
+
+  const existing = taskStatusInFlight.get(cacheKey);
+  if (existing) {
+    return existing;
+  }
+
+  const promise = queryAiStudioTaskUncached(modelId, taskId)
+    .then((result) => {
+      taskStatusCache.set(cacheKey, {
+        expiresAt: Date.now() + TASK_STATUS_CACHE_TTL_MS,
+        result,
+      });
+      return result;
+    })
+    .finally(() => {
+      taskStatusInFlight.delete(cacheKey);
+    });
+
+  taskStatusInFlight.set(cacheKey, promise);
+  return promise;
 }

@@ -94,13 +94,15 @@ const pricingPlanFormSchema = z.object({
   groupSlug: z.string().optional(),
   cardTitle: z.string().min(1, "Card title is required."),
   cardDescription: z.string().optional().nullable(),
-  provider: z.enum(["none", "stripe", "creem", "paypal"]),
+  provider: z.enum(["none", "all", "stripe", "creem", "paypal"]),
   stripePriceId: z.string().optional().nullable(),
   stripeProductId: z.string().optional().nullable(),
   stripeCouponId: z.string().optional().nullable(),
   enableManualInputCoupon: z.boolean().optional().nullable(),
   creemProductId: z.string().optional().nullable(),
   creemDiscountCode: z.string().optional().nullable(),
+  paypalProductId: z.string().optional().nullable(),
+  paypalPlanId: z.string().optional().nullable(),
   paymentType: z.string().optional().nullable(),
   recurringInterval: z.string().optional().nullable(),
   price: z.number().optional().nullable(),
@@ -169,6 +171,8 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
       enableManualInputCoupon: initialData?.enableManualInputCoupon ?? false,
       creemProductId: initialData?.creemProductId ?? "",
       creemDiscountCode: initialData?.creemDiscountCode ?? "",
+      paypalProductId: initialData?.paypalProductId ?? "",
+      paypalPlanId: initialData?.paypalPlanId ?? "",
       paymentType: initialData?.paymentType ?? null,
       recurringInterval: initialData?.recurringInterval ?? null,
       price: Number(initialData?.price) ?? undefined,
@@ -234,6 +238,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
   const watchProvider = form.watch("provider");
   const watchStripePriceId = form.watch("stripePriceId");
   const watchCreemProductId = form.watch("creemProductId");
+  const watchPaypalPlanId = form.watch("paypalPlanId");
   const watchCreemDiscountCode = form.watch("creemDiscountCode");
   const watchEnvironment = form.watch("environment");
   const watchIsHighlighted = form.watch("isHighlighted");
@@ -280,7 +285,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
   };
 
   useEffect(() => {
-    if (watchProvider === "stripe") {
+    if (watchProvider === "stripe" || watchProvider === "all") {
       handleFetchCoupons();
     }
   }, [watchEnvironment, watchProvider]);
@@ -659,18 +664,25 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
         // Remove Creem fields when provider is Stripe
         payload.creemProductId = null;
         payload.creemDiscountCode = null;
+        payload.paypalProductId = null;
+        payload.paypalPlanId = null;
       } else if (payload.provider === "creem") {
         // Remove Stripe fields when provider is Creem
         payload.stripePriceId = null;
         payload.stripeProductId = null;
         payload.stripeCouponId = null;
+        payload.paypalProductId = null;
+        payload.paypalPlanId = null;
         payload.enableManualInputCoupon = false;
       } else if (payload.provider === "paypal") {
         payload.stripePriceId = null;
         payload.stripeProductId = null;
         payload.stripeCouponId = null;
+        payload.creemProductId = null;
         payload.creemDiscountCode = null;
         payload.enableManualInputCoupon = false;
+      } else if (payload.provider === "all") {
+        // Keep all provider IDs so users can choose at checkout.
       } else if (payload.provider === "none") {
         // Remove all fields when provider is none
         payload.stripePriceId = null;
@@ -678,6 +690,8 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
         payload.stripeCouponId = null;
         payload.creemProductId = null;
         payload.creemDiscountCode = null;
+        payload.paypalProductId = null;
+        payload.paypalPlanId = null;
         payload.enableManualInputCoupon = false;
       }
 
@@ -812,12 +826,6 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                       const newValue =
                         typeof value === "string" ? value : value[0];
                       field.onChange(newValue);
-
-                      // Clear shared fields in this card when provider changes
-                      form.setValue("paymentType", "");
-                      form.setValue("recurringInterval", "");
-                      form.setValue("price", undefined);
-                      form.setValue("currency", "");
                     };
                     return (
                       <FormItem>
@@ -838,6 +846,11 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                               title="No Payment"
                             />
                             <ChoiceboxGroup.Item
+                              value="all"
+                              title="All"
+                              description="Let users choose"
+                            />
+                            <ChoiceboxGroup.Item
                               value="stripe"
                               title="Stripe"
                             />
@@ -856,7 +869,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
 
                 {watchProvider !== "none" && (
                   <>
-                    {watchProvider === "stripe" && (
+                    {(watchProvider === "stripe" || watchProvider === "all") && (
                       <>
                         <FormField
                           control={form.control}
@@ -920,56 +933,91 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                         />
                       </>
                     )}
-                    {(watchProvider === "creem" ||
-                      watchProvider === "paypal") && (
+                    {(watchProvider === "creem" || watchProvider === "all") && (
                       <FormField
                         control={form.control}
                         name="creemProductId"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>
-                              {watchProvider === "paypal"
-                                ? "PayPal Plan ID"
-                                : "Creem Product ID"}
-                            </FormLabel>
+                            <FormLabel>Creem Product ID</FormLabel>
                             <div className="flex items-center gap-2">
                               <FormControl>
                                 <Input
-                                  placeholder={
-                                    watchProvider === "paypal" ? "P-..." : "prod_..."
-                                  }
+                                  placeholder="prod_..."
                                   {...field}
                                   value={field.value ?? ""}
                                   disabled={isLoading || isVerifyingCreem}
                                 />
                               </FormControl>
-                              {watchProvider === "creem" && (
-                                <Button
-                                  type="button"
-                                  variant="outline"
-                                  onClick={handleCreemVerify}
-                                  disabled={
-                                    !watchCreemProductId ||
-                                    isVerifyingCreem ||
-                                    isLoading
-                                  }
-                                >
-                                  {isVerifyingCreem ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                  ) : null}
-                                  Verify & Fetch
-                                </Button>
-                              )}
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={handleCreemVerify}
+                                disabled={
+                                  !watchCreemProductId ||
+                                  isVerifyingCreem ||
+                                  isLoading
+                                }
+                              >
+                                {isVerifyingCreem ? (
+                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : null}
+                                Verify & Fetch
+                              </Button>
                             </div>
                             <FormDescription>
-                              {watchProvider === "paypal"
-                                ? "Recurring plans fill this with the PayPal Plan ID. One-time plans can leave it empty."
-                                : `Enter the Creem product ID for ${watchEnvironment} environment`}
+                              {`Enter the Creem product ID for ${watchEnvironment} environment`}
                             </FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
+                    )}
+                    {(watchProvider === "paypal" || watchProvider === "all") && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="paypalProductId"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>PayPal Product ID</FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="PROD-..."
+                                  {...field}
+                                  value={field.value ?? ""}
+                                  disabled={isLoading}
+                                />
+                              </FormControl>
+                              <FormDescription>
+                                Optional PayPal product ID for reference.
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="paypalPlanId"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>PayPal Plan ID</FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="P-..."
+                                  {...field}
+                                  value={field.value ?? ""}
+                                  disabled={isLoading}
+                                />
+                              </FormControl>
+                              <FormDescription>
+                                Required for recurring PayPal plans.
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
                     )}
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -979,7 +1027,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Payment Type</FormLabel>
-                            {watchProvider === "paypal" ? (
+                            {watchProvider === "paypal" || watchProvider === "all" ? (
                               <Select
                                 onValueChange={field.onChange}
                                 value={field.value ?? ""}
@@ -1020,7 +1068,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Recurring Interval</FormLabel>
-                            {watchProvider === "paypal" ? (
+                            {watchProvider === "paypal" || watchProvider === "all" ? (
                               <Select
                                 onValueChange={field.onChange}
                                 value={field.value ?? ""}
@@ -1077,10 +1125,18 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                                       : Number(event.target.value)
                                   )
                                 }
-                                readOnly={watchProvider !== "paypal"}
-                                disabled={watchProvider !== "paypal" || isLoading}
+                                readOnly={
+                                  watchProvider !== "paypal" &&
+                                  watchProvider !== "all"
+                                }
+                                disabled={
+                                  (watchProvider !== "paypal" &&
+                                    watchProvider !== "all") ||
+                                  isLoading
+                                }
                                 placeholder={
-                                  watchProvider === "paypal"
+                                  watchProvider === "paypal" ||
+                                  watchProvider === "all"
                                     ? "Enter plan price"
                                     : "Fetched from provider"
                                 }
@@ -1100,10 +1156,18 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                               <Input
                                 {...field}
                                 value={field.value ?? ""}
-                                readOnly={watchProvider !== "paypal"}
-                                disabled={watchProvider !== "paypal" || isLoading}
+                                readOnly={
+                                  watchProvider !== "paypal" &&
+                                  watchProvider !== "all"
+                                }
+                                disabled={
+                                  (watchProvider !== "paypal" &&
+                                    watchProvider !== "all") ||
+                                  isLoading
+                                }
                                 placeholder={
-                                  watchProvider === "paypal"
+                                  watchProvider === "paypal" ||
+                                  watchProvider === "all"
                                     ? "USD"
                                     : "Fetched from provider"
                                 }
@@ -1115,7 +1179,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                       />
                     </div>
 
-                    {watchProvider === "stripe" && (
+                    {(watchProvider === "stripe" || watchProvider === "all") && (
                       <>
                         <FormField
                           control={form.control}
@@ -1225,7 +1289,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                         )}
                       </>
                     )}
-                    {watchProvider === "creem" && (
+                    {(watchProvider === "creem" || watchProvider === "all") && (
                       <>
                         <FormField
                           control={form.control}
@@ -1486,7 +1550,8 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                           disabled={
                             isLoading ||
                             !!watchStripePriceId ||
-                            !!watchCreemProductId
+                            !!watchCreemProductId ||
+                            !!watchPaypalPlanId
                           }
                         />
                       </FormControl>

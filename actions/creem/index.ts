@@ -57,6 +57,14 @@ export async function syncCreemSubscriptionData(
       planId = planRow.id;
     }
   }
+  const [existingSubscription] = await db
+    .select({
+      currentPeriodEnd: subscriptionsSchema.currentPeriodEnd,
+    })
+    .from(subscriptionsSchema)
+    .where(eq(subscriptionsSchema.subscriptionId, subscription.id))
+    .limit(1);
+  const isCanceled = subscription.status === 'scheduled_cancel' || subscription.status === 'canceled';
 
   const subscriptionData: InferInsertModel<typeof subscriptionsSchema> = {
     userId,
@@ -68,9 +76,11 @@ export async function syncCreemSubscriptionData(
     productId: productId,
     status: subscription.status,
     currentPeriodStart: toDate(subscription.current_period_start_date),
-    currentPeriodEnd: toDate(subscription.current_period_end_date),
+    currentPeriodEnd: isCanceled
+      ? (existingSubscription?.currentPeriodEnd ?? toDate(subscription.current_period_end_date))
+      : toDate(subscription.current_period_end_date),
     cancelAtPeriodEnd: subscription.status === 'scheduled_cancel',
-    canceledAt: toDate(subscription.canceled_at),
+    canceledAt: isCanceled ? new Date() : toDate(subscription.canceled_at),
     endedAt: subscription.status === 'canceled' ? toDate(subscription.current_period_end_date) : null,
     trialStart: null,
     trialEnd: null,
@@ -92,4 +102,3 @@ export async function syncCreemSubscriptionData(
       set: updateData,
     });
 }
-

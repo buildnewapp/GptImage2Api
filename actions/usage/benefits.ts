@@ -3,12 +3,18 @@
 import { actionResponse, ActionResult } from '@/lib/action-response';
 import { getSession } from '@/lib/auth/server';
 import { getDb } from '@/lib/db';
-import { creditLogs as creditLogsSchema, subscriptions as subscriptionsSchema, usage as usageSchema } from '@/lib/db/schema';
+import {
+  creditLogs as creditLogsSchema,
+  orders as ordersSchema,
+  subscriptionCreditBuckets as subscriptionCreditBucketsSchema,
+  subscriptions as subscriptionsSchema,
+  usage as usageSchema,
+} from '@/lib/db/schema';
 import {
   applyDueYearlyAllocations,
   getNextYearlyCreditDate,
 } from '@/lib/payments/subscription-credits';
-import { desc, eq } from 'drizzle-orm';
+import { and, desc, eq, gt, inArray, sql } from 'drizzle-orm';
 
 export interface UserBenefits {
   activePlanId: string | null;
@@ -70,6 +76,12 @@ function createUserBenefitsFromData(
   };
 }
 
+function addOneMonth(date: Date): Date {
+  const next = new Date(date);
+  next.setUTCMonth(next.getUTCMonth() + 1);
+  return next;
+}
+
 async function fetchSubscriptionData(
   userId: string
 ): Promise<SubscriptionData | null> {
@@ -128,9 +140,8 @@ export async function getUserBenefits(userId: string): Promise<UserBenefits> {
       .from(usageSchema)
       .where(eq(usageSchema.userId, userId));
 
-    const usageData = result.length > 0 ? result[0] : null;
-
-    let finalUsageData: UsageData | null = usageData as UsageData | null;
+    let finalUsageData: UsageData | null =
+      (result.length > 0 ? result[0] : null) as UsageData | null;
 
     // ------------------------------------------
     // User with no usage data, it means he/she is a new user
@@ -143,21 +154,34 @@ export async function getUserBenefits(userId: string): Promise<UserBenefits> {
     // ------------------------------------------
     // Handle user subscription data (subscriptions table) and benefits data (usage table)
     // ------------------------------------------
-    if (finalUsageData) {
-      // Process yearly subscription catch-up logic
-      finalUsageData = await processYearlySubscriptionCatchUp(userId) ?? finalUsageData;
+    finalUsageData = await processYearlySubscriptionCatchUp(userId) ?? finalUsageData;
 
-      const subscription = await fetchSubscriptionData(userId);
-
-      return createUserBenefitsFromData(
-        finalUsageData,
-        subscription,
+    const activeSubRows = await db
+      .select({
+        balance: sql<number>`coalesce(sum(${subscriptionCreditBucketsSchema.creditsRemaining}), 0)`,
+      })
+      .from(subscriptionCreditBucketsSchema)
+      .where(
+        and(
+          eq(subscriptionCreditBucketsSchema.userId, userId),
+          gt(subscriptionCreditBucketsSchema.creditsRemaining, 0),
+          gt(subscriptionCreditBucketsSchema.expiresAt, new Date()),
+        ),
       );
-    } else {
-      const subscription = await fetchSubscriptionData(userId);
+    const activeSubscriptionBalance = Number(activeSubRows[0]?.balance ?? 0);
 
-      return createUserBenefitsFromData(null, subscription);
-    }
+    const subscription = await fetchSubscriptionData(userId);
+
+    const normalizedUsage: UsageData = {
+      subscriptionCreditsBalance: activeSubscriptionBalance,
+      oneTimeCreditsBalance: finalUsageData?.oneTimeCreditsBalance ?? 0,
+      balanceJsonb: finalUsageData?.balanceJsonb ?? {},
+    };
+
+    return createUserBenefitsFromData(
+      normalizedUsage,
+      subscription,
+    );
   } catch (error) {
     console.error(`Unexpected error in getUserBenefits for user ${userId}:`, error);
     return defaultUserBenefits;
@@ -214,19 +238,105 @@ async function processYearlySubscriptionCatchUp(
       }
 
       finalUsageData = usage as UsageData;
+      const currentActiveSubRows = await tx
+        .select({
+          balance: sql<number>`coalesce(sum(${subscriptionCreditBucketsSchema.creditsRemaining}), 0)`,
+        })
+        .from(subscriptionCreditBucketsSchema)
+        .where(
+          and(
+            eq(subscriptionCreditBucketsSchema.userId, userId),
+            gt(subscriptionCreditBucketsSchema.creditsRemaining, 0),
+            gt(subscriptionCreditBucketsSchema.expiresAt, new Date()),
+          ),
+        );
+      const currentActiveSubBalance = Number(currentActiveSubRows[0]?.balance ?? 0);
+
       const allocationResult = applyDueYearlyAllocations({
         balanceJsonb: usage.balanceJsonb,
-        currentBalance: usage.subscriptionCreditsBalance,
+        currentBalance: currentActiveSubBalance,
       });
 
       if (allocationResult.grants.length === 0) {
         return false;
       }
 
+      const relatedOrderIds = Array.from(
+        new Set(allocationResult.grants.map((grant) => grant.relatedOrderId)),
+      );
+      const orderRows = relatedOrderIds.length
+        ? await tx
+            .select({
+              id: ordersSchema.id,
+              provider: ordersSchema.provider,
+              subscriptionId: ordersSchema.subscriptionId,
+            })
+            .from(ordersSchema)
+            .where(inArray(ordersSchema.id, relatedOrderIds))
+        : [];
+      const orderMap = new Map(orderRows.map((row) => [row.id, row]));
+      const appliedGrants: typeof allocationResult.grants = [];
+
+      for (const grant of allocationResult.grants) {
+        const order = orderMap.get(grant.relatedOrderId);
+        const provider = order?.provider;
+        if (
+          !order?.subscriptionId ||
+          (provider !== 'stripe' && provider !== 'creem' && provider !== 'paypal')
+        ) {
+          continue;
+        }
+        const periodStart = new Date(grant.allocationDate);
+        const periodEnd = addOneMonth(periodStart);
+
+        await tx
+          .insert(subscriptionCreditBucketsSchema)
+          .values({
+            userId,
+            provider,
+            subscriptionId: order.subscriptionId,
+            periodStart,
+            periodEnd,
+            expiresAt: periodEnd,
+            creditsTotal: grant.amount,
+            creditsRemaining: grant.amount,
+            relatedOrderId: grant.relatedOrderId,
+          })
+          .onConflictDoUpdate({
+            target: [
+              subscriptionCreditBucketsSchema.provider,
+              subscriptionCreditBucketsSchema.subscriptionId,
+              subscriptionCreditBucketsSchema.periodStart,
+            ],
+            set: {
+              periodEnd,
+              expiresAt: periodEnd,
+              creditsTotal: grant.amount,
+              creditsRemaining: grant.amount,
+              relatedOrderId: grant.relatedOrderId,
+            },
+          });
+        appliedGrants.push(grant);
+      }
+
+      const updatedSubRows = await tx
+        .select({
+          balance: sql<number>`coalesce(sum(${subscriptionCreditBucketsSchema.creditsRemaining}), 0)`,
+        })
+        .from(subscriptionCreditBucketsSchema)
+        .where(
+          and(
+            eq(subscriptionCreditBucketsSchema.userId, userId),
+            gt(subscriptionCreditBucketsSchema.creditsRemaining, 0),
+            gt(subscriptionCreditBucketsSchema.expiresAt, new Date()),
+          ),
+        );
+      const nextSubscriptionBalance = Number(updatedSubRows[0]?.balance ?? 0);
+
       const updatedUsage = await tx
         .update(usageSchema)
         .set({
-          subscriptionCreditsBalance: allocationResult.nextBalance,
+          subscriptionCreditsBalance: nextSubscriptionBalance,
           balanceJsonb: allocationResult.nextBalanceJsonb,
         })
         .where(eq(usageSchema.userId, userId))
@@ -238,9 +348,9 @@ async function processYearlySubscriptionCatchUp(
       const balances = updatedUsage[0];
       if (balances) {
         let runningSubscriptionSnapshot =
-          balances.subscriptionCreditsSnapshot - allocationResult.grants.reduce((sum, grant) => sum + grant.amount, 0);
+          balances.subscriptionCreditsSnapshot - appliedGrants.reduce((sum, grant) => sum + grant.amount, 0);
 
-        for (const grant of allocationResult.grants) {
+        for (const grant of appliedGrants) {
           runningSubscriptionSnapshot += grant.amount;
           await tx.insert(creditLogsSchema).values({
             userId: userId,

@@ -275,7 +275,7 @@ export default function AiStudioVideoHistoryClient() {
             record.catalogModelId.length > 0,
         );
 
-        pendingRecords.forEach((record: VideoGeneration) => {
+        pendingRecords.slice(0, 5).forEach((record: VideoGeneration) => {
           fetch(
             `/api/ai-studio/tasks/${record.providerTaskId}?modelId=${encodeURIComponent(
               record.catalogModelId!,

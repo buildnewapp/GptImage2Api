@@ -1,7 +1,0 @@
----
-description:
-globs:
-alwaysApply: false
----
-
-use pnpm, not npm or yarn

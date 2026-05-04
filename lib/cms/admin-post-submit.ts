@@ -42,6 +42,19 @@ function normalizeSeoMetadata(input: AdminPostSubmission) {
   }
 }
 
+function padDatePart(value: number) {
+  return value.toString().padStart(2, "0");
+}
+
+export function appendSlugTimestamp(slug: string, date = new Date()) {
+  const month = padDatePart(date.getMonth() + 1);
+  const day = padDatePart(date.getDate());
+  const hour = padDatePart(date.getHours());
+  const minute = padDatePart(date.getMinutes());
+
+  return `${slug}-${month}${day}${hour}${minute}`;
+}
+
 export function parseAdminPostSubmission(
   input: unknown,
 ): ParseAdminPostSubmissionResult {

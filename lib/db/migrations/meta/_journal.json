@@ -274,6 +274,41 @@
       "when": 1777107302314,
       "tag": "0038_even_george_stacy",
       "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1777440292363,
+      "tag": "0039_small_eternity",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1777443900000,
+      "tag": "0040_subscription_credit_buckets",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1777447200000,
+      "tag": "0041_ai_studio_bucket_allocations",
+      "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1777651200000,
+      "tag": "0042_paypal_pricing_ids",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1777722201050,
+      "tag": "0043_wandering_santa_claus",
+      "breakpoints": true
     }
   ]
 }

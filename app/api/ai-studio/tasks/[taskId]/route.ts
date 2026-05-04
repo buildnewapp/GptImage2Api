@@ -2,6 +2,7 @@ import { getCachedAiStudioCatalogEntry } from "@/lib/ai-studio/catalog";
 import { queryAiStudioTask } from "@/lib/ai-studio/execute";
 import { extractProviderFailureReason } from "@/lib/ai-studio/execute";
 import {
+  archiveAiStudioGenerationMediaUrlsInBackground,
   getAiStudioGenerationForUserByTaskId,
   settleAiStudioGenerationFailure,
   settleAiStudioGenerationSuccess,
@@ -70,6 +71,7 @@ export async function GET(
         mediaUrls: result.mediaUrls,
         providerState: result.state,
       });
+      archiveAiStudioGenerationMediaUrlsInBackground(generation.id);
       if (Array.isArray(settled?.resultUrls)) {
         result.mediaUrls = settled.resultUrls as string[];
       }

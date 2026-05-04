@@ -174,6 +174,7 @@ export const pricingPlanEnvironmentEnum = pgEnum("pricing_plan_environment", [
 
 export const providerEnum = pgEnum("provider", [
   "none", // no payment feature
+  "all", // let users choose from configured payment methods
   "stripe",
   "creem",
   "paypal",
@@ -221,6 +222,8 @@ export const pricingPlans = pgTable("pricing_plans", {
   stripeCouponId: varchar("stripe_coupon_id", { length: 255 }),
   creemProductId: varchar("creem_product_id", { length: 255 }),
   creemDiscountCode: varchar("creem_discount_code", { length: 255 }),
+  paypalProductId: varchar("paypal_product_id", { length: 255 }),
+  paypalPlanId: varchar("paypal_plan_id", { length: 255 }),
   enableManualInputCoupon: boolean("enable_manual_input_coupon")
     .default(false)
     .notNull(),
@@ -370,6 +373,42 @@ export const usage = pgTable("usage", {
     .notNull()
     .$onUpdate(() => new Date()),
 });
+
+export const subscriptionCreditBuckets = pgTable(
+  "subscription_credit_buckets",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
+    provider: providerEnum("provider").notNull(),
+    subscriptionId: text("subscription_id").notNull(),
+    periodStart: timestamp("period_start", { withTimezone: true }).notNull(),
+    periodEnd: timestamp("period_end", { withTimezone: true }).notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    creditsTotal: integer("credits_total").notNull(),
+    creditsRemaining: integer("credits_remaining").notNull(),
+    relatedOrderId: uuid("related_order_id").references(() => orders.id, {
+      onDelete: "set null",
+    }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    userIdIdx: index("idx_subscription_credit_buckets_user_id").on(table.userId),
+    expiresAtIdx: index("idx_subscription_credit_buckets_expires_at").on(
+      table.expiresAt,
+    ),
+    subscriptionPeriodUnique: unique(
+      "subscription_credit_buckets_subscription_period_unique",
+    ).on(table.provider, table.subscriptionId, table.periodStart),
+  }),
+);
 
 export const creditLogs = pgTable(
   "credit_logs",
@@ -831,6 +870,17 @@ export const aiStudioGenerations = pgTable(
     resultUrls: jsonb("result_urls"),
     officialPricingSnapshot: jsonb("official_pricing_snapshot"),
     creditsReserved: integer("credits_reserved").default(0).notNull(),
+    creditsReservedFromSubscription: integer(
+      "credits_reserved_from_subscription",
+    )
+      .default(0)
+      .notNull(),
+    creditsReservedFromOneTime: integer("credits_reserved_from_one_time")
+      .default(0)
+      .notNull(),
+    creditsBucketAllocations: jsonb("credits_bucket_allocations")
+      .default("[]")
+      .notNull(),
     creditsCaptured: integer("credits_captured").default(0).notNull(),
     creditsRefunded: integer("credits_refunded").default(0).notNull(),
     isPublic: boolean("is_public").default(true).notNull(),

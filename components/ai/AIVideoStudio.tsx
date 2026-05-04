@@ -55,6 +55,7 @@ import {
   getEstimatedCreditsForPricing,
   resolveSelectedPricing,
 } from "@/lib/ai-studio/runtime";
+import { fetchWithTimeout } from "@/lib/fetch/with-timeout";
 import { cn } from "@/lib/utils";
 import {
   Copy,
@@ -165,6 +166,22 @@ type GeneratedMediaKind = "image" | "video";
 
 const POLLING_ERROR_LIMIT = 3;
 const VISIBLE_GENERATION_TASK_COUNT = 5;
+const FAST_TASK_POLLING_MS = 5000;
+const SLOW_TASK_POLLING_MS = 10000;
+const HIDDEN_TASK_POLLING_MS = 20000;
+const SLOW_TASK_POLLING_AFTER_MS = 30000;
+
+function getTaskPollingDelay(startedAt: number) {
+  const isHidden =
+    typeof document !== "undefined" && document.visibilityState === "hidden";
+  const baseDelay = isHidden
+    ? HIDDEN_TASK_POLLING_MS
+    : Date.now() - startedAt > SLOW_TASK_POLLING_AFTER_MS
+      ? SLOW_TASK_POLLING_MS
+      : FAST_TASK_POLLING_MS;
+
+  return baseDelay + Math.floor(Math.random() * 1000);
+}
 
 function createLocalTaskId() {
   if (
@@ -607,7 +624,7 @@ export default function AIVideoStudio({
     optimisticDeduct,
   } = useUserBenefits();
   const hasInitializedFromStorageRef = useRef(false);
-  const pollingTimersRef = useRef<Map<string, ReturnType<typeof setInterval>>>(
+  const pollingTimersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(
     new Map(),
   );
   const pollingErrorCountsRef = useRef<Map<string, number>>(new Map());
@@ -1071,7 +1088,7 @@ export default function AIVideoStudio({
       return;
     }
 
-    clearInterval(timer);
+    clearTimeout(timer);
     pollingTimersRef.current.delete(localId);
     pollingErrorCountsRef.current.delete(localId);
   }, []);
@@ -1080,17 +1097,20 @@ export default function AIVideoStudio({
     (localId: string, taskId: string, modelId: string) => {
       clearTaskPolling(localId);
       const mediaKind = resolveGeneratedMediaKind(modelId);
+      const startedAt = Date.now();
 
-      const timer = setInterval(async () => {
+      const poll = async () => {
         if (pollingInFlightRef.current.has(localId)) {
           return;
         }
 
         pollingInFlightRef.current.add(localId);
+        let shouldContinue = true;
 
         try {
-          const response = await fetch(
+          const response = await fetchWithTimeout(
             `/api/ai-studio/tasks/${taskId}?modelId=${encodeURIComponent(modelId)}`,
+            { timeoutMs: 15000 },
           );
           const json = (await response.json()) as TaskResponse;
           if (!response.ok || !json.success) {
@@ -1100,6 +1120,7 @@ export default function AIVideoStudio({
           pollingErrorCountsRef.current.delete(localId);
 
           if (json.data.state === "succeeded") {
+            shouldContinue = false;
             clearTaskPolling(localId);
             updateGenerationTask(localId, {
               state: "succeeded",
@@ -1117,6 +1138,7 @@ export default function AIVideoStudio({
             );
             void refreshBenefits();
           } else if (json.data.state === "failed") {
+            shouldContinue = false;
             clearTaskPolling(localId);
             const failureReason =
               json.data.reason ||
@@ -1143,6 +1165,7 @@ export default function AIVideoStudio({
           pollingErrorCountsRef.current.set(localId, nextErrorCount);
 
           if (nextErrorCount >= POLLING_ERROR_LIMIT) {
+            shouldContinue = false;
             clearTaskPolling(localId);
             updateGenerationTask(localId, {
               state: "failed",
@@ -1157,9 +1180,14 @@ export default function AIVideoStudio({
           increaseTaskProgress(localId);
         } finally {
           pollingInFlightRef.current.delete(localId);
+          if (shouldContinue && pollingTimersRef.current.has(localId)) {
+            const nextTimer = setTimeout(poll, getTaskPollingDelay(startedAt));
+            pollingTimersRef.current.set(localId, nextTimer);
+          }
         }
-      }, 5000);
+      };
 
+      const timer = setTimeout(poll, getTaskPollingDelay(startedAt));
       pollingTimersRef.current.set(localId, timer);
     },
     [
@@ -1173,7 +1201,7 @@ export default function AIVideoStudio({
 
   useEffect(() => {
     return () => {
-      pollingTimersRef.current.forEach((timer) => clearInterval(timer));
+      pollingTimersRef.current.forEach((timer) => clearTimeout(timer));
       pollingTimersRef.current.clear();
       pollingErrorCountsRef.current.clear();
       pollingInFlightRef.current.clear();

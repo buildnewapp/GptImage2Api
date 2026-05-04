@@ -1,8 +1,13 @@
 import { apiResponse } from "@/lib/api-response";
 import { getRequestUser } from "@/lib/auth/request-user";
 import { getDb } from "@/lib/db";
-import { orders as ordersSchema, pricingPlans as pricingPlansSchema, usage as usageSchema } from "@/lib/db/schema";
-import { and, desc, eq, inArray, sql } from "drizzle-orm";
+import {
+  orders as ordersSchema,
+  pricingPlans as pricingPlansSchema,
+  subscriptionCreditBuckets as subscriptionCreditBucketsSchema,
+  usage as usageSchema,
+} from "@/lib/db/schema";
+import { and, desc, eq, gt, inArray, sql } from "drizzle-orm";
 
 type MembershipLevel = "none" | "standard" | "pro" | "max";
 
@@ -30,15 +35,26 @@ export async function GET(request: Request) {
       end
     `;
 
-    const [usageRows, membershipRows] = await Promise.all([
+    const [usageRows, subscriptionRows, membershipRows] = await Promise.all([
       db
         .select({
-          subscriptionCreditsBalance: usageSchema.subscriptionCreditsBalance,
           oneTimeCreditsBalance: usageSchema.oneTimeCreditsBalance,
         })
         .from(usageSchema)
         .where(eq(usageSchema.userId, user.id))
         .limit(1),
+      db
+        .select({
+          subscriptionCreditsBalance: sql<number>`coalesce(sum(${subscriptionCreditBucketsSchema.creditsRemaining}), 0)`,
+        })
+        .from(subscriptionCreditBucketsSchema)
+        .where(
+          and(
+            eq(subscriptionCreditBucketsSchema.userId, user.id),
+            gt(subscriptionCreditBucketsSchema.creditsRemaining, 0),
+            gt(subscriptionCreditBucketsSchema.expiresAt, new Date()),
+          ),
+        ),
       db
         .select({
           planTitle: pricingPlansSchema.cardTitle,
@@ -57,7 +73,9 @@ export async function GET(request: Request) {
     ]);
 
     const usageData = usageRows[0];
-    const credits = (usageData?.subscriptionCreditsBalance ?? 0) + (usageData?.oneTimeCreditsBalance ?? 0);
+    const subscriptionData = subscriptionRows[0];
+    const activeSubscriptionCredits = Number(subscriptionData?.subscriptionCreditsBalance ?? 0);
+    const credits = activeSubscriptionCredits + (usageData?.oneTimeCreditsBalance ?? 0);
 
     const membershipData = membershipRows[0];
     const membershipLevel = getMembershipLevelFromRank(Number(membershipData?.rank ?? 0));

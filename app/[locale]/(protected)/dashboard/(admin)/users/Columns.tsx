@@ -2,7 +2,6 @@
 
 import { banUser, unbanUser, UserWithSource } from "@/actions/users/admin";
 import { buildAdminUserQuickActionLinks } from "@/lib/admin/dashboard-users";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -36,6 +35,7 @@ import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
+import { UserDetailsDrawer } from "./UserDetailsDrawer";
 
 type UserType = UserWithSource;
 
@@ -245,35 +245,7 @@ export const columns: ColumnDef<UserType>[] = [
     id: "user",
     header: "User",
     cell: ({ row }) => {
-      const { image, name, email, role } = row.original;
-      const displayName = name || email;
-      return (
-        <div className="flex items-center gap-3">
-          <Avatar className="h-9 w-9">
-            <AvatarImage src={image || undefined} alt={displayName} />
-            <AvatarFallback>{displayName[0].toUpperCase()}</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1.5">
-              <span className="font-medium">{name || ""}</span>
-              {role === "admin" && (
-                <span className="text-xs capitalize text-primary font-medium">
-                  ({role})
-                </span>
-              )}
-            </div>
-            <span
-              className="text-sm text-muted-foreground cursor-pointer hover:underline"
-              onClick={() => {
-                navigator.clipboard.writeText(email);
-                toast.success("Copied to clipboard");
-              }}
-            >
-              {email}
-            </span>
-          </div>
-        </div>
-      );
+      return <UserDetailsDrawer user={row.original} />;
     },
   },
   {
@@ -450,7 +422,9 @@ export const columns: ColumnDef<UserType>[] = [
 
       return (
         <div className="flex flex-col gap-1">
-          <span>{dayjs(row.original.createdAt).format("YYYY-MM-DD HH:mm")}</span>
+          <span>
+            {dayjs(row.original.createdAt).format("YYYY-MM-DD HH:mm")}
+          </span>
           {isBanned ? <Badge variant="destructive">Banned</Badge> : null}
         </div>
       );

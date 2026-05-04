@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   getAiStudioAssetDirectory,
+  hasNonR2AiStudioMediaUrls,
   isAiStudioR2AutoUploadEnabled,
   persistAiStudioMediaUrls,
 } from "@/lib/ai-studio/assets";
@@ -111,4 +112,25 @@ test("skips urls that already point at the configured r2 public host", async () 
     "https://cdn.example.com/image/2026/03/09/existing.png",
     `https://cdn.example.com/${uploadCalls[0]!.key}`,
   ]);
+});
+
+test("detects provider urls that still need r2 archival", () => {
+  assert.equal(
+    hasNonR2AiStudioMediaUrls(
+      [
+        "https://cdn.example.com/image/2026/03/09/existing.png",
+        "https://provider.example.com/generated/fresh.png",
+      ],
+      "https://cdn.example.com/",
+    ),
+    true,
+  );
+
+  assert.equal(
+    hasNonR2AiStudioMediaUrls(
+      ["https://cdn.example.com/image/2026/03/09/existing.png"],
+      "https://cdn.example.com/",
+    ),
+    false,
+  );
 });

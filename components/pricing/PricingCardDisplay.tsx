@@ -7,6 +7,10 @@ import { Check, X } from "lucide-react";
 type PricingPlan = typeof pricingPlansSchema.$inferSelect;
 
 interface PricingCardDisplayProps {
+  checkoutAvailabilityEnv?: {
+    nowpaymentsEnabled?: boolean;
+    paypalEnabled?: boolean;
+  };
   checkoutMode?: "default" | "nowpayments";
   id?: string;
   plan: PricingPlan;
@@ -15,6 +19,7 @@ interface PricingCardDisplayProps {
 }
 
 export function PricingCardDisplay({
+  checkoutAvailabilityEnv,
   checkoutMode = "default",
   id,
   plan,
@@ -92,6 +97,7 @@ export function PricingCardDisplay({
       )}
 
       <PricingCTA
+        checkoutAvailabilityEnv={checkoutAvailabilityEnv}
         checkoutMode={checkoutMode}
         plan={plan}
         localizedPlan={localizedPlan}

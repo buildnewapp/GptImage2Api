@@ -5,6 +5,7 @@ import {
   type PricingFeature,
   pricingPlans,
 } from "@/lib/db/seed/pricing-config";
+import { getAvailableCheckoutProviders } from "@/lib/payments/checkout-availability";
 
 import type {
   VideoTemplateCheckoutPlan,
@@ -132,6 +133,12 @@ function buildCheckoutPlan(plan: PricingConfigPlan): VideoTemplateCheckoutPlan {
     isHighlighted: plan.isHighlighted,
     planId: plan.id ?? null,
     provider: plan.provider ?? null,
+    providerOptions: getAvailableCheckoutProviders(plan, {
+      nowpaymentsEnabled: Boolean(process.env.NOWPAYMENTS_API_KEY),
+      paypalEnabled: Boolean(
+        process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET,
+      ),
+    }),
     stripeCouponId: plan.stripeCouponId ?? null,
     stripePriceId: plan.stripePriceId ?? null,
   };

@@ -129,23 +129,32 @@ export async function createPricingPlanAction({
   if (planData.provider === 'stripe') {
     planData.creemProductId = null
     planData.creemDiscountCode = null
+    planData.paypalProductId = null
+    planData.paypalPlanId = null
   } else if (planData.provider === 'creem') {
     planData.stripePriceId = null
     planData.stripeProductId = null
     planData.stripeCouponId = null
+    planData.paypalProductId = null
+    planData.paypalPlanId = null
     planData.enableManualInputCoupon = false
   } else if (planData.provider === 'paypal') {
     planData.stripePriceId = null
     planData.stripeProductId = null
     planData.stripeCouponId = null
+    planData.creemProductId = null
     planData.creemDiscountCode = null
     planData.enableManualInputCoupon = false
+  } else if (planData.provider === 'all') {
+    // Keep all provider IDs so the public pricing card can offer choices.
   } else if (planData.provider === 'none') {
     planData.stripePriceId = null
     planData.stripeProductId = null
     planData.stripeCouponId = null
     planData.creemProductId = null
     planData.creemDiscountCode = null
+    planData.paypalProductId = null
+    planData.paypalPlanId = null
     planData.enableManualInputCoupon = false
     planData.paymentType = null
     planData.recurringInterval = null
@@ -165,6 +174,8 @@ export async function createPricingPlanAction({
         stripeCouponId: planData.stripeCouponId,
         creemProductId: planData.creemProductId,
         creemDiscountCode: planData.creemDiscountCode,
+        paypalProductId: planData.paypalProductId,
+        paypalPlanId: planData.paypalPlanId,
         enableManualInputCoupon:
           planData.enableManualInputCoupon ?? false,
         paymentType: planData.paymentType || null,
@@ -258,23 +269,32 @@ export async function updatePricingPlanAction({
   if (planData.provider === 'stripe') {
     planData.creemProductId = null
     planData.creemDiscountCode = null
+    planData.paypalProductId = null
+    planData.paypalPlanId = null
   } else if (planData.provider === 'creem') {
     planData.stripePriceId = null
     planData.stripeProductId = null
     planData.stripeCouponId = null
+    planData.paypalProductId = null
+    planData.paypalPlanId = null
     planData.enableManualInputCoupon = false
   } else if (planData.provider === 'paypal') {
     planData.stripePriceId = null
     planData.stripeProductId = null
     planData.stripeCouponId = null
+    planData.creemProductId = null
     planData.creemDiscountCode = null
     planData.enableManualInputCoupon = false
+  } else if (planData.provider === 'all') {
+    // Keep all provider IDs so the public pricing card can offer choices.
   } else if (planData.provider === 'none') {
     planData.stripePriceId = null
     planData.stripeProductId = null
     planData.stripeCouponId = null
     planData.creemProductId = null
     planData.creemDiscountCode = null
+    planData.paypalProductId = null
+    planData.paypalPlanId = null
     planData.enableManualInputCoupon = false
     planData.paymentType = null
     planData.recurringInterval = null
@@ -285,12 +305,19 @@ export async function updatePricingPlanAction({
     delete planData.createdAt
     delete planData.updatedAt
 
-    planData.currency = planData.currency?.toUpperCase() || null
+    if (planData.currency !== undefined) {
+      planData.currency = planData.currency?.toUpperCase() || null
+    }
 
     const dataToUpdate: { [key: string]: any } = {
       ...planData,
-      paymentType: planData.paymentType || null,
-      recurringInterval: planData.recurringInterval || null,
+    }
+
+    if (planData.paymentType !== undefined) {
+      dataToUpdate.paymentType = planData.paymentType || null
+    }
+    if (planData.recurringInterval !== undefined) {
+      dataToUpdate.recurringInterval = planData.recurringInterval || null
     }
 
     if (dataToUpdate.price) {
@@ -305,6 +332,12 @@ export async function updatePricingPlanAction({
     }
     if (planData.creemDiscountCode !== undefined) {
       dataToUpdate.creemDiscountCode = planData.creemDiscountCode || null
+    }
+    if (planData.paypalProductId !== undefined) {
+      dataToUpdate.paypalProductId = planData.paypalProductId || null
+    }
+    if (planData.paypalPlanId !== undefined) {
+      dataToUpdate.paypalPlanId = planData.paypalPlanId || null
     }
     if (planData.langJsonb !== undefined) {
       dataToUpdate.langJsonb = (planData.langJsonb || {})

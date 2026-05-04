@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { parseAdminPostSubmission } from "@/lib/cms/admin-post-submit";
+import {
+  appendSlugTimestamp,
+  parseAdminPostSubmission,
+} from "@/lib/cms/admin-post-submit";
 
 function buildBasePayload(overrides: Record<string, unknown> = {}) {
   return {
@@ -110,4 +113,11 @@ test("rejects compare payloads with malformed comparison rows", () => {
     status: 400,
     message: "Invalid metadataJsonb for postType 'compare'.",
   });
+});
+
+test("appends month day hour minute to duplicate slugs", () => {
+  assert.equal(
+    appendSlugTimestamp("test-admin-post", new Date(2026, 4, 4, 17, 49)),
+    "test-admin-post-05041749",
+  );
 });

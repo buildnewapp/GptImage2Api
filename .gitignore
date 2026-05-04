@@ -81,6 +81,7 @@ web_modules/
 .env.local
 .env.test
 .dev.vars
+.seo-geo-config.json
 
 # Cloudflare / OpenNext build output
 .open-next
@@ -143,6 +144,7 @@ dist
 
 .backup/
 .worktrees/
+.cursor
 
 docs/kie
 docs/plans
