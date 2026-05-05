@@ -23,7 +23,9 @@
     "ai-studio:sync": "tsx scripts/ai-studio/sync-catalog.ts",
     "ai-studio:build": "tsx scripts/ai-studio/build-runtime-catalog.ts",
     "ai-studio:validate": "tsx scripts/ai-studio/validate-runtime-catalog.ts",
-    "blog:build-data": "tsx scripts/build-blog-data.ts"
+    "blog:build-data": "tsx scripts/build-blog-data.ts",
+    "prompts:sync-youmind": "tsx scripts/sync-youmind-prompts.ts",
+    "prompts:categorize": "tsx scripts/categorize-prompt-gallery-items.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.45",
