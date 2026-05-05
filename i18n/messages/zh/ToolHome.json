@@ -1,0 +1,412 @@
+{
+  "hero": {
+    "badge": "JsonTranslate · 多语言文件翻译工作台",
+    "eyebrow": "为现代产品团队而生",
+    "title": {
+      "line1": "多语言文件翻译",
+      "line2": "从此更快、更稳、更省"
+    },
+    "description": "JsonTranslate 支持 JSON、Markdown、TXT 等文件输入。对于 JSON，系统可按 Key 级别识别新增、修改与删除内容，只翻译真正变化的部分；Markdown 和 TXT 也能进入同一流程，方便统一处理文档类翻译任务。",
+    "primaryCta": "进入 JsonAIStudio",
+    "secondaryCta": "查看计费与套餐",
+    "stats": [
+      {
+        "label": "输入方式",
+        "value": "上传 / 拖拽 / 粘贴",
+        "description": "支持 JSON、Markdown、TXT 等纯文本内容直接进入工作台。"
+      },
+      {
+        "label": "翻译模式",
+        "value": "增量 / 全量 / 文件 / 项目",
+        "description": "覆盖单文件修改、项目批量交付和大版本重翻场景。"
+      },
+      {
+        "label": "同步链路",
+        "value": "Web Studio + CLI",
+        "description": "从在线工作台到本地工程目录，保持同一条翻译闭环。"
+      }
+    ],
+    "preview": {
+      "eyebrow": "工作台预览",
+      "title": "预览最新响应式 Web Studio 界面",
+      "modeBadge": "官方托管 / 自有 Key",
+      "studioLabel": "JsonAIStudio",
+      "studioTitle": "为翻译任务设计的响应式 Web Studio",
+      "chips": [
+        "marketing-site",
+        "源语言：en",
+        "文件类型：json",
+        "目标语言：zh-CN, ja-JP, de-DE"
+      ],
+      "actions": [
+        {
+          "key": "upload",
+          "label": "上传导入"
+        },
+        {
+          "key": "projectSettings",
+          "label": "项目设置"
+        },
+        {
+          "key": "modelSettings",
+          "label": "模型设置"
+        },
+        {
+          "key": "taskCenter",
+          "label": "任务中心"
+        },
+        {
+          "key": "startTranslation",
+          "label": "开始翻译",
+          "primary": true
+        },
+        {
+          "key": "downloadProject",
+          "label": "下载项目"
+        }
+      ],
+      "browser": {
+        "eyebrow": "项目文件浏览",
+        "title": "文件树",
+        "projectBadge": "demo1",
+        "tree": [
+          "marketing-site",
+          "i18n/messages/en/common.json",
+          "i18n/messages/en/pricing.json",
+          "i18n/messages/en/dashboard.json",
+          "docs/help/faq.md"
+        ],
+        "activeTreeItem": "i18n/messages/en/common.json"
+      },
+      "source": {
+        "eyebrow": "源内容编辑区",
+        "title": "en / common.json",
+        "badge": "Diff：2 项新增，1 项修改",
+        "tags": ["JSON", "增量模式", "结构保持", "自动比对"],
+        "code": "{\n  \"hero\": {\n    \"title\": \"Ship localization faster\",\n    \"cta\": \"Start now\"\n  },\n  \"pricing\": {\n    \"headline\": \"Flexible plans\",\n    \"badge\": \"For global teams\"\n  }\n}"
+      },
+      "target": {
+        "eyebrow": "目标语言结果区",
+        "title": "多语言 Tab 与对照输出",
+        "badge": "任务状态：运行中 82%",
+        "tabs": [
+          {
+            "locale": "zh-CN",
+            "active": true
+          },
+          {
+            "locale": "ja-JP",
+            "active": false
+          },
+          {
+            "locale": "de-DE",
+            "active": false
+          }
+        ],
+        "tags": ["排队", "运行中", "可暂停", "可恢复", "可导出 ZIP"],
+        "code": "{\n  \"hero\": {\n    \"title\": \"更快交付本地化版本\",\n    \"cta\": \"立即开始\"\n  },\n  \"pricing\": {\n    \"headline\": \"为全球化团队准备的灵活套餐\",\n    \"badge\": \"适合长期维护项目\"\n  }\n}"
+      },
+      "summary": [
+        "顶部功能区集中承接上传、设置、任务中心、翻译和导出操作。",
+        "项目文件浏览、源内容编辑区、目标语言结果区可在同一界面对照操作。",
+        "布局在移动端纵向堆叠，在桌面端切换为真实三栏工作台。"
+      ]
+    }
+  },
+  "capabilities": {
+    "eyebrow": "六大能力",
+    "title": "覆盖真实项目翻译流程的六大能力",
+    "description": "从增量翻译、目录映射到任务中心与 CLI 同步，每一块都对应一个实际会发生的本地化协作环节，而不是抽象营销词。",
+    "cards": [
+      {
+        "key": "workflow",
+        "title": "多格式输入与智能增量翻译",
+        "description": "面向真实 i18n 工作流，既能处理结构化语言文件，也能接住文档与纯文本内容。",
+        "bullets": [
+          "支持 JSON、Markdown、TXT 上传、拖拽和直接粘贴。",
+          "支持文件增量翻译、文件全量翻译、项目增量翻译、项目全量翻译。",
+          "具备类似 Git Diff 的差异识别，只翻译新增或修改部分。"
+        ]
+      },
+      {
+        "key": "folderTree",
+        "title": "项目目录映射与路径规则",
+        "description": "不只翻一个文本块，而是把源文件、目标文件和目录约定一起纳入项目级管理。",
+        "bullets": [
+          "支持项目目录映射，翻译后自动生成对应语言文件。",
+          "内置语言目录、模块目录、语言后缀等常见路径模式。",
+          "支持项目导入导出和保留层级的 ZIP 批量交付。"
+        ]
+      },
+      {
+        "key": "languages",
+        "title": "多语言支持与模型使用方式",
+        "description": "既提供开箱即用的官方工作流，也支持接入团队自有模型资源和成本策略。",
+        "bullets": [
+          "覆盖英文、中文、日文、韩文、法文、德文、西班牙文等 20+ 常见语种。",
+          "可扩展到 100+ 语言，满足从核心市场到长尾语种的本地化需求。",
+          "支持官方中转与 BYOK，适配统一体验和灵活配置两种模式。"
+        ]
+      },
+      {
+        "key": "upload",
+        "title": "响应式 Web Studio 设计",
+        "description": "把文件管理、参数配置和翻译结果放在同一操作界面内，适合持续对照和校验。",
+        "bullets": [
+          "顶部功能区集中放置翻译触发、项目设置、模型设置和上传导入。",
+          "左侧源内容区用于配置源语言、文件路径、文件类型与原文编辑。",
+          "右侧目标输出区通过多语言 Tab 横向查看不同目标结果。"
+        ]
+      },
+      {
+        "key": "taskCenter",
+        "title": "任务中心",
+        "description": "针对项目级和批量翻译场景，把任务状态、进度和异常信息独立呈现出来。",
+        "bullets": [
+          "集中查看运行中、排队中、已暂停、已完成、失败等任务状态。",
+          "显示进度、分块处理状态与异常信息，便于追踪长任务。",
+          "支持暂停、继续等任务调度操作，提升协作可见性。"
+        ]
+      },
+      {
+        "key": "terminal",
+        "title": "全流程 CLI 工具支持",
+        "description": "CLI 不是附属入口，而是本地工程和在线工作区之间的完整同步链路。",
+        "bullets": [
+          "提供 `jsontranslate` NPM 包，适合接入开发环境与工程化流程。",
+          "支持初始化、登录、API Key 配置、上传、翻译、状态查询和结果回拉。",
+          "形成 Web 与 CLI 互通的完整工作流。"
+        ]
+      }
+    ]
+  },
+  "mapping": {
+    "eyebrow": "项目目录映射",
+    "title": "按项目导入、按规则生成、按原结构交付",
+    "description": "JsonTranslate 支持以“项目”为单位管理文件流，翻译结果不再需要手工整理路径，能够按既有 i18n 目录约定直接生成对应目标文件。",
+    "bullets": [
+      "支持导入项目级源文件，并在翻译后按照原始规则组织目标语言目录。",
+      "翻译过程中尽量保持原始 key、层级关系与内容结构，避免破坏现有 i18n 文件组织方式。",
+      "可一键下载整个项目的目录压缩包（ZIP），保留原始文件夹层级，方便直接接入工程或交付协作团队。"
+    ],
+    "pathPatternsEyebrow": "路径模式",
+    "pathPatterns": [
+      {
+        "title": "语言目录",
+        "path": "i18n/messages/{locale}/{module}.json"
+      },
+      {
+        "title": "模块目录",
+        "path": "i18n/messages/{module}/{locale}.json"
+      },
+      {
+        "title": "语言后缀",
+        "path": "i18n/messages/{module}.{locale}.json"
+      }
+    ],
+    "zip": {
+      "title": "批量交付与 ZIP 导出",
+      "description": "项目翻译完成后可直接导出完整目录压缩包，不打散原有文件夹层级，适合工程回写、版本交付和多角色协作。"
+    }
+  },
+  "languageModel": {
+    "badge": "多语言与模型",
+    "title": "覆盖 20+ 常见语言，同时支持官方中转与 BYOK",
+    "description": "默认使用 JsonTranslate AI，开箱即用；也支持接入自有 API Key 和多供应商模型。对于已有模型资源、预算控制或合规要求更明确的团队，可以按自己的策略接入。",
+    "cards": [
+      {
+        "key": "languages",
+        "title": "语言能力",
+        "description": "内置 20+ 常见语言，覆盖英文、中文、日文、韩文、法文、德文、西班牙文、葡萄牙文、俄文、阿拉伯文等主流语种，并支持扩展到 100+ 种语言。"
+      },
+      {
+        "key": "official",
+        "title": "官方中转",
+        "description": "默认使用 JsonTranslate AI，整体体验更统一，适合希望快速开始、多语言统一处理的日常团队协作。"
+      },
+      {
+        "key": "byok",
+        "title": "BYOK",
+        "description": "接入自有 Provider、Model 和 API Key，使用自有模型时可按团队已有资源与成本策略灵活配置，不依赖平台积分消耗模式。"
+      }
+    ]
+  },
+  "workspace": {
+    "eyebrow": "Web Studio",
+    "title": "响应式工作台把文件、参数与结果放在同一界面",
+    "description": "JsonAIStudio 采用面向翻译任务的响应式工作台布局，无论是单文件编辑还是项目批量翻译，都可以在统一界面内完成。",
+    "columns": [
+      {
+        "title": "顶部功能区",
+        "description": "集中放置翻译触发、项目设置、模型设置、上传导入等核心操作。",
+        "points": ["开始翻译", "项目设置", "模型设置", "上传导入"]
+      },
+      {
+        "title": "左侧源内容区",
+        "description": "配置源语言、文件路径、文件类型，并编辑或查看原始内容与变更信息。",
+        "points": [
+          "源语言设置",
+          "文件路径配置",
+          "原文编辑 / 查看",
+          "变更状态识别"
+        ]
+      },
+      {
+        "title": "右侧目标输出区",
+        "description": "通过多语言 Tab 切换查看不同目标语言结果，便于横向对比与逐项确认。",
+        "points": [
+          "多语言 Tab",
+          "逐项比对",
+          "继续导出 / 同步",
+          "统一项目级操作"
+        ]
+      }
+    ],
+    "taskCenter": {
+      "eyebrow": "任务中心",
+      "title": "面向批量翻译的状态管理与调度入口",
+      "statuses": [
+        {
+          "key": "running",
+          "label": "运行中",
+          "detail": "显示当前进度、已处理分块与剩余语言任务。"
+        },
+        {
+          "key": "queued",
+          "label": "排队中",
+          "detail": "适合项目级批量任务，统一等待执行窗口。"
+        },
+        {
+          "key": "paused",
+          "label": "已暂停",
+          "detail": "便于中断长任务，后续可继续恢复执行。"
+        },
+        {
+          "key": "failed",
+          "label": "失败",
+          "detail": "保留异常信息和任务上下文，便于排查问题。"
+        }
+      ],
+      "pauseAction": "运行中或排队中任务可暂停",
+      "resumeAction": "已暂停任务可继续恢复执行"
+    }
+  },
+  "cli": {
+    "eyebrow": "CLI",
+    "title": "Web 与 CLI 互通，形成可同步的本地化闭环",
+    "description": "JsonTranslate 不把 CLI 当作附属能力，而是把它设计为本地工程与在线翻译工作区之间的完整同步链路。",
+    "commands": [
+      "jsontranslate login",
+      "jsontranslate auth:apikey",
+      "jsontranslate init",
+      "jsontranslate push",
+      "jsontranslate translate",
+      "jsontranslate status",
+      "jsontranslate pull"
+    ],
+    "steps": [
+      {
+        "step": "步骤 01",
+        "title": "初始化本地项目",
+        "description": "配置项目名称、源语言、目标语言、根目录与路径模式，为本地工程建立可同步的翻译上下文。"
+      },
+      {
+        "step": "步骤 02",
+        "title": "上传本地文件并触发翻译",
+        "description": "将源文件推送到服务器统一比对和处理，可按文件或项目维度执行增量或全量翻译。"
+      },
+      {
+        "step": "步骤 03",
+        "title": "查看状态并管理任务",
+        "description": "通过 CLI 或任务中心查看排队、运行、暂停、完成等状态，掌握任务执行节奏。"
+      },
+      {
+        "step": "步骤 04",
+        "title": "回拉最新翻译结果",
+        "description": "把服务器端结果同步回本地项目目录，保持 Web 与 CLI 的完整闭环。"
+      }
+    ]
+  },
+  "pricing": {
+    "eyebrow": "套餐选择",
+    "title": "按团队需求选择合适的使用方案",
+    "description": "可以直接使用平台模式快速开始，也可以结合自定义模型、项目目录映射和 CLI 同步方式，按团队资源灵活接入。"
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "常见问题",
+    "description": "以下回答都基于当前 JsonTranslate 的真实能力，包括增量翻译、项目路径映射、任务调度和 CLI 同步。",
+    "items": [
+      {
+        "question": "JsonTranslate 支持哪些文件格式？",
+        "answer": "目前支持 JSON、Markdown 和 TXT 输入，适合统一处理 i18n 文件、文档以及其他纯文本内容。"
+      },
+      {
+        "question": "JsonTranslate 可以只翻译发生变化的 JSON Key 吗？",
+        "answer": "可以。针对 JSON 文件，系统会在 Key 级别识别新增、修改和删除内容，让增量翻译只处理真正变化的部分，而不是整文件重跑。"
+      },
+      {
+        "question": "我可以按整个项目执行翻译，而不只是单文件吗？",
+        "answer": "可以。你既可以按文件执行增量或全量翻译，也可以在需要批量交付时切换到项目级增量翻译或项目级全量翻译。"
+      },
+      {
+        "question": "JsonTranslate 如何处理 i18n 路径映射？",
+        "answer": "路径映射是在项目级完成的。你可以定义源文件和目标文件的组织方式，系统会按语言目录、模块目录或语言后缀等模式生成结果。"
+      },
+      {
+        "question": "支持把翻译结果按 ZIP 导入或导出吗？",
+        "answer": "支持。JsonTranslate 会保留项目目录结构，翻译完成后可直接导出 ZIP，不会打散原始层级。"
+      },
+      {
+        "question": "支持翻译到哪些语言？",
+        "answer": "官方托管工作流默认覆盖 20+ 常见语言，并可扩展到 100+ 语言以满足更广泛的本地化需求。"
+      },
+      {
+        "question": "必须使用官方托管的 JsonTranslate AI 工作流吗？",
+        "answer": "不必须。官方托管是最容易开始的方式，但如果团队已有自己的模型接入或 API 配置，也可以不依赖默认托管模式。"
+      },
+      {
+        "question": "可以接入自己的 API Key 或模型供应商吗？",
+        "answer": "可以。JsonTranslate 支持 BYOK，你可以接入自己的 Provider、Model 和 API Key，而不必只使用默认托管配置。"
+      },
+      {
+        "question": "任务中心如何帮助处理批量翻译？",
+        "answer": "任务中心会集中展示排队中、运行中、已暂停、已完成和失败等状态，让长任务或项目级批量任务更容易追踪和调度。"
+      },
+      {
+        "question": "是否提供适合本地仓库使用的 CLI？",
+        "answer": "提供。`jsontranslate` CLI 支持初始化、登录、API Key 配置、上传、翻译、状态查询和回拉结果，方便把本地仓库与在线工作区串起来。"
+      },
+      {
+        "question": "如何把翻译后的文件同步回我的项目？",
+        "answer": "翻译完成后，你可以把最新结果回拉到本地项目目录，也可以先导出 ZIP 再进行工程回写和审核。"
+      },
+      {
+        "question": "在翻整个项目之前，可以先小范围试跑吗？",
+        "answer": "可以。很多团队会先从单文件或单模块开始，确认路径规则和模型设置后，再扩展到项目级翻译。"
+      }
+    ]
+  },
+  "audience": {
+    "eyebrow": "适合谁使用",
+    "title": "适合长期维护多语言项目的工程与本地化团队",
+    "description": "如果你关心的不只是一次性翻译，而是目录结构、增量更新、批量交付和本地同步，那么它会更适合长期维护多语言项目的协作场景。",
+    "items": [
+      "管理多语言 i18n 文件的前端与全栈团队",
+      "需要长期维护项目目录结构的 SaaS 产品团队",
+      "追求增量翻译效率与批量交付能力的本地化团队",
+      "希望把在线翻译能力接入本地开发流程的工程团队"
+    ]
+  },
+  "contact": {
+    "badge": "联系我们",
+    "title": "对产品能力、项目工作流、CLI 接入或模型支持有问题？",
+    "description": "欢迎直接联系 JsonTranslate。无论你在评估 i18n 文件翻译方案、项目级目录映射还是本地工程同步方式，都可以通过官网或技术支持入口继续沟通。",
+    "websiteLabel": "官方网站",
+    "websiteUrl": "https://jsontranslate.org",
+    "supportLabel": "技术支持",
+    "supportEmail": "support@jsontranslate.org",
+    "primaryCta": "立即体验",
+    "secondaryCta": "查看套餐"
+  }
+}

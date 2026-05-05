@@ -1,7 +1,7 @@
 ## dev
 
 ### 自动创建项目
-./script/create-site.sh tikdek-web /Users/syx/WebstormProjects/tikdek/tikdek-web
+./scripts/create-site.sh tikdek-web /Users/syx/WebstormProjects/tikdek/tikdek-web
 
 ### create repo
 cd new-project-name
