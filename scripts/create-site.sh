@@ -13,6 +13,7 @@ GITHUB_OWNER="buildnewapp"
 # ==============================
 SITE_NAME=$1
 TARGET_DIR=$2
+ORIGIN_REPO="git@github.com:${GITHUB_OWNER}/${SITE_NAME}.git"
 
 if [ -z "$SITE_NAME" ] || [ -z "$TARGET_DIR" ]; then
   echo "用法:"
@@ -25,6 +26,7 @@ echo "创建项目: $SITE_NAME"
 echo "模板仓库: $TEMPLATE_REPO"
 echo "目标目录: $TARGET_DIR"
 echo "GitHub Owner: $GITHUB_OWNER"
+echo "新仓库地址: $ORIGIN_REPO"
 echo "=============================="
 
 # ==============================
@@ -69,15 +71,15 @@ git remote rename origin upstream
 # 创建 GitHub 新仓库并 push
 # ==============================
 gh repo create "$GITHUB_OWNER/$SITE_NAME" \
-  --private \
-  --source=. \
-  --remote=origin \
-  --push
+  --private
+
+git remote add origin "$ORIGIN_REPO"
+git push -u origin main
 
 echo ""
 echo "✅ 创建完成"
 echo "本地项目: $TARGET_DIR"
-echo "GitHub仓库: git@github.com:$GITHUB_OWNER/$SITE_NAME.git"
+echo "GitHub仓库: $ORIGIN_REPO"
 echo ""
 
 echo "当前 remote:"
