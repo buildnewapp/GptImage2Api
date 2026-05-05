@@ -1,9 +1,5 @@
 import withBundleAnalyzer from "@next/bundle-analyzer";
 import createNextIntlPlugin from "next-intl/plugin";
-import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
-import { mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
-import { unstable_readConfig as readWranglerConfig } from "wrangler";
 
 const withNextIntl = createNextIntlPlugin();
 
@@ -63,32 +59,6 @@ if (
   // console.log("💬 Join our Discord community: https://discord.gg/VRDxBgXUZ8");
   // console.log("📚 Documentation: https://nexty.dev/docs\n\n");
   process.env.NEXTY_WELCOME_SHOWN = "true";
-}
-
-function createWranglerDevConfigPath() {
-  const config = readWranglerConfig(
-      { config: "./wrangler.jsonc" },
-      { hideWarnings: true }
-  );
-  const devConfig = { ...config };
-
-  delete devConfig.durable_objects;
-  delete devConfig.migrations;
-  delete devConfig.env;
-  delete devConfig.unsafe;
-
-  const outputDir = ".wrangler/tmp";
-  const outputPath = join(outputDir, "wrangler.next-dev.generated.json");
-  mkdirSync(outputDir, { recursive: true });
-  writeFileSync(outputPath, `${JSON.stringify(devConfig, null, 2)}\n`);
-  return outputPath;
-}
-
-// Initialize Cloudflare bindings for local development (next dev).
-if (process.env.NODE_ENV === "development") {
-  initOpenNextCloudflareForDev({
-    configPath: createWranglerDevConfigPath(),
-  });
 }
 
 export default withBundleAnalyzerWrapper(withNextIntl(nextConfig));

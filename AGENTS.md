@@ -29,4 +29,4 @@ Recent commits use short, direct summaries, often in Chinese, such as `细节优
 
 ## Security & Configuration Tips
 
-Do not commit secrets or local Cloudflare credentials. Use `.env` / `.env.local` for local configuration and `wrangler.example.jsonc` as the reference for Cloudflare settings. When changing payment, auth, webhook, or credit logic, document the test path and any migration or seed requirement in the PR.
+Do not commit secrets or local deployment credentials. Use `.env` / `.env.local` for local configuration. When changing payment, auth, webhook, or credit logic, document the test path and any migration or seed requirement in the PR.
