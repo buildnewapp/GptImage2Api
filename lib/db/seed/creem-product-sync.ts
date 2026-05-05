@@ -1,3 +1,5 @@
+import { siteConfig } from '@/config/site'
+
 export type BillingType = 'recurring' | 'onetime'
 export type BillingPeriod = 'every-month' | 'every-year'
 export type PlanKind = 'monthly' | 'annual' | 'onetime'
@@ -124,9 +126,11 @@ export function buildCreemProductPayload(
   input: BuildCreemProductPayloadInput
 ): BuildCreemProductPayloadResult {
   const billing = deriveCreemBilling(input)
+  const siteName = siteConfig.name.trim()
+
   return {
     ...billing,
-    name: input.cardTitle.trim(),
+    name: `${siteName} ${input.cardTitle.trim()}`,
     description: (input.cardDescription ?? input.cardTitle).trim(),
     price: parsePrice(input.price, input.planId),
     currency: normalizeCurrency(input.currency),

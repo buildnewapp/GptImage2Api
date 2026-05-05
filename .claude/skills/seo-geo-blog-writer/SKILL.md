@@ -380,9 +380,9 @@ Load `references/geo-optimization.md` for AI citation formatting:
 
 ### Phase 6: Image Generation (NEW v2.2)
 
-**Automated image generation and insertion using AI APIs:**
+**Automated image generation and insertion:**
 
-Generate professional blog post images automatically using Kie GPT Image 2, Google Imagen, or OpenAI DALL-E 3. The system extracts image placeholders, auto-detects strong sections, classifies image types, generates appropriate images, and inserts them into your draft.
+Generate professional blog post images with Codex built-in image generation first. Kie GPT Image 2 is paid and must be treated as a fallback only, not the default path.
 
 **1. Add image placeholders to your draft (optional):**
 
@@ -394,9 +394,48 @@ Generate professional blog post images automatically using Kie GPT Image 2, Goog
 
    **Note:** Featured/hero image is auto-generated if not present.
 
-**2. Generate images:**
+**2. Extract image needs without paid generation:**
 
-   **Option A - Kie GPT Image 2 (recommended):**
+   ```bash
+   python scripts/image_generation.py /tmp/blog_draft.md --dry-run
+   ```
+
+   Use dry-run to list the featured/body image requests and their alt text. Dry-run does not require API keys and does not call Kie.
+
+**3. Generate with Codex built-in image generation (default):**
+
+   In Codex, call the built-in image generation tool for each extracted image request. Save project-bound assets into the configured `output_dir` or the blog image asset directory, then replace `(placeholder)` entries with the saved local paths.
+
+   Prompt rules:
+   - Featured/hero images: 16:9, polished editorial hero image.
+   - Section images: 4:3 or square, modern editorial illustration.
+   - Diagrams/infographics: 16:9, clean structure, avoid tiny unreadable text.
+   - Avoid logos, watermarks, UI chrome, and long readable text unless the user explicitly asks.
+
+**4. Script/API fallback only when needed:**
+
+   If Codex built-in generation is unavailable, or the user explicitly asks for API/script generation, use the standalone script. Its `auto` provider order is OpenAI DALL-E 3, Google Imagen, then Kie GPT Image 2 last.
+
+   **OpenAI DALL-E 3:**
+   ```bash
+   export OPENAI_API_KEY=sk-...
+
+   python scripts/image_generation.py /tmp/blog_draft.md \
+     --output /tmp/blog_draft_with_images.md \
+     --max-images 5
+   ```
+
+   **Google Imagen (requires Google Cloud):**
+   ```bash
+   export GOOGLE_API_KEY=...
+   export GOOGLE_PROJECT_ID=my-project
+
+   python scripts/image_generation.py /tmp/blog_draft.md \
+     --output /tmp/blog_draft_with_images.md \
+     --max-images 5
+   ```
+
+   **Kie GPT Image 2 (paid fallback only):**
    ```bash
    export KIE_API_KEY=your_key
 
@@ -407,34 +446,15 @@ Generate professional blog post images automatically using Kie GPT Image 2, Goog
      --body-images 4
    ```
 
-   This creates one featured image plus 3-5 body images. Kie media URLs expire, so the script downloads images into `output_dir` and inserts local paths into the draft.
+   Kie media URLs expire, so the script downloads images into `output_dir` and inserts local paths into the draft.
 
-   **Option B - OpenAI DALL-E 3:**
-   ```bash
-   export OPENAI_API_KEY=sk-...
-
-   python scripts/image_generation.py /tmp/blog_draft.md \
-     --output /tmp/blog_draft_with_images.md \
-     --max-images 5
-   ```
-
-   **Option C - Google Imagen (requires Google Cloud):**
-   ```bash
-   export GOOGLE_API_KEY=...
-   export GOOGLE_PROJECT_ID=my-project
-
-   python scripts/image_generation.py /tmp/blog_draft.md \
-     --output /tmp/blog_draft_with_images.md \
-     --max-images 5
-   ```
-
-   **Option C - Use configuration file:**
+   **Use configuration file:**
    ```bash
    # Configure in .seo-geo-config.json:
    {
      "image_generation": {
        "enabled": true,
-       "provider": "kie",
+       "provider": "auto",
        "kie_api_key": "...",
        "kie_resolution": "1K",
        "google_api_key": "...",
@@ -450,7 +470,7 @@ Generate professional blog post images automatically using Kie GPT Image 2, Goog
      --output /tmp/blog_draft_with_images.md
    ```
 
-**3. Test extraction without API keys (dry-run):**
+**5. Test extraction without API keys (dry-run):**
    ```bash
    python scripts/image_generation.py /tmp/blog_draft.md --dry-run
 
@@ -470,9 +490,10 @@ Generate professional blog post images automatically using Kie GPT Image 2, Goog
    - Determines appropriate style (photorealistic, illustration, diagram)
 
 2. **Generate Images:**
-   - Priority 1: Kie GPT Image 2 (`gpt-image-2-text-to-image`)
-   - Priority 2: Google Imagen
-   - Priority 3: OpenAI DALL-E 3
+   - Priority 1: Codex built-in image generation when the skill is run inside Codex
+   - Priority 2: OpenAI DALL-E 3 in standalone script/API fallback
+   - Priority 3: Google Imagen in standalone script/API fallback
+   - Priority 4: Kie GPT Image 2 (`gpt-image-2-text-to-image`) only as paid fallback
    - Optimized prompts for each style and image type
    - Downloads and saves images locally
 

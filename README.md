@@ -128,9 +128,12 @@ https://www.sandbox.paypal.com/billing/overview
 3 自动创建订阅产品
 提供PAYPAL_CLIENT_ID、PAYPAL_CLIENT_SECRET 让 ai 使用脚本创建产品+订阅计划，获取计划 id
 pnpm db:sync-paypal-products
+PAY_ENV=test pnpm db:sync-paypal-products -- --force
+PAY_ENV=live pnpm db:sync-paypal-products -- --force
+
 
 #### 真实环境
-1 新建测试应用，登录主账户
+1 新建应用，登录主账户
 https://developer.paypal.com/dashboard/applications/live
 create app → name + Merchant + Sandbox Account → get Client ID + Secret key 1
 回调地址：https://sdanceai.com/api/paypal/notify
@@ -147,7 +150,10 @@ pnpm db:sync-paypal-products
 
 ### creem
 回调地址
-https://gptimage2api.net/api/paypal/notify
+https://many-fine-bullfrog.ngrok-free.app/api/creem/webhook
+https://xxxx/api/creem/webhook
+PAY_ENV=test pnpm db:sync-creem-products -- --force
+PAY_ENV=live pnpm db:sync-creem-products -- --force
 # moderation provider: none | creem
 MODERATION=creem
 

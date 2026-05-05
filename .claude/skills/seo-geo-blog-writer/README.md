@@ -486,10 +486,11 @@ Generate professional, SEO-optimized images automatically for your blog posts us
 - Chooses appropriate style (photorealistic, illustration, diagram)
 - Optimizes prompts for each image type
 
-💰 **Multi-API support with fallback:**
-- **Google Imagen** (priority 1): $0.02/image
-- **OpenAI DALL-E 3** (priority 2): $0.04-$0.08/image
-- Automatic failover between APIs
+💰 **Image generation priority:**
+- **Codex built-in image generation** (priority 1 when running inside Codex)
+- **OpenAI DALL-E 3** (standalone script fallback)
+- **Google Imagen** (standalone script fallback)
+- **Kie GPT Image 2** (paid fallback only)
 
 📊 **Cost tracking:** Shows per-image and total generation costs
 
@@ -517,7 +518,15 @@ pip install google-cloud-aiplatform  # For Google Imagen (requires Google Cloud 
 
 **3. Generate images:**
 
-**Option A - OpenAI DALL-E 3 (easiest):**
+When running this skill inside Codex, first run a dry-run to extract image requests, then use Codex built-in image generation for each requested image. Save the generated assets into the configured image output directory and replace the markdown placeholders with those local paths.
+
+```bash
+python scripts/image_generation.py draft.md --dry-run
+```
+
+Use the standalone script only if Codex built-in generation is unavailable or the user explicitly asks for API/script generation.
+
+**Option A - OpenAI DALL-E 3:**
 ```bash
 export OPENAI_API_KEY=sk-proj-...
 
@@ -542,9 +551,11 @@ python scripts/image_generation.py draft.md \
 {
   "image_generation": {
     "enabled": true,
+    "provider": "auto",
     "google_api_key": "...",
     "google_project_id": "...",
     "openai_api_key": "sk-...",
+    "kie_api_key": "...",
     "max_images_per_post": 5,
     "output_dir": "./generated_images"
   }
@@ -632,9 +643,10 @@ else:
 #### 3. Generate Images
 
 **API Priority:**
-1. Try Google Imagen ($0.02/image)
-2. Fallback to OpenAI DALL-E 3 ($0.04-$0.08/image)
-3. Report error if both fail
+1. Use Codex built-in image generation when this skill is run inside Codex.
+2. In standalone script `auto` mode, try OpenAI DALL-E 3.
+3. Fallback to Google Imagen.
+4. Use Kie GPT Image 2 only as a paid fallback.
 
 **Prompt optimization by style:**
 
@@ -1216,7 +1228,7 @@ pip install openai
 **Test it:**
 ```bash
 python scripts/image_generation.py test-draft.md --dry-run
-# Should show: "✓ OpenAI DALL-E 3 configured (priority 2)"
+# Should show: "✓ OpenAI DALL-E 3 configured (priority 1)"
 ```
 
 **Cost:** $0.04-$0.08/image (1024x1024 standard quality)

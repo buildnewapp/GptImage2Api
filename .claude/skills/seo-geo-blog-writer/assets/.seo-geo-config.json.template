@@ -45,7 +45,7 @@
     "max_images_per_post": 5,
     "body_images_per_post": 4,
     "output_dir": "./generated_images",
-    "_comment": "Image generation available. provider can be auto, kie, google, or openai. Kie GPT Image 2 uses kie_api_key or KIE_API_KEY and downloads generated images locally because hosted media expires. Google Imagen requires gcloud auth (run: gcloud auth application-default login) OR set GOOGLE_APPLICATION_CREDENTIALS env var. OpenAI only needs openai_api_key. Set enabled=true when ready."
+    "_comment": "Image generation available. In Codex workflows, use Codex built-in image generation first. This script fallback supports provider auto, openai, google, or kie; auto tries OpenAI, then Google, then Kie. Kie GPT Image 2 uses kie_api_key or KIE_API_KEY and is a paid fallback. Google Imagen requires gcloud auth (run: gcloud auth application-default login) OR set GOOGLE_APPLICATION_CREDENTIALS env var. OpenAI only needs openai_api_key. Set enabled=true when ready."
   },
 
   "_usage": {

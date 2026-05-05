@@ -13,9 +13,11 @@
 
 import { loadEnvConfig } from '@next/env'
 import 'dotenv/config'
+import { randomUUID } from 'node:crypto'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { siteConfig } from '@/config/site'
 import { PayPalClient, isPayPalEnabled } from '@/lib/paypal/client'
 import { applyPricingConfigFieldUpdates } from './creem-product-sync'
 import { pricingPlans } from './pricing-config'
@@ -74,17 +76,29 @@ function getExistingPayPalProductId(plan: (typeof pricingPlans)[number]) {
 }
 
 function isPayPalRecurringPlan(plan: (typeof pricingPlans)[number]) {
+  const provider = typeof plan.provider === 'string' ? plan.provider.toLowerCase() : ''
+
   return (
-    plan.provider === 'paypal' &&
+    (provider === 'paypal' || provider === 'all') &&
     plan.paymentType === 'recurring' &&
     (plan.recurringInterval === 'month' || plan.recurringInterval === 'year')
   )
 }
 
+function buildPayPalRequestId(prefix: 'pricing-product' | 'pricing-plan', environment: string, planId: string, force: boolean) {
+  if (force) {
+    return randomUUID()
+  }
+
+  return `${prefix}-${environment}-${planId}`
+}
+
 function buildPayPalProductPayload(plan: (typeof pricingPlans)[number]) {
+  const siteName = siteConfig.name.trim()
+
   return {
     description: (plan.cardDescription ?? plan.cardTitle).trim(),
-    name: plan.cardTitle.trim(),
+    name: `${siteName} ${plan.cardTitle.trim()}`,
     type: 'SERVICE',
   }
 }
@@ -99,6 +113,7 @@ function buildPayPalPlanPayload(
 
   const intervalUnit = plan.recurringInterval === 'year' ? 'YEAR' : 'MONTH'
   const normalizedPrice = String(plan.price ?? '').trim()
+  const siteName = siteConfig.name.trim()
 
   if (!/^\d+(\.\d{1,2})?$/.test(normalizedPrice)) {
     throw new Error(`Invalid price for PayPal plan ${plan.id}: ${plan.price}`)
@@ -123,7 +138,7 @@ function buildPayPalPlanPayload(
       },
     ],
     description: (plan.cardDescription ?? plan.cardTitle).trim(),
-    name: `${plan.cardTitle.trim()} ${plan.recurringInterval === 'year' ? 'Yearly' : 'Monthly'}`,
+    name: `${siteName} ${plan.cardTitle.trim()} ${plan.recurringInterval === 'year' ? 'Yearly' : 'Monthly'}`,
     payment_preferences: {
       auto_bill_outstanding: true,
       payment_failure_threshold: 1,
@@ -217,14 +232,14 @@ async function main() {
     if (!paypalProductId || force) {
       const product = await client.createProduct(
         buildPayPalProductPayload(plan),
-        `pricing-product-${environment.apiEnvironment}-${plan.id}`
+        buildPayPalRequestId('pricing-product', environment.apiEnvironment, plan.id, force)
       )
       paypalProductId = product.id
     }
 
     const billingPlan = await client.createBillingPlan(
       buildPayPalPlanPayload(plan, paypalProductId),
-      `pricing-plan-${environment.apiEnvironment}-${plan.id}`
+      buildPayPalRequestId('pricing-plan', environment.apiEnvironment, plan.id, force)
     )
 
     pricingConfigSource = applyPricingConfigFieldUpdates(pricingConfigSource, [

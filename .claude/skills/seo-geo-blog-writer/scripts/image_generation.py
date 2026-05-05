@@ -3,8 +3,14 @@
 Automated Image Generation for Blog Posts
 
 APIs supported:
-- Google Imagen (priority 1 - $2000 startup credit)
-- OpenAI DALL-E 3 (priority 2 - Microsoft Startup Hub credits)
+- OpenAI DALL-E 3 (priority 1 for standalone script fallback)
+- Google Imagen (priority 2 for standalone script fallback)
+- Kie GPT Image 2 (priority 3, paid fallback only)
+
+Note:
+- In Codex workflows, prefer Codex built-in image generation before this standalone script.
+- Codex built-in image generation is an agent tool, not a Python API, so this script cannot
+  call it directly.
 
 Image types:
 - Featured/hero images (photorealistic)
@@ -558,12 +564,12 @@ class BlogImageGenerator:
         # Initialize generators in priority order
         self.generators = []
 
-        # Priority 1: Kie GPT Image 2
-        if self.provider in ('auto', 'kie'):
-            kie = KieGPTImage2Generator(kie_config['api_key'], kie_config['resolution'])
-            if kie.is_available():
-                self.generators.append(kie)
-                print(f"✓ Kie GPT Image 2 configured (priority {len(self.generators)})", file=sys.stderr)
+        # Priority 1: OpenAI DALL-E
+        if self.provider in ('auto', 'openai'):
+            openai_gen = OpenAIDallEGenerator(openai_config['api_key'])
+            if openai_gen.is_available():
+                self.generators.append(openai_gen)
+                print(f"✓ OpenAI DALL-E 3 configured (priority {len(self.generators)})", file=sys.stderr)
 
         # Priority 2: Google Imagen
         if self.provider in ('auto', 'google'):
@@ -572,12 +578,12 @@ class BlogImageGenerator:
                 self.generators.append(google)
                 print(f"✓ Google Imagen configured (priority {len(self.generators)})", file=sys.stderr)
 
-        # Priority 3: OpenAI DALL-E
-        if self.provider in ('auto', 'openai'):
-            openai_gen = OpenAIDallEGenerator(openai_config['api_key'])
-            if openai_gen.is_available():
-                self.generators.append(openai_gen)
-                print(f"✓ OpenAI DALL-E 3 configured (priority {len(self.generators)})", file=sys.stderr)
+        # Priority 3: Kie GPT Image 2, paid fallback only
+        if self.provider in ('auto', 'kie'):
+            kie = KieGPTImage2Generator(kie_config['api_key'], kie_config['resolution'])
+            if kie.is_available():
+                self.generators.append(kie)
+                print(f"✓ Kie GPT Image 2 configured (priority {len(self.generators)})", file=sys.stderr)
 
         if not self.generators:
             if self.provider == 'kie':
@@ -862,7 +868,7 @@ Examples:
     --output draft-with-images.md \\
     --output-dir ./blog-images
 
-  # Kie GPT Image 2:
+  # Kie GPT Image 2 (paid fallback only):
   export KIE_API_KEY=your_key
   python image_generation.py draft.md \\
     --provider kie \\
@@ -947,16 +953,16 @@ Examples:
     except ValueError as e:
         print(f"\n❌ {e}\n", file=sys.stderr)
         print("Configure at least one API:\n", file=sys.stderr)
-        print("Option 1 - Kie GPT Image 2:", file=sys.stderr)
-        print("  export KIE_API_KEY=your_key", file=sys.stderr)
-        print("  Or: --kie-api-key your_key\n", file=sys.stderr)
-        print("Option 2 - OpenAI DALL-E 3:", file=sys.stderr)
+        print("Option 1 - OpenAI DALL-E 3:", file=sys.stderr)
         print("  export OPENAI_API_KEY=sk-...", file=sys.stderr)
         print("  Or: --openai-api-key sk-...\n", file=sys.stderr)
-        print("Option 3 - Google Imagen (requires Google Cloud auth):", file=sys.stderr)
+        print("Option 2 - Google Imagen (requires Google Cloud auth):", file=sys.stderr)
         print("  gcloud auth application-default login", file=sys.stderr)
         print("  export GOOGLE_PROJECT_ID=my-project", file=sys.stderr)
         print("  Or: --google-project-id my-project\n", file=sys.stderr)
+        print("Option 3 - Kie GPT Image 2 (paid fallback only):", file=sys.stderr)
+        print("  export KIE_API_KEY=your_key", file=sys.stderr)
+        print("  Or: --kie-api-key your_key\n", file=sys.stderr)
         sys.exit(1)
 
     # Generate images
