@@ -1,132 +1,105 @@
-# Sdance AI
+# GptImage2Api
 
 ## Overview
 
-Sdance AI is an independent AI creation website at [https://sdanceai.com](https://sdanceai.com). The site presents Seedance video workflows, image generation and editing workflows, public examples, reusable prompts, pricing information, and developer documentation.
+GptImage2Api is an independent GPT Image 2 API website at [https://gptimage2api.net](https://gptimage2api.net). It provides API access for developers, startups, and businesses that want to generate high-quality AI images through simple REST endpoints, build image generation applications, automate creative workflows, or integrate GPT Image 2 API access into products.
 
-The configured site description says SdanceAI lets users experience Seedance 2.0, create high-quality AI videos with native audio sync, and use stable API access for developer integrations. The current homepage copy also describes production-ready image generation and editing for posters, product photos, social creatives, and design mockups.
-
-Sdance AI states that it is an independent product and is not affiliated with, endorsed by, or sponsored by AI model providers.
+The site states that it is an independent product and is not affiliated with Google, OpenAI, or other AI model providers.
 
 ## Target Users
 
-- Creators making AI video, image, and social content.
-- Marketing, ecommerce, media, startup, education, and design teams creating campaign or product visuals.
-- Developers looking for public documentation for AI generation integration.
-- Visitors comparing examples, prompts, pricing, and product pages before signing in.
+- Developers integrating AI image generation into apps, websites, and internal tools.
+- Startups and businesses building image generation workflows.
+- Product and creative teams that need API-friendly image generation and editing workflows.
+- Visitors comparing examples, prompts, pricing, documentation, and public articles before signing in.
 
 ## Core Features
 
-- Text-to-video and image-to-video workflows for supported video models.
-- Seedance 2.0 workflows with text, image, video, and audio references.
-- Seedance 1.5-oriented product content for AI video production workflows.
-- Image generation and image editing workflows for commercial creative assets.
-- Public showcase pages for successful generated media.
-- Prompt gallery pages for reusable Seedance 2.0 prompts and related outputs.
-- Pricing pages for the online experience and API service.
-- Public API documentation for access setup, generation, task status, generation history, and credits.
+- GPT Image 2 API access through REST-oriented workflows.
+- AI image generation for apps, creative automation, and product integrations.
+- Public showcase pages for generated work that can be inspected by visitors.
+- Public prompt gallery for GPT Image 2 prompts.
+- Pricing information for subscriptions, credit packs, and payment options.
+- Public API documentation for access setup, generation tasks, task status, generation history, and credit checks.
+- Blog resources about GPT image API workflows and product usage.
 
 ## Primary Pages
 
-- [Home](https://sdanceai.com) - Main public entry point. The English homepage text says: "Experience Seedance 2.0 on SdanceAI. Create high-quality AI videos with native audio sync. We provide stable API access for developers to integrate AI video."
-- [Features](https://sdanceai.com/#features) - Feature section linked from the public header and footer.
-- [Showcase](https://sdanceai.com/showcase) - "Browse successful public generations from the community and open any item to inspect the prompt, settings, and output."
-- [Prompts](https://sdanceai.com/prompts) - "Browse reusable Seedance 2.0 prompts and review generated results with input materials."
-- [Blog](https://sdanceai.com/blog) - "Insights on AI video creation, product updates, and creator workflows."
-- [Pricing](https://sdanceai.com/pricing) - Pricing plans for Seedance 2.0 and the online/API service.
-- [API Docs](https://sdanceai.com/apidoc) - Public AI Studio API documentation for integration workflow, task status, history, and credits.
-- [Seedance 2](https://sdanceai.com/seedance2) - Product page for Seedance 2.0 video generation workflows.
-- [Seedance 1.5](https://sdanceai.com/seedance-15) - Product page for SdanceAI platform capabilities around Seedance 1.5 and related video workflows.
-- [About / Contact](https://sdanceai.com/about#contact-us) - About page and public contact section.
+- [Home](https://gptimage2api.net) - Main public entry point for GptImage2Api.
+- [Features](https://gptimage2api.net/#features) - Public homepage feature section linked from the header and footer.
+- [Showcase](https://gptimage2api.net/showcase) - Browse public successful generations and open details to review prompts, parameters, and results.
+- [Prompts](https://gptimage2api.net/prompts) - Curated GPT Image 2 prompt library for reusable image generation prompts.
+- [Blog](https://gptimage2api.net/blog) - Public articles about AI image creation, product updates, and creator workflows.
+- [Pricing](https://gptimage2api.net/pricing) - Subscription plans, credit packs, and payment options for GptImage2Api.
+- [API Docs](https://gptimage2api.net/apidoc) - Public AI Studio API documentation for access setup, generation, task status, history, and credits.
+- [About / Contact](https://gptimage2api.net/about#contact-us) - About page and public contact section.
 
 ## Localized Pages
 
-Supported locales are read from configuration as English, 中文, and 日本語. English is the default locale and uses root paths. Chinese and Japanese use locale-prefixed paths.
+Supported locales are configured as English, 中文, and 日本語. English is the default locale and uses root paths. Chinese and Japanese use locale-prefixed paths.
 
 ### English
 
-- [SdanceAI](https://sdanceai.com) - Seedance 2.0 Online Experience & API Service.
-- [Features](https://sdanceai.com/#features) - Public homepage feature section.
-- [Seedance 2.0 Showcase](https://sdanceai.com/showcase) - Browse successful public generations and inspect prompts, settings, and outputs.
-- [Seedance 2.0 Prompt Gallery](https://sdanceai.com/prompts) - Browse reusable Seedance 2.0 prompts and generated results.
-- [Blog Posts](https://sdanceai.com/blog) - Insights on AI video creation, product updates, and creator workflows.
-- [Seedance 2.0 Pricing](https://sdanceai.com/pricing) - View Seedance 2.0 online experience and API pricing.
-- [AI Studio API Documentation](https://sdanceai.com/apidoc) - Learn access setup, AI video generation, task status, history, and credits.
-- [Seedance 2](https://sdanceai.com/seedance2) - Seedance 2.0 video workflows and capabilities.
-- [Seedance 1.5](https://sdanceai.com/seedance-15) - Independent AI video studio and API page for Seedance 1.5-oriented workflows.
-- [About](https://sdanceai.com/about#contact-us) - About the site and contact section.
-- [Glossary](https://sdanceai.com/glossary) - Glossary of terms and concepts.
-- [AI Use Cases](https://sdanceai.com/use-cases) - Curated AI use case pages.
-- [AI Prompt Templates](https://sdanceai.com/templates) - Curated prompt template pages.
-- [AI Alternatives](https://sdanceai.com/alternatives) - Alternative pages for comparison-oriented visitors.
-- [AI Comparisons](https://sdanceai.com/compare) - Side-by-side AI product and model comparisons.
+- [Gpt Image 2 Api](https://gptimage2api.net) - Gpt Image 2 Api - Fast & Reliable GPT Image 2 API for Developers.
+- [Features](https://gptimage2api.net/#features) - Public homepage feature section.
+- [Showcase](https://gptimage2api.net/showcase) - GptImage2Api - Fast & Reliable GPT Image 2 API for Developers.
+- [GPT Image 2 API awesome prompts](https://gptimage2api.net/prompts) - Curated GPT Image 2 prompt library for text rendering, cross-image consistency, and illustration workflows.
+- [Blog Posts](https://gptimage2api.net/blog) - Insights on AI image creation, product updates, and creator workflows.
+- [GptImage2Api Pricing](https://gptimage2api.net/pricing) - View subscription plans, credit packs, and payment options for GptImage2Api.
+- [AI Studio API Documentation](https://gptimage2api.net/apidoc) - Learn access setup, generation tasks, task status, generation history, and user credits.
+- [About](https://gptimage2api.net/about#contact-us) - About page and contact section.
 
 ### 中文
 
-- [SdanceAI](https://sdanceai.com/zh) - Seedance 2.0 在线体验 与 API 服务。
-- [功能特性](https://sdanceai.com/zh#features) - 首页公开功能区。
-- [seedance 2.0 作品展示](https://sdanceai.com/zh/showcase) - 浏览社区中公开且生成成功的作品，查看提示词、参数和结果。
-- [Seedance 2.0 提示词库](https://sdanceai.com/zh/prompts) - 浏览可直接复用的 Seedance 2.0 提示词，查看生成结果与输入素材。
-- [博客列表](https://sdanceai.com/zh/blog) - 分享 AI 视频创作经验、产品更新与创作者实战内容。
-- [Seedance 2.0 价格](https://sdanceai.com/zh/pricing) - 查看 Seedance 2.0 的价格方案。
-- [AI Studio API 文档](https://sdanceai.com/zh/apidoc) - 了解鉴权、AI 视频生成、任务状态查询、生成记录读取和用户积分查询方式。
-- [Seedance 2](https://sdanceai.com/zh/seedance2) - Seedance 2.0 视频生成工作流与能力页面。
-- [Seedance 1.5](https://sdanceai.com/zh/seedance-15) - SdanceAI 平台围绕 Seedance 1.5 和相关视频工作流的产品页面。
-- [关于我们](https://sdanceai.com/zh/about#contact-us) - 关于页面与联系方式。
-- [术语表](https://sdanceai.com/zh/glossary) - Next.js SaaS 开发术语和概念的综合词汇表。
-- [AI 应用场景](https://sdanceai.com/zh/use-cases) - 为长尾 SEO 和产品转化设计的 AI 应用场景页面。
-- [AI 提示词模板](https://sdanceai.com/zh/templates) - 为搜索意图和转化承接设计的 AI 提示词模板页面。
-- [AI 替代方案](https://sdanceai.com/zh/alternatives) - 面向替代方案比较的公开内容页面。
-- [AI 对比页](https://sdanceai.com/zh/compare) - 围绕工具、模型和工作流选择构建的 AI 对比页。
+- [Gpt Image 2 Api](https://gptimage2api.net/zh) - Gpt Image 2 Api - 面向开发者的快速可靠 GPT Image 2 API。
+- [功能特性](https://gptimage2api.net/zh#features) - 首页公开功能区。
+- [seedance 2.0 作品展示](https://gptimage2api.net/zh/showcase) - 浏览社区中公开且生成成功的作品，查看提示词、参数和结果。
+- [GPT Image 2 API 超赞提示词](https://gptimage2api.net/zh/prompts) - 精选 GPT Image 2 提示词库，面向文字渲染、跨图一致性和插画创作。
+- [博客列表](https://gptimage2api.net/zh/blog) - 分享 AI 图像创作经验、产品更新与创作者实战内容。
+- [GptImage2Api 价格](https://gptimage2api.net/zh/pricing) - 查看 GptImage2Api 的订阅套餐、积分包和支付方式。
+- [AI Studio API 文档](https://gptimage2api.net/zh/apidoc) - 了解鉴权、生成任务、任务状态查询、生成记录读取和用户积分查询方式。
+- [关于我们](https://gptimage2api.net/zh/about#contact-us) - 关于页面与联系方式。
 
 ### 日本語
 
-- [SdanceAI](https://sdanceai.com/ja) - Seedance 2.0 オンライン体験版 & API サービス。
-- [機能特性](https://sdanceai.com/ja#features) - 公開ホームページの機能セクション。
-- [Seedance 2.0 作品展示](https://sdanceai.com/ja/showcase) - 公開され、正常に生成された作品を一覧し、詳細でプロンプトや設定を確認できます。
-- [Seedance 2.0 プロンプト集](https://sdanceai.com/ja/prompts) - 再利用できる Seedance 2.0 のプロンプトと生成結果を確認できます。
-- [ブログ記事](https://sdanceai.com/ja/blog) - AI動画制作の知見、プロダクト更新、クリエイター向け実践情報。
-- [Seedance 2.0の料金](https://sdanceai.com/ja/pricing) - Seedance 2.0 の料金プラン。
-- [AI Studio API ドキュメント](https://sdanceai.com/ja/apidoc) - 認証、AI動画生成、タスク結果、生成履歴、クレジット確認方法。
-- [Seedance 2](https://sdanceai.com/ja/seedance2) - Seedance 2.0 動画生成ワークフローと機能ページ。
-- [Seedance 1.5](https://sdanceai.com/ja/seedance-15) - Seedance 1.5 関連ワークフロー向けの SdanceAI 製品ページ。
-- [About](https://sdanceai.com/ja/about#contact-us) - About page and contact section.
-- [用語集](https://sdanceai.com/ja/glossary) - Next.js SaaS開発の用語と概念の包括的な用語集。
-- [AI ユースケース](https://sdanceai.com/ja/use-cases) - AI ユースケースページ。
-- [AI プロンプトテンプレート](https://sdanceai.com/ja/templates) - AI プロンプトテンプレートページ。
-- [AI 代替ページ](https://sdanceai.com/ja/alternatives) - 比較意図の高い代替ページ。
-- [AI 比較ページ](https://sdanceai.com/ja/compare) - ツール・モデル・ワークフロー選定向けの AI 比較ページ。
+- [Gpt Image 2 Api](https://gptimage2api.net/ja) - Gpt Image 2 Api - 開発者向けの高速で信頼性の高い GPT Image 2 API。
+- [機能特性](https://gptimage2api.net/ja#features) - 公開ホームページの機能セクション。
+- [Seedance 2.0 作品展示](https://gptimage2api.net/ja/showcase) - 公開され、正常に生成された作品を一覧し、詳細でプロンプトや設定を確認できます。
+- [GPT Image 2 API 最高のプロンプト集](https://gptimage2api.net/ja/prompts) - GPT Image 2 のプロンプト集。文字レンダリング、画像間の一貫性、イラスト制作に対応します。
+- [ブログ記事](https://gptimage2api.net/ja/blog) - AI画像制作の知見、プロダクト更新、クリエイター向け実践情報。
+- [GptImage2Api の料金](https://gptimage2api.net/ja/pricing) - GptImage2Api のサブスクリプション、クレジットパック、支払い方法を確認できます。
+- [AI Studio API ドキュメント](https://gptimage2api.net/ja/apidoc) - 認証、生成タスク、タスク結果、生成履歴、クレジット確認方法。
+- [About](https://gptimage2api.net/ja/about#contact-us) - About page and contact section.
 
 ## Content Resources
 
-- [Showcase](https://sdanceai.com/showcase) - Public generated media entries.
-- [Prompts](https://sdanceai.com/prompts) - Seedance 2.0 prompt gallery.
-- [Blog](https://sdanceai.com/blog) - Public articles and product/workflow updates.
-- [Glossary](https://sdanceai.com/glossary) - Public glossary entries when available.
-- [Use Cases](https://sdanceai.com/use-cases) - Public use case content when available.
-- [Templates](https://sdanceai.com/templates) - Public template content when available.
-- [Alternatives](https://sdanceai.com/alternatives) - Public alternative pages when available.
-- [Comparisons](https://sdanceai.com/compare) - Public comparison pages when available.
+- [Showcase](https://gptimage2api.net/showcase) - Public generated image entries when available.
+- [Prompts](https://gptimage2api.net/prompts) - GPT Image 2 prompt gallery.
+- [Blog](https://gptimage2api.net/blog) - Public articles and product or workflow updates.
+- [GPT Image API: Build Faster with GptImage2Api.net](https://gptimage2api.net/blog/gpt-image-api) - Published article about GPT image API workflows and GptImage2Api.net usage.
+- [GPT Image API：用 GptImage2Api.net 更快构建 AI 图片功能](https://gptimage2api.net/zh/blog/gpt-image-api) - Chinese version of the published GPT image API article.
+- [GPT Image API：GptImage2Api.net で AI 画像機能をすばやく構築する](https://gptimage2api.net/ja/blog/gpt-image-api) - Japanese version of the published GPT image API article.
 
-Published CMS detail pages may appear in the sitemap only when they are published and public.
+Published CMS detail pages should only be treated as public when they are published, visible as public content, and included in the sitemap.
 
 ## Contact / Social Links
 
-- [Support email](mailto:support@sdanceai.com)
-- [GitHub prompt repository](https://github.com/sdanceai/awesome_seedance2_prompt)
+- [GitHub](https://github.com/gpt-image2)
+- [Support email](mailto:support@gptimage2api.net)
 
-No Twitter, YouTube, Instagram, TikTok, or Discord URL is listed here because no fixed public URL is configured in `siteConfig`.
+No Twitter, YouTube, Instagram, TikTok, or fixed Discord URL is listed here because no fixed public URL is configured in `siteConfig`.
 
 ## Legal Pages
 
-- [Privacy Policy](https://sdanceai.com/privacy-policy)
-- [Terms of Service](https://sdanceai.com/terms-of-service)
-- [Refund Policy](https://sdanceai.com/refund-policy)
+- [Privacy Policy](https://gptimage2api.net/privacy-policy)
+- [Terms of Service](https://gptimage2api.net/terms-of-service)
+- [Refund Policy](https://gptimage2api.net/refund-policy)
 
 ## Notes for AI Assistants
 
-- Use [https://sdanceai.com](https://sdanceai.com) for English/default pages.
+- Use [https://gptimage2api.net](https://gptimage2api.net) for English/default pages.
 - Use `/zh` and `/ja` prefixes only for the configured non-default locales.
+- Do not use `/en` for default English pages.
 - Do not invent unlisted locales or pages.
-- Do not cite non-public or internal service paths as public documentation pages.
-- Do not include static build asset paths.
+- Do not cite non-public account, infrastructure, payment, callback, error, or build asset paths as public pages.
+- Do not include draft, restricted, unpublished, or internal content.

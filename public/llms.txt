@@ -1,27 +1,26 @@
-# Sdance AI
+# GptImage2Api
 
-Sdance AI is an independent AI creation website for Seedance video workflows, image generation/editing, public examples, prompts, pricing, and developer documentation.
+GptImage2Api provides GPT Image 2 API access for developers, startups, and businesses to generate high-quality AI images through simple REST endpoints.
 
 ## Primary Pages
 
-- [Home](https://sdanceai.com)
-- [Features](https://sdanceai.com/#features)
-- [Showcase](https://sdanceai.com/showcase)
-- [Prompts](https://sdanceai.com/prompts)
-- [Blog](https://sdanceai.com/blog)
-- [Pricing](https://sdanceai.com/pricing)
-- [API Docs](https://sdanceai.com/apidoc)
-- [Seedance 2](https://sdanceai.com/seedance2)
-- [Seedance 1.5](https://sdanceai.com/seedance-15)
-- [About / Contact](https://sdanceai.com/about#contact-us)
+- [Home](https://gptimage2api.net)
+- [Features](https://gptimage2api.net/#features)
+- [Showcase](https://gptimage2api.net/showcase)
+- [Prompts](https://gptimage2api.net/prompts)
+- [Blog](https://gptimage2api.net/blog)
+- [Pricing](https://gptimage2api.net/pricing)
+- [API Docs](https://gptimage2api.net/apidoc)
+- [About / Contact](https://gptimage2api.net/about#contact-us)
 
 ## Localized Versions
 
-- [English](https://sdanceai.com) - default locale
-- [中文](https://sdanceai.com/zh)
-- [日本語](https://sdanceai.com/ja)
+- [English](https://gptimage2api.net) - default locale
+- [中文](https://gptimage2api.net/zh)
+- [日本語](https://gptimage2api.net/ja)
 
 ## Resources
 
-- [GitHub prompt repository](https://github.com/sdanceai/awesome_seedance2_prompt)
-- [Support email](mailto:support@sdanceai.com)
+- [GPT Image API blog article](https://gptimage2api.net/blog/gpt-image-api)
+- [GitHub](https://github.com/gpt-image2)
+- [Support email](mailto:support@gptimage2api.net)
