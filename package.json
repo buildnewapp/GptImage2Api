@@ -11,6 +11,8 @@
     "update:next": "pnpm i next@latest react@latest react-dom@latest @next/env@latest @next/bundle-analyzer@latest @types/react@latest @types/react-dom@latest",
     "env:clear": "node scripts/clear-env-from-github.mjs",
     "env:sync": "node scripts/sync-env-to-github.mjs",
+    "prompts:sync-youmind": "tsx scripts/sync-youmind-prompts.ts",
+    "prompts:categorize": "tsx scripts/categorize-prompt-gallery-items.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",

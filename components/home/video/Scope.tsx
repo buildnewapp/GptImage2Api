@@ -36,11 +36,11 @@ const accentMap = {
 };
 
 const footerAvatars = [
-  "/images/users/user1.jpeg",
-  "/images/users/user2.jpeg",
-  "/images/users/user3.png",
-  "/logo.png",
-  "/images/google.svg",
+  "/images/users/1.png",
+  "/images/users/2.png",
+  "/images/users/3.png",
+  "/images/users/4.png",
+  "/images/users/5.png"
 ];
 
 export default function Scope({ section }: ScopeProps) {

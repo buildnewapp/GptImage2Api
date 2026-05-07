@@ -16,7 +16,8 @@
   },
   "prompts": {
     "allCategories": "All Categories",
-    "searchPlaceholder": "Search title, description, prompt",
+    "allModels": "All Models",
+    "searchPlaceholder": "Search title, description, prompt, model",
     "search": "Search",
     "resultCount": "Results: {count}",
     "emptyDescription": "Try another keyword or category.",
@@ -28,6 +29,7 @@
     "inputAudios": "Input Audios",
     "author": "Author",
     "unknownAuthor": "-",
-    "language": "Language"
+    "language": "Language",
+    "source": "Source"
   }
 }

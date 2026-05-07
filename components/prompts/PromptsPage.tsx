@@ -40,7 +40,7 @@ function PromptPreview({ item }: { item: PromptGalleryItem }) {
 
   if (!media) {
     return (
-      <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-4 text-sm leading-7 text-slate-600 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300">
+      <div className="line-clamp-5 rounded-2xl border border-slate-200/80 bg-white/70 p-4 text-sm leading-7 text-slate-600 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300">
         {item.prompt}
       </div>
     );
@@ -78,7 +78,7 @@ function DetailPreview({ item }: { item: PromptGalleryItem }) {
 
   if (media.type === "image") {
     return (
-      <div className="overflow-hidden rounded-xl border border-slate-200/80 bg-slate-100 dark:border-white/10 dark:bg-slate-900/30">
+      <div className="w-1/2 overflow-hidden rounded-xl border border-slate-200/80 bg-slate-100 dark:border-white/10 dark:bg-slate-900/30">
         <img
           src={resolveMediaUrl(media.src)}
           alt={item.title}
@@ -170,9 +170,11 @@ function PromptMediaBlock({
 function PromptResultsBlock({
   title,
   items,
+  sourceLink,
 }: {
   title: string;
   items: string[];
+  sourceLink?: string | null;
 }) {
   if (items.length === 0) {
     return null;
@@ -189,6 +191,16 @@ function PromptResultsBlock({
         {items.map((item, index) => {
           const type = inferResultMediaType(item);
           const src = resolveMediaUrl(item);
+          const twimgVideoId = item.match(
+            /^https?:\/\/video\.twimg\.com\/(?:amplify_video|ext_tw_video)\/(\d+)\//i,
+          )?.[1];
+          const tweetId =
+            sourceLink?.match(
+              /^https?:\/\/(?:www\.)?(?:twitter\.com|x\.com)\/[^/]+\/status\/(\d+)/i,
+            )?.[1] ?? twimgVideoId;
+          const twitterEmbedUrl = twimgVideoId
+            ? `https://platform.twitter.com/embed/Tweet.html?id=${tweetId}`
+            : null;
 
           return type === "image" ? (
             <div
@@ -199,6 +211,19 @@ function PromptResultsBlock({
                 src={src}
                 alt={`${title} ${index + 1}`}
                 className="w-full object-contain"
+              />
+            </div>
+          ) : twitterEmbedUrl ? (
+            <div
+              key={`result-${index}`}
+              className="overflow-hidden bg-white dark:border-white/10 dark:bg-slate-950"
+            >
+              <iframe
+                src={twitterEmbedUrl}
+                title={`${title} ${index + 1}`}
+                loading="lazy"
+                className="aspect-square w-full"
+                allow="fullscreen; autoplay; encrypted-media; picture-in-picture"
               />
             </div>
           ) : (
@@ -231,6 +256,7 @@ function PromptCard({
     copy: string;
     copied: string;
     noPrompt: string;
+    model: string;
     author: string;
     unknownAuthor: string;
   };
@@ -238,7 +264,7 @@ function PromptCard({
   onCopy: (event: MouseEvent<HTMLButtonElement>, item: PromptGalleryItem) => void;
 }) {
   const authorName = item.author?.name?.trim() || labels.unknownAuthor;
-  const authorLink = item.author?.link?.trim() || "";
+  const authorLink = item.sourceLink?.trim() || item.author?.link?.trim() || "";
 
   return (
     <article
@@ -263,6 +289,11 @@ function PromptCard({
               {category}
             </span>
           ))}
+          {item.model ? (
+            <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 dark:bg-white/10 dark:text-slate-200">
+              {labels.model}: {item.model}
+            </span>
+          ) : null}
         </div>
 
         <div className="space-y-2">
@@ -353,12 +384,22 @@ function PromptDetailModal({
     results: string;
     model: string;
     language: string;
+    source: string;
     author: string;
     unknownAuthor: string;
   };
   onClose: () => void;
   onCopy: (event: MouseEvent<HTMLButtonElement>, item: PromptGalleryItem) => void;
 }) {
+  const sourceLink = item.sourceLink?.trim() || "";
+  const sourcePlatform =
+    item.sourcePlatform?.trim() ||
+    (sourceLink.includes("twitter.com") || sourceLink.includes("x.com")
+      ? "X"
+      : "-");
+  const detailAuthorName = item.author?.name || labels.unknownAuthor;
+  const detailAuthorLink = item.author?.link?.trim() || "";
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/60 p-2 sm:items-center sm:p-4"
@@ -367,7 +408,7 @@ function PromptDetailModal({
       <div
         role="dialog"
         aria-modal="true"
-        className="max-h-[94vh] w-full max-w-5xl overflow-hidden rounded-[calc(var(--radius)+0.45rem)] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.97)_0%,rgba(245,248,252,0.95)_100%)] shadow-[0_28px_80px_-44px_rgba(15,23,42,0.42)] dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(31,41,55,0.92)_0%,rgba(15,23,42,0.95)_100%)]"
+        className="max-h-[80vh] w-full max-w-5xl overflow-hidden rounded-[calc(var(--radius)+0.45rem)] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.97)_0%,rgba(245,248,252,0.95)_100%)] shadow-[0_28px_80px_-44px_rgba(15,23,42,0.42)] dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(31,41,55,0.92)_0%,rgba(15,23,42,0.95)_100%)]"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-slate-200/80 px-4 py-3 dark:border-white/10 sm:px-6">
@@ -383,7 +424,7 @@ function PromptDetailModal({
           </button>
         </div>
 
-        <div className="max-h-[calc(94vh-72px)] space-y-4 overflow-y-auto p-4 sm:p-6">
+        <div className="max-h-[calc(80vh-72px)] space-y-4 overflow-y-auto p-4 sm:p-6">
           <div className="flex flex-wrap gap-2">
             {item.categories.map((category) => (
               <span
@@ -393,6 +434,42 @@ function PromptDetailModal({
                 {category}
               </span>
             ))}
+            {item.model ? (
+              <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 dark:bg-white/10 dark:text-slate-200">
+                {labels.model}: {item.model}
+              </span>
+            ) : null}
+            <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 dark:bg-white/10 dark:text-slate-200">
+              {labels.language}: {item.language || "-"}
+            </span>
+            {detailAuthorLink ? (
+              <a
+                href={detailAuthorLink}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-sky-700 underline underline-offset-4 dark:bg-white/10 dark:text-sky-300"
+              >
+                {labels.author}: {detailAuthorName}
+              </a>
+            ) : (
+              <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 dark:bg-white/10 dark:text-slate-200">
+                {labels.author}: {detailAuthorName}
+              </span>
+            )}
+            {sourceLink ? (
+              <a
+                href={sourceLink}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-sky-700 underline underline-offset-4 dark:bg-white/10 dark:text-sky-300"
+              >
+                {labels.source}: {sourcePlatform}
+              </a>
+            ) : (
+              <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 dark:bg-white/10 dark:text-slate-200">
+                {labels.source}: {sourcePlatform}
+              </span>
+            )}
           </div>
 
           {item.description ? (
@@ -401,15 +478,13 @@ function PromptDetailModal({
             </p>
           ) : null}
 
-          <div className="grid gap-2 rounded-[1.2rem] border border-slate-200/80 bg-white/75 p-4 text-sm text-slate-700 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-200 sm:grid-cols-3">
-            <div>{labels.model}: {item.model || "-"}</div>
-            <div>{labels.language}: {item.language || "-"}</div>
-            <div>{labels.author}: {item.author?.name || labels.unknownAuthor}</div>
-          </div>
-
           <DetailPreview item={item} />
 
-          <PromptResultsBlock title={labels.results} items={item.results} />
+          <PromptResultsBlock
+            title={labels.results}
+            items={item.results}
+            sourceLink={item.sourceLink}
+          />
 
           <div className="rounded-[1.4rem] border border-slate-200/80 bg-white/75 p-4 dark:border-white/10 dark:bg-white/[0.04]">
             <div className="mb-3 flex items-center justify-between gap-3">
@@ -449,11 +524,13 @@ function PromptDetailModal({
 export default function PromptsPage({
   items,
   categories,
+  models,
   totalCount,
   pageSize,
 }: {
   items: PromptGalleryItem[];
   categories: string[];
+  models: string[];
   totalCount: number;
   pageSize: number;
 }) {
@@ -465,6 +542,7 @@ export default function PromptsPage({
 
   const qParam = (searchParams.get("q") || "").trim();
   const categoryParam = searchParams.get("category") || "all";
+  const modelParam = searchParams.get("model") || "all";
   const pageParam = parsePositiveInt(searchParams.get("page"), 1);
 
   const [keywordInput, setKeywordInput] = useState(qParam);
@@ -475,6 +553,8 @@ export default function PromptsPage({
     categoryParam !== "all" && categories.includes(categoryParam)
       ? categoryParam
       : "all";
+  const activeModel =
+    modelParam !== "all" && models.includes(modelParam) ? modelParam : "all";
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
   const currentPage = Math.min(Math.max(pageParam, 1), totalPages);
 
@@ -482,6 +562,7 @@ export default function PromptsPage({
     next: {
       q?: string;
       category?: string;
+      model?: string;
       page?: number;
     },
     replace = false,
@@ -490,6 +571,7 @@ export default function PromptsPage({
 
     const nextKeyword = next.q ?? qParam;
     const nextCategory = next.category ?? activeCategory;
+    const nextModel = next.model ?? activeModel;
     const nextPage = next.page ?? currentPage;
 
     if (nextKeyword) {
@@ -502,6 +584,12 @@ export default function PromptsPage({
       params.set("category", nextCategory);
     } else {
       params.delete("category");
+    }
+
+    if (nextModel && nextModel !== "all") {
+      params.set("model", nextModel);
+    } else {
+      params.delete("model");
     }
 
     if (nextPage > 1) {
@@ -537,17 +625,31 @@ export default function PromptsPage({
       return;
     }
 
-    if (currentPage !== pageParam || activeCategory !== categoryParam) {
+    if (
+      currentPage !== pageParam ||
+      activeCategory !== categoryParam ||
+      activeModel !== modelParam
+    ) {
       updateUrl(
         {
           q: qParam,
           category: activeCategory,
+          model: activeModel,
           page: currentPage,
         },
         true,
       );
     }
-  }, [activeCategory, activeItem, categoryParam, currentPage, pageParam, qParam]);
+  }, [
+    activeCategory,
+    activeItem,
+    activeModel,
+    categoryParam,
+    currentPage,
+    modelParam,
+    pageParam,
+    qParam,
+  ]);
 
   useEffect(() => {
     if (!activeItem) {
@@ -616,35 +718,69 @@ export default function PromptsPage({
 
       <section className="sticky top-20 z-30 border-y border-slate-200/70 bg-[color-mix(in_srgb,hsl(var(--background))_82%,white_18%)]/85 backdrop-blur-2xl dark:border-white/10 dark:bg-[color-mix(in_srgb,hsl(var(--background))_86%,black_14%)]/82">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 px-3 py-3 sm:px-6 lg:px-8">
-          <div
-            className="flex flex-wrap items-center gap-2 pb-1 touch-pan-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-x" }}
-          >
-            <button
-              type="button"
-              onClick={() => updateUrl({ category: "all", page: 1 })}
-              className={`inline-flex h-9 shrink-0 items-center rounded-full px-2 text-xs font-semibold transition-all ${
-                activeCategory === "all"
-                  ? "bg-[linear-gradient(135deg,#1f2a44_0%,#253a64_100%)] text-white"
-                  : "border border-slate-200/80 bg-white/80 text-slate-600 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300"
-              }`}
+          <div className="flex flex-col gap-2">
+            <div
+              className="flex flex-nowrap items-center gap-2 overflow-x-auto pb-1 touch-pan-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-x" }}
             >
-              {tPrompts("allCategories")}
-            </button>
-            {categories.map((category) => (
               <button
-                key={category}
                 type="button"
-                onClick={() => updateUrl({ category, page: 1 })}
+                onClick={() => updateUrl({ category: "all", page: 1 })}
                 className={`inline-flex h-9 shrink-0 items-center rounded-full px-2 text-xs font-semibold transition-all ${
-                  activeCategory === category
-                    ? "bg-[linear-gradient(135deg,#2d6cdf_0%,#39a7d8_100%)] text-white"
+                  activeCategory === "all"
+                    ? "bg-[linear-gradient(135deg,#1f2a44_0%,#253a64_100%)] text-white"
                     : "border border-slate-200/80 bg-white/80 text-slate-600 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300"
                 }`}
               >
-                {category}
+                {tPrompts("allCategories")}
               </button>
-            ))}
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() => updateUrl({ category, page: 1 })}
+                  className={`inline-flex h-9 shrink-0 items-center rounded-full px-2 text-xs font-semibold transition-all ${
+                    activeCategory === category
+                      ? "bg-[linear-gradient(135deg,#2d6cdf_0%,#39a7d8_100%)] text-white"
+                      : "border border-slate-200/80 bg-white/80 text-slate-600 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300"
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+            {models.length > 0 ? (
+              <div
+                className="flex flex-nowrap items-center gap-2 overflow-x-auto pb-1 touch-pan-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-x" }}
+              >
+                <button
+                  type="button"
+                  onClick={() => updateUrl({ model: "all", page: 1 })}
+                  className={`inline-flex h-9 shrink-0 items-center rounded-full px-2 text-xs font-semibold transition-all ${
+                    activeModel === "all"
+                      ? "bg-slate-900 text-white dark:bg-white dark:text-slate-950"
+                      : "border border-slate-200/80 bg-white/80 text-slate-600 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300"
+                  }`}
+                >
+                  {tPrompts("allModels")}
+                </button>
+                {models.map((model) => (
+                  <button
+                    key={model}
+                    type="button"
+                    onClick={() => updateUrl({ model, page: 1 })}
+                    className={`inline-flex h-9 shrink-0 items-center rounded-full px-2 text-xs font-semibold transition-all ${
+                      activeModel === model
+                        ? "bg-slate-900 text-white dark:bg-white dark:text-slate-950"
+                        : "border border-slate-200/80 bg-white/80 text-slate-600 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300"
+                    }`}
+                  >
+                    {model}
+                  </button>
+                ))}
+              </div>
+            ) : null}
           </div>
 
           <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2">
@@ -702,6 +838,7 @@ export default function PromptsPage({
                       copy: tPrompts("copy"),
                       copied: tPrompts("copied"),
                       noPrompt: tPrompts("noPrompt"),
+                      model: tPromptsPage("detail.model"),
                       author: tPrompts("author"),
                       unknownAuthor: tPrompts("unknownAuthor"),
                     }}
@@ -758,6 +895,7 @@ export default function PromptsPage({
             results: tPromptsPage("detail.result"),
             model: tPromptsPage("detail.model"),
             language: tPrompts("language"),
+            source: tPrompts("source"),
             author: tPrompts("author"),
             unknownAuthor: tPrompts("unknownAuthor"),
           }}

@@ -16,7 +16,8 @@
   },
   "prompts": {
     "allCategories": "全部分类",
-    "searchPlaceholder": "搜索标题、简介、Prompt",
+    "allModels": "全部模型",
+    "searchPlaceholder": "搜索标题、简介、Prompt、模型",
     "search": "搜索",
     "resultCount": "结果：{count}",
     "emptyDescription": "可以换个关键词或切换分类再试。",
@@ -28,6 +29,7 @@
     "inputAudios": "输入音频",
     "author": "作者",
     "unknownAuthor": "-",
-    "language": "语言"
+    "language": "语言",
+    "source": "来源"
   }
 }

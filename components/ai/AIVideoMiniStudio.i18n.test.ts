@@ -19,3 +19,13 @@ test("mini studio reads hero form copy through Landing.Hero translations", () =>
   assert.doesNotMatch(source, /getSeedancePricingExplanation/);
   assert.doesNotMatch(source, /pricingExplanation/);
 });
+
+test("mini studio groups model versions under non-selectable family labels", () => {
+  const source = readFileSync(
+    path.join(projectRoot, "components/ai/AIVideoMiniStudio.tsx"),
+    "utf8",
+  );
+
+  assert.match(source, /<optgroup/);
+  assert.match(source, /label=\{family\.label\}/);
+});
