@@ -153,6 +153,7 @@ export async function getAdminPromptGalleryItems(
   const status = input?.status?.trim() || "";
   const language = input?.language?.trim() || "";
   const category = input?.category?.trim() || "";
+  const model = input?.model?.trim() || "";
   const author = input?.author?.trim() || "";
   const title = input?.title?.trim() || "";
   const prompt = input?.prompt?.trim() || "";
@@ -180,6 +181,10 @@ export async function getAdminPromptGalleryItems(
     conditions.push(
       sql`${promptGalleryItems.categories}::text ilike ${`%${category}%`}`,
     );
+  }
+
+  if (model) {
+    conditions.push(ilike(promptGalleryItems.model, `%${model}%`));
   }
 
   if (author) {
@@ -230,6 +235,16 @@ export async function getAdminPromptGalleryItems(
       allItems.map((item) => item.author?.name?.trim() || "").filter(Boolean),
     ),
   ).sort((left, right) => left.localeCompare(right));
+  const models = collectPromptGalleryModels(allItems);
+  const modelCounts = models
+    .map((model) => ({
+      model,
+      count: allItems.filter((item) => item.model.trim() === model).length,
+    }))
+    .sort(
+      (left, right) =>
+        right.count - left.count || left.model.localeCompare(right.model),
+    );
 
   return {
     items: rows.map(mapPromptGalleryItem),
@@ -240,12 +255,14 @@ export async function getAdminPromptGalleryItems(
       draft: allItems.filter((item) => item.status === "draft").length,
       offline: allItems.filter((item) => item.status === "offline").length,
       featured: allItems.filter((item) => item.featured).length,
+      models: modelCounts,
     },
     filterOptions: {
       languages: Array.from(
         new Set(allItems.map((item) => item.language.trim()).filter(Boolean)),
       ).sort((left, right) => left.localeCompare(right)),
       categories: collectPromptGalleryCategories(allItems),
+      models,
       authors,
     },
   };

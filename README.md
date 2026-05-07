@@ -183,7 +183,7 @@ git stash pop
 方式一，使用提示词，推荐，修改更全面
 
 ```
-[SKILL.md](.claude/skills/create-new-site/SKILL.md)  是干什么的？
+create-new-site  是干什么的？
 -------------------------------------------
 产品名  tikdek，域名 tikdek.com， 邮箱 support@tikdek.com， 描述：ai 视频、图片生成平台，提供免费使用机会，提供实名上主流模型，价格低，提供稳定的 api 服务
 核心关键词：ai video generator，ai image genrator, ai video api, ai image api
