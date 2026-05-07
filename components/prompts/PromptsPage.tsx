@@ -749,38 +749,6 @@ export default function PromptsPage({
                 </button>
               ))}
             </div>
-            {models.length > 0 ? (
-              <div
-                className="flex flex-nowrap items-center gap-2 overflow-x-auto pb-1 touch-pan-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-                style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-x" }}
-              >
-                <button
-                  type="button"
-                  onClick={() => updateUrl({ model: "all", page: 1 })}
-                  className={`inline-flex h-9 shrink-0 items-center rounded-full px-2 text-xs font-semibold transition-all ${
-                    activeModel === "all"
-                      ? "bg-slate-900 text-white dark:bg-white dark:text-slate-950"
-                      : "border border-slate-200/80 bg-white/80 text-slate-600 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300"
-                  }`}
-                >
-                  {tPrompts("allModels")}
-                </button>
-                {models.map((model) => (
-                  <button
-                    key={model}
-                    type="button"
-                    onClick={() => updateUrl({ model, page: 1 })}
-                    className={`inline-flex h-9 shrink-0 items-center rounded-full px-2 text-xs font-semibold transition-all ${
-                      activeModel === model
-                        ? "bg-slate-900 text-white dark:bg-white dark:text-slate-950"
-                        : "border border-slate-200/80 bg-white/80 text-slate-600 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300"
-                    }`}
-                  >
-                    {model}
-                  </button>
-                ))}
-              </div>
-            ) : null}
           </div>
 
           <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2">
