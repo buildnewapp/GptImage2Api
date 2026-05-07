@@ -34,6 +34,12 @@
       "Github": {
         "errorTitle": "エラーが発生しました",
         "errorDescription": "GitHubアカウントでのログインに失敗しました。お手数ですが、再度お試しください。"
+      },
+      "Password": {
+        "successTitle": "ログインに成功しました",
+        "successDescription": "おかえりなさい。",
+        "errorTitle": "エラーが発生しました",
+        "errorDescription": "メールアドレスまたはパスワードが正しくありません。再度お試しください。"
       }
     },
     "signInMethods": {
@@ -43,6 +49,7 @@
       "signInWithEmail": "メールアドレスでログイン",
       "otpMethod": "認証コード",
       "magicLinkMethod": "マジックリンク",
+      "passwordMethod": "パスワード",
       "sendOTP": "認証コードを送信",
       "verifyOTP": "認証する",
       "resendOTP": "コードが届かない場合は再送信",

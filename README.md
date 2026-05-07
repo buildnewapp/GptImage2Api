@@ -1,7 +1,7 @@
 ## dev
 
 ### 自动创建项目
-./script/create-site.sh tikdek-web /Users/syx/WebstormProjects/tikdek/tikdek-web
+./scripts/create-site.sh tikdek-web /Users/syx/WebstormProjects/tikdek/tikdek-web
 
 ### create repo
 cd new-project-name
@@ -127,6 +127,9 @@ https://www.sandbox.paypal.com/billing/overview
 3 自动创建订阅产品
 提供PAYPAL_CLIENT_ID、PAYPAL_CLIENT_SECRET 让 ai 使用脚本创建产品+订阅计划，获取计划 id
 pnpm db:sync-paypal-products
+PAY_ENV=test pnpm db:sync-paypal-products -- --force
+PAY_ENV=live pnpm db:sync-paypal-products -- --force
+
 
 #### 真实环境
 1 新建应用，登录主账户
@@ -153,7 +156,10 @@ MODERATION=creem
 
 ### creem
 回调地址
-https://gptimage2api.net/api/paypal/notify
+https://many-fine-bullfrog.ngrok-free.app/api/creem/webhook
+https://xxxx/api/creem/webhook
+PAY_ENV=test pnpm db:sync-creem-products -- --force
+PAY_ENV=live pnpm db:sync-creem-products -- --force
 # moderation provider: none | creem
 MODERATION=creem
 
@@ -183,7 +189,7 @@ git stash pop
 方式一，使用提示词，推荐，修改更全面
 
 ```
-[SKILL.md](.claude/skills/create-new-site/SKILL.md)  是干什么的？
+create-new-site  是干什么的？
 -------------------------------------------
 产品名  tikdek，域名 tikdek.com， 邮箱 support@tikdek.com， 描述：ai 视频、图片生成平台，提供免费使用机会，提供实名上主流模型，价格低，提供稳定的 api 服务
 核心关键词：ai video generator，ai image genrator, ai video api, ai image api

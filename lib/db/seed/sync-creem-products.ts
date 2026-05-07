@@ -43,7 +43,12 @@ function hasExistingCreemProductId(value: string | null | undefined) {
 }
 
 function isCreemPlanProvider(value: unknown) {
-  return typeof value === 'string' && value.toLowerCase() === 'creem'
+  if (typeof value !== 'string') {
+    return false
+  }
+
+  const provider = value.toLowerCase()
+  return provider === 'creem' || provider === 'all'
 }
 
 function buildCreateParamsFromPlan(plan: (typeof pricingPlans)[number]): CreemProductCreateParams {

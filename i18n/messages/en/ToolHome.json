@@ -1,0 +1,417 @@
+{
+  "hero": {
+    "badge": "JsonTranslate · Multilingual File Translation Workspace",
+    "eyebrow": "Built for modern product teams",
+    "title": {
+      "line1": "Translate multilingual files",
+      "line2": "faster, safer, and with less work"
+    },
+    "description": "JsonTranslate supports JSON, Markdown, and TXT inputs. For JSON, it detects added, modified, and deleted content at the key level so only real changes are translated. Markdown and TXT go through the same workflow, making document translation easier to manage in one place.",
+    "primaryCta": "Open JsonAIStudio",
+    "secondaryCta": "View pricing",
+    "stats": [
+      {
+        "label": "Input methods",
+        "value": "Upload / Drag / Paste",
+        "description": "Bring JSON, Markdown, TXT, and other plain-text content directly into the workspace."
+      },
+      {
+        "label": "Translation modes",
+        "value": "Incremental / Full / File / Project",
+        "description": "Cover single-file edits, project-scale delivery, and full re-translation workflows."
+      },
+      {
+        "label": "Sync flow",
+        "value": "Web Studio + CLI",
+        "description": "Keep one continuous translation loop from the hosted workspace to your local repository."
+      }
+    ],
+    "preview": {
+      "eyebrow": "Workspace preview",
+      "title": "Preview the latest responsive Web Studio",
+      "modeBadge": "Hosted by us / Bring your own key",
+      "studioLabel": "JsonAIStudio",
+      "studioTitle": "A responsive Web Studio designed for translation tasks",
+      "chips": [
+        "marketing-site",
+        "Source locale: en",
+        "File type: json",
+        "Target locales: zh-CN, ja-JP, de-DE"
+      ],
+      "actions": [
+        {
+          "key": "upload",
+          "label": "Upload"
+        },
+        {
+          "key": "projectSettings",
+          "label": "Project settings"
+        },
+        {
+          "key": "modelSettings",
+          "label": "Model settings"
+        },
+        {
+          "key": "taskCenter",
+          "label": "Task center"
+        },
+        {
+          "key": "startTranslation",
+          "label": "Start translation",
+          "primary": true
+        },
+        {
+          "key": "downloadProject",
+          "label": "Download project"
+        }
+      ],
+      "browser": {
+        "eyebrow": "Project file browser",
+        "title": "File tree",
+        "projectBadge": "demo1",
+        "tree": [
+          "marketing-site",
+          "i18n/messages/en/common.json",
+          "i18n/messages/en/pricing.json",
+          "i18n/messages/en/dashboard.json",
+          "docs/help/faq.md"
+        ],
+        "activeTreeItem": "i18n/messages/en/common.json"
+      },
+      "source": {
+        "eyebrow": "Source editor",
+        "title": "en / common.json",
+        "badge": "Diff: 2 added, 1 changed",
+        "tags": ["JSON", "Incremental mode", "Keep structure", "Auto compare"],
+        "code": "{\n  \"hero\": {\n    \"title\": \"Ship localization faster\",\n    \"cta\": \"Start now\"\n  },\n  \"pricing\": {\n    \"headline\": \"Flexible plans\",\n    \"badge\": \"For global teams\"\n  }\n}"
+      },
+      "target": {
+        "eyebrow": "Target results",
+        "title": "Multi-language tabs and side-by-side output",
+        "badge": "Task status: Running 82%",
+        "tabs": [
+          {
+            "locale": "zh-CN",
+            "active": true
+          },
+          {
+            "locale": "ja-JP",
+            "active": false
+          },
+          {
+            "locale": "de-DE",
+            "active": false
+          }
+        ],
+        "tags": ["Queued", "Running", "Pausable", "Resumable", "ZIP export"],
+        "code": "{\n  \"hero\": {\n    \"title\": \"更快交付本地化版本\",\n    \"cta\": \"立即开始\"\n  },\n  \"pricing\": {\n    \"headline\": \"为全球化团队准备的灵活套餐\",\n    \"badge\": \"适合长期维护项目\"\n  }\n}"
+      },
+      "summary": [
+        "Top-level actions keep upload, settings, task center, translation, and export in one place.",
+        "Project browser, source editor, and target output stay visible together for side-by-side work.",
+        "The layout stacks vertically on mobile and expands into a real three-column workspace on desktop."
+      ]
+    }
+  },
+  "capabilities": {
+    "eyebrow": "Six capabilities",
+    "title": "Six capabilities built around real translation workflows",
+    "description": "From incremental translation and path mapping to task management and CLI sync, every block maps to an actual localization workflow instead of generic marketing language.",
+    "cards": [
+      {
+        "key": "workflow",
+        "title": "Multi-format input and smart incremental translation",
+        "description": "Built for real i18n workflows, not just structured language files. It also handles docs and plain-text content.",
+        "bullets": [
+          "Upload, drag, or paste JSON, Markdown, and TXT files.",
+          "Support file-level incremental translation, full-file translation, project incremental translation, and full-project translation.",
+          "Use Git-diff-like change detection so only added or edited content gets translated."
+        ]
+      },
+      {
+        "key": "folderTree",
+        "title": "Project path mapping and path rules",
+        "description": "This is not a single text box translator. Source files, target files, and directory conventions are managed together at the project level.",
+        "bullets": [
+          "Map project directories and generate corresponding locale files automatically after translation.",
+          "Support common patterns such as locale folders, module folders, and locale suffixes.",
+          "Import or export full projects and deliver zipped results with directory structure preserved."
+        ]
+      },
+      {
+        "key": "languages",
+        "title": "Language coverage and model usage options",
+        "description": "Use the default hosted workflow out of the box, or plug in your team's own model resources and cost strategy.",
+        "bullets": [
+          "Cover 20+ common languages including English, Chinese, Japanese, Korean, French, German, and Spanish.",
+          "Extend to 100+ languages for both core markets and long-tail localization needs.",
+          "Support hosted usage and BYOK to balance unified workflows with flexible configuration."
+        ]
+      },
+      {
+        "key": "upload",
+        "title": "Responsive Web Studio design",
+        "description": "File management, parameter setup, and translation results stay in one UI so review and comparison are easier.",
+        "bullets": [
+          "The top action bar brings translation triggers, project settings, model settings, and upload entry points together.",
+          "The left source pane handles source locale, file path, file type, and original content editing.",
+          "The right result pane shows multiple target locales through tabs for quick comparison."
+        ]
+      },
+      {
+        "key": "taskCenter",
+        "title": "Task center",
+        "description": "For project-level and batch translation workflows, task status, progress, and exceptions are displayed in a dedicated view.",
+        "bullets": [
+          "Track running, queued, paused, completed, and failed tasks in one place.",
+          "Show progress, chunk-level processing state, and exception details for long-running work.",
+          "Pause or resume tasks to improve operational visibility for teams."
+        ]
+      },
+      {
+        "key": "terminal",
+        "title": "Full CLI support across the workflow",
+        "description": "The CLI is not a side entrance. It is the full sync bridge between local codebases and the online workspace.",
+        "bullets": [
+          "Provide the `jsontranslate` npm package for engineering workflows and local development.",
+          "Support init, login, API key setup, upload, translation, status checks, and pull-back of results.",
+          "Create one connected workflow between the Web Studio and the CLI."
+        ]
+      }
+    ]
+  },
+  "mapping": {
+    "eyebrow": "Project path mapping",
+    "title": "Import by project, generate by rule, deliver in the original structure",
+    "description": "JsonTranslate manages file flows at the project level. Translation results no longer need manual path cleanup and can be generated directly into your existing i18n directory conventions.",
+    "bullets": [
+      "Import project-level source files and organize target locale directories according to the original rules after translation.",
+      "Preserve original keys, nesting, and content structure as much as possible during translation so existing i18n organization is not broken.",
+      "Download the full project as a ZIP with the original folder hierarchy preserved for direct engineering write-back or team handoff."
+    ],
+    "pathPatternsEyebrow": "Path patterns",
+    "pathPatterns": [
+      {
+        "title": "Locale folder",
+        "path": "i18n/messages/{locale}/{module}.json"
+      },
+      {
+        "title": "Module folder",
+        "path": "i18n/messages/{module}/{locale}.json"
+      },
+      {
+        "title": "Locale suffix",
+        "path": "i18n/messages/{module}.{locale}.json"
+      }
+    ],
+    "zip": {
+      "title": "Batch delivery and ZIP export",
+      "description": "Export a full directory archive after project translation finishes without flattening the original folder structure. It fits engineering write-back, release delivery, and cross-role collaboration."
+    }
+  },
+  "languageModel": {
+    "badge": "Languages and models",
+    "title": "Cover 20+ common languages and support both hosted usage and BYOK",
+    "description": "Use JsonTranslate AI by default for a ready-to-run workflow, or connect your own API keys and multi-provider models. Teams with existing model budgets, cost controls, or stricter compliance needs can plug in their own strategy.",
+    "cards": [
+      {
+        "key": "languages",
+        "title": "Language coverage",
+        "description": "Built-in support for 20+ common languages including English, Chinese, Japanese, Korean, French, German, Spanish, Portuguese, Russian, and Arabic, with expansion to 100+ languages."
+      },
+      {
+        "key": "official",
+        "title": "Hosted workflow",
+        "description": "Use JsonTranslate AI by default for a more unified experience that suits teams who want to start quickly and manage multilingual work in one place."
+      },
+      {
+        "key": "byok",
+        "title": "BYOK",
+        "description": "Connect your own provider, model, and API key. When you use your own model resources, you can align with existing team cost strategy instead of relying on platform credit consumption."
+      }
+    ]
+  },
+  "workspace": {
+    "eyebrow": "Web Studio",
+    "title": "A responsive workspace keeps files, parameters, and results in one interface",
+    "description": "JsonAIStudio uses a translation-first responsive workspace layout. Whether you edit one file or run project-scale batch translation, the whole workflow stays in one interface.",
+    "columns": [
+      {
+        "title": "Top action bar",
+        "description": "Centralize translation triggers, project settings, model settings, upload, and import operations.",
+        "points": [
+          "Start translation",
+          "Project settings",
+          "Model settings",
+          "Upload and import"
+        ]
+      },
+      {
+        "title": "Left source pane",
+        "description": "Configure source locale, file path, and file type, then edit or inspect original content and change details.",
+        "points": [
+          "Source locale",
+          "File path",
+          "Edit / inspect source",
+          "Change detection"
+        ]
+      },
+      {
+        "title": "Right target pane",
+        "description": "Switch across target locales through tabs and compare results side by side before exporting or syncing.",
+        "points": [
+          "Locale tabs",
+          "Side-by-side review",
+          "Export / sync next",
+          "Project-level actions"
+        ]
+      }
+    ],
+    "taskCenter": {
+      "eyebrow": "Task center",
+      "title": "Status management and scheduling entry point for batch translation",
+      "statuses": [
+        {
+          "key": "running",
+          "label": "Running",
+          "detail": "Show current progress, processed chunks, and remaining locale tasks."
+        },
+        {
+          "key": "queued",
+          "label": "Queued",
+          "detail": "Useful for project-scale batch work with one shared execution queue."
+        },
+        {
+          "key": "paused",
+          "label": "Paused",
+          "detail": "Interrupt long-running tasks and resume them later when needed."
+        },
+        {
+          "key": "failed",
+          "label": "Failed",
+          "detail": "Keep exception details and task context so issues are easier to investigate."
+        }
+      ],
+      "pauseAction": "Pause running or queued tasks",
+      "resumeAction": "Resume paused tasks"
+    }
+  },
+  "cli": {
+    "eyebrow": "CLI",
+    "title": "Web and CLI stay connected as one localizable delivery loop",
+    "description": "JsonTranslate does not treat the CLI as a side feature. It is designed as the full synchronization path between your local repository and the online translation workspace.",
+    "commands": [
+      "jsontranslate login",
+      "jsontranslate auth:apikey",
+      "jsontranslate init",
+      "jsontranslate push",
+      "jsontranslate translate",
+      "jsontranslate status",
+      "jsontranslate pull"
+    ],
+    "steps": [
+      {
+        "step": "Step 01",
+        "title": "Initialize the local project",
+        "description": "Configure project name, source locale, target locales, root directory, and path pattern to create a syncable translation context for the codebase."
+      },
+      {
+        "step": "Step 02",
+        "title": "Upload local files and start translation",
+        "description": "Push source files to the server for unified comparison and processing, then run incremental or full translation by file or by project."
+      },
+      {
+        "step": "Step 03",
+        "title": "Check status and manage tasks",
+        "description": "Use the CLI or task center to track queued, running, paused, and completed states so execution cadence stays visible."
+      },
+      {
+        "step": "Step 04",
+        "title": "Pull the latest translation results",
+        "description": "Sync server-side results back into the local project tree and keep the Web and CLI workflow aligned."
+      }
+    ]
+  },
+  "pricing": {
+    "eyebrow": "Plans",
+    "title": "Choose the setup that fits your team",
+    "description": "Start quickly with the hosted platform mode, or combine custom models, project path mapping, and CLI sync to match your team's resources."
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Frequently asked questions",
+    "description": "These answers map directly to the current JsonTranslate workflow, including incremental translation, project path mapping, task scheduling, and CLI sync.",
+    "items": [
+      {
+        "question": "What file formats does JsonTranslate support?",
+        "answer": "JsonTranslate currently supports JSON, Markdown, and TXT inputs, so teams can translate i18n files, docs, and other plain-text content in one workflow."
+      },
+      {
+        "question": "Can JsonTranslate translate only the JSON keys that changed?",
+        "answer": "Yes. For JSON files, JsonTranslate detects added, modified, and deleted content at the key level so incremental translation jobs focus on real changes instead of reprocessing the whole file."
+      },
+      {
+        "question": "Can I run translation for a full project instead of a single file?",
+        "answer": "Yes. You can choose file-level incremental or full translation, and you can also run project-level incremental or full-project translation when you need broader delivery."
+      },
+      {
+        "question": "How does JsonTranslate handle i18n path mapping?",
+        "answer": "Path mapping is handled at the project level. You define how source and target files should be organized, and JsonTranslate can generate output using patterns such as locale folders, module folders, or locale suffixes."
+      },
+      {
+        "question": "Can I import or export translated files as a ZIP?",
+        "answer": "Yes. JsonTranslate preserves directory structure for project workflows, and finished translation results can be exported as a ZIP without flattening the original hierarchy."
+      },
+      {
+        "question": "Which languages can I translate into?",
+        "answer": "The hosted workflow covers 20+ common languages out of the box and can extend to 100+ languages for broader localization needs."
+      },
+      {
+        "question": "Do I have to use the hosted JsonTranslate AI workflow?",
+        "answer": "No. The hosted workflow is the fastest way to start, but it is not the only option if your team already has its own model access or API setup."
+      },
+      {
+        "question": "Can I bring my own API key or model provider?",
+        "answer": "Yes. JsonTranslate supports BYOK, so you can connect your own provider, model, and API key instead of relying only on the default hosted setup."
+      },
+      {
+        "question": "How does the task center help with batch translation?",
+        "answer": "The task center keeps queued, running, paused, completed, and failed jobs visible in one place, which makes long-running or project-scale batches easier to track and schedule."
+      },
+      {
+        "question": "Is there a CLI for local repositories?",
+        "answer": "Yes. The `jsontranslate` CLI supports init, login, API key setup, upload, translation, status checks, and pull so local repositories can stay connected to the online workspace."
+      },
+      {
+        "question": "How do I sync translated files back into my project?",
+        "answer": "After translation finishes, you can pull the latest results back into your local project tree or export the translated project as a ZIP for review and engineering write-back."
+      },
+      {
+        "question": "Can I start small before translating the whole project?",
+        "answer": "Yes. Many teams begin with one file or one module, confirm path rules and model settings, and then expand to project-level translation once the workflow looks right."
+      }
+    ]
+  },
+  "audience": {
+    "eyebrow": "Who it is for",
+    "title": "Built for engineering and localization teams that maintain multilingual projects over time",
+    "description": "If you care about more than one-off translation and need structure, incremental updates, batch delivery, and local synchronization, this workflow is better suited to long-lived multilingual collaboration.",
+    "items": [
+      "Frontend and full-stack teams managing multilingual i18n files",
+      "SaaS teams that maintain project directory structures over the long term",
+      "Localization teams focused on incremental efficiency and batch delivery",
+      "Engineering teams that want online translation capability wired into local development workflows"
+    ]
+  },
+  "contact": {
+    "badge": "Contact us",
+    "title": "Questions about product capabilities, project workflows, CLI integration, or model support?",
+    "description": "Talk to JsonTranslate directly. Whether you are evaluating i18n file translation, project-level path mapping, or local repository sync workflows, you can continue through the website or technical support channel.",
+    "websiteLabel": "Official website",
+    "websiteUrl": "https://jsontranslate.org",
+    "supportLabel": "Technical support",
+    "supportEmail": "support@jsontranslate.org",
+    "primaryCta": "Try it now",
+    "secondaryCta": "View plans"
+  }
+}

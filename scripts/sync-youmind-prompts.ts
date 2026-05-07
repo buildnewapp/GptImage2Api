@@ -7,9 +7,13 @@
  pnpm prompts:sync-youmind --mode full
  强制增量：
  pnpm prompts:sync-youmind --mode incremental
+ 指定多个模型：
+ pnpm prompts:sync-youmind --models gpt-image-2,gpt-image-1.5,seedance-2.0
  只预演不写库：
  pnpm prompts:sync-youmind --dry-run
  常用参数：
+ --model gpt-image-1.5
+ --kind image
  --start-page 1
  --max-pages 1000
  --limit 50
@@ -32,6 +36,12 @@ type YoumindPrompt = {
   content?: string;
   media?: string[];
   mediaThumbnails?: string[];
+  videos?: Array<{
+    streamId?: string;
+    sourceUrl?: string;
+    thumbnail?: string;
+    caption?: string;
+  }>;
   language?: string;
   sourcePlatform?: string;
   likes?: number;
@@ -43,8 +53,10 @@ type YoumindResponse = {
 };
 
 type SyncMode = "auto" | "full" | "incremental";
+type PromptKind = "image" | "video";
 
-const API_URL = "https://youmind.com/youhome-api/prompts";
+const API_BASE_URL = "https://youmind.com/youhome-api";
+const YOUMIND_BASE_URL = "https://youmind.com";
 const DEFAULT_MODEL = "gpt-image-2";
 const DEFAULT_LIMIT = 50;
 const DEFAULT_START_PAGE = 1;
@@ -52,6 +64,19 @@ const DEFAULT_MAX_PAGES = 1000;
 const DEFAULT_STOP_EXISTING_RATIO = 0.2;
 const DEFAULT_MAX_RETRIES = 5;
 const DEFAULT_TIMEOUT_MS = 30_000;
+
+type SyncOptions = {
+  databaseUrl: string;
+  model: string;
+  limit: number;
+  startPage: number;
+  maxPages: number;
+  stopExistingRatio: number;
+  maxRetries: number;
+  timeoutMs: number;
+  dryRun: boolean;
+  mode: SyncMode;
+};
 
 function parseEnvFile(filePath: string) {
   if (!fs.existsSync(filePath)) return {};
@@ -98,12 +123,43 @@ function getDatabaseUrl() {
   return db;
 }
 
+async function openDbClient(databaseUrl: string) {
+  const client = new Client({ connectionString: databaseUrl });
+  client.on("error", (error) => {
+    console.warn("[db-client-error]", error.message);
+  });
+  await client.connect();
+  return client;
+}
+
 function parseNumberArg(flag: string, fallback: number) {
   const index = process.argv.findIndex((arg) => arg === flag);
   if (index < 0) return fallback;
   const raw = process.argv[index + 1];
   const value = Number(raw);
   return Number.isFinite(value) ? value : fallback;
+}
+
+function parseStringArg(flag: string, fallback: string) {
+  const index = process.argv.findIndex((arg) => arg === flag);
+  if (index < 0) return fallback;
+  return process.argv[index + 1]?.trim() || fallback;
+}
+
+function parseOptionalStringArg(flag: string) {
+  const index = process.argv.findIndex((arg) => arg === flag);
+  return index >= 0 ? process.argv[index + 1]?.trim() || "" : "";
+}
+
+function parseStringList(value: string) {
+  return Array.from(
+    new Set(
+      value
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean),
+    ),
+  );
 }
 
 function hasFlag(flag: string) {
@@ -117,6 +173,39 @@ function parseModeArg(): SyncMode {
     .trim();
   if (raw === "full" || raw === "incremental" || raw === "auto") return raw;
   return "auto";
+}
+
+function parseKindArg(model: string): PromptKind {
+  const raw = parseStringArg("--kind", getEnv("YM_PROMPT_KIND"))
+    .toLowerCase()
+    .trim();
+  if (raw === "image" || raw === "video") return raw;
+
+  const normalizedModel = model.toLowerCase();
+  if (
+    normalizedModel.includes("seedance") ||
+    normalizedModel === "grok-imagine"
+  ) {
+    return "video";
+  }
+
+  return "image";
+}
+
+function buildCampaign(model: string) {
+  return getEnv("YM_CAMPAIGN") || `${model}-prompts`;
+}
+
+function buildReferer(model: string) {
+  const configured = getEnv("YM_REFERER");
+  if (configured) return configured;
+
+  const slug = model.replace(/\./g, "-");
+  return `${YOUMIND_BASE_URL}/${slug}-prompts`;
+}
+
+function buildApiUrl(kind: PromptKind) {
+  return `${API_BASE_URL}/${kind === "video" ? "video-prompts" : "prompts"}`;
 }
 
 function randomInt(min: number, max: number) {
@@ -137,6 +226,45 @@ function uniqStrings(values: unknown) {
     if (!text || seen.has(text)) continue;
     seen.add(text);
     output.push(text);
+  }
+
+  return output;
+}
+
+function uniqVideoField(
+  videos: YoumindPrompt["videos"],
+  field: "sourceUrl" | "thumbnail",
+) {
+  if (!Array.isArray(videos)) return [];
+  const seen = new Set<string>();
+  const output: string[] = [];
+
+  for (const video of videos) {
+    const value = typeof video?.[field] === "string" ? video[field]?.trim() : "";
+    if (!value || seen.has(value)) continue;
+    seen.add(value);
+    output.push(value);
+  }
+
+  return output;
+}
+
+function extractImportedVideoUrl(caption: unknown) {
+  if (typeof caption !== "string") return "";
+  const match = caption.match(/https?:\/\/\S+/);
+  return match?.[0]?.trim() || "";
+}
+
+function uniqImportedVideoUrls(videos: YoumindPrompt["videos"]) {
+  if (!Array.isArray(videos)) return [];
+  const seen = new Set<string>();
+  const output: string[] = [];
+
+  for (const video of videos) {
+    const value = extractImportedVideoUrl(video?.caption);
+    if (!value || seen.has(value)) continue;
+    seen.add(value);
+    output.push(value);
   }
 
   return output;
@@ -202,8 +330,11 @@ function normalizePrompt(item: YoumindPrompt, model: string) {
   const authorLink = (item.author?.link || "").trim();
   const media = uniqStrings(item.media);
   const mediaThumbnails = uniqStrings(item.mediaThumbnails);
+  const importedVideoUrls = uniqImportedVideoUrls(item.videos);
+  const videoUrls = uniqVideoField(item.videos, "sourceUrl");
+  const videoThumbnails = uniqVideoField(item.videos, "thumbnail");
   const categories = normalizeCategories(item.promptCategories);
-  const coverUrl = media[0] || mediaThumbnails[0] || null;
+  const coverUrl = videoThumbnails[0] || media[0] || mediaThumbnails[0] || null;
 
   return {
     sourceId,
@@ -226,7 +357,12 @@ function normalizePrompt(item: YoumindPrompt, model: string) {
     inputVideos: [],
     inputImages: [],
     inputAudios: [],
-    results: media,
+    results:
+      media.length > 0
+        ? media
+        : importedVideoUrls.length > 0
+          ? importedVideoUrls
+          : videoUrls,
     prompt,
     note: null,
     featured: false,
@@ -264,31 +400,47 @@ async function fetchPage(params: {
   page: number;
   limit: number;
   model: string;
+  kind: PromptKind;
+  campaign: string;
+  referer: string;
   timeoutMs: number;
   maxRetries: number;
 }) {
-  const { page, limit, model, timeoutMs, maxRetries } = params;
+  const { page, limit, model, kind, campaign, referer, timeoutMs, maxRetries } =
+    params;
   let lastError: unknown = null;
-  console.log('fetchPage', new Date(), page, limit, model)
+  const apiUrl = buildApiUrl(kind);
+
+  console.log("fetchPage", new Date(), page, limit, model, kind);
+
   for (let attempt = 1; attempt <= maxRetries; attempt += 1) {
     try {
       await sleep(randomInt(10_000, 20_000));
 
-      const response = await fetch(API_URL, {
+      const body =
+        kind === "video"
+          ? {
+              model,
+              page,
+              limit,
+              locale: "en-US",
+            }
+          : {
+              model,
+              page,
+              limit,
+              locale: "en-US",
+              campaign,
+              filterMode: "imageCategories",
+              sortBy: "time",
+              sortOrder: "desc",
+            };
+
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: buildHeaders(),
-        referrer:
-          "https://youmind.com/gpt-image-2-prompts?sortBy=time&sortOrder=desc",
-        body: JSON.stringify({
-          model,
-          page,
-          limit,
-          locale: "en-US",
-          campaign: "gpt-image-2-prompts",
-          filterMode: "imageCategories",
-          sortBy: "time",
-          sortOrder: "desc",
-        }),
+        referrer: referer,
+        body: JSON.stringify(body),
         mode: "cors",
         credentials: "omit",
         signal: AbortSignal.timeout(timeoutMs),
@@ -326,6 +478,64 @@ async function countExistingModelRows(client: Client, model: string) {
     [model],
   );
   return Number(result.rows[0]?.count || 0);
+}
+
+async function countExistingModelRowsWithRetry(databaseUrl: string, model: string) {
+  let lastError: unknown = null;
+
+  for (let attempt = 1; attempt <= 5; attempt += 1) {
+    const client = await openDbClient(databaseUrl);
+    try {
+      return await countExistingModelRows(client, model);
+    } catch (error) {
+      lastError = error;
+      console.warn(
+        `[db-count] 第 ${attempt}/5 次失败：`,
+        error instanceof Error ? error.message : error,
+      );
+      await sleep(1000 * attempt);
+    } finally {
+      await client.end().catch(() => {});
+    }
+  }
+
+  throw lastError instanceof Error ? lastError : new Error("数据库计数失败");
+}
+
+async function listExistingModels(client: Client) {
+  const result = await client.query(
+    `
+      select distinct model
+      from prompt_gallery_items
+      where model is not null and trim(model) <> ''
+      order by model asc
+    `,
+  );
+  return result.rows
+    .map((row) => String(row.model || "").trim())
+    .filter(Boolean);
+}
+
+async function listExistingModelsWithRetry(databaseUrl: string) {
+  let lastError: unknown = null;
+
+  for (let attempt = 1; attempt <= 5; attempt += 1) {
+    const client = await openDbClient(databaseUrl);
+    try {
+      return await listExistingModels(client);
+    } catch (error) {
+      lastError = error;
+      console.warn(
+        `[db-models] 第 ${attempt}/5 次失败：`,
+        error instanceof Error ? error.message : error,
+      );
+      await sleep(1000 * attempt);
+    } finally {
+      await client.end().catch(() => {});
+    }
+  }
+
+  throw lastError instanceof Error ? lastError : new Error("数据库模型列表读取失败");
 }
 
 async function findExistingSourceIds(
@@ -525,9 +735,154 @@ async function upsertPageItems(
   };
 }
 
+async function writePageItemsWithRetry(params: {
+  databaseUrl: string;
+  model: string;
+  normalized: ReturnType<typeof normalizePrompt>[];
+  dryRun: boolean;
+}) {
+  const { databaseUrl, model, normalized, dryRun } = params;
+  let lastError: unknown = null;
+
+  for (let attempt = 1; attempt <= 5; attempt += 1) {
+    const client = await openDbClient(databaseUrl);
+    try {
+      await client.query("begin");
+      const pageResult = await upsertPageItems(
+        client,
+        model,
+        normalized,
+        dryRun,
+      );
+      await client.query("commit");
+      return pageResult;
+    } catch (error) {
+      lastError = error;
+      await client.query("rollback").catch(() => {});
+      console.warn(
+        `[db-write] 第 ${attempt}/5 次失败：`,
+        error instanceof Error ? error.message : error,
+      );
+      await sleep(Math.min(20_000, 1500 * attempt));
+    } finally {
+      await client.end().catch(() => {});
+    }
+  }
+
+  throw lastError instanceof Error ? lastError : new Error("数据库写入失败");
+}
+
+async function syncModel(options: SyncOptions) {
+  const {
+    databaseUrl,
+    model,
+    limit,
+    startPage,
+    maxPages,
+    stopExistingRatio,
+    maxRetries,
+    timeoutMs,
+    dryRun,
+    mode,
+  } = options;
+  const kind = parseKindArg(model);
+  const campaign = buildCampaign(model);
+  const referer = buildReferer(model);
+  let page = startPage;
+  let scannedPages = 0;
+  let totalFetched = 0;
+  let totalInserted = 0;
+  let totalUpdated = 0;
+
+  const beforeCount = await countExistingModelRowsWithRetry(databaseUrl, model);
+
+  const isFullSync =
+    mode === "full" || (mode === "auto" && beforeCount === 0);
+  const isIncremental = mode === "incremental" || !isFullSync;
+
+  console.log(
+    `[start] model=${model} kind=${kind} mode=${mode}(${isFullSync ? "full" : "incremental"}) before=${beforeCount} dryRun=${dryRun}`,
+  );
+
+  while (scannedPages < maxPages) {
+    const prompts = await fetchPage({
+      page,
+      limit,
+      model,
+      kind,
+      campaign,
+      referer,
+      timeoutMs,
+      maxRetries,
+    });
+
+    if (prompts.length === 0) {
+      console.log(`[stop] page=${page} 返回空数据`);
+      break;
+    }
+
+    const normalized = prompts.map((item) => normalizePrompt(item, model));
+    const validCount = normalized.filter(Boolean).length;
+
+    const pageResult = await writePageItemsWithRetry({
+      databaseUrl,
+      model,
+      normalized,
+      dryRun,
+    });
+
+    totalFetched += pageResult.total;
+    totalInserted += pageResult.inserted;
+    totalUpdated += pageResult.updated;
+
+    const overlapRatio =
+      pageResult.total > 0 ? pageResult.existing / pageResult.total : 0;
+
+    console.log(
+      `[page=${page}] raw=${prompts.length} valid=${validCount} inserted=${pageResult.inserted} updated=${pageResult.updated} existingRatio=${overlapRatio.toFixed(2)}`,
+    );
+
+    scannedPages += 1;
+    const shouldStopByOverlap =
+      isIncremental && pageResult.total > 0 && overlapRatio >= stopExistingRatio;
+
+    if (shouldStopByOverlap) {
+      console.log(
+        `[stop] page=${page} 已存在比例 ${overlapRatio.toFixed(2)} >= ${stopExistingRatio.toFixed(2)}，判定增量同步完成`,
+      );
+      break;
+    }
+
+    page += 1;
+
+    const pauseMs =
+      scannedPages % 10 === 0 ? randomInt(4500, 9000) : randomInt(900, 2200);
+    await sleep(pauseMs);
+  }
+
+  const afterCount = await countExistingModelRowsWithRetry(databaseUrl, model);
+
+  return {
+    model,
+    kind,
+    campaign,
+    referer,
+    mode,
+    effectiveMode: isFullSync ? "full" : "incremental",
+    dryRun,
+    startPage,
+    scannedPages,
+    fetched: totalFetched,
+    inserted: totalInserted,
+    updated: totalUpdated,
+    beforeCount,
+    afterCount,
+    delta: afterCount - beforeCount,
+  };
+}
+
 async function main() {
   const databaseUrl = getDatabaseUrl();
-  const model = getEnv("YM_MODEL") || DEFAULT_MODEL;
   const limit = parseNumberArg(
     "--limit",
     Number(getEnv("YM_LIMIT")) || DEFAULT_LIMIT,
@@ -553,6 +908,10 @@ async function main() {
   );
   const dryRun = hasFlag("--dry-run") || getEnv("YM_DRY_RUN") === "1";
   const mode = parseModeArg();
+  const modelArg = parseOptionalStringArg("--model");
+  const modelsArg = parseOptionalStringArg("--models");
+  const envModel = getEnv("YM_MODEL");
+  const envModels = getEnv("YM_MODELS");
 
   if (limit <= 0 || limit > 100) {
     throw new Error("limit 需在 1~100");
@@ -567,105 +926,54 @@ async function main() {
     throw new Error("YM_STOP_EXISTING_RATIO 建议在 0~1 之间");
   }
 
-  const client = new Client({ connectionString: databaseUrl });
-  await client.connect();
-
-  let page = startPage;
-  let scannedPages = 0;
-  let totalFetched = 0;
-  let totalInserted = 0;
-  let totalUpdated = 0;
-
-  try {
-    const beforeCount = await countExistingModelRows(client, model);
-    const isFullSync =
-      mode === "full" || (mode === "auto" && beforeCount === 0);
-    const isIncremental = mode === "incremental" || !isFullSync;
-
-    console.log(
-      `[start] model=${model} mode=${mode}(${isFullSync ? "full" : "incremental"}) before=${beforeCount} dryRun=${dryRun}`,
-    );
-
-    while (scannedPages < maxPages) {
-      const prompts = await fetchPage({
-        page,
-        limit,
-        model,
-        timeoutMs,
-        maxRetries,
-      });
-
-      if (prompts.length === 0) {
-        console.log(`[stop] page=${page} 返回空数据`);
-        break;
-      }
-
-      const normalized = prompts.map((item) => normalizePrompt(item, model));
-      const validCount = normalized.filter(Boolean).length;
-
-      await client.query("begin");
-      let pageResult: Awaited<ReturnType<typeof upsertPageItems>> | null = null;
-      try {
-        pageResult = await upsertPageItems(client, model, normalized, dryRun);
-        await client.query("commit");
-      } catch (error) {
-        await client.query("rollback");
-        throw error;
-      }
-
-      totalFetched += pageResult.total;
-      totalInserted += pageResult.inserted;
-      totalUpdated += pageResult.updated;
-
-      const overlapRatio =
-        pageResult.total > 0 ? pageResult.existing / pageResult.total : 0;
-
-      console.log(
-        `[page=${page}] raw=${prompts.length} valid=${validCount} inserted=${pageResult.inserted} updated=${pageResult.updated} existingRatio=${overlapRatio.toFixed(2)}`,
-      );
-
-      scannedPages += 1;
-      const shouldStopByOverlap =
-        isIncremental && pageResult.total > 0 && overlapRatio >= stopExistingRatio;
-
-      if (shouldStopByOverlap) {
-        console.log(
-          `[stop] page=${page} 已存在比例 ${overlapRatio.toFixed(2)} >= ${stopExistingRatio.toFixed(2)}，判定增量同步完成`,
-        );
-        break;
-      }
-
-      page += 1;
-
-      const pauseMs =
-        scannedPages % 10 === 0 ? randomInt(4500, 9000) : randomInt(900, 2200);
-      await sleep(pauseMs);
-    }
-
-    const afterCount = await countExistingModelRows(client, model);
-    console.log(
-      JSON.stringify(
-        {
-          model,
-          mode,
-          effectiveMode: isFullSync ? "full" : "incremental",
-          dryRun,
-          startPage,
-          scannedPages,
-          fetched: totalFetched,
-          inserted: totalInserted,
-          updated: totalUpdated,
-          beforeCount,
-          afterCount,
-          delta: afterCount - beforeCount,
-        },
-        null,
-        2,
-      ),
-    );
-  } finally {
-    await client.end();
+  let models = parseStringList(modelsArg || envModels);
+  if (models.length === 0 && (modelArg || envModel)) {
+    models = [modelArg || envModel];
   }
+  if (models.length === 0) {
+    models = await listExistingModelsWithRetry(databaseUrl);
+  }
+  if (models.length === 0) {
+    models = [DEFAULT_MODEL];
+  }
+
+  console.log(`[models] 本次同步 ${models.length} 个模型：${models.join(", ")}`);
+
+  const summaries = [];
+  for (const model of models) {
+    summaries.push(
+      await syncModel({
+        databaseUrl,
+        model,
+        limit,
+        startPage,
+        maxPages,
+        stopExistingRatio,
+        maxRetries,
+        timeoutMs,
+        dryRun,
+        mode,
+      }),
+    );
+  }
+
+  console.log(
+    JSON.stringify(
+      {
+        mode,
+        dryRun,
+        models,
+        totalModels: summaries.length,
+        fetched: summaries.reduce((total, item) => total + item.fetched, 0),
+        inserted: summaries.reduce((total, item) => total + item.inserted, 0),
+        updated: summaries.reduce((total, item) => total + item.updated, 0),
+        delta: summaries.reduce((total, item) => total + item.delta, 0),
+        summaries,
+      },
+      null,
+      2,
+    ),
+  );
 }
 
 main().catch((error) => {

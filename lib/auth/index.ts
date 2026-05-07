@@ -28,7 +28,9 @@ import { cache } from "react";
 function createAuthConfig(databaseInstance: ReturnType<typeof getDb>): BetterAuthOptions {
   return {
     appName: siteConfig.name,
-    baseURL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL || process.env.NEXT_PUBLIC_SITE_URL,
+    baseURL: process.env.NODE_ENV === 'development'
+      ? undefined
+      : process.env.NEXT_PUBLIC_BETTER_AUTH_URL || process.env.NEXT_PUBLIC_SITE_URL,
     secret: process.env.BETTER_AUTH_SECRET,
     advanced: {
       database: {
@@ -68,6 +70,9 @@ function createAuthConfig(databaseInstance: ReturnType<typeof getDb>): BetterAut
     },
     account: {
       accountLinking: { enabled: true, trustedProviders: ['google', 'github'] },
+    },
+    emailAndPassword: {
+      enabled: process.env.NODE_ENV === 'development',
     },
     user: { deleteUser: { enabled: true } },
     database: drizzleAdapter(databaseInstance, {
@@ -118,7 +123,12 @@ function createAuthConfig(databaseInstance: ReturnType<typeof getDb>): BetterAut
       },
     },
     trustedOrigins: process.env.NODE_ENV === 'development'
-      ? [process.env.NEXT_PUBLIC_SITE_URL!, 'http://localhost:3000']
+      ? [
+        process.env.NEXT_PUBLIC_SITE_URL,
+        'http://localhost:*',
+        'http://127.0.0.1:*',
+        'http://[::1]:*',
+      ].filter((origin): origin is string => Boolean(origin))
       : [process.env.NEXT_PUBLIC_SITE_URL!],
     plugins: [
       ...(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ? [oneTap()] : []),

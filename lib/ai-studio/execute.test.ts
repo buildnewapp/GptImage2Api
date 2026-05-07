@@ -71,6 +71,8 @@ test("extracts media urls from nested JSON strings like resultJson", () => {
       data: {
         taskId: "097ff77ea1f25d348da62d0de2c453ab",
         callBackUrl: "http://localhost:3000/api/ai-studio/callback",
+        param:
+          "{\"input\":\"{\\\"image_urls\\\":[\\\"https://v.sdanceai.com/reference-images/20260507/reference.png\\\"]}\"}",
         resultJson:
           "{\"resultUrls\":[\"https://tempfile.aiquickdraw.com/r/097ff77ea1f25d348da62d0de2c453ab_1773029425_n07jf415.mp4\"]}",
       },

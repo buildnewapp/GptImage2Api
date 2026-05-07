@@ -16,7 +16,8 @@
   },
   "prompts": {
     "allCategories": "すべてのカテゴリ",
-    "searchPlaceholder": "タイトル・説明・プロンプトで検索",
+    "allModels": "すべてのモデル",
+    "searchPlaceholder": "タイトル・説明・プロンプト・モデルで検索",
     "search": "検索",
     "resultCount": "結果: {count}",
     "emptyDescription": "キーワードかカテゴリを変更してください。",
@@ -28,6 +29,7 @@
     "inputAudios": "入力音声",
     "author": "作者",
     "unknownAuthor": "-",
-    "language": "言語"
+    "language": "言語",
+    "source": "出典"
   }
 }

@@ -14,6 +14,7 @@ import {
   orders as ordersSchema,
   pricingPlans as pricingPlansSchema,
   session as sessionSchema,
+  account as accountSchema,
   subscriptions as subscriptionsSchema,
   subscriptionCreditBuckets as subscriptionCreditBucketsSchema,
   usage as usageSchema,
@@ -21,6 +22,7 @@ import {
   userSource as userSourceSchema,
 } from "@/lib/db/schema";
 import { getErrorMessage } from "@/lib/error-utils";
+import { hashPassword } from "better-auth/crypto";
 import { randomUUID } from "node:crypto";
 import { and, asc, count, desc, eq, gt, ilike, inArray, or, sql } from "drizzle-orm";
 import { z } from "zod";
@@ -97,6 +99,11 @@ export type AdminManualBenefitPlan = {
 };
 
 const DEFAULT_PAGE_SIZE = 20;
+
+const SetUserPasswordSchema = z.object({
+  userId: z.string().uuid(),
+  password: z.string().min(8).max(128),
+});
 
 export async function getUsers({
   pageIndex = 0,
@@ -490,6 +497,75 @@ export async function unbanUser({
       .update(userSchema)
       .set({ banned: false, banReason: null, banExpires: null })
       .where(eq(userSchema.id, userId));
+
+    return actionResponse.success();
+  } catch (error: any) {
+    return actionResponse.error(getErrorMessage(error));
+  }
+}
+
+export async function setUserPassword({
+  userId,
+  password,
+}: z.infer<typeof SetUserPasswordSchema>): Promise<ActionResult> {
+  if (process.env.NODE_ENV !== "development") {
+    return actionResponse.forbidden(
+      "Password setting is only available in development.",
+    );
+  }
+
+  if (!(await isAdmin())) {
+    return actionResponse.forbidden("Admin privileges required.");
+  }
+
+  const parsed = SetUserPasswordSchema.safeParse({ userId, password });
+  if (!parsed.success) {
+    return actionResponse.badRequest(
+      parsed.error.issues[0]?.message || "Invalid input.",
+    );
+  }
+
+  const db = getDb();
+
+  try {
+    const target = await db
+      .select({ id: userSchema.id })
+      .from(userSchema)
+      .where(eq(userSchema.id, parsed.data.userId))
+      .limit(1);
+
+    if (target.length === 0) {
+      return actionResponse.notFound("User not found.");
+    }
+
+    const passwordHash = await hashPassword(parsed.data.password);
+    const credentialAccount = await db
+      .select({ id: accountSchema.id })
+      .from(accountSchema)
+      .where(
+        and(
+          eq(accountSchema.userId, parsed.data.userId),
+          eq(accountSchema.providerId, "credential"),
+        ),
+      )
+      .limit(1);
+
+    if (credentialAccount[0]) {
+      await db
+        .update(accountSchema)
+        .set({
+          password: passwordHash,
+          updatedAt: new Date(),
+        })
+        .where(eq(accountSchema.id, credentialAccount[0].id));
+    } else {
+      await db.insert(accountSchema).values({
+        userId: parsed.data.userId,
+        accountId: parsed.data.userId,
+        providerId: "credential",
+        password: passwordHash,
+      });
+    }
 
     return actionResponse.success();
   } catch (error: any) {

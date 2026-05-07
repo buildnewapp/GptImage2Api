@@ -9,6 +9,7 @@ type Params = Promise<{ locale: string }>;
 type SearchParams = Promise<{
   q?: string | string[];
   category?: string | string[];
+  model?: string | string[];
   page?: string | string[];
 }>;
 
@@ -49,12 +50,14 @@ export default async function Prompts({
 
   const q = getSearchParamValue(resolvedSearchParams.q).trim();
   const category = getSearchParamValue(resolvedSearchParams.category).trim();
+  const model = getSearchParamValue(resolvedSearchParams.model).trim();
   const page = parsePage(getSearchParamValue(resolvedSearchParams.page));
 
   const data = await getPublicPromptGalleryItems({
     language: locale,
     q,
     category,
+    model,
     page,
   });
 
@@ -62,6 +65,7 @@ export default async function Prompts({
     <PromptsPage
       items={data.items}
       categories={data.categories}
+      models={data.models}
       totalCount={data.total}
       pageSize={data.pageSize}
     />

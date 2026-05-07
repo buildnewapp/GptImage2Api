@@ -47,6 +47,7 @@ export type PromptGalleryAdminListInput = {
   status?: string;
   language?: string;
   category?: string;
+  model?: string;
   author?: string;
   title?: string;
   prompt?: string;
@@ -61,10 +62,15 @@ export type PromptGalleryAdminData = {
     draft: number;
     offline: number;
     featured: number;
+    models: Array<{
+      model: string;
+      count: number;
+    }>;
   };
   filterOptions: {
     languages: string[];
     categories: string[];
+    models: string[];
     authors: string[];
   };
 };

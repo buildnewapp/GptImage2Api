@@ -2,7 +2,7 @@ import "server-only";
 
 import { getDb } from "@/lib/db";
 import { promptGalleryItems } from "@/lib/db/schema";
-import { and, asc, count, desc, eq, ilike, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, or, sql } from "drizzle-orm";
 import {
   type PromptGalleryAdminData,
   type PromptGalleryAdminListInput,
@@ -18,6 +18,7 @@ export type PublicPromptGalleryListInput = {
   language?: string;
   q?: string;
   category?: string;
+  model?: string;
   page?: number;
   pageSize?: number;
 };
@@ -26,6 +27,7 @@ export type PublicPromptGalleryPageData = {
   items: PromptGalleryItem[];
   total: number;
   categories: string[];
+  models: string[];
   page: number;
   pageSize: number;
 };
@@ -67,6 +69,7 @@ export async function getPublicPromptGalleryItems(
   const normalizedLanguage = input?.language?.trim() || "";
   const normalizedKeyword = input?.q?.trim().toLowerCase() || "";
   const normalizedCategory = input?.category?.trim() || "";
+  const normalizedModel = input?.model?.trim() || "";
   const pageSize = Math.min(Math.max(input?.pageSize ?? PUBLIC_PROMPT_GALLERY_DEFAULT_PAGE_SIZE, 1), 48);
   const requestedPage = Math.max(input?.page ?? 1, 1);
 
@@ -88,14 +91,23 @@ export async function getPublicPromptGalleryItems(
     );
   }
 
+  if (normalizedModel && normalizedModel !== "all") {
+    listConditions.push(eq(promptGalleryItems.model, normalizedModel));
+  }
+
   if (normalizedKeyword) {
-    listConditions.push(ilike(promptGalleryItems.searchIndex, `%${normalizedKeyword}%`));
+    listConditions.push(
+      or(
+        ilike(promptGalleryItems.searchIndex, `%${normalizedKeyword}%`),
+        ilike(promptGalleryItems.model, `%${normalizedKeyword}%`),
+      )!,
+    );
   }
 
   const whereCondition = and(...listConditions);
   const db = getDb();
 
-  const [countRows, categoryRows] = await Promise.all([
+  const [countRows, categoryRows, modelRows] = await Promise.all([
     db
       .select({ value: count() })
       .from(promptGalleryItems)
@@ -103,6 +115,12 @@ export async function getPublicPromptGalleryItems(
     db
       .select({
         category: sql<string>`jsonb_array_elements_text(${promptGalleryItems.categories})`,
+      })
+      .from(promptGalleryItems)
+      .where(and(...baseConditions)),
+    db
+      .select({
+        model: promptGalleryItems.model,
       })
       .from(promptGalleryItems)
       .where(and(...baseConditions)),
@@ -136,11 +154,19 @@ export async function getPublicPromptGalleryItems(
         .filter(Boolean),
     ),
   ).sort((left, right) => left.localeCompare(right));
+  const models = Array.from(
+    new Set(
+      modelRows
+        .map((row) => row.model.trim())
+        .filter(Boolean),
+    ),
+  ).sort((left, right) => left.localeCompare(right));
 
   return {
     items: rows.map(mapPromptGalleryItem),
     total,
     categories,
+    models,
     page,
     pageSize,
   };
@@ -153,6 +179,7 @@ export async function getAdminPromptGalleryItems(
   const status = input?.status?.trim() || "";
   const language = input?.language?.trim() || "";
   const category = input?.category?.trim() || "";
+  const model = input?.model?.trim() || "";
   const author = input?.author?.trim() || "";
   const title = input?.title?.trim() || "";
   const prompt = input?.prompt?.trim() || "";
@@ -180,6 +207,10 @@ export async function getAdminPromptGalleryItems(
     conditions.push(
       sql`${promptGalleryItems.categories}::text ilike ${`%${category}%`}`,
     );
+  }
+
+  if (model) {
+    conditions.push(ilike(promptGalleryItems.model, `%${model}%`));
   }
 
   if (author) {
@@ -230,6 +261,16 @@ export async function getAdminPromptGalleryItems(
       allItems.map((item) => item.author?.name?.trim() || "").filter(Boolean),
     ),
   ).sort((left, right) => left.localeCompare(right));
+  const models = collectPromptGalleryModels(allItems);
+  const modelCounts = models
+    .map((model) => ({
+      model,
+      count: allItems.filter((item) => item.model.trim() === model).length,
+    }))
+    .sort(
+      (left, right) =>
+        right.count - left.count || left.model.localeCompare(right.model),
+    );
 
   return {
     items: rows.map(mapPromptGalleryItem),
@@ -240,12 +281,14 @@ export async function getAdminPromptGalleryItems(
       draft: allItems.filter((item) => item.status === "draft").length,
       offline: allItems.filter((item) => item.status === "offline").length,
       featured: allItems.filter((item) => item.featured).length,
+      models: modelCounts,
     },
     filterOptions: {
       languages: Array.from(
         new Set(allItems.map((item) => item.language.trim()).filter(Boolean)),
       ).sort((left, right) => left.localeCompare(right)),
       categories: collectPromptGalleryCategories(allItems),
+      models,
       authors,
     },
   };

@@ -3,6 +3,7 @@ import HomeComponent from "@/components/home";
 import HomeTemplate1 from "@/components/home/HomeTemplate1";
 import SeedanceHome from "@/components/home/SeedanceHome";
 import ImageTemplate from "@/components/home/image/ImageTemplate";
+import ToolHomeComponent from "@/components/home/ToolHomeComponent";
 
 export default function Home() {
   // return <Seedance15Home />;
@@ -11,4 +12,5 @@ export default function Home() {
   // return <VideoTemplate />;
   return <ImageTemplate />;
   // return <HomeComponent />;
+  // return <ToolHomeComponent />;
 }

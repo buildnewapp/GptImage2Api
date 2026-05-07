@@ -28,6 +28,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       HomeTemplate1: (await import(`./messages/${locale}/HomeTemplate1.json`)).default,
       VideoTemplate: (await import(`./messages/${locale}/VideoTemplate.json`)).default,
       ImageTemplate: (await import(`./messages/${locale}/ImageTemplate.json`)).default,
+      ToolHome: (await import(`./messages/${locale}/ToolHome.json`)).default,
       ApiDoc: (await import(`./messages/${locale}/ApiDoc.json`)).default,
 
       // Dashboard - User

@@ -68,7 +68,7 @@ export default async function VideoFooter() {
         >
           <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-[1.45fr_repeat(3,minmax(0,1fr))]">
             <div className="space-y-4">
-              <div data-aos="fade-up" className="flex items-center gap-3">
+              <div data-aos="fade-up" data-aos-offset="0" className="flex items-center gap-3">
                 <span className="flex h-11 w-11 items-center justify-center rounded-full border border-border/75 bg-background/72">
                   <Image
                     src="/logo.png"
@@ -83,12 +83,12 @@ export default async function VideoFooter() {
                 </span>
               </div>
 
-              <p data-aos="fade-up" className="max-w-md text-sm leading-7 text-muted-foreground">
+              <p data-aos="fade-up" data-aos-offset="0" className="max-w-md text-sm leading-7 text-muted-foreground">
                 {t("tagLine")}
               </p>
 
 
-              <div data-aos="fade-up" className="flex flex-wrap gap-3">
+              <div data-aos="fade-up" data-aos-offset="0" className="flex flex-wrap gap-3">
                 {socialLinks.length > 0 && socialLinks.map((item) => (
                     <Link
                         key={item.label}
@@ -122,7 +122,7 @@ export default async function VideoFooter() {
             </div>
 
             {footerLinks.map((section) => (
-              <div data-aos="fade-up" key={section.title} className="space-y-4">
+              <div data-aos="fade-up" data-aos-offset="0" key={section.title} className="space-y-4">
                 <h3 className="text-lg text-foreground">{section.title}</h3>
                 <ul className="space-y-3 text-sm text-muted-foreground">
                   {section.links.map((link) => (
@@ -158,9 +158,9 @@ export default async function VideoFooter() {
           </div>
 
 
-          <div data-aos="fade-up" className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-border/70 pt-6 text-sm text-muted-foreground" />
+          <div data-aos="fade-up" data-aos-offset="0" className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-border/70 pt-6 text-sm text-muted-foreground" />
 
-          <div className="mt-6 flex flex-col gap-4 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
+          <div data-aos="fade-up" data-aos-offset="0" className="mt-6 flex flex-col gap-4 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
             <p>
               {tFooter("Copyright", {
                 year: new Date().getFullYear(),

@@ -210,6 +210,17 @@ export default function AIVideoMiniStudio({
     [initialModelId],
   );
   const modelOptions = useMemo(() => listAiVideoStudioModelOptions(), []);
+  const modelOptionGroups = useMemo(
+    () =>
+      AI_VIDEO_STUDIO_FAMILIES
+        .filter((family) => family.selectable !== false)
+        .map((family) => ({
+          family,
+          options: modelOptions.filter((option) => option.familyKey === family.key),
+        }))
+        .filter((group) => group.options.length > 0),
+    [modelOptions],
+  );
   const { data: session } = authClient.useSession();
   const hasInitializedFromStorageRef = useRef(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -808,10 +819,14 @@ export default function AIVideoMiniStudio({
             }}
             className="flex h-9 w-[120px] items-center rounded-full border border-white/12 bg-white/6 px-2 py-2 text-[12px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] outline-none transition hover:border-white/20"
           >
-            {modelOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
+            {modelOptionGroups.map(({ family, options }) => (
+              <optgroup key={family.key} label={family.label}>
+                {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </optgroup>
             ))}
           </select>
         </label>

@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
@@ -242,6 +242,7 @@ type AdminFilters = {
   id: string;
   language: string;
   category: string;
+  model: string;
   author: string;
   title: string;
   prompt: string;
@@ -252,6 +253,7 @@ const emptyFilters: AdminFilters = {
   id: "",
   language: "",
   category: "",
+  model: "",
   author: "",
   title: "",
   prompt: "",
@@ -325,6 +327,7 @@ export default function PromptGalleryAdminClient({
         id: nextFilters.id,
         language: nextFilters.language,
         category: nextFilters.category,
+        model: nextFilters.model,
         author: nextFilters.author,
         title: nextFilters.title,
         prompt: nextFilters.prompt,
@@ -497,7 +500,7 @@ export default function PromptGalleryAdminClient({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent
           showCloseButton={true}
@@ -775,10 +778,10 @@ export default function PromptGalleryAdminClient({
         </DialogContent>
       </Dialog>
 
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold">Prompt Gallery 管理</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-xl font-semibold">Prompt Gallery 管理</h1>
+          <p className="text-xs text-muted-foreground">
             后续人工在这里录入和维护 `/prompts` 展示内容。
           </p>
         </div>
@@ -799,77 +802,66 @@ export default function PromptGalleryAdminClient({
         </div>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-5">
-        <Card className="gap-2 py-3">
-          <CardHeader className="px-4 pb-0">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              总数
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-4 text-2xl font-semibold">
-            {adminData.summary.total}
-          </CardContent>
-        </Card>
-        <Card className="gap-2 py-3">
-          <CardHeader className="px-4 pb-0">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Online
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-4 text-2xl font-semibold">
-            {adminData.summary.online}
-          </CardContent>
-        </Card>
-        <Card className="gap-2 py-3">
-          <CardHeader className="px-4 pb-0">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Draft
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-4 text-2xl font-semibold">
-            {adminData.summary.draft}
-          </CardContent>
-        </Card>
-        <Card className="gap-2 py-3">
-          <CardHeader className="px-4 pb-0">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Offline
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-4 text-2xl font-semibold">
-            {adminData.summary.offline}
-          </CardContent>
-        </Card>
-        <Card className="gap-2 py-3">
-          <CardHeader className="px-4 pb-0">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Featured
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-4 text-2xl font-semibold">
-            {adminData.summary.featured}
-          </CardContent>
-        </Card>
+      <div className="">
+        <div className="flex flex-wrap items-center gap-2 py-0">
+          {[
+            ["总数", adminData.summary.total],
+            ["Online", adminData.summary.online],
+            ["Draft", adminData.summary.draft],
+            ["Offline", adminData.summary.offline],
+            ["Featured", adminData.summary.featured],
+          ].map(([label, value]) => (
+            <div
+              key={label}
+              className="inline-flex items-center gap-2 rounded-md border bg-muted/30 px-3 py-1.5"
+            >
+              <span className="text-xs font-medium text-muted-foreground">
+                {label}
+              </span>
+              <span className="text-sm font-semibold">{value}</span>
+            </div>
+          ))}
+          <div className="mx-1 hidden h-6 w-px bg-border lg:block" />
+          <span className="text-xs font-medium text-muted-foreground">
+            模型
+          </span>
+          {adminData.summary.models.length > 0 ? (
+            adminData.summary.models.map((model) => (
+              <Badge
+                key={model.model}
+                variant="secondary"
+                className="gap-1.5 rounded-md px-2.5 py-1 text-xs"
+              >
+                <span>{model.model}</span>
+                <span className="font-semibold">{model.count}</span>
+              </Badge>
+            ))
+          ) : (
+            <span className="text-xs text-muted-foreground">暂无模型数据</span>
+          )}
+        </div>
       </div>
 
-      <Card className="py-4">
-        <CardContent className="space-y-4 px-4">
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">
+      <div>
+        <div className="px-0 py-0">
+          <div className="grid gap-2 md:grid-cols-3 xl:grid-cols-[repeat(8,minmax(0,1fr))_120px]">
+            <div>
+              <label className="sr-only">
                 ID
               </label>
               <Input
+                className="h-9"
                 value={filters.id}
                 onChange={(event) => updateFilter("id", event.target.value)}
                 placeholder="输入 ID"
               />
             </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">
+            <div>
+              <label className="sr-only">
                 语言
               </label>
               <Input
+                className="h-9"
                 value={filters.language}
                 onChange={(event) =>
                   updateFilter("language", event.target.value)
@@ -877,11 +869,12 @@ export default function PromptGalleryAdminClient({
                 placeholder="如 en / zh"
               />
             </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">
+            <div>
+              <label className="sr-only">
                 分类
               </label>
               <Input
+                className="h-9"
                 value={filters.category}
                 onChange={(event) =>
                   updateFilter("category", event.target.value)
@@ -889,44 +882,57 @@ export default function PromptGalleryAdminClient({
                 placeholder="输入分类"
               />
             </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">
+            <div>
+              <label className="sr-only">
+                模型
+              </label>
+              <Input
+                className="h-9"
+                value={filters.model}
+                onChange={(event) => updateFilter("model", event.target.value)}
+                placeholder="输入模型"
+              />
+            </div>
+            <div>
+              <label className="sr-only">
                 作者
               </label>
               <Input
+                className="h-9"
                 value={filters.author}
                 onChange={(event) => updateFilter("author", event.target.value)}
                 placeholder="输入作者"
               />
             </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">
+            <div>
+              <label className="sr-only">
                 标题
               </label>
               <div className="relative">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
+                  className="h-9 pl-9"
                   value={filters.title}
                   onChange={(event) =>
                     updateFilter("title", event.target.value)
                   }
                   placeholder="输入标题"
-                  className="pl-9"
                 />
               </div>
             </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">
+            <div>
+              <label className="sr-only">
                 提示词
               </label>
               <Input
+                className="h-9"
                 value={filters.prompt}
                 onChange={(event) => updateFilter("prompt", event.target.value)}
                 placeholder="输入提示词内容"
               />
             </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">
+            <div>
+              <label className="sr-only">
                 状态
               </label>
               <Select
@@ -935,7 +941,7 @@ export default function PromptGalleryAdminClient({
                   updateFilter("status", value === "all" ? "" : value)
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-9">
                   <SelectValue placeholder="全部状态" />
                 </SelectTrigger>
                 <SelectContent>
@@ -948,79 +954,83 @@ export default function PromptGalleryAdminClient({
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-end">
+            <div>
               <Button
                 onClick={submitSearch}
                 disabled={isLoading}
-                className="w-full"
+                className="h-9 w-full"
               >
                 <Search className="mr-2 h-4 w-4" />
                 搜索
               </Button>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Card>
-        <CardContent className="pt-6">
-          <div className="mb-4 flex flex-col gap-3 rounded-lg border bg-muted/20 p-3 lg:flex-row lg:items-center lg:justify-between">
-            <div className="text-sm text-muted-foreground">
-              已选择 {selectedCount} 条
+      <Card className="pt-0 pb-2">
+        <CardContent className="px-4">
+          {selectedCount > 0 ? (
+            <div className="my-3 flex flex-col gap-2 rounded-md border bg-muted/20 p-2 lg:flex-row lg:items-center lg:justify-between">
+              <div className="text-sm text-muted-foreground">
+                已选择 {selectedCount} 条
+              </div>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                <Select
+                  value={batchStatus}
+                  onValueChange={(value) =>
+                    setBatchStatus(value as PromptGalleryStatus)
+                  }
+                >
+                  <SelectTrigger className="h-9 w-full sm:w-40">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PROMPT_GALLERY_STATUS_VALUES.map((status) => (
+                      <SelectItem key={status} value={status}>
+                        {status}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button
+                  variant="outline"
+                  onClick={updateBatchStatus}
+                  disabled={isPending || isLoading}
+                  className="h-9"
+                >
+                  批量改状态
+                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="destructive"
+                      disabled={isPending || isLoading}
+                      className="h-9"
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      批量删除
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>确认删除选中记录？</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        将删除当前选中的 {selectedCount} 条 Prompt Gallery
+                        记录。此操作不可撤销。
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>取消</AlertDialogCancel>
+                      <AlertDialogAction onClick={deleteSelectedItems}>
+                        确认删除
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
             </div>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <Select
-                value={batchStatus}
-                onValueChange={(value) =>
-                  setBatchStatus(value as PromptGalleryStatus)
-                }
-              >
-                <SelectTrigger className="w-full sm:w-40">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {PROMPT_GALLERY_STATUS_VALUES.map((status) => (
-                    <SelectItem key={status} value={status}>
-                      {status}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Button
-                variant="outline"
-                onClick={updateBatchStatus}
-                disabled={selectedCount === 0 || isPending || isLoading}
-              >
-                批量改状态
-              </Button>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    variant="destructive"
-                    disabled={selectedCount === 0 || isPending || isLoading}
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    批量删除
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>确认删除选中记录？</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      将删除当前选中的 {selectedCount} 条 Prompt Gallery
-                      记录。此操作不可撤销。
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>取消</AlertDialogCancel>
-                    <AlertDialogAction onClick={deleteSelectedItems}>
-                      确认删除
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </div>
-          </div>
+          ) : null}
 
           <div className="relative min-h-[320px] overflow-auto">
             {isLoading ? (
@@ -1048,6 +1058,7 @@ export default function PromptGalleryAdminClient({
                   </TableHead>
                   <TableHead>ID</TableHead>
                   <TableHead>标题</TableHead>
+                  <TableHead>模型</TableHead>
                   <TableHead>语言</TableHead>
                   <TableHead>分类</TableHead>
                   <TableHead>作者</TableHead>
@@ -1061,7 +1072,7 @@ export default function PromptGalleryAdminClient({
                 {adminData.items.length === 0 ? (
                   <TableRow>
                     <TableCell
-                      colSpan={10}
+                      colSpan={11}
                       className="h-24 text-center text-muted-foreground"
                     >
                       暂无数据
@@ -1092,6 +1103,9 @@ export default function PromptGalleryAdminClient({
                             {formatDate(item.updatedAt || item.createdAt)}
                           </div>
                         </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">{item.model}</Badge>
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline">{item.language}</Badge>
