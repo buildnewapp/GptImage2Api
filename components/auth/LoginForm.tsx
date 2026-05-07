@@ -9,7 +9,7 @@ import { authClient } from "@/lib/auth/auth-client";
 import { normalizeEmail } from "@/lib/email";
 import { initializeTracking } from "@/lib/tracking/client";
 import { Turnstile } from "@marsidev/react-turnstile";
-import { Github, Link as LinkIcon, Loader2 } from "lucide-react";
+import { Github, Link as LinkIcon, Loader2, Lock } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -20,7 +20,7 @@ interface LoginFormProps {
   callbackUrl?: string;
 }
 
-type LoginMode = "otp" | "magic-link";
+type LoginMode = "otp" | "magic-link" | "password";
 
 export default function LoginForm({
   className = "",
@@ -30,12 +30,17 @@ export default function LoginForm({
   const locale = useLocale();
 
   const showGithub = !!process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
-  const showEmail = process.env.NEXT_PUBLIC_EMAIL_LOGIN === "true";
+  const showEmailLogin = process.env.NEXT_PUBLIC_EMAIL_LOGIN === "true";
+  const showDevPasswordLogin = process.env.NODE_ENV === "development";
+  const showEmail = showEmailLogin || showDevPasswordLogin;
 
   const [lastMethod, setLastMethod] = useState<string | null>(null);
 
-  const [mode, setMode] = useState<LoginMode>("otp");
+  const [mode, setMode] = useState<LoginMode>(
+    showEmailLogin ? "otp" : "password"
+  );
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isGithubLoading, setIsGithubLoading] = useState(false);
@@ -215,6 +220,38 @@ export default function LoginForm({
     }
   };
 
+  const handlePasswordLogin = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const { error } = await authClient.signIn.email({
+        email: normalizeEmail(email),
+        password,
+        callbackURL: getCallbackUrl(),
+      });
+
+      if (error) {
+        toast.error(t("Toast.Password.errorTitle"), {
+          description: error.message || t("Toast.Password.errorDescription"),
+        });
+        return;
+      }
+
+      toast.success(t("Toast.Password.successTitle"), {
+        description: t("Toast.Password.successDescription"),
+      });
+
+      window.location.assign(getCallbackUrl());
+    } catch (error) {
+      toast.error(t("Toast.Password.errorTitle"), {
+        description: t("Toast.Password.errorDescription"),
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const signInSocial = async (provider: string) => {
     const callback = new URL(
       next || locale === DEFAULT_LOCALE ? "" : `/${locale}`,
@@ -257,6 +294,12 @@ export default function LoginForm({
 
   const toggleMode = () => {
     setMode(mode === "otp" ? "magic-link" : "otp");
+    setOtpCode("");
+    setIsCodeSent(false);
+  };
+
+  const switchMode = (nextMode: LoginMode) => {
+    setMode(nextMode);
     setOtpCode("");
     setIsCodeSent(false);
   };
@@ -377,7 +420,22 @@ export default function LoginForm({
             </div>
           )}
 
-          {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && showTurnstile && (
+          {mode === "password" && (
+            <div className="grid">
+              <div className="text-sm font-medium">
+                {t("signInMethods.passwordMethod")}
+              </div>
+              <Input
+                type="password"
+                placeholder="********"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={isLoading || isOtpLoading}
+              />
+            </div>
+          )}
+
+          {mode !== "password" && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && showTurnstile && (
             <Turnstile
               siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
               onSuccess={(token: string) => {
@@ -392,13 +450,22 @@ export default function LoginForm({
           )}
 
           <Button
-            onClick={mode === "otp" ? handleVerifyOTP : handleEmailLogin}
+            onClick={
+              mode === "otp"
+                ? handleVerifyOTP
+                : mode === "password"
+                  ? handlePasswordLogin
+                  : handleEmailLogin
+            }
             disabled={
               !email ||
               isLoading ||
               isOtpLoading ||
               (mode === "otp" && otpCode.length !== 6) ||
-              (!!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && !captchaToken)
+              (mode === "password" && !password) ||
+              (mode !== "password" &&
+                !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY &&
+                !captchaToken)
             }
             className="w-full bg-primary/90 hover:bg-primary"
           >
@@ -406,6 +473,11 @@ export default function LoginForm({
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : mode === "otp" ? (
               t("Button.signIn")
+            ) : mode === "password" ? (
+              <>
+                <Lock className="h-4 w-4" />
+                {t("Button.signIn")}
+              </>
             ) : (
               <>
                 <LinkIcon className="h-4 w-4" />
@@ -414,16 +486,29 @@ export default function LoginForm({
             )}
           </Button>
 
-          <div className="text-center">
-            <Button
-              variant="link"
-              className="text-xs font-normal text-muted-foreground hover:text-primary"
-              onClick={toggleMode}
-            >
-              {mode === "otp"
-                ? `Or ${t("signInMethods.magicLinkMethod")}`
-                : `Or ${t("signInMethods.otpMethod")}`}
-            </Button>
+          <div className="flex flex-wrap justify-center gap-1">
+            {showEmailLogin && mode !== "password" && (
+              <Button
+                variant="link"
+                className="text-xs font-normal text-muted-foreground hover:text-primary"
+                onClick={toggleMode}
+              >
+                {mode === "otp"
+                  ? `Or ${t("signInMethods.magicLinkMethod")}`
+                  : `Or ${t("signInMethods.otpMethod")}`}
+              </Button>
+            )}
+            {showDevPasswordLogin && showEmailLogin && (
+              <Button
+                variant="link"
+                className="text-xs font-normal text-muted-foreground hover:text-primary"
+                onClick={() => switchMode(mode === "password" ? "otp" : "password")}
+              >
+                {mode === "password"
+                  ? `Or ${t("signInMethods.otpMethod")}`
+                  : `Or ${t("signInMethods.passwordMethod")}`}
+              </Button>
+            )}
           </div>
         </div>
       )}

@@ -34,6 +34,12 @@
       "Github": {
         "errorTitle": "错误",
         "errorDescription": "使用 GitHub 登录失败，请重试。"
+      },
+      "Password": {
+        "successTitle": "登录成功",
+        "successDescription": "欢迎回来。",
+        "errorTitle": "错误",
+        "errorDescription": "邮箱或密码不正确，请重试。"
       }
     },
     "signInMethods": {
@@ -43,6 +49,7 @@
       "signInWithEmail": "使用邮箱登录",
       "otpMethod": "验证码",
       "magicLinkMethod": "魔法链接",
+      "passwordMethod": "密码",
       "sendOTP": "发送验证码",
       "verifyOTP": "验证",
       "resendOTP": "没收到验证码？重新发送",

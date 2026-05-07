@@ -34,6 +34,12 @@
       "Github": {
         "errorTitle": "Error",
         "errorDescription": "Failed to sign in with Github. Please try again."
+      },
+      "Password": {
+        "successTitle": "Signed in",
+        "successDescription": "You have been signed in successfully.",
+        "errorTitle": "Error",
+        "errorDescription": "Invalid email or password. Please try again."
       }
     },
     "signInMethods": {
@@ -43,6 +49,7 @@
       "signInWithEmail": "Continue with Email",
       "otpMethod": "Verification Code",
       "magicLinkMethod": "Magic Link",
+      "passwordMethod": "Password",
       "sendOTP": "Send Code",
       "verifyOTP": "Verify Code",
       "resendOTP": "Didn't receive the code? Resend",

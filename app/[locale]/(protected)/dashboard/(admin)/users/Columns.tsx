@@ -1,6 +1,11 @@
 "use client";
 
-import { banUser, unbanUser, UserWithSource } from "@/actions/users/admin";
+import {
+  banUser,
+  setUserPassword,
+  unbanUser,
+  UserWithSource,
+} from "@/actions/users/admin";
 import { buildAdminUserQuickActionLinks } from "@/lib/admin/dashboard-users";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,6 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Tooltip,
@@ -170,15 +176,120 @@ const UnbanUserDialog = ({
   );
 };
 
+const SetPasswordDialog = ({
+  open,
+  onOpenChange,
+  user,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  user: UserType;
+}) => {
+  const [isPending, startTransition] = useTransition();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const reset = () => {
+    setPassword("");
+    setConfirmPassword("");
+  };
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          reset();
+        }
+        onOpenChange(isOpen);
+      }}
+    >
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>设置用户密码</DialogTitle>
+          <DialogDescription>
+            为 {user.email || user.id} 设置开发环境邮箱密码登录的密码。
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor={`password-${user.id}`}>新密码</Label>
+            <Input
+              id={`password-${user.id}`}
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={isPending}
+              autoComplete="new-password"
+              placeholder="至少 8 位"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor={`confirm-password-${user.id}`}>确认密码</Label>
+            <Input
+              id={`confirm-password-${user.id}`}
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              disabled={isPending}
+              autoComplete="new-password"
+              placeholder="再次输入密码"
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={isPending}
+          >
+            取消
+          </Button>
+          <Button
+            disabled={
+              isPending || password.length < 8 || password !== confirmPassword
+            }
+            onClick={() => {
+              if (password !== confirmPassword) {
+                toast.error("两次输入的密码不一致");
+                return;
+              }
+              startTransition(async () => {
+                const res = await setUserPassword({
+                  userId: user.id,
+                  password,
+                });
+                if (res.success) {
+                  toast.success("密码已设置");
+                  onOpenChange(false);
+                  reset();
+                } else {
+                  toast.error("设置密码失败", {
+                    description: res.error,
+                  });
+                }
+              });
+            }}
+          >
+            保存密码
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 const ActionsCell = ({ user }: { user: UserType }) => {
   const locale = useLocale();
   const router = useRouter();
   const [openBan, setOpenBan] = useState(false);
   const [openUnban, setOpenUnban] = useState(false);
+  const [openPassword, setOpenPassword] = useState(false);
   const quickLinks = buildAdminUserQuickActionLinks({
     locale,
     userId: user.id,
   });
+  const showDevPasswordAction = process.env.NODE_ENV === "development";
 
   return (
     <>
@@ -210,6 +321,14 @@ const ActionsCell = ({ user }: { user: UserType }) => {
             用户生成记录
           </DropdownMenuItem>
           <DropdownMenuSeparator />
+          {showDevPasswordAction && (
+            <>
+              <DropdownMenuItem onClick={() => setOpenPassword(true)}>
+                设置密码
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
           {user.banned ? (
             <DropdownMenuItem onClick={() => setOpenUnban(true)}>
               Unban user
@@ -231,6 +350,11 @@ const ActionsCell = ({ user }: { user: UserType }) => {
       </DropdownMenu>
 
       <BanUserDialog open={openBan} onOpenChange={setOpenBan} user={user} />
+      <SetPasswordDialog
+        open={openPassword}
+        onOpenChange={setOpenPassword}
+        user={user}
+      />
       <UnbanUserDialog
         open={openUnban}
         onOpenChange={setOpenUnban}
