@@ -149,7 +149,20 @@ export function extractTaskId(raw: unknown): string | null {
 }
 
 export function extractMediaUrls(raw: unknown): string[] {
-  const urls = new Set<string>();
+  const resultUrls = new Set<string>();
+  const fallbackUrls = new Set<string>();
+  const resultContainerKeys = new Set([
+    "result",
+    "results",
+    "resultJson",
+    "result_json",
+    "resultUrls",
+    "result_urls",
+    "mediaUrls",
+    "media_urls",
+    "output",
+    "outputs",
+  ]);
 
   function maybeParseJsonString(value: string) {
     const trimmed = value.trim();
@@ -168,7 +181,7 @@ export function extractMediaUrls(raw: unknown): string[] {
     }
   }
 
-  function visit(value: unknown) {
+  function visit(value: unknown, urls: Set<string>) {
     if (!value) {
       return;
     }
@@ -179,7 +192,7 @@ export function extractMediaUrls(raw: unknown): string[] {
       } else {
         const parsed = maybeParseJsonString(value);
         if (parsed) {
-          visit(parsed);
+          visit(parsed, urls);
         }
       }
       return;
@@ -187,20 +200,56 @@ export function extractMediaUrls(raw: unknown): string[] {
 
     if (Array.isArray(value)) {
       for (const item of value) {
-        visit(item);
+        visit(item, urls);
       }
       return;
     }
 
     if (typeof value === "object") {
       for (const item of Object.values(value as Record<string, unknown>)) {
-        visit(item);
+        visit(item, urls);
       }
     }
   }
 
-  visit(raw);
-  return [...urls];
+  function collectResultContainers(value: unknown) {
+    if (!value) {
+      return;
+    }
+
+    if (typeof value === "string") {
+      const parsed = maybeParseJsonString(value);
+      if (parsed) {
+        collectResultContainers(parsed);
+      }
+      return;
+    }
+
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        collectResultContainers(item);
+      }
+      return;
+    }
+
+    if (typeof value === "object") {
+      for (const [key, item] of Object.entries(value as Record<string, unknown>)) {
+        if (resultContainerKeys.has(key)) {
+          visit(item, resultUrls);
+        } else {
+          collectResultContainers(item);
+        }
+      }
+    }
+  }
+
+  collectResultContainers(raw);
+  if (resultUrls.size > 0) {
+    return [...resultUrls];
+  }
+
+  visit(raw, fallbackUrls);
+  return [...fallbackUrls];
 }
 
 function getNestedValue(record: Record<string, unknown>, path: string[]) {
