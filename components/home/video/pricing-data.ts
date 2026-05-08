@@ -1,10 +1,4 @@
 import { DEFAULT_LOCALE } from "@/i18n/routing";
-import {
-  type LocalizedPricingContent,
-  type PricingBenefits,
-  type PricingFeature,
-  pricingPlans,
-} from "@/lib/db/seed/pricing-config";
 import { getAvailableCheckoutProviders } from "@/lib/payments/checkout-availability";
 
 import type {
@@ -18,7 +12,58 @@ import type {
 type PricingEnvironment = "live" | "test";
 type SupportedLocale = "en" | "zh" | "ja";
 
-type PricingConfigPlan = (typeof pricingPlans)[number];
+type PricingFeature = {
+  bold?: boolean;
+  description: string;
+  included: boolean;
+};
+
+type LocalizedPricingContent = {
+  buttonText?: string;
+  cardDescription?: string;
+  cardTitle?: string;
+  displayPrice?: string;
+  features?: PricingFeature[];
+  highlightText?: string;
+  originalPrice?: string;
+  priceSuffix?: string;
+};
+
+type PricingBenefits = {
+  monthlyCredits?: number;
+  oneTimeCredits?: number;
+  totalMonths?: number;
+};
+
+export type VideoPricingSourcePlan = {
+  benefitsJsonb?: unknown;
+  buttonLink?: string | null;
+  buttonText?: string | null;
+  cardDescription?: string | null;
+  cardTitle: string;
+  creemDiscountCode?: string | null;
+  creemProductId?: string | null;
+  currency?: string | null;
+  displayOrder?: number | null;
+  displayPrice?: string | null;
+  enableManualInputCoupon?: boolean;
+  environment: PricingEnvironment;
+  features?: unknown;
+  groupSlug?: string | null;
+  highlightText?: string | null;
+  id?: string | null;
+  isActive: boolean;
+  isHighlighted: boolean;
+  langJsonb?: unknown;
+  originalPrice?: string | null;
+  paypalPlanId?: string | null;
+  paymentType?: string | null;
+  price?: string | null;
+  priceSuffix?: string | null;
+  provider?: string | null;
+  stripeCouponId?: string | null;
+  stripePriceId?: string | null;
+};
 
 const accentByOrder = ["foreground", "primary", "accent"] as const;
 const iconByAccent = {
@@ -44,7 +89,7 @@ function resolveLocale(locale: string): SupportedLocale {
 }
 
 function getLocalizedPlanContent(
-  plan: PricingConfigPlan,
+  plan: VideoPricingSourcePlan,
   locale: SupportedLocale,
 ): LocalizedPricingContent {
   const content = (plan.langJsonb ?? {}) as Record<string, LocalizedPricingContent>;
@@ -85,7 +130,7 @@ function formatCredits(benefits: PricingBenefits | null | undefined, locale: Sup
   return undefined;
 }
 
-function formatBilled(plan: PricingConfigPlan, locale: SupportedLocale): string | undefined {
+function formatBilled(plan: VideoPricingSourcePlan, locale: SupportedLocale): string | undefined {
   if (!plan.price) {
     return undefined;
   }
@@ -124,12 +169,12 @@ function mapFeatures(features: PricingFeature[] | undefined): VideoTemplatePrici
     }));
 }
 
-function buildCheckoutPlan(plan: PricingConfigPlan): VideoTemplateCheckoutPlan {
+function buildCheckoutPlan(plan: VideoPricingSourcePlan): VideoTemplateCheckoutPlan {
   return {
     buttonLink: plan.buttonLink ?? null,
     creemDiscountCode: plan.creemDiscountCode ?? null,
     creemProductId: plan.creemProductId ?? null,
-    enableManualInputCoupon: plan.enableManualInputCoupon,
+    enableManualInputCoupon: plan.enableManualInputCoupon ?? false,
     isHighlighted: plan.isHighlighted,
     planId: plan.id ?? null,
     provider: plan.provider ?? null,
@@ -145,8 +190,8 @@ function buildCheckoutPlan(plan: PricingConfigPlan): VideoTemplateCheckoutPlan {
 }
 
 function buildSavingsLabel(
-  annualPlans: PricingConfigPlan[],
-  monthlyPlans: PricingConfigPlan[],
+  annualPlans: VideoPricingSourcePlan[],
+  monthlyPlans: VideoPricingSourcePlan[],
   locale: SupportedLocale,
   fallback: string,
 ): string {
@@ -180,9 +225,9 @@ function buildSavingsLabel(
 }
 
 function mapRecurringPlan(
-  plan: PricingConfigPlan,
+  plan: VideoPricingSourcePlan,
   locale: SupportedLocale,
-  matchingMonthlyPlan?: PricingConfigPlan,
+  matchingMonthlyPlan?: VideoPricingSourcePlan,
 ): VideoTemplatePricingPlan {
   const localizedPlan = getLocalizedPlanContent(plan, locale);
   const matchingMonthlyLocalizedPlan = matchingMonthlyPlan
@@ -216,7 +261,7 @@ function mapRecurringPlan(
   };
 }
 
-function mapOneTimePlan(plan: PricingConfigPlan, locale: SupportedLocale): VideoTemplateCreditPack {
+function mapOneTimePlan(plan: VideoPricingSourcePlan, locale: SupportedLocale): VideoTemplateCreditPack {
   const localizedPlan = getLocalizedPlanContent(plan, locale);
   const benefits = plan.benefitsJsonb as PricingBenefits | undefined;
   const creditTitle =
@@ -238,14 +283,16 @@ export function buildVideoTemplatePricingSection({
   baseSection,
   environment,
   locale,
+  plans,
 }: {
   baseSection: VideoTemplatePricing;
   environment?: PricingEnvironment;
   locale: string;
+  plans: VideoPricingSourcePlan[];
 }): VideoTemplatePricing {
   const pricingLocale = resolveLocale(locale);
   const pricingEnvironment = resolvePricingEnvironment(environment);
-  const activePlans = pricingPlans
+  const activePlans = plans
     .filter((plan) => plan.environment === pricingEnvironment && plan.isActive)
     .sort((left, right) => (left.displayOrder ?? 0) - (right.displayOrder ?? 0));
 

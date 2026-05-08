@@ -7,20 +7,40 @@ test("buildPricingValueRows calculates credits per dollar across active plans", 
   const rows = buildPricingValueRows({
     environment: "test",
     locale: "en",
+    plans: [
+      {
+        environment: "test",
+        groupSlug: "annual",
+        cardTitle: "Standard",
+        displayOrder: 1,
+        isActive: true,
+        isHighlighted: false,
+        price: "118.80",
+        benefitsJsonb: {
+          monthlyCredits: 1600,
+          totalMonths: 12,
+        },
+      },
+      {
+        environment: "test",
+        groupSlug: "onetime",
+        cardTitle: "Pro Pack",
+        displayOrder: 2,
+        isActive: true,
+        isHighlighted: false,
+        price: "29.90",
+        benefitsJsonb: {
+          oneTimeCredits: 3750,
+        },
+      },
+    ],
   });
 
   assert.deepEqual(
     rows.map((row) => row.plan),
     [
       "Annual Standard",
-      "Annual Pro",
-      "Annual Max",
-      "Monthly Standard",
-      "Monthly Pro",
-      "Monthly Max",
-      "Standard Pack",
       "Pro Pack",
-      "Max Pack",
     ]
   );
 
