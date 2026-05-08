@@ -14,6 +14,10 @@ type AdminPaginationProps = {
   pageIndex: number;
   pageSize: number;
   totalCount: number;
+  pageCount?: number;
+  totalLabel?: string;
+  canGoNext?: boolean;
+  canGoPrevious?: boolean;
   disabled?: boolean;
   pageSizeOptions?: number[];
   className?: string;
@@ -25,6 +29,10 @@ export function AdminPagination({
   pageIndex,
   pageSize,
   totalCount,
+  pageCount: pageCountProp,
+  totalLabel,
+  canGoNext,
+  canGoPrevious,
   disabled = false,
   pageSizeOptions = [10, 20, 100],
   className,
@@ -32,8 +40,13 @@ export function AdminPagination({
   onPageSizeChange,
 }: AdminPaginationProps) {
   const safePageSize = pageSize > 0 ? pageSize : pageSizeOptions[0] || 10;
-  const pageCount = Math.max(1, Math.ceil(totalCount / safePageSize));
+  const pageCount = Math.max(
+    1,
+    pageCountProp ?? Math.ceil(totalCount / safePageSize),
+  );
   const currentPageIndex = Math.min(Math.max(pageIndex, 0), pageCount - 1);
+  const hasPreviousPage = canGoPrevious ?? currentPageIndex > 0;
+  const hasNextPage = canGoNext ?? currentPageIndex < pageCount - 1;
   const pageWindowStart = Math.min(
     Math.max(currentPageIndex - 2, 0),
     Math.max(pageCount - 5, 0),
@@ -52,7 +65,8 @@ export function AdminPagination({
     >
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted-foreground">
         <span>
-          第 {currentPageIndex + 1} / {pageCount} 页，共 {totalCount} 条
+          {totalLabel ??
+            `第 ${currentPageIndex + 1} / ${pageCount} 页，共 ${totalCount} 条`}
         </span>
         <div className="flex items-center gap-2">
           <span>每页</span>
@@ -81,7 +95,7 @@ export function AdminPagination({
           variant="outline"
           size="sm"
           onClick={() => onPageIndexChange(0)}
-          disabled={currentPageIndex === 0 || disabled}
+          disabled={!hasPreviousPage || disabled}
         >
           首页
         </Button>
@@ -89,7 +103,7 @@ export function AdminPagination({
           variant="outline"
           size="sm"
           onClick={() => onPageIndexChange(Math.max(0, currentPageIndex - 1))}
-          disabled={currentPageIndex === 0 || disabled}
+          disabled={!hasPreviousPage || disabled}
         >
           上一页
         </Button>
@@ -111,7 +125,7 @@ export function AdminPagination({
           onClick={() =>
             onPageIndexChange(Math.min(pageCount - 1, currentPageIndex + 1))
           }
-          disabled={currentPageIndex >= pageCount - 1 || disabled}
+          disabled={!hasNextPage || disabled}
         >
           下一页
         </Button>
@@ -119,7 +133,7 @@ export function AdminPagination({
           variant="outline"
           size="sm"
           onClick={() => onPageIndexChange(pageCount - 1)}
-          disabled={currentPageIndex >= pageCount - 1 || disabled}
+          disabled={!hasNextPage || disabled}
         >
           尾页
         </Button>

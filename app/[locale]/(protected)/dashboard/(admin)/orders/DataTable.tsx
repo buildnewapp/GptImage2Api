@@ -12,6 +12,7 @@ import {
 } from "@tanstack/react-table";
 
 import { getOrders, GetOrdersResult } from "@/actions/orders/admin";
+import { AdminPagination } from "@/components/shared/AdminPagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
@@ -62,7 +63,7 @@ export function OrdersDataTable<TData, TValue>({
   initialData,
   initialPageCount,
   pageSize,
-  totalCount,
+  totalCount: initialTotalCount,
   initialUserId,
 }: DataTableProps<TData, TValue>) {
   const pathname = usePathname();
@@ -82,6 +83,7 @@ export function OrdersDataTable<TData, TValue>({
   });
   const [data, setData] = useState<TData[]>(initialData);
   const [pageCount, setPageCount] = useState<number>(initialPageCount);
+  const [totalCount, setTotalCount] = useState<number>(initialTotalCount);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const lockedUserId = initialUserId || "";
 
@@ -91,13 +93,22 @@ export function OrdersDataTable<TData, TValue>({
       !provider &&
       !orderType &&
       !status &&
-      pagination.pageIndex === 0,
-    [debouncedGlobalFilter, provider, orderType, status, pagination.pageIndex]
+      pagination.pageIndex === 0 &&
+      pagination.pageSize === pageSize,
+    [
+      debouncedGlobalFilter,
+      provider,
+      orderType,
+      status,
+      pagination.pageIndex,
+      pagination.pageSize,
+      pageSize,
+    ],
   );
 
   useEffect(() => {
     setPagination((prev) =>
-      prev.pageIndex !== 0 ? { ...prev, pageIndex: 0 } : prev
+      prev.pageIndex !== 0 ? { ...prev, pageIndex: 0 } : prev,
     );
   }, [debouncedGlobalFilter, provider, orderType, status]);
 
@@ -106,6 +117,7 @@ export function OrdersDataTable<TData, TValue>({
       if (data !== initialData) {
         setData(initialData);
         setPageCount(initialPageCount);
+        setTotalCount(initialTotalCount);
       }
       return;
     }
@@ -124,14 +136,16 @@ export function OrdersDataTable<TData, TValue>({
         });
         if (result.success) {
           setData(result.data?.orders as TData[]);
+          setTotalCount(result.data?.totalCount || 0);
           setPageCount(
-            Math.ceil((result.data?.totalCount || 0) / pagination.pageSize)
+            Math.ceil((result.data?.totalCount || 0) / pagination.pageSize),
           );
         } else {
           toast.error("Failed to fetch data", {
             description: result.error,
           });
           setData([]);
+          setTotalCount(0);
           setPageCount(0);
         }
       } catch (error: any) {
@@ -139,6 +153,7 @@ export function OrdersDataTable<TData, TValue>({
           description: error.message,
         });
         setData([]);
+        setTotalCount(0);
         setPageCount(0);
       } finally {
         setIsLoading(false);
@@ -157,6 +172,7 @@ export function OrdersDataTable<TData, TValue>({
     initialData,
     initialLoad,
     initialPageCount,
+    initialTotalCount,
   ]);
 
   const table = useReactTable({
@@ -184,7 +200,8 @@ export function OrdersDataTable<TData, TValue>({
       {lockedUserId ? (
         <div className="mb-3 flex items-center justify-between rounded-md border bg-muted/30 px-3 py-2 text-sm">
           <span className="text-muted-foreground">
-            当前按用户筛选: <span className="font-mono text-foreground">{lockedUserId}</span>
+            当前按用户筛选:{" "}
+            <span className="font-mono text-foreground">{lockedUserId}</span>
           </span>
           <Button asChild size="sm" variant="outline">
             <Link href={pathname}>清除筛选</Link>
@@ -296,7 +313,7 @@ export function OrdersDataTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -343,7 +360,7 @@ export function OrdersDataTable<TData, TValue>({
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -362,30 +379,25 @@ export function OrdersDataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between space-x-2 py-4">
-        <div className="text-sm text-muted-foreground">
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()} ({totalCount} Orders)
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage() || isLoading}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage() || isLoading}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      <AdminPagination
+        pageIndex={table.getState().pagination.pageIndex}
+        pageSize={table.getState().pagination.pageSize}
+        totalCount={totalCount}
+        pageCount={table.getPageCount()}
+        disabled={isLoading}
+        onPageIndexChange={(pageIndex) =>
+          setPagination((current) => ({
+            ...current,
+            pageIndex,
+          }))
+        }
+        onPageSizeChange={(nextPageSize) =>
+          setPagination({
+            pageIndex: 0,
+            pageSize: nextPageSize,
+          })
+        }
+      />
     </div>
   );
 }

@@ -12,8 +12,8 @@ type MetadataProps = {
 };
 
 export async function generateMetadata({
-                                         params,
-                                       }: MetadataProps): Promise<Metadata> {
+  params,
+}: MetadataProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({
     locale,

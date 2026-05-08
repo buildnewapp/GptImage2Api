@@ -12,7 +12,7 @@ import {
 } from "@tanstack/react-table";
 
 import { getUsers, GetUsersResult } from "@/actions/users/admin";
-import { Button } from "@/components/ui/button";
+import { AdminPagination } from "@/components/shared/AdminPagination";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -32,6 +32,7 @@ interface DataTableProps<TData, TValue> {
   initialData: TData[];
   initialPageCount: number;
   pageSize: number;
+  totalCount: number;
 }
 
 export function DataTable<TData, TValue>({
@@ -39,6 +40,7 @@ export function DataTable<TData, TValue>({
   initialData,
   initialPageCount,
   pageSize,
+  totalCount: initialTotalCount,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -53,6 +55,7 @@ export function DataTable<TData, TValue>({
   });
   const [data, setData] = useState<TData[]>(initialData);
   const [pageCount, setPageCount] = useState<number>(initialPageCount);
+  const [totalCount, setTotalCount] = useState<number>(initialTotalCount);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -64,6 +67,7 @@ export function DataTable<TData, TValue>({
   useEffect(() => {
     if (
       pagination.pageIndex === 0 &&
+      pagination.pageSize === pageSize &&
       !debouncedGlobalFilter &&
       data === initialData
     ) {
@@ -79,14 +83,16 @@ export function DataTable<TData, TValue>({
           filter: debouncedGlobalFilter,
         });
         setData(result.data?.users as TData[]);
+        setTotalCount(result.data?.totalCount || 0);
         setPageCount(
-          Math.ceil((result.data?.totalCount || 0) / pagination.pageSize)
+          Math.ceil((result.data?.totalCount || 0) / pagination.pageSize),
         );
       } catch (error: any) {
         toast.error("Failed to fetch data", {
           description: error.message,
         });
         setData([]);
+        setTotalCount(0);
         setPageCount(0);
       } finally {
         setIsLoading(false);
@@ -99,6 +105,7 @@ export function DataTable<TData, TValue>({
     pagination.pageIndex,
     pagination.pageSize,
     initialData,
+    pageSize,
   ]);
 
   const table = useReactTable({
@@ -176,7 +183,7 @@ export function DataTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -223,7 +230,7 @@ export function DataTable<TData, TValue>({
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -242,30 +249,25 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between space-x-2 py-4">
-        <div className="text-sm text-muted-foreground">
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()}
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage() || isLoading}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage() || isLoading}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      <AdminPagination
+        pageIndex={table.getState().pagination.pageIndex}
+        pageSize={table.getState().pagination.pageSize}
+        totalCount={totalCount}
+        pageCount={table.getPageCount()}
+        disabled={isLoading}
+        onPageIndexChange={(pageIndex) =>
+          setPagination((current) => ({
+            ...current,
+            pageIndex,
+          }))
+        }
+        onPageSizeChange={(nextPageSize) =>
+          setPagination({
+            pageIndex: 0,
+            pageSize: nextPageSize,
+          })
+        }
+      />
     </div>
   );
 }

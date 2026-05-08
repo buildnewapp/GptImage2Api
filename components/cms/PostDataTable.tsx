@@ -1,6 +1,7 @@
 "use client";
 
 import { TagManagementDialog } from "@/components/cms/TagManagementDialog";
+import { AdminPagination } from "@/components/shared/AdminPagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -75,6 +76,7 @@ export function PostDataTable<TData, TValue>({
   });
   const [data, setData] = useState<TData[]>(initialData);
   const [pageCount, setPageCount] = useState<number>(initialPageCount);
+  const [totalCount, setTotalCount] = useState<number>(totalPosts);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
@@ -87,6 +89,7 @@ export function PostDataTable<TData, TValue>({
   useEffect(() => {
     if (
       pagination.pageIndex === 0 &&
+      pagination.pageSize === pageSize &&
       !debouncedGlobalFilter &&
       data === initialData
     ) {
@@ -108,14 +111,16 @@ export function PostDataTable<TData, TValue>({
         }
 
         setData(result.data?.posts as TData[]);
+        setTotalCount(result.data?.count || 0);
         setPageCount(
-          Math.ceil((result.data?.count || 0) / pagination.pageSize)
+          Math.ceil((result.data?.count || 0) / pagination.pageSize),
         );
       } catch (error: any) {
         toast.error(`Failed to fetch ${postType}s.`, {
           description: error.message,
         });
         setData([]);
+        setTotalCount(0);
         setPageCount(0);
       } finally {
         setIsLoading(false);
@@ -188,7 +193,7 @@ export function PostDataTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -207,7 +212,7 @@ export function PostDataTable<TData, TValue>({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -227,30 +232,25 @@ export function PostDataTable<TData, TValue>({
         </Table>
       </div>
 
-      <div className="flex items-center justify-between space-x-2 py-4">
-        <div className="text-sm text-muted-foreground">
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount() || 0} ({totalPosts} Post)
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage() || isLoading}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage() || isLoading}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      <AdminPagination
+        pageIndex={table.getState().pagination.pageIndex}
+        pageSize={table.getState().pagination.pageSize}
+        totalCount={totalCount}
+        pageCount={table.getPageCount()}
+        disabled={isLoading}
+        onPageIndexChange={(pageIndex) =>
+          setPagination((current) => ({
+            ...current,
+            pageIndex,
+          }))
+        }
+        onPageSizeChange={(nextPageSize) =>
+          setPagination({
+            pageIndex: 0,
+            pageSize: nextPageSize,
+          })
+        }
+      />
     </div>
   );
 }
