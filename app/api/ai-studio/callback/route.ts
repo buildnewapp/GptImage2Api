@@ -3,6 +3,7 @@ import {
   extractProviderFailureReason,
   extractTaskId,
   normalizeTaskState,
+  queryAiStudioTask,
 } from "@/lib/ai-studio/execute";
 import {
   archiveAiStudioGenerationMediaUrlsInBackground,
@@ -13,22 +14,55 @@ import {
   updateAiStudioGenerationProgress,
 } from "@/lib/ai-studio/generations";
 import { apiResponse } from "@/lib/api-response";
+import crypto from "crypto";
 import { NextRequest } from "next/server";
+
+const KIE_WEBHOOK_HMAC_KEY = process.env.KIE_WEBHOOK_HMAC_KEY;
+
+function verifyKieSignature(
+  taskId: string,
+  timestamp: string,
+  receivedSignature: string,
+  secret: string,
+) {
+  const expected = crypto
+    .createHmac("sha256", secret)
+    .update(`${taskId}.${timestamp}`)
+    .digest("base64");
+
+  if (expected.length !== receivedSignature.length) return false;
+  return crypto.timingSafeEqual(
+    Buffer.from(expected),
+    Buffer.from(receivedSignature),
+  );
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const expectedSecret =
-      process.env.AI_STUDIO_CALLBACK_SECRET || process.env.KIE_CALLBACK_SECRET;
-    const providedSecret = request.nextUrl.searchParams.get("secret");
-
-    if (expectedSecret && expectedSecret !== providedSecret) {
-      return apiResponse.unauthorized("Invalid callback secret.");
-    }
-
     const body = await request.json();
     const taskId = extractTaskId(body);
     if (!taskId) {
       return apiResponse.badRequest("Missing taskId in callback payload.");
+    }
+
+    if (KIE_WEBHOOK_HMAC_KEY) {
+      const timestamp = request.headers.get("x-webhook-timestamp");
+      const receivedSignature = request.headers.get("x-webhook-signature");
+
+      if (!timestamp || !receivedSignature) {
+        return apiResponse.unauthorized("Missing signature headers.");
+      }
+
+      if (
+        !verifyKieSignature(
+          taskId,
+          timestamp,
+          receivedSignature,
+          KIE_WEBHOOK_HMAC_KEY,
+        )
+      ) {
+        return apiResponse.unauthorized("Invalid signature.");
+      }
     }
 
     const generation = await getAiStudioGenerationByTaskId(taskId);
@@ -38,27 +72,54 @@ export async function POST(request: NextRequest) {
 
     await setAiStudioGenerationCallback(generation.id, body);
 
-    const state = normalizeTaskState(body);
-    const mediaUrls = extractMediaUrls(body);
+    const callbackCode =
+      body && typeof body === "object"
+        ? (body as Record<string, unknown>).code
+        : null;
+    const normalizedCallbackCode = Number(callbackCode);
+
+    if (normalizedCallbackCode === 501) {
+      await settleAiStudioGenerationFailure(generation.id, {
+        raw: body,
+        reason:
+          extractProviderFailureReason(body) ||
+          "Provider task failed",
+        providerState: "failed",
+      });
+
+      return apiResponse.success({
+        ok: true,
+        taskId,
+        state: "failed",
+      });
+    }
+
+    const shouldFetchKieResult = normalizedCallbackCode === 200;
+    const result = shouldFetchKieResult
+      ? await queryAiStudioTask(generation.catalogModelId, taskId)
+      : null;
+    const raw = result?.raw ?? body;
+    const state = result?.state ?? normalizeTaskState(body);
+    const mediaUrls = result?.mediaUrls ?? extractMediaUrls(body);
 
     if (state === "succeeded") {
       await settleAiStudioGenerationSuccess(generation.id, {
-        raw: body,
+        raw,
         mediaUrls,
         providerState: state,
       });
       archiveAiStudioGenerationMediaUrlsInBackground(generation.id);
     } else if (state === "failed") {
       await settleAiStudioGenerationFailure(generation.id, {
-        raw: body,
+        raw,
         reason:
-          extractProviderFailureReason(body) ||
+          extractProviderFailureReason(raw) ||
           "Provider task failed",
         providerState: state,
       });
     } else if (state === "queued" || state === "running") {
       await updateAiStudioGenerationProgress(generation.id, {
-        raw: body,
+        raw,
         state,
         mediaUrls,
       });
