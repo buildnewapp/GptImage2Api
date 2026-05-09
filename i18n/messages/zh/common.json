@@ -119,16 +119,6 @@
         "icon": "Users"
       },
       {
-        "name": "系统邮件",
-        "href": "/dashboard/system-emails",
-        "icon": "Mail"
-      },
-      {
-        "name": "API Key 管理",
-        "href": "/dashboard/apikeys-admin",
-        "icon": "Key"
-      },
-      {
         "name": "订单管理",
         "href": "/dashboard/orders",
         "icon": "ShoppingCart"
@@ -137,6 +127,26 @@
         "name": "积分流水",
         "href": "/dashboard/credits",
         "icon": "Coins"
+      },
+      {
+        "name": "AI Studio 管理",
+        "href": "/dashboard/ai-studio-admin",
+        "icon": "Bot"
+      },
+      {
+        "name": "Prompt 管理",
+        "href": "/dashboard/prompts-admin",
+        "icon": "FileText"
+      },
+      {
+        "name": "系统邮件",
+        "href": "/dashboard/system-emails",
+        "icon": "Mail"
+      },
+      {
+        "name": "API Key 管理",
+        "href": "/dashboard/apikeys-admin",
+        "icon": "Key"
       },
       {
         "name": "邀请管理",
@@ -157,16 +167,6 @@
         "name": "R2资源管理",
         "href": "/dashboard/r2-resources",
         "icon": "FileBox"
-      },
-      {
-        "name": "AI Studio 管理",
-        "href": "/dashboard/ai-studio-admin",
-        "icon": "Bot"
-      },
-      {
-        "name": "Prompt 管理",
-        "href": "/dashboard/prompts-admin",
-        "icon": "FileText"
       }
     ],
     "AdminContentTabs": {
