@@ -1,0 +1,358 @@
+{
+  "jsonLd": [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "applicationCategory": "DesignApplication",
+      "browserRequirements": "需要 JavaScript 和现代浏览器。",
+      "description": "在线将 PNG、JPG、JPEG 和 WebP 矢量化为可编辑 SVG 文件。可使用按格式划分的转换器，并将 SVG 导出为透明或白底 PNG。",
+      "featureList": [
+        "将 PNG、JPG、JPEG 和 WebP 图片转换为 SVG",
+        "将 SVG 文件导出为 PNG",
+        "在线预览图片转 SVG 的效果",
+        "矢量化 Logo、图标、草图和插画",
+        "登录后下载干净的 SVG 输出"
+      ],
+      "image": "https://file.tikdek.com/temp/svg/hero/hummingbird-before-after.png",
+      "name": "图片转 SVG 转换器",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "operatingSystem": "Web",
+      "url": "https://tikdek.com"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "可以。首页面向 PNG、JPG、JPEG、WebP 等常见格式提供免费的图片转 SVG 预览。登录功能可继续支持保存文件、批量工具和更高额度。"
+          },
+          "name": "我可以免费把图片转换成 SVG 吗？"
+        },
+        {
+          "@type": "Question",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "可以。PNG、JPG、JPEG 和 WebP 是图片转 SVG 工作流的主要格式，每种格式也可以拥有独立转换页面和更具体说明。"
+          },
+          "name": "可以把 PNG、JPG 和 WebP 转成 SVG 吗？"
+        },
+        {
+          "@type": "Question",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "可以。图片转 SVG 通常指把位图矢量化为可缩放 SVG。Logo、图标、草图、签名、线稿和轮廓清晰的插画效果最好。"
+          },
+          "name": "这是图片矢量化工具吗？"
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "description": "使用在线转换器，将位图转换为可缩放 SVG 文件。",
+      "name": "如何将图片转换为 SVG",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "上传图片",
+          "position": 1,
+          "text": "选择 PNG、JPG、JPEG、WebP 或其他受支持的图片文件。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "预览矢量结果",
+          "position": 2,
+          "text": "查看前后对比预览，并在可用时调整设置。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "下载 SVG",
+          "position": 3,
+          "text": "导出适用于网站、设计工具、切割机或印刷的干净 SVG 文件。"
+        }
+      ],
+      "totalTime": "PT1M"
+    }
+  ],
+  "compare": {
+    "afterAlt": "{title} SVG 输出",
+    "ariaLabel": "对比原始图片和 SVG 输出",
+    "beforeAlt": "{title} 原图",
+    "replay": "重播"
+  },
+  "hero": {
+    "description": "将 PNG、JPG、JPEG、WebP 和其他图片转换为干净、可编辑的 SVG 文件。免费预览矢量结果，再使用积分下载干净 SVG。",
+    "showPreview": "显示 {title} 预览",
+    "titleAccent": "图片转 SVG",
+    "titleSuffix": "转换器",
+    "samples": [
+      {
+        "label": "图标",
+        "title": "齿轮图标"
+      },
+      {
+        "label": "Logo",
+        "title": "狐狸 Logo"
+      },
+      {
+        "label": "徽章",
+        "title": "龙形徽章"
+      },
+      {
+        "label": "草图",
+        "title": "花纹草图"
+      },
+      {
+        "label": "头像",
+        "title": "肖像头像"
+      }
+    ]
+  },
+  "upload": {
+    "ariaLabel": "上传图片文件",
+    "badges": {
+      "fast": "快速",
+      "noSignUp": "无需注册",
+      "secure": "安全"
+    },
+    "button": "上传图片",
+    "drop": "或拖放文件",
+    "formats": "PNG、JPG、JPEG 或 WebP"
+  },
+  "useCases": {
+    "description": "当图片需要在任意尺寸保持清晰时，SVG 转换最有价值。",
+    "titleAccent": "Logo、图标和艺术图",
+    "titlePrefix": "面向",
+    "items": [
+      {
+        "afterAlt": "矢量转换后的清晰纹章 SVG",
+        "beforeAlt": "SVG 转换前的纹章图案",
+        "description": "把细节丰富的徽章图案转换为可缩放 SVG 素材。",
+        "title": "徽章与标识"
+      },
+      {
+        "afterAlt": "矢量转换后的清晰峡谷 SVG",
+        "beforeAlt": "SVG 转换前的沙漠峡谷插画",
+        "description": "让彩色插画在网页、印刷和产品场景中保持锐利。",
+        "title": "插画场景"
+      },
+      {
+        "afterAlt": "矢量转换后的清晰角色 SVG",
+        "beforeAlt": "SVG 转换前的吉祥物角色插画",
+        "description": "把角色插画转换为干净、可复用的矢量图形。",
+        "title": "吉祥物图形"
+      },
+      {
+        "afterAlt": "矢量转换后的清晰木屋 SVG",
+        "beforeAlt": "SVG 转换前的木屋插画",
+        "description": "为缩放、编辑和发布准备插画场景。",
+        "title": "编辑插画"
+      },
+      {
+        "afterAlt": "矢量转换后的清晰肖像 SVG",
+        "beforeAlt": "SVG 转换前的风格化肖像",
+        "description": "从清晰位图创建风格化 SVG 肖像。",
+        "title": "肖像艺术"
+      }
+    ]
+  },
+  "vectorInfo": {
+    "description1": "这款工具适合把能从矢量输出中受益的素材转换为 SVG：Logo、图标、草图、签名、线稿、插画和简单图形。",
+    "description2": "照片也可以转换为风格化矢量结果，但复杂照片不像简单 Logo 那样稳定。想得到干净 SVG 路径，请使用对比强、边缘清晰的图片。",
+    "eyebrow": "图片矢量化",
+    "title": "矢量化轮廓清晰、边缘明确的图片"
+  },
+  "conversion": {
+    "description": "从你需要的具体格式转换页开始。高频图片与 SVG 工作流都有独立页面，说明更清楚。",
+    "titleAccent": "转换中心",
+    "titlePrefix": "格式",
+    "groups": [
+      {
+        "description": "打开专用图片转 SVG 转换器，选择你想矢量化的源格式。",
+        "eyebrow": "转为 SVG",
+        "title": "转换为 SVG",
+        "items": [
+          {
+            "description": "矢量化 PNG Logo 和图形",
+            "title": "PNG 转 SVG"
+          },
+          {
+            "description": "将 JPG 照片转换为 SVG 矢量",
+            "title": "JPG 转 SVG"
+          },
+          {
+            "description": "将 WebP 图片转换为设计工具可用格式",
+            "title": "WebP 转 SVG"
+          }
+        ]
+      },
+      {
+        "description": "当平台需要固定尺寸图片时，将矢量图导出为位图格式。",
+        "eyebrow": "从 SVG 导出",
+        "title": "从 SVG 导出",
+        "items": [
+          {
+            "description": "将 SVG 文件导出为清晰 PNG 图片",
+            "title": "SVG 转 PNG"
+          }
+        ]
+      },
+      {
+        "description": "如果只需要图片格式转换，可使用免费的浏览器转换工具。",
+        "eyebrow": "图片格式",
+        "title": "优化图片格式",
+        "items": [
+          {
+            "description": "将 JPG 和 JPEG 图片转换为压缩 WebP 文件",
+            "title": "JPG 转 WebP"
+          },
+          {
+            "description": "免费将 WebP 图片转换为兼容性更好的 JPG 文件",
+            "title": "WebP 转 JPG"
+          }
+        ]
+      }
+    ]
+  },
+  "workflows": {
+    "description": "在需要可缩放图形的设计和手作工作流中使用图片转 SVG。",
+    "eyebrow": "SVG 使用场景",
+    "titleLine1": "将图片转换为 SVG",
+    "titleLine2Accent": "真实工作流",
+    "titleLine2Prefix": "用于",
+    "items": [
+      {
+        "description": "把低分辨率 Logo 转换为可缩放 SVG 品牌素材。",
+        "title": "Logo 转 SVG"
+      },
+      {
+        "description": "将 UI 图形和简单符号转换为清晰 SVG 文件。",
+        "title": "图标转 SVG"
+      },
+      {
+        "description": "矢量化手绘、签名、轮廓和黑白线稿。",
+        "title": "草图与线稿"
+      },
+      {
+        "description": "为 Figma、Illustrator、网站和应用准备 SVG 素材。",
+        "title": "设计工具"
+      },
+      {
+        "description": "当图片边缘清晰时，为手作和切割工作流创建 SVG 文件。",
+        "title": "Cricut 与切割"
+      }
+    ]
+  },
+  "batch": {
+    "description": "当你需要处理一组 Logo、图标或设计素材时，可以沿用同样的图片转 SVG 流程。随着产品发展，批量功能可支持保存文件、更高额度和高级工作流。",
+    "eyebrow": "高级工作流",
+    "features": [
+      "支持批量工作流",
+      "按格式智能分流",
+      "下载前可预览",
+      "干净 SVG 输出"
+    ],
+    "preview": {
+      "adjust": "2 调整",
+      "batchPreview": "批量预览",
+      "convert": "3 转换",
+      "converting": "转换中...",
+      "upload": "1 上传"
+    },
+    "titleAccent": "批量工具",
+    "titlePrefix": "使用"
+  },
+  "steps": {
+    "description": "三步即可把位图转换为可缩放 SVG 文件。",
+    "titleAccent": "图片转 SVG",
+    "titlePrefix": "如何完成",
+    "items": [
+      {
+        "description": "选择 PNG、JPG、JPEG、WebP 或其他受支持的图片文件。",
+        "title": "上传图片"
+      },
+      {
+        "description": "查看前后对比预览，并在可用时调整设置。",
+        "title": "预览矢量结果"
+      },
+      {
+        "description": "导出适用于网站、设计工具、切割机或印刷的干净 SVG 文件。",
+        "title": "下载 SVG"
+      }
+    ]
+  },
+  "resources": {
+    "description": "了解哪些文件转换效果最好，以及如何准备图片以获得更干净的 SVG 输出。",
+    "readMore": "阅读更多",
+    "title": "SVG 指南与资源",
+    "items": [
+      {
+        "description": "了解哪些图片最适合转换，以及如何准备更干净的 SVG 输出。",
+        "title": "图片转 SVG 最佳实践"
+      },
+      {
+        "description": "了解何时使用 SVG，何时 PNG 仍然是更好的选择。",
+        "title": "SVG 与 PNG"
+      },
+      {
+        "description": "把 Logo 转换为可缩放品牌素材的实用技巧。",
+        "title": "如何将 Logo 转换为 SVG"
+      },
+      {
+        "description": "为手作和切割工作流准备干净的 SVG 文件。",
+        "title": "面向 Cricut 和切割的 SVG"
+      }
+    ]
+  },
+  "cta": {
+    "description": "上传 PNG、JPG、JPEG 或 WebP 图片，并将其转换为适用于 Logo、图标、插画、网站和设计工具的可缩放 SVG 文件。",
+    "eyebrow": "图片转 SVG 转换器",
+    "note": "免费预览。登录后下载干净 SVG 文件。",
+    "title": "开始将图片转换为 SVG"
+  },
+  "faq": {
+    "description": "关于图片矢量化、格式支持和 SVG 导出工作流的清晰解答。",
+    "title": "常见问题",
+    "items": [
+      {
+        "answer": "可以。首页面向 PNG、JPG、JPEG、WebP 等常见格式提供免费的图片转 SVG 预览。登录功能可继续支持保存文件、批量工具和更高额度。",
+        "question": "我可以免费把图片转换成 SVG 吗？"
+      },
+      {
+        "answer": "可以。PNG、JPG、JPEG 和 WebP 是图片转 SVG 工作流的主要格式，每种格式也可以拥有独立转换页面和更具体说明。",
+        "question": "可以把 PNG、JPG 和 WebP 转成 SVG 吗？"
+      },
+      {
+        "answer": "可以。图片转 SVG 通常指把位图矢量化为可缩放 SVG。Logo、图标、草图、签名、线稿和轮廓清晰的插画效果最好。",
+        "question": "这是图片矢量化工具吗？"
+      },
+      {
+        "answer": "目标是生成可在设计和开发工具中打开的干净 SVG。可编辑程度取决于源图片和转换设置，但 SVG 本身适合可缩放矢量工作流。",
+        "question": "SVG 文件可以编辑吗？"
+      },
+      {
+        "answer": "可以转换照片，但细节丰富的照片通常会得到风格化矢量结果，而不是完全复刻。想得到干净 SVG 路径，请使用对比强、形状清晰、边缘明确的图片。",
+        "question": "可以把照片转换成 SVG 吗？"
+      },
+      {
+        "answer": "当前公开版本支持 PNG、JPG、JPEG、WebP 转 SVG，以及 SVG 转 PNG 导出。SVG 转 JPG、SVG 转 WebP 和文档格式可作为后续独立工作流添加。",
+        "question": "现在支持哪些格式？"
+      },
+      {
+        "answer": "第一次预览无需注册。登录后可以下载干净 SVG 文件，或使用积分进行更多生成。",
+        "question": "需要注册吗？"
+      },
+      {
+        "answer": "上传流程会尽量让隐私信息保持可见、易查找。上传敏感品牌素材或客户文件前，请先查看隐私政策。",
+        "question": "上传文件是私密的吗？"
+      }
+    ]
+  }
+}
