@@ -1,7 +1,7 @@
 "use client";
 
 import { deleteR2File, listR2Files, R2File } from "@/actions/r2-resources";
-import { Button } from "@/components/ui/button";
+import { AdminPagination } from "@/components/shared/AdminPagination";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -41,7 +41,7 @@ export function ImagesDataTable({
   initialTokenMap = {},
   categoryPrefix,
   r2PublicUrl,
-  pageSize,
+  pageSize: initialPageSize,
 }: ImagesDataTableProps) {
   const [filter, setFilter] = useState("");
   const [debouncedFilter] = useDebounce(filter, 500);
@@ -49,6 +49,7 @@ export function ImagesDataTable({
   const [files, setFiles] = useState<R2File[]>(initialData);
   const pageTokensRef = useRef<Record<number, string | null>>(initialTokenMap);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
+  const [currentPageSize, setCurrentPageSize] = useState(initialPageSize);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -79,7 +80,7 @@ export function ImagesDataTable({
           categoryPrefix: categoryPrefix,
           filterPrefix: debouncedFilter,
           continuationToken: tokenForThisPage ?? undefined,
-          pageSize: pageSize,
+          pageSize: currentPageSize,
         });
 
         if (!result.success || !result.data) {
@@ -98,12 +99,12 @@ export function ImagesDataTable({
         return result.data;
       } catch (err: any) {
         handleFetchError(
-          err.message || "An unknown error occurred during fetch"
+          err.message || "An unknown error occurred during fetch",
         );
         return null;
       }
     },
-    [categoryPrefix, debouncedFilter, pageSize]
+    [categoryPrefix, debouncedFilter, currentPageSize],
   );
 
   useEffect(() => {
@@ -124,7 +125,7 @@ export function ImagesDataTable({
     categoryPrefix,
     debouncedFilter,
     isDeleting,
-    pageSize,
+    currentPageSize,
     fetchFiles,
   ]);
 
@@ -157,12 +158,12 @@ export function ImagesDataTable({
         setIsDeleting(false);
       }
     },
-    [currentPageIndex, fetchFiles]
+    [currentPageIndex, fetchFiles],
   );
 
   const columns = useMemo(
     () => getColumns(r2PublicUrl, handleDelete),
-    [r2PublicUrl, handleDelete]
+    [r2PublicUrl, handleDelete],
   );
 
   const table = useReactTable({
@@ -170,7 +171,7 @@ export function ImagesDataTable({
     columns,
     pageCount: -1,
     state: {
-      pagination: { pageIndex: currentPageIndex, pageSize: pageSize },
+      pagination: { pageIndex: currentPageIndex, pageSize: currentPageSize },
       sorting,
     },
     onPaginationChange: (updater) => {
@@ -193,18 +194,10 @@ export function ImagesDataTable({
 
   const canGoNext = hasMore;
   const canGoPrevious = currentPageIndex > 0;
-
-  const handleNextPage = () => {
-    if (canGoNext) {
-      setCurrentPageIndex((prev) => prev + 1);
-    }
-  };
-
-  const handlePreviousPage = () => {
-    if (canGoPrevious) {
-      setCurrentPageIndex((prev) => prev - 1);
-    }
-  };
+  const knownTotalCount = currentPageIndex * currentPageSize + files.length;
+  const paginationPageCount = hasMore
+    ? currentPageIndex + 2
+    : currentPageIndex + 1;
 
   const handleUploadSuccess = async () => {
     setCurrentPageIndex(0);
@@ -216,6 +209,15 @@ export function ImagesDataTable({
     setIsLoading(true);
     await fetchFiles(0);
     setIsLoading(false);
+  };
+
+  const handlePageSizeChange = (nextPageSize: number) => {
+    setCurrentPageSize(nextPageSize);
+    setCurrentPageIndex(0);
+    pageTokensRef.current = {};
+    setHasMore(true);
+    setFiles([]);
+    setError(null);
   };
 
   return (
@@ -264,7 +266,7 @@ export function ImagesDataTable({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -279,7 +281,7 @@ export function ImagesDataTable({
                       <TableCell key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </TableCell>
                     ))}
@@ -300,29 +302,22 @@ export function ImagesDataTable({
         </Table>
       </div>
 
-      <div className="flex items-center justify-between space-x-2 py-4">
-        <div className="text-sm text-muted-foreground">
-          Page {currentPageIndex + 1}
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePreviousPage}
-            disabled={!canGoPrevious || isLoading || isDeleting}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleNextPage}
-            disabled={!canGoNext || isLoading || isDeleting}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      <AdminPagination
+        pageIndex={currentPageIndex}
+        pageSize={currentPageSize}
+        totalCount={knownTotalCount}
+        pageCount={paginationPageCount}
+        totalLabel={
+          hasMore
+            ? `第 ${currentPageIndex + 1} 页，已加载至少 ${knownTotalCount} 条`
+            : `第 ${currentPageIndex + 1} 页，共 ${knownTotalCount} 条`
+        }
+        canGoPrevious={canGoPrevious}
+        canGoNext={canGoNext}
+        disabled={isLoading || isDeleting}
+        onPageIndexChange={setCurrentPageIndex}
+        onPageSizeChange={handlePageSizeChange}
+      />
     </div>
   );
 }

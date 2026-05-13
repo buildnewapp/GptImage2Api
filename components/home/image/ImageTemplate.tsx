@@ -1,5 +1,6 @@
 import { getLocale, getTranslations } from "next-intl/server";
 
+import { getPublicPricingPlans } from "@/actions/prices/public";
 import TemplateJsonLd from "@/components/home/image/TemplateJsonLd";
 import { buildVideoTemplatePricingSection } from "@/components/home/video/pricing-data";
 import type { VideoTemplatePage } from "@/components/home/video/types";
@@ -17,6 +18,13 @@ import CTA from "@/components/home/video/CTA";
 export default async function ImageTemplate() {
   const locale = await getLocale();
   const t = await getTranslations("ImageTemplate");
+  const plansResult = await getPublicPricingPlans();
+  const plans = plansResult.success ? plansResult.data ?? [] : [];
+
+  if (!plansResult.success) {
+    console.error("Failed to fetch public pricing plans:", plansResult.error);
+  }
+
   const page = {
     hero: t.raw("hero"),
     featureRows: t.raw("featureRows"),
@@ -27,6 +35,7 @@ export default async function ImageTemplate() {
     pricing: buildVideoTemplatePricingSection({
       baseSection: t.raw("pricing"),
       locale,
+      plans,
     }),
     faq: t.raw("faq"),
     cta: t.raw("cta"),

@@ -1,0 +1,358 @@
+{
+  "jsonLd": [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "applicationCategory": "DesignApplication",
+      "browserRequirements": "Requires JavaScript and a modern browser.",
+      "description": "Vectorize PNG, JPG, JPEG, and WebP into editable SVG files online. Use format-specific converters and export SVG to PNG with transparent or white backgrounds.",
+      "featureList": [
+        "Convert PNG, JPG, JPEG, and WebP images to SVG",
+        "Export SVG files to PNG",
+        "Preview image to SVG results online",
+        "Vectorize logos, icons, sketches, and illustrations",
+        "Download clean SVG output after sign in"
+      ],
+      "image": "https://file.tikdek.com/temp/svg/hero/hummingbird-before-after.png",
+      "name": "Image to SVG Converter",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "operatingSystem": "Web",
+      "url": "https://tikdek.com"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The homepage is designed as a free image to SVG converter for common image formats such as PNG, JPG, JPEG, and WebP. Optional account features can support saved files, batch tools, and higher limits."
+          },
+          "name": "Can I convert an image to SVG for free?"
+        },
+        {
+          "@type": "Question",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. PNG, JPG, JPEG, and WebP are the main image formats for the image to SVG workflow. Each format also has a dedicated converter page with more specific instructions."
+          },
+          "name": "Can I convert PNG, JPG, and WebP to SVG?"
+        },
+        {
+          "@type": "Question",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Image to SVG conversion usually means vectorizing a raster image into scalable SVG output. The best results come from logos, icons, sketches, signatures, line art, and illustrations with clear shapes."
+          },
+          "name": "Is this an image vectorizer?"
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "description": "Turn a raster image into a scalable SVG file with the online converter.",
+      "name": "How to Convert an Image to SVG",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Upload your image",
+          "position": 1,
+          "text": "Choose a PNG, JPG, JPEG, WebP, or other supported image file."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Preview the vector result",
+          "position": 2,
+          "text": "Review the before and after preview, then adjust settings when available."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Download your SVG",
+          "position": 3,
+          "text": "Export a clean SVG file for websites, design tools, cutting machines, or print."
+        }
+      ],
+      "totalTime": "PT1M"
+    }
+  ],
+  "compare": {
+    "afterAlt": "{title} SVG output",
+    "ariaLabel": "Compare original image with SVG output",
+    "beforeAlt": "{title} original",
+    "replay": "Replay"
+  },
+  "hero": {
+    "description": "Convert PNG, JPG, JPEG, WebP, and other images into clean, editable SVG files. Preview the vector result for free, then use credits for clean SVG downloads.",
+    "showPreview": "Show {title} preview",
+    "titleAccent": "Image to SVG",
+    "titleSuffix": "Converter",
+    "samples": [
+      {
+        "label": "Icon",
+        "title": "Gear icon"
+      },
+      {
+        "label": "Logo",
+        "title": "Fox logo"
+      },
+      {
+        "label": "Emblem",
+        "title": "Dragon emblem"
+      },
+      {
+        "label": "Sketch",
+        "title": "Floral sketch"
+      },
+      {
+        "label": "Avatar",
+        "title": "Portrait avatar"
+      }
+    ]
+  },
+  "upload": {
+    "ariaLabel": "Upload image file",
+    "badges": {
+      "fast": "Fast",
+      "noSignUp": "No sign up",
+      "secure": "Secure"
+    },
+    "button": "Upload Image",
+    "drop": "or drop a file",
+    "formats": "PNG, JPG, JPEG, or WebP"
+  },
+  "useCases": {
+    "description": "SVG conversion is most useful when your image needs to stay sharp at any size.",
+    "titleAccent": "Logos, Icons, and Art",
+    "titlePrefix": "Image Vectorizer for",
+    "items": [
+      {
+        "afterAlt": "Crisp heraldic crest SVG after vector conversion",
+        "beforeAlt": "Heraldic crest artwork before SVG conversion",
+        "description": "Turn detailed crest artwork into scalable SVG assets.",
+        "title": "Emblems & badges"
+      },
+      {
+        "afterAlt": "Crisp desert canyon SVG after vector conversion",
+        "beforeAlt": "Desert canyon illustration before SVG conversion",
+        "description": "Keep colorful artwork sharp across web, print, and product surfaces.",
+        "title": "Illustration scenes"
+      },
+      {
+        "afterAlt": "Crisp mascot character SVG after vector conversion",
+        "beforeAlt": "Mascot character illustration before SVG conversion",
+        "description": "Convert character art into clean, reusable vector graphics.",
+        "title": "Mascot graphics"
+      },
+      {
+        "afterAlt": "Crisp cabin illustration SVG after vector conversion",
+        "beforeAlt": "Cabin illustration before SVG conversion",
+        "description": "Prepare illustrated scenes for resizing, editing, and publishing.",
+        "title": "Editorial artwork"
+      },
+      {
+        "afterAlt": "Crisp portrait artwork SVG after vector conversion",
+        "beforeAlt": "Stylized portrait artwork before SVG conversion",
+        "description": "Create stylized SVG portraits from clear raster artwork.",
+        "title": "Portrait art"
+      }
+    ]
+  },
+  "vectorInfo": {
+    "description1": "This tool is designed for image to SVG conversion when assets benefit from vector output: logos, icons, sketches, signatures, line art, illustrations, and simple graphics.",
+    "description2": "Photos can also be converted into stylized vector results, but detailed photos do not behave like simple logos. For clean SVG paths, use images with strong contrast and clear edges.",
+    "eyebrow": "Image to vector",
+    "title": "Vectorize images that have clear shapes and edges"
+  },
+  "conversion": {
+    "description": "Start from the exact converter page for the format you need. The highest-demand image and SVG workflows each have a focused page with clearer instructions.",
+    "titleAccent": "Conversion Hub",
+    "titlePrefix": "Format",
+    "groups": [
+      {
+        "description": "Open a dedicated image to SVG converter for the source format you want to vectorize.",
+        "eyebrow": "To SVG",
+        "title": "Convert to SVG",
+        "items": [
+          {
+            "description": "Vectorize PNG logos and graphics",
+            "title": "PNG to SVG"
+          },
+          {
+            "description": "Turn JPG photos into SVG vectors",
+            "title": "JPG to SVG"
+          },
+          {
+            "description": "Convert WebP images for design tools",
+            "title": "WebP to SVG"
+          }
+        ]
+      },
+      {
+        "description": "Export vector artwork into raster formats when a platform needs a fixed-size image.",
+        "eyebrow": "From SVG",
+        "title": "Export from SVG",
+        "items": [
+          {
+            "description": "Export SVG files as crisp PNG images",
+            "title": "SVG to PNG"
+          }
+        ]
+      },
+      {
+        "description": "Use free browser-based converter tools when you only need image format conversion.",
+        "eyebrow": "Image Formats",
+        "title": "Optimize image formats",
+        "items": [
+          {
+            "description": "Convert JPG and JPEG images into compressed WebP files",
+            "title": "JPG to WebP"
+          },
+          {
+            "description": "Convert WebP images into compatible JPG files for free",
+            "title": "WebP to JPG"
+          }
+        ]
+      }
+    ]
+  },
+  "workflows": {
+    "description": "Use image to SVG conversion for the design and maker workflows where scalable graphics matter.",
+    "eyebrow": "SVG use cases",
+    "titleLine1": "Convert Images to SVG",
+    "titleLine2Accent": "Real Workflows",
+    "titleLine2Prefix": "for",
+    "items": [
+      {
+        "description": "Convert low-resolution logos into scalable SVG files for brand assets.",
+        "title": "Logo to SVG"
+      },
+      {
+        "description": "Turn UI graphics and simple symbols into crisp SVG files.",
+        "title": "Icons to SVG"
+      },
+      {
+        "description": "Vectorize drawings, signatures, outlines, and black-and-white artwork.",
+        "title": "Sketches & Line Art"
+      },
+      {
+        "description": "Prepare SVG assets for Figma, Illustrator, websites, and apps.",
+        "title": "Design Tools"
+      },
+      {
+        "description": "Create SVG files for maker workflows when your image has clean edges.",
+        "title": "Cricut & Cutting"
+      }
+    ]
+  },
+  "batch": {
+    "description": "Keep the same image to SVG flow when you need to process groups of logos, icons, or design assets. Batch features can support saved files, higher limits, and premium workflows as the product grows.",
+    "eyebrow": "Advanced workflow",
+    "features": [
+      "Batch-ready workflow",
+      "Format-aware routing",
+      "Preview before download",
+      "Clean SVG outputs"
+    ],
+    "preview": {
+      "adjust": "2 Adjust",
+      "batchPreview": "Batch preview",
+      "convert": "3 Convert",
+      "converting": "Converting...",
+      "upload": "1 Upload"
+    },
+    "titleAccent": "Batch Tools",
+    "titlePrefix": "Convert More Images With"
+  },
+  "steps": {
+    "description": "Turn a raster image into a scalable SVG file in three simple steps.",
+    "titleAccent": "Image to SVG",
+    "titlePrefix": "How to Convert an",
+    "items": [
+      {
+        "description": "Choose a PNG, JPG, JPEG, WebP, or other supported image file.",
+        "title": "Upload your image"
+      },
+      {
+        "description": "Review the before and after preview, then adjust settings when available.",
+        "title": "Preview the vector result"
+      },
+      {
+        "description": "Export a clean SVG file for websites, design tools, cutting machines, or print.",
+        "title": "Download your SVG"
+      }
+    ]
+  },
+  "resources": {
+    "description": "Learn which files convert best and how to prepare images for cleaner SVG output.",
+    "readMore": "Read More",
+    "title": "SVG Guides and Resources",
+    "items": [
+      {
+        "description": "Learn which images convert best and how to prepare cleaner SVG output.",
+        "title": "Image to SVG Best Practices"
+      },
+      {
+        "description": "Understand when to use SVG and when PNG is still the better choice.",
+        "title": "SVG vs PNG"
+      },
+      {
+        "description": "Practical tips for turning logos into scalable brand assets.",
+        "title": "How to Convert a Logo to SVG"
+      },
+      {
+        "description": "Prepare clean SVG files for maker and cutting workflows.",
+        "title": "SVG for Cricut and Cutting"
+      }
+    ]
+  },
+  "cta": {
+    "description": "Upload a PNG, JPG, JPEG, or WebP image and turn it into a scalable SVG file for logos, icons, illustrations, websites, and design tools.",
+    "eyebrow": "Image to SVG Converter",
+    "note": "Preview for free. Sign in to download clean SVG files.",
+    "title": "Start Converting Images to SVG"
+  },
+  "faq": {
+    "description": "Clear answers about image vectorization, format support, and SVG export workflows.",
+    "title": "Common Questions",
+    "items": [
+      {
+        "answer": "Yes. The homepage is designed as a free image to SVG converter for common image formats such as PNG, JPG, JPEG, and WebP. Optional account features can support saved files, batch tools, and higher limits.",
+        "question": "Can I convert an image to SVG for free?"
+      },
+      {
+        "answer": "Yes. PNG, JPG, JPEG, and WebP are the main image formats for the image to SVG workflow. Each format also has a dedicated converter page with more specific instructions.",
+        "question": "Can I convert PNG, JPG, and WebP to SVG?"
+      },
+      {
+        "answer": "Yes. Image to SVG conversion usually means vectorizing a raster image into scalable SVG output. The best results come from logos, icons, sketches, signatures, line art, and illustrations with clear shapes.",
+        "question": "Is this an image vectorizer?"
+      },
+      {
+        "answer": "The goal is to create clean SVG output that can be opened in design and development tools. Editability depends on the source image and conversion settings, but SVG is designed for scalable vector workflows.",
+        "question": "Will the SVG file be editable?"
+      },
+      {
+        "answer": "You can convert photos to SVG, but detailed photos often produce stylized vector results rather than perfect replicas. For clean SVG paths, use images with strong contrast, simple shapes, and clear edges.",
+        "question": "Can I convert a photo to SVG?"
+      },
+      {
+        "answer": "The public launch supports PNG, JPG, JPEG, and WebP to SVG, plus SVG to PNG export. SVG to JPG, SVG to WebP, and document formats can be added as separate workflows later.",
+        "question": "Which formats are supported now?"
+      },
+      {
+        "answer": "No sign-up is required for your first preview. Sign in to download clean SVG files or use credits for more generations.",
+        "question": "Do I need to sign up?"
+      },
+      {
+        "answer": "The upload flow is designed to keep privacy information visible and easy to find. Check the privacy policy before uploading sensitive brand assets or client files.",
+        "question": "Are uploaded files private?"
+      }
+    ]
+  }
+}

@@ -3,6 +3,7 @@ import {
   subsectionTitleClass,
 } from "@/components/home/video/constants";
 import { buildPricingValueRows } from "@/components/home/video/pricing-value-data";
+import type { VideoPricingSourcePlan } from "@/components/home/video/pricing-data";
 
 function getCopy(locale: string) {
   if (locale === "zh") {
@@ -40,9 +41,15 @@ function getCopy(locale: string) {
   };
 }
 
-export default function PricingValueComparison({ locale }: { locale: string }) {
+export default function PricingValueComparison({
+  locale,
+  plans,
+}: {
+  locale: string;
+  plans: VideoPricingSourcePlan[];
+}) {
   const copy = getCopy(locale);
-  const rows = buildPricingValueRows({ locale });
+  const rows = buildPricingValueRows({ locale, plans });
 
   return (
     <div className="container mx-auto px-4 pb-24">

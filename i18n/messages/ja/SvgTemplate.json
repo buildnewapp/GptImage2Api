@@ -1,0 +1,358 @@
+{
+  "jsonLd": [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "applicationCategory": "DesignApplication",
+      "browserRequirements": "JavaScript と最新ブラウザが必要です。",
+      "description": "PNG、JPG、JPEG、WebP をオンラインで編集可能な SVG ファイルにベクター化します。形式別コンバーターを使い、SVG を透明または白背景の PNG として書き出せます。",
+      "featureList": [
+        "PNG、JPG、JPEG、WebP 画像を SVG に変換",
+        "SVG ファイルを PNG に書き出し",
+        "画像から SVG への結果をオンラインでプレビュー",
+        "ロゴ、アイコン、スケッチ、イラストをベクター化",
+        "サインイン後にクリーンな SVG をダウンロード"
+      ],
+      "image": "https://file.tikdek.com/temp/svg/hero/hummingbird-before-after.png",
+      "name": "画像から SVG コンバーター",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "operatingSystem": "Web",
+      "url": "https://tikdek.com"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "はい。ホームページは PNG、JPG、JPEG、WebP など一般的な画像形式向けの無料画像から SVG コンバーターとして設計されています。アカウント機能では保存、バッチツール、高い上限にも対応できます。"
+          },
+          "name": "画像を無料で SVG に変換できますか？"
+        },
+        {
+          "@type": "Question",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "はい。PNG、JPG、JPEG、WebP は画像から SVG への主な入力形式です。各形式には、より具体的な説明を持つ専用ページも用意できます。"
+          },
+          "name": "PNG、JPG、WebP を SVG に変換できますか？"
+        },
+        {
+          "@type": "Question",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "はい。画像から SVG への変換は通常、ラスター画像を拡大縮小可能な SVG にベクター化することを意味します。ロゴ、アイコン、スケッチ、署名、線画、輪郭が明確なイラストに向いています。"
+          },
+          "name": "これは画像ベクター化ツールですか？"
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "description": "オンラインコンバーターで、ラスター画像を拡大縮小可能な SVG ファイルに変換します。",
+      "name": "画像を SVG に変換する方法",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "画像をアップロード",
+          "position": 1,
+          "text": "PNG、JPG、JPEG、WebP、またはその他の対応画像ファイルを選択します。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "ベクター結果をプレビュー",
+          "position": 2,
+          "text": "変換前後のプレビューを確認し、利用できる場合は設定を調整します。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "SVG をダウンロード",
+          "position": 3,
+          "text": "Web サイト、デザインツール、カッティングマシン、印刷向けにクリーンな SVG を書き出します。"
+        }
+      ],
+      "totalTime": "PT1M"
+    }
+  ],
+  "compare": {
+    "afterAlt": "{title} の SVG 出力",
+    "ariaLabel": "元画像と SVG 出力を比較",
+    "beforeAlt": "{title} の元画像",
+    "replay": "リプレイ"
+  },
+  "hero": {
+    "description": "PNG、JPG、JPEG、WebP などの画像を、クリーンで編集可能な SVG ファイルに変換します。ベクター結果を無料でプレビューし、クレジットでクリーンな SVG をダウンロードできます。",
+    "showPreview": "{title} のプレビューを表示",
+    "titleAccent": "画像から SVG",
+    "titleSuffix": "コンバーター",
+    "samples": [
+      {
+        "label": "アイコン",
+        "title": "歯車アイコン"
+      },
+      {
+        "label": "ロゴ",
+        "title": "キツネのロゴ"
+      },
+      {
+        "label": "エンブレム",
+        "title": "ドラゴンのエンブレム"
+      },
+      {
+        "label": "スケッチ",
+        "title": "花柄スケッチ"
+      },
+      {
+        "label": "アバター",
+        "title": "ポートレートアバター"
+      }
+    ]
+  },
+  "upload": {
+    "ariaLabel": "画像ファイルをアップロード",
+    "badges": {
+      "fast": "高速",
+      "noSignUp": "登録不要",
+      "secure": "安全"
+    },
+    "button": "画像をアップロード",
+    "drop": "またはファイルをドロップ",
+    "formats": "PNG、JPG、JPEG、WebP"
+  },
+  "useCases": {
+    "description": "SVG 変換は、どのサイズでも画像をシャープに保ちたいときに役立ちます。",
+    "titleAccent": "ロゴ、アイコン、アート",
+    "titlePrefix": "画像ベクター化:",
+    "items": [
+      {
+        "afterAlt": "ベクター変換後の鮮明な紋章 SVG",
+        "beforeAlt": "SVG 変換前の紋章アート",
+        "description": "細かい紋章アートを拡大縮小可能な SVG アセットに変換します。",
+        "title": "エンブレムとバッジ"
+      },
+      {
+        "afterAlt": "ベクター変換後の鮮明な峡谷 SVG",
+        "beforeAlt": "SVG 変換前の砂漠峡谷イラスト",
+        "description": "カラフルなアートを Web、印刷、製品面でシャープに保ちます。",
+        "title": "イラストシーン"
+      },
+      {
+        "afterAlt": "ベクター変換後の鮮明なマスコット SVG",
+        "beforeAlt": "SVG 変換前のマスコットキャラクター",
+        "description": "キャラクターアートをクリーンで再利用しやすいベクター画像に変換します。",
+        "title": "マスコット画像"
+      },
+      {
+        "afterAlt": "ベクター変換後の鮮明な小屋 SVG",
+        "beforeAlt": "SVG 変換前の小屋イラスト",
+        "description": "拡大縮小、編集、公開に使えるイラストシーンを準備します。",
+        "title": "エディトリアルアート"
+      },
+      {
+        "afterAlt": "ベクター変換後の鮮明なポートレート SVG",
+        "beforeAlt": "SVG 変換前のスタイライズされたポートレート",
+        "description": "明瞭なラスター画像からスタイライズされた SVG ポートレートを作成します。",
+        "title": "ポートレートアート"
+      }
+    ]
+  },
+  "vectorInfo": {
+    "description1": "このツールは、ロゴ、アイコン、スケッチ、署名、線画、イラスト、シンプルな図形など、ベクター出力が有効な素材の画像から SVG への変換に向いています。",
+    "description2": "写真もスタイライズされたベクター結果に変換できますが、細かい写真は単純なロゴとは異なります。クリーンな SVG パスには、コントラストが強く輪郭が明確な画像を使ってください。",
+    "eyebrow": "画像をベクター化",
+    "title": "形と輪郭が明確な画像をベクター化"
+  },
+  "conversion": {
+    "description": "必要な形式に合わせて専用コンバーターページから始められます。需要の高い画像と SVG のワークフローには、それぞれ説明が明確な専用ページがあります。",
+    "titleAccent": "変換ハブ",
+    "titlePrefix": "形式",
+    "groups": [
+      {
+        "description": "ベクター化したい元形式に合わせて、専用の画像から SVG コンバーターを開きます。",
+        "eyebrow": "SVG へ",
+        "title": "SVG に変換",
+        "items": [
+          {
+            "description": "PNG ロゴや画像をベクター化",
+            "title": "PNG から SVG"
+          },
+          {
+            "description": "JPG 写真を SVG ベクターに変換",
+            "title": "JPG から SVG"
+          },
+          {
+            "description": "WebP 画像をデザインツール向けに変換",
+            "title": "WebP から SVG"
+          }
+        ]
+      },
+      {
+        "description": "固定サイズ画像が必要なプラットフォーム向けに、ベクターアートをラスター形式へ書き出します。",
+        "eyebrow": "SVG から",
+        "title": "SVG から書き出し",
+        "items": [
+          {
+            "description": "SVG ファイルを鮮明な PNG 画像として書き出し",
+            "title": "SVG から PNG"
+          }
+        ]
+      },
+      {
+        "description": "画像形式だけを変換したい場合は、無料のブラウザベース変換ツールを使えます。",
+        "eyebrow": "画像形式",
+        "title": "画像形式を最適化",
+        "items": [
+          {
+            "description": "JPG と JPEG 画像を圧縮された WebP ファイルに変換",
+            "title": "JPG から WebP"
+          },
+          {
+            "description": "WebP 画像を互換性の高い JPG ファイルに無料変換",
+            "title": "WebP から JPG"
+          }
+        ]
+      }
+    ]
+  },
+  "workflows": {
+    "description": "拡大縮小可能な画像が重要なデザインやメイカー向けワークフローで、画像から SVG への変換を活用できます。",
+    "eyebrow": "SVG の用途",
+    "titleLine1": "画像を SVG に変換",
+    "titleLine2Accent": "実用ワークフロー",
+    "titleLine2Prefix": "for",
+    "items": [
+      {
+        "description": "低解像度ロゴをブランドアセット向けの拡大縮小可能な SVG に変換します。",
+        "title": "ロゴから SVG"
+      },
+      {
+        "description": "UI 画像やシンプルな記号を鮮明な SVG ファイルに変換します。",
+        "title": "アイコンから SVG"
+      },
+      {
+        "description": "手描き、署名、アウトライン、白黒アートをベクター化します。",
+        "title": "スケッチと線画"
+      },
+      {
+        "description": "Figma、Illustrator、Web サイト、アプリ向けに SVG アセットを準備します。",
+        "title": "デザインツール"
+      },
+      {
+        "description": "輪郭が明確な画像から、メイカー向けワークフロー用の SVG ファイルを作成します。",
+        "title": "Cricut とカッティング"
+      }
+    ]
+  },
+  "batch": {
+    "description": "複数のロゴ、アイコン、デザイン素材を処理したいときも、同じ画像から SVG の流れを使えます。バッチ機能は、保存ファイル、高い上限、プレミアムワークフローにも拡張できます。",
+    "eyebrow": "高度なワークフロー",
+    "features": [
+      "バッチ対応ワークフロー",
+      "形式に応じたルーティング",
+      "ダウンロード前にプレビュー",
+      "クリーンな SVG 出力"
+    ],
+    "preview": {
+      "adjust": "2 調整",
+      "batchPreview": "バッチプレビュー",
+      "convert": "3 変換",
+      "converting": "変換中...",
+      "upload": "1 アップロード"
+    },
+    "titleAccent": "バッチツール",
+    "titlePrefix": "さらに多くの画像を変換"
+  },
+  "steps": {
+    "description": "3 つの簡単な手順で、ラスター画像を拡大縮小可能な SVG ファイルに変換できます。",
+    "titleAccent": "画像から SVG",
+    "titlePrefix": "変換方法:",
+    "items": [
+      {
+        "description": "PNG、JPG、JPEG、WebP、またはその他の対応画像ファイルを選択します。",
+        "title": "画像をアップロード"
+      },
+      {
+        "description": "変換前後のプレビューを確認し、利用できる場合は設定を調整します。",
+        "title": "ベクター結果をプレビュー"
+      },
+      {
+        "description": "Web サイト、デザインツール、カッティングマシン、印刷向けにクリーンな SVG を書き出します。",
+        "title": "SVG をダウンロード"
+      }
+    ]
+  },
+  "resources": {
+    "description": "どのファイルが変換に向いているか、よりクリーンな SVG 出力のために画像をどう準備するかを学べます。",
+    "readMore": "続きを読む",
+    "title": "SVG ガイドとリソース",
+    "items": [
+      {
+        "description": "どの画像が最も変換に向いているか、よりクリーンな SVG 出力の準備方法を学べます。",
+        "title": "画像から SVG のベストプラクティス"
+      },
+      {
+        "description": "SVG を使うべき場面と、PNG がまだ適している場面を理解できます。",
+        "title": "SVG と PNG"
+      },
+      {
+        "description": "ロゴを拡大縮小可能なブランドアセットに変換する実用的なヒント。",
+        "title": "ロゴを SVG に変換する方法"
+      },
+      {
+        "description": "メイカーやカッティング向けワークフローに使えるクリーンな SVG を準備します。",
+        "title": "Cricut とカッティング向け SVG"
+      }
+    ]
+  },
+  "cta": {
+    "description": "PNG、JPG、JPEG、WebP 画像をアップロードし、ロゴ、アイコン、イラスト、Web サイト、デザインツール向けの拡大縮小可能な SVG ファイルに変換します。",
+    "eyebrow": "画像から SVG コンバーター",
+    "note": "無料でプレビュー。サインインするとクリーンな SVG ファイルをダウンロードできます。",
+    "title": "画像から SVG への変換を開始"
+  },
+  "faq": {
+    "description": "画像ベクター化、対応形式、SVG 書き出しワークフローについてのわかりやすい回答です。",
+    "title": "よくある質問",
+    "items": [
+      {
+        "answer": "はい。ホームページは PNG、JPG、JPEG、WebP など一般的な画像形式向けの無料画像から SVG コンバーターとして設計されています。アカウント機能では保存、バッチツール、高い上限にも対応できます。",
+        "question": "画像を無料で SVG に変換できますか？"
+      },
+      {
+        "answer": "はい。PNG、JPG、JPEG、WebP は画像から SVG への主な入力形式です。各形式には、より具体的な説明を持つ専用ページも用意できます。",
+        "question": "PNG、JPG、WebP を SVG に変換できますか？"
+      },
+      {
+        "answer": "はい。画像から SVG への変換は通常、ラスター画像を拡大縮小可能な SVG にベクター化することを意味します。ロゴ、アイコン、スケッチ、署名、線画、輪郭が明確なイラストに向いています。",
+        "question": "これは画像ベクター化ツールですか？"
+      },
+      {
+        "answer": "目的は、デザインツールや開発ツールで開けるクリーンな SVG 出力を作成することです。編集しやすさは元画像と変換設定によりますが、SVG は拡大縮小可能なベクターワークフロー向けです。",
+        "question": "SVG ファイルは編集できますか？"
+      },
+      {
+        "answer": "写真も SVG に変換できますが、細かい写真は完全な複製ではなくスタイライズされたベクター結果になりやすいです。クリーンな SVG パスには、コントラストが強く形が明確な画像を使ってください。",
+        "question": "写真を SVG に変換できますか？"
+      },
+      {
+        "answer": "現在の公開版では PNG、JPG、JPEG、WebP から SVG への変換と、SVG から PNG への書き出しをサポートしています。SVG から JPG、SVG から WebP、文書形式は別ワークフローとして追加できます。",
+        "question": "現在対応している形式は？"
+      },
+      {
+        "answer": "最初のプレビューには登録は不要です。クリーンな SVG のダウンロードや追加生成にはサインインしてクレジットを使用できます。",
+        "question": "サインアップは必要ですか？"
+      },
+      {
+        "answer": "アップロードフローでは、プライバシー情報を見つけやすく表示することを意識しています。機密性の高いブランド素材や顧客ファイルをアップロードする前に、プライバシーポリシーを確認してください。",
+        "question": "アップロードしたファイルは非公開ですか？"
+      }
+    ]
+  }
+}

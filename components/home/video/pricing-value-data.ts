@@ -1,15 +1,18 @@
 import { DEFAULT_LOCALE } from "@/i18n/routing";
-import {
-  type LocalizedPricingContent,
-  type PricingBenefits,
-  pricingPlans,
-} from "@/lib/db/seed/pricing-config";
+import type { VideoPricingSourcePlan } from "@/components/home/video/pricing-data";
 
 type PricingEnvironment = "live" | "test";
 type SupportedLocale = "en" | "zh" | "ja";
 type SupportedGroupSlug = "annual" | "monthly" | "onetime";
-type PricingConfigPlan = (typeof pricingPlans)[number];
-type SupportedPricingConfigPlan = PricingConfigPlan & { groupSlug: SupportedGroupSlug };
+type SupportedPricingPlan = VideoPricingSourcePlan & { groupSlug: SupportedGroupSlug };
+type LocalizedPricingContent = {
+  cardTitle?: string;
+};
+type PricingBenefits = {
+  monthlyCredits?: number;
+  oneTimeCredits?: number;
+  totalMonths?: number;
+};
 const groupOrder: Record<SupportedGroupSlug, number> = {
   annual: 0,
   monthly: 1,
@@ -42,7 +45,7 @@ function resolveLocale(locale: string): SupportedLocale {
 }
 
 function getLocalizedPlanContent(
-  plan: PricingConfigPlan,
+  plan: VideoPricingSourcePlan,
   locale: SupportedLocale,
 ): LocalizedPricingContent {
   const content = (plan.langJsonb ?? {}) as Record<string, LocalizedPricingContent>;
@@ -53,11 +56,11 @@ function isSupportedGroupSlug(value: string | null | undefined): value is Suppor
   return value === "annual" || value === "monthly" || value === "onetime";
 }
 
-function isSupportedPricingPlan(plan: PricingConfigPlan): plan is SupportedPricingConfigPlan {
+function isSupportedPricingPlan(plan: VideoPricingSourcePlan): plan is SupportedPricingPlan {
   return isSupportedGroupSlug(plan.groupSlug);
 }
 
-function buildPlanLabel(plan: PricingConfigPlan, locale: SupportedLocale): string {
+function buildPlanLabel(plan: VideoPricingSourcePlan, locale: SupportedLocale): string {
   const localizedPlan = getLocalizedPlanContent(plan, locale);
   const planTitle = localizedPlan.cardTitle ?? plan.cardTitle ?? "";
 
@@ -126,14 +129,16 @@ function getPurchaseNote(groupSlug: SupportedGroupSlug, locale: SupportedLocale)
 export function buildPricingValueRows({
   environment,
   locale,
+  plans,
 }: {
   environment?: PricingEnvironment;
   locale: string;
+  plans: VideoPricingSourcePlan[];
 }): PricingValueRow[] {
   const pricingEnvironment = resolvePricingEnvironment(environment);
   const pricingLocale = resolveLocale(locale);
 
-  const supportedPlans = pricingPlans
+  const supportedPlans = plans
     .filter((plan) => plan.environment === pricingEnvironment && plan.isActive)
     .filter(isSupportedPricingPlan)
     .sort((left, right) => {

@@ -1,6 +1,7 @@
 import AiVideoModelPricingComparison from "@/components/home/video/AiVideoModelPricingComparison";
 import Pricing from "@/components/home/video/Pricing";
 import PricingValueComparison from "@/components/home/video/PricingValueComparison";
+import { getPublicPricingPlans } from "@/actions/prices/public";
 import { pageShellClass } from "@/components/home/video/constants";
 import { buildVideoTemplatePricingSection } from "@/components/home/video/pricing-data";
 import { siteConfig } from "@/config/site";
@@ -38,9 +39,17 @@ export default async function PricingPage({ params }: { params: Params }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "ImageTemplate" });
   const pricingT = await getTranslations({ locale, namespace: "Pricing" });
+  const plansResult = await getPublicPricingPlans();
+  const plans = plansResult.success ? plansResult.data ?? [] : [];
+
+  if (!plansResult.success) {
+    console.error("Failed to fetch public pricing plans:", plansResult.error);
+  }
+
   const pricing = buildVideoTemplatePricingSection({
     baseSection: t.raw("pricing"),
     locale,
+    plans,
   });
   const taskHub = pricingT.raw("taskHub") as PricingTaskHubSection;
 
@@ -50,7 +59,7 @@ export default async function PricingPage({ params }: { params: Params }) {
         section={pricing}
         taskHub={taskRewardsConfig.enabled ? taskHub : undefined}
       />
-      <PricingValueComparison locale={locale} />
+      <PricingValueComparison locale={locale} plans={plans} />
       <AiVideoModelPricingComparison locale={locale} />
     </div>
   );

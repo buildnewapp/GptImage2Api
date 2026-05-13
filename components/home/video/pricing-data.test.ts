@@ -26,11 +26,23 @@ test("buildVideoTemplatePricingSection defaults to live plans when PAY_ENV is li
     const section = buildVideoTemplatePricingSection({
       baseSection,
       locale: "en",
+      plans: [
+        {
+          id: "test-annual-plan",
+          environment: "live",
+          groupSlug: "annual",
+          cardTitle: "Fixture",
+          displayOrder: 1,
+          displayPrice: "$1.00",
+          isActive: true,
+          isHighlighted: false,
+        },
+      ],
     });
 
     assert.equal(
       section.yearlyPlans?.[0]?.checkoutPlan?.planId,
-      "58f8aa44-b082-4f7d-93f0-e11d0e25b817",
+      "test-annual-plan",
     );
   } finally {
     process.env.PAY_ENV = originalPayEnv;

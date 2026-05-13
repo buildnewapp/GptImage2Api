@@ -119,16 +119,6 @@
         "icon": "Users"
       },
       {
-        "name": "System Emails",
-        "href": "/dashboard/system-emails",
-        "icon": "Mail"
-      },
-      {
-        "name": "API Keys",
-        "href": "/dashboard/apikeys-admin",
-        "icon": "Key"
-      },
-      {
         "name": "Orders",
         "href": "/dashboard/orders",
         "icon": "ShoppingCart"
@@ -137,6 +127,26 @@
         "name": "Credit Logs",
         "href": "/dashboard/credits",
         "icon": "Coins"
+      },
+      {
+        "name": "AI Studio",
+        "href": "/dashboard/ai-studio-admin",
+        "icon": "Bot"
+      },
+      {
+        "name": "Prompt Gallery",
+        "href": "/dashboard/prompts-admin",
+        "icon": "FileText"
+      },
+      {
+        "name": "System Emails",
+        "href": "/dashboard/system-emails",
+        "icon": "Mail"
+      },
+      {
+        "name": "API Keys",
+        "href": "/dashboard/apikeys-admin",
+        "icon": "Key"
       },
       {
         "name": "Referrals",
@@ -157,16 +167,6 @@
         "name": "R2 Files",
         "href": "/dashboard/r2-resources",
         "icon": "FileBox"
-      },
-      {
-        "name": "AI Studio",
-        "href": "/dashboard/ai-studio-admin",
-        "icon": "Bot"
-      },
-      {
-        "name": "Prompt Gallery",
-        "href": "/dashboard/prompts-admin",
-        "icon": "FileText"
       }
     ],
     "AdminContentTabs": {

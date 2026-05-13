@@ -43,7 +43,7 @@ const CATEGORIES = [
   { name: "Image to Video", prefix: "image-to-videos/" },
 ];
 
-const PAGE_SIZE = 40;
+const PAGE_SIZE = 20;
 
 async function CategoryTable({ categoryPrefix }: { categoryPrefix: string }) {
   const initialResult = await listR2Files({
@@ -55,7 +55,7 @@ async function CategoryTable({ categoryPrefix }: { categoryPrefix: string }) {
     console.error(
       "Failed to load initial files for category:",
       categoryPrefix,
-      initialResult.error
+      initialResult.error,
     );
     return (
       <div className="text-red-500">

@@ -119,16 +119,6 @@
         "icon": "Users"
       },
       {
-        "name": "システムメール",
-        "href": "/dashboard/system-emails",
-        "icon": "Mail"
-      },
-      {
-        "name": "APIキー管理",
-        "href": "/dashboard/apikeys-admin",
-        "icon": "Key"
-      },
-      {
         "name": "注文管理",
         "href": "/dashboard/orders",
         "icon": "ShoppingCart"
@@ -137,6 +127,26 @@
         "name": "クレジット履歴",
         "href": "/dashboard/credits",
         "icon": "Coins"
+      },
+      {
+        "name": "AI Studio管理",
+        "href": "/dashboard/ai-studio-admin",
+        "icon": "Bot"
+      },
+      {
+        "name": "Prompt管理",
+        "href": "/dashboard/prompts-admin",
+        "icon": "FileText"
+      },
+      {
+        "name": "システムメール",
+        "href": "/dashboard/system-emails",
+        "icon": "Mail"
+      },
+      {
+        "name": "APIキー管理",
+        "href": "/dashboard/apikeys-admin",
+        "icon": "Key"
       },
       {
         "name": "招待管理",
@@ -157,16 +167,6 @@
         "name": "R2リソース",
         "href": "/dashboard/r2-resources",
         "icon": "FileBox"
-      },
-      {
-        "name": "AI Studio管理",
-        "href": "/dashboard/ai-studio-admin",
-        "icon": "Bot"
-      },
-      {
-        "name": "Prompt管理",
-        "href": "/dashboard/prompts-admin",
-        "icon": "FileText"
       }
     ],
     "AdminContentTabs": {

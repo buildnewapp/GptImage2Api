@@ -15,6 +15,7 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
+    "db:initAdmin": "tsx lib/db/seed/init-admin.ts",
     "db:seed": "tsx lib/db/seed/index.ts",
     "db:seed:seo-content": "tsx lib/db/seed/seo-content.ts",
     "db:export-pricing": "tsx lib/db/seed/export.ts",

@@ -42,9 +42,10 @@ async function UsersTable() {
       columns={columns}
       initialData={initialData.data?.users || []}
       initialPageCount={Math.ceil(
-        (initialData.data?.totalCount || 0) / PAGE_SIZE
+        (initialData.data?.totalCount || 0) / PAGE_SIZE,
       )}
       pageSize={PAGE_SIZE}
+      totalCount={initialData.data?.totalCount || 0}
     />
   );
 }

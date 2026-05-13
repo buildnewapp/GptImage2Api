@@ -7,6 +7,7 @@ import {
   updatePromptGalleryItemsStatusAction,
   updatePromptGalleryItemAction,
 } from "@/actions/prompts/admin";
+import { AdminPagination } from "@/components/shared/AdminPagination";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -285,18 +286,6 @@ export default function PromptGalleryAdminClient({
   const [form, setForm] = useState<FormState>(createEmptyForm());
   const [isPending, startTransition] = useTransition();
 
-  const pageCount = Math.max(
-    1,
-    Math.ceil(adminData.count / pagination.pageSize),
-  );
-  const pageWindowStart = Math.min(
-    Math.max(pagination.pageIndex - 2, 0),
-    Math.max(pageCount - 5, 0),
-  );
-  const pageNumbers = Array.from(
-    { length: Math.min(pageCount, 5) },
-    (_, index) => pageWindowStart + index,
-  );
   const currentPageIds = adminData.items.map((item) => item.id);
   const selectedCount = selectedIds.length;
   const isCurrentPageSelected =
@@ -846,9 +835,7 @@ export default function PromptGalleryAdminClient({
         <div className="px-0 py-0">
           <div className="grid gap-2 md:grid-cols-3 xl:grid-cols-[repeat(8,minmax(0,1fr))_120px]">
             <div>
-              <label className="sr-only">
-                ID
-              </label>
+              <label className="sr-only">ID</label>
               <Input
                 className="h-9"
                 value={filters.id}
@@ -857,9 +844,7 @@ export default function PromptGalleryAdminClient({
               />
             </div>
             <div>
-              <label className="sr-only">
-                语言
-              </label>
+              <label className="sr-only">语言</label>
               <Input
                 className="h-9"
                 value={filters.language}
@@ -870,9 +855,7 @@ export default function PromptGalleryAdminClient({
               />
             </div>
             <div>
-              <label className="sr-only">
-                分类
-              </label>
+              <label className="sr-only">分类</label>
               <Input
                 className="h-9"
                 value={filters.category}
@@ -883,9 +866,7 @@ export default function PromptGalleryAdminClient({
               />
             </div>
             <div>
-              <label className="sr-only">
-                模型
-              </label>
+              <label className="sr-only">模型</label>
               <Input
                 className="h-9"
                 value={filters.model}
@@ -894,9 +875,7 @@ export default function PromptGalleryAdminClient({
               />
             </div>
             <div>
-              <label className="sr-only">
-                作者
-              </label>
+              <label className="sr-only">作者</label>
               <Input
                 className="h-9"
                 value={filters.author}
@@ -905,9 +884,7 @@ export default function PromptGalleryAdminClient({
               />
             </div>
             <div>
-              <label className="sr-only">
-                标题
-              </label>
+              <label className="sr-only">标题</label>
               <div className="relative">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
@@ -921,9 +898,7 @@ export default function PromptGalleryAdminClient({
               </div>
             </div>
             <div>
-              <label className="sr-only">
-                提示词
-              </label>
+              <label className="sr-only">提示词</label>
               <Input
                 className="h-9"
                 value={filters.prompt}
@@ -932,9 +907,7 @@ export default function PromptGalleryAdminClient({
               />
             </div>
             <div>
-              <label className="sr-only">
-                状态
-              </label>
+              <label className="sr-only">状态</label>
               <Select
                 value={filters.status}
                 onValueChange={(value) =>
@@ -1179,85 +1152,24 @@ export default function PromptGalleryAdminClient({
             </Table>
           </div>
 
-          <div className="flex flex-col gap-3 pt-4 md:flex-row md:items-center md:justify-between">
-            <div className="text-sm text-muted-foreground">
-              第 {pagination.pageIndex + 1} / {pageCount} 页，共{" "}
-              {adminData.count} 条
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  setPagination((current) => ({
-                    ...current,
-                    pageIndex: 0,
-                  }))
-                }
-                disabled={pagination.pageIndex === 0 || isLoading}
-              >
-                首页
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  setPagination((current) => ({
-                    ...current,
-                    pageIndex: Math.max(0, current.pageIndex - 1),
-                  }))
-                }
-                disabled={pagination.pageIndex === 0 || isLoading}
-              >
-                上一页
-              </Button>
-              {pageNumbers.map((pageNumber) => (
-                <Button
-                  key={pageNumber}
-                  variant={
-                    pageNumber === pagination.pageIndex ? "default" : "outline"
-                  }
-                  size="sm"
-                  onClick={() =>
-                    setPagination((current) => ({
-                      ...current,
-                      pageIndex: pageNumber,
-                    }))
-                  }
-                  disabled={isLoading}
-                  className="min-w-9"
-                >
-                  {pageNumber + 1}
-                </Button>
-              ))}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  setPagination((current) => ({
-                    ...current,
-                    pageIndex: Math.min(pageCount - 1, current.pageIndex + 1),
-                  }))
-                }
-                disabled={pagination.pageIndex >= pageCount - 1 || isLoading}
-              >
-                下一页
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  setPagination((current) => ({
-                    ...current,
-                    pageIndex: pageCount - 1,
-                  }))
-                }
-                disabled={pagination.pageIndex >= pageCount - 1 || isLoading}
-              >
-                尾页
-              </Button>
-            </div>
-          </div>
+          <AdminPagination
+            pageIndex={pagination.pageIndex}
+            pageSize={pagination.pageSize}
+            totalCount={adminData.count}
+            disabled={isLoading}
+            onPageIndexChange={(pageIndex) =>
+              setPagination((current) => ({
+                ...current,
+                pageIndex,
+              }))
+            }
+            onPageSizeChange={(nextPageSize) =>
+              setPagination({
+                pageIndex: 0,
+                pageSize: nextPageSize,
+              })
+            }
+          />
         </CardContent>
       </Card>
     </div>

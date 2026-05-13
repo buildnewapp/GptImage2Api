@@ -28,9 +28,7 @@ import { cache } from "react";
 function createAuthConfig(databaseInstance: ReturnType<typeof getDb>): BetterAuthOptions {
   return {
     appName: siteConfig.name,
-    baseURL: process.env.NODE_ENV === 'development'
-      ? undefined
-      : process.env.NEXT_PUBLIC_BETTER_AUTH_URL || process.env.NEXT_PUBLIC_SITE_URL,
+    baseURL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL || process.env.NEXT_PUBLIC_SITE_URL,
     secret: process.env.BETTER_AUTH_SECRET,
     advanced: {
       database: {
