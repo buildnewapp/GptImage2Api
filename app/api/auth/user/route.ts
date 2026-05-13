@@ -39,6 +39,7 @@ export async function GET(request: Request) {
       db
         .select({
           oneTimeCreditsBalance: usageSchema.oneTimeCreditsBalance,
+          subscriptionCreditsBalance: usageSchema.subscriptionCreditsBalance,
         })
         .from(usageSchema)
         .where(eq(usageSchema.userId, user.id))
@@ -75,7 +76,13 @@ export async function GET(request: Request) {
     const usageData = usageRows[0];
     const subscriptionData = subscriptionRows[0];
     const activeSubscriptionCredits = Number(subscriptionData?.subscriptionCreditsBalance ?? 0);
-    const credits = activeSubscriptionCredits + (usageData?.oneTimeCreditsBalance ?? 0);
+    const storedSubscriptionCredits =
+      usageData?.subscriptionCreditsBalance ?? activeSubscriptionCredits;
+    const subscriptionCredits = Math.min(
+      storedSubscriptionCredits,
+      activeSubscriptionCredits,
+    );
+    const credits = subscriptionCredits + (usageData?.oneTimeCreditsBalance ?? 0);
 
     const membershipData = membershipRows[0];
     const membershipLevel = getMembershipLevelFromRank(Number(membershipData?.rank ?? 0));

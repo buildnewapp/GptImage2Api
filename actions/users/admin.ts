@@ -24,7 +24,18 @@ import {
 import { getErrorMessage } from "@/lib/error-utils";
 import { hashPassword } from "better-auth/crypto";
 import { randomUUID } from "node:crypto";
-import { and, asc, count, desc, eq, gt, ilike, inArray, or, sql } from "drizzle-orm";
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  gt,
+  ilike,
+  inArray,
+  or,
+  sql,
+} from "drizzle-orm";
 import { z } from "zod";
 
 type UserType = typeof userSchema.$inferSelect;
@@ -577,6 +588,7 @@ const ManualGrantSchema = z.object({
   userId: z.string().uuid(),
   planId: z.string().uuid().nullable().optional(),
   subscriptionPeriodEnd: z.string().nullable().optional(),
+  operation: z.enum(["grant", "deduct"]).default("grant"),
   creditType: z.enum(["none", "one_time", "subscription"]),
   creditAmount: z.coerce.number().int().min(0).default(0),
   creditExpiresAt: z.string().nullable().optional(),
@@ -598,25 +610,34 @@ function getManualPlanPriceValue(value: string | null | undefined) {
 
 export async function grantManualUserBenefits(
   input: z.infer<typeof ManualGrantSchema>,
-): Promise<ActionResult<{ orderId: string | null; subscriptionId: string | null }>> {
+): Promise<
+  ActionResult<{ orderId: string | null; subscriptionId: string | null }>
+> {
   if (!(await isAdmin())) {
     return actionResponse.forbidden("Admin privileges required.");
   }
 
   const parsed = ManualGrantSchema.safeParse(input);
   if (!parsed.success) {
-    return actionResponse.badRequest(parsed.error.issues[0]?.message || "Invalid input.");
+    return actionResponse.badRequest(
+      parsed.error.issues[0]?.message || "Invalid input.",
+    );
   }
 
   const {
     userId,
     planId,
     subscriptionPeriodEnd,
+    operation,
     creditType,
     creditAmount,
     creditExpiresAt,
     notes,
   } = parsed.data;
+
+  if (operation === "deduct" && planId) {
+    return actionResponse.badRequest("扣除积分时不能同时添加产品。");
+  }
 
   if (!planId && creditType === "none") {
     return actionResponse.badRequest("请选择产品或填写积分调整。");
@@ -666,7 +687,11 @@ export async function grantManualUserBenefits(
 
     const subscriptionCreditEnd =
       creditType === "subscription" ? parseManualDate(creditExpiresAt) : null;
-    if (creditType === "subscription" && (!subscriptionCreditEnd || subscriptionCreditEnd <= now)) {
+    if (
+      operation === "grant" &&
+      creditType === "subscription" &&
+      (!subscriptionCreditEnd || subscriptionCreditEnd <= now)
+    ) {
       return actionResponse.badRequest("订阅积分结束时间必须晚于当前时间。");
     }
 
@@ -675,7 +700,7 @@ export async function grantManualUserBenefits(
     let createdSubscriptionId: string | null = null;
 
     await db.transaction(async (tx) => {
-      if (plan) {
+      if (operation === "grant" && plan) {
         const orderType = getManualOrderTypeForPlan(plan);
         const manualSubscriptionId = shouldCreateSubscription
           ? `manual:${manualId}:subscription`
@@ -732,7 +757,11 @@ export async function grantManualUserBenefits(
         }
       }
 
-      if (creditType === "one_time" && creditAmount > 0) {
+      if (
+        operation === "grant" &&
+        creditType === "one_time" &&
+        creditAmount > 0
+      ) {
         const updatedUsage = await tx
           .insert(usageSchema)
           .values({
@@ -766,7 +795,67 @@ export async function grantManualUserBenefits(
         });
       }
 
-      if (creditType === "subscription" && creditAmount > 0 && subscriptionCreditEnd) {
+      if (
+        operation === "deduct" &&
+        creditType === "one_time" &&
+        creditAmount > 0
+      ) {
+        const usageRows = await tx
+          .select()
+          .from(usageSchema)
+          .where(eq(usageSchema.userId, userId))
+          .for("update");
+        const usage = usageRows[0];
+        const nextOneTimeBalance =
+          (usage?.oneTimeCreditsBalance ?? 0) - creditAmount;
+
+        const updatedUsage = usage
+          ? await tx
+              .update(usageSchema)
+              .set({
+                oneTimeCreditsBalance: nextOneTimeBalance,
+              })
+              .where(eq(usageSchema.userId, userId))
+              .returning({
+                oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
+                subscriptionCreditsSnapshot:
+                  usageSchema.subscriptionCreditsBalance,
+              })
+          : await tx
+              .insert(usageSchema)
+              .values({
+                userId,
+                oneTimeCreditsBalance: nextOneTimeBalance,
+                subscriptionCreditsBalance: 0,
+              })
+              .returning({
+                oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
+                subscriptionCreditsSnapshot:
+                  usageSchema.subscriptionCreditsBalance,
+              });
+
+        const balances = updatedUsage[0];
+        if (!balances) {
+          throw new Error("Failed to deduct one-time credits.");
+        }
+
+        await tx.insert(creditLogsSchema).values({
+          userId,
+          amount: -creditAmount,
+          oneTimeCreditsSnapshot: balances.oneTimeCreditsSnapshot,
+          subscriptionCreditsSnapshot: balances.subscriptionCreditsSnapshot,
+          type: "manual_one_time_deduct",
+          notes: notes || "Manual one-time credit deduction",
+          relatedOrderId: null,
+        });
+      }
+
+      if (
+        operation === "grant" &&
+        creditType === "subscription" &&
+        creditAmount > 0 &&
+        subscriptionCreditEnd
+      ) {
         const creditSubscriptionId =
           createdSubscriptionId ?? `manual:${manualId}:credits`;
 
@@ -795,18 +884,35 @@ export async function grantManualUserBenefits(
             ),
           );
         const nextSubscriptionBalance = Number(activeSubRows[0]?.balance ?? 0);
+        const activeSubscriptionBalanceBeforeGrant =
+          nextSubscriptionBalance - creditAmount;
+        const existingUsageRows = await tx
+          .select({
+            subscriptionCreditsBalance: usageSchema.subscriptionCreditsBalance,
+          })
+          .from(usageSchema)
+          .where(eq(usageSchema.userId, userId))
+          .for("update");
+        const subscriptionBalanceBeforeGrant =
+          existingUsageRows[0]?.subscriptionCreditsBalance ??
+          activeSubscriptionBalanceBeforeGrant;
+        const adjustedSubscriptionBalance =
+          Math.min(
+            subscriptionBalanceBeforeGrant,
+            activeSubscriptionBalanceBeforeGrant,
+          ) + creditAmount;
 
         const updatedUsage = await tx
           .insert(usageSchema)
           .values({
             userId,
             oneTimeCreditsBalance: 0,
-            subscriptionCreditsBalance: nextSubscriptionBalance,
+            subscriptionCreditsBalance: adjustedSubscriptionBalance,
           })
           .onConflictDoUpdate({
             target: usageSchema.userId,
             set: {
-              subscriptionCreditsBalance: nextSubscriptionBalance,
+              subscriptionCreditsBalance: adjustedSubscriptionBalance,
             },
           })
           .returning({
@@ -827,6 +933,110 @@ export async function grantManualUserBenefits(
           type: "manual_subscription_grant",
           notes: notes || "Manual subscription credit grant",
           relatedOrderId: createdOrderId,
+        });
+      }
+
+      if (
+        operation === "deduct" &&
+        creditType === "subscription" &&
+        creditAmount > 0
+      ) {
+        const usageRows = await tx
+          .select()
+          .from(usageSchema)
+          .where(eq(usageSchema.userId, userId))
+          .for("update");
+        const usage = usageRows[0];
+
+        const buckets = await tx
+          .select({
+            id: subscriptionCreditBucketsSchema.id,
+            creditsRemaining: subscriptionCreditBucketsSchema.creditsRemaining,
+          })
+          .from(subscriptionCreditBucketsSchema)
+          .where(
+            and(
+              eq(subscriptionCreditBucketsSchema.userId, userId),
+              gt(subscriptionCreditBucketsSchema.creditsRemaining, 0),
+              gt(subscriptionCreditBucketsSchema.expiresAt, now),
+            ),
+          )
+          .orderBy(asc(subscriptionCreditBucketsSchema.expiresAt))
+          .for("update");
+
+        const availableSubscriptionCredits = buckets.reduce(
+          (sum, bucket) => sum + bucket.creditsRemaining,
+          0,
+        );
+        const currentSubscriptionBalance =
+          usage?.subscriptionCreditsBalance ?? availableSubscriptionCredits;
+        const baseSubscriptionBalance = Math.min(
+          currentSubscriptionBalance,
+          availableSubscriptionCredits,
+        );
+        const nextSubscriptionBalance = baseSubscriptionBalance - creditAmount;
+
+        let remainingBucketDeduction = Math.min(
+          availableSubscriptionCredits,
+          creditAmount,
+        );
+        for (const bucket of buckets) {
+          if (remainingBucketDeduction <= 0) {
+            break;
+          }
+
+          const deduction = Math.min(
+            bucket.creditsRemaining,
+            remainingBucketDeduction,
+          );
+          remainingBucketDeduction -= deduction;
+
+          await tx
+            .update(subscriptionCreditBucketsSchema)
+            .set({
+              creditsRemaining: bucket.creditsRemaining - deduction,
+            })
+            .where(eq(subscriptionCreditBucketsSchema.id, bucket.id));
+        }
+
+        const updatedUsage = usage
+          ? await tx
+              .update(usageSchema)
+              .set({
+                subscriptionCreditsBalance: nextSubscriptionBalance,
+              })
+              .where(eq(usageSchema.userId, userId))
+              .returning({
+                oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
+                subscriptionCreditsSnapshot:
+                  usageSchema.subscriptionCreditsBalance,
+              })
+          : await tx
+              .insert(usageSchema)
+              .values({
+                userId,
+                oneTimeCreditsBalance: 0,
+                subscriptionCreditsBalance: nextSubscriptionBalance,
+              })
+              .returning({
+                oneTimeCreditsSnapshot: usageSchema.oneTimeCreditsBalance,
+                subscriptionCreditsSnapshot:
+                  usageSchema.subscriptionCreditsBalance,
+              });
+
+        const balances = updatedUsage[0];
+        if (!balances) {
+          throw new Error("Failed to deduct subscription credits.");
+        }
+
+        await tx.insert(creditLogsSchema).values({
+          userId,
+          amount: -creditAmount,
+          oneTimeCreditsSnapshot: balances.oneTimeCreditsSnapshot,
+          subscriptionCreditsSnapshot: balances.subscriptionCreditsSnapshot,
+          type: "manual_subscription_deduct",
+          notes: notes || "Manual subscription credit deduction",
+          relatedOrderId: null,
         });
       }
     });
