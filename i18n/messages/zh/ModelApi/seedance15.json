@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "title": "Seedance 1.5 API",
+    "description": "测试并集成 Seedance 1.5 API，支持文生视频、图生视频以及可选的同步音频生成。"
+  },
+  "title": "Seedance 1.5 API",
+  "badge": "支持音频的 API",
+  "description": [
+    "Seedance 1.5 Pro 是可通过 SdanceAI API 工作流调用的字节跳动视频生成模型。它支持文生视频和图生视频，并可控制画面比例、时长、分辨率、镜头行为和可选音频生成。",
+    "你可以先在本页验证提示词、参考图片、价格、请求字段和任务输出，再把 Seedance 1.5 接入自己的产品或内容生产流程。"
+  ],
+  "monitor": {
+    "label": "24 小时状态监控"
+  },
+  "pricingNote": "美元估算按最佳年付套餐 $0.005/积分 计算。",
+  "labels": {
+    "apiDocs": "API 文档",
+    "apiDocsDetail": "查看 API 详细文档",
+    "apiDocsDetailDescription": "打开完整 API 文档，查看接口、鉴权、任务轮询和 payload 细节。",
+    "apiInputDescription": "保持请求结构可预测，同时保留实用的视频控制能力。",
+    "apiInputKicker": "API 输入",
+    "apiInputTitle": "核心请求字段",
+    "descriptionColumn": "说明",
+    "fieldColumn": "字段",
+    "lowestCostPrefix": "最低成本从",
+    "modelType": "模型类型：",
+    "pricingTitle": "价格",
+    "requestJson": "请求 JSON",
+    "runWithApi": "使用 API 运行",
+    "selectedModel": "当前模型",
+    "selectedModelNote": "本页的 Playground、请求示例、请求字段和价格都会跟随当前选择的模型类型变化。",
+    "typeColumn": "类型",
+    "useModelForGeneration": "使用 {model} 生成"
+  },
+  "featuresKicker": "能力",
+  "featuresTitle": "Seedance 1.5 API 为视频工作流带来的能力",
+  "featuresDescription": "页面按 API 优先的结构组织：先测试模型，再理解字段，最后进入集成。",
+  "capabilities": [
+    {
+      "icon": "video",
+      "title": "文生视频与图生视频",
+      "description": "可仅通过提示词生成视频，也可以加入最多 2 张图片 URL 来约束构图、主体和场景风格。"
+    },
+    {
+      "icon": "music",
+      "title": "可选音频生成",
+      "description": "当短片需要氛围声、音效或语音驱动叙事时，可以启用同步音频生成。"
+    },
+    {
+      "icon": "layers",
+      "title": "灵活输出设置",
+      "description": "可控制画面比例、分辨率、时长和固定镜头，让 API 输出适配产品、广告和社媒格式。"
+    },
+    {
+      "icon": "sparkles",
+      "title": "适合叙事的运动表现",
+      "description": "需要电影感时可使用动态运镜；需要稳定产品或角色镜头时，可启用 fixed_lens。"
+    }
+  ],
+  "quickStartKicker": "快速开始",
+  "quickStartTitle": "从 Playground 测试到生产请求",
+  "quickStartDescription": "适合团队先验证 Seedance 1.5 输出质量，再把 API 接入自己的应用。",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. 准备请求",
+      "description": "填写提示词，选择是否加入图片 URL，然后设置画面比例、分辨率、时长和音频选项。"
+    },
+    {
+      "icon": "key",
+      "title": "2. 提交生成",
+      "description": "使用账户密钥和 bytedance/seedance-1.5-pro 模型 payload 调用 API。"
+    },
+    {
+      "icon": "play",
+      "title": "3. 轮询并渲染",
+      "description": "跟踪任务直到成功，然后获取生成视频 URL。"
+    }
+  ],
+  "useCasesKicker": "使用场景",
+  "useCasesTitle": "你可以用 Seedance 1.5 API 创作什么",
+  "useCasesDescription": "当工作流需要可重复的短视频输出和实用控制项时，可以直接接入 API。",
+  "useCases": [
+    "短剧和剧情短片",
+    "产品视频和广告变体",
+    "图生视频社媒内容",
+    "多语言语音和音频优先场景",
+    "品牌概念可视化",
+    "模板化视频生产"
+  ],
+  "communityShowcase": {
+    "kicker": "社区案例",
+    "title": "社区公开的 Seedance 1.5 成功案例",
+    "description": "查看数据库中公开且已成功生成的 Seedance 1.5 作品，打开案例可继续查看提示词、参数和生成结果。",
+    "viewAll": "查看更多",
+    "viewDetails": "查看详情"
+  },
+  "productionKicker": "生产说明",
+  "productionTitle": "面向真实 API 工作流构建",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "账户级执行",
+      "body": "用户登录后提交任务，并通过现有 SdanceAI 生成流程消耗积分。"
+    },
+    {
+      "icon": "image",
+      "title": "参考图片处理",
+      "body": "API 支持上传后或已托管的图片 URL，用于图生视频流程，并可在 Studio 中预览和编辑 payload。"
+    },
+    {
+      "icon": "zap",
+      "title": "成本可控设置",
+      "body": "分辨率、时长和音频选项可以组合选择，用来平衡输出质量、速度和积分成本。"
+    }
+  ],
+  "faqKicker": "常见问题",
+  "faqTitle": "Seedance 1.5 API 常见问题",
+  "faqs": [
+    {
+      "question": "Seedance 1.5 API 最适合什么场景？",
+      "answer": "它适合需要提示词控制、可选图片参考和可选同步音频的短视频生成，尤其适合希望通过 API 重复生产的团队。"
+    },
+    {
+      "question": "Seedance 1.5 API 支持图生视频吗？",
+      "answer": "支持。请求中可以包含图片 URL 来进行图生视频；不传图片时则按文生视频流程生成。"
+    },
+    {
+      "question": "Seedance 1.5 API 可以生成音频吗？",
+      "answer": "可以。payload 中包含 generate_audio 选项。启用音频可能增加生成成本，生产使用前建议先查看价格。"
+    },
+    {
+      "question": "支持哪些画面比例？",
+      "answer": "当前请求 schema 支持 1:1、4:3、3:4、16:9、9:16、21:9 等常见格式。"
+    },
+    {
+      "question": "支持哪些时长和分辨率？",
+      "answer": "API 面向短视频生成，并支持 480p、720p、1080p 分辨率选项。建议结合目标渠道和成本预期一起选择。"
+    },
+    {
+      "question": "fixed_lens 有什么作用？",
+      "answer": "fixed_lens 会锁定镜头，让画面更稳定、更接近静态拍摄。需要动态运镜时保持关闭即可。"
+    },
+    {
+      "question": "接入前在哪里测试？",
+      "answer": "可以直接使用本页 Playground 测试提示词、图片 URL、画面比例、时长、分辨率、音频和 API payload。"
+    },
+    {
+      "question": "Seedance 1.5 API 可以用于商业项目吗？",
+      "answer": "本页面面向生产型 API 工作流配置。商业使用前，请确认账户套餐、积分余额、模型可用性以及适用的内容政策要求。"
+    }
+  ],
+  "cta": {
+    "kicker": "开始接入",
+    "title": "把 Seedance 1.5 接入你的视频工作流",
+    "description": "先打开生成器测试提示词或图片参考，确认效果后再通过 API 文档接入 Seedance 1.5。",
+    "primaryLabel": "打开 Seedance 1.5",
+    "secondaryLabel": "查看 API 能力",
+    "stats": [
+      {
+        "value": "API 就绪",
+        "label": "工作流"
+      },
+      {
+        "value": "音频",
+        "label": "可选"
+      },
+      {
+        "value": "1080p",
+        "label": "输出选项"
+      }
+    ]
+  }
+}

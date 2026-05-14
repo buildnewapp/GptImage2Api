@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "title": "Veo 3.1 API",
+    "description": "测试并集成 Veo 3.1 API，支持电影感文本生视频、图生视频、首尾帧控制、视频延展和 4K 相关视频工作流。"
+  },
+  "title": "Veo 3.1 API",
+  "badge": "Google 视频 API",
+  "description": [
+    "Veo 3.1 是 Google 新一代视频生成模型，适合电影感文本生视频和图生视频创作，强调更好的提示词理解、原生音频工作流和更可控的镜头生成。",
+    "你可以在本页对比 Lite、Fast、Quality、Extend、1080P 和 4K 相关版本，先在 Playground 测试，再用稳定的 payload 字段接入生产 API 请求。"
+  ],
+  "monitor": {
+    "label": "24 小时状态监控"
+  },
+  "pricingNote": "美元估算按最佳年付套餐 $0.005/积分 计算。最终计费会跟随所选 Veo 3.1 版本、分辨率和任务类型变化。",
+  "labels": {
+    "apiDocs": "API 文档",
+    "apiDocsDetail": "查看 API 详细文档",
+    "apiDocsDetailDescription": "打开完整 API 文档，查看接口、鉴权、任务轮询和 payload 细节。",
+    "apiInputDescription": "让文本提示、图片参考、时长、画面比例、分辨率、回调和任务获取保持清晰可控。",
+    "apiInputKicker": "API 输入",
+    "apiInputTitle": "核心请求字段",
+    "descriptionColumn": "说明",
+    "fieldColumn": "字段",
+    "lowestCostPrefix": "最低成本从",
+    "modelType": "模型类型：",
+    "pricingTitle": "价格",
+    "requestJson": "请求 JSON",
+    "runWithApi": "使用 API 运行",
+    "selectedModel": "当前模型",
+    "selectedModelNote": "本页的 Playground、请求示例、请求字段和价格都会跟随当前选择的模型类型变化。",
+    "typeColumn": "类型",
+    "useModelForGeneration": "使用 {model} 生成"
+  },
+  "featuresKicker": "能力",
+  "featuresTitle": "Veo 3.1 API 为视频工作流带来的能力",
+  "featuresDescription": "页面按 API 优先的结构组织：先测试模型，再理解字段，最后进入集成。",
+  "capabilities": [
+    {
+      "icon": "video",
+      "title": "文本和图片生成视频",
+      "description": "用提示词或起始图片生成电影感短片，并根据速度、质量和交付目标选择不同版本。"
+    },
+    {
+      "icon": "layers",
+      "title": "首尾帧控制",
+      "description": "通过开始帧和结束帧引导转场，让运动、构图和镜头方向更贴近创意 brief。"
+    },
+    {
+      "icon": "music",
+      "title": "原生音频工作流",
+      "description": "在所选 Veo 3.1 模式支持时，让视频生成更好地配合声音、氛围和音频方向。"
+    },
+    {
+      "icon": "zap",
+      "title": "延展和高清路径",
+      "description": "当工作流需要更长场景、更高分辨率或生成后获取时，可以使用 Extend、1080P 和 4K 相关版本。"
+    }
+  ],
+  "quickStartKicker": "快速开始",
+  "quickStartTitle": "从提示词测试到 Veo 3.1 API 请求",
+  "quickStartDescription": "适合团队先验证运动质量，再把 Veo 3.1 接入自己的应用或内容管线。",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. 选择版本",
+      "description": "根据迭代速度、输出质量和交付目标选择 Lite、Fast、Quality、Extend、1080P 或 4K。"
+    },
+    {
+      "icon": "image",
+      "title": "2. 添加创意输入",
+      "description": "为所选模型填写提示词、可选图片参考、时长、比例、分辨率和回调设置。"
+    },
+    {
+      "icon": "play",
+      "title": "3. 轮询并交付",
+      "description": "跟踪任务直到成功，然后获取生成视频 URL，用于应用、广告或生产流程。"
+    }
+  ],
+  "useCasesKicker": "使用场景",
+  "useCasesTitle": "你可以用 Veo 3.1 API 创作什么",
+  "useCasesDescription": "当产品需要可重复、高质量的 AI 视频输出时，可以直接接入 API，而不只是做一次性导出。",
+  "useCases": [
+    "产品发布视频和首页 hero 短片",
+    "TikTok、Reels、Shorts 社媒广告",
+    "影视、游戏和分镜预演",
+    "产品或角色素材的图生视频动画",
+    "用首尾帧制作广告场景转场",
+    "用于生产评审的延展或高清短片"
+  ],
+  "communityShowcase": {
+    "kicker": "社区案例",
+    "title": "社区公开的 Veo 3.1 成功案例",
+    "description": "查看数据库中公开且已成功生成的 Veo 3.1 作品，打开案例可继续查看提示词、参数和生成结果。",
+    "viewAll": "查看更多",
+    "viewDetails": "查看详情"
+  },
+  "productionKicker": "生产说明",
+  "productionTitle": "面向真实 Veo 3.1 API 工作流构建",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "账户级执行",
+      "body": "用户登录后提交任务，并通过现有 SdanceAI 生成流程消耗积分。"
+    },
+    {
+      "icon": "image",
+      "title": "参考素材处理",
+      "body": "Studio 支持为 Veo 3.1 版本上传参考素材、直接填写 URL、预览以及编辑表单/API payload。"
+    },
+    {
+      "icon": "zap",
+      "title": "按分辨率交付",
+      "body": "早期提示词迭代可选择成本更低的模式，方向确认后再切换到 Quality、1080P 或 4K 路径。"
+    }
+  ],
+  "faqKicker": "常见问题",
+  "faqTitle": "Veo 3.1 API 常见问题",
+  "faqs": [
+    {
+      "question": "Veo 3.1 API 最适合什么场景？",
+      "answer": "它适合电影感文本生视频和图生视频，尤其适合重视运动质量、提示词控制、帧引导和生产交付的场景。"
+    },
+    {
+      "question": "Lite、Fast 和 Quality 有什么区别？",
+      "answer": "Lite 更适合低成本入门，Fast 偏快速迭代，Quality 更适合创意方向明确后的高质量输出。"
+    },
+    {
+      "question": "Veo 3.1 可以使用首尾帧吗？",
+      "answer": "可以。Veo 3.1 工作流可以根据所选版本和 payload，用开始帧和结束帧生成中间转场。"
+    },
+    {
+      "question": "Veo 3.1 支持图生视频吗？",
+      "answer": "支持。你可以使用纯提示词生成，也可以用图片引导生成，适合让产品图、角色、场景或视觉概念动起来。"
+    },
+    {
+      "question": "Veo 3.1 常见输出格式是什么？",
+      "answer": "Veo 3.1 视频工作流通常面向短 MP4 视频，可按所选版本使用 16:9 或 9:16 画面比例和不同分辨率。"
+    },
+    {
+      "question": "什么时候应该使用 Extend？",
+      "answer": "当你已经有一个生成视频任务，并希望延续同一场景而不是重新生成短片时，可以使用 Extend。"
+    },
+    {
+      "question": "接入前在哪里测试？",
+      "answer": "可以直接使用本页 Playground 测试提示词、参考素材、分辨率、比例、时长和 API payload。"
+    },
+    {
+      "question": "Veo 3.1 API 可以用于商业项目吗？",
+      "answer": "本页面面向商用工作流配置。生产环境使用前，请确认账户套餐、积分余额、模型可用性以及适用的内容政策要求。"
+    }
+  ],
+  "cta": {
+    "kicker": "开始接入",
+    "title": "把 Veo 3.1 接入你的视频工作流",
+    "description": "先打开生成器测试提示词或图片参考，确认效果后再通过 API 文档接入到生产流程。",
+    "primaryLabel": "打开 Veo 3.1",
+    "secondaryLabel": "查看 API 能力",
+    "stats": [
+      {
+        "value": "API 就绪",
+        "label": "工作流"
+      },
+      {
+        "value": "4-8 秒",
+        "label": "短片时长"
+      },
+      {
+        "value": "4K",
+        "label": "目标路径"
+      }
+    ]
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "title": "Veo 3.1 API",
+    "description": "Test and integrate Veo 3.1 API for cinematic text-to-video, image-to-video, first-and-last-frame control, extension, and 4K-ready video workflows."
+  },
+  "title": "Veo 3.1 API",
+  "badge": "Google video API",
+  "description": [
+    "Veo 3.1 is Google's latest line of video generation models, built for cinematic text-to-video and image-to-video creation with stronger prompt following, native audio workflows, and more controllable shots.",
+    "Use this page to compare Lite, Fast, Quality, Extend, 1080P, and 4K-oriented variants, then move from playground testing into a production API request with predictable payload fields."
+  ],
+  "monitor": {
+    "label": "24h Status Monitor"
+  },
+  "pricingNote": "USD estimates use $0.005/credit with the best annual plan. Final billing follows the selected Veo 3.1 variant, resolution, and task type.",
+  "labels": {
+    "apiDocs": "API docs",
+    "apiDocsDetail": "View detailed API docs",
+    "apiDocsDetailDescription": "Open the full API documentation for endpoints, authentication, task polling, and payload details.",
+    "apiInputDescription": "Keep request payloads clear across text prompts, image references, duration, aspect ratio, resolution, callbacks, and task retrieval.",
+    "apiInputKicker": "API Input",
+    "apiInputTitle": "Core request fields",
+    "descriptionColumn": "Description",
+    "fieldColumn": "Field",
+    "lowestCostPrefix": "Lowest cost starts at",
+    "modelType": "Model Type:",
+    "pricingTitle": "Pricing",
+    "requestJson": "Request JSON",
+    "runWithApi": "Run with API",
+    "selectedModel": "Selected model",
+    "selectedModelNote": "The playground, request sample, request fields, and pricing on this page follow the selected model type.",
+    "typeColumn": "Type",
+    "useModelForGeneration": "Use {model} for generation"
+  },
+  "featuresKicker": "Capabilities",
+  "featuresTitle": "What Veo 3.1 API adds to your video workflow",
+  "featuresDescription": "The page follows the same API-first structure as the reference: test the model, understand the fields, then move into integration.",
+  "capabilities": [
+    {
+      "icon": "video",
+      "title": "Text and image to video",
+      "description": "Generate cinematic clips from prompts or starting images, with variants for fast iteration and higher-quality final output."
+    },
+    {
+      "icon": "layers",
+      "title": "First and last frame control",
+      "description": "Guide transitions with beginning and ending frames so motion, composition, and shot direction stay closer to the creative brief."
+    },
+    {
+      "icon": "music",
+      "title": "Native audio workflows",
+      "description": "Build videos that account for sound, dialogue-like ambience, and richer audio direction where the selected Veo 3.1 mode supports it."
+    },
+    {
+      "icon": "zap",
+      "title": "Extend and upscale paths",
+      "description": "Use dedicated Extend, 1080P, and 4K variants when the workflow needs longer scenes, higher resolution, or post-generation retrieval."
+    }
+  ],
+  "quickStartKicker": "Quick Start",
+  "quickStartTitle": "From prompt test to Veo 3.1 API request",
+  "quickStartDescription": "A compact integration path for teams that want to validate motion quality before wiring Veo 3.1 into an app or content pipeline.",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. Choose a variant",
+      "description": "Select Lite, Fast, Quality, Extend, 1080P, or 4K based on iteration speed, output quality, and delivery target."
+    },
+    {
+      "icon": "image",
+      "title": "2. Add creative inputs",
+      "description": "Provide a prompt, optional image references, duration, aspect ratio, resolution, and callback settings for the selected model."
+    },
+    {
+      "icon": "play",
+      "title": "3. Poll and deliver",
+      "description": "Track the task until it succeeds, then retrieve the generated video URL for your app, campaign, or production pipeline."
+    }
+  ],
+  "useCasesKicker": "Use Cases",
+  "useCasesTitle": "What you can create with Veo 3.1 API",
+  "useCasesDescription": "Use the API when your product needs repeatable, high-quality AI video output rather than one-off manual exports.",
+  "useCases": [
+    "Product launch videos and hero clips",
+    "Social ads for TikTok, Reels, and Shorts",
+    "Storyboard, film, and game pre-visualization",
+    "Image-to-video animations for product and character assets",
+    "First-and-last-frame transitions for campaign scenes",
+    "Extended or higher-resolution clips for production review"
+  ],
+  "communityShowcase": {
+    "kicker": "Community Showcase",
+    "title": "Successful Veo 3.1 generations from the community",
+    "description": "Browse public Veo 3.1 outputs that finished successfully, then open any case to inspect the prompt, settings, and result.",
+    "viewAll": "View more",
+    "viewDetails": "View details"
+  },
+  "productionKicker": "Production Notes",
+  "productionTitle": "Built for real Veo 3.1 API workflows",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "Account-gated execution",
+      "body": "Users sign in, submit jobs, and consume credits through the existing SdanceAI generation flow."
+    },
+    {
+      "icon": "image",
+      "title": "Reference media handling",
+      "body": "The studio supports uploaded reference media, direct URLs, previews, and form/API payload editing for Veo 3.1 variants."
+    },
+    {
+      "icon": "zap",
+      "title": "Resolution-aware delivery",
+      "body": "Choose a lower-cost mode for early prompt iteration, then move to Quality, 1080P, or 4K paths when the direction is ready."
+    }
+  ],
+  "faqKicker": "FAQ",
+  "faqTitle": "Veo 3.1 API questions",
+  "faqs": [
+    {
+      "question": "What is Veo 3.1 API best for?",
+      "answer": "It is best for cinematic text-to-video and image-to-video generation where motion quality, prompt control, frame guidance, and production-ready delivery matter."
+    },
+    {
+      "question": "What is the difference between Lite, Fast, and Quality?",
+      "answer": "Lite is the lower-cost entry point, Fast is tuned for quicker iteration, and Quality focuses on higher-fidelity output when creative direction is already clear."
+    },
+    {
+      "question": "Can Veo 3.1 use first and last frames?",
+      "answer": "Yes. Veo 3.1 workflows can use frame guidance to generate transitions between a starting frame and an ending frame, depending on the selected variant and payload."
+    },
+    {
+      "question": "Does Veo 3.1 support image-to-video?",
+      "answer": "Yes. The workflow supports prompt-only generation and image-guided generation, so you can animate product shots, characters, scenes, or visual concepts."
+    },
+    {
+      "question": "Which output formats are common for Veo 3.1?",
+      "answer": "Veo 3.1 video workflows commonly target short MP4 clips with 16:9 or 9:16 aspect ratios, with resolution options depending on the selected variant."
+    },
+    {
+      "question": "When should I use Extend?",
+      "answer": "Use Extend when you already have a generated video task and want to continue the scene rather than start a new clip from scratch."
+    },
+    {
+      "question": "Where can I test it before integrating?",
+      "answer": "Use the playground on this page to test prompts, references, resolution, aspect ratio, duration, and API payload behavior before moving into production."
+    },
+    {
+      "question": "Can I use Veo 3.1 API for commercial projects?",
+      "answer": "This page is configured for commercial-use workflows. For production use, review your account plan, credit balance, model availability, and any applicable content policy requirements."
+    }
+  ],
+  "cta": {
+    "kicker": "Start building",
+    "title": "Turn Veo 3.1 into your video workflow",
+    "description": "Open the generator, test a prompt or image reference, then use the API docs when you are ready to wire Veo 3.1 into production.",
+    "primaryLabel": "Open Veo 3.1",
+    "secondaryLabel": "Review API features",
+    "stats": [
+      {
+        "value": "API-ready",
+        "label": "workflow"
+      },
+      {
+        "value": "4-8s",
+        "label": "clip length"
+      },
+      {
+        "value": "4K",
+        "label": "target path"
+      }
+    ]
+  }
+}

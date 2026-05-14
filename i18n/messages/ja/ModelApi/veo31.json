@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "title": "Veo 3.1 API",
+    "description": "映画的な Text-to-Video、Image-to-Video、最初と最後のフレーム制御、動画延長、4K 対応ワークフロー向けに Veo 3.1 API をテストして統合できます。"
+  },
+  "title": "Veo 3.1 API",
+  "badge": "Google video API",
+  "description": [
+    "Veo 3.1 は Google の新世代動画生成モデルで、映画的な Text-to-Video と Image-to-Video、より強いプロンプト追従、ネイティブ音声ワークフロー、制御しやすいショット生成に向いています。",
+    "このページでは Lite、Fast、Quality、Extend、1080P、4K 向けのバリアントを比較し、Playground で検証してから予測しやすい payload で本番 API に接続できます。"
+  ],
+  "monitor": {
+    "label": "24時間ステータス"
+  },
+  "pricingNote": "USD 見積もりは最適な年額プランの $0.005/クレジットで計算しています。最終的な課金は選択した Veo 3.1 バリアント、解像度、タスク種別に従います。",
+  "labels": {
+    "apiDocs": "API ドキュメント",
+    "apiDocsDetail": "API 詳細ドキュメントを見る",
+    "apiDocsDetailDescription": "エンドポイント、認証、タスクのポーリング、payload の詳細を確認できます。",
+    "apiInputDescription": "テキストプロンプト、画像参照、長さ、アスペクト比、解像度、コールバック、タスク取得を明確に扱えます。",
+    "apiInputKicker": "API 入力",
+    "apiInputTitle": "主要リクエストフィールド",
+    "descriptionColumn": "説明",
+    "fieldColumn": "フィールド",
+    "lowestCostPrefix": "最低コスト",
+    "modelType": "モデルタイプ:",
+    "pricingTitle": "料金",
+    "requestJson": "Request JSON",
+    "runWithApi": "API で実行",
+    "selectedModel": "選択中モデル",
+    "selectedModelNote": "Playground、リクエスト例、入力フィールド、料金は選択中のモデルタイプに連動します。",
+    "typeColumn": "型",
+    "useModelForGeneration": "{model} で生成"
+  },
+  "featuresKicker": "Capabilities",
+  "featuresTitle": "Veo 3.1 API が動画ワークフローに加える機能",
+  "featuresDescription": "モデルを試し、フィールドを確認し、そのまま統合へ進める API ファーストの構成です。",
+  "capabilities": [
+    {
+      "icon": "video",
+      "title": "Text/Image to Video",
+      "description": "プロンプトや開始画像から映画的なクリップを生成し、速度、品質、納品目的に応じてバリアントを選べます。"
+    },
+    {
+      "icon": "layers",
+      "title": "最初と最後のフレーム制御",
+      "description": "開始フレームと終了フレームでトランジションを導き、動き、構図、ショット方向を意図に近づけます。"
+    },
+    {
+      "icon": "music",
+      "title": "ネイティブ音声ワークフロー",
+      "description": "選択した Veo 3.1 モードが対応している場合、音、雰囲気、音声の方向性を考慮した動画生成に使えます。"
+    },
+    {
+      "icon": "zap",
+      "title": "延長と高解像度パス",
+      "description": "長いシーン、高解像度、生成後の取得が必要な場合は Extend、1080P、4K 関連バリアントを利用できます。"
+    }
+  ],
+  "quickStartKicker": "Quick Start",
+  "quickStartTitle": "プロンプト検証から Veo 3.1 API リクエストへ",
+  "quickStartDescription": "Veo 3.1 をアプリや制作パイプラインに組み込む前に、動きの品質を素早く確認できます。",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. バリアントを選択",
+      "description": "反復速度、出力品質、納品ターゲットに応じて Lite、Fast、Quality、Extend、1080P、4K を選びます。"
+    },
+    {
+      "icon": "image",
+      "title": "2. クリエイティブ入力を追加",
+      "description": "選択したモデルに合わせて、プロンプト、任意の画像参照、長さ、比率、解像度、コールバックを設定します。"
+    },
+    {
+      "icon": "play",
+      "title": "3. ポーリングして納品",
+      "description": "タスク完了まで追跡し、生成された動画 URL をアプリ、キャンペーン、制作フローで利用します。"
+    }
+  ],
+  "useCasesKicker": "Use Cases",
+  "useCasesTitle": "Veo 3.1 API で作れるもの",
+  "useCasesDescription": "単発の手動書き出しではなく、繰り返し使える高品質な AI 動画生成を製品に組み込めます。",
+  "useCases": [
+    "製品ローンチ動画とヒーロークリップ",
+    "TikTok、Reels、Shorts 向け広告",
+    "映画、ゲーム、ストーリーボードのプリビズ",
+    "製品やキャラクター素材の Image-to-Video",
+    "最初と最後のフレームを使った広告シーンの遷移",
+    "制作レビュー向けの延長または高解像度クリップ"
+  ],
+  "communityShowcase": {
+    "kicker": "Community Showcase",
+    "title": "コミュニティの Veo 3.1 成功事例",
+    "description": "公開され、正常に生成された Veo 3.1 の出力を確認できます。各事例からプロンプト、設定、結果を詳しく見られます。",
+    "viewAll": "もっと見る",
+    "viewDetails": "詳細を見る"
+  },
+  "productionKicker": "Production Notes",
+  "productionTitle": "実運用の Veo 3.1 API ワークフロー向け",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "アカウント連動の実行",
+      "body": "ユーザーはログイン後にジョブを送信し、既存の SdanceAI 生成フローでクレジットを消費します。"
+    },
+    {
+      "icon": "image",
+      "title": "参照メディア処理",
+      "body": "Veo 3.1 バリアント向けに、アップロード、直接 URL、プレビュー、フォーム/API payload 編集に対応しています。"
+    },
+    {
+      "icon": "zap",
+      "title": "解像度を意識した納品",
+      "body": "初期反復では低コストモードを使い、方向性が決まったら Quality、1080P、4K のパスへ移行できます。"
+    }
+  ],
+  "faqKicker": "FAQ",
+  "faqTitle": "Veo 3.1 API FAQ",
+  "faqs": [
+    {
+      "question": "Veo 3.1 API は何に向いていますか？",
+      "answer": "動きの品質、プロンプト制御、フレームガイド、制作納品が重要な映画的 Text-to-Video と Image-to-Video に向いています。"
+    },
+    {
+      "question": "Lite、Fast、Quality の違いは？",
+      "answer": "Lite は低コストの入口、Fast は素早い反復、Quality は方向性が固まった後の高品質出力に向いています。"
+    },
+    {
+      "question": "Veo 3.1 は最初と最後のフレームを使えますか？",
+      "answer": "はい。選択したバリアントと payload に応じて、開始フレームと終了フレームの間を生成できます。"
+    },
+    {
+      "question": "Veo 3.1 は Image-to-Video に対応していますか？",
+      "answer": "はい。プロンプトのみの生成に加え、画像でガイドする生成にも対応し、製品、キャラクター、シーン、ビジュアルコンセプトを動かせます。"
+    },
+    {
+      "question": "Veo 3.1 の一般的な出力形式は？",
+      "answer": "Veo 3.1 の動画ワークフローは短尺 MP4 を想定し、選択したバリアントに応じて 16:9 または 9:16、各種解像度を利用できます。"
+    },
+    {
+      "question": "Extend はいつ使うべきですか？",
+      "answer": "既存の生成動画タスクがあり、同じシーンを続けたい場合に Extend を使います。"
+    },
+    {
+      "question": "統合前にどこで試せますか？",
+      "answer": "このページの Playground で、プロンプト、参照素材、解像度、比率、長さ、API payload を試せます。"
+    },
+    {
+      "question": "Veo 3.1 API は商用プロジェクトで使えますか？",
+      "answer": "このページは商用ワークフロー向けに構成されています。本番利用前に、アカウントプラン、クレジット残高、モデル提供状況、適用されるコンテンツポリシーを確認してください。"
+    }
+  ],
+  "cta": {
+    "kicker": "Start building",
+    "title": "Veo 3.1 を動画ワークフローへ",
+    "description": "まず生成画面でプロンプトや画像参照を試し、結果を確認してから API ドキュメントで本番フローに接続できます。",
+    "primaryLabel": "Veo 3.1 を開く",
+    "secondaryLabel": "API 機能を見る",
+    "stats": [
+      {
+        "value": "API ready",
+        "label": "workflow"
+      },
+      {
+        "value": "4-8秒",
+        "label": "clip length"
+      },
+      {
+        "value": "4K",
+        "label": "target path"
+      }
+    ]
+  }
+}

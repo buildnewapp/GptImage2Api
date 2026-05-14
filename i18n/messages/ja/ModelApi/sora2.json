@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "title": "Sora 2 API",
+    "description": "テキスト動画、画像から動画、音声対応クリップ、Pro Storyboard ワークフロー向けに Sora 2 API をテストして統合できます。"
+  },
+  "title": "Sora 2 API",
+  "badge": "音声対応",
+  "description": [
+    "Sora 2 はリアルな動き、物理的な一貫性、映画的なシーン生成を重視した AI 動画モデルです。自然な動作、カメラロジック、音声表現が重要なテキスト動画・画像から動画のワークフローに向いています。",
+    "このページは Seedance 2.0 API と同じ構成です。Sora 2 のモデルタイプを選び、Playground で生成を試し、リクエストフィールドと料金を確認してから API ドキュメントで本番連携へ進めます。"
+  ],
+  "monitor": {
+    "label": "24時間ステータス"
+  },
+  "pricingNote": "USD 見積もりは最適な年額プランの $0.005/クレジットで計算しています。",
+  "labels": {
+    "apiDocs": "API ドキュメント",
+    "apiDocsDetail": "API 詳細ドキュメントを見る",
+    "apiDocsDetailDescription": "エンドポイント、認証、タスクのポーリング、payload の詳細を確認できます。",
+    "apiInputDescription": "予測しやすい payload 構造を保ちながら、動画、画像、音声、Storyboard 制御に対応します。",
+    "apiInputKicker": "API 入力",
+    "apiInputTitle": "主要リクエストフィールド",
+    "descriptionColumn": "説明",
+    "fieldColumn": "フィールド",
+    "lowestCostPrefix": "最低コスト",
+    "modelType": "モデルタイプ:",
+    "pricingTitle": "料金",
+    "requestJson": "Request JSON",
+    "runWithApi": "API で実行",
+    "selectedModel": "選択中モデル",
+    "selectedModelNote": "Playground、リクエスト例、入力フィールド、料金は選択中のモデルタイプに連動します。",
+    "typeColumn": "型",
+    "useModelForGeneration": "{model} で生成"
+  },
+  "featuresKicker": "Capabilities",
+  "featuresTitle": "Sora 2 API が動画ワークフローに加える機能",
+  "featuresDescription": "リアルな動き、プロンプト駆動の動画生成、参照画像による制御、より高度な Pro 出力が必要なときに Sora 2 を利用できます。",
+  "capabilities": [
+    {
+      "icon": "video",
+      "title": "リアルなテキスト動画",
+      "description": "プロンプトから映画的な短尺クリップを生成し、カメラ、被写体、シーン物理をより自然に表現します。"
+    },
+    {
+      "icon": "image",
+      "title": "画像から動画の制御",
+      "description": "参照画像から始めることで、被写体、構図、スタイル、製品ディテールを保ちやすくなります。"
+    },
+    {
+      "icon": "music",
+      "title": "音声を考慮した出力",
+      "description": "対応モデルでは音声関連の設定を利用でき、広告、ショート動画、ストーリーシーンをより完成度高く作れます。"
+    },
+    {
+      "icon": "layers",
+      "title": "Pro と Storyboard",
+      "description": "高品質な生成には Pro、構造化されたシーン設計には Storyboard モードを利用できます。"
+    }
+  ],
+  "quickStartKicker": "Quick Start",
+  "quickStartTitle": "Sora 2 のテストから本番リクエストへ",
+  "quickStartDescription": "API 統合前に、プロンプト、参照画像、長さ、モデルバリアントを素早く検証できます。",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. Sora 2 モードを選択",
+      "description": "必要な品質と制御に合わせて、テキスト動画、画像から動画、Stable、Pro、Pro Storyboard を選びます。"
+    },
+    {
+      "icon": "key",
+      "title": "2. 生成を送信",
+      "description": "モデル ID、プロンプト、必要な参照画像、長さ、解像度、モデル固有のフィールドを指定して API リクエストを送ります。"
+    },
+    {
+      "icon": "play",
+      "title": "3. ポーリングして公開",
+      "description": "非同期タスクの完了を追跡し、生成された動画 URL をアプリ、キャンペーン、制作フローで利用します。"
+    }
+  ],
+  "useCasesKicker": "Use Cases",
+  "useCasesTitle": "Sora 2 API で作れるもの",
+  "useCasesDescription": "明確なクリエイティブブリーフや参照フレームから、繰り返し動画を生成したい製品に向いています。",
+  "useCases": [
+    "TikTok、Reels、Shorts 向けの映画的なショート動画",
+    "参照画像から作る製品モーションショット",
+    "広告コンセプト、ローンチティザー、クリエイティブバリエーション",
+    "映画、ゲーム、ブランド施策の Storyboard プレビュー",
+    "キャラクター、シーン、カメラモーションのプロトタイプ",
+    "動画ツールや SaaS アプリ向けの一括クリエイティブ生成"
+  ],
+  "communityShowcase": {
+    "kicker": "Community Showcase",
+    "title": "コミュニティの Sora 2 成功事例",
+    "description": "公開され、正常に生成された Sora 2 の出力を確認できます。各事例からプロンプト、設定、結果を詳しく見られます。",
+    "viewAll": "もっと見る",
+    "viewDetails": "詳細を見る"
+  },
+  "productionKicker": "Production Notes",
+  "productionTitle": "API ベースの動画プロダクト向け",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "アカウント連動の実行",
+      "body": "ユーザーはログイン後にジョブを送信し、既存の SdanceAI 生成フローでクレジットを消費します。"
+    },
+    {
+      "icon": "image",
+      "title": "参照画像サポート",
+      "body": "被写体、スタイル、製品の一貫性が重要な場合は、画像から動画モデルを利用できます。"
+    },
+    {
+      "icon": "zap",
+      "title": "柔軟なモデル選択",
+      "body": "速度、品質、シーン制御の要件に応じて、標準、Stable、Pro、Storyboard を切り替えられます。"
+    }
+  ],
+  "faqKicker": "FAQ",
+  "faqTitle": "Sora 2 API FAQ",
+  "faqs": [
+    {
+      "question": "Sora 2 API は何に向いていますか？",
+      "answer": "リアルな短尺 AI 動画生成に向いています。特にテキスト動画、画像から動画、広告、製品ビジュアル、SNS クリップ、Storyboard 型のコンセプト開発に適しています。"
+    },
+    {
+      "question": "このページではどの Sora 2 モデルを使えますか？",
+      "answer": "Sora 2 Text to Video、Sora 2 Image to Video、Stable バリアント、Sora 2 Pro Text to Video、Sora 2 Pro Image to Video、Sora 2 Pro Storyboard を利用できます。"
+    },
+    {
+      "question": "画像から動画を生成できますか？",
+      "answer": "はい。被写体、構図、製品ディテール、スタイルを参照画像でガイドしたい場合は、Sora 2 Image to Video または Pro Image to Video を選択してください。"
+    },
+    {
+      "question": "統合前にどこで Sora 2 を試せますか？",
+      "answer": "このページの Playground で、プロンプト、モデルバリアント、入力フィールド、料金、API payload を確認できます。"
+    },
+    {
+      "question": "Sora 2 と Sora 2 Pro の違いは？",
+      "answer": "Sora 2 は一般的な短尺生成と反復に向いています。Sora 2 Pro はより高品質な出力や要求の高い制作ワークフロー向けです。"
+    },
+    {
+      "question": "Sora 2 Pro Storyboard は何に使いますか？",
+      "answer": "構造化されたシーン設計、クリエイティブなシーケンス、最終生成前のプリビズに役立ちます。"
+    },
+    {
+      "question": "Sora 2 API は音声に対応していますか？",
+      "answer": "対応する Sora 2 バリアントでは音声関連の生成設定を利用できます。利用可否と挙動は、選択中のモデルとこのページに表示されるリクエストフィールドに依存します。"
+    },
+    {
+      "question": "Sora 2 の動画の長さはどれくらいですか？",
+      "answer": "選択できる長さは Sora 2 のモデルタイプと料金ティアによって変わります。モデルを選択した後、料金とリクエストフィールドを確認してください。"
+    },
+    {
+      "question": "Sora 2 API は商用プロジェクトで使えますか？",
+      "answer": "このページは商用 API ワークフロー向けに構成されています。本番利用前に、アカウントプラン、クレジット残高、モデル提供状況、適用されるコンテンツポリシーを確認してください。"
+    },
+    {
+      "question": "Playground から API 統合へ進むには？",
+      "answer": "モデルタイプを選び、生成された request JSON とフィールド表を確認し、API ドキュメントでエンドポイント、認証、タスクポーリング、webhook の詳細を確認してください。"
+    }
+  ],
+  "cta": {
+    "kicker": "Start building",
+    "title": "Sora 2 を動画ワークフローへ",
+    "description": "まず生成画面で Sora 2 のプロンプトや参照画像を試し、結果を確認してから API ドキュメントで本番フローに接続できます。",
+    "primaryLabel": "Sora 2 を開く",
+    "secondaryLabel": "API 機能を見る",
+    "stats": [
+      {
+        "value": "Text + image",
+        "label": "input modes"
+      },
+      {
+        "value": "音声対応",
+        "label": "model family"
+      },
+      {
+        "value": "Pro",
+        "label": "workflow option"
+      }
+    ]
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "title": "Sora 2 API",
+    "description": "测试并集成 Sora 2 API，支持文生视频、图生视频、音频感知短片和 Pro Storyboard 工作流。"
+  },
+  "title": "Sora 2 API",
+  "badge": "支持音频",
+  "description": [
+    "Sora 2 是面向真实运动、物理一致性和电影感场景生成的 AI 视频模型。它适合文生视频和图生视频工作流，尤其适合需要自然动作、镜头逻辑和音频表现的场景。",
+    "本页沿用 Seedance 2.0 API 的结构：选择 Sora 2 模型类型，在 Playground 测试生成，查看请求字段和价格，再通过 API 文档接入生产环境。"
+  ],
+  "monitor": {
+    "label": "24 小时状态监控"
+  },
+  "pricingNote": "美元估算按最佳年付套餐 $0.005/积分 计算。",
+  "labels": {
+    "apiDocs": "API 文档",
+    "apiDocsDetail": "查看 API 详细文档",
+    "apiDocsDetailDescription": "打开完整 API 文档，查看接口、鉴权、任务轮询和 payload 细节。",
+    "apiInputDescription": "保持请求结构可预测，同时保留视频、图片、音频和分镜控制能力。",
+    "apiInputKicker": "API 输入",
+    "apiInputTitle": "核心请求字段",
+    "descriptionColumn": "说明",
+    "fieldColumn": "字段",
+    "lowestCostPrefix": "最低成本从",
+    "modelType": "模型类型：",
+    "pricingTitle": "价格",
+    "requestJson": "请求 JSON",
+    "runWithApi": "使用 API 运行",
+    "selectedModel": "当前模型",
+    "selectedModelNote": "本页的 Playground、请求示例、请求字段和价格都会跟随当前选择的模型类型变化。",
+    "typeColumn": "类型",
+    "useModelForGeneration": "使用 {model} 生成"
+  },
+  "featuresKicker": "能力",
+  "featuresTitle": "Sora 2 API 为视频工作流带来的能力",
+  "featuresDescription": "当产品需要真实运动、提示词驱动的视频生成、参考图片控制或更高阶的 Pro 输出时，可以使用 Sora 2。",
+  "capabilities": [
+    {
+      "icon": "video",
+      "title": "真实文生视频",
+      "description": "把提示词生成电影感短片，让镜头运动、主体动作和场景物理更可信。"
+    },
+    {
+      "icon": "image",
+      "title": "图生视频控制",
+      "description": "从参考图片开始生成，尽量保持主体身份、构图、风格和产品细节。"
+    },
+    {
+      "icon": "music",
+      "title": "音频感知输出",
+      "description": "在支持的模型中使用音频相关设置，让广告、短片和叙事场景更完整。"
+    },
+    {
+      "icon": "layers",
+      "title": "Pro 与 Storyboard 模式",
+      "description": "需要更高阶生成时使用 Pro 版本，需要结构化场景规划时使用 Storyboard。"
+    }
+  ],
+  "quickStartKicker": "快速开始",
+  "quickStartTitle": "从 Sora 2 测试到生产请求",
+  "quickStartDescription": "在接入 API 前，先快速验证提示词、参考图片、时长和不同模型版本的表现。",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. 选择 Sora 2 模式",
+      "description": "根据质量和控制需求，选择文生视频、图生视频、Stable、Pro 或 Pro Storyboard。"
+    },
+    {
+      "icon": "key",
+      "title": "2. 提交生成",
+      "description": "使用模型 ID、提示词、必要的参考图片、时长、分辨率和其他模型字段发起 API 请求。"
+    },
+    {
+      "icon": "play",
+      "title": "3. 轮询并发布",
+      "description": "跟踪异步任务直到成功，然后获取生成视频 URL，用于应用、营销活动或内部工作流。"
+    }
+  ],
+  "useCasesKicker": "使用场景",
+  "useCasesTitle": "你可以用 Sora 2 API 创作什么",
+  "useCasesDescription": "当产品需要基于明确创意 brief 或参考画面的可重复视频生成时，Sora 2 很适合接入。",
+  "useCases": [
+    "TikTok、Reels、Shorts 的电影感社媒短片",
+    "从参考图片生成产品动态镜头",
+    "广告概念、发布预热视频和创意变体",
+    "影视、游戏和品牌活动的分镜预览",
+    "角色、场景和镜头运动原型",
+    "视频工具和 SaaS 应用中的批量创意生成"
+  ],
+  "communityShowcase": {
+    "kicker": "社区案例",
+    "title": "社区公开的 Sora 2 成功案例",
+    "description": "查看数据库中公开且已成功生成的 Sora 2 作品，打开案例可继续查看提示词、参数和生成结果。",
+    "viewAll": "查看更多",
+    "viewDetails": "查看详情"
+  },
+  "productionKicker": "生产说明",
+  "productionTitle": "面向 API 视频产品构建",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "账户级执行",
+      "body": "用户登录后提交任务，并通过现有 SdanceAI 生成流程消耗积分。"
+    },
+    {
+      "icon": "image",
+      "title": "参考图片支持",
+      "body": "当工作流需要更强的主体、风格或产品一致性时，可以选择图生视频模型。"
+    },
+    {
+      "icon": "zap",
+      "title": "灵活模型选择",
+      "body": "可根据速度、质量和场景控制需求，在标准、Stable、Pro 和 Storyboard 版本间切换。"
+    }
+  ],
+  "faqKicker": "常见问题",
+  "faqTitle": "Sora 2 API 常见问题",
+  "faqs": [
+    {
+      "question": "Sora 2 API 最适合什么场景？",
+      "answer": "它适合真实感短视频生成，尤其是文生视频、图生视频、广告、产品视觉、社媒短片和分镜概念开发。"
+    },
+    {
+      "question": "本页支持哪些 Sora 2 模型类型？",
+      "answer": "本页包含 Sora 2 Text to Video、Sora 2 Image to Video、Stable 版本、Sora 2 Pro Text to Video、Sora 2 Pro Image to Video 和 Sora 2 Pro Storyboard。"
+    },
+    {
+      "question": "可以从图片开始生成视频吗？",
+      "answer": "可以。需要参考图片来控制主体身份、构图、产品细节或视觉风格时，请选择 Sora 2 Image to Video 或 Pro Image to Video。"
+    },
+    {
+      "question": "接入前在哪里测试 Sora 2？",
+      "answer": "可以直接使用本页 Playground 测试提示词、模型版本、请求字段、价格和 API payload 行为。"
+    },
+    {
+      "question": "Sora 2 和 Sora 2 Pro 有什么区别？",
+      "answer": "Sora 2 适合通用短片生成和快速迭代。Sora 2 Pro 更适合高质量输出和要求更高的创意工作流。"
+    },
+    {
+      "question": "Sora 2 Pro Storyboard 用来做什么？",
+      "answer": "Storyboard 适合需要结构化场景规划、创意分镜或成片前预演的工作流。"
+    },
+    {
+      "question": "Sora 2 API 支持音频吗？",
+      "answer": "支持的 Sora 2 版本包含音频相关生成设置。具体可用性和表现取决于当前选择的模型和本页展示的请求字段。"
+    },
+    {
+      "question": "Sora 2 可以生成多长的视频？",
+      "answer": "可选时长取决于当前选择的 Sora 2 模型和价格档位。选择模型类型后，可以查看对应价格和请求字段。"
+    },
+    {
+      "question": "Sora 2 API 可以用于商业项目吗？",
+      "answer": "本页面面向商用 API 工作流配置。生产环境使用前，请确认账户套餐、积分余额、模型可用性以及适用的内容政策要求。"
+    },
+    {
+      "question": "如何从 Playground 测试切换到 API 接入？",
+      "answer": "先选择模型类型，查看生成的请求 JSON 和字段表，然后打开 API 文档查看接口、鉴权、任务轮询和 webhook 细节。"
+    }
+  ],
+  "cta": {
+    "kicker": "开始接入",
+    "title": "把 Sora 2 接入你的视频工作流",
+    "description": "先打开生成器测试 Sora 2 提示词或参考图片，确认效果后再通过 API 文档接入到生产流程。",
+    "primaryLabel": "打开 Sora 2",
+    "secondaryLabel": "查看 API 能力",
+    "stats": [
+      {
+        "value": "文本 + 图片",
+        "label": "输入模式"
+      },
+      {
+        "value": "支持音频",
+        "label": "模型族"
+      },
+      {
+        "value": "Pro",
+        "label": "工作流选项"
+      }
+    ]
+  }
+}

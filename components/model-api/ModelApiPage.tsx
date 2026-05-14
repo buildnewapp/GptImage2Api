@@ -156,9 +156,11 @@ function resolveRuntimeCatalogEntry(version: AiVideoStudioVersion) {
   );
 }
 
-function formatUsdPerSecond(creditRate: number) {
+function formatUsdEstimate(creditRate: number, unit: "image" | "second") {
   const usd = creditRate * 0.005;
-  return `$${usd.toFixed(4).replace(/0+$/, "").replace(/\.$/, "")}/s`;
+  const suffix = unit === "second" ? "/s" : "/image";
+
+  return `$${usd.toFixed(4).replace(/0+$/, "").replace(/\.$/, "")}${suffix}`;
 }
 
 function parseCreditRate(value: string) {
@@ -208,7 +210,12 @@ function buildParameters(detail: RuntimeCatalogItem | null | undefined) {
 
   for (const field of normalized.fields) {
     const name = field.key.trim();
-    if (!name || existingNames.has(name)) {
+    if (
+      !name ||
+      name === "callBackUrl" ||
+      name === "progressCallBackUrl" ||
+      existingNames.has(name)
+    ) {
       continue;
     }
     existingNames.add(name);
@@ -222,10 +229,32 @@ function buildParameters(detail: RuntimeCatalogItem | null | undefined) {
   return rows;
 }
 
+function omitCallbackUrl(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map((item) => omitCallbackUrl(item));
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(
+          ([key]) => key !== "callBackUrl" && key !== "progressCallBackUrl",
+        )
+        .map(([key, item]) => [key, omitCallbackUrl(item)]),
+    );
+  }
+
+  return value;
+}
+
 function buildRequestExample(
   detail: RuntimeCatalogItem | null | undefined,
   version: AiVideoStudioVersion,
 ) {
+  if (detail?.examplePayload) {
+    return JSON.stringify(omitCallbackUrl(detail.examplePayload), null, 2);
+  }
+
   const requestModel = detail?.alias ?? detail?.modelKeys[0] ?? version.key;
 
   return JSON.stringify(
@@ -315,13 +344,18 @@ async function buildModelPage(input: {
       .filter((rate): rate is number => rate !== null);
     const lowestCreditRate =
       versionCreditRates.length > 0 ? Math.min(...versionCreditRates) : null;
+    const priceUnit = versionPricingRows.some((row) =>
+      row.creditPrice.includes("/"),
+    )
+      ? "second"
+      : "image";
 
     return {
       key: version.key,
       label: version.label,
       modelId: version.modelId,
       lowest: lowestCreditRate
-        ? formatUsdPerSecond(lowestCreditRate)
+        ? formatUsdEstimate(lowestCreditRate, priceUnit)
         : "Custom",
       parameters: buildParameters(detail),
       pricingRows: versionPricingRows.map(

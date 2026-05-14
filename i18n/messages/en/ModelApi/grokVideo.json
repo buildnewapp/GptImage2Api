@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "title": "Grok Video API",
+    "description": "Test and integrate Grok Video API for text-to-video, image-to-video, video upscaling, and video extension workflows."
+  },
+  "title": "Grok Video API",
+  "badge": "Video API",
+  "description": [
+    "Grok Video API gives teams an API-first way to use Grok Imagine video generation inside production workflows. It supports prompt-driven text-to-video, reference-based image-to-video, video upscaling, and video extension from one model family.",
+    "Use the playground to validate prompts, source images, task IDs, duration, aspect ratio, and payload behavior before connecting Grok video generation to your app, creative tool, or content pipeline."
+  ],
+  "monitor": {
+    "label": "24h Status Monitor"
+  },
+  "pricingNote": "USD estimates use $0.005/credit with the best annual plan. Final billing follows the selected Grok video variant and output settings.",
+  "labels": {
+    "apiDocs": "API docs",
+    "apiDocsDetail": "View detailed API docs",
+    "apiDocsDetailDescription": "Open the full API documentation for endpoints, authentication, task polling, and payload details.",
+    "apiInputDescription": "Use a predictable payload for prompts, image URLs, source task IDs, aspect ratio, and callback settings.",
+    "apiInputKicker": "API Input",
+    "apiInputTitle": "Core request fields",
+    "descriptionColumn": "Description",
+    "fieldColumn": "Field",
+    "lowestCostPrefix": "Lowest cost starts at",
+    "modelType": "Model Type:",
+    "pricingTitle": "Pricing",
+    "requestJson": "Request JSON",
+    "runWithApi": "Run with API",
+    "selectedModel": "Selected model",
+    "selectedModelNote": "The playground, request sample, request fields, and pricing on this page follow the selected model type.",
+    "typeColumn": "Type",
+    "useModelForGeneration": "Use {model} for generation"
+  },
+  "featuresKicker": "Capabilities",
+  "featuresTitle": "What Grok Video API adds to your video workflow",
+  "featuresDescription": "The page follows the same API-first structure as the reference: test the model, understand the fields, then move into integration.",
+  "capabilities": [
+    {
+      "icon": "sparkles",
+      "title": "Text-to-video generation",
+      "description": "Turn detailed prompts into short-form video concepts for social posts, ads, product moments, and fast creative exploration."
+    },
+    {
+      "icon": "image",
+      "title": "Image-to-video motion",
+      "description": "Animate source images while preserving the subject, composition, and visual direction that your team already approved."
+    },
+    {
+      "icon": "video",
+      "title": "Upscale and extend",
+      "description": "Improve successful Grok clips with video upscaling, or continue an existing generation with an extension task."
+    },
+    {
+      "icon": "code",
+      "title": "API-ready payloads",
+      "description": "Work with model IDs, prompts, image URLs, task IDs, aspect ratios, callbacks, and task polling in one integration path."
+    }
+  ],
+  "quickStartKicker": "Quick Start",
+  "quickStartTitle": "From Grok video test to production request",
+  "quickStartDescription": "A compact path for teams that want to validate output quality before wiring Grok video generation into an app.",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. Choose a mode",
+      "description": "Select text-to-video for prompt-only creation, image-to-video for source image animation, or a follow-up mode for upscale and extend."
+    },
+    {
+      "icon": "key",
+      "title": "2. Submit generation",
+      "description": "Call the API with your account key, model ID, prompt, optional image URLs or source task ID, and callback URL."
+    },
+    {
+      "icon": "play",
+      "title": "3. Poll and reuse",
+      "description": "Track the task until it succeeds, then reuse the output URL in your product, campaign workflow, or follow-up video task."
+    }
+  ],
+  "useCasesKicker": "Use Cases",
+  "useCasesTitle": "What you can create with Grok Video API",
+  "useCasesDescription": "Use the API when your product needs repeatable Grok video output, not just one-off manual generations.",
+  "useCases": [
+    "Prompt-led social clips for TikTok, Reels, and Shorts",
+    "Animated product stills and campaign visuals",
+    "Rapid storyboard and concept video exploration",
+    "Video variants for ads, thumbnails, and landing pages",
+    "Upscaled versions of successful generated clips",
+    "Extended clips for iterative creative pipelines"
+  ],
+  "communityShowcase": {
+    "kicker": "Community Showcase",
+    "title": "Successful Grok video generations from the community",
+    "description": "Browse public Grok video outputs that finished successfully, then open any case to inspect the prompt, settings, and result.",
+    "viewAll": "View more",
+    "viewDetails": "View details"
+  },
+  "productionKicker": "Production Notes",
+  "productionTitle": "Built for real Grok video API workflows",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "Account-gated execution",
+      "body": "Users sign in, submit jobs, and consume credits through the existing SdanceAI generation flow."
+    },
+    {
+      "icon": "image",
+      "title": "Reference and task inputs",
+      "body": "Image-to-video accepts source image URLs, while upscale and extend workflows can continue from completed video task IDs."
+    },
+    {
+      "icon": "zap",
+      "title": "Mode-aware iteration",
+      "body": "Start with text or image generation, then move promising outputs into upscale or extension workflows when needed."
+    }
+  ],
+  "faqKicker": "FAQ",
+  "faqTitle": "Grok Video API questions",
+  "faqs": [
+    {
+      "question": "What is Grok Video API best for?",
+      "answer": "It is best for repeatable short-form video generation, including prompt-led clips, animated source images, video variants, upscaled outputs, and extended creative sequences."
+    },
+    {
+      "question": "Which Grok video modes are available?",
+      "answer": "The current page exposes Grok Imagine Text to Video, Grok Imagine Image to Video, Grok Imagine Video Upscale, and Grok Imagine Video Extend."
+    },
+    {
+      "question": "What is the difference between Text to Video and Image to Video?",
+      "answer": "Text to Video starts from a prompt only. Image to Video uses one or more source images plus a prompt, which is better when you need subject or composition continuity."
+    },
+    {
+      "question": "When should I use upscale or extend?",
+      "answer": "Use upscale when you already have a successful Grok video and want a higher-quality version. Use extend when you want to continue a completed generation into a longer sequence."
+    },
+    {
+      "question": "Where can I test it before integrating?",
+      "answer": "Use the playground on this page to test prompts, image URLs, source task IDs, aspect ratios, callbacks, and API payload behavior before moving into production."
+    },
+    {
+      "question": "Does the API support callbacks?",
+      "answer": "Yes. The request schema includes callback settings where supported, so your service can receive task completion notifications."
+    },
+    {
+      "question": "Can I use Grok Video API for commercial workflows?",
+      "answer": "This page is configured for production video workflows. For commercial use, review your account plan, credit balance, model availability, and applicable content policy requirements."
+    },
+    {
+      "question": "Can I animate an existing product image?",
+      "answer": "Yes. Use the image-to-video mode with a source image URL and a prompt that describes the motion, camera behavior, and final visual direction."
+    },
+    {
+      "question": "How should I manage cost?",
+      "answer": "Start with quick prompt or image-to-video tests, then reserve upscale and extension tasks for clips that are already close to your target."
+    },
+    {
+      "question": "Can I inspect the actual API fields?",
+      "answer": "Yes. Select a Grok video mode on this page and the request JSON, field list, and pricing panel will update to match that model."
+    }
+  ],
+  "cta": {
+    "kicker": "Start building",
+    "title": "Turn Grok video into your production workflow",
+    "description": "Open the generator, test a Grok video prompt or source image, then use the API docs when you are ready to wire it into production.",
+    "primaryLabel": "Open Grok Video",
+    "secondaryLabel": "Review API features",
+    "stats": [
+      {
+        "value": "API-ready",
+        "label": "workflow"
+      },
+      {
+        "value": "4 modes",
+        "label": "video tools"
+      },
+      {
+        "value": "Task ID",
+        "label": "follow-ups"
+      }
+    ]
+  }
+}
