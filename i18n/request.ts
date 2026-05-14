@@ -31,6 +31,9 @@ export default getRequestConfig(async ({ requestLocale }) => {
       SvgTemplate: (await import(`./messages/${locale}/SvgTemplate.json`)).default,
       ToolHome: (await import(`./messages/${locale}/ToolHome.json`)).default,
       ApiDoc: (await import(`./messages/${locale}/ApiDoc.json`)).default,
+      ModelApi: {
+        seedance2: (await import(`./messages/${locale}/ModelApi/seedance2.json`)).default,
+      },
 
       // Dashboard - User
       Settings: (

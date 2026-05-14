@@ -35,6 +35,7 @@ const STATIC_PAGE_CONFIG: StaticPageConfig[] = [
   { path: '/prompts', priority: 0.8, changeFrequency: 'weekly' },
   { path: '/pricing', priority: 0.8, changeFrequency: 'weekly' },
   { path: '/apidoc', priority: 0.8, changeFrequency: 'weekly' },
+  { path: '/seedance-2-0-api', priority: 0.85, changeFrequency: 'weekly' },
 ]
 
 const CMS_MODULES = {

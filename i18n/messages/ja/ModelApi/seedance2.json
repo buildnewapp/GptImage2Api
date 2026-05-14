@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "title": "Seedance 2.0 API",
+    "description": "テキスト、画像、動画、音声リファレンスに対応した Seedance 2.0 API をテストして統合できます。"
+  },
+  "title": "Seedance 2.0 API",
+  "badge": "商用利用",
+  "description": [
+    "Seedance 2.0 は ByteDance のマルチモーダル AI 動画モデルで、高速かつリアルな動画生成に最適化されています。複数ショットの一貫性に強く、人物やシーンのつながりを自然に保てます。",
+    "Seedance 2.0 は通常約 5 分、Seedance 2.0 Fast は通常約 4 分で生成でき、スケールする制作ワークフローに向いています。"
+  ],
+  "monitor": {
+    "label": "24時間ステータス"
+  },
+  "pricingNote": "USD 見積もりは最適な年額プランの $0.005/クレジットで計算しています。",
+  "labels": {
+    "apiDocs": "API ドキュメント",
+    "apiDocsDetail": "API 詳細ドキュメントを見る",
+    "apiDocsDetailDescription": "エンドポイント、認証、タスクのポーリング、payload の詳細を確認できます。",
+    "apiInputDescription": "予測しやすい payload 構造を保ちながら、豊かなマルチモーダル制御に対応します。",
+    "apiInputKicker": "API 入力",
+    "apiInputTitle": "主要リクエストフィールド",
+    "descriptionColumn": "説明",
+    "fieldColumn": "フィールド",
+    "lowestCostPrefix": "最低コスト",
+    "modelType": "モデルタイプ:",
+    "pricingTitle": "料金",
+    "requestJson": "Request JSON",
+    "runWithApi": "API で実行",
+    "selectedModel": "選択中モデル",
+    "selectedModelNote": "Playground、リクエスト例、入力フィールド、料金は選択中のモデルタイプに連動します。",
+    "typeColumn": "型",
+    "useModelForGeneration": "{model} で生成"
+  },
+  "featuresKicker": "Capabilities",
+  "featuresTitle": "Seedance 2.0 API が動画ワークフローに加える機能",
+  "featuresDescription": "モデルを試し、フィールドを確認し、そのまま統合へ進める API ファーストの構成です。",
+  "capabilities": [
+    {
+      "icon": "layers",
+      "title": "マルチモーダル参照",
+      "description": "プロンプト、画像、動画、音声を組み合わせ、被写体・動き・リズム・スタイルを伝えられます。"
+    },
+    {
+      "icon": "video",
+      "title": "複数ショットの一貫性",
+      "description": "キャラクター、カメラ、シーンのつながりが安定した短編映像を作成できます。"
+    },
+    {
+      "icon": "sparkles",
+      "title": "参照駆動のモーション",
+      "description": "元動画でカメラワーク、動作タイミング、転換、テンポをガイドできます。"
+    },
+    {
+      "icon": "music",
+      "title": "音声を考慮した生成",
+      "description": "音声参照や生成音声を使い、リズムに合ったクリップを作れます。"
+    }
+  ],
+  "quickStartKicker": "Quick Start",
+  "quickStartTitle": "Playground から本番リクエストへ",
+  "quickStartDescription": "API を製品に組み込む前に、出力品質を素早く確認できます。",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. リクエスト準備",
+      "description": "Seedance 2.0 または Fast を選び、プロンプトと必要な参照素材を追加します。"
+    },
+    {
+      "icon": "key",
+      "title": "2. 生成を送信",
+      "description": "API キー、モデル ID、長さ、解像度、アスペクト比、素材 URL を指定して呼び出します。"
+    },
+    {
+      "icon": "play",
+      "title": "3. ポーリングして取得",
+      "description": "タスク完了まで追跡し、生成された動画 URL を取得します。"
+    }
+  ],
+  "useCasesKicker": "Use Cases",
+  "useCasesTitle": "Seedance 2.0 API で作れるもの",
+  "useCasesDescription": "単発の Playground ではなく、繰り返し使える AI 動画生成を製品に組み込めます。",
+  "useCases": [
+    "TikTok、Reels、Shorts 向け短尺動画",
+    "製品デモとローンチ広告",
+    "映画、ゲーム、ストーリーボードのプリビズ",
+    "音楽動画とビート同期クリエイティブ",
+    "テンプレートベースの一括生成",
+    "バーチャル人物とキャラクターシーン"
+  ],
+  "communityShowcase": {
+    "kicker": "Community Showcase",
+    "title": "コミュニティの Seedance 2.0 成功事例",
+    "description": "公開され、正常に生成された Seedance 2.0 の出力を確認できます。各事例からプロンプト、設定、結果を詳しく見られます。",
+    "viewAll": "もっと見る",
+    "viewDetails": "詳細を見る"
+  },
+  "productionKicker": "Production Notes",
+  "productionTitle": "実運用の API ワークフロー向け",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "アカウント連動の実行",
+      "body": "ユーザーはログイン後にジョブを送信し、既存の SdanceAI 生成フローでクレジットを消費します。"
+    },
+    {
+      "icon": "image",
+      "title": "参照メディア処理",
+      "body": "アップロード、直接 URL、プレビュー、フォーム/API payload 編集に対応しています。"
+    },
+    {
+      "icon": "zap",
+      "title": "拡張しやすいモデル選択",
+      "body": "品質、コスト、レイテンシーに応じて標準と Fast を切り替えられます。"
+    }
+  ],
+  "faqKicker": "FAQ",
+  "faqTitle": "Seedance 2.0 API FAQ",
+  "faqs": [
+    {
+      "question": "Seedance 2.0 API は何に向いていますか？",
+      "answer": "プロンプト制御と参照素材が重要な短尺の映画風 AI 動画、製品動画、SNS クリップ、モーション再現に向いています。"
+    },
+    {
+      "question": "Seedance 2.0 と Fast の違いは？",
+      "answer": "Seedance 2.0 は品質と制御を重視し、Fast は素早い反復とスケールした制作に向いています。"
+    },
+    {
+      "question": "画像、動画、音声を同時に使えますか？",
+      "answer": "はい。Seedance 2.0 はテキストに加え、画像、動画クリップ、音声リファレンスを利用できます。"
+    },
+    {
+      "question": "統合前にどこで試せますか？",
+      "answer": "このページの Playground で、プロンプト、参照素材、解像度、比率、長さ、API payload を試せます。"
+    },
+    {
+      "question": "Seedance 2.0 API の新機能は何ですか？",
+      "answer": "テキスト、画像、動画、音声リファレンスによるマルチモーダル制御が広がり、動きのガイド、シーン一貫性、映画的な出力を作りやすくなります。"
+    },
+    {
+      "question": "一般的な AI 動画生成ツールと何が違いますか？",
+      "answer": "多くの動画生成ツールは主にプロンプト解釈に依存しますが、Seedance 2.0 は参照素材を使ってカメラワーク、動作タイミング、転換、スタイル、テンポをより具体的に誘導できます。"
+    },
+    {
+      "question": "Seedance 2.0 API では何個の参照素材を使えますか？",
+      "answer": "最大 9 枚の画像リファレンス、最大 3 本の動画リファレンス、最大 3 本の音声リファレンスを利用できます。動画と音声はドキュメント上の長さ制限内に収めてください。"
+    },
+    {
+      "question": "音声ガイドやリップシンク生成に対応していますか？",
+      "answer": "音声を考慮した生成に対応しています。音声リファレンスでリズムや雰囲気を指定でき、選択したバージョンで対応していれば生成音声も有効化できます。"
+    },
+    {
+      "question": "動画の長さはどれくらい選べますか？",
+      "answer": "Seedance 2.0 は短尺クリップ向けで、一般的には 4 秒から 15 秒程度です。用途に合わせて長さ、解像度、アスペクト比を一緒に選択してください。"
+    },
+    {
+      "question": "Seedance 2.0 API は商用プロジェクトで使えますか？",
+      "answer": "このページは商用ワークフロー向けに構成されています。本番利用前に、アカウントプラン、クレジット残高、モデル提供状況、適用されるコンテンツポリシーを確認してください。"
+    }
+  ],
+  "cta": {
+    "kicker": "Start building",
+    "title": "Seedance 2.0 を動画ワークフローへ",
+    "description": "まず生成画面でプロンプトと参照素材を試し、結果を確認してから API ドキュメントで本番フローに接続できます。",
+    "primaryLabel": "Seedance 2.0 を開く",
+    "secondaryLabel": "API 機能を見る",
+    "stats": [
+      {
+        "value": "API ready",
+        "label": "workflow"
+      },
+      {
+        "value": "4-15秒",
+        "label": "clip length"
+      },
+      {
+        "value": "1080p",
+        "label": "public output"
+      }
+    ]
+  }
+}

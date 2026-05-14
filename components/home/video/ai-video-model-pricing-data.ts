@@ -277,8 +277,10 @@ function buildDynamicSeedanceRows(
 }
 
 export function buildAiVideoModelPricingRows({
+  familyKey,
   locale,
 }: {
+  familyKey?: string;
   locale: string;
 }): AiVideoModelPricingRow[] {
   const resolvedLocale = resolveLocale(locale);
@@ -286,6 +288,9 @@ export function buildAiVideoModelPricingRows({
 
   for (const family of AI_VIDEO_STUDIO_FAMILIES) {
     if (family.selectable === false) {
+      continue;
+    }
+    if (familyKey && family.key !== familyKey) {
       continue;
     }
 
