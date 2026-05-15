@@ -333,17 +333,17 @@ export function buildAiVideoModelPricingRows({
     for (const version of family.versions) {
       const entry = resolveRuntimeCatalogEntry(version);
 
-      if (version.familyKey === "seedance-2.0") {
-        rows.push(...buildDynamicSeedanceRows(version, resolvedLocale));
-        continue;
-      }
-
       if ((entry?.pricingRows.length ?? 0) > 0) {
         rows.push(
           ...entry!.pricingRows.map((pricingRow) =>
             parseStaticPricingRow(version.label, pricingRow, resolvedLocale),
           ),
         );
+        continue;
+      }
+
+      if (version.familyKey === "seedance-2.0") {
+        rows.push(...buildDynamicSeedanceRows(version, resolvedLocale));
         continue;
       }
 
