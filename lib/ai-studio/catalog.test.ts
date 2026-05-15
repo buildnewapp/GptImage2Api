@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   findAiStudioCatalogEntryById,
+  parseApimartLlmsFull,
   parseApiDocMarkdown,
   parseLlmsIndex,
 } from "@/lib/ai-studio/catalog";
@@ -92,6 +93,43 @@ paths:
 \`\`\`
 `;
 
+const apimartFullSample = `
+# Sora2 Video Generation
+Source: https://docs.apimart.ai/en/api-reference/videos/sora-2/generation
+
+POST https://api.apimart.ai/v1/videos/generations
+
+<ParamField body="model" type="string" required>
+  Video generation model name
+
+  Supported models:
+
+  * \`sora-2\` Sora 2 standard
+  * \`sora-2-pro\` Sora 2 Pro
+</ParamField>
+
+<ParamField body="prompt" type="string" required>
+  Text description for video generation
+</ParamField>
+
+<ParamField body="duration" type="integer" default="4">
+  Supported values: \`4\`, \`8\`, \`12\`, \`16\`, \`20\`
+</ParamField>
+
+\`\`\`json theme={null}
+{
+  "model": "sora-2",
+  "prompt": "A waterfall cascading down forming a rainbow",
+  "duration": 8
+}
+\`\`\`
+
+# Query User Balance
+Source: https://docs.apimart.ai/en/api-reference/account/user-balance
+
+GET https://api.apimart.ai/v1/user/balance
+`;
+
 test("parses the official llms index into supported catalog entries", () => {
   const entries = parseLlmsIndex(llmsSample);
 
@@ -130,6 +168,24 @@ test("parses enum-backed model options from a music doc", () => {
   assert.equal(detail.endpoint, "/api/v1/generate");
   assert.deepEqual(detail.modelKeys, ["V4", "V4_5", "V5"]);
   assert.equal(detail.examplePayload.model, "V5");
+});
+
+test("parses apimart llms-full sections into model catalog details", () => {
+  const catalog = parseApimartLlmsFull(apimartFullSample);
+
+  assert.equal(catalog.items.length, 2);
+  assert.deepEqual(
+    catalog.items.map((item) => item.id),
+    ["video:apimart-sora-2", "video:apimart-sora-2-pro"],
+  );
+  assert.equal(catalog.items[0]?.vendor, "apimart");
+  assert.equal(catalog.items[0]?.endpoint, "/v1/videos/generations");
+  assert.equal(catalog.items[0]?.statusEndpoint, "/v1/tasks/{taskId}?language=en");
+  assert.deepEqual(catalog.items[1]?.modelKeys, ["sora-2-pro"]);
+  assert.deepEqual(catalog.items[1]?.requestSchema?.properties?.model?.enum, [
+    "sora-2-pro",
+  ]);
+  assert.equal(catalog.items[1]?.examplePayload.model, "sora-2-pro");
 });
 
 test("finds canonical bytedance entries from legacy slash-style public ids", () => {

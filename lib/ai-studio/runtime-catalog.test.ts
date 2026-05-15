@@ -655,6 +655,7 @@ test("loads apimart sora 2 models from the real upstream catalog", async () => {
   const { upstreamCatalogPath } = getAiStudioCatalogPaths();
   const loaded = await loadAiStudioMergedUpstreamCatalogFiles(upstreamCatalogPath);
 
+  const sora2 = loaded.items.find((item) => item.id === "video:apimart-sora-2");
   const sora2Pro = loaded.items.find((item) => item.id === "video:apimart-sora-2-pro");
   const sora2Vip = loaded.items.find((item) => item.id === "video:apimart-sora-2-vip");
   const sora2Preview = loaded.items.find(
@@ -664,35 +665,18 @@ test("loads apimart sora 2 models from the real upstream catalog", async () => {
     (item) => item.id === "video:apimart-sora-2-pro-preview",
   );
 
+  assert.ok(sora2);
   assert.ok(sora2Pro);
-  assert.ok(sora2Vip);
-  assert.ok(sora2Preview);
-  assert.ok(sora2ProPreview);
+  assert.equal(sora2Vip, undefined);
+  assert.equal(sora2Preview, undefined);
+  assert.equal(sora2ProPreview, undefined);
+  assert.deepEqual(sora2.modelKeys, ["sora-2"]);
   assert.deepEqual(sora2Pro.modelKeys, ["sora-2-pro"]);
-  assert.deepEqual(sora2Vip.modelKeys, ["sora-2-vip"]);
-  assert.deepEqual(sora2Preview.modelKeys, ["sora-2-preview"]);
-  assert.deepEqual(sora2ProPreview.modelKeys, ["sora-2-pro-preview"]);
-  assert.equal(sora2Pro.requestSchema?.properties?.storyboard?.type, "boolean");
-  assert.equal(
-    sora2Vip.requestSchema?.properties?.storyboard,
-    undefined,
-  );
-  assert.equal(
-    sora2Vip.requestSchema?.properties?.watermark,
-    undefined,
-  );
-  assert.equal(
-    sora2Pro.requestSchema?.properties?.character_timestamps?.type,
-    "string",
-  );
-  assert.equal(
-    sora2Preview.requestSchema?.properties?.resolution,
-    undefined,
-  );
   assert.deepEqual(
-    sora2ProPreview.requestSchema?.properties?.resolution?.enum,
-    ["standard", "high"],
+    sora2Pro.requestSchema?.properties?.model?.enum,
+    ["sora-2-pro"],
   );
+  assert.equal(sora2Pro.requestSchema?.properties?.resolution?.type, "string");
 });
 
 test("keeps runtime catalog paths rooted at cwd config dir", async () => {

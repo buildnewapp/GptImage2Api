@@ -145,8 +145,12 @@ type CompileRuntimeCatalogInput = {
 };
 
 const LLMS_INDEX_URL = "https://docs.kie.ai/llms.txt";
+const APIMART_LLMS_FULL_URL = "https://docs.apimart.ai/llms-full.txt";
 const DOC_LINE_PATTERN =
   /^- (?:(Image|Video|Music|Chat)\s+Models?\s+>\s+.+?|4o Image API|Flux Kontext API|Runway API(?: > Aleph)?|Veo3\.1 API|Suno API(?: > .+?)?) \[(.+?)\]\((https:\/\/docs\.kie\.ai\/(?!cn\/)[^)]+\.md)\):/;
+const APIMART_SECTION_PATTERN =
+  /^# (.+?)\nSource: (https:\/\/docs\.apimart\.ai\/en\/api-reference\/(?:audios|images|texts|videos)\/[^\n]+)\n([\s\S]*?)(?=^# |\s*(?![\s\S]))/gm;
+const APIMART_STATUS_ENDPOINT = "/v1/tasks/{taskId}?language=en";
 
 const USER_AGENT =
   "Mozilla/5.0 (compatible; Nexty AiStudio Catalog Sync/1.0; +https://nexty.dev)";
@@ -169,6 +173,9 @@ export function getAiStudioCatalogPaths() {
     upstreamCatalogPath:
       process.env.AI_STUDIO_UPSTREAM_CATALOG_PATH ??
       path.join(DEFAULT_AI_STUDIO_DATA_DIR, "upstream", "catalog.json"),
+    apimartCatalogPath:
+      process.env.AI_STUDIO_APIMART_CATALOG_PATH ??
+      path.join(DEFAULT_AI_STUDIO_DATA_DIR, "upstream", "apimart.json"),
     kieRawPricePath:
       process.env.AI_STUDIO_KIE_RAW_PRICE_PATH ??
       path.join(DEFAULT_AI_STUDIO_DATA_DIR, "upstream", "kie_price.json"),
@@ -404,6 +411,335 @@ function extractModelKeysFromSchema(
 
   const endpointModel = endpoint.match(/^\/([^/]+)\/v\d+\//)?.[1];
   return endpointModel ? [endpointModel] : [];
+}
+
+function inferApimartCategory(docUrl: string): AiStudioCategory | null {
+  if (docUrl.includes("/images/")) {
+    return "image";
+  }
+  if (docUrl.includes("/videos/")) {
+    return "video";
+  }
+  if (docUrl.includes("/texts/")) {
+    return "chat";
+  }
+  if (docUrl.includes("/audios/")) {
+    return "music";
+  }
+  return null;
+}
+
+function parseTagAttributes(input: string) {
+  const attrs: Record<string, string | true> = {};
+  const attrPattern = /([a-zA-Z_:-]+)(?:="([^"]*)")?/g;
+  let match: RegExpExecArray | null;
+
+  while ((match = attrPattern.exec(input))) {
+    const name = match[1];
+    if (!name || name === "ParamField") {
+      continue;
+    }
+    attrs[name] = match[2] ?? true;
+  }
+
+  return attrs;
+}
+
+function stripMarkdownForDescription(input: string) {
+  return input
+    .split("\n")
+    .map((line) =>
+      line
+        .replace(/<\/?(?:Note|Warning|Expandable)[^>]*>/g, "")
+        .replace(/```[a-zA-Z0-9 ={}-]*/g, "")
+        .replace(/`([^`]+)`/g, "$1")
+        .trim(),
+    )
+    .filter((line) => line && !line.startsWith("```"))
+    .join("\n");
+}
+
+function toJsonSchemaType(type: string) {
+  const normalized = type.toLowerCase();
+  if (normalized.includes("array")) {
+    return {
+      type: "array",
+      items: normalized.includes("url")
+        ? { type: "string", format: "uri" }
+        : {},
+    };
+  }
+  if (normalized.includes("integer")) {
+    return { type: "integer" };
+  }
+  if (normalized.includes("number") || normalized.includes("float")) {
+    return { type: "number" };
+  }
+  if (normalized.includes("boolean")) {
+    return { type: "boolean" };
+  }
+  if (normalized.includes("object")) {
+    return { type: "object" };
+  }
+  return { type: "string" };
+}
+
+function parseDefaultValue(value: string | true | undefined, type: string) {
+  if (typeof value !== "string") {
+    return undefined;
+  }
+
+  const normalized = type.toLowerCase();
+  if (normalized.includes("integer")) {
+    const parsed = Number.parseInt(value, 10);
+    return Number.isFinite(parsed) ? parsed : value;
+  }
+  if (normalized.includes("number") || normalized.includes("float")) {
+    const parsed = Number.parseFloat(value);
+    return Number.isFinite(parsed) ? parsed : value;
+  }
+  if (normalized.includes("boolean")) {
+    if (value === "true") return true;
+    if (value === "false") return false;
+  }
+  return value;
+}
+
+function shouldTreatBackticksAsEnum(fieldName: string, body: string) {
+  if (fieldName === "model") {
+    return true;
+  }
+  return /supported (?:models|values|ratios|formats|options)|available models|options:/i.test(body);
+}
+
+function extractBacktickValues(input: string) {
+  const values = new Set<string>();
+  const pattern = /`([^`\n]+)`/g;
+  let match: RegExpExecArray | null;
+
+  while ((match = pattern.exec(input))) {
+    const value = match[1]?.trim().replace(/^["']|["']$/g, "");
+    if (!value || value.includes(" ") || value.includes("://")) {
+      continue;
+    }
+    values.add(value);
+  }
+
+  return [...values];
+}
+
+function stripJsonComments(input: string) {
+  return input
+    .split("\n")
+    .map((line) => line.replace(/\s+#.*$/, ""))
+    .join("\n");
+}
+
+function extractFirstJsonPayload(markdown: string) {
+  const curlData = markdown.match(/--data\s+'([\s\S]*?)'\s*(?:\\|\n\s*```)/i)?.[1];
+  const fencedJson = markdown.match(/```json[^\n]*\n([\s\S]*?)```/i)?.[1];
+  const raw = curlData ?? fencedJson;
+  if (!raw) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(stripJsonComments(raw)) as Record<string, any>;
+  } catch {
+    return {};
+  }
+}
+
+function toSchemaFromExampleValue(value: unknown) {
+  if (Array.isArray(value)) {
+    return { type: "array", items: {} };
+  }
+  if (typeof value === "number") {
+    return Number.isInteger(value) ? { type: "integer" } : { type: "number" };
+  }
+  if (typeof value === "boolean") {
+    return { type: "boolean" };
+  }
+  if (value && typeof value === "object") {
+    return { type: "object" };
+  }
+  return { type: "string" };
+}
+
+function mergeExamplePayloadIntoSchema(
+  schema: { type: string; required: string[]; properties: Record<string, any> },
+  examplePayload: Record<string, any>,
+) {
+  for (const [key, value] of Object.entries(examplePayload)) {
+    schema.properties[key] ??= toSchemaFromExampleValue(value);
+  }
+  return schema;
+}
+
+function extractApimartModelKeys(
+  markdown: string,
+  examplePayload: Record<string, any>,
+) {
+  const fieldBlocks = [...markdown.matchAll(/^<ParamField[^>]*>\n([\s\S]*?)^<\/ParamField>/gm)]
+    .map((match) => match[1] ?? "");
+  const modelBlock = fieldBlocks.find((block) => /model name|supported models|available models|fixed as/i.test(block));
+  const values = modelBlock ? extractBacktickValues(modelBlock) : [];
+  const modelValues = values.filter((value) => /[a-zA-Z]/.test(value));
+
+  if (modelValues.length > 0) {
+    return modelValues;
+  }
+  if (typeof examplePayload.model === "string") {
+    return [examplePayload.model];
+  }
+  return [];
+}
+
+function parseApimartRequestSchema(markdown: string, examplePayload: Record<string, any>) {
+  const properties: Record<string, any> = {};
+  const required: string[] = [];
+  const fieldPattern = /^<ParamField\s+([^>]*\bbody="([^"]+)"[^>]*)>\n([\s\S]*?)^<\/ParamField>/gm;
+  let match: RegExpExecArray | null;
+
+  while ((match = fieldPattern.exec(markdown))) {
+    const rawAttrs = match[1] ?? "";
+    const name = match[2];
+    const body = match[3] ?? "";
+    if (!name) {
+      continue;
+    }
+
+    const attrs = parseTagAttributes(rawAttrs);
+    const rawType = typeof attrs.type === "string" ? attrs.type : "string";
+    const property: Record<string, any> = {
+      ...toJsonSchemaType(rawType),
+      description: stripMarkdownForDescription(body),
+    };
+    const defaultValue = parseDefaultValue(attrs.default, rawType);
+
+    if (defaultValue !== undefined) {
+      property.default = defaultValue;
+    }
+
+    if (shouldTreatBackticksAsEnum(name, body)) {
+      const enumValues = extractBacktickValues(body);
+      if (enumValues.length > 0) {
+        property.enum = enumValues;
+      }
+    }
+
+    properties[name] = property;
+    if (attrs.required === true) {
+      required.push(name);
+    }
+  }
+
+  return mergeExamplePayloadIntoSchema({
+    type: "object",
+    required,
+    properties,
+  }, examplePayload);
+}
+
+function inferApimartProvider(title: string) {
+  return title
+    .replace(/\s+(?:Image|Video|Audio|Text).*/i, "")
+    .replace(/\s+Generation.*$/i, "")
+    .replace(/\s+API.*$/i, "")
+    .trim() || "APIMart";
+}
+
+function toApimartModelId(category: AiStudioCategory, modelKey: string) {
+  const handle = normalizeModelHandle(modelKey).replace(/^doubao-seedance-/, "seedance-");
+  return `${category}:apimart-${handle}`;
+}
+
+function rewriteApimartSchemaForModel(
+  schema: Record<string, any>,
+  modelKey: string,
+) {
+  return {
+    ...schema,
+    required: Array.isArray(schema.required) ? [...schema.required] : [],
+    properties: {
+      ...schema.properties,
+      model: {
+        ...(schema.properties?.model ?? { type: "string" }),
+        enum: [modelKey],
+        default: modelKey,
+      },
+    },
+  };
+}
+
+function buildApimartDetailsFromSection(
+  title: string,
+  docUrl: string,
+  body: string,
+): AiStudioDocDetail[] {
+  const category = inferApimartCategory(docUrl);
+  const endpointMatch = body.match(/^([A-Z]+)\s+https:\/\/api\.apimart\.ai([^\s]+)/m);
+  if (!category || !endpointMatch?.[1] || !endpointMatch?.[2]) {
+    return [];
+  }
+
+  const examplePayload = extractFirstJsonPayload(body);
+  const requestSchema = parseApimartRequestSchema(body, examplePayload);
+  const modelKeys =
+    requestSchema.properties.model?.enum ??
+    (typeof requestSchema.properties.model?.default === "string"
+      ? [requestSchema.properties.model.default]
+      : extractApimartModelKeys(body, examplePayload));
+  const keys = modelKeys.length > 0 ? modelKeys : [slugify(title)];
+
+  return keys.map((modelKey: string) => ({
+    id: toApimartModelId(category, modelKey),
+    vendor: "apimart",
+    category,
+    title: keys.length > 1 ? `${title} - ${modelKey}` : title,
+    docUrl,
+    provider: inferApimartProvider(title),
+    endpoint: endpointMatch[2],
+    method: endpointMatch[1],
+    statusEndpoint:
+      category === "image" || category === "video" ? APIMART_STATUS_ENDPOINT : null,
+    modelKeys: [modelKey],
+    requestSchema: rewriteApimartSchemaForModel(requestSchema, modelKey),
+    examplePayload: {
+      ...examplePayload,
+      model: modelKey,
+    },
+    pricingRows: [],
+  }));
+}
+
+export function parseApimartLlmsFull(content: string): AiStudioUpstreamCatalogFile {
+  const items: AiStudioDocDetail[] = [];
+  const seen = new Set<string>();
+  let match: RegExpExecArray | null;
+
+  while ((match = APIMART_SECTION_PATTERN.exec(content))) {
+    const title = match[1]?.trim();
+    const docUrl = match[2]?.trim();
+    const body = match[3] ?? "";
+    if (!title || !docUrl) {
+      continue;
+    }
+
+    for (const detail of buildApimartDetailsFromSection(title, docUrl, body)) {
+      if (seen.has(detail.id)) {
+        continue;
+      }
+      seen.add(detail.id);
+      items.push(detail);
+    }
+  }
+
+  return {
+    version: 1,
+    generatedAt: new Date().toISOString(),
+    items,
+  };
 }
 
 function buildAliases(
@@ -939,6 +1275,11 @@ export async function buildAiStudioUpstreamCatalog(): Promise<AiStudioUpstreamCa
     generatedAt: new Date().toISOString(),
     items,
   };
+}
+
+export async function buildAiStudioApimartCatalog(): Promise<AiStudioUpstreamCatalogFile> {
+  const content = await fetchText(APIMART_LLMS_FULL_URL);
+  return parseApimartLlmsFull(content);
 }
 
 function clonePricingRow(row: AiStudioPricingRow): AiStudioPricingRow {
