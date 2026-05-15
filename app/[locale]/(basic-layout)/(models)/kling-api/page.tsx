@@ -11,17 +11,24 @@ type MetadataProps = { params: Params };
 export const dynamic = "force-dynamic";
 
 const config = {
-  docsHref: "/apidoc",
-  familyKey: "seedance-2.0",
-  messageKey: "seedance2",
-  path: "/seedance-2-0-api",
+  docsHref: "/models/kling.md",
+  familyKey: "kling",
+  messageKey: "kling",
+  path: "/kling-api",
   showcaseModelIds: [
-    "video:seedance-2-0-vip",
-    "video:seedance-2-0-fast-vip",
-    "video:seedance-2-0",
-    "video:seedance-2-0-fast",
-    "video:apimart-seedance-2-0",
-    "video:apimart-seedance-2-0-fast",
+    "video:kling-3-0",
+    "video:kling-3-0-motion-control",
+    "video:kling-2-6-text-to-video",
+    "video:kling-2-6-image-to-video",
+    "video:kling-2-6-motion-control",
+    "video:kling-v2-5-turbo-text-to-video-pro",
+    "video:kling-v2-5-turbo-image-to-video-pro",
+    "video:kling-v2-1-master-text-to-video",
+    "video:kling-v2-1-master-image-to-video",
+    "video:kling-v2-1-pro",
+    "video:kling-v2-1-standard",
+    "video:kling-ai-avatar-standard",
+    "video:kling-ai-avatar-pro",
   ],
 } satisfies ModelApiPageConfig;
 
@@ -36,7 +43,7 @@ export async function generateMetadata({
   });
 }
 
-export default async function Seedance20ApiPage({ params }: MetadataProps) {
+export default async function KlingPage({ params }: MetadataProps) {
   const { locale } = await params;
 
   return <ModelApiPage config={config} locale={locale} />;

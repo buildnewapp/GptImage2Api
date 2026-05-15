@@ -11,13 +11,22 @@ type MetadataProps = { params: Params };
 export const dynamic = "force-dynamic";
 
 const config = {
-  docsHref: "/apidoc",
-  familyKey: "gpt-image-2",
-  messageKey: "gptImage2",
-  path: "/gpt-image-2-api",
+  docsHref: "/models/sora2.md",
+  familyKey: "sora2",
+  messageKey: "sora2",
+  path: "/sora2-api",
   showcaseModelIds: [
-    "image:gpt-image-2-text-to-image",
-    "image:gpt-image-2-image-to-image",
+    "video:sora2-text-to-video-standard",
+    "video:sora2-image-to-video-standard",
+    "video:sora2-text-to-video-stable",
+    "video:sora2-image-to-video-stable",
+    "video:sora2-pro-text-to-video",
+    "video:sora2-pro-image-to-video",
+    "video:sora2-pro-storyboard",
+    "video:apimart-sora-2-pro",
+    "video:apimart-sora-2-vip",
+    "video:apimart-sora-2-preview",
+    "video:apimart-sora-2-pro-preview",
   ],
 } satisfies ModelApiPageConfig;
 
@@ -32,7 +41,7 @@ export async function generateMetadata({
   });
 }
 
-export default async function GptImage2ApiPage({ params }: MetadataProps) {
+export default async function Sora2Page({ params }: MetadataProps) {
   const { locale } = await params;
 
   return <ModelApiPage config={config} locale={locale} />;

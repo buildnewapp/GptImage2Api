@@ -11,17 +11,17 @@ type MetadataProps = { params: Params };
 export const dynamic = "force-dynamic";
 
 const config = {
-  docsHref: "/apidoc",
-  familyKey: "veo-3.1",
-  messageKey: "veo31",
-  path: "/veo-3-1-api",
+  docsHref: "/models/seedance-2.0.md",
+  familyKey: "seedance-2.0",
+  messageKey: "seedance2",
+  path: "/seedance-2-0-api",
   showcaseModelIds: [
-    "video:veo-3.1-lite",
-    "video:veo-3.1-fast",
-    "video:veo-3.1-quality",
-    "video:extend-veo3-1-video",
-    "video:get-veo3-1-1080p-video",
-    "video:get-veo3-1-4k-video",
+    "video:seedance-2-0-vip",
+    "video:seedance-2-0-fast-vip",
+    "video:seedance-2-0",
+    "video:seedance-2-0-fast",
+    "video:apimart-seedance-2-0",
+    "video:apimart-seedance-2-0-fast",
   ],
 } satisfies ModelApiPageConfig;
 
@@ -36,7 +36,7 @@ export async function generateMetadata({
   });
 }
 
-export default async function Veo31ApiPage({ params }: MetadataProps) {
+export default async function Seedance20ApiPage({ params }: MetadataProps) {
   const { locale } = await params;
 
   return <ModelApiPage config={config} locale={locale} />;

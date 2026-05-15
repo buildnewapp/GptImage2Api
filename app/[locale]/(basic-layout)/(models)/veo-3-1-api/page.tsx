@@ -11,22 +11,17 @@ type MetadataProps = { params: Params };
 export const dynamic = "force-dynamic";
 
 const config = {
-  docsHref: "/apidoc",
-  familyKey: "sora2",
-  messageKey: "sora2",
-  path: "/sora2-api",
+  docsHref: "/models/veo-3.1.md",
+  familyKey: "veo-3.1",
+  messageKey: "veo31",
+  path: "/veo-3-1-api",
   showcaseModelIds: [
-    "video:sora2-text-to-video-standard",
-    "video:sora2-image-to-video-standard",
-    "video:sora2-text-to-video-stable",
-    "video:sora2-image-to-video-stable",
-    "video:sora2-pro-text-to-video",
-    "video:sora2-pro-image-to-video",
-    "video:sora2-pro-storyboard",
-    "video:apimart-sora-2-pro",
-    "video:apimart-sora-2-vip",
-    "video:apimart-sora-2-preview",
-    "video:apimart-sora-2-pro-preview",
+    "video:veo-3.1-lite",
+    "video:veo-3.1-fast",
+    "video:veo-3.1-quality",
+    "video:extend-veo3-1-video",
+    "video:get-veo3-1-1080p-video",
+    "video:get-veo3-1-4k-video",
   ],
 } satisfies ModelApiPageConfig;
 
@@ -41,7 +36,7 @@ export async function generateMetadata({
   });
 }
 
-export default async function Sora2Page({ params }: MetadataProps) {
+export default async function Veo31ApiPage({ params }: MetadataProps) {
   const { locale } = await params;
 
   return <ModelApiPage config={config} locale={locale} />;

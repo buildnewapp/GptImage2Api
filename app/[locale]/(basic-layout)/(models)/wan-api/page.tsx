@@ -11,15 +11,20 @@ type MetadataProps = { params: Params };
 export const dynamic = "force-dynamic";
 
 const config = {
-  docsHref: "/apidoc",
-  familyKey: "grok-imagine",
-  messageKey: "grokVideo",
-  path: "/grok-video-api",
+  docsHref: "/models/wan.md",
+  familyKey: "wan",
+  messageKey: "wan",
+  path: "/wan-api",
   showcaseModelIds: [
-    "video:grok-imagine-text-to-video",
-    "video:grok-imagine-image-to-video",
-    "video:grok-imagine-video-upscale",
-    "video:grok-imagine-video-extend",
+    "video:wan-2-7-text-to-video",
+    "video:wan-2-7-image-to-video",
+    "video:wan-2-7-video-edit",
+    "video:wan-2-7-reference-to-video",
+    "video:wan-2-6-text-to-video",
+    "video:wan-2-6-image-to-video",
+    "video:wan-2-6-video-to-video",
+    "video:wan-2-5-text-to-video",
+    "video:wan-2-5-image-to-video",
   ],
 } satisfies ModelApiPageConfig;
 
@@ -34,7 +39,7 @@ export async function generateMetadata({
   });
 }
 
-export default async function GrokVideoApiPage({ params }: MetadataProps) {
+export default async function WanApiPage({ params }: MetadataProps) {
   const { locale } = await params;
 
   return <ModelApiPage config={config} locale={locale} />;

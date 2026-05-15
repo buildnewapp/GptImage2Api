@@ -11,20 +11,13 @@ type MetadataProps = { params: Params };
 export const dynamic = "force-dynamic";
 
 const config = {
-  docsHref: "/apidoc",
-  familyKey: "wan",
-  messageKey: "wan",
-  path: "/wan-api",
+  docsHref: "/models/gpt-image-2.md",
+  familyKey: "gpt-image-2",
+  messageKey: "gptImage2",
+  path: "/gpt-image-2-api",
   showcaseModelIds: [
-    "video:wan-2-7-text-to-video",
-    "video:wan-2-7-image-to-video",
-    "video:wan-2-7-video-edit",
-    "video:wan-2-7-reference-to-video",
-    "video:wan-2-6-text-to-video",
-    "video:wan-2-6-image-to-video",
-    "video:wan-2-6-video-to-video",
-    "video:wan-2-5-text-to-video",
-    "video:wan-2-5-image-to-video",
+    "image:gpt-image-2-text-to-image",
+    "image:gpt-image-2-image-to-image",
   ],
 } satisfies ModelApiPageConfig;
 
@@ -39,7 +32,7 @@ export async function generateMetadata({
   });
 }
 
-export default async function WanApiPage({ params }: MetadataProps) {
+export default async function GptImage2ApiPage({ params }: MetadataProps) {
   const { locale } = await params;
 
   return <ModelApiPage config={config} locale={locale} />;

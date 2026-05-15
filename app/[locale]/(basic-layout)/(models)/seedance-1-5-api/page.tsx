@@ -11,7 +11,7 @@ type MetadataProps = { params: Params };
 export const dynamic = "force-dynamic";
 
 const config = {
-  docsHref: "/apidoc",
+  docsHref: "/models/seedance-1.5.md",
   familyKey: "seedance-1.5",
   messageKey: "seedance15",
   path: "/seedance-1-5-api",
