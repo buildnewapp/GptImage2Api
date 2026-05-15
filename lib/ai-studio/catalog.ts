@@ -145,9 +145,12 @@ type CompileRuntimeCatalogInput = {
 };
 
 const LLMS_INDEX_URL = "https://docs.kie.ai/llms.txt";
+const APIMART_LLMS_INDEX_URL = "https://docs.apimart.ai/llms.txt";
 const APIMART_LLMS_FULL_URL = "https://docs.apimart.ai/llms-full.txt";
 const DOC_LINE_PATTERN =
   /^- (?:(Image|Video|Music|Chat)\s+Models?\s+>\s+.+?|4o Image API|Flux Kontext API|Runway API(?: > Aleph)?|Veo3\.1 API|Suno API(?: > .+?)?) \[(.+?)\]\((https:\/\/docs\.kie\.ai\/(?!cn\/)[^)]+\.md)\):/;
+const APIMART_DOC_LINE_PATTERN =
+  /^- \[(.+?)\]\((https:\/\/docs\.apimart\.ai\/en\/api-reference\/(?:audios|images|texts|videos)\/[^)]+\.md)\):/;
 const APIMART_SECTION_PATTERN =
   /^# (.+?)\nSource: (https:\/\/docs\.apimart\.ai\/en\/api-reference\/(?:audios|images|texts|videos)\/[^\n]+)\n([\s\S]*?)(?=^# |\s*(?![\s\S]))/gm;
 const APIMART_STATUS_ENDPOINT = "/v1/tasks/{taskId}?language=en";
@@ -459,14 +462,71 @@ function stripMarkdownForDescription(input: string) {
     .join("\n");
 }
 
-function toJsonSchemaType(type: string) {
+function getApimartFieldTokens(fieldName: string) {
+  return fieldName
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .toLowerCase()
+    .split(/[^a-z0-9]+/g)
+    .filter(Boolean);
+}
+
+function isApimartUrlField(fieldName: string, body = "") {
+  const tokens = getApimartFieldTokens(fieldName);
+  const normalizedBody = body.toLowerCase();
+
+  return (
+    tokens.includes("url") ||
+    tokens.includes("urls") ||
+    normalizedBody.includes("asset://") ||
+    normalizedBody.includes("data:image/")
+  );
+}
+
+function getApimartArrayMaxItems(fieldName: string, body: string) {
+  if (!isApimartUrlField(fieldName, body)) {
+    return undefined;
+  }
+
+  const normalized = stripMarkdownForDescription(body)
+    .replace(/[*_]/g, "")
+    .toLowerCase();
+  const resourcePattern = "(?:reference\\s+)?(?:images?|audios?|videos?|urls?|items?)";
+  const patterns = [
+    new RegExp(`max(?:imum)?[^\\d]{0,24}(\\d+)[^\\n]{0,48}${resourcePattern}`, "i"),
+    new RegExp(`(?:up to|≤|<=)[^\\d]{0,12}(\\d+)[^\\n]{0,48}${resourcePattern}`, "i"),
+  ];
+
+  for (const pattern of patterns) {
+    const match = normalized.match(pattern);
+    const parsed = match?.[1] ? Number.parseInt(match[1], 10) : NaN;
+    if (Number.isFinite(parsed) && parsed > 0) {
+      return parsed;
+    }
+  }
+
+  return undefined;
+}
+
+function toJsonSchemaType(type: string, fieldName = "", body = "") {
   const normalized = type.toLowerCase();
   if (normalized.includes("array")) {
+    const itemSchema =
+      normalized.includes("object")
+        ? { type: "object" }
+        : normalized.includes("string") ||
+            normalized.includes("url") ||
+            isApimartUrlField(fieldName, body)
+          ? {
+              type: "string",
+              ...(normalized.includes("url") || isApimartUrlField(fieldName, body)
+                ? { format: "uri" }
+                : {}),
+            }
+          : {};
+
     return {
       type: "array",
-      items: normalized.includes("url")
-        ? { type: "string", format: "uri" }
-        : {},
+      items: itemSchema,
     };
   }
   if (normalized.includes("integer")) {
@@ -503,13 +563,6 @@ function parseDefaultValue(value: string | true | undefined, type: string) {
     if (value === "false") return false;
   }
   return value;
-}
-
-function shouldTreatBackticksAsEnum(fieldName: string, body: string) {
-  if (fieldName === "model") {
-    return true;
-  }
-  return /supported (?:models|values|ratios|formats|options)|available models|options:/i.test(body);
 }
 
 function extractBacktickValues(input: string) {
@@ -550,9 +603,14 @@ function extractFirstJsonPayload(markdown: string) {
   }
 }
 
-function toSchemaFromExampleValue(value: unknown) {
+function toSchemaFromExampleValue(key: string, value: unknown) {
   if (Array.isArray(value)) {
-    return { type: "array", items: {} };
+    return {
+      type: "array",
+      items: isApimartUrlField(key)
+        ? { type: "string", format: "uri" }
+        : {},
+    };
   }
   if (typeof value === "number") {
     return Number.isInteger(value) ? { type: "integer" } : { type: "number" };
@@ -571,9 +629,19 @@ function mergeExamplePayloadIntoSchema(
   examplePayload: Record<string, any>,
 ) {
   for (const [key, value] of Object.entries(examplePayload)) {
-    schema.properties[key] ??= toSchemaFromExampleValue(value);
+    schema.properties[key] ??= toSchemaFromExampleValue(key, value);
   }
   return schema;
+}
+
+function shouldSkipApimartRequestField(name: string) {
+  return name === "n";
+}
+
+function omitSkippedApimartRequestFields(payload: Record<string, any>) {
+  const next = { ...payload };
+  delete next.n;
+  return next;
 }
 
 function extractApimartModelKeys(
@@ -598,34 +666,32 @@ function extractApimartModelKeys(
 function parseApimartRequestSchema(markdown: string, examplePayload: Record<string, any>) {
   const properties: Record<string, any> = {};
   const required: string[] = [];
-  const fieldPattern = /^<ParamField\s+([^>]*\bbody="([^"]+)"[^>]*)>\n([\s\S]*?)^<\/ParamField>/gm;
+  const fieldPattern = /^<ParamField\s+(.+)>\n([\s\S]*?)^<\/ParamField>/gm;
   let match: RegExpExecArray | null;
 
   while ((match = fieldPattern.exec(markdown))) {
     const rawAttrs = match[1] ?? "";
-    const name = match[2];
-    const body = match[3] ?? "";
-    if (!name) {
+    const body = match[2] ?? "";
+    const attrs = parseTagAttributes(rawAttrs);
+    const name = typeof attrs.body === "string" ? attrs.body : undefined;
+    if (!name || shouldSkipApimartRequestField(name)) {
       continue;
     }
 
-    const attrs = parseTagAttributes(rawAttrs);
     const rawType = typeof attrs.type === "string" ? attrs.type : "string";
     const property: Record<string, any> = {
-      ...toJsonSchemaType(rawType),
+      ...toJsonSchemaType(rawType, name, body),
       description: stripMarkdownForDescription(body),
     };
     const defaultValue = parseDefaultValue(attrs.default, rawType);
+    const maxItems = getApimartArrayMaxItems(name, body);
 
     if (defaultValue !== undefined) {
       property.default = defaultValue;
     }
 
-    if (shouldTreatBackticksAsEnum(name, body)) {
-      const enumValues = extractBacktickValues(body);
-      if (enumValues.length > 0) {
-        property.enum = enumValues;
-      }
+    if (property.type === "array" && maxItems !== undefined) {
+      property.maxItems = maxItems;
     }
 
     properties[name] = property;
@@ -638,7 +704,7 @@ function parseApimartRequestSchema(markdown: string, examplePayload: Record<stri
     type: "object",
     required,
     properties,
-  }, examplePayload);
+  }, omitSkippedApimartRequestFields(examplePayload));
 }
 
 function inferApimartProvider(title: string) {
@@ -649,9 +715,32 @@ function inferApimartProvider(title: string) {
     .trim() || "APIMart";
 }
 
+function extractApimartEndpoint(body: string) {
+  const directMatch = body.match(/^([A-Z]+)\s+https:\/\/api\.apimart\.ai([^\s]+)/m);
+  if (directMatch?.[1] && directMatch?.[2]) {
+    return {
+      method: directMatch[1],
+      endpoint: directMatch[2],
+    };
+  }
+
+  const curlMethod = body.match(/--request\s+([A-Z]+)/i)?.[1];
+  const curlEndpoint = body.match(/--url\s+https:\/\/api\.apimart\.ai([^\s\\]+)/i)?.[1];
+  if (curlMethod && curlEndpoint) {
+    return {
+      method: curlMethod.toUpperCase(),
+      endpoint: curlEndpoint,
+    };
+  }
+
+  return null;
+}
+
 function toApimartModelId(category: AiStudioCategory, modelKey: string) {
-  const handle = normalizeModelHandle(modelKey).replace(/^doubao-seedance-/, "seedance-");
-  return `${category}:apimart-${handle}`;
+  const handle = normalizeModelHandle(modelKey)
+    .replace(/^doubao-seedance-/, "seedance-")
+    .replace(/-apimart$/, "");
+  return `${category}:fal-${handle}`;
 }
 
 function rewriteApimartSchemaForModel(
@@ -678,8 +767,8 @@ function buildApimartDetailsFromSection(
   body: string,
 ): AiStudioDocDetail[] {
   const category = inferApimartCategory(docUrl);
-  const endpointMatch = body.match(/^([A-Z]+)\s+https:\/\/api\.apimart\.ai([^\s]+)/m);
-  if (!category || !endpointMatch?.[1] || !endpointMatch?.[2]) {
+  const endpoint = extractApimartEndpoint(body);
+  if (!category || !endpoint) {
     return [];
   }
 
@@ -699,18 +788,62 @@ function buildApimartDetailsFromSection(
     title: keys.length > 1 ? `${title} - ${modelKey}` : title,
     docUrl,
     provider: inferApimartProvider(title),
-    endpoint: endpointMatch[2],
-    method: endpointMatch[1],
+    endpoint: endpoint.endpoint,
+    method: endpoint.method,
     statusEndpoint:
       category === "image" || category === "video" ? APIMART_STATUS_ENDPOINT : null,
     modelKeys: [modelKey],
     requestSchema: rewriteApimartSchemaForModel(requestSchema, modelKey),
     examplePayload: {
-      ...examplePayload,
+      ...omitSkippedApimartRequestFields(examplePayload),
       model: modelKey,
     },
     pricingRows: [],
   }));
+}
+
+export interface AiStudioApimartDocSeed {
+  title: string;
+  docUrl: string;
+}
+
+function toApimartPublicDocUrl(markdownDocUrl: string) {
+  return markdownDocUrl.replace(/\.md$/, "");
+}
+
+export function parseApimartLlmsIndex(content: string): AiStudioApimartDocSeed[] {
+  const entries: AiStudioApimartDocSeed[] = [];
+  const seen = new Set<string>();
+
+  for (const rawLine of content.split("\n")) {
+    const line = rawLine.trim();
+    const match = line.match(APIMART_DOC_LINE_PATTERN);
+    const title = match?.[1]?.trim();
+    const docUrl = match?.[2]?.trim();
+    if (!title || !docUrl || seen.has(docUrl)) {
+      continue;
+    }
+
+    seen.add(docUrl);
+    entries.push({
+      title,
+      docUrl,
+    });
+  }
+
+  return entries;
+}
+
+export function parseApimartDocMarkdown(
+  title: string,
+  markdownDocUrl: string,
+  markdown: string,
+): AiStudioDocDetail[] {
+  return buildApimartDetailsFromSection(
+    title,
+    toApimartPublicDocUrl(markdownDocUrl),
+    markdown,
+  );
 }
 
 export function parseApimartLlmsFull(content: string): AiStudioUpstreamCatalogFile {
@@ -1278,8 +1411,30 @@ export async function buildAiStudioUpstreamCatalog(): Promise<AiStudioUpstreamCa
 }
 
 export async function buildAiStudioApimartCatalog(): Promise<AiStudioUpstreamCatalogFile> {
-  const content = await fetchText(APIMART_LLMS_FULL_URL);
-  return parseApimartLlmsFull(content);
+  const content = await fetchText(APIMART_LLMS_INDEX_URL);
+  const seeds = parseApimartLlmsIndex(content);
+  const details = await Promise.all(
+    seeds.map(async (seed) => {
+      const markdown = await fetchText(seed.docUrl);
+      return parseApimartDocMarkdown(seed.title, seed.docUrl, markdown);
+    }),
+  );
+
+  const items: AiStudioDocDetail[] = [];
+  const seen = new Set<string>();
+  for (const detail of details.flat()) {
+    if (seen.has(detail.id)) {
+      continue;
+    }
+    seen.add(detail.id);
+    items.push(detail);
+  }
+
+  return {
+    version: 1,
+    generatedAt: new Date().toISOString(),
+    items,
+  };
 }
 
 function clonePricingRow(row: AiStudioPricingRow): AiStudioPricingRow {

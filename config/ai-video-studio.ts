@@ -71,13 +71,13 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         key: "seedance-2.0-vip",
         label: "Seedance 2.0",
         familyKey: "seedance-2.0",
-        modelId: "video:seedance-2-0-vip",
+        modelId: "video:bytedance-seedance-2",
       },
       {
         key: "seedance-2.0-fast-vip",
         label: "Seedance 2.0 Fast",
         familyKey: "seedance-2.0",
-        modelId: "video:seedance-2-0-fast-vip",
+        modelId: "video:bytedance-seedance-2-0-fast",
       },
     ],
   },
@@ -552,7 +552,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "Image to Image",
         familyKey: "gpt-image-2",
         modelId: "image:gpt-image-2-image-to-image",
-      },
+      }
     ],
   },
   {

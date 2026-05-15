@@ -32,7 +32,7 @@
         }
       ]
     },
-    "video:apimart-seedance-2-0": {
+    "video:fal-seedance-2-0": {
       "addRows": [
         {
           "modelDescription": "Seedance 2.0, 720p no video input",
@@ -48,7 +48,7 @@
         }
       ]
     },
-    "video:apimart-seedance-2-0-fast": {
+    "video:fal-seedance-2-0-fast": {
       "addRows": [
         {
           "modelDescription": "Seedance 2.0 Fast, 720p no video input",

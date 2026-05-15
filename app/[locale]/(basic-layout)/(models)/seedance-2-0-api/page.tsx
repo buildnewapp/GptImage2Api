@@ -20,8 +20,8 @@ const config = {
     "video:seedance-2-0-fast-vip",
     "video:seedance-2-0",
     "video:seedance-2-0-fast",
-    "video:apimart-seedance-2-0",
-    "video:apimart-seedance-2-0-fast",
+    "video:fal-seedance-2-0",
+    "video:fal-seedance-2-0-fast",
   ],
 } satisfies ModelApiPageConfig;
 

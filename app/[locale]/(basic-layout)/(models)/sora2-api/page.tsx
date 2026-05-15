@@ -23,10 +23,10 @@ const config = {
     "video:sora2-pro-text-to-video",
     "video:sora2-pro-image-to-video",
     "video:sora2-pro-storyboard",
-    "video:apimart-sora-2-pro",
-    "video:apimart-sora-2-vip",
-    "video:apimart-sora-2-preview",
-    "video:apimart-sora-2-pro-preview",
+    "video:fal-sora-2-pro",
+    "video:fal-sora-2-vip",
+    "video:fal-sora-2-preview",
+    "video:fal-sora-2-pro-preview",
   ],
 } satisfies ModelApiPageConfig;
 

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-04-24T06:53:28.215Z",
+  "generatedAt": "2026-05-15T08:48:10.155Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -3005,21 +3005,12 @@
                   }
                 ],
                 "description": "Image resolution: Note: Images with a 1:1 aspect ratio cannot be converted to 4K images. Images with the aspect ratio set to \"auto\" or without a specified aspect ratio parameter will only be converted to 1K images; otherwise, the task will fail to create."
-              },
-              "nsfw_checker": {
-                "type": "boolean",
-                "default": false,
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.",
-                "examples": [
-                  false
-                ]
               }
             },
             "x-apidog-orders": [
               "prompt",
               "aspect_ratio",
-              "resolution",
-              "nsfw_checker"
+              "resolution"
             ],
             "x-apidog-ignore-properties": []
           }
@@ -3036,8 +3027,7 @@
         "callBackUrl": "https://your-domain.com/api/callback",
         "input": {
           "prompt": "A cinematic night city poster with neon reflections on a rainy street.",
-          "aspect_ratio": "auto",
-          "nsfw_checker": false
+          "aspect_ratio": "auto"
         }
       },
       "pricingRows": []
@@ -3177,18 +3167,13 @@
                   }
                 ],
                 "description": "Image resolution: Note: Images with a 1:1 aspect ratio cannot be converted to 4K images. Images with the aspect ratio set to \"auto\" or without a specified aspect ratio parameter will only be converted to 1K images; otherwise, the task will fail to create."
-              },
-              "nsfw_checker": {
-                "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
               }
             },
             "x-apidog-orders": [
               "prompt",
               "input_urls",
               "aspect_ratio",
-              "resolution",
-              "nsfw_checker"
+              "resolution"
             ],
             "x-apidog-ignore-properties": []
           }
@@ -3208,8 +3193,7 @@
           "input_urls": [
             "https://static.aiquickdraw.com/tools/example/1776782793756_wrogXTdd.png"
           ],
-          "aspect_ratio": "auto",
-          "nsfw_checker": true
+          "aspect_ratio": "auto"
         }
       },
       "pricingRows": []
@@ -3446,154 +3430,6 @@
         "callBackUrl": "https://your-domain.com/api/callback",
         "input": {
           "image": "https://file.aiquickdraw.com/custom-page/akr/section-images/1757169577325ijj8vwvt.jpg"
-        }
-      },
-      "pricingRows": []
-    },
-    {
-      "id": "image:ideogram-v3-reframe",
-      "category": "image",
-      "title": "Ideogram - V3 Reframe",
-      "docUrl": "https://docs.kie.ai/market/ideogram/v3-reframe.md",
-      "provider": "Ideogram",
-      "endpoint": "/api/v1/jobs/createTask",
-      "method": "POST",
-      "modelKeys": [
-        "ideogram/v3-reframe"
-      ],
-      "requestSchema": {
-        "type": "object",
-        "required": [
-          "model"
-        ],
-        "properties": {
-          "model": {
-            "type": "string",
-            "enum": [
-              "ideogram/v3-reframe"
-            ],
-            "default": "ideogram/v3-reframe",
-            "description": "The model name to use for generation. Required field.\n\n- Must be `ideogram/v3-reframe` for this endpoint",
-            "examples": [
-              "ideogram/v3-reframe"
-            ]
-          },
-          "callBackUrl": {
-            "type": "string",
-            "format": "uri",
-            "description": "The URL to receive generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when generation completes\n- Callback includes generated content URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
-            "examples": [
-              "https://your-domain.com/api/callback"
-            ]
-          },
-          "input": {
-            "type": "object",
-            "description": "Input parameters for the generation task",
-            "properties": {
-              "image_url": {
-                "description": "The image URL to reframe (File URL after upload, not file content; Accepted types: image/jpeg, image/png, image/webp; Max size: 10.0MB)",
-                "type": "string",
-                "examples": [
-                  "https://file.aiquickdraw.com/custom-page/akr/section-images/1757168087001amxesd6e.webp"
-                ]
-              },
-              "image_size": {
-                "description": "The resolution for the reframed output image",
-                "type": "string",
-                "enum": [
-                  "square",
-                  "square_hd",
-                  "portrait_4_3",
-                  "portrait_16_9",
-                  "landscape_4_3",
-                  "landscape_16_9"
-                ],
-                "default": "square_hd",
-                "examples": [
-                  "square_hd"
-                ]
-              },
-              "rendering_speed": {
-                "description": "The rendering speed to use",
-                "type": "string",
-                "enum": [
-                  "TURBO",
-                  "BALANCED",
-                  "QUALITY"
-                ],
-                "default": "BALANCED",
-                "examples": [
-                  "BALANCED"
-                ]
-              },
-              "style": {
-                "description": "The style type to generate with. Cannot be used with style_codes",
-                "type": "string",
-                "enum": [
-                  "AUTO",
-                  "GENERAL",
-                  "REALISTIC",
-                  "DESIGN"
-                ],
-                "default": "AUTO",
-                "examples": [
-                  "AUTO"
-                ]
-              },
-              "num_images": {
-                "description": "Select description",
-                "type": "string",
-                "enum": [
-                  "1",
-                  "2",
-                  "3",
-                  "4"
-                ],
-                "default": "1",
-                "examples": [
-                  "1"
-                ]
-              },
-              "seed": {
-                "description": "Seed for the random number generator",
-                "type": "number",
-                "examples": [
-                  0
-                ]
-              }
-            },
-            "required": [
-              "image_url",
-              "image_size"
-            ],
-            "x-apidog-orders": [
-              "image_url",
-              "image_size",
-              "rendering_speed",
-              "style",
-              "num_images",
-              "seed"
-            ],
-            "x-apidog-ignore-properties": []
-          }
-        },
-        "x-apidog-orders": [
-          "model",
-          "callBackUrl",
-          "input"
-        ],
-        "x-apidog-ignore-properties": []
-      },
-      "examplePayload": {
-        "model": "ideogram/v3-reframe",
-        "callBackUrl": "https://your-domain.com/api/callback",
-        "input": {
-          "image_url": "https://file.aiquickdraw.com/custom-page/akr/section-images/1757168087001amxesd6e.webp",
-          "image_size": "square_hd",
-          "rendering_speed": "BALANCED",
-          "style": "AUTO",
-          "num_images": "1",
-          "seed": 0
         }
       },
       "pricingRows": []
@@ -5367,7 +5203,7 @@
       "id": "image:qwen2-text-to-image",
       "category": "image",
       "title": "Qwen2 - Text To Image",
-      "docUrl": "https://docs.kie.ai/30861522e0.md",
+      "docUrl": "https://docs.kie.ai/market/qwen2/text-to-image.md",
       "provider": "Qwen2",
       "endpoint": "/api/v1/jobs/createTask",
       "method": "POST",
@@ -5896,7 +5732,7 @@
                   "3:4",
                   "9:16",
                   "8:1",
-                  " 1:8 "
+                  "1:8"
                 ],
                 "x-apidog-enum": [
                   {
@@ -5935,7 +5771,7 @@
                     "description": ""
                   },
                   {
-                    "value": " 1:8 ",
+                    "value": "1:8",
                     "name": "",
                     "description": ""
                   }
@@ -6178,7 +6014,7 @@
                   "3:4",
                   "9:16",
                   "8:1",
-                  " 1:8 "
+                  "1:8"
                 ],
                 "x-apidog-enum": [
                   {
@@ -6217,7 +6053,7 @@
                     "description": ""
                   },
                   {
-                    "value": " 1:8 ",
+                    "value": "1:8",
                     "name": "",
                     "description": ""
                   }
@@ -7145,7 +6981,7 @@
                 ]
               },
               "image_urls": {
-                "description": "Image URLs for video generation. (Uploaded file URLs, not file content; supported types: image/jpeg, image/png, image/webp; maximum file size: 10.0MB)",
+                "description": "Image URLs for video generation. (Uploaded file URLs, not file content; supported types: image/jpeg, image/png; maximum file size: 10.0MB)",
                 "type": "array",
                 "items": {
                   "type": "string",
@@ -7263,7 +7099,7 @@
                 ]
               },
               "image_url": {
-                "description": "URL of the image to be used for the video (File URL after upload, not file content; Accepted types: image/jpeg, image/png, image/webp; Max size: 10.0MB)",
+                "description": "URL of the image to be used for the video (File URL after upload, not file content; Accepted types: image/jpeg, image/png; Max size: 10.0MB)",
                 "type": "string",
                 "examples": [
                   "https://file.aiquickdraw.com/custom-page/akr/section-images/1755256297923kmjpynul.png"
@@ -7490,14 +7326,14 @@
             "description": "Input parameters for the generation task",
             "properties": {
               "image_url": {
-                "description": "The URL of the image to use as your avatar (File URL after upload, not file content; Accepted types: image/jpeg, image/png, image/webp; Max size: 10.0MB)",
+                "description": "The URL of the image to use as your avatar (File URL after upload, not file content; Accepted types: image/jpeg, image/png; Max size: 10.0MB)",
                 "type": "string",
                 "examples": [
                   "https://file.aiquickdraw.com/custom-page/akr/section-images/17579268936223zs9l3dt.png"
                 ]
               },
               "audio_url": {
-                "description": "The URL of the audio file (File URL after upload, not file content; Accepted types: audio/mpeg, audio/wav, audio/x-wav, audio/aac, audio/mp4, audio/ogg; Max size: 10.0MB)",
+                "description": "The URL of the audio file (must be the URL of the uploaded file, not the file content; supported formats: audio/mpeg, audio/wav, audio/x-wav, audio/aac, audio/mp4, audio/ogg; audio size is limited to 100M, and the duration cannot exceed 5 minutes)",
                 "type": "string",
                 "examples": [
                   "https://file.aiquickdraw.com/custom-page/akr/section-images/17579258340109gghun47.mp3"
@@ -7584,14 +7420,14 @@
             "description": "Input parameters for the generation task",
             "properties": {
               "image_url": {
-                "description": "The URL of the image to use as your avatar (File URL after upload, not file content; Accepted types: image/jpeg, image/png, image/webp; Max size: 10.0MB)",
+                "description": "The URL of the image to use as your avatar (File URL after upload, not file content; Accepted types: image/jpeg, image/png; Max size: 10.0MB)",
                 "type": "string",
                 "examples": [
                   "https://file.aiquickdraw.com/custom-page/akr/section-images/175792685809077e8h8k3.png"
                 ]
               },
               "audio_url": {
-                "description": "The URL of the audio file (File URL after upload, not file content; Accepted types: audio/mpeg, audio/wav, audio/x-wav, audio/aac, audio/mp4, audio/ogg; Max size: 10.0MB)",
+                "description": "The URL of the audio file (must be the URL of the uploaded file, not the file content; supported formats: audio/mpeg, audio/wav, audio/x-wav, audio/aac, audio/mp4, audio/ogg; audio size is limited to 100M, and the duration cannot exceed 5 minutes)",
                 "type": "string",
                 "examples": [
                   "https://file.aiquickdraw.com/custom-page/akr/section-images/1757925802302srqfkcqh.mp3"
@@ -7686,7 +7522,7 @@
                 ]
               },
               "image_url": {
-                "description": "URL of the image to be used for the video (File URL after upload, not file content; Accepted types: image/jpeg, image/png, image/webp; Max size: 10.0MB)",
+                "description": "URL of the image to be used for the video (File URL after upload, not file content; Accepted types: image/jpeg, image/png; Max size: 10.0MB)",
                 "type": "string",
                 "examples": [
                   "https://file.aiquickdraw.com/custom-page/akr/section-images/1755256297923kmjpynul.png"
@@ -7968,7 +7804,7 @@
                 ]
               },
               "tail_image_url": {
-                "description": "URL of the image to be used for the end of the video (File URL after upload, not file content; Accepted types: image/jpeg, image/png, image/webp; Max size: 10.0MB)",
+                "description": "URL of the image to be used for the end of the video (File URL after upload, not file content; Accepted types: image/jpeg, image/png; Max size: 10.0MB)",
                 "type": "string",
                 "examples": [
                   ""
@@ -8275,20 +8111,34 @@
     {
       "id": "video:kling-3-0-motion-control",
       "category": "video",
-      "title": "kling-3.0 motion-control",
+      "title": "Kling-3.0 motion-control",
       "docUrl": "https://docs.kie.ai/market/kling/motion-control-v3.md",
-      "provider": "kling-3.0 motion-control",
+      "provider": "Kling-3.0 motion-control",
       "endpoint": "/api/v1/jobs/createTask",
       "method": "POST",
       "modelKeys": [
-        "api"
+        "kling-3.0/motion-control"
       ],
       "requestSchema": {
         "type": "object",
         "properties": {
           "model": {
-            "description": "Model name, fixed",
-            "type": "string"
+            "type": "string",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `kling-3.0/motion-control` for this endpoint",
+            "enum": [
+              "kling-3.0/motion-control"
+            ],
+            "x-apidog-enum": [
+              {
+                "value": "kling-3.0/motion-control",
+                "name": "",
+                "description": ""
+              }
+            ],
+            "default": "kling-3.0/motion-control",
+            "examples": [
+              "kling-3.0/motion-control"
+            ]
           },
           "callBackUrl": {
             "description": "Callback address. Once the model is generated, it will notify this URL.",
@@ -9004,7 +8854,29 @@
               },
               "duration": {
                 "type": "string",
-                "description": "Duration of the video in seconds"
+                "description": "Duration of the video in seconds",
+                "enum": [
+                  "4",
+                  "8",
+                  "12"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "4",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "8",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "12",
+                    "name": "",
+                    "description": ""
+                  }
+                ]
               },
               "fixed_lens": {
                 "description": "Seedance adds dynamic camera movement. Enable this feature to lock the camera for stable, static shots.\n\n- **true**: Lock camera for static shots\n- **false**: Allow dynamic camera movement",
@@ -9029,7 +8901,8 @@
             },
             "required": [
               "prompt",
-              "aspect_ratio"
+              "aspect_ratio",
+              "duration"
             ],
             "x-apidog-orders": [
               "prompt",
@@ -14254,7 +14127,9 @@
       "examplePayload": {
         "prompt": "A fluffy orange cat dancing energetically in a colorful room with disco lights",
         "imageUrl": "https://example.com/cat-image.jpg",
-        "model": "runway-duration-5-generate",
+        "duration": "5",
+        "quality": "720p",
+        "aspectRatio": "9:16",
         "waterMark": "kie.ai",
         "callBackUrl": "https://api.example.com/callback"
       },
@@ -14327,10 +14202,678 @@
       "examplePayload": {
         "taskId": "ee603959-debb-48d1-98c4-a6d1c717eba6",
         "prompt": "The cat continues dancing with more energy and excitement, spinning around with colorful light effects intensifying",
-        "imageUrl": "https://file.com/m/xxxxxxxx.png",
-        "expandPrompt": true,
+        "quality": "720p",
         "waterMark": "kie.ai",
         "callBackUrl": "https://api.example.com/callback"
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:happyhorse-text-to-video",
+      "category": "video",
+      "title": "happyhorse-text-to-video",
+      "docUrl": "https://docs.kie.ai/market/happyhorse/text-to-video.md",
+      "provider": "happyhorse-text-to-video",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "happyhorse/text-to-video"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `happyhorse/text-to-video` for this endpoint",
+            "enum": [
+              "happyhorse/text-to-video"
+            ],
+            "default": "happyhorse/text-to-video",
+            "x-apidog-enum": [
+              {
+                "value": "happyhorse/text-to-video",
+                "name": "",
+                "description": ""
+              }
+            ],
+            "examples": [
+              "happyhorse/text-to-video"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to receive generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when generation completes\n- Callback includes generated content URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the generation task",
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "description": "Text prompt describing the video to generate (any language). Max 5,000 non‑Chinese characters or 2,500 Chinese characters; extra content is truncated.",
+                "maxLength": 5000,
+                "examples": [
+                  "A miniature city built from cardboard and bottle caps comes to life at night. A cardboard train slowly passes through, with small lights dotting the scene and illuminating the way ahead."
+                ]
+              },
+              "resolution": {
+                "type": "string",
+                "description": "Output video resolution. Valid values: 720P, 1080P (default).",
+                "enum": [
+                  "720p",
+                  "1080p"
+                ],
+                "default": "1080p",
+                "x-apidog-enum": [
+                  {
+                    "value": "720p",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "1080p",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "examples": [
+                  "1080p"
+                ]
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "description": "Output aspect ratio. Valid values: 16:9 (default), 9:16, 1:1, 4:3, 3:4.",
+                "enum": [
+                  "16:9",
+                  "9:16",
+                  "1:1",
+                  "4:3",
+                  "3:4"
+                ],
+                "default": "16:9",
+                "x-apidog-enum": [
+                  {
+                    "value": "16:9",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "9:16",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "1:1",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "4:3",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "3:4",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "examples": [
+                  "16:9"
+                ]
+              },
+              "duration": {
+                "type": "integer",
+                "description": "Output duration in seconds (integer). Must be between 3 and 15. Defaults to 5.",
+                "default": 5,
+                "examples": [
+                  5
+                ],
+                "minimum": 3,
+                "maximum": 15
+              },
+              "seed": {
+                "type": "integer",
+                "description": "Random seed for reproducibility (if supported).",
+                "default": 0,
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            },
+            "x-apidog-orders": [
+              "prompt",
+              "resolution",
+              "aspect_ratio",
+              "duration",
+              "seed"
+            ],
+            "required": [
+              "prompt"
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "happyhorse/text-to-video",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "A miniature city built from cardboard and bottle caps comes to life at night. A cardboard train slowly passes through, with small lights dotting the scene and illuminating the way ahead.",
+          "resolution": "1080p",
+          "aspect_ratio": "16:9",
+          "duration": 5,
+          "seed": 1622429582
+        }
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:happyhorse-image-to-video",
+      "category": "video",
+      "title": "happyhorse-image-to-video",
+      "docUrl": "https://docs.kie.ai/market/happyhorse/image-to-video.md",
+      "provider": "happyhorse-image-to-video",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "happyhorse/image-to-video"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `happyhorse/image-to-video` for this endpoint",
+            "enum": [
+              "happyhorse/image-to-video"
+            ],
+            "default": "happyhorse/image-to-video",
+            "x-apidog-enum": [
+              {
+                "value": "happyhorse/image-to-video",
+                "name": "",
+                "description": ""
+              }
+            ],
+            "examples": [
+              "happyhorse/image-to-video"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to receive generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when generation completes\n- Callback includes generated content URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the generation task",
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "description": "Text prompt describing the video to generate (any language). Max 5,000 non‑Chinese characters or 2,500 Chinese characters; extra content is truncated.",
+                "maxLength": 5000,
+                "examples": [
+                  "A cat running on the grass"
+                ]
+              },
+              "image_urls ": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "First-frame image URL list. Exactly one image is required.\n\nImage constraints:\nFormat: JPEG, JPG, PNG, WEBP.\nResolution: Width and height must be at least 300 pixels.\nAspect ratio: 1:2.5 to 2.5:1.\nFile size: Up to 10 MB.",
+                "maxItems": 1
+              },
+              "resolution": {
+                "type": "string",
+                "description": "Output video resolution. Valid values: 720P, 1080P (default).",
+                "enum": [
+                  "720p",
+                  "1080p"
+                ],
+                "default": "1080p",
+                "x-apidog-enum": [
+                  {
+                    "value": "720p",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "1080p",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "examples": [
+                  "1080p"
+                ]
+              },
+              "duration": {
+                "type": "integer",
+                "description": "Output duration in seconds. Must be between 3 and 15. Defaults to 5.",
+                "default": 5,
+                "examples": [
+                  5
+                ],
+                "minimum": 3,
+                "maximum": 15
+              },
+              "seed": {
+                "type": "integer",
+                "description": "Random seed for reproducibility (if supported).",
+                "default": 0,
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            },
+            "x-apidog-orders": [
+              "prompt",
+              "image_urls ",
+              "resolution",
+              "duration",
+              "seed"
+            ],
+            "required": [
+              "image_urls "
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "happyhorse/image-to-video",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "A cat running on the grass",
+          "image_urls": [
+            "https://loremflickr.com/400/400?lock=4153750340434616"
+          ],
+          "resolution": "1080p",
+          "duration": 5,
+          "seed": 1546095068
+        }
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:happyhorse-reference-to-video",
+      "category": "video",
+      "title": "happyhorse/reference-to-video",
+      "docUrl": "https://docs.kie.ai/market/happyhorse/reference-to-video.md",
+      "provider": "happyhorse/reference-to-video",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "happyhorse/reference-to-video"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `happyhorse/reference-to-video` for this endpoint",
+            "enum": [
+              "happyhorse/reference-to-video"
+            ],
+            "default": "happyhorse/reference-to-video",
+            "x-apidog-enum": [
+              {
+                "value": "happyhorse/reference-to-video",
+                "name": "",
+                "description": ""
+              }
+            ],
+            "examples": [
+              "happyhorse/reference-to-video"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to receive generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when generation completes\n- Callback includes generated content URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the generation task",
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "description": "Text prompt describing the video to generate (any language). Max 5,000 non‑Chinese characters or 2,500 Chinese characters; extra content is truncated.",
+                "maxLength": 5000,
+                "examples": [
+                  "A woman in a red qipao character1. The shot opens with a side medium view outlining the tailored fit of the qipao and S-curve silhouette, then cuts to a low-angle shot capturing her gracefully unfolding a folding fan character2, with tassel earrings character3 swaying lightly as she turns her head. Finally, the camera pushes into a facial close-up, freezing on her fingertips lightly touching the fan ribs and the subtle, reserved charm in her expressive gaze. Through multiple angles, it comprehensively showcases an aura of Eastern elegance."
+                ]
+              },
+              "reference_image": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Reference image URL list. Provide 1–9 images. The order defines which image is character1, character2, etc.\n\nImage limits:\nFormat: JPEG, JPG, PNG, and WEBP.\nResolution: shortest side at least 400 px. 720P or higher recommended. Avoid small, blurry, or heavily compressed images, as they degrade output quality.\nFile size: 10 MB maximum.",
+                "maxItems": 9,
+                "minItems": 1
+              },
+              "resolution": {
+                "type": "string",
+                "description": "Output video resolution. Valid values: 720P, 1080P (default).",
+                "enum": [
+                  "720p",
+                  "1080p"
+                ],
+                "default": "1080p",
+                "x-apidog-enum": [
+                  {
+                    "value": "720p",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "1080p",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "examples": [
+                  "1080p"
+                ]
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "description": "Output aspect ratio. Valid values: 16:9 (default), 9:16, 1:1, 4:3, 3:4.",
+                "enum": [
+                  "16:9",
+                  "9:16",
+                  "1:1",
+                  "4:3",
+                  "3:4"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "16:9",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "9:16",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "1:1",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "4:3",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "3:4",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "default": "16:9",
+                "examples": [
+                  "16:9"
+                ]
+              },
+              "duration": {
+                "type": "integer",
+                "description": "Output duration in seconds (integer). Must be between 3 and 15. Defaults to 5.",
+                "default": 5,
+                "examples": [
+                  5
+                ],
+                "minimum": 3,
+                "maximum": 15
+              },
+              "seed": {
+                "type": "integer",
+                "description": "Random seed for reproducibility (if supported).",
+                "default": 0,
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            },
+            "x-apidog-orders": [
+              "prompt",
+              "reference_image",
+              "resolution",
+              "aspect_ratio",
+              "duration",
+              "seed"
+            ],
+            "required": [
+              "prompt",
+              "reference_image"
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "happyhorse/reference-to-video",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "A woman in a red qipao character1. The shot opens with a side medium view outlining the tailored fit of the qipao and S-curve silhouette, then cuts to a low-angle shot capturing her gracefully unfolding a folding fan character2, with tassel earrings character3 swaying lightly as she turns her head. Finally, the camera pushes into a facial close-up, freezing on her fingertips lightly touching the fan ribs and the subtle, reserved charm in her expressive gaze. Through multiple angles, it comprehensively showcases an aura of Eastern elegance.",
+          "reference_image": [
+            "https://loremflickr.com/400/400?lock=8132663902229376",
+            "https://loremflickr.com/400/400?lock=1716016437146867"
+          ],
+          "resolution": "1080p",
+          "aspect_ratio": "16:9",
+          "duration": 5,
+          "seed": 1308038620
+        }
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:happyhorse-video-edit",
+      "category": "video",
+      "title": "happyhorse/video-edit",
+      "docUrl": "https://docs.kie.ai/market/happyhorse/video-edit.md",
+      "provider": "happyhorse/video-edit",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "happyhorse/video-edit"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `happyhorse/video-edit` for this endpoint",
+            "enum": [
+              "happyhorse/video-edit"
+            ],
+            "default": "happyhorse/video-edit",
+            "x-apidog-enum": [
+              {
+                "value": "happyhorse/video-edit",
+                "name": "",
+                "description": ""
+              }
+            ],
+            "examples": [
+              "happyhorse/video-edit"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to receive generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when generation completes\n- Callback includes generated content URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the generation task",
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "description": "Required edit instruction describing the intended change (e.g., style transfer / local replacement). Max 5,000 non‑Chinese characters or 2,500 Chinese characters; extra content is truncated.",
+                "maxLength": 5000,
+                "examples": [
+                  "Make the horse-headed humanoid character in the video wear the striped sweater from the image"
+                ]
+              },
+              "video_url": {
+                "type": "string",
+                "description": "Input video URL list. Exactly one video is required.\nVideo requirements:\nFormat: MP4, MOV (H.264 encoding recommended).\nDuration: 3–60 seconds.\nResolution: the longer side must not exceed 2,160 px; the shorter side must be at least 320 px.\nAspect ratio: 1:2.5–2.5:1.\nFile size: up to 100 MB.\nFrame rate: greater than 8 fps."
+              },
+              "reference_image ": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Optional reference image URL list (0–5).\nImage requirements:\nFormat: JPEG, JPG, PNG, WEBP.\nResolution: both width and height must be at least 300 px.\nAspect ratio: 1:2.5–2.5:1.\nFile size: up to 10 MB.",
+                "maxItems": 5,
+                "minItems": 0
+              },
+              "resolution": {
+                "type": "string",
+                "description": "Output video resolution. Valid values: 720P, 1080P (default).",
+                "enum": [
+                  "720p",
+                  "1080p"
+                ],
+                "default": "1080p",
+                "x-apidog-enum": [
+                  {
+                    "value": "720p",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "1080p",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "examples": [
+                  "1080p"
+                ]
+              },
+              "audio_setting": {
+                "type": "string",
+                "description": "Audio handling strategy for the output video. ",
+                "enum": [
+                  "auto",
+                  "origin"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "auto",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "origin",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "default": "auto",
+                "examples": [
+                  "auto"
+                ]
+              },
+              "seed": {
+                "type": "integer",
+                "description": "Random seed for reproducibility (if supported).",
+                "default": 0,
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            },
+            "x-apidog-orders": [
+              "prompt",
+              "video_url",
+              "reference_image ",
+              "resolution",
+              "audio_setting",
+              "seed"
+            ],
+            "required": [
+              "prompt",
+              "video_url"
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "happyhorse/video-edit",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "Make the horse-headed humanoid character in the video wear the striped sweater from the image",
+          "video_url": "https://hollow-joy.info/",
+          "reference_image ": [
+            "https://loremflickr.com/400/400?lock=3320229742640740",
+            "https://loremflickr.com/400/400?lock=390084853871038",
+            "https://loremflickr.com/400/400?lock=4205160298467577",
+            "https://loremflickr.com/400/400?lock=7626507781317900",
+            "https://loremflickr.com/400/400?lock=2804855355708229"
+          ],
+          "resolution": "1080p",
+          "audio_setting": "auto",
+          "seed": 1764574909
+        }
       },
       "pricingRows": []
     },
@@ -14408,240 +14951,6 @@
       "pricingRows": []
     },
     {
-      "id": "music:elevenlabs-sound-effect-v2",
-      "category": "music",
-      "title": "elevenlabs/sound-effect-v2",
-      "docUrl": "https://docs.kie.ai/market/elevenlabs/sound-effect-v2.md",
-      "provider": "elevenlabs/sound-effect-v2",
-      "endpoint": "/api/v1/jobs/createTask",
-      "method": "POST",
-      "modelKeys": [
-        "elevenlabs/sound-effect-v2"
-      ],
-      "requestSchema": {
-        "type": "object",
-        "required": [
-          "model"
-        ],
-        "properties": {
-          "model": {
-            "type": "string",
-            "enum": [
-              "elevenlabs/sound-effect-v2"
-            ],
-            "default": "elevenlabs/sound-effect-v2",
-            "description": "The model name to use for generation. Required field.\n\n- Must be `elevenlabs/sound-effect-v2` for this endpoint",
-            "examples": [
-              "elevenlabs/sound-effect-v2"
-            ]
-          },
-          "callBackUrl": {
-            "type": "string",
-            "format": "uri",
-            "description": "The URL to receive generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when generation completes\n- Callback includes generated content URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
-            "examples": [
-              "https://your-domain.com/api/callback"
-            ]
-          },
-          "input": {
-            "type": "object",
-            "description": "Input parameters for the generation task",
-            "properties": {
-              "text": {
-                "description": "The text describing the sound effect to generate (Max length: 5000 characters)",
-                "type": "string",
-                "maxLength": 5000,
-                "examples": [
-                  ""
-                ]
-              },
-              "loop": {
-                "description": "Whether to create a sound effect that loops smoothly (Boolean value (true/false))",
-                "type": "boolean",
-                "examples": [
-                  false
-                ]
-              },
-              "duration_seconds": {
-                "description": "Duration in seconds (0.5-22). If None, optimal duration will be determined from prompt (Min: 0.5, Max: 22, Step: 0.1) (step: 0.1)",
-                "type": "number",
-                "minimum": 0.5,
-                "maximum": 22
-              },
-              "prompt_influence": {
-                "description": "How closely to follow the prompt (0-1). Higher values mean less variation (Min: 0, Max: 1, Step: 0.01) (step: 0.01)",
-                "type": "number",
-                "minimum": 0,
-                "maximum": 1,
-                "default": 0.3,
-                "examples": [
-                  0.3
-                ]
-              },
-              "output_format": {
-                "description": "Output format of the generated audio. Formatted as codec_sample_rate_bitrate",
-                "type": "string",
-                "enum": [
-                  "mp3_22050_32",
-                  "mp3_44100_32",
-                  "mp3_44100_64",
-                  "mp3_44100_96",
-                  "mp3_44100_128",
-                  "mp3_44100_192",
-                  "pcm_8000",
-                  "pcm_16000",
-                  "pcm_22050",
-                  "pcm_24000",
-                  "pcm_44100",
-                  "pcm_48000",
-                  "ulaw_8000",
-                  "alaw_8000",
-                  "opus_48000_32",
-                  "opus_48000_64",
-                  "opus_48000_96",
-                  "opus_48000_128",
-                  "opus_48000_192"
-                ],
-                "default": "mp3_44100_128",
-                "examples": [
-                  "mp3_44100_128"
-                ]
-              }
-            },
-            "required": [
-              "text"
-            ],
-            "x-apidog-orders": [
-              "text",
-              "loop",
-              "duration_seconds",
-              "prompt_influence",
-              "output_format"
-            ],
-            "x-apidog-ignore-properties": []
-          }
-        },
-        "x-apidog-orders": [
-          "model",
-          "callBackUrl",
-          "input"
-        ],
-        "x-apidog-ignore-properties": []
-      },
-      "examplePayload": {
-        "model": "elevenlabs/sound-effect-v2",
-        "callBackUrl": "https://your-domain.com/api/callback",
-        "input": {
-          "text": "",
-          "loop": false,
-          "prompt_influence": 0.3,
-          "output_format": "mp3_44100_128"
-        }
-      },
-      "pricingRows": []
-    },
-    {
-      "id": "music:elevenlabs-speech-to-text",
-      "category": "music",
-      "title": "elevenlabs/speech-to-text",
-      "docUrl": "https://docs.kie.ai/market/elevenlabs/speech-to-text.md",
-      "provider": "elevenlabs/speech-to-text",
-      "endpoint": "/api/v1/jobs/createTask",
-      "method": "POST",
-      "modelKeys": [
-        "elevenlabs/speech-to-text"
-      ],
-      "requestSchema": {
-        "type": "object",
-        "required": [
-          "model"
-        ],
-        "properties": {
-          "model": {
-            "type": "string",
-            "enum": [
-              "elevenlabs/speech-to-text"
-            ],
-            "default": "elevenlabs/speech-to-text",
-            "description": "The model name to use for generation. Required field.\n\n- Must be `elevenlabs/speech-to-text` for this endpoint",
-            "examples": [
-              "elevenlabs/speech-to-text"
-            ]
-          },
-          "callBackUrl": {
-            "type": "string",
-            "format": "uri",
-            "description": "The URL to receive generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when generation completes\n- Callback includes generated content URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
-            "examples": [
-              "https://your-domain.com/api/callback"
-            ]
-          },
-          "input": {
-            "type": "object",
-            "description": "Input parameters for the generation task",
-            "properties": {
-              "audio_url": {
-                "description": "URL of the audio file to transcribe (File URL after upload, not file content; Accepted types: audio/mpeg, audio/wav, audio/x-wav, audio/aac, audio/mp3, audio/ogg; Max size: 200.0MB)",
-                "type": "string",
-                "examples": [
-                  "https://file.aiquickdraw.com/custom-page/akr/section-images/1757157053357tn37vxc8.mp3"
-                ]
-              },
-              "language_code": {
-                "description": "Language code of the audio (Max length: 500 characters)",
-                "type": "string",
-                "maxLength": 500,
-                "examples": [
-                  ""
-                ]
-              },
-              "tag_audio_events": {
-                "description": "Tag audio events like laughter, applause, etc. (Boolean value (true/false))",
-                "type": "boolean",
-                "examples": [
-                  true
-                ]
-              },
-              "diarize": {
-                "description": "Whether to annotate who is speaking (Boolean value (true/false))",
-                "type": "boolean",
-                "examples": [
-                  true
-                ]
-              }
-            },
-            "required": [
-              "audio_url"
-            ],
-            "x-apidog-orders": [
-              "audio_url",
-              "language_code",
-              "tag_audio_events",
-              "diarize"
-            ],
-            "x-apidog-ignore-properties": []
-          }
-        },
-        "x-apidog-orders": [
-          "model",
-          "callBackUrl",
-          "input"
-        ],
-        "x-apidog-ignore-properties": []
-      },
-      "examplePayload": {
-        "model": "elevenlabs/speech-to-text",
-        "callBackUrl": "https://your-domain.com/api/callback",
-        "input": {
-          "audio_url": "https://file.aiquickdraw.com/custom-page/akr/section-images/1757157053357tn37vxc8.mp3",
-          "language_code": "",
-          "tag_audio_events": true,
-          "diarize": true
-        }
-      },
-      "pricingRows": []
-    },
-    {
       "id": "music:elevenlabs-text-to-dialogue-v3",
       "category": "music",
       "title": "elevenlabs/text-to-dialogue-v3",
@@ -14703,30 +15012,9 @@
                       ]
                     },
                     "voice": {
-                      "description": "The voice to use for speech generation. Can be a preset voice name (e.g. Rachel, Adam) or a voice ID. You can preview a voice by opening https://static.aiquickdraw.com/elevenlabs/voice/<voice_id>.mp3 in your browser (replace <voice_id> with the actual voice ID). For example: https://static.aiquickdraw.com/elevenlabs/voice/N2lVS1w4EtoT3dr4eOWO.mp3\n\nAvailable voices:\n\nRachel\nAria\nRoger\nSarah\nLaura\nCharlie\nGeorge\nCallum\nRiver\nLiam\nCharlotte\nAlice\nMatilda\nWill\nJessica\nEric\nChris\nBrian\nDaniel\nLily\nBill\nEkK5I93UQWFDigLMpZcX - James - Husky, Engaging and Bold\nZ3R5wn05IrDiVCyEkUrK - Arabella - Mysterious and Emotive\nNNl6r8mD7vthiJatiJt1 - Bradford - Expressive and Articulate\nYOq2y2Up4RgXP2HyXjE5 - Xavier - Dominating, Metallic Announcer\nB8gJV1IhpuegLxdpXFOE - Kuon - Cheerful, Clear and Steady\n2zRM7PkgwBPiau2jvVXc - Monika Sogam - Deep and Natural\n1SM7GgM6IMuvQlz2BwM3 - Mark - Casual, Relaxed and Light\n5l5f8iK3YPeGga21rQIX - Adeline - Feminine and Conversational\nscOwDtmlUjD3prqpp97I - Sam - Support Agent\nNOpBlnGInO9m6vDvFkFC - Spuds Oxley - Wise and Approachable\nBZgkqPqms7Kj9ulSkVzn - Eve - Authentic, Energetic and Happy\nwo6udizrrtpIxWGp2qJk - Northern Terry\ngU0LNdkMOQCOrPrwtbee - British Football Announcer\nDGzg6RaUqxGRTHSBjfgF - Brock - Commanding and Loud Sergeant\nx70vRnQBMBu4FAYhjJbO - Nathan - Virtual Radio Host\nSm1seazb4gs7RSlUVw7c - Anika - Animated, Friendly and Engaging\nP1bg08DkjqiVEzOn76yG - Viraj - Rich and Soft\nqDuRKMlYmrm8trt5QyBn - Taksh - Calm, Serious and Smooth\nqXpMhyvQqiRxWQs4qSSB - Horatius - Energetic Character Voice\nTX3LPaxmHKxFdv7VOQHJ - Liam - Energetic, Social Media Creator\nN2lVS1w4EtoT3dr4eOWO - Callum - Husky Trickster\nFGY2WhTYpPnrIDTdsKH5 - Laura - Enthusiast, Quirky Attitude\nkPzsL2i3teMYv0FxEYQ6 - Brittney - Social Media Voice - Fun, Youthful & Informative\nUgBBYS2sOqTuMpoF3BR0 - Mark - Natural Conversations\nhpp4J3VqNfWAUOO0d1Us - Bella - Professional, Bright, Warm\nnPczCjzI2devNBz1zQrb - Brian - Deep, Resonant and Comforting\nuYXf8XasLslADfZ2MB4u - Hope - Bubbly, Gossipy and Girly\ngs0tAILXbY5DNrJrsM6F - Jeff - Classy, Resonating and Strong\nDTKMou8ccj1ZaWGBiotd - Jamahal - Young, Vibrant, and Natural\nvBKc2FfBKJfcZNyEt1n6 - Finn - Youthful, Eager and Energetic\nDYkrAHD8iwork3YSUBbs - Tom - Conversations & Books\n56AoDkrOh6qfVPDXZ7Pt - Cassidy - Crisp, Direct and Clear\neR40ATw9ArzDf9h3v7t7 - Addison 2.0 - Australian Audiobook & Podcast\ng6xIsTj2HwM6VR4iXFCw - Jessica Anne Bogart - Chatty and Friendly\nlcMyyd2HUfFzxdCaC4Ta - Lucy - Fresh & Casual\n6aDn1KB0hjpdcocrUkmq - Tiffany - Natural and Welcoming\nSq93GQT4X1lKDXsQcixO - Felix - Warm, Positive & Contemporary RP\nflHkNRp1BlvT73UL6gyz - Jessica Anne Bogart - Eloquent Villain\n9yzdeviXkFddZ4Oz8Mok - Lutz - Chuckling, Giggly and Cheerful\npPdl9cQBQq4p6mRkZy2Z - Emma - Adorable and Upbeat\nzYcjlYFOd3taleS0gkk3 - Edward - Loud, Confident and Cocky\nnzeAacJi50IvxcyDnMXa - Marshal - Friendly, Funny Professor\nruirxsoakN0GWmGNIo04 - John Morgan - Gritty, Rugged Cowboy\nTC0Zp7WVFzhA8zpTlRqV - Aria - Sultry Villain\nljo9gAlSqKOvF6D8sOsX - Viking Bjorn - Epic Medieval Raider\nPPzYpIqttlTYA83688JI - Pirate Marshal\n8JVbfL6oEdmuxKn5DK2C - Johnny Kid - Serious and Calm Narrator\niCrDUkL56s3C8sCRl7wb - Hope - Poetic, Romantic and Captivating\nwJqPPQ618aTW29mptyoc - Ana Rita - Smooth, Expressive and Bright\nEiNlNiXeDU1pqqOPrYMO - John Doe - Deep\n4YYIPFl9wE5c4L2eu2Gb - Burt Reynolds™ - Deep, Smooth and Clear\n6F5Zhi321D3Oq7v1oNT4 - Hank - Deep and Engaging Narrator\nYXpFCvM1S3JbWEJhoskW - Wyatt - Wise Rustic Cowboy\nLG95yZDEHg6fCZdQjLqj - Phil - Explosive, Passionate Announcer\nCeNX9CMwmxDxUF5Q2Inm - Johnny Dynamite - Vintage Radio DJ\naD6riP1btT197c6dACmy - Rachel M - Pro British Radio Presenter\nmtrellq69YZsNwzUSyXh - Rex Thunder - Deep N Tough\ndHd5gvgSOzSfduK4CvEg - Ed - Late Night Announcer\neVItLK1UvXctxuaRV2Oq - Jean - Alluring and Playful Femme Fatale\nesy0r39YPLQjOczyOib8 - Britney - Calm and Calculative Villain\nD2jw4N9m4xePLTQ3IHjU - Ian - Strange and Distorted Alien\nTsns2HvNFKfGiNjllgqo - Sven - Emotional and Nice\n1U02n4nD6AdIZ9CjF053 - Viraj - Smooth and Gentle\nAeRdCCKzvd23BpJoofzx - Nathaniel - Engaging, British and Calm\nLruHrtVF6PSyGItzMNHS - Benjamin - Deep, Warm, Calming\n1wGbFxmAM3Fgw63G1zZJ - Allison - Calm, Soothing and Meditative\nhqfrgApggtO1785R4Fsn - Theodore HQ - Serene and Grounded\nMJ0RnG71ty4LH3dvNfSd - Leon - Soothing and Grounded",
                       "type": "string",
+                      "description": "The voice to use for speech generation. Can be a preset voice name (e.g. Rachel, Adam) or a voice ID. You can preview a voice by opening https://static.aiquickdraw.com/elevenlabs/voice/<voice_id>.mp3 in your browser (replace <voice_id> with the actual voice ID). For example: https://static.aiquickdraw.com/elevenlabs/voice/N2lVS1w4EtoT3dr4eOWO.mp3\n\nAvailable voices:\n\nEkK5I93UQWFDigLMpZcX - James - Husky, Engaging and Bold\nZ3R5wn05IrDiVCyEkUrK - Arabella - Mysterious and Emotive\nNNl6r8mD7vthiJatiJt1 - Bradford - Expressive and Articulate\nYOq2y2Up4RgXP2HyXjE5 - Xavier - Dominating, Metallic Announcer\nB8gJV1IhpuegLxdpXFOE - Kuon - Cheerful, Clear and Steady\n2zRM7PkgwBPiau2jvVXc - Monika Sogam - Deep and Natural\n1SM7GgM6IMuvQlz2BwM3 - Mark - Casual, Relaxed and Light\n5l5f8iK3YPeGga21rQIX - Adeline - Feminine and Conversational\nscOwDtmlUjD3prqpp97I - Sam - Support Agent\nNOpBlnGInO9m6vDvFkFC - Spuds Oxley - Wise and Approachable\nBZgkqPqms7Kj9ulSkVzn - Eve - Authentic, Energetic and Happy\nwo6udizrrtpIxWGp2qJk - Northern Terry\ngU0LNdkMOQCOrPrwtbee - British Football Announcer\nDGzg6RaUqxGRTHSBjfgF - Brock - Commanding and Loud Sergeant\nx70vRnQBMBu4FAYhjJbO - Nathan - Virtual Radio Host\nSm1seazb4gs7RSlUVw7c - Anika - Animated, Friendly and Engaging\nP1bg08DkjqiVEzOn76yG - Viraj - Rich and Soft\nqDuRKMlYmrm8trt5QyBn - Taksh - Calm, Serious and Smooth\nqXpMhyvQqiRxWQs4qSSB - Horatius - Energetic Character Voice\nTX3LPaxmHKxFdv7VOQHJ - Liam - Energetic, Social Media Creator\nN2lVS1w4EtoT3dr4eOWO - Callum - Husky Trickster\nFGY2WhTYpPnrIDTdsKH5 - Laura - Enthusiast, Quirky Attitude\nkPzsL2i3teMYv0FxEYQ6 - Brittney - Social Media Voice - Fun, Youthful & Informative\nUgBBYS2sOqTuMpoF3BR0 - Mark - Natural Conversations\nhpp4J3VqNfWAUOO0d1Us - Bella - Professional, Bright, Warm\nnPczCjzI2devNBz1zQrb - Brian - Deep, Resonant and Comforting\nuYXf8XasLslADfZ2MB4u - Hope - Bubbly, Gossipy and Girly\ngs0tAILXbY5DNrJrsM6F - Jeff - Classy, Resonating and Strong\nDTKMou8ccj1ZaWGBiotd - Jamahal - Young, Vibrant, and Natural\nvBKc2FfBKJfcZNyEt1n6 - Finn - Youthful, Eager and Energetic\nDYkrAHD8iwork3YSUBbs - Tom - Conversations & Books\n56AoDkrOh6qfVPDXZ7Pt - Cassidy - Crisp, Direct and Clear\neR40ATw9ArzDf9h3v7t7 - Addison 2.0 - Australian Audiobook & Podcast\ng6xIsTj2HwM6VR4iXFCw - Jessica Anne Bogart - Chatty and Friendly\nlcMyyd2HUfFzxdCaC4Ta - Lucy - Fresh & Casual\n6aDn1KB0hjpdcocrUkmq - Tiffany - Natural and Welcoming\nSq93GQT4X1lKDXsQcixO - Felix - Warm, Positive & Contemporary RP\nflHkNRp1BlvT73UL6gyz - Jessica Anne Bogart - Eloquent Villain\n9yzdeviXkFddZ4Oz8Mok - Lutz - Chuckling, Giggly and Cheerful\npPdl9cQBQq4p6mRkZy2Z - Emma - Adorable and Upbeat\nzYcjlYFOd3taleS0gkk3 - Edward - Loud, Confident and Cocky\nnzeAacJi50IvxcyDnMXa - Marshal - Friendly, Funny Professor\nruirxsoakN0GWmGNIo04 - John Morgan - Gritty, Rugged Cowboy\nTC0Zp7WVFzhA8zpTlRqV - Aria - Sultry Villain\nljo9gAlSqKOvF6D8sOsX - Viking Bjorn - Epic Medieval Raider\nPPzYpIqttlTYA83688JI - Pirate Marshal\n8JVbfL6oEdmuxKn5DK2C - Johnny Kid - Serious and Calm Narrator\niCrDUkL56s3C8sCRl7wb - Hope - Poetic, Romantic and Captivating\nwJqPPQ618aTW29mptyoc - Ana Rita - Smooth, Expressive and Bright\nEiNlNiXeDU1pqqOPrYMO - John Doe - Deep\n4YYIPFl9wE5c4L2eu2Gb - Burt Reynolds™ - Deep, Smooth and Clear\n6F5Zhi321D3Oq7v1oNT4 - Hank - Deep and Engaging Narrator\nYXpFCvM1S3JbWEJhoskW - Wyatt - Wise Rustic Cowboy\nLG95yZDEHg6fCZdQjLqj - Phil - Explosive, Passionate Announcer\nCeNX9CMwmxDxUF5Q2Inm - Johnny Dynamite - Vintage Radio DJ\naD6riP1btT197c6dACmy - Rachel M - Pro British Radio Presenter\nmtrellq69YZsNwzUSyXh - Rex Thunder - Deep N Tough\ndHd5gvgSOzSfduK4CvEg - Ed - Late Night Announcer\neVItLK1UvXctxuaRV2Oq - Jean - Alluring and Playful Femme Fatale\nesy0r39YPLQjOczyOib8 - Britney - Calm and Calculative Villain\nTsns2HvNFKfGiNjllgqo - Sven - Emotional and Nice\n1U02n4nD6AdIZ9CjF053 - Viraj - Smooth and Gentle\nAeRdCCKzvd23BpJoofzx - Nathaniel - Engaging, British and Calm\nLruHrtVF6PSyGItzMNHS - Benjamin - Deep, Warm, Calming\n1wGbFxmAM3Fgw63G1zZJ - Allison - Calm, Soothing and Meditative\nhqfrgApggtO1785R4Fsn - Theodore HQ - Serene and Grounded\nMJ0RnG71ty4LH3dvNfSd - Leon - Soothing and Grounded",
                       "enum": [
-                        "Rachel",
-                        "Aria",
-                        "Roger",
-                        "Sarah",
-                        "Laura",
-                        "Charlie",
-                        "George",
-                        "Callum",
-                        "River",
-                        "Liam",
-                        "Charlotte",
-                        "Alice",
-                        "Matilda",
-                        "Will",
-                        "Jessica",
-                        "Eric",
-                        "Chris",
-                        "Brian",
-                        "Daniel",
-                        "Lily",
-                        "Bill",
                         "EkK5I93UQWFDigLMpZcX",
                         "Z3R5wn05IrDiVCyEkUrK",
                         "NNl6r8mD7vthiJatiJt1",
@@ -14787,7 +15075,6 @@
                         "dHd5gvgSOzSfduK4CvEg",
                         "eVItLK1UvXctxuaRV2Oq",
                         "esy0r39YPLQjOczyOib8",
-                        "D2jw4N9m4xePLTQ3IHjU",
                         "Tsns2HvNFKfGiNjllgqo",
                         "1U02n4nD6AdIZ9CjF053",
                         "AeRdCCKzvd23BpJoofzx",
@@ -14796,116 +15083,8 @@
                         "hqfrgApggtO1785R4Fsn",
                         "MJ0RnG71ty4LH3dvNfSd"
                       ],
-                      "default": "Rachel",
-                      "examples": [
-                        "Rachel"
-                      ],
+                      "default": "EkK5I93UQWFDigLMpZcX",
                       "x-apidog-enum": [
-                        {
-                          "value": "Rachel",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Aria",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Roger",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Sarah",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Laura",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Charlie",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "George",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Callum",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "River",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Liam",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Charlotte",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Alice",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Matilda",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Will",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Jessica",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Eric",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Chris",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Brian",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Daniel",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Lily",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
-                          "value": "Bill",
-                          "name": "",
-                          "description": ""
-                        },
                         {
                           "value": "EkK5I93UQWFDigLMpZcX",
                           "name": "",
@@ -15207,11 +15386,6 @@
                           "description": ""
                         },
                         {
-                          "value": "D2jw4N9m4xePLTQ3IHjU",
-                          "name": "",
-                          "description": ""
-                        },
-                        {
                           "value": "Tsns2HvNFKfGiNjllgqo",
                           "name": "",
                           "description": ""
@@ -15246,6 +15420,9 @@
                           "name": "",
                           "description": ""
                         }
+                      ],
+                      "examples": [
+                        "EkK5I93UQWFDigLMpZcX"
                       ]
                     }
                   },
@@ -15388,15 +15565,15 @@
           "dialogue": [
             {
               "text": "I have a pen, I have an apple, ah, Apple pen~",
-              "voice": "Adam"
+              "voice": "EkK5I93UQWFDigLMpZcX"
             },
             {
               "text": "a happy dog",
-              "voice": "Brian"
+              "voice": "Z3R5wn05IrDiVCyEkUrK"
             },
             {
               "text": "a happy cat",
-              "voice": "Roger"
+              "voice": "NNl6r8mD7vthiJatiJt1"
             }
           ],
           "stability": 0.5
@@ -15453,30 +15630,9 @@
                 ]
               },
               "voice": {
-                "description": "The voice to use for speech generation. Can be a preset voice name (e.g. Rachel, Adam) or a voice ID. You can preview a voice by opening https://static.aiquickdraw.com/elevenlabs/voice/<voice_id>.mp3 in your browser (replace <voice_id> with the actual voice ID). For example: https://static.aiquickdraw.com/elevenlabs/voice/N2lVS1w4EtoT3dr4eOWO.mp3\n\nAvailable voices:\n\nRachel\nAria\nRoger\nSarah\nLaura\nCharlie\nGeorge\nCallum\nRiver\nLiam\nCharlotte\nAlice\nMatilda\nWill\nJessica\nEric\nChris\nBrian\nDaniel\nLily\nBill\nEkK5I93UQWFDigLMpZcX - James - Husky, Engaging and Bold\nZ3R5wn05IrDiVCyEkUrK - Arabella - Mysterious and Emotive\nNNl6r8mD7vthiJatiJt1 - Bradford - Expressive and Articulate\nYOq2y2Up4RgXP2HyXjE5 - Xavier - Dominating, Metallic Announcer\nB8gJV1IhpuegLxdpXFOE - Kuon - Cheerful, Clear and Steady\n2zRM7PkgwBPiau2jvVXc - Monika Sogam - Deep and Natural\n1SM7GgM6IMuvQlz2BwM3 - Mark - Casual, Relaxed and Light\n5l5f8iK3YPeGga21rQIX - Adeline - Feminine and Conversational\nscOwDtmlUjD3prqpp97I - Sam - Support Agent\nNOpBlnGInO9m6vDvFkFC - Spuds Oxley - Wise and Approachable\nBZgkqPqms7Kj9ulSkVzn - Eve - Authentic, Energetic and Happy\nwo6udizrrtpIxWGp2qJk - Northern Terry\ngU0LNdkMOQCOrPrwtbee - British Football Announcer\nDGzg6RaUqxGRTHSBjfgF - Brock - Commanding and Loud Sergeant\nx70vRnQBMBu4FAYhjJbO - Nathan - Virtual Radio Host\nSm1seazb4gs7RSlUVw7c - Anika - Animated, Friendly and Engaging\nP1bg08DkjqiVEzOn76yG - Viraj - Rich and Soft\nqDuRKMlYmrm8trt5QyBn - Taksh - Calm, Serious and Smooth\nqXpMhyvQqiRxWQs4qSSB - Horatius - Energetic Character Voice\nTX3LPaxmHKxFdv7VOQHJ - Liam - Energetic, Social Media Creator\nN2lVS1w4EtoT3dr4eOWO - Callum - Husky Trickster\nFGY2WhTYpPnrIDTdsKH5 - Laura - Enthusiast, Quirky Attitude\nkPzsL2i3teMYv0FxEYQ6 - Brittney - Social Media Voice - Fun, Youthful & Informative\nUgBBYS2sOqTuMpoF3BR0 - Mark - Natural Conversations\nhpp4J3VqNfWAUOO0d1Us - Bella - Professional, Bright, Warm\nnPczCjzI2devNBz1zQrb - Brian - Deep, Resonant and Comforting\nuYXf8XasLslADfZ2MB4u - Hope - Bubbly, Gossipy and Girly\ngs0tAILXbY5DNrJrsM6F - Jeff - Classy, Resonating and Strong\nDTKMou8ccj1ZaWGBiotd - Jamahal - Young, Vibrant, and Natural\nvBKc2FfBKJfcZNyEt1n6 - Finn - Youthful, Eager and Energetic\nDYkrAHD8iwork3YSUBbs - Tom - Conversations & Books\n56AoDkrOh6qfVPDXZ7Pt - Cassidy - Crisp, Direct and Clear\neR40ATw9ArzDf9h3v7t7 - Addison 2.0 - Australian Audiobook & Podcast\ng6xIsTj2HwM6VR4iXFCw - Jessica Anne Bogart - Chatty and Friendly\nlcMyyd2HUfFzxdCaC4Ta - Lucy - Fresh & Casual\n6aDn1KB0hjpdcocrUkmq - Tiffany - Natural and Welcoming\nSq93GQT4X1lKDXsQcixO - Felix - Warm, Positive & Contemporary RP\nflHkNRp1BlvT73UL6gyz - Jessica Anne Bogart - Eloquent Villain\n9yzdeviXkFddZ4Oz8Mok - Lutz - Chuckling, Giggly and Cheerful\npPdl9cQBQq4p6mRkZy2Z - Emma - Adorable and Upbeat\nzYcjlYFOd3taleS0gkk3 - Edward - Loud, Confident and Cocky\nnzeAacJi50IvxcyDnMXa - Marshal - Friendly, Funny Professor\nruirxsoakN0GWmGNIo04 - John Morgan - Gritty, Rugged Cowboy\nTC0Zp7WVFzhA8zpTlRqV - Aria - Sultry Villain\nljo9gAlSqKOvF6D8sOsX - Viking Bjorn - Epic Medieval Raider\nPPzYpIqttlTYA83688JI - Pirate Marshal\n8JVbfL6oEdmuxKn5DK2C - Johnny Kid - Serious and Calm Narrator\niCrDUkL56s3C8sCRl7wb - Hope - Poetic, Romantic and Captivating\nwJqPPQ618aTW29mptyoc - Ana Rita - Smooth, Expressive and Bright\nEiNlNiXeDU1pqqOPrYMO - John Doe - Deep\n4YYIPFl9wE5c4L2eu2Gb - Burt Reynolds™ - Deep, Smooth and Clear\n6F5Zhi321D3Oq7v1oNT4 - Hank - Deep and Engaging Narrator\nYXpFCvM1S3JbWEJhoskW - Wyatt - Wise Rustic Cowboy\nLG95yZDEHg6fCZdQjLqj - Phil - Explosive, Passionate Announcer\nCeNX9CMwmxDxUF5Q2Inm - Johnny Dynamite - Vintage Radio DJ\naD6riP1btT197c6dACmy - Rachel M - Pro British Radio Presenter\nmtrellq69YZsNwzUSyXh - Rex Thunder - Deep N Tough\ndHd5gvgSOzSfduK4CvEg - Ed - Late Night Announcer\neVItLK1UvXctxuaRV2Oq - Jean - Alluring and Playful Femme Fatale\nesy0r39YPLQjOczyOib8 - Britney - Calm and Calculative Villain\nTsns2HvNFKfGiNjllgqo - Sven - Emotional and Nice\n1U02n4nD6AdIZ9CjF053 - Viraj - Smooth and Gentle\nAeRdCCKzvd23BpJoofzx - Nathaniel - Engaging, British and Calm\nLruHrtVF6PSyGItzMNHS - Benjamin - Deep, Warm, Calming\n1wGbFxmAM3Fgw63G1zZJ - Allison - Calm, Soothing and Meditative\nhqfrgApggtO1785R4Fsn - Theodore HQ - Serene and Grounded\nMJ0RnG71ty4LH3dvNfSd - Leon - Soothing and Grounded",
                 "type": "string",
+                "description": "The voice to use for speech generation. Can be a preset voice name (e.g. Rachel, Adam) or a voice ID. You can preview a voice by opening https://static.aiquickdraw.com/elevenlabs/voice/<voice_id>.mp3 in your browser (replace <voice_id> with the actual voice ID). For example: https://static.aiquickdraw.com/elevenlabs/voice/N2lVS1w4EtoT3dr4eOWO.mp3\n\nAvailable voices:\n\nEkK5I93UQWFDigLMpZcX - James - Husky, Engaging and Bold\nZ3R5wn05IrDiVCyEkUrK - Arabella - Mysterious and Emotive\nNNl6r8mD7vthiJatiJt1 - Bradford - Expressive and Articulate\nYOq2y2Up4RgXP2HyXjE5 - Xavier - Dominating, Metallic Announcer\nB8gJV1IhpuegLxdpXFOE - Kuon - Cheerful, Clear and Steady\n2zRM7PkgwBPiau2jvVXc - Monika Sogam - Deep and Natural\n1SM7GgM6IMuvQlz2BwM3 - Mark - Casual, Relaxed and Light\n5l5f8iK3YPeGga21rQIX - Adeline - Feminine and Conversational\nscOwDtmlUjD3prqpp97I - Sam - Support Agent\nNOpBlnGInO9m6vDvFkFC - Spuds Oxley - Wise and Approachable\nBZgkqPqms7Kj9ulSkVzn - Eve - Authentic, Energetic and Happy\nwo6udizrrtpIxWGp2qJk - Northern Terry\ngU0LNdkMOQCOrPrwtbee - British Football Announcer\nDGzg6RaUqxGRTHSBjfgF - Brock - Commanding and Loud Sergeant\nx70vRnQBMBu4FAYhjJbO - Nathan - Virtual Radio Host\nSm1seazb4gs7RSlUVw7c - Anika - Animated, Friendly and Engaging\nP1bg08DkjqiVEzOn76yG - Viraj - Rich and Soft\nqDuRKMlYmrm8trt5QyBn - Taksh - Calm, Serious and Smooth\nqXpMhyvQqiRxWQs4qSSB - Horatius - Energetic Character Voice\nTX3LPaxmHKxFdv7VOQHJ - Liam - Energetic, Social Media Creator\nN2lVS1w4EtoT3dr4eOWO - Callum - Husky Trickster\nFGY2WhTYpPnrIDTdsKH5 - Laura - Enthusiast, Quirky Attitude\nkPzsL2i3teMYv0FxEYQ6 - Brittney - Social Media Voice - Fun, Youthful & Informative\nUgBBYS2sOqTuMpoF3BR0 - Mark - Natural Conversations\nhpp4J3VqNfWAUOO0d1Us - Bella - Professional, Bright, Warm\nnPczCjzI2devNBz1zQrb - Brian - Deep, Resonant and Comforting\nuYXf8XasLslADfZ2MB4u - Hope - Bubbly, Gossipy and Girly\ngs0tAILXbY5DNrJrsM6F - Jeff - Classy, Resonating and Strong\nDTKMou8ccj1ZaWGBiotd - Jamahal - Young, Vibrant, and Natural\nvBKc2FfBKJfcZNyEt1n6 - Finn - Youthful, Eager and Energetic\nDYkrAHD8iwork3YSUBbs - Tom - Conversations & Books\n56AoDkrOh6qfVPDXZ7Pt - Cassidy - Crisp, Direct and Clear\neR40ATw9ArzDf9h3v7t7 - Addison 2.0 - Australian Audiobook & Podcast\ng6xIsTj2HwM6VR4iXFCw - Jessica Anne Bogart - Chatty and Friendly\nlcMyyd2HUfFzxdCaC4Ta - Lucy - Fresh & Casual\n6aDn1KB0hjpdcocrUkmq - Tiffany - Natural and Welcoming\nSq93GQT4X1lKDXsQcixO - Felix - Warm, Positive & Contemporary RP\nflHkNRp1BlvT73UL6gyz - Jessica Anne Bogart - Eloquent Villain\n9yzdeviXkFddZ4Oz8Mok - Lutz - Chuckling, Giggly and Cheerful\npPdl9cQBQq4p6mRkZy2Z - Emma - Adorable and Upbeat\nzYcjlYFOd3taleS0gkk3 - Edward - Loud, Confident and Cocky\nnzeAacJi50IvxcyDnMXa - Marshal - Friendly, Funny Professor\nruirxsoakN0GWmGNIo04 - John Morgan - Gritty, Rugged Cowboy\nTC0Zp7WVFzhA8zpTlRqV - Aria - Sultry Villain\nljo9gAlSqKOvF6D8sOsX - Viking Bjorn - Epic Medieval Raider\nPPzYpIqttlTYA83688JI - Pirate Marshal\n8JVbfL6oEdmuxKn5DK2C - Johnny Kid - Serious and Calm Narrator\niCrDUkL56s3C8sCRl7wb - Hope - Poetic, Romantic and Captivating\nwJqPPQ618aTW29mptyoc - Ana Rita - Smooth, Expressive and Bright\nEiNlNiXeDU1pqqOPrYMO - John Doe - Deep\n4YYIPFl9wE5c4L2eu2Gb - Burt Reynolds™ - Deep, Smooth and Clear\n6F5Zhi321D3Oq7v1oNT4 - Hank - Deep and Engaging Narrator\nYXpFCvM1S3JbWEJhoskW - Wyatt - Wise Rustic Cowboy\nLG95yZDEHg6fCZdQjLqj - Phil - Explosive, Passionate Announcer\nCeNX9CMwmxDxUF5Q2Inm - Johnny Dynamite - Vintage Radio DJ\naD6riP1btT197c6dACmy - Rachel M - Pro British Radio Presenter\nmtrellq69YZsNwzUSyXh - Rex Thunder - Deep N Tough\ndHd5gvgSOzSfduK4CvEg - Ed - Late Night Announcer\neVItLK1UvXctxuaRV2Oq - Jean - Alluring and Playful Femme Fatale\nesy0r39YPLQjOczyOib8 - Britney - Calm and Calculative Villain\nTsns2HvNFKfGiNjllgqo - Sven - Emotional and Nice\n1U02n4nD6AdIZ9CjF053 - Viraj - Smooth and Gentle\nAeRdCCKzvd23BpJoofzx - Nathaniel - Engaging, British and Calm\nLruHrtVF6PSyGItzMNHS - Benjamin - Deep, Warm, Calming\n1wGbFxmAM3Fgw63G1zZJ - Allison - Calm, Soothing and Meditative\nhqfrgApggtO1785R4Fsn - Theodore HQ - Serene and Grounded\nMJ0RnG71ty4LH3dvNfSd - Leon - Soothing and Grounded",
                 "enum": [
-                  "Rachel",
-                  "Aria",
-                  "Roger",
-                  "Sarah",
-                  "Laura",
-                  "Charlie",
-                  "George",
-                  "Callum",
-                  "River",
-                  "Liam",
-                  "Charlotte",
-                  "Alice",
-                  "Matilda",
-                  "Will",
-                  "Jessica",
-                  "Eric",
-                  "Chris",
-                  "Brian",
-                  "Daniel",
-                  "Lily",
-                  "Bill",
                   "EkK5I93UQWFDigLMpZcX",
                   "Z3R5wn05IrDiVCyEkUrK",
                   "NNl6r8mD7vthiJatiJt1",
@@ -15545,116 +15701,8 @@
                   "hqfrgApggtO1785R4Fsn",
                   "MJ0RnG71ty4LH3dvNfSd"
                 ],
-                "default": "Rachel",
-                "examples": [
-                  "Rachel"
-                ],
+                "default": "EkK5I93UQWFDigLMpZcX",
                 "x-apidog-enum": [
-                  {
-                    "value": "Rachel",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Aria",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Roger",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Sarah",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Laura",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Charlie",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "George",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Callum",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "River",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Liam",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Charlotte",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Alice",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Matilda",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Will",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Jessica",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Eric",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Chris",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Brian",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Daniel",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Lily",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "Bill",
-                    "name": "",
-                    "description": ""
-                  },
                   {
                     "value": "EkK5I93UQWFDigLMpZcX",
                     "name": "",
@@ -15990,6 +16038,9 @@
                     "name": "",
                     "description": ""
                   }
+                ],
+                "examples": [
+                  "EkK5I93UQWFDigLMpZcX"
                 ]
               },
               "stability": {
@@ -16157,43 +16208,14 @@
                 ]
               },
               "voice": {
-                "description": "The voice to use for speech generation. Can be a preset voice name (e.g. Rachel, Adam) or a voice ID. You can preview a voice by opening `https://static.aiquickdraw.com/elevenlabs/voice/<voice_id>.mp3` in your browser (replace <voice_id> with the actual voice ID). For example: `https://static.aiquickdraw.com/elevenlabs/voice/BIvP0GN1cAtSRTxNHnWS.mp3`\n\n**Available voices:**\n- `Rachel`\n- `Aria`\n- `Roger`\n- `Sarah`\n- `Laura`\n- `Charlie`\n- `George`\n- `Callum`\n- `River`\n- `Liam`\n- `Charlotte`\n- `Alice`\n- `Matilda`\n- `Will`\n- `Jessica`\n- `Eric`\n- `Chris`\n- `Brian`\n- `Daniel`\n- `Lily`\n- `Bill`\n- `BIvP0GN1cAtSRTxNHnWS` - Ellen - Serious, Direct and Confident\n- `aMSt68OGf4xUZAnLpTU8` - Juniper - Grounded and Professional\n- `RILOU7YmBhvwJGDGjNmP` - Jane - Professional Audiobook Reader\n- `EkK5I93UQWFDigLMpZcX` - James - Husky, Engaging and Bold\n- `Z3R5wn05IrDiVCyEkUrK` - Arabella - Mysterious and Emotive\n- `tnSpp4vdxKPjI9w0GnoV` - Hope - Upbeat and Clear\n- `NNl6r8mD7vthiJatiJt1` - Bradford - Expressive and Articulate\n- `YOq2y2Up4RgXP2HyXjE5` - Xavier - Dominating, Metallic Announcer\n- `Bj9UqZbhQsanLzgalpEG` - Austin - Deep, Raspy and Authentic\n- `c6SfcYrb2t09NHXiT80T` - Jarnathan - Confident and Versatile\n- `B8gJV1IhpuegLxdpXFOE` - Kuon - Cheerful, Clear and Steady\n- `exsUS4vynmxd379XN4yO` - Blondie - Conversational\n- `BpjGufoPiobT79j2vtj4` - Priyanka - Calm, Neutral and Relaxed\n- `2zRM7PkgwBPiau2jvVXc` - Monika Sogam - Deep and Natural\n- `1SM7GgM6IMuvQlz2BwM3` - Mark - Casual, Relaxed and Light\n- `5l5f8iK3YPeGga21rQIX` - Adeline - Feminine and Conversational\n- `scOwDtmlUjD3prqpp97I` - Sam - Support Agent\n- `NOpBlnGInO9m6vDvFkFC` - Spuds Oxley - Wise and Approachable\n- `BZgkqPqms7Kj9ulSkVzn` - Eve - Authentic, Energetic and Happy\n- `wo6udizrrtpIxWGp2qJk` - Northern Terry\n- `gU0LNdkMOQCOrPrwtbee` - British Football Announcer\n- `DGzg6RaUqxGRTHSBjfgF` - Brock - Commanding and Loud Sergeant\n- `DGTOOUoGpoP6UZ9uSWfA` - Célian - Documentary Narrator\n- `x70vRnQBMBu4FAYhjJbO` - Nathan - Virtual Radio Host\n- `P1bg08DkjqiVEzOn76yG` - Viraj - Rich and Soft\n- `qDuRKMlYmrm8trt5QyBn` - Taksh - Calm, Serious and Smooth\n- `qXpMhyvQqiRxWQs4qSSB` - Horatius - Energetic Character Voice\n- `TX3LPaxmHKxFdv7VOQHJ` - Liam - Energetic, Social Media Creator\n- `iP95p4xoKVk53GoZ742B` - Chris - Charming, Down-to-Earth\n- `SOYHLrjzK2X1ezoPC6cr` - Harry - Fierce Warrior\n- `N2lVS1w4EtoT3dr4eOWO` - Callum - Husky Trickster\n- `FGY2WhTYpPnrIDTdsKH5` - Laura - Enthusiast, Quirky Attitude\n- `cgSgspJ2msm6clMCkdW9` - Jessica - Playful, Bright, Warm\n- `kPzsL2i3teMYv0FxEYQ6` - Brittney - Social Media Voice - Fun, Youthful & Informative\n- `UgBBYS2sOqTuMpoF3BR0` - Mark - Natural Conversations\n- `hpp4J3VqNfWAUOO0d1Us` - Bella - Professional, Bright, Warm\n- `pNInz6obpgDQGcFmaJgB` - Adam - Dominant, Firm\n- `nPczCjzI2devNBz1zQrb` - Brian - Deep, Resonant and Comforting\n- `uYXf8XasLslADfZ2MB4u` - Hope - Bubbly, Gossipy and Girly\n- `gs0tAILXbY5DNrJrsM6F` - Jeff - Classy, Resonating and Strong\n- `DTKMou8ccj1ZaWGBiotd` - Jamahal - Young, Vibrant, and Natural\n- `vBKc2FfBKJfcZNyEt1n6` - Finn - Youthful, Eager and Energetic\n- `DYkrAHD8iwork3YSUBbs` - Tom - Conversations & Books\n- `56AoDkrOh6qfVPDXZ7Pt` - Cassidy - Crisp, Direct and Clear\n- `eR40ATw9ArzDf9h3v7t7` - Addison 2.0 - Australian Audiobook & Podcast\n- `g6xIsTj2HwM6VR4iXFCw` - Jessica Anne Bogart - Chatty and Friendly\n- `lcMyyd2HUfFzxdCaC4Ta` - Lucy - Fresh & Casual\n- `6aDn1KB0hjpdcocrUkmq` - Tiffany - Natural and Welcoming\n- `Sq93GQT4X1lKDXsQcixO` - Felix - Warm, Positive & Contemporary RP\n- `flHkNRp1BlvT73UL6gyz` - Jessica Anne Bogart - Eloquent Villain\n- `9yzdeviXkFddZ4Oz8Mok` - Lutz - Chuckling, Giggly and Cheerful\n- `pPdl9cQBQq4p6mRkZy2Z` - Emma - Adorable and Upbeat\n- `zYcjlYFOd3taleS0gkk3` - Edward - Loud, Confident and Cocky\n- `nzeAacJi50IvxcyDnMXa` - Marshal - Friendly, Funny Professor\n- `ruirxsoakN0GWmGNIo04` - John Morgan - Gritty, Rugged Cowboy\n- `TC0Zp7WVFzhA8zpTlRqV` - Aria - Sultry Villain\n- `ljo9gAlSqKOvF6D8sOsX` - Viking Bjorn - Epic Medieval Raider\n- `PPzYpIqttlTYA83688JI` - Pirate Marshal\n- `ZF6FPAbjXT4488VcRRnw` - Amelia - Enthusiastic and Expressive\n- `8JVbfL6oEdmuxKn5DK2C` - Johnny Kid - Serious and Calm Narrator\n- `iCrDUkL56s3C8sCRl7wb` - Hope - Poetic, Romantic and Captivating\n- `1hlpeD1ydbI2ow0Tt3EW` - Olivia - Smooth, Warm and Engaging\n- `wJqPPQ618aTW29mptyoc` - Ana Rita - Smooth, Expressive and Bright\n- `EiNlNiXeDU1pqqOPrYMO` - John Doe - Deep\n- `4YYIPFl9wE5c4L2eu2Gb` - Burt Reynolds™ - Deep, Smooth and Clear\n- `6F5Zhi321D3Oq7v1oNT4` - Hank - Deep and Engaging Narrator\n- `YXpFCvM1S3JbWEJhoskW` - Wyatt - Wise Rustic Cowboy\n- `LG95yZDEHg6fCZdQjLqj` - Phil - Explosive, Passionate Announcer\n- `CeNX9CMwmxDxUF5Q2Inm` - Johnny Dynamite - Vintage Radio DJ\n- `st7NwhTPEzqo2riw7qWC` - Blondie - Radio Host\n- `aD6riP1btT197c6dACmy` - Rachel M - Pro British Radio Presenter\n- `mtrellq69YZsNwzUSyXh` - Rex Thunder - Deep N Tough\n- `dHd5gvgSOzSfduK4CvEg` - Ed - Late Night Announcer\n- `eVItLK1UvXctxuaRV2Oq` - Jean - Alluring and Playful Femme Fatale\n- `esy0r39YPLQjOczyOib8` - Britney - Calm and Calculative Villain\n- `Tsns2HvNFKfGiNjllgqo` - Sven - Emotional and Nice\n- `1U02n4nD6AdIZ9CjF053` - Viraj - Smooth and Gentle\n- `AeRdCCKzvd23BpJoofzx` - Nathaniel - Engaging, British and Calm\n- `LruHrtVF6PSyGItzMNHS` - Benjamin - Deep, Warm, Calming\n- `Qggl4b0xRMiqOwhPtVWT` - Clara - Relaxing, Calm and Soothing\n- `zA6D7RyKdc2EClouEMkP` - AImee - Tranquil ASMR and Meditation\n- `1wGbFxmAM3Fgw63G1zZJ` - Allison - Calm, Soothing and Meditative\n- `hqfrgApggtO1785R4Fsn` - Theodore HQ - Serene and Grounded\n- `MJ0RnG71ty4LH3dvNfSd` - Leon - Soothing and Grounded",
                 "type": "string",
+                "description": "The voice to use for speech generation. Can be a preset voice name (e.g. Rachel, Adam) or a voice ID. You can preview a voice by opening https://static.aiquickdraw.com/elevenlabs/voice/<voice_id>.mp3 in your browser (replace <voice_id> with the actual voice ID). For example: https://static.aiquickdraw.com/elevenlabs/voice/N2lVS1w4EtoT3dr4eOWO.mp3\n\nAvailable voices:\n\nEkK5I93UQWFDigLMpZcX - James - Husky, Engaging and Bold\nZ3R5wn05IrDiVCyEkUrK - Arabella - Mysterious and Emotive\nNNl6r8mD7vthiJatiJt1 - Bradford - Expressive and Articulate\nYOq2y2Up4RgXP2HyXjE5 - Xavier - Dominating, Metallic Announcer\nB8gJV1IhpuegLxdpXFOE - Kuon - Cheerful, Clear and Steady\n2zRM7PkgwBPiau2jvVXc - Monika Sogam - Deep and Natural\n1SM7GgM6IMuvQlz2BwM3 - Mark - Casual, Relaxed and Light\n5l5f8iK3YPeGga21rQIX - Adeline - Feminine and Conversational\nscOwDtmlUjD3prqpp97I - Sam - Support Agent\nNOpBlnGInO9m6vDvFkFC - Spuds Oxley - Wise and Approachable\nBZgkqPqms7Kj9ulSkVzn - Eve - Authentic, Energetic and Happy\nwo6udizrrtpIxWGp2qJk - Northern Terry\ngU0LNdkMOQCOrPrwtbee - British Football Announcer\nDGzg6RaUqxGRTHSBjfgF - Brock - Commanding and Loud Sergeant\nx70vRnQBMBu4FAYhjJbO - Nathan - Virtual Radio Host\nSm1seazb4gs7RSlUVw7c - Anika - Animated, Friendly and Engaging\nP1bg08DkjqiVEzOn76yG - Viraj - Rich and Soft\nqDuRKMlYmrm8trt5QyBn - Taksh - Calm, Serious and Smooth\nqXpMhyvQqiRxWQs4qSSB - Horatius - Energetic Character Voice\nTX3LPaxmHKxFdv7VOQHJ - Liam - Energetic, Social Media Creator\nN2lVS1w4EtoT3dr4eOWO - Callum - Husky Trickster\nFGY2WhTYpPnrIDTdsKH5 - Laura - Enthusiast, Quirky Attitude\nkPzsL2i3teMYv0FxEYQ6 - Brittney - Social Media Voice - Fun, Youthful & Informative\nUgBBYS2sOqTuMpoF3BR0 - Mark - Natural Conversations\nhpp4J3VqNfWAUOO0d1Us - Bella - Professional, Bright, Warm\nnPczCjzI2devNBz1zQrb - Brian - Deep, Resonant and Comforting\nuYXf8XasLslADfZ2MB4u - Hope - Bubbly, Gossipy and Girly\ngs0tAILXbY5DNrJrsM6F - Jeff - Classy, Resonating and Strong\nDTKMou8ccj1ZaWGBiotd - Jamahal - Young, Vibrant, and Natural\nvBKc2FfBKJfcZNyEt1n6 - Finn - Youthful, Eager and Energetic\nDYkrAHD8iwork3YSUBbs - Tom - Conversations & Books\n56AoDkrOh6qfVPDXZ7Pt - Cassidy - Crisp, Direct and Clear\neR40ATw9ArzDf9h3v7t7 - Addison 2.0 - Australian Audiobook & Podcast\ng6xIsTj2HwM6VR4iXFCw - Jessica Anne Bogart - Chatty and Friendly\nlcMyyd2HUfFzxdCaC4Ta - Lucy - Fresh & Casual\n6aDn1KB0hjpdcocrUkmq - Tiffany - Natural and Welcoming\nSq93GQT4X1lKDXsQcixO - Felix - Warm, Positive & Contemporary RP\nflHkNRp1BlvT73UL6gyz - Jessica Anne Bogart - Eloquent Villain\n9yzdeviXkFddZ4Oz8Mok - Lutz - Chuckling, Giggly and Cheerful\npPdl9cQBQq4p6mRkZy2Z - Emma - Adorable and Upbeat\nzYcjlYFOd3taleS0gkk3 - Edward - Loud, Confident and Cocky\nnzeAacJi50IvxcyDnMXa - Marshal - Friendly, Funny Professor\nruirxsoakN0GWmGNIo04 - John Morgan - Gritty, Rugged Cowboy\nTC0Zp7WVFzhA8zpTlRqV - Aria - Sultry Villain\nljo9gAlSqKOvF6D8sOsX - Viking Bjorn - Epic Medieval Raider\nPPzYpIqttlTYA83688JI - Pirate Marshal\n8JVbfL6oEdmuxKn5DK2C - Johnny Kid - Serious and Calm Narrator\niCrDUkL56s3C8sCRl7wb - Hope - Poetic, Romantic and Captivating\nwJqPPQ618aTW29mptyoc - Ana Rita - Smooth, Expressive and Bright\nEiNlNiXeDU1pqqOPrYMO - John Doe - Deep\n4YYIPFl9wE5c4L2eu2Gb - Burt Reynolds™ - Deep, Smooth and Clear\n6F5Zhi321D3Oq7v1oNT4 - Hank - Deep and Engaging Narrator\nYXpFCvM1S3JbWEJhoskW - Wyatt - Wise Rustic Cowboy\nLG95yZDEHg6fCZdQjLqj - Phil - Explosive, Passionate Announcer\nCeNX9CMwmxDxUF5Q2Inm - Johnny Dynamite - Vintage Radio DJ\naD6riP1btT197c6dACmy - Rachel M - Pro British Radio Presenter\nmtrellq69YZsNwzUSyXh - Rex Thunder - Deep N Tough\ndHd5gvgSOzSfduK4CvEg - Ed - Late Night Announcer\neVItLK1UvXctxuaRV2Oq - Jean - Alluring and Playful Femme Fatale\nesy0r39YPLQjOczyOib8 - Britney - Calm and Calculative Villain\nTsns2HvNFKfGiNjllgqo - Sven - Emotional and Nice\n1U02n4nD6AdIZ9CjF053 - Viraj - Smooth and Gentle\nAeRdCCKzvd23BpJoofzx - Nathaniel - Engaging, British and Calm\nLruHrtVF6PSyGItzMNHS - Benjamin - Deep, Warm, Calming\n1wGbFxmAM3Fgw63G1zZJ - Allison - Calm, Soothing and Meditative\nhqfrgApggtO1785R4Fsn - Theodore HQ - Serene and Grounded\nMJ0RnG71ty4LH3dvNfSd - Leon - Soothing and Grounded",
                 "enum": [
-                  "Rachel",
-                  "Aria",
-                  "Roger",
-                  "Sarah",
-                  "Laura",
-                  "Charlie",
-                  "George",
-                  "Callum",
-                  "River",
-                  "Liam",
-                  "Charlotte",
-                  "Alice",
-                  "Matilda",
-                  "Will",
-                  "Jessica",
-                  "Eric",
-                  "Chris",
-                  "Brian",
-                  "Daniel",
-                  "Lily",
-                  "Bill",
-                  "BIvP0GN1cAtSRTxNHnWS",
-                  "aMSt68OGf4xUZAnLpTU8",
-                  "RILOU7YmBhvwJGDGjNmP",
                   "EkK5I93UQWFDigLMpZcX",
                   "Z3R5wn05IrDiVCyEkUrK",
-                  "tnSpp4vdxKPjI9w0GnoV",
                   "NNl6r8mD7vthiJatiJt1",
                   "YOq2y2Up4RgXP2HyXjE5",
-                  "Bj9UqZbhQsanLzgalpEG",
-                  "c6SfcYrb2t09NHXiT80T",
                   "B8gJV1IhpuegLxdpXFOE",
-                  "exsUS4vynmxd379XN4yO",
-                  "BpjGufoPiobT79j2vtj4",
                   "2zRM7PkgwBPiau2jvVXc",
                   "1SM7GgM6IMuvQlz2BwM3",
                   "5l5f8iK3YPeGga21rQIX",
@@ -16203,21 +16225,17 @@
                   "wo6udizrrtpIxWGp2qJk",
                   "gU0LNdkMOQCOrPrwtbee",
                   "DGzg6RaUqxGRTHSBjfgF",
-                  "DGTOOUoGpoP6UZ9uSWfA",
                   "x70vRnQBMBu4FAYhjJbO",
+                  "Sm1seazb4gs7RSlUVw7c",
                   "P1bg08DkjqiVEzOn76yG",
                   "qDuRKMlYmrm8trt5QyBn",
                   "qXpMhyvQqiRxWQs4qSSB",
                   "TX3LPaxmHKxFdv7VOQHJ",
-                  "iP95p4xoKVk53GoZ742B",
-                  "SOYHLrjzK2X1ezoPC6cr",
                   "N2lVS1w4EtoT3dr4eOWO",
                   "FGY2WhTYpPnrIDTdsKH5",
-                  "cgSgspJ2msm6clMCkdW9",
                   "kPzsL2i3teMYv0FxEYQ6",
                   "UgBBYS2sOqTuMpoF3BR0",
                   "hpp4J3VqNfWAUOO0d1Us",
-                  "pNInz6obpgDQGcFmaJgB",
                   "nPczCjzI2devNBz1zQrb",
                   "uYXf8XasLslADfZ2MB4u",
                   "gs0tAILXbY5DNrJrsM6F",
@@ -16239,10 +16257,8 @@
                   "TC0Zp7WVFzhA8zpTlRqV",
                   "ljo9gAlSqKOvF6D8sOsX",
                   "PPzYpIqttlTYA83688JI",
-                  "ZF6FPAbjXT4488VcRRnw",
                   "8JVbfL6oEdmuxKn5DK2C",
                   "iCrDUkL56s3C8sCRl7wb",
-                  "1hlpeD1ydbI2ow0Tt3EW",
                   "wJqPPQ618aTW29mptyoc",
                   "EiNlNiXeDU1pqqOPrYMO",
                   "4YYIPFl9wE5c4L2eu2Gb",
@@ -16250,7 +16266,6 @@
                   "YXpFCvM1S3JbWEJhoskW",
                   "LG95yZDEHg6fCZdQjLqj",
                   "CeNX9CMwmxDxUF5Q2Inm",
-                  "st7NwhTPEzqo2riw7qWC",
                   "aD6riP1btT197c6dACmy",
                   "mtrellq69YZsNwzUSyXh",
                   "dHd5gvgSOzSfduK4CvEg",
@@ -16260,15 +16275,350 @@
                   "1U02n4nD6AdIZ9CjF053",
                   "AeRdCCKzvd23BpJoofzx",
                   "LruHrtVF6PSyGItzMNHS",
-                  "Qggl4b0xRMiqOwhPtVWT",
-                  "zA6D7RyKdc2EClouEMkP",
                   "1wGbFxmAM3Fgw63G1zZJ",
                   "hqfrgApggtO1785R4Fsn",
                   "MJ0RnG71ty4LH3dvNfSd"
                 ],
-                "default": "Rachel",
+                "default": "EkK5I93UQWFDigLMpZcX",
+                "x-apidog-enum": [
+                  {
+                    "value": "EkK5I93UQWFDigLMpZcX",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "Z3R5wn05IrDiVCyEkUrK",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "NNl6r8mD7vthiJatiJt1",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "YOq2y2Up4RgXP2HyXjE5",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "B8gJV1IhpuegLxdpXFOE",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "2zRM7PkgwBPiau2jvVXc",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "1SM7GgM6IMuvQlz2BwM3",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "5l5f8iK3YPeGga21rQIX",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "scOwDtmlUjD3prqpp97I",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "NOpBlnGInO9m6vDvFkFC",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "BZgkqPqms7Kj9ulSkVzn",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "wo6udizrrtpIxWGp2qJk",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "gU0LNdkMOQCOrPrwtbee",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "DGzg6RaUqxGRTHSBjfgF",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "x70vRnQBMBu4FAYhjJbO",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "Sm1seazb4gs7RSlUVw7c",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "P1bg08DkjqiVEzOn76yG",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "qDuRKMlYmrm8trt5QyBn",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "qXpMhyvQqiRxWQs4qSSB",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "TX3LPaxmHKxFdv7VOQHJ",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "N2lVS1w4EtoT3dr4eOWO",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "FGY2WhTYpPnrIDTdsKH5",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "kPzsL2i3teMYv0FxEYQ6",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "UgBBYS2sOqTuMpoF3BR0",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "hpp4J3VqNfWAUOO0d1Us",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "nPczCjzI2devNBz1zQrb",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "uYXf8XasLslADfZ2MB4u",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "gs0tAILXbY5DNrJrsM6F",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "DTKMou8ccj1ZaWGBiotd",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "vBKc2FfBKJfcZNyEt1n6",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "DYkrAHD8iwork3YSUBbs",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "56AoDkrOh6qfVPDXZ7Pt",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "eR40ATw9ArzDf9h3v7t7",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "g6xIsTj2HwM6VR4iXFCw",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "lcMyyd2HUfFzxdCaC4Ta",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "6aDn1KB0hjpdcocrUkmq",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "Sq93GQT4X1lKDXsQcixO",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "flHkNRp1BlvT73UL6gyz",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "9yzdeviXkFddZ4Oz8Mok",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "pPdl9cQBQq4p6mRkZy2Z",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "zYcjlYFOd3taleS0gkk3",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "nzeAacJi50IvxcyDnMXa",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "ruirxsoakN0GWmGNIo04",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "TC0Zp7WVFzhA8zpTlRqV",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "ljo9gAlSqKOvF6D8sOsX",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "PPzYpIqttlTYA83688JI",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "8JVbfL6oEdmuxKn5DK2C",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "iCrDUkL56s3C8sCRl7wb",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "wJqPPQ618aTW29mptyoc",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "EiNlNiXeDU1pqqOPrYMO",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "4YYIPFl9wE5c4L2eu2Gb",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "6F5Zhi321D3Oq7v1oNT4",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "YXpFCvM1S3JbWEJhoskW",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "LG95yZDEHg6fCZdQjLqj",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "CeNX9CMwmxDxUF5Q2Inm",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "aD6riP1btT197c6dACmy",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "mtrellq69YZsNwzUSyXh",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "dHd5gvgSOzSfduK4CvEg",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "eVItLK1UvXctxuaRV2Oq",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "esy0r39YPLQjOczyOib8",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "Tsns2HvNFKfGiNjllgqo",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "1U02n4nD6AdIZ9CjF053",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "AeRdCCKzvd23BpJoofzx",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "LruHrtVF6PSyGItzMNHS",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "1wGbFxmAM3Fgw63G1zZJ",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "hqfrgApggtO1785R4Fsn",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "MJ0RnG71ty4LH3dvNfSd",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
                 "examples": [
-                  "Rachel"
+                  "EkK5I93UQWFDigLMpZcX"
                 ]
               },
               "stability": {
@@ -16414,6 +16764,281 @@
       ],
       "requestSchema": null,
       "examplePayload": {},
+      "pricingRows": []
+    },
+    {
+      "id": "chat:gpt-5-5-response",
+      "category": "chat",
+      "title": "GPT 5.5 (response)",
+      "docUrl": "https://docs.kie.ai/market/chat/gpt-5-5.md",
+      "provider": "GPT 5.5 (response)",
+      "endpoint": "/codex/v1/responses",
+      "method": "POST",
+      "modelKeys": [
+        "codex"
+      ],
+      "requestSchema": null,
+      "examplePayload": {},
+      "pricingRows": []
+    },
+    {
+      "id": "chat:claude-opus-4-7",
+      "category": "chat",
+      "title": "Claude Opus 4.7",
+      "docUrl": "https://docs.kie.ai/market/claude/claude-opus-4-7.md",
+      "provider": "Claude Opus 4.7",
+      "endpoint": "/claude/v1/messages",
+      "method": "POST",
+      "modelKeys": [
+        "claude-opus-4-7"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model name. It must match the current document.",
+            "enum": [
+              "claude-opus-4-7"
+            ],
+            "x-apidog-enum": [
+              {
+                "value": "claude-opus-4-7",
+                "name": "",
+                "description": ""
+              }
+            ],
+            "examples": [
+              "claude-opus-4-7"
+            ]
+          },
+          "messages": {
+            "type": "array",
+            "description": "Conversation messages in chronological order.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "user",
+                    "assistant"
+                  ],
+                  "description": "Message role.",
+                  "examples": [
+                    "user"
+                  ]
+                },
+                "content": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "description": "Plain text content."
+                    },
+                    {
+                      "type": "array",
+                      "description": "Structured content blocks.",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "x-apidog-orders": []
+                      }
+                    }
+                  ],
+                  "description": "Message content.",
+                  "examples": [
+                    "What is the weather like in Boston today?"
+                  ]
+                }
+              },
+              "required": [
+                "role",
+                "content"
+              ],
+              "x-apidog-orders": [
+                "role",
+                "content"
+              ]
+            },
+            "minItems": 1
+          },
+          "tools": {
+            "type": "array",
+            "description": "Optional callable tools. Each tool includes a name, description, and input_schema.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Function name.",
+                  "examples": [
+                    "get_current_weather"
+                  ]
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Human-readable function description.",
+                  "examples": [
+                    "Get the current weather in a given location"
+                  ]
+                },
+                "input_schema": {
+                  "type": "object",
+                  "description": "JSON Schema for function parameters.",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "Schema type.",
+                      "examples": [
+                        "object"
+                      ]
+                    },
+                    "properties": {
+                      "type": "object",
+                      "description": "Function parameter definitions.",
+                      "additionalProperties": true,
+                      "x-apidog-orders": [],
+                      "properties": {}
+                    },
+                    "required": {
+                      "type": "array",
+                      "description": "Required parameter names.",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "x-apidog-orders": [
+                    "type",
+                    "properties",
+                    "required"
+                  ],
+                  "examples": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "location": {
+                          "type": "string",
+                          "description": "The city and state, e.g. Boston, MA"
+                        }
+                      },
+                      "required": [
+                        "location"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "description",
+                "input_schema"
+              ],
+              "x-apidog-orders": [
+                "name",
+                "description",
+                "input_schema"
+              ]
+            }
+          },
+          "thinkingFlag": {
+            "type": "boolean",
+            "description": "Project-specific thinking flag used by the current Claude adapter.",
+            "examples": [
+              true
+            ]
+          },
+          "stream": {
+            "type": "boolean",
+            "default": true,
+            "description": "If set to true, the response is returned as an SSE stream.",
+            "examples": [
+              false
+            ]
+          },
+          "max_tokens": {
+            "type": "number",
+            "default": 4096,
+            "examples": [
+              4096
+            ],
+            "description": "Optional Claude output token limit. Leave empty to use the default of 4096."
+          }
+        },
+        "required": [
+          "model",
+          "messages"
+        ],
+        "x-apidog-orders": [
+          "model",
+          "messages",
+          "tools",
+          "thinkingFlag",
+          "stream",
+          "max_tokens"
+        ],
+        "examples": [
+          {
+            "model": "claude-opus-4-6-v1messages",
+            "messages": [
+              {
+                "role": "user",
+                "content": "What is the weather like in Boston today?"
+              }
+            ],
+            "tools": [
+              {
+                "name": "get_current_weather",
+                "description": "Get the current weather in a given location",
+                "input_schema": {
+                  "type": "object",
+                  "properties": {
+                    "location": {
+                      "type": "string",
+                      "description": "The city and state, e.g. Boston, MA"
+                    }
+                  },
+                  "required": [
+                    "location"
+                  ]
+                }
+              }
+            ],
+            "thinkingFlag": true,
+            "stream": false
+          }
+        ]
+      },
+      "examplePayload": {
+        "model": "claude-opus-4-7",
+        "messages": [
+          {
+            "role": "user",
+            "content": "What is the weather like in Boston today?"
+          }
+        ],
+        "tools": [
+          {
+            "name": "get_current_weather",
+            "description": "Get the current weather in a given location",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "type": "string",
+                  "description": "The city and state, e.g. Boston, MA"
+                }
+              },
+              "required": [
+                "location"
+              ]
+            }
+          }
+        ],
+        "thinkingFlag": true,
+        "stream": false,
+        "max_tokens": 4096
+      },
       "pricingRows": []
     },
     {
@@ -17776,6 +18401,21 @@
       "pricingRows": []
     },
     {
+      "id": "chat:gpt-codex",
+      "category": "chat",
+      "title": "GPT Codex",
+      "docUrl": "https://docs.kie.ai/market/codex/gpt-codex.md",
+      "provider": "GPT Codex",
+      "endpoint": "/api/v1/responses",
+      "method": "POST",
+      "modelKeys": [
+        "api"
+      ],
+      "requestSchema": null,
+      "examplePayload": {},
+      "pricingRows": []
+    },
+    {
       "id": "chat:gemini-2-5-pro-openai",
       "category": "chat",
       "title": "Gemini  2.5 Pro (openai)",
@@ -18188,322 +18828,6 @@
             "thinkingLevel": "high"
           }
         }
-      },
-      "pricingRows": []
-    },
-    {
-      "id": "chat:gpt-codex",
-      "category": "chat",
-      "title": "GPT Codex",
-      "docUrl": "https://docs.kie.ai/market/codex/gpt-codex.md",
-      "provider": "GPT Codex",
-      "endpoint": "/api/v1/responses",
-      "method": "POST",
-      "modelKeys": [
-        "api"
-      ],
-      "requestSchema": null,
-      "examplePayload": {},
-      "pricingRows": []
-    },
-    {
-      "id": "video:generate-veo3-1-video",
-      "category": "video",
-      "title": "Generate Veo3.1 Video",
-      "docUrl": "https://docs.kie.ai/veo3-api/generate-veo-3-video.md",
-      "provider": "Generate Veo3.1 Video",
-      "endpoint": "/api/v1/veo/generate",
-      "method": "POST",
-      "modelKeys": [
-        "veo3",
-        "veo3_fast",
-        "veo3_lite"
-      ],
-      "requestSchema": {
-        "type": "object",
-        "properties": {
-          "prompt": {
-            "type": "string",
-            "description": "Text prompt describing the desired video content. Required for all generation modes.\n\n- Should be detailed and specific in describing video content\n- Can include actions, scenes, style and other information\n- For image-to-video, describe how you want the image to come alive",
-            "examples": [
-              "A dog playing in a park"
-            ]
-          },
-          "imageUrls": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Image URL list (used in image-to-video mode). Supports 1 or 2 images:\n\n- **1 image**: The generated video will unfold around this image, with the image content presented dynamically\n- **2 images**: The first image serves as the video's first frame, and the second image serves as the video's last frame, with the video transitioning between them\n- Must be valid image URLs\n- Images must be accessible to the API server.",
-            "examples": [
-              [
-                "http://example.com/image1.jpg",
-                "http://example.com/image2.jpg"
-              ]
-            ]
-          },
-          "model": {
-            "type": "string",
-            "description": "Select the model type to use.\n\n- veo3: Veo 3.1 Quality, supports both text-to-video and image-to-video generation\n- veo3_fast: Veo3.1 Fast generation model, supports both text-to-video and image-to-video generation",
-            "enum": [
-              "veo3",
-              "veo3_fast",
-              "veo3_lite"
-            ],
-            "default": "veo3_fast",
-            "examples": [
-              "veo3_fast"
-            ],
-            "x-apidog-enum": [
-              {
-                "value": "veo3",
-                "name": "",
-                "description": ""
-              },
-              {
-                "value": "veo3_fast",
-                "name": "",
-                "description": ""
-              },
-              {
-                "value": "veo3_lite",
-                "name": "",
-                "description": ""
-              }
-            ]
-          },
-          "generationType": {
-            "type": "string",
-            "description": "Video generation mode (optional). Specifies different video generation approaches:\n\n- **TEXT_2_VIDEO**: Text-to-video - Generate videos using only text prompts\n- **FIRST_AND_LAST_FRAMES_2_VIDEO**: First and last frames to video - Flexible image-to-video generation mode\n  - 1 image: Generate video based on the provided image\n  - 2 images: First image as first frame, second image as last frame, generating transition video\n- **REFERENCE_2_VIDEO**: Reference-to-video - Generate videos based on reference images, requires 1-3 images in imageUrls (minimum 1, maximum 3)\n\n**Important Notes**:\n- REFERENCE_2_VIDEO mode currently only supports veo3_fast model\n- If not specified, the system will automatically determine the generation mode based on whether imageUrls are provided",
-            "enum": [
-              "TEXT_2_VIDEO",
-              "FIRST_AND_LAST_FRAMES_2_VIDEO",
-              "REFERENCE_2_VIDEO"
-            ],
-            "examples": [
-              "TEXT_2_VIDEO"
-            ]
-          },
-          "aspect_ratio": {
-            "type": "string",
-            "description": "Video aspect ratio. Specifies the dimension ratio of the generated video. Available options:\n\n- 16:9: Landscape video format. \n- 9:16: Portrait video format, suitable for mobile short videos\n- Auto: In auto mode, the video will be automatically center-cropped based on whether your uploaded image is closer to 16:9 or 9:16.\n\nDefault value is 16:9.",
-            "enum": [
-              "16:9",
-              "9:16",
-              "Auto"
-            ],
-            "default": "16:9",
-            "examples": [
-              "16:9"
-            ]
-          },
-          "callBackUrl": {
-            "type": "string",
-            "description": "Completion callback URL for receiving video generation status updates.\n\n- Optional but recommended for production use\n- System will POST task completion status to this URL when the video generation is completed\n- Callback will include task results, video URLs, and status information\n- Your callback endpoint should accept POST requests with JSON payload\n- For detailed callback format and implementation guide, see [Callback Documentation](https://docs.kie.ai/veo3-api/generate-veo-3-video-callbacks)\n- Alternatively, use the Get Video Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
-            "examples": [
-              "http://your-callback-url.com/complete"
-            ]
-          },
-          "enableFallback": {
-            "type": "boolean",
-            "description": "Deprecated Enable fallback functionality. When set to true, if the official Veo3.1 video generation service is unavailable or encounters exceptions, the system will automatically switch to a backup model for video generation to ensure task continuity and reliability. Default value is false.\n\n- When fallback is enabled, backup model will be used for the following errors:\n  - public error minor upload\n  - Your prompt was flagged by Website as violating content policies\n  - public error prominent people upload\n- Fallback mode requires 16:9 aspect ratio and uses 1080p resolution by default\n- **Note**: Videos generated through fallback mode cannot be accessed via the Get 1080P Video endpoint\n- **Credit Consumption**: Successful fallback has different credit consumption, please see https://kie.ai/pricing for pricing details\n\n**Note: This parameter is deprecated. Please remove this parameter from your requests. The system has automatically optimized the content review mechanism without requiring manual fallback configuration.**",
-            "default": false,
-            "deprecated": true,
-            "examples": [
-              false
-            ]
-          },
-          "enableTranslation": {
-            "type": "boolean",
-            "description": "Enable prompt translation to English. When set to true, the system will automatically translate prompts to English before video generation for better generation results. Default value is true.\n\n- true: Enable translation, prompts will be automatically translated to English\n- false: Disable translation, use original prompts directly for generation",
-            "default": true,
-            "examples": [
-              true
-            ]
-          },
-          "watermark": {
-            "type": "string",
-            "description": "Watermark text.\n\n- Optional parameter\n- If provided, a watermark will be added to the generated video",
-            "examples": [
-              "MyBrand"
-            ]
-          },
-          "resolution": {
-            "type": "string",
-            "enum": [
-              "720p",
-              "1080p",
-              "4k"
-            ],
-            "x-apidog-enum": [
-              {
-                "value": "720p",
-                "name": "",
-                "description": ""
-              },
-              {
-                "value": "1080p",
-                "name": "",
-                "description": ""
-              },
-              {
-                "value": "4k",
-                "name": "",
-                "description": ""
-              }
-            ],
-            "default": "720p",
-            "description": "Controls the pixel dimensions of the generated image. Higher resolution results in greater clarity and detail, while lower resolution allows for faster generation."
-          }
-        },
-        "required": [
-          "prompt"
-        ],
-        "x-apidog-orders": [
-          "prompt",
-          "imageUrls",
-          "model",
-          "generationType",
-          "aspect_ratio",
-          "callBackUrl",
-          "enableFallback",
-          "enableTranslation",
-          "watermark",
-          "resolution"
-        ],
-        "examples": [
-          {
-            "prompt": "A dog playing in a park",
-            "imageUrls": [
-              "http://example.com/image1.jpg",
-              "http://example.com/image2.jpg"
-            ],
-            "model": "veo3_fast",
-            "watermark": "MyBrand",
-            "callBackUrl": "http://your-callback-url.com/complete",
-            "aspect_ratio": "16:9",
-            "seeds": 12345,
-            "enableFallback": false,
-            "enableTranslation": true,
-            "generationType": "REFERENCE_2_VIDEO"
-          }
-        ],
-        "x-apidog-ignore-properties": []
-      },
-      "examplePayload": {
-        "prompt": "A dog playing in a park",
-        "imageUrls": [
-          "http://example.com/image1.jpg",
-          "http://example.com/image2.jpg"
-        ],
-        "model": "veo3_fast",
-        "watermark": "MyBrand",
-        "callBackUrl": "http://your-callback-url.com/complete",
-        "aspect_ratio": "16:9",
-        "enableFallback": false,
-        "enableTranslation": true,
-        "generationType": "REFERENCE_2_VIDEO"
-      },
-      "pricingRows": []
-    },
-    {
-      "id": "video:extend-veo3-1-video",
-      "category": "video",
-      "title": "Extend Veo3.1 Video",
-      "docUrl": "https://docs.kie.ai/veo3-api/extend-video.md",
-      "provider": "Extend Veo3.1 Video",
-      "endpoint": "/api/v1/veo/extend",
-      "method": "POST",
-      "modelKeys": [
-        "fast",
-        "quality",
-        "lite"
-      ],
-      "requestSchema": {
-        "type": "object",
-        "properties": {
-          "taskId": {
-            "type": "string",
-            "description": "Task ID of the original video generation. Must be a valid taskId returned from the video generation interface. Note: Videos generated after 1080P generation cannot be extended.",
-            "examples": [
-              "veo_task_abcdef123456"
-            ]
-          },
-          "prompt": {
-            "type": "string",
-            "description": "Text prompt describing the extended video content. Should detail how you want the video to be extended, including actions, scene changes, style, etc.",
-            "examples": [
-              "The dog continues running through the park, jumping over obstacles and playing with other dogs"
-            ]
-          },
-          "seeds": {
-            "type": "integer",
-            "description": "Random seed parameter for controlling the randomness of generated content. Range: 10000-99999. Same seeds will generate similar video content, different seeds will generate different video content. If not specified, the system will automatically assign random seeds.",
-            "minimum": 10000,
-            "maximum": 99999,
-            "examples": [
-              12345
-            ]
-          },
-          "model": {
-            "type": "string",
-            "description": "Model type for video extension (optional). Defaults to `fast` if not specified.\n\n- **fast**: Fast generation mode\n- **quality**: High quality generation mode\n- **lite**: Most cost-effective generation mode",
-            "enum": [
-              "fast",
-              "quality",
-              "lite"
-            ],
-            "default": "fast",
-            "examples": [
-              "fast"
-            ]
-          },
-          "watermark": {
-            "type": "string",
-            "description": "Watermark text (optional). If provided, a watermark will be added to the generated video.",
-            "examples": [
-              "MyBrand"
-            ]
-          },
-          "callBackUrl": {
-            "type": "string",
-            "description": "Callback URL when the task is completed (optional). Strongly recommended for production environments.\n\n- The system will send a POST request to this URL when video extension is completed, containing task status and results\n- The callback contains generated video URLs, task information, etc.\n- Your callback endpoint should accept POST requests with JSON payloads containing video results\n- For detailed callback format and implementation guide, see [Video Generation Callbacks](https://docs.kie.ai/veo3-api/generate-veo-3-video-callbacks)\n- Alternatively, you can use [the get video details interface](https://docs.kie.ai/veo3-api/get-veo-3-video-details) to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
-            "examples": [
-              "https://your-callback-url.com/veo-extend-callback"
-            ]
-          }
-        },
-        "required": [
-          "taskId",
-          "prompt"
-        ],
-        "x-apidog-orders": [
-          "taskId",
-          "prompt",
-          "seeds",
-          "model",
-          "watermark",
-          "callBackUrl"
-        ],
-        "examples": [
-          {
-            "taskId": "veo_task_abcdef123456",
-            "prompt": "The dog continues running through the park, jumping over obstacles and playing with other dogs",
-            "seeds": 12345,
-            "model": "fast",
-            "watermark": "MyBrand",
-            "callBackUrl": "https://your-callback-url.com/veo-extend-callback"
-          }
-        ],
-        "x-apidog-ignore-properties": []
-      },
-      "examplePayload": {
-        "taskId": "veo_task_abcdef123456",
-        "prompt": "The dog continues running through the park, jumping over obstacles and playing with other dogs",
-        "seeds": 12345,
-        "watermark": "MyBrand",
-        "callBackUrl": "https://your-callback-url.com/veo-extend-callback",
-        "model": "fast"
       },
       "pricingRows": []
     },
@@ -19782,8 +20106,7 @@
       "requestSchema": {
         "type": "object",
         "required": [
-          "taskId",
-          "callBackUrl"
+          "taskId"
         ],
         "properties": {
           "taskId": {
@@ -20179,8 +20502,7 @@
       "requestSchema": {
         "type": "object",
         "required": [
-          "prompt",
-          "callBackUrl"
+          "prompt"
         ],
         "properties": {
           "prompt": {
@@ -20717,153 +21039,303 @@
       "pricingRows": []
     },
     {
-      "id": "image:qwen2",
-      "category": "image",
-      "title": "Qwen2 文生图",
-      "docUrl": "https://docs.kie.ai/30861823e0.md",
-      "provider": "Qwen2 文生图",
-      "endpoint": "/api/v1/jobs/createTask",
+      "id": "video:generate-veo3-1-video",
+      "category": "video",
+      "title": "Generate Veo3.1 Video",
+      "docUrl": "https://docs.kie.ai/veo3-api/generate-veo-3-video.md",
+      "provider": "Generate Veo3.1 Video",
+      "endpoint": "/api/v1/veo/generate",
       "method": "POST",
       "modelKeys": [
-        "qwen2/image-edit"
+        "veo3",
+        "veo3_fast",
+        "veo3_lite"
       ],
       "requestSchema": {
         "type": "object",
-        "required": [
-          "model"
-        ],
         "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "Text prompt describing the desired video content. Required for all generation modes.\n\n- Should be detailed and specific in describing video content\n- Can include actions, scenes, style and other information\n- For image-to-video, describe how you want the image to come alive",
+            "examples": [
+              "A dog playing in a park"
+            ]
+          },
+          "imageUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Image URL list (used in image-to-video mode). Supports 1 or 2 images:\n\n- **1 image**: The generated video will unfold around this image, with the image content presented dynamically\n- **2 images**: The first image serves as the video's first frame, and the second image serves as the video's last frame, with the video transitioning between them\n- Must be valid image URLs\n- Images must be accessible to the API server.",
+            "examples": [
+              [
+                "http://example.com/image1.jpg",
+                "http://example.com/image2.jpg"
+              ]
+            ]
+          },
           "model": {
             "type": "string",
-            "description": "用于生成任务的模型名称。必填字段。\n\n- 该端点必须使用 `qwen2/image-edit` 模型",
+            "description": "Select the model type to use.\n\n- veo3: Veo 3.1 Quality, supports both text-to-video and image-to-video generation\n- veo3_fast: Veo3.1 Fast generation model, supports both text-to-video and image-to-video generation",
             "enum": [
-              "qwen2/image-edit"
+              "veo3",
+              "veo3_fast",
+              "veo3_lite"
             ],
-            "default": "qwen2/image-edit",
+            "default": "veo3_fast",
+            "examples": [
+              "veo3_fast"
+            ],
             "x-apidog-enum": [
               {
-                "value": "qwen2/image-edit",
+                "value": "veo3",
+                "name": "",
+                "description": ""
+              },
+              {
+                "value": "veo3_fast",
+                "name": "",
+                "description": ""
+              },
+              {
+                "value": "veo3_lite",
                 "name": "",
                 "description": ""
               }
+            ]
+          },
+          "generationType": {
+            "type": "string",
+            "description": "Video generation mode (optional). Specifies different video generation approaches:\n\n- **TEXT_2_VIDEO**: Text-to-video - Generate videos using only text prompts\n- **FIRST_AND_LAST_FRAMES_2_VIDEO**: First and last frames to video - Flexible image-to-video generation mode\n  - 1 image: Generate video based on the provided image\n  - 2 images: First image as first frame, second image as last frame, generating transition video\n- **REFERENCE_2_VIDEO**: Reference-to-video - Generate videos based on reference images, requires 1-3 images in imageUrls (minimum 1, maximum 3)\n\n**Important Notes**:\n- REFERENCE_2_VIDEO mode currently only supports veo3_fast model\n- If not specified, the system will automatically determine the generation mode based on whether imageUrls are provided",
+            "enum": [
+              "TEXT_2_VIDEO",
+              "FIRST_AND_LAST_FRAMES_2_VIDEO",
+              "REFERENCE_2_VIDEO"
             ],
             "examples": [
-              "qwen2/image-edit"
+              "TEXT_2_VIDEO"
+            ]
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "Video aspect ratio. Specifies the dimension ratio of the generated video. Available options:\n\n- 16:9: Landscape video format. \n- 9:16: Portrait video format, suitable for mobile short videos\n- Auto: In auto mode, the video will be automatically center-cropped based on whether your uploaded image is closer to 16:9 or 9:16.\n\nDefault value is 16:9.",
+            "enum": [
+              "16:9",
+              "9:16",
+              "Auto"
+            ],
+            "default": "16:9",
+            "examples": [
+              "16:9"
             ]
           },
           "callBackUrl": {
             "type": "string",
-            "format": "uri",
-            "description": "接收生成任务完成通知的回调 URL。可选配置，建议在生产环境中使用。\n\n- 任务生成完成后，系统会向该 URL POST 任务状态与结果\n- 回调内容包含生成的资源 URL 与任务相关信息\n- 您的回调端点需要支持接收带 JSON 负载的 POST 请求\n- 也可以选择调用任务详情端点，主动轮询任务状态\n- 为确保回调安全性，请参阅 [Webhook 校验指南](/cn/common-api/webhook-verification) 了解签名验证实现方法",
+            "description": "Completion callback URL for receiving video generation status updates.\n\n- Optional but recommended for production use\n- System will POST task completion status to this URL when the video generation is completed\n- Callback will include task results, video URLs, and status information\n- Your callback endpoint should accept POST requests with JSON payload\n- For detailed callback format and implementation guide, see [Callback Documentation](https://docs.kie.ai/veo3-api/generate-veo-3-video-callbacks)\n- Alternatively, use the Get Video Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
             "examples": [
-              "https://your-domain.com/api/callback"
+              "http://your-callback-url.com/complete"
             ]
           },
-          "input": {
-            "type": "object",
-            "description": "生成任务的输入参数",
-            "properties": {
-              "prompt": {
-                "type": "string",
-                "description": "用于图像生成的文本提示词（最大长度：800 字符）",
-                "maxLength": 800,
-                "examples": [
-                  ""
-                ]
+          "enableFallback": {
+            "type": "boolean",
+            "description": "Deprecated Enable fallback functionality. When set to true, if the official Veo3.1 video generation service is unavailable or encounters exceptions, the system will automatically switch to a backup model for video generation to ensure task continuity and reliability. Default value is false.\n\n- When fallback is enabled, backup model will be used for the following errors:\n  - public error minor upload\n  - Your prompt was flagged by Website as violating content policies\n  - public error prominent people upload\n- Fallback mode requires 16:9 aspect ratio and uses 1080p resolution by default\n- **Note**: Videos generated through fallback mode cannot be accessed via the Get 1080P Video endpoint\n- **Credit Consumption**: Successful fallback has different credit consumption, please see https://kie.ai/pricing for pricing details\n\n**Note: This parameter is deprecated. Please remove this parameter from your requests. The system has automatically optimized the content review mechanism without requiring manual fallback configuration.**",
+            "default": false,
+            "deprecated": true,
+            "examples": [
+              false
+            ]
+          },
+          "enableTranslation": {
+            "type": "boolean",
+            "description": "Enable prompt translation to English. When set to true, the system will automatically translate prompts to English before video generation for better generation results. Default value is true.\n\n- true: Enable translation, prompts will be automatically translated to English\n- false: Disable translation, use original prompts directly for generation",
+            "default": true,
+            "examples": [
+              true
+            ]
+          },
+          "watermark": {
+            "type": "string",
+            "description": "Watermark text.\n\n- Optional parameter\n- If provided, a watermark will be added to the generated video",
+            "examples": [
+              "MyBrand"
+            ]
+          },
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "720p",
+              "1080p",
+              "4k"
+            ],
+            "x-apidog-enum": [
+              {
+                "value": "720p",
+                "name": "",
+                "description": ""
               },
-              "image_size": {
-                "type": "string",
-                "description": "生成图像的尺寸规格。默认值：16:9",
-                "enum": [
-                  "1:1",
-                  "3:4",
-                  "4:3",
-                  "9:16",
-                  "16:9"
-                ],
-                "default": "16:9",
-                "x-apidog-enum": [
-                  {
-                    "value": "1:1",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "3:4",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "4:3",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "9:16",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "16:9",
-                    "name": "",
-                    "description": ""
-                  }
-                ],
-                "examples": [
-                  "16:9"
-                ]
+              {
+                "value": "1080p",
+                "name": "",
+                "description": ""
               },
-              "seed": {
-                "description": "随机种子值。相同的种子值、提示词和模型版本，每次生成的图像结果完全一致。",
-                "type": "integer"
-              },
-              "output_format": {
-                "description": "生成图像的输出格式。默认值：\"png\"",
-                "type": "string",
-                "enum": [
-                  "jpeg",
-                  "png"
-                ],
-                "default": "png",
-                "examples": [
-                  "png"
-                ]
-              },
-              "nsfw_checker": {
-                "type": "boolean",
-                "default": false,
-                "description": "默认值为 false。您可以根据需要将其设置为 false。如果设置为 false，我们的内容过滤功能将被禁用，所有结果将由模型直接返回。"
+              {
+                "value": "4k",
+                "name": "",
+                "description": ""
               }
-            },
-            "required": [
-              "prompt"
             ],
-            "x-apidog-orders": [
-              "prompt",
-              "image_size",
-              "seed",
-              "output_format",
-              "nsfw_checker"
-            ],
-            "x-apidog-ignore-properties": []
+            "default": "720p",
+            "description": "Controls the pixel dimensions of the generated image. Higher resolution results in greater clarity and detail, while lower resolution allows for faster generation."
           }
         },
+        "required": [
+          "prompt"
+        ],
         "x-apidog-orders": [
+          "prompt",
+          "imageUrls",
           "model",
+          "generationType",
+          "aspect_ratio",
           "callBackUrl",
-          "input"
+          "enableFallback",
+          "enableTranslation",
+          "watermark",
+          "resolution"
+        ],
+        "examples": [
+          {
+            "prompt": "A dog playing in a park",
+            "imageUrls": [
+              "http://example.com/image1.jpg",
+              "http://example.com/image2.jpg"
+            ],
+            "model": "veo3_fast",
+            "watermark": "MyBrand",
+            "callBackUrl": "http://your-callback-url.com/complete",
+            "aspect_ratio": "16:9",
+            "seeds": 12345,
+            "enableFallback": false,
+            "enableTranslation": true,
+            "generationType": "REFERENCE_2_VIDEO"
+          }
         ],
         "x-apidog-ignore-properties": []
       },
       "examplePayload": {
-        "model": "qwen2/text-to-image",
-        "callBackUrl": "https://your-domain.com/api/callback",
-        "input": {
-          "prompt": "",
-          "image_size": "16:9",
-          "seed": 0,
-          "output_format": "png"
-        }
+        "prompt": "A dog playing in a park",
+        "imageUrls": [
+          "http://example.com/image1.jpg",
+          "http://example.com/image2.jpg"
+        ],
+        "model": "veo3_fast",
+        "watermark": "MyBrand",
+        "callBackUrl": "http://your-callback-url.com/complete",
+        "aspect_ratio": "16:9",
+        "enableFallback": false,
+        "enableTranslation": true,
+        "generationType": "REFERENCE_2_VIDEO"
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:extend-veo3-1-video",
+      "category": "video",
+      "title": "Extend Veo3.1 Video",
+      "docUrl": "https://docs.kie.ai/veo3-api/extend-video.md",
+      "provider": "Extend Veo3.1 Video",
+      "endpoint": "/api/v1/veo/extend",
+      "method": "POST",
+      "modelKeys": [
+        "fast",
+        "quality",
+        "lite"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string",
+            "description": "Task ID of the original video generation. Must be a valid taskId returned from the video generation interface. Note: Videos generated after 1080P generation cannot be extended.",
+            "examples": [
+              "veo_task_abcdef123456"
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Text prompt describing the extended video content. Should detail how you want the video to be extended, including actions, scene changes, style, etc.",
+            "examples": [
+              "The dog continues running through the park, jumping over obstacles and playing with other dogs"
+            ]
+          },
+          "seeds": {
+            "type": "integer",
+            "description": "Random seed parameter for controlling the randomness of generated content. Range: 10000-99999. Same seeds will generate similar video content, different seeds will generate different video content. If not specified, the system will automatically assign random seeds.",
+            "minimum": 10000,
+            "maximum": 99999,
+            "examples": [
+              12345
+            ]
+          },
+          "model": {
+            "type": "string",
+            "description": "Model type for video extension (optional). Defaults to `fast` if not specified.\n\n- **fast**: Fast generation mode\n- **quality**: High quality generation mode\n- **lite**: Most cost-effective generation mode",
+            "enum": [
+              "fast",
+              "quality",
+              "lite"
+            ],
+            "default": "fast",
+            "examples": [
+              "fast"
+            ]
+          },
+          "watermark": {
+            "type": "string",
+            "description": "Watermark text (optional). If provided, a watermark will be added to the generated video.",
+            "examples": [
+              "MyBrand"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "description": "Callback URL when the task is completed (optional). Strongly recommended for production environments.\n\n- The system will send a POST request to this URL when video extension is completed, containing task status and results\n- The callback contains generated video URLs, task information, etc.\n- Your callback endpoint should accept POST requests with JSON payloads containing video results\n- For detailed callback format and implementation guide, see [Video Generation Callbacks](https://docs.kie.ai/veo3-api/generate-veo-3-video-callbacks)\n- Alternatively, you can use [the get video details interface](https://docs.kie.ai/veo3-api/get-veo-3-video-details) to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
+            "examples": [
+              "https://your-callback-url.com/veo-extend-callback"
+            ]
+          }
+        },
+        "required": [
+          "taskId",
+          "prompt"
+        ],
+        "x-apidog-orders": [
+          "taskId",
+          "prompt",
+          "seeds",
+          "model",
+          "watermark",
+          "callBackUrl"
+        ],
+        "examples": [
+          {
+            "taskId": "veo_task_abcdef123456",
+            "prompt": "The dog continues running through the park, jumping over obstacles and playing with other dogs",
+            "seeds": 12345,
+            "model": "fast",
+            "watermark": "MyBrand",
+            "callBackUrl": "https://your-callback-url.com/veo-extend-callback"
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "taskId": "veo_task_abcdef123456",
+        "prompt": "The dog continues running through the park, jumping over obstacles and playing with other dogs",
+        "seeds": 12345,
+        "watermark": "MyBrand",
+        "callBackUrl": "https://your-callback-url.com/veo-extend-callback",
+        "model": "fast"
       },
       "pricingRows": []
     }

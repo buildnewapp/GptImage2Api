@@ -622,7 +622,7 @@ test("merges multiple upstream catalog files from the same directory", async () 
         generatedAt: "2026-03-08T00:00:00.000Z",
         items: [
           createDetail({
-            id: "video:apimart-seedance-2-0",
+            id: "video:fal-seedance-2-0",
             vendor: "apimart",
             title: "Seedance 2.0",
             docUrl: "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
@@ -643,7 +643,7 @@ test("merges multiple upstream catalog files from the same directory", async () 
 
     assert.deepEqual(
       loaded.items.map((item) => item.id),
-      ["video:sora2-text-to-video", "video:apimart-seedance-2-0"],
+      ["video:sora2-text-to-video", "video:fal-seedance-2-0"],
     );
     assert.equal(loaded.items[1]?.vendor, "apimart");
   } finally {
@@ -655,14 +655,14 @@ test("loads apimart sora 2 models from the real upstream catalog", async () => {
   const { upstreamCatalogPath } = getAiStudioCatalogPaths();
   const loaded = await loadAiStudioMergedUpstreamCatalogFiles(upstreamCatalogPath);
 
-  const sora2 = loaded.items.find((item) => item.id === "video:apimart-sora-2");
-  const sora2Pro = loaded.items.find((item) => item.id === "video:apimart-sora-2-pro");
-  const sora2Vip = loaded.items.find((item) => item.id === "video:apimart-sora-2-vip");
+  const sora2 = loaded.items.find((item) => item.id === "video:fal-sora-2");
+  const sora2Pro = loaded.items.find((item) => item.id === "video:fal-sora-2-pro");
+  const sora2Vip = loaded.items.find((item) => item.id === "video:fal-sora-2-vip");
   const sora2Preview = loaded.items.find(
-    (item) => item.id === "video:apimart-sora-2-preview",
+    (item) => item.id === "video:fal-sora-2-preview",
   );
   const sora2ProPreview = loaded.items.find(
-    (item) => item.id === "video:apimart-sora-2-pro-preview",
+    (item) => item.id === "video:fal-sora-2-pro-preview",
   );
 
   assert.ok(sora2);
@@ -783,7 +783,7 @@ test("resolves the public Seedance 2.0 alias from the bundled runtime catalog", 
   const entry = await getCachedAiStudioCatalogEntry("video:seedance-2-0");
 
   assert.ok(entry);
-  assert.equal(entry.id, "video:apimart-seedance-2-0");
+  assert.equal(entry.id, "video:fal-seedance-2-0");
   assert.equal(entry.alias, "seedance-2-0");
 });
 
@@ -812,8 +812,8 @@ test("exposes pricing rows only for models backed by pricing overrides", async (
     "video:extend-veo3-1-video",
     "video:get-veo3-1-1080p-video",
     "video:get-veo3-1-4k-video",
-    "video:apimart-seedance-2-0",
-    "video:apimart-seedance-2-0-fast",
+    "video:fal-seedance-2-0",
+    "video:fal-seedance-2-0-fast",
     "video:wan-2-7-text-to-video",
     "video:hailuo-standard-text-to-video",
     "video:generate-ai-video",
@@ -839,8 +839,8 @@ test("exposes pricing rows only for models backed by pricing overrides", async (
 });
 
 test("keeps exposed override pricing rows isolated to the correct model family", async () => {
-  const apimart = await getCachedAiStudioCatalogEntry("video:apimart-seedance-2-0");
-  const apimartFast = await getCachedAiStudioCatalogEntry("video:apimart-seedance-2-0-fast");
+  const apimart = await getCachedAiStudioCatalogEntry("video:fal-seedance-2-0");
+  const apimartFast = await getCachedAiStudioCatalogEntry("video:fal-seedance-2-0-fast");
   const veoLite = await getCachedAiStudioCatalogEntry("video:veo-3.1-lite");
   const veoFast = await getCachedAiStudioCatalogEntry("video:veo-3.1-fast");
   const veoQuality = await getCachedAiStudioCatalogEntry("video:veo-3.1-quality");
@@ -1072,7 +1072,7 @@ test("hydrates runtime pricing rows only from pricing overrides", () => {
       generatedAt: "2026-03-10T00:00:00.000Z",
       items: [
         createDetail({
-          id: "video:apimart-seedance-2-0",
+          id: "video:fal-seedance-2-0",
           title: "Seedance 2.0",
           docUrl: "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
           provider: "ByteDance",
@@ -1109,7 +1109,7 @@ test("hydrates runtime pricing rows only from pricing overrides", () => {
     },
     pricingOverrides: {
       models: {
-        "video:apimart-seedance-2-0": {
+        "video:fal-seedance-2-0": {
           addRows: [
             {
               modelDescription: "Seedance 2.0, 720p no video input",
