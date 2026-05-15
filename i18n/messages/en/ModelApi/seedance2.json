@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "title": "Seedance 2.0 API",
+    "description": "Test and integrate Seedance 2.0 API for multimodal AI video generation with text, image, video, and audio references."
+  },
+  "title": "Seedance 2.0 API",
+  "badge": "Commercial use",
+  "description": [
+    "Seedance 2.0 is a multimodal AI video model by ByteDance, optimized for fast and realistic video generation. It supports high-quality virtual human video creation with strong multi-shot consistency, enabling more lifelike and cinematic outputs across scenes.",
+    "With efficient generation speed, Seedance 2.0 typically averages around ~5 minutes per generation, while Seedance 2.0 Fast averages around ~4 minutes, making it a reliable choice for scalable content production."
+  ],
+  "monitor": {
+    "label": "24h Status Monitor"
+  },
+  "pricingNote": "USD estimates use $0.005/credit with the best annual plan.",
+  "labels": {
+    "apiDocs": "API docs",
+    "apiDocsDetail": "View detailed API docs",
+    "apiDocsDetailDescription": "Open the full API documentation for endpoints, authentication, task polling, and payload details.",
+    "apiInputDescription": "Keep the payload predictable while still allowing rich multimodal control.",
+    "apiInputKicker": "API Input",
+    "apiInputTitle": "Core request fields",
+    "descriptionColumn": "Description",
+    "fieldColumn": "Field",
+    "lowestCostPrefix": "Lowest cost starts at",
+    "modelType": "Model Type:",
+    "pricingTitle": "Pricing",
+    "requestJson": "Request JSON",
+    "runWithApi": "Run with API",
+    "selectedModel": "Selected model",
+    "selectedModelNote": "The playground, request sample, request fields, and pricing on this page follow the selected model type.",
+    "typeColumn": "Type",
+    "useModelForGeneration": "Use {model} for generation"
+  },
+  "featuresKicker": "Capabilities",
+  "featuresTitle": "What Seedance 2.0 API adds to your video workflow",
+  "featuresDescription": "The page follows the same API-first structure as the reference: test the model, understand the fields, then move into integration.",
+  "capabilities": [
+    {
+      "icon": "layers",
+      "title": "Multimodal references",
+      "description": "Combine prompts with images, videos, and audio so the model can follow subject identity, motion, rhythm, and visual style."
+    },
+    {
+      "icon": "video",
+      "title": "Multi-shot consistency",
+      "description": "Create short cinematic sequences with steadier characters, camera logic, and scene continuity across cuts."
+    },
+    {
+      "icon": "sparkles",
+      "title": "Reference-driven motion",
+      "description": "Use source clips to guide camera movement, action timing, transitions, and high-impact visual pacing."
+    },
+    {
+      "icon": "music",
+      "title": "Audio-aware creation",
+      "description": "Upload audio references or enable generated audio for beat-matched clips, music videos, and synced storytelling."
+    }
+  ],
+  "quickStartKicker": "Quick Start",
+  "quickStartTitle": "From playground test to production request",
+  "quickStartDescription": "A compact integration path for teams that want to validate output quality before wiring the API into an app.",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. Prepare request",
+      "description": "Choose Seedance 2.0 or Seedance 2.0 Fast, then add prompt text and any reference media your workflow needs."
+    },
+    {
+      "icon": "key",
+      "title": "2. Submit generation",
+      "description": "Call the API with your account key, model id, duration, resolution, aspect ratio, and media URLs."
+    },
+    {
+      "icon": "play",
+      "title": "3. Poll and render",
+      "description": "Track the task until it succeeds, then retrieve the generated video URL for your app, campaign, or pipeline."
+    }
+  ],
+  "useCasesKicker": "Use Cases",
+  "useCasesTitle": "What you can create with Seedance 2.0 API",
+  "useCasesDescription": "Use the API when your product needs repeatable AI video output, not just a one-off playground result.",
+  "useCases": [
+    "Social clips for TikTok, Reels, and Shorts",
+    "Product demos and launch ads",
+    "Film, game, and storyboard pre-visualization",
+    "Music videos and beat-synced creative",
+    "Template-based batch video production",
+    "Virtual human and character-driven scenes"
+  ],
+  "communityShowcase": {
+    "kicker": "Community Showcase",
+    "title": "Successful Seedance 2.0 generations from the community",
+    "description": "Browse public Seedance 2.0 outputs that finished successfully, then open any case to inspect the prompt, settings, and result.",
+    "viewAll": "View more",
+    "viewDetails": "View details"
+  },
+  "productionKicker": "Production Notes",
+  "productionTitle": "Built for real API workflows",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "Account-gated execution",
+      "body": "Users sign in, submit jobs, and consume credits through the existing SdanceAI generation flow."
+    },
+    {
+      "icon": "image",
+      "title": "Reference media handling",
+      "body": "The studio supports uploaded reference media, direct URLs, previews, and form/API payload editing."
+    },
+    {
+      "icon": "zap",
+      "title": "Scalable model choice",
+      "body": "Switch between standard and fast Seedance 2.0 modes based on quality, cost, and latency needs."
+    }
+  ],
+  "faqKicker": "FAQ",
+  "faqTitle": "Seedance 2.0 API questions",
+  "faqs": [
+    {
+      "question": "What is Seedance 2.0 API best for?",
+      "answer": "It is best for short, cinematic AI video generation where prompt control and reference media matter, including product videos, social clips, motion replication, and multi-shot storytelling."
+    },
+    {
+      "question": "What is the difference between Seedance 2.0 and Seedance 2.0 Fast?",
+      "answer": "Seedance 2.0 focuses on higher-quality output and stronger creative control. Seedance 2.0 Fast is optimized for faster iteration and scalable batch workflows."
+    },
+    {
+      "question": "Can I use images, video, and audio in one request?",
+      "answer": "Yes. The Seedance 2.0 workflow supports text plus mixed reference inputs, including images, video clips, and audio references."
+    },
+    {
+      "question": "Where can I test it before integrating?",
+      "answer": "Use the playground on this page to test prompts, references, resolution, aspect ratio, duration, and API payload behavior before moving into production."
+    },
+    {
+      "question": "What new features does Seedance 2.0 API introduce?",
+      "answer": "Seedance 2.0 introduces broader multimodal control with text, image, video, and audio references. It is designed for better motion guidance, stronger scene consistency, and more predictable cinematic output."
+    },
+    {
+      "question": "How is Seedance 2.0 API different from typical AI video generators?",
+      "answer": "Many video generators rely mostly on prompt interpretation. Seedance 2.0 is more reference-driven, so it can use source media to guide camera motion, action timing, transitions, subject style, and pacing."
+    },
+    {
+      "question": "How many references can I upload in a Seedance 2.0 API project?",
+      "answer": "The workflow supports up to 9 image references, up to 3 video references, and up to 3 audio references. Reference video and audio inputs should stay within the documented duration limits."
+    },
+    {
+      "question": "Does Seedance 2.0 API support voice guidance and lip-sync generation?",
+      "answer": "The model workflow supports audio-aware generation. You can use audio references for rhythm and pacing, and enable generated audio where supported by the selected version and request settings."
+    },
+    {
+      "question": "What video length and duration options are available?",
+      "answer": "Seedance 2.0 is built for short-form clips, commonly in the 4 to 15 second range. Duration, aspect ratio, and resolution should be selected together to match your target output format."
+    },
+    {
+      "question": "Can I use Seedance 2.0 API for commercial projects?",
+      "answer": "This page is configured for commercial-use workflows. For production use, review your account plan, credit balance, model availability, and any applicable content policy requirements."
+    }
+  ],
+  "cta": {
+    "kicker": "Start building",
+    "title": "Turn Seedance 2.0 into your video workflow",
+    "description": "Open the generator, test a prompt, then use the API docs when you are ready to wire Seedance 2.0 into production.",
+    "primaryLabel": "Open Seedance 2.0",
+    "secondaryLabel": "Review API features",
+    "stats": [
+      {
+        "value": "API-ready",
+        "label": "workflow"
+      },
+      {
+        "value": "4-15s",
+        "label": "clip length"
+      },
+      {
+        "value": "1080p",
+        "label": "public output"
+      }
+    ]
+  }
+}

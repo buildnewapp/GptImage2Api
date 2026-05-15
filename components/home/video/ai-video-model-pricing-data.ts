@@ -88,6 +88,26 @@ function normalizeTypeLabel(value: string, locale: SupportedLocale) {
     return "Text/Image to Video";
   }
 
+  if (normalized === "text-to-image") {
+    if (locale === "zh") {
+      return "文生图";
+    }
+    if (locale === "ja") {
+      return "テキストから画像";
+    }
+    return "Text to Image";
+  }
+
+  if (normalized === "image-to-image") {
+    if (locale === "zh") {
+      return "图生图";
+    }
+    if (locale === "ja") {
+      return "画像から画像";
+    }
+    return "Image to Image";
+  }
+
   if (normalized === "video-to-video") {
     if (locale === "zh") {
       return "视频转视频";
@@ -160,16 +180,32 @@ function parseStaticPricingRow(
     .split(",")
     .map((segment) => segment.trim())
     .filter(Boolean);
-  const type = normalizeTypeLabel(segments[1] ?? "", locale);
-  const spec = segments.slice(2).join(", ") || "-";
-  const isPerSecond = pricingRow.creditUnit.trim().toLowerCase().includes("per second");
+  const inferredImageType = pricingRow.modelDescription
+    .toLowerCase()
+    .match(/(?:text|image)-to-image/)?.[0];
+  const typeSource =
+    segments.length === 2 && inferredImageType
+      ? inferredImageType
+      : (segments[1] ?? "");
+  const type = normalizeTypeLabel(typeSource, locale);
+  const spec =
+    segments.length === 2 && inferredImageType
+      ? segments[1]
+      : segments.slice(2).join(", ") || "-";
+  const isPerSecond = pricingRow.creditUnit
+    .trim()
+    .toLowerCase()
+    .includes("per second");
 
   return {
     billingNote: isPerSecond
       ? getPerSecondPriceNote(locale, pricingRow.creditPrice)
       : getFixedPriceNote(locale),
     creditPrice: isPerSecond
-      ? formatCreditsPerSecond(Number.parseFloat(pricingRow.creditPrice), locale)
+      ? formatCreditsPerSecond(
+          Number.parseFloat(pricingRow.creditPrice),
+          locale,
+        )
       : formatCredits(pricingRow.creditPrice, locale),
     model: modelLabel,
     spec,
@@ -251,34 +287,36 @@ function buildDynamicSeedanceRows(
   ] as const;
 
   const rows: Array<AiVideoModelPricingRow | null> = examples.map((example) => {
-      const pricing = calculateSeedanceVideoPricing({
-        model: version.aliases?.[0] ?? version.modelId,
-        payload: example.payload,
-      });
+    const pricing = calculateSeedanceVideoPricing({
+      model: version.aliases?.[0] ?? version.modelId,
+      payload: example.payload,
+    });
 
-      if (!pricing) {
-        return null;
-      }
+    if (!pricing) {
+      return null;
+    }
 
-      return {
-        billingNote: getDynamicPriceNote({
-          hasVideoInput: pricing.hasVideoInput,
-          locale,
-          rate: pricing.rate,
-        }),
-        creditPrice: formatCreditsPerSecond(pricing.rate, locale),
-        model: version.label,
-        spec: example.spec,
-        type: normalizeTypeLabel(example.type, locale),
-      } satisfies AiVideoModelPricingRow;
-    })
+    return {
+      billingNote: getDynamicPriceNote({
+        hasVideoInput: pricing.hasVideoInput,
+        locale,
+        rate: pricing.rate,
+      }),
+      creditPrice: formatCreditsPerSecond(pricing.rate, locale),
+      model: version.label,
+      spec: example.spec,
+      type: normalizeTypeLabel(example.type, locale),
+    } satisfies AiVideoModelPricingRow;
+  });
 
   return rows.filter((row): row is AiVideoModelPricingRow => row !== null);
 }
 
 export function buildAiVideoModelPricingRows({
+  familyKey,
   locale,
 }: {
+  familyKey?: string;
   locale: string;
 }): AiVideoModelPricingRow[] {
   const resolvedLocale = resolveLocale(locale);
@@ -288,14 +326,12 @@ export function buildAiVideoModelPricingRows({
     if (family.selectable === false) {
       continue;
     }
+    if (familyKey && family.key !== familyKey) {
+      continue;
+    }
 
     for (const version of family.versions) {
       const entry = resolveRuntimeCatalogEntry(version);
-
-      if (version.familyKey === "seedance-2.0") {
-        rows.push(...buildDynamicSeedanceRows(version, resolvedLocale));
-        continue;
-      }
 
       if ((entry?.pricingRows.length ?? 0) > 0) {
         rows.push(
@@ -303,6 +339,11 @@ export function buildAiVideoModelPricingRows({
             parseStaticPricingRow(version.label, pricingRow, resolvedLocale),
           ),
         );
+        continue;
+      }
+
+      if (version.familyKey === "seedance-2.0") {
+        rows.push(...buildDynamicSeedanceRows(version, resolvedLocale));
         continue;
       }
 

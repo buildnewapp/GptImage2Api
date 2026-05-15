@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "title": "GPT Image 2 API",
+    "description": "测试并集成 GPT Image 2 API，支持文生图和基于参考图的图像编辑。"
+  },
+  "title": "GPT Image 2 API",
+  "badge": "图像 API",
+  "description": [
+    "GPT Image 2 API 面向生产级图像生成工作流，适合提示词创作、参考图编辑和可预测的 API payload。你可以用它生成活动视觉、商品图、社媒素材和设计稿，并继续沿用 SdanceAI 的生成流程。",
+    "当前集成提供 Text to Image 和 Image to Image 两种模型类型，支持 1K、2K、4K 价格档位，并覆盖常用的方图、竖图、横图和肖像比例。"
+  ],
+  "monitor": {
+    "label": "24 小时状态监控"
+  },
+  "pricingNote": "美元估算按最佳年付套餐 $0.005/积分 计算。最终计费跟随所选分辨率和模型类型。",
+  "labels": {
+    "apiDocs": "API 文档",
+    "apiDocsDetail": "查看 API 详细文档",
+    "apiDocsDetailDescription": "打开完整 API 文档，查看接口、鉴权、任务轮询和 payload 细节。",
+    "apiInputDescription": "用精简 payload 管理提示词、源图、比例、分辨率、回调和安全设置。",
+    "apiInputKicker": "API 输入",
+    "apiInputTitle": "核心请求字段",
+    "descriptionColumn": "说明",
+    "fieldColumn": "字段",
+    "lowestCostPrefix": "最低成本从",
+    "modelType": "模型类型：",
+    "pricingTitle": "价格",
+    "requestJson": "请求 JSON",
+    "runWithApi": "使用 API 运行",
+    "selectedModel": "当前模型",
+    "selectedModelNote": "本页的 Playground、请求示例、请求字段和价格都会跟随当前选择的模型类型变化。",
+    "typeColumn": "类型",
+    "useModelForGeneration": "使用 {model} 生成"
+  },
+  "featuresKicker": "能力",
+  "featuresTitle": "GPT Image 2 API 为图像工作流带来的能力",
+  "featuresDescription": "页面按 API 优先的结构组织：先测试模型，再理解字段，最后进入集成。",
+  "capabilities": [
+    {
+      "icon": "sparkles",
+      "title": "文生图创作",
+      "description": "把结构化提示词转成海报、广告、缩略图、概念图和商品场景等可用于生产的视觉素材。"
+    },
+    {
+      "icon": "image",
+      "title": "参考图编辑",
+      "description": "使用输入图片保留主体上下文，同时修改风格、背景、构图、光影或商品呈现。"
+    },
+    {
+      "icon": "layers",
+      "title": "分辨率档位",
+      "description": "在 1K、2K、4K 间选择，平衡迭代成本、预览质量和最终素材清晰度。"
+    },
+    {
+      "icon": "code",
+      "title": "API 就绪 payload",
+      "description": "在一个可预测请求中管理模型 ID、回调地址、提示词、输入图片 URL、画面比例和分辨率字段。"
+    }
+  ],
+  "quickStartKicker": "快速开始",
+  "quickStartTitle": "从提示词测试到图像 API 请求",
+  "quickStartDescription": "适合团队先验证图像质量，再把生成能力接入应用或内容生产管线。",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. 选择模式",
+      "description": "新建视觉素材选择 Text to Image；需要参考图引导编辑时选择 Image to Image。"
+    },
+    {
+      "icon": "key",
+      "title": "2. 提交生成",
+      "description": "使用账户密钥、模型 ID、提示词、可选输入图 URL、画面比例和分辨率调用 API。"
+    },
+    {
+      "icon": "play",
+      "title": "3. 轮询并使用",
+      "description": "跟踪任务直到成功，然后把生成图像用于应用、活动页面或素材库。"
+    }
+  ],
+  "useCasesKicker": "使用场景",
+  "useCasesTitle": "你可以用 GPT Image 2 API 创作什么",
+  "useCasesDescription": "当产品需要稳定、可重复的高质量图像生成，而不是一次性手动导出时，可以直接接入 API。",
+  "useCases": [
+    "商品主图和电商视觉",
+    "社媒帖子、缩略图和广告素材",
+    "海报、传单和营销主视觉",
+    "基于参考图的服装、背景和风格编辑",
+    "设计稿和视觉概念探索",
+    "内容管线中的批量创意生成"
+  ],
+  "communityShowcase": {
+    "kicker": "社区案例",
+    "title": "社区公开的 GPT Image 2 成功案例",
+    "description": "查看数据库中公开且已成功生成的 GPT Image 2 作品，打开案例可继续查看提示词、参数和生成结果。",
+    "viewAll": "查看更多",
+    "viewDetails": "查看详情"
+  },
+  "productionKicker": "生产说明",
+  "productionTitle": "面向真实图像 API 工作流构建",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "账户级执行",
+      "body": "用户登录后提交任务，并通过现有 SdanceAI 生成流程消耗积分。"
+    },
+    {
+      "icon": "image",
+      "title": "输入图片处理",
+      "body": "Image to Image 接收源图片 URL，团队可以保留自己的素材管线，再生成新的版本。"
+    },
+    {
+      "icon": "zap",
+      "title": "按分辨率控制成本",
+      "body": "先用 1K 快速迭代，确认提示词和视觉方向后，再切换到 2K 或 4K 生成最终素材。"
+    }
+  ],
+  "faqKicker": "常见问题",
+  "faqTitle": "GPT Image 2 API 常见问题",
+  "faqs": [
+    {
+      "question": "GPT Image 2 API 最适合什么场景？",
+      "answer": "它适合提示词图像生成和参考图编辑，包括商品图、广告图、社媒素材、海报和设计稿。"
+    },
+    {
+      "question": "Text to Image 和 Image to Image 有什么区别？",
+      "answer": "Text to Image 只从提示词开始生成。Image to Image 使用一张或多张源图 URL 加提示词，更适合编辑、变体和保留参考关系的工作流。"
+    },
+    {
+      "question": "支持哪些分辨率？",
+      "answer": "当前 API 配置包含 1K、2K 和 4K 价格档位。低分辨率适合迭代，高分辨率适合最终素材。"
+    },
+    {
+      "question": "支持哪些画面比例？",
+      "answer": "可用比例包括 auto、1:1、9:16、16:9、4:3 和 3:4。建议在最终生成前按目标渠道选择比例。"
+    },
+    {
+      "question": "Image to Image 可以使用多少张输入图？",
+      "answer": "当前图生图 payload 支持输入图片 URL 数组，最多 16 张源图。"
+    },
+    {
+      "question": "接入前在哪里测试？",
+      "answer": "可以直接使用本页 Playground 测试提示词、输入图片 URL、比例、分辨率和 API payload。"
+    },
+    {
+      "question": "GPT Image 2 API 可以用于商业工作流吗？",
+      "answer": "本页面面向生产图像工作流配置。商业使用前，请确认账户套餐、积分余额、模型可用性以及适用的内容政策要求。"
+    },
+    {
+      "question": "API 支持回调吗？",
+      "answer": "支持。请求 schema 包含可选 callback URL，你的服务可以接收任务完成通知。"
+    },
+    {
+      "question": "如何控制成本？",
+      "answer": "用 1K 做提示词探索和批量草稿，筛选出满意方向后，再用 2K 或 4K 重新生成最终版本。"
+    },
+    {
+      "question": "可以编辑现有商品照片吗？",
+      "answer": "可以。使用 Image to Image，传入源图 URL，并在提示词中明确需要调整的背景、光影、构图或风格。"
+    }
+  ],
+  "cta": {
+    "kicker": "开始接入",
+    "title": "把 GPT Image 2 接入你的图像工作流",
+    "description": "先打开生成器测试提示词或参考图，确认效果后再通过 API 文档接入到生产流程。",
+    "primaryLabel": "打开 GPT Image 2",
+    "secondaryLabel": "查看 API 能力",
+    "stats": [
+      {
+        "value": "API 就绪",
+        "label": "工作流"
+      },
+      {
+        "value": "1K-4K",
+        "label": "分辨率"
+      },
+      {
+        "value": "16 张",
+        "label": "参考图"
+      }
+    ]
+  }
+}

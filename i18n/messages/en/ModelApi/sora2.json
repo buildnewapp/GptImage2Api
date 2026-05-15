@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "title": "Sora 2 API",
+    "description": "Test and integrate Sora 2 API for text-to-video, image-to-video, audio-aware clips, and Pro storyboard workflows."
+  },
+  "title": "Sora 2 API",
+  "badge": "With audio",
+  "description": [
+    "Sora 2 is an AI video model focused on realistic motion, stronger physical consistency, and cinematic scene generation. Use it for text-to-video and image-to-video workflows where believable movement, camera logic, and audio matter.",
+    "This page follows the Seedance 2.0 API layout: choose a Sora 2 model type, test generation in the playground, inspect request fields, compare pricing, and move into production with the API docs."
+  ],
+  "monitor": {
+    "label": "24h Status Monitor"
+  },
+  "pricingNote": "USD estimates use $0.005/credit with the best annual plan.",
+  "labels": {
+    "apiDocs": "API docs",
+    "apiDocsDetail": "View detailed API docs",
+    "apiDocsDetailDescription": "Open the full API documentation for endpoints, authentication, task polling, and payload details.",
+    "apiInputDescription": "Keep the payload predictable while still allowing rich video, image, audio, and storyboard control.",
+    "apiInputKicker": "API Input",
+    "apiInputTitle": "Core request fields",
+    "descriptionColumn": "Description",
+    "fieldColumn": "Field",
+    "lowestCostPrefix": "Lowest cost starts at",
+    "modelType": "Model Type:",
+    "pricingTitle": "Pricing",
+    "requestJson": "Request JSON",
+    "runWithApi": "Run with API",
+    "selectedModel": "Selected model",
+    "selectedModelNote": "The playground, request sample, request fields, and pricing on this page follow the selected model type.",
+    "typeColumn": "Type",
+    "useModelForGeneration": "Use {model} for generation"
+  },
+  "featuresKicker": "Capabilities",
+  "featuresTitle": "What Sora 2 API adds to your video workflow",
+  "featuresDescription": "Use Sora 2 when your product needs realistic motion, prompt-driven video generation, reference-image control, or higher-end Pro output.",
+  "capabilities": [
+    {
+      "icon": "video",
+      "title": "Realistic text-to-video",
+      "description": "Turn prompts into cinematic clips with more believable camera movement, subject motion, and scene physics."
+    },
+    {
+      "icon": "image",
+      "title": "Image-to-video control",
+      "description": "Start from a reference image to preserve subject identity, framing, style, and product details across the generated clip."
+    },
+    {
+      "icon": "music",
+      "title": "Audio-aware output",
+      "description": "Create clips that can include audio-oriented settings where supported, helping ads, shorts, and story scenes feel more complete."
+    },
+    {
+      "icon": "layers",
+      "title": "Pro and storyboard modes",
+      "description": "Use Pro variants for higher-end generation and storyboard mode when you need structured scene planning."
+    }
+  ],
+  "quickStartKicker": "Quick Start",
+  "quickStartTitle": "From Sora 2 test to production request",
+  "quickStartDescription": "A compact path for validating prompts, image references, durations, and model variants before integrating the API.",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. Choose a Sora 2 mode",
+      "description": "Select text-to-video, image-to-video, Stable, Pro, or Pro Storyboard based on the output quality and control you need."
+    },
+    {
+      "icon": "key",
+      "title": "2. Submit generation",
+      "description": "Send your API request with a model id, prompt, reference image when needed, duration, resolution, and other model-specific fields."
+    },
+    {
+      "icon": "play",
+      "title": "3. Poll and publish",
+      "description": "Track the async task until it succeeds, then retrieve the generated video URL for your app, campaign, or workflow."
+    }
+  ],
+  "useCasesKicker": "Use Cases",
+  "useCasesTitle": "What you can create with Sora 2 API",
+  "useCasesDescription": "Sora 2 works well when a product needs repeatable video generation with a clear creative brief or reference frame.",
+  "useCases": [
+    "Cinematic social videos for TikTok, Reels, and Shorts",
+    "Product shots animated from reference images",
+    "Ad concepts, launch teasers, and creative variants",
+    "Storyboard previews for film, games, and brand campaigns",
+    "Character, scene, and camera-motion prototyping",
+    "Batch creative generation for video tools and SaaS apps"
+  ],
+  "communityShowcase": {
+    "kicker": "Community Showcase",
+    "title": "Successful Sora 2 generations from the community",
+    "description": "Browse public Sora 2 outputs that finished successfully, then open any case to inspect the prompt, settings, and result.",
+    "viewAll": "View more",
+    "viewDetails": "View details"
+  },
+  "productionKicker": "Production Notes",
+  "productionTitle": "Ready for API-based video products",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "Account-gated execution",
+      "body": "Users sign in, submit jobs, and consume credits through the existing SdanceAI generation flow."
+    },
+    {
+      "icon": "image",
+      "title": "Reference image support",
+      "body": "Use image-to-video models when your workflow needs stronger subject, style, or product continuity."
+    },
+    {
+      "icon": "zap",
+      "title": "Flexible model choice",
+      "body": "Switch between standard, Stable, Pro, and Storyboard variants based on speed, quality, and scene-control needs."
+    }
+  ],
+  "faqKicker": "FAQ",
+  "faqTitle": "Sora 2 API questions",
+  "faqs": [
+    {
+      "question": "What is Sora 2 API best for?",
+      "answer": "It is best for realistic short-form AI video generation, especially text-to-video, image-to-video, ads, product visuals, social clips, and storyboard-style concept development."
+    },
+    {
+      "question": "What Sora 2 model types are available on this page?",
+      "answer": "The page includes Sora 2 Text to Video, Sora 2 Image to Video, Stable variants, Sora 2 Pro Text to Video, Sora 2 Pro Image to Video, and Sora 2 Pro Storyboard."
+    },
+    {
+      "question": "Can I start generation from an image?",
+      "answer": "Yes. Select a Sora 2 Image to Video or Pro Image to Video model when you want a reference image to guide subject identity, framing, product details, or visual style."
+    },
+    {
+      "question": "Where can I test Sora 2 before integrating?",
+      "answer": "Use the playground on this page to test prompts, model variants, request fields, pricing, and API payload behavior before wiring it into production."
+    },
+    {
+      "question": "What is the difference between Sora 2 and Sora 2 Pro?",
+      "answer": "Sora 2 is suited for general short-form generation and iteration. Sora 2 Pro is positioned for higher-end output and more demanding creative workflows."
+    },
+    {
+      "question": "What is Sora 2 Pro Storyboard for?",
+      "answer": "Storyboard mode is useful when you need more structured scene planning, creative sequencing, or previsualization before producing final clips."
+    },
+    {
+      "question": "Does Sora 2 API support audio?",
+      "answer": "Supported Sora 2 variants include audio-oriented generation settings. Availability and behavior depend on the selected model and request fields shown on this page."
+    },
+    {
+      "question": "How long can Sora 2 videos be?",
+      "answer": "Available duration choices depend on the selected Sora 2 model and pricing tier. Check the pricing and request fields after choosing a model type."
+    },
+    {
+      "question": "Can I use Sora 2 API for commercial projects?",
+      "answer": "This page is configured for commercial API workflows. For production use, review your account plan, credit balance, model availability, and applicable content policy requirements."
+    },
+    {
+      "question": "How do I move from playground testing to API integration?",
+      "answer": "Choose the model type, inspect the generated request JSON and field table, then open the API docs for endpoint, authentication, task polling, and webhook details."
+    }
+  ],
+  "cta": {
+    "kicker": "Start building",
+    "title": "Turn Sora 2 into your video workflow",
+    "description": "Open the generator, test a Sora 2 prompt or image reference, then use the API docs when you are ready to connect it to production.",
+    "primaryLabel": "Open Sora 2",
+    "secondaryLabel": "Review API features",
+    "stats": [
+      {
+        "value": "Text + image",
+        "label": "input modes"
+      },
+      {
+        "value": "With audio",
+        "label": "model family"
+      },
+      {
+        "value": "Pro",
+        "label": "workflow option"
+      }
+    ]
+  }
+}

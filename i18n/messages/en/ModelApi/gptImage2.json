@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "title": "GPT Image 2 API",
+    "description": "Test and integrate GPT Image 2 API for text-to-image generation and reference-based image editing."
+  },
+  "title": "GPT Image 2 API",
+  "badge": "Image API",
+  "description": [
+    "GPT Image 2 API is built for production image generation workflows that need prompt-driven creation, reference image editing, and predictable API payloads. Use it to create campaign visuals, product shots, social creatives, and design mockups without leaving the SdanceAI generation flow.",
+    "The current integration exposes Text to Image and Image to Image variants with 1K, 2K, and 4K pricing tiers, plus common aspect ratios for square, vertical, horizontal, and portrait outputs."
+  ],
+  "monitor": {
+    "label": "24h Status Monitor"
+  },
+  "pricingNote": "USD estimates use $0.005/credit with the best annual plan. Final billing follows the selected resolution and model variant.",
+  "labels": {
+    "apiDocs": "API docs",
+    "apiDocsDetail": "View detailed API docs",
+    "apiDocsDetailDescription": "Open the full API documentation for endpoints, authentication, task polling, and payload details.",
+    "apiInputDescription": "Use a compact payload for prompt, source images, aspect ratio, resolution, callback, and safety settings.",
+    "apiInputKicker": "API Input",
+    "apiInputTitle": "Core request fields",
+    "descriptionColumn": "Description",
+    "fieldColumn": "Field",
+    "lowestCostPrefix": "Lowest cost starts at",
+    "modelType": "Model Type:",
+    "pricingTitle": "Pricing",
+    "requestJson": "Request JSON",
+    "runWithApi": "Run with API",
+    "selectedModel": "Selected model",
+    "selectedModelNote": "The playground, request sample, request fields, and pricing on this page follow the selected model type.",
+    "typeColumn": "Type",
+    "useModelForGeneration": "Use {model} for generation"
+  },
+  "featuresKicker": "Capabilities",
+  "featuresTitle": "What GPT Image 2 API adds to your image workflow",
+  "featuresDescription": "The page follows the same API-first structure as the reference: test the model, understand the fields, then move into integration.",
+  "capabilities": [
+    {
+      "icon": "sparkles",
+      "title": "Text-to-image creation",
+      "description": "Turn structured prompts into production-ready visuals for posters, ads, thumbnails, concept art, and product scenes."
+    },
+    {
+      "icon": "image",
+      "title": "Reference image editing",
+      "description": "Use image inputs to preserve subject context while changing style, background, layout, lighting, or product presentation."
+    },
+    {
+      "icon": "layers",
+      "title": "Resolution tiers",
+      "description": "Select 1K, 2K, or 4K output tiers to balance iteration cost, preview quality, and final asset sharpness."
+    },
+    {
+      "icon": "code",
+      "title": "API-ready payloads",
+      "description": "Work with model IDs, callback URLs, prompt text, input image URLs, aspect ratios, and resolution fields in one predictable request."
+    }
+  ],
+  "quickStartKicker": "Quick Start",
+  "quickStartTitle": "From prompt test to image API request",
+  "quickStartDescription": "A direct path for teams that want to validate image quality before wiring generation into an app or content pipeline.",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. Choose a mode",
+      "description": "Select Text to Image for new visuals or Image to Image when you want reference-guided edits."
+    },
+    {
+      "icon": "key",
+      "title": "2. Submit generation",
+      "description": "Call the API with your account key, model ID, prompt, optional input image URLs, aspect ratio, and resolution."
+    },
+    {
+      "icon": "play",
+      "title": "3. Poll and use",
+      "description": "Track the task until it succeeds, then use the generated image result in your app, campaign, or asset library."
+    }
+  ],
+  "useCasesKicker": "Use Cases",
+  "useCasesTitle": "What you can create with GPT Image 2 API",
+  "useCasesDescription": "Use the API when your product needs repeatable, high-quality image generation rather than one-off manual exports.",
+  "useCases": [
+    "Product hero images and e-commerce visuals",
+    "Social posts, thumbnails, and ad creatives",
+    "Poster, flyer, and campaign key art",
+    "Reference-based outfit, background, and style edits",
+    "Design mockups and visual concept exploration",
+    "Batch creative generation for content pipelines"
+  ],
+  "communityShowcase": {
+    "kicker": "Community Showcase",
+    "title": "Successful GPT Image 2 generations from the community",
+    "description": "Browse public GPT Image 2 outputs that finished successfully, then open any case to inspect the prompt, settings, and result.",
+    "viewAll": "View more",
+    "viewDetails": "View details"
+  },
+  "productionKicker": "Production Notes",
+  "productionTitle": "Built for real image API workflows",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "Account-gated execution",
+      "body": "Users sign in, submit jobs, and consume credits through the existing SdanceAI generation flow."
+    },
+    {
+      "icon": "image",
+      "title": "Input image handling",
+      "body": "Image to Image accepts source image URLs, so teams can keep references in their own asset pipeline while generating new variations."
+    },
+    {
+      "icon": "zap",
+      "title": "Cost-aware resolution",
+      "body": "Start with 1K for fast iteration, then move to 2K or 4K when the prompt and visual direction are ready."
+    }
+  ],
+  "faqKicker": "FAQ",
+  "faqTitle": "GPT Image 2 API questions",
+  "faqs": [
+    {
+      "question": "What is GPT Image 2 API best for?",
+      "answer": "It is best for prompt-based image generation and reference-guided image editing, including product visuals, ads, social creatives, posters, and design mockups."
+    },
+    {
+      "question": "What is the difference between Text to Image and Image to Image?",
+      "answer": "Text to Image starts from a prompt only. Image to Image uses one or more source image URLs plus a prompt, making it better for edits, variations, and reference-preserving workflows."
+    },
+    {
+      "question": "Which resolutions are available?",
+      "answer": "The current API configuration includes 1K, 2K, and 4K pricing tiers. Choose lower resolution for iteration and higher resolution for final assets."
+    },
+    {
+      "question": "Which aspect ratios can I use?",
+      "answer": "The available aspect ratios include auto, 1:1, 9:16, 16:9, 4:3, and 3:4. Match the ratio to your target channel before generating final assets."
+    },
+    {
+      "question": "How many input images can Image to Image use?",
+      "answer": "The configured image-to-image payload supports input image URL arrays, with up to 16 source images."
+    },
+    {
+      "question": "Where can I test it before integrating?",
+      "answer": "Use the playground on this page to test prompts, input image URLs, aspect ratio, resolution, and API payload behavior before moving into production."
+    },
+    {
+      "question": "Can I use GPT Image 2 API for commercial workflows?",
+      "answer": "This page is configured for production image workflows. For commercial use, review your account plan, credit balance, model availability, and applicable content policy requirements."
+    },
+    {
+      "question": "Does the API support callbacks?",
+      "answer": "Yes. The request schema includes an optional callback URL so your service can receive task completion notifications."
+    },
+    {
+      "question": "How should I manage cost?",
+      "answer": "Use 1K for prompt exploration and bulk drafts, then regenerate selected winners at 2K or 4K when you need sharper final output."
+    },
+    {
+      "question": "Can I edit existing product photos?",
+      "answer": "Yes. Use Image to Image with source image URLs and a prompt that describes the exact background, lighting, layout, or styling changes you need."
+    }
+  ],
+  "cta": {
+    "kicker": "Start building",
+    "title": "Turn GPT Image 2 into your image workflow",
+    "description": "Open the generator, test a prompt or reference image, then use the API docs when you are ready to connect GPT Image 2 to production.",
+    "primaryLabel": "Open GPT Image 2",
+    "secondaryLabel": "Review API features",
+    "stats": [
+      {
+        "value": "API-ready",
+        "label": "workflow"
+      },
+      {
+        "value": "1K-4K",
+        "label": "resolution"
+      },
+      {
+        "value": "16 images",
+        "label": "references"
+      }
+    ]
+  }
+}

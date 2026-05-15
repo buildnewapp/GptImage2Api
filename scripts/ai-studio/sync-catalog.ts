@@ -7,7 +7,7 @@ import {
 } from "@/lib/ai-studio/catalog";
 
 async function main() {
-  const { upstreamCatalogPath } = getAiStudioCatalogPaths();
+  const { upstreamCatalogPath, apimartCatalogPath } = getAiStudioCatalogPaths();
   const upstream = await buildAiStudioUpstreamCatalog();
 
   await mkdir(path.dirname(upstreamCatalogPath), { recursive: true });
@@ -19,6 +19,9 @@ async function main() {
 
   console.log(
     `Synced AI Studio upstream catalog: ${upstream.items.length} models -> ${upstreamCatalogPath}`,
+  );
+  console.log(
+    `Skipped AI Studio APIMart catalog sync -> ${apimartCatalogPath}`,
   );
 }
 

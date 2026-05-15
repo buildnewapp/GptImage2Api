@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "title": "Kling API",
+    "description": "テキストから動画、画像から動画、モーションコントロール、AI アバター生成に対応した Kling API をテストして統合できます。"
+  },
+  "title": "Kling API",
+  "badge": "API workflow",
+  "description": [
+    "Kling は、柔軟なテキストから動画、画像から動画のワークフローを必要とするクリエイターやプロダクトチーム向けの動画生成モデルファミリーです。このページでは、利用可能な Kling バリアントを API ファーストの体験にまとめ、モデル挙動、料金、リクエストフィールド、生成結果を比較できます。",
+    "映画的なモーション、画像ベースのアニメーション、モーションコントロール、アバター風の動画出力が必要なときに Kling を選べます。Playground でモデルを選んで出力を確認し、そのまま本番 API フローへ進めます。"
+  ],
+  "monitor": {
+    "label": "24時間ステータス"
+  },
+  "pricingNote": "USD 見積もりは最適な年額プランの $0.005/クレジットで計算しています。",
+  "labels": {
+    "apiDocs": "API ドキュメント",
+    "apiDocsDetail": "API 詳細ドキュメントを見る",
+    "apiDocsDetailDescription": "エンドポイント、認証、タスクのポーリング、payload の詳細を確認できます。",
+    "apiInputDescription": "リクエストフィールドは選択中の Kling モデルに連動し、テキスト、画像、モーション、アバター生成に合った payload を表示します。",
+    "apiInputKicker": "API 入力",
+    "apiInputTitle": "主要リクエストフィールド",
+    "descriptionColumn": "説明",
+    "fieldColumn": "フィールド",
+    "lowestCostPrefix": "最低コスト",
+    "modelType": "モデルタイプ:",
+    "pricingTitle": "料金",
+    "requestJson": "Request JSON",
+    "runWithApi": "API で実行",
+    "selectedModel": "選択中モデル",
+    "selectedModelNote": "Playground、リクエスト例、入力フィールド、料金は選択中のモデルタイプに連動します。",
+    "typeColumn": "型",
+    "useModelForGeneration": "{model} で生成"
+  },
+  "featuresKicker": "Capabilities",
+  "featuresTitle": "Kling API が動画ワークフローに加える機能",
+  "featuresDescription": "モデルを試し、フィールドを確認し、そのまま統合へ進める API ファーストの構成です。",
+  "capabilities": [
+    {
+      "icon": "video",
+      "title": "テキスト・画像から動画",
+      "description": "プロンプトからクリップを生成したり、元画像を動画化したりしながら、Kling バージョン、長さ、品質設定を明確に選べます。"
+    },
+    {
+      "icon": "sparkles",
+      "title": "映画的なモーション",
+      "description": "ダイナミックなカメラワーク、スタイライズされた動き、製品紹介、キャラクターショット、短尺ストーリーに向いています。"
+    },
+    {
+      "icon": "layers",
+      "title": "複数モデルの切り替え",
+      "description": "Kling 3.0、2.6、2.5 Turbo、2.1、モーションコントロール、アバター variants を同じページで切り替えられます。"
+    },
+    {
+      "icon": "image",
+      "title": "リファレンス主導の出力",
+      "description": "選択したモデルが対応している場合、画像やモーション参照を使い、被写体やシーンの方向性をより明確にできます。"
+    }
+  ],
+  "quickStartKicker": "Quick Start",
+  "quickStartTitle": "Kling のテストから本番リクエストへ",
+  "quickStartDescription": "アプリに組み込む前に、Kling バリアントの出力を検証できます。",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. Kling モデルを選択",
+      "description": "テキストから動画、画像から動画、モーションコントロール、アバター生成など、用途に合う Kling バージョンを選びます。"
+    },
+    {
+      "icon": "key",
+      "title": "2. 生成を送信",
+      "description": "API キー、モデル ID、プロンプト、素材 URL、長さ、解像度、モデル固有フィールドを指定して呼び出します。"
+    },
+    {
+      "icon": "play",
+      "title": "3. ポーリングして配信",
+      "description": "タスク完了まで追跡し、生成された動画 URL をアプリ、キャンペーン、制作パイプラインで利用します。"
+    }
+  ],
+  "useCasesKicker": "Use Cases",
+  "useCasesTitle": "Kling API で作れるもの",
+  "useCasesDescription": "単発の Playground ではなく、繰り返し使える Kling 動画生成を製品に組み込めます。",
+  "useCases": [
+    "TikTok、Reels、Shorts 向け短尺動画",
+    "製品、ポートレート、コンセプト画像のアニメーション",
+    "モーションコントロールを使ったクリエイティブショット",
+    "アバターとスポークスパーソン動画",
+    "ストーリーボードとプリビズ用クリップ",
+    "テンプレートとキャンペーン向け一括動画生成"
+  ],
+  "communityShowcase": {
+    "kicker": "Community Showcase",
+    "title": "コミュニティの Kling 成功事例",
+    "description": "公開され、正常に生成された Kling の出力を確認できます。各事例からプロンプト、設定、結果を詳しく見られます。",
+    "viewAll": "もっと見る",
+    "viewDetails": "詳細を見る"
+  },
+  "productionKicker": "Production Notes",
+  "productionTitle": "実運用の API ワークフロー向け",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "アカウント連動の実行",
+      "body": "ユーザーはログイン後に Kling ジョブを送信し、既存の SdanceAI 生成フローでクレジットを消費します。"
+    },
+    {
+      "icon": "image",
+      "title": "メディア対応リクエスト",
+      "body": "選択した Kling モデルがメディア入力に対応している場合、アップロード、直接 URL、プレビュー、フォーム/API payload 編集を利用できます。"
+    },
+    {
+      "icon": "zap",
+      "title": "バージョン別の制御",
+      "body": "出力タイプ、品質目標、料金、生成コントロールに応じて Kling バージョンを切り替えられます。"
+    }
+  ],
+  "faqKicker": "FAQ",
+  "faqTitle": "Kling API FAQ",
+  "faqs": [
+    {
+      "question": "Kling API は何に向いていますか？",
+      "answer": "テキストから動画、画像から動画、モーションコントロール、アバター風の出力が必要な短尺 AI 動画ワークフローに向いています。"
+    },
+    {
+      "question": "このページではどの Kling バージョンを使えますか？",
+      "answer": "SdanceAI に設定済みの Kling ファミリーに連動し、Kling 3.0、Kling 3.0 Motion Control、Kling 2.6、Kling 2.5 Turbo、Kling V2.1、アバター variants を含みます。"
+    },
+    {
+      "question": "Kling API で画像リファレンスを使えますか？",
+      "answer": "はい。画像から動画、またはメディア入力に対応した Kling バージョンを選び、画像 URL を指定するか Studio フローで素材をアップロードできます。"
+    },
+    {
+      "question": "統合前に Kling をどこで試せますか？",
+      "answer": "このページの Playground で、プロンプト、メディア入力、モデルバージョン、リクエスト payload、料金、出力結果を確認できます。"
+    },
+    {
+      "question": "Kling API はモーションコントロールに対応していますか？",
+      "answer": "はい。設定済みの Kling ファミリーには motion-control variants が含まれ、選択モデルに応じてリクエストフィールドが更新されます。"
+    },
+    {
+      "question": "Kling API でアバター動画を作れますか？",
+      "answer": "はい。設定済みの Kling ファミリーには AI Avatar Standard と Pro が含まれ、アバター風の動画ワークフローに利用できます。"
+    },
+    {
+      "question": "料金はどのように表示されますか？",
+      "answer": "料金は選択中の Kling モデルに合わせて既存のクレジット表から表示されます。設定済みのクレジット価値に基づく USD 見積もりも表示されます。"
+    },
+    {
+      "question": "Kling API は商用プロジェクトで使えますか？",
+      "answer": "このページは API ワークフロー向けに構成されています。本番利用前に、アカウントプラン、クレジット残高、モデル提供状況、適用されるコンテンツポリシーを確認してください。"
+    }
+  ],
+  "cta": {
+    "kicker": "Start building",
+    "title": "Kling を動画ワークフローへ",
+    "description": "まず生成画面で Kling バージョンを試し、結果を確認してから API ドキュメントで本番フローに接続できます。",
+    "primaryLabel": "Kling を開く",
+    "secondaryLabel": "API 機能を見る",
+    "stats": [
+      {
+        "value": "13",
+        "label": "model variants"
+      },
+      {
+        "value": "Text + image",
+        "label": "inputs"
+      },
+      {
+        "value": "API ready",
+        "label": "workflow"
+      }
+    ]
+  }
+}

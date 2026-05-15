@@ -91,7 +91,7 @@
 ```json
 {
   "models": {
-    "video:apimart-seedance-2-0": {
+    "video:fal-seedance-2-0": {
       "alias": "seedance-2-0"
     }
   }
@@ -467,11 +467,11 @@ tags: [{ text: "HOT", type: "hot" }]
   label: "Seedance 2.0",
   familyKey: "seedance-2.0",
   modelId: "video:seedance-2-0",
-  aliases: ["video:apimart-seedance-2-0"],
+  aliases: ["video:fal-seedance-2-0"],
 }
 ```
 
-这样历史数据里如果存的是 `video:apimart-seedance-2-0`，前台仍然能正确恢复到 `seedance-2.0` 这个版本。
+这样历史数据里如果存的是 `video:fal-seedance-2-0`，前台仍然能正确恢复到 `seedance-2.0` 这个版本。
 
 ### 2.6 这些配置在代码里怎么用
 

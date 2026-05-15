@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "title": "Grok Video API",
+    "description": "测试并集成 Grok Video API，支持文生视频、图生视频、视频放大和视频延长工作流。"
+  },
+  "title": "Grok Video API",
+  "badge": "视频 API",
+  "description": [
+    "Grok Video API 让团队可以用 API 优先的方式，把 Grok Imagine 视频生成接入生产工作流。它在同一个模型家族内支持提示词文生视频、参考图图生视频、视频放大和视频延长。",
+    "你可以先在 Playground 中验证提示词、源图片、任务 ID、时长、画面比例和 payload 行为，再把 Grok 视频生成接入应用、创意工具或内容生产管线。"
+  ],
+  "monitor": {
+    "label": "24 小时状态监控"
+  },
+  "pricingNote": "美元估算按最佳年付套餐 $0.005/积分 计算。最终计费跟随所选 Grok 视频模式和输出设置。",
+  "labels": {
+    "apiDocs": "API 文档",
+    "apiDocsDetail": "查看 API 详细文档",
+    "apiDocsDetailDescription": "打开完整 API 文档，查看接口、鉴权、任务轮询和 payload 细节。",
+    "apiInputDescription": "用可预测 payload 管理提示词、图片 URL、源任务 ID、画面比例和回调设置。",
+    "apiInputKicker": "API 输入",
+    "apiInputTitle": "核心请求字段",
+    "descriptionColumn": "说明",
+    "fieldColumn": "字段",
+    "lowestCostPrefix": "最低成本从",
+    "modelType": "模型类型：",
+    "pricingTitle": "价格",
+    "requestJson": "请求 JSON",
+    "runWithApi": "使用 API 运行",
+    "selectedModel": "当前模型",
+    "selectedModelNote": "本页的 Playground、请求示例、请求字段和价格都会跟随当前选择的模型类型变化。",
+    "typeColumn": "类型",
+    "useModelForGeneration": "使用 {model} 生成"
+  },
+  "featuresKicker": "能力",
+  "featuresTitle": "Grok Video API 为视频工作流带来的能力",
+  "featuresDescription": "页面按 API 优先的结构组织：先测试模型，再理解字段，最后进入集成。",
+  "capabilities": [
+    {
+      "icon": "sparkles",
+      "title": "文生视频生成",
+      "description": "把详细提示词转成短视频概念，适合社媒内容、广告、产品瞬间和快速创意探索。"
+    },
+    {
+      "icon": "image",
+      "title": "图生视频运动",
+      "description": "基于源图片生成动态视频，同时保留团队已经确认的主体、构图和视觉方向。"
+    },
+    {
+      "icon": "video",
+      "title": "放大和延长",
+      "description": "对成功的 Grok 短片进行视频放大，或通过延长任务继续已有生成结果。"
+    },
+    {
+      "icon": "code",
+      "title": "API 就绪 payload",
+      "description": "在一条集成路径中处理模型 ID、提示词、图片 URL、任务 ID、画面比例、回调和任务轮询。"
+    }
+  ],
+  "quickStartKicker": "快速开始",
+  "quickStartTitle": "从 Grok 视频测试到生产请求",
+  "quickStartDescription": "适合团队先验证输出质量，再把 Grok 视频生成接入自己的应用。",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. 选择模式",
+      "description": "提示词直出选择文生视频；需要源图动起来选择图生视频；已有结果再进入放大或延长模式。"
+    },
+    {
+      "icon": "key",
+      "title": "2. 提交生成",
+      "description": "使用账户密钥、模型 ID、提示词、可选图片 URL 或源任务 ID，以及回调地址调用 API。"
+    },
+    {
+      "icon": "play",
+      "title": "3. 轮询并复用",
+      "description": "跟踪任务直到成功，然后把输出 URL 用于产品、营销工作流或下一轮视频任务。"
+    }
+  ],
+  "useCasesKicker": "使用场景",
+  "useCasesTitle": "你可以用 Grok Video API 创作什么",
+  "useCasesDescription": "当产品需要可重复的 Grok 视频输出，而不是一次性手动生成时，可以直接接入 API。",
+  "useCases": [
+    "TikTok、Reels、Shorts 的提示词短视频",
+    "商品静图动效和活动视觉",
+    "快速分镜和概念视频探索",
+    "广告、缩略图和落地页视频变体",
+    "成功生成短片的高清放大版本",
+    "面向迭代创意管线的视频延长"
+  ],
+  "communityShowcase": {
+    "kicker": "社区案例",
+    "title": "社区公开的 Grok 视频成功案例",
+    "description": "查看数据库中公开且已成功生成的 Grok 视频作品，打开案例可继续查看提示词、参数和生成结果。",
+    "viewAll": "查看更多",
+    "viewDetails": "查看详情"
+  },
+  "productionKicker": "生产说明",
+  "productionTitle": "面向真实 Grok 视频 API 工作流构建",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "账户级执行",
+      "body": "用户登录后提交任务，并通过现有 SdanceAI 生成流程消耗积分。"
+    },
+    {
+      "icon": "image",
+      "title": "参考和任务输入",
+      "body": "图生视频接收源图片 URL；放大和延长工作流可以基于已完成的视频任务 ID 继续处理。"
+    },
+    {
+      "icon": "zap",
+      "title": "按模式迭代",
+      "body": "先用文生视频或图生视频探索方向，再把满意结果送入放大或延长工作流。"
+    }
+  ],
+  "faqKicker": "常见问题",
+  "faqTitle": "Grok Video API 常见问题",
+  "faqs": [
+    {
+      "question": "Grok Video API 最适合什么场景？",
+      "answer": "它适合可重复的短视频生成，包括提示词短片、源图动画、视频变体、高清放大和创意序列延长。"
+    },
+    {
+      "question": "当前支持哪些 Grok 视频模式？",
+      "answer": "本页当前提供 Grok Imagine Text to Video、Grok Imagine Image to Video、Grok Imagine Video Upscale 和 Grok Imagine Video Extend。"
+    },
+    {
+      "question": "Text to Video 和 Image to Video 有什么区别？",
+      "answer": "Text to Video 只从提示词开始生成。Image to Video 会结合一张或多张源图片和提示词，更适合需要主体或构图连续性的场景。"
+    },
+    {
+      "question": "什么时候使用放大或延长？",
+      "answer": "已有成功 Grok 视频并希望获得更高质量版本时使用放大；想把已完成生成继续成更长片段时使用延长。"
+    },
+    {
+      "question": "接入前在哪里测试？",
+      "answer": "可以直接使用本页 Playground 测试提示词、图片 URL、源任务 ID、比例、回调和 API payload。"
+    },
+    {
+      "question": "API 支持回调吗？",
+      "answer": "支持。请求 schema 在对应模式下包含回调设置，你的服务可以接收任务完成通知。"
+    },
+    {
+      "question": "Grok Video API 可以用于商业工作流吗？",
+      "answer": "本页面面向生产视频工作流配置。商业使用前，请确认账户套餐、积分余额、模型可用性以及适用的内容政策要求。"
+    },
+    {
+      "question": "可以让现有商品图动起来吗？",
+      "answer": "可以。使用图生视频模式，传入源图片 URL，并在提示词中描述运动、镜头和最终视觉方向。"
+    },
+    {
+      "question": "如何控制成本？",
+      "answer": "先用提示词或图生视频快速测试，把放大和延长留给已经接近目标效果的短片。"
+    },
+    {
+      "question": "可以查看实际 API 字段吗？",
+      "answer": "可以。在本页选择一个 Grok 视频模式后，请求 JSON、字段列表和价格面板都会跟随更新。"
+    }
+  ],
+  "cta": {
+    "kicker": "开始接入",
+    "title": "把 Grok 视频接入你的生产工作流",
+    "description": "先打开生成器测试 Grok 视频提示词或源图片，确认效果后再通过 API 文档接入到生产流程。",
+    "primaryLabel": "打开 Grok Video",
+    "secondaryLabel": "查看 API 能力",
+    "stats": [
+      {
+        "value": "API 就绪",
+        "label": "工作流"
+      },
+      {
+        "value": "4 种",
+        "label": "视频模式"
+      },
+      {
+        "value": "任务 ID",
+        "label": "后续处理"
+      }
+    ]
+  }
+}

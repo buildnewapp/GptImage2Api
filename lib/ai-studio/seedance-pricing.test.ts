@@ -54,7 +54,7 @@ test("calculates official credits for seedance 2.0 with video input", () => {
 
 test("calculates official credits for seedance 2.0 fast with video input", () => {
   const pricing = calculateSeedanceVideoPricing({
-    model: "video:apimart-seedance-2-0-fast",
+    model: "video:fal-seedance-2-0-fast",
     payload: {
       input: {
         duration: 4,

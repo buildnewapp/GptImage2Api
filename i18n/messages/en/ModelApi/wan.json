@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "title": "Wan API",
+    "description": "Test and integrate Wan API for text-to-video, image-to-video, video editing, and reference-driven AI video generation."
+  },
+  "title": "Wan API",
+  "badge": "Video API",
+  "description": [
+    "Wan API brings multiple AI video workflows into one production path, including text-to-video, image-to-video, video-to-video, video editing, animation, and reference-to-video generation.",
+    "Use Wan 2.7 for high-quality 720p and 1080p generation, then switch between text, image, video, and reference modes based on the exact input your product or campaign needs."
+  ],
+  "monitor": {
+    "label": "24h Status Monitor"
+  },
+  "pricingNote": "USD estimates use $0.005/credit with the best annual plan. Final billing follows the selected Wan model, resolution, duration, and input type.",
+  "labels": {
+    "apiDocs": "API docs",
+    "apiDocsDetail": "View detailed API docs",
+    "apiDocsDetailDescription": "Open the full API documentation for endpoints, authentication, task polling, and payload details.",
+    "apiInputDescription": "Use model-specific payloads for prompt, source media, resolution, aspect ratio, duration, callback, and generation options.",
+    "apiInputKicker": "API Input",
+    "apiInputTitle": "Core request fields",
+    "descriptionColumn": "Description",
+    "fieldColumn": "Field",
+    "lowestCostPrefix": "Lowest cost starts at",
+    "modelType": "Model Type:",
+    "pricingTitle": "Pricing",
+    "requestJson": "Request JSON",
+    "runWithApi": "Run with API",
+    "selectedModel": "Selected model",
+    "selectedModelNote": "The playground, request sample, request fields, and pricing on this page follow the selected model type.",
+    "typeColumn": "Type",
+    "useModelForGeneration": "Use {model} for generation"
+  },
+  "featuresKicker": "Capabilities",
+  "featuresTitle": "What Wan API adds to your video workflow",
+  "featuresDescription": "The page follows the same API-first structure as the reference: test a Wan model, understand the fields, then move into integration.",
+  "capabilities": [
+    {
+      "icon": "sparkles",
+      "title": "Text-to-video generation",
+      "description": "Turn prompts into cinematic clips with controllable resolution, aspect ratio, duration, negative prompt, seed, and prompt extension options."
+    },
+    {
+      "icon": "image",
+      "title": "Image-to-video motion",
+      "description": "Animate still images into short videos while preserving subject context, composition, and visual style."
+    },
+    {
+      "icon": "video",
+      "title": "Video editing workflows",
+      "description": "Use source clips and reference images to change outfits, objects, style, or motion while keeping the surrounding scene coherent."
+    },
+    {
+      "icon": "layers",
+      "title": "Reference-to-video control",
+      "description": "Combine reference images, videos, first frames, and voice inputs to guide characters, motion, timing, and scene layout."
+    }
+  ],
+  "quickStartKicker": "Quick Start",
+  "quickStartTitle": "From Wan playground test to production request",
+  "quickStartDescription": "A compact path for teams that want to validate Wan output before connecting generation to an app or content pipeline.",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. Choose a Wan mode",
+      "description": "Select text-to-video, image-to-video, video edit, reference-to-video, or an older Wan workflow that matches your source input."
+    },
+    {
+      "icon": "key",
+      "title": "2. Submit generation",
+      "description": "Call the API with your account key, model ID, prompt, media URLs, resolution, duration, aspect ratio, and callback settings."
+    },
+    {
+      "icon": "play",
+      "title": "3. Poll and use",
+      "description": "Track the task until it succeeds, then retrieve the generated video URL for your app, campaign, or automation."
+    }
+  ],
+  "useCasesKicker": "Use Cases",
+  "useCasesTitle": "What you can create with Wan API",
+  "useCasesDescription": "Use the API when your product needs repeatable AI video output across several input styles, not just a one-off generation.",
+  "useCases": [
+    "Prompt-based social clips and short ads",
+    "Product image animation and hero videos",
+    "Reference-driven character and scene videos",
+    "Video edits for outfits, props, and visual style",
+    "Video-to-video transformation workflows",
+    "Batch creative generation for content pipelines"
+  ],
+  "communityShowcase": {
+    "kicker": "Community Showcase",
+    "title": "Successful Wan generations from the community",
+    "description": "Browse public Wan outputs that finished successfully, then open any case to inspect the prompt, settings, and result.",
+    "viewAll": "View more",
+    "viewDetails": "View details"
+  },
+  "productionKicker": "Production Notes",
+  "productionTitle": "Built for real Wan API workflows",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "Account-gated execution",
+      "body": "Users sign in, submit jobs, and consume credits through the existing SdanceAI generation flow."
+    },
+    {
+      "icon": "image",
+      "title": "Flexible source media",
+      "body": "Wan workflows can accept prompt-only requests or media-driven requests with images, videos, first frames, references, and audio where supported."
+    },
+    {
+      "icon": "zap",
+      "title": "Resolution-aware cost",
+      "body": "Choose 720p for iteration and 1080p when a selected concept is ready for a sharper final render."
+    }
+  ],
+  "faqKicker": "FAQ",
+  "faqTitle": "Wan API questions",
+  "faqs": [
+    {
+      "question": "What is Wan API best for?",
+      "answer": "It is best for teams that need several AI video workflows in one integration, including text-to-video, image-to-video, video editing, video-to-video, animation, and reference-guided generation."
+    },
+    {
+      "question": "Which Wan models are available on this page?",
+      "answer": "The page follows the configured Wan family, including Wan 2.7 text-to-video, image-to-video, video edit, reference-to-video, Wan 2.6 workflows, Wan 2.5 workflows, and Wan 2.2 animation modes."
+    },
+    {
+      "question": "What is the difference between text-to-video and image-to-video?",
+      "answer": "Text-to-video starts from a prompt only. Image-to-video uses a source image so the generated clip can preserve the subject, framing, or visual style from the input."
+    },
+    {
+      "question": "When should I use Wan 2.7 Reference to Video?",
+      "answer": "Use Reference to Video when you need tighter control from reference images, reference videos, first frames, or voice input rather than relying only on a written prompt."
+    },
+    {
+      "question": "Does Wan API support 1080p output?",
+      "answer": "Wan 2.7 entries on this page include 720p and 1080p pricing rows. Choose the resolution that matches your quality and cost target."
+    },
+    {
+      "question": "Can I edit an existing video?",
+      "answer": "Yes. Use Wan 2.7 Video Edit or another video-input workflow when you want to modify a source clip with prompts and references."
+    },
+    {
+      "question": "Can I use negative prompts?",
+      "answer": "Supported Wan request schemas include negative prompt fields for reducing blur, distortion, low quality output, and other unwanted details."
+    },
+    {
+      "question": "Where can I test Wan before integrating?",
+      "answer": "Use the playground on this page to test the model, prompt, media URLs, resolution, duration, and API payload behavior before moving into production."
+    },
+    {
+      "question": "How should I manage cost?",
+      "answer": "Start with lower resolution and shorter clips for prompt exploration, then switch to 1080p or longer durations only after the direction is validated."
+    },
+    {
+      "question": "Can I use Wan API for commercial projects?",
+      "answer": "This page is configured for production video workflows. For commercial use, review your account plan, credit balance, model availability, and applicable content policy requirements."
+    }
+  ],
+  "cta": {
+    "kicker": "Start building",
+    "title": "Turn Wan into your video workflow",
+    "description": "Open the generator, test a Wan prompt or reference workflow, then use the API docs when you are ready to connect Wan to production.",
+    "primaryLabel": "Open Wan",
+    "secondaryLabel": "Review API features",
+    "stats": [
+      {
+        "value": "API-ready",
+        "label": "workflow"
+      },
+      {
+        "value": "720p-1080p",
+        "label": "resolution"
+      },
+      {
+        "value": "Multi-input",
+        "label": "control"
+      }
+    ]
+  }
+}

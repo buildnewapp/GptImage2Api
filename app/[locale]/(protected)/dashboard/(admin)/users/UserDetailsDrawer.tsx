@@ -88,14 +88,15 @@ function CopyValue({
   }
 
   return (
-    <span className="inline-flex min-w-0 max-w-full items-center gap-1.5 align-middle"
-          onClick={() => copyText(value, label)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              copyText(value, label);
-            }
-          }}
+    <span
+      className="inline-flex min-w-0 max-w-full items-center gap-1.5 align-middle"
+      onClick={() => copyText(value, label)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          copyText(value, label);
+        }
+      }}
     >
       <span
         title={value}
@@ -171,6 +172,8 @@ function toIsoDateTime(value: string) {
   return Number.isNaN(date.getTime()) ? null : date.toISOString();
 }
 
+type ManualCreditOperation = "grant" | "deduct";
+
 function ManualBenefitDialog({
   userId,
   plans,
@@ -181,6 +184,7 @@ function ManualBenefitDialog({
   onCompleted: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [operation, setOperation] = useState<ManualCreditOperation>("grant");
   const [selectedPlanId, setSelectedPlanId] = useState("none");
   const [subscriptionEnd, setSubscriptionEnd] = useState("");
   const [creditType, setCreditType] = useState<ManualCreditType>("none");
@@ -190,12 +194,13 @@ function ManualBenefitDialog({
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
-  const selectedPlan =
-    plans.find((plan) => plan.id === selectedPlanId) ?? null;
-  const isRecurringPlan =
-    selectedPlan ? isRecurringManualBenefitPlan(selectedPlan) : false;
+  const selectedPlan = plans.find((plan) => plan.id === selectedPlanId) ?? null;
+  const isRecurringPlan = selectedPlan
+    ? isRecurringManualBenefitPlan(selectedPlan)
+    : false;
 
   function resetForm() {
+    setOperation("grant");
     setSelectedPlanId("none");
     setSubscriptionEnd("");
     setCreditType("none");
@@ -219,7 +224,9 @@ function ManualBenefitDialog({
 
     const creditDefaults = getManualCreditDefaultsFromPlan(plan);
     setCreditType(creditDefaults.creditType);
-    setCreditAmount(creditDefaults.amount > 0 ? String(creditDefaults.amount) : "");
+    setCreditAmount(
+      creditDefaults.amount > 0 ? String(creditDefaults.amount) : "",
+    );
 
     if (isRecurringManualBenefitPlan(plan)) {
       const defaultEnd = getManualBenefitPeriodEnd(plan);
@@ -234,14 +241,26 @@ function ManualBenefitDialog({
     }
   }
 
+  function updateOperation(value: ManualCreditOperation) {
+    setOperation(value);
+    if (value === "deduct") {
+      setSelectedPlanId("none");
+      setSubscriptionEnd("");
+      setCreditExpiresAt("");
+      if (creditType === "none") {
+        setCreditType("one_time");
+      }
+    }
+  }
+
   function updateCreditType(value: ManualCreditType) {
     setCreditType(value);
-    if (value === "subscription" && !creditExpiresAt) {
+    if (operation === "grant" && value === "subscription" && !creditExpiresAt) {
       setCreditExpiresAt(
         subscriptionEnd || formatDateTimeLocal(getManualBenefitPeriodEnd({})),
       );
     }
-    if (value !== "subscription") {
+    if (operation === "deduct" || value !== "subscription") {
       setCreditExpiresAt("");
     }
   }
@@ -253,11 +272,19 @@ function ManualBenefitDialog({
       toast.error("请填写会员结束时间");
       return;
     }
+    if (operation === "deduct" && creditType === "none") {
+      toast.error("请选择要扣除的积分类型");
+      return;
+    }
     if (creditType !== "none" && (!Number.isFinite(amount) || amount <= 0)) {
       toast.error("请填写有效的积分数量");
       return;
     }
-    if (creditType === "subscription" && !creditExpiresAt) {
+    if (
+      operation === "grant" &&
+      creditType === "subscription" &&
+      !creditExpiresAt
+    ) {
       toast.error("请填写订阅积分结束时间");
       return;
     }
@@ -265,25 +292,34 @@ function ManualBenefitDialog({
     startTransition(async () => {
       const result = await grantManualUserBenefits({
         userId,
-        planId: selectedPlanId === "none" ? null : selectedPlanId,
-        subscriptionPeriodEnd: isRecurringPlan
-          ? toIsoDateTime(subscriptionEnd)
-          : null,
+        operation,
+        planId:
+          operation === "grant" && selectedPlanId !== "none"
+            ? selectedPlanId
+            : null,
+        subscriptionPeriodEnd:
+          operation === "grant" && isRecurringPlan
+            ? toIsoDateTime(subscriptionEnd)
+            : null,
         creditType,
         creditAmount: amount,
         creditExpiresAt:
-          creditType === "subscription" ? toIsoDateTime(creditExpiresAt) : null,
+          operation === "grant" && creditType === "subscription"
+            ? toIsoDateTime(creditExpiresAt)
+            : null,
         notes: notes || undefined,
       });
 
       if (result.success) {
-        toast.success("权益已添加");
+        toast.success(operation === "deduct" ? "积分已扣除" : "权益已添加");
         resetForm();
         setOpen(false);
         onCompleted();
         router.refresh();
       } else {
-        toast.error("添加权益失败", { description: result.error });
+        toast.error(operation === "deduct" ? "扣除积分失败" : "添加权益失败", {
+          description: result.error,
+        });
       }
     });
   }
@@ -301,37 +337,57 @@ function ManualBenefitDialog({
       <DialogTrigger asChild>
         <Button size="xs" variant="outline" className="gap-1.5">
           <Gift className="h-3.5 w-3.5" />
-          添加权益
+          调整权益
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>添加权益</DialogTitle>
+          <DialogTitle>调整权益</DialogTitle>
           <DialogDescription>
-            产品和积分都可以单独填写；一次性产品不会创建订阅记录。
+            添加时可以选择产品或积分；扣除时只调整积分余额。
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>产品</Label>
-            <Select value={selectedPlanId} onValueChange={applyPlanDefaults}>
+            <Label>操作</Label>
+            <Select
+              value={operation}
+              onValueChange={(value) =>
+                updateOperation(value as ManualCreditOperation)
+              }
+            >
               <SelectTrigger>
-                <SelectValue placeholder="不选择产品" />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">不选择产品</SelectItem>
-                {plans.map((plan) => (
-                  <SelectItem key={plan.id} value={plan.id}>
-                    {plan.cardTitle}
-                    {plan.displayPrice ? ` · ${plan.displayPrice}` : ""}
-                  </SelectItem>
-                ))}
+                <SelectItem value="grant">添加</SelectItem>
+                <SelectItem value="deduct">扣除</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          {isRecurringPlan ? (
+          {operation === "grant" ? (
+            <div className="space-y-2">
+              <Label>产品</Label>
+              <Select value={selectedPlanId} onValueChange={applyPlanDefaults}>
+                <SelectTrigger>
+                  <SelectValue placeholder="不选择产品" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">不选择产品</SelectItem>
+                  {plans.map((plan) => (
+                    <SelectItem key={plan.id} value={plan.id}>
+                      {plan.cardTitle}
+                      {plan.displayPrice ? ` · ${plan.displayPrice}` : ""}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          ) : null}
+
+          {operation === "grant" && isRecurringPlan ? (
             <div className="space-y-2">
               <Label htmlFor="manual-benefit-subscription-end">
                 会员结束时间
@@ -363,7 +419,9 @@ function ManualBenefitDialog({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">不添加积分</SelectItem>
+                  <SelectItem value="none">
+                    {operation === "deduct" ? "不扣除积分" : "不添加积分"}
+                  </SelectItem>
                   <SelectItem value="one_time">一次性积分</SelectItem>
                   <SelectItem value="subscription">订阅积分</SelectItem>
                 </SelectContent>
@@ -383,7 +441,7 @@ function ManualBenefitDialog({
             </div>
           </div>
 
-          {creditType === "subscription" ? (
+          {operation === "grant" && creditType === "subscription" ? (
             <div className="space-y-2">
               <Label htmlFor="manual-benefit-credit-end">
                 订阅积分结束时间
@@ -417,7 +475,7 @@ function ManualBenefitDialog({
             取消
           </Button>
           <Button disabled={isPending} onClick={submit}>
-            确认添加
+            {operation === "deduct" ? "确认扣除" : "确认添加"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -642,7 +700,11 @@ function UserDetailsContent({
                   </div>
                   <div className="flex min-w-0 items-center gap-1">
                     <span className="shrink-0">Subscription ID:</span>
-                    <CopyValue value={subscription.subscriptionId} label="Subscription ID" muted />
+                    <CopyValue
+                      value={subscription.subscriptionId}
+                      label="Subscription ID"
+                      muted
+                    />
                   </div>
                   <div>Created: {formatDate(subscription.createdAt)}</div>
                 </div>

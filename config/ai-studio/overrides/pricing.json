@@ -3,36 +3,162 @@
     "video:bytedance-seedance-2": {
       "addRows": [
         {
-          "modelDescription": "Seedance 2.0 VIP, 720p no video input",
+          "modelDescription": "Seedance 2.0 VIP, video-to-video, 480p",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "11.5",
+          "creditUnit": "per second",
+          "usdPrice": "0.0575",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-2.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-2",
+          "runtimeModel": "bytedance/seedance-2",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "Seedance 2.0 VIP, text/image-to-video, 480p",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "19",
+          "creditUnit": "per second",
+          "usdPrice": "0.095",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-2.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-2",
+          "runtimeModel": "bytedance/seedance-2",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "Seedance 2.0 VIP, video-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "25",
+          "creditUnit": "per second",
+          "usdPrice": "0.125",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-2.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-2",
+          "runtimeModel": "bytedance/seedance-2",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "Seedance 2.0 VIP, text/image-to-video, 720p",
           "interfaceType": "video",
           "provider": "ByteDance",
           "creditPrice": "41",
           "creditUnit": "per second",
-          "usdPrice": "",
+          "usdPrice": "0.205",
           "falPrice": "",
           "discountRate": 0,
           "anchor": "https://docs.kie.ai/market/bytedance/seedance-2.md",
-          "discountPrice": false
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-2",
+          "runtimeModel": "bytedance/seedance-2",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "Seedance 2.0 VIP, video-to-video, 1080p",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "62",
+          "creditUnit": "per second",
+          "usdPrice": "0.31",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-2.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-2",
+          "runtimeModel": "bytedance/seedance-2",
+          "resolution": "1080p"
+        },
+        {
+          "modelDescription": "Seedance 2.0 VIP, text/image-to-video, 1080p",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "102",
+          "creditUnit": "per second",
+          "usdPrice": "0.51",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-2.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-2",
+          "runtimeModel": "bytedance/seedance-2",
+          "resolution": "1080p"
         }
       ]
     },
     "video:bytedance-seedance-2-0-fast": {
       "addRows": [
         {
-          "modelDescription": "Seedance 2.0 Fast VIP, 720p no video input",
+          "modelDescription": "Seedance 2.0 Fast VIP, video-to-video, 480p",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "9",
+          "creditUnit": "per second",
+          "usdPrice": "0.045",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-2-fast.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-2-0-fast",
+          "runtimeModel": "bytedance/seedance-2-fast",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "Seedance 2.0 Fast VIP, text/image-to-video, 480p",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "15.5",
+          "creditUnit": "per second",
+          "usdPrice": "0.0775",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-2-fast.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-2-0-fast",
+          "runtimeModel": "bytedance/seedance-2-fast",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "Seedance 2.0 Fast VIP, video-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "ByteDance",
+          "creditPrice": "20",
+          "creditUnit": "per second",
+          "usdPrice": "0.100",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/bytedance/seedance-2-fast.md",
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-2-0-fast",
+          "runtimeModel": "bytedance/seedance-2-fast",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "Seedance 2.0 Fast VIP, text/image-to-video, 720p",
           "interfaceType": "video",
           "provider": "ByteDance",
           "creditPrice": "33",
           "creditUnit": "per second",
-          "usdPrice": "",
+          "usdPrice": "0.165",
           "falPrice": "",
           "discountRate": 0,
           "anchor": "https://docs.kie.ai/market/bytedance/seedance-2-fast.md",
-          "discountPrice": false
+          "discountPrice": false,
+          "catalogModelId": "video:bytedance-seedance-2-0-fast",
+          "runtimeModel": "bytedance/seedance-2-fast",
+          "resolution": "720p"
         }
       ]
     },
-    "video:apimart-seedance-2-0": {
+    "video:fal-seedance-2-0": {
       "addRows": [
         {
           "modelDescription": "Seedance 2.0, 720p no video input",
@@ -48,7 +174,7 @@
         }
       ]
     },
-    "video:apimart-seedance-2-0-fast": {
+    "video:fal-seedance-2-0-fast": {
       "addRows": [
         {
           "modelDescription": "Seedance 2.0 Fast, 720p no video input",

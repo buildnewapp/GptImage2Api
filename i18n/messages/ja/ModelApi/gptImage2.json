@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "title": "GPT Image 2 API",
+    "description": "テキストから画像生成、参照画像を使った画像編集に対応した GPT Image 2 API をテストして統合できます。"
+  },
+  "title": "GPT Image 2 API",
+  "badge": "画像 API",
+  "description": [
+    "GPT Image 2 API は、プロンプト生成、参照画像編集、予測しやすい API payload が必要な本番向け画像生成ワークフローに適しています。キャンペーンビジュアル、商品画像、SNS クリエイティブ、デザインモックを SdanceAI の生成フロー内で作成できます。",
+    "現在の統合では Text to Image と Image to Image を提供し、1K、2K、4K の料金ティアと、正方形・縦長・横長・ポートレート向けの一般的なアスペクト比に対応しています。"
+  ],
+  "monitor": {
+    "label": "24時間ステータス"
+  },
+  "pricingNote": "USD 見積もりは最適な年額プランの $0.005/クレジットで計算しています。最終料金は選択した解像度とモデルタイプに従います。",
+  "labels": {
+    "apiDocs": "API ドキュメント",
+    "apiDocsDetail": "API 詳細ドキュメントを見る",
+    "apiDocsDetailDescription": "エンドポイント、認証、タスクのポーリング、payload の詳細を確認できます。",
+    "apiInputDescription": "プロンプト、入力画像、比率、解像度、コールバック、安全設定をコンパクトな payload で管理します。",
+    "apiInputKicker": "API 入力",
+    "apiInputTitle": "主要リクエストフィールド",
+    "descriptionColumn": "説明",
+    "fieldColumn": "フィールド",
+    "lowestCostPrefix": "最低コスト",
+    "modelType": "モデルタイプ:",
+    "pricingTitle": "料金",
+    "requestJson": "Request JSON",
+    "runWithApi": "API で実行",
+    "selectedModel": "選択中モデル",
+    "selectedModelNote": "Playground、リクエスト例、入力フィールド、料金は選択中のモデルタイプに連動します。",
+    "typeColumn": "型",
+    "useModelForGeneration": "{model} で生成"
+  },
+  "featuresKicker": "Capabilities",
+  "featuresTitle": "GPT Image 2 API が画像ワークフローに加える機能",
+  "featuresDescription": "モデルを試し、フィールドを確認し、そのまま統合へ進める API ファーストの構成です。",
+  "capabilities": [
+    {
+      "icon": "sparkles",
+      "title": "テキストから画像生成",
+      "description": "構造化したプロンプトから、ポスター、広告、サムネイル、コンセプトアート、商品シーン向けの画像を生成できます。"
+    },
+    {
+      "icon": "image",
+      "title": "参照画像編集",
+      "description": "入力画像の文脈を保ちながら、スタイル、背景、レイアウト、ライティング、商品表現を変更できます。"
+    },
+    {
+      "icon": "layers",
+      "title": "解像度ティア",
+      "description": "1K、2K、4K から選び、反復コスト、プレビュー品質、最終画像の精細さを調整できます。"
+    },
+    {
+      "icon": "code",
+      "title": "API-ready payload",
+      "description": "モデル ID、コールバック URL、プロンプト、入力画像 URL、アスペクト比、解像度を 1 つの予測しやすいリクエストで扱えます。"
+    }
+  ],
+  "quickStartKicker": "Quick Start",
+  "quickStartTitle": "プロンプトテストから画像 API リクエストへ",
+  "quickStartDescription": "画像品質を確認してから、生成機能をアプリやコンテンツパイプラインへ組み込めます。",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. モード選択",
+      "description": "新しい画像を作る場合は Text to Image、参照画像を使って編集する場合は Image to Image を選びます。"
+    },
+    {
+      "icon": "key",
+      "title": "2. 生成を送信",
+      "description": "API キー、モデル ID、プロンプト、任意の入力画像 URL、アスペクト比、解像度を指定して呼び出します。"
+    },
+    {
+      "icon": "play",
+      "title": "3. ポーリングして利用",
+      "description": "タスク完了まで追跡し、生成された画像をアプリ、キャンペーン、アセットライブラリで利用します。"
+    }
+  ],
+  "useCasesKicker": "Use Cases",
+  "useCasesTitle": "GPT Image 2 API で作れるもの",
+  "useCasesDescription": "単発の手動書き出しではなく、繰り返し使える高品質な画像生成を製品に組み込めます。",
+  "useCases": [
+    "商品メイン画像と EC ビジュアル",
+    "SNS 投稿、サムネイル、広告クリエイティブ",
+    "ポスター、チラシ、キャンペーンキービジュアル",
+    "参照画像を使った服装、背景、スタイル編集",
+    "デザインモックとビジュアルコンセプト探索",
+    "コンテンツパイプライン向け一括クリエイティブ生成"
+  ],
+  "communityShowcase": {
+    "kicker": "Community Showcase",
+    "title": "コミュニティの GPT Image 2 成功事例",
+    "description": "公開され、正常に生成された GPT Image 2 の出力を確認できます。各事例からプロンプト、設定、結果を詳しく見られます。",
+    "viewAll": "もっと見る",
+    "viewDetails": "詳細を見る"
+  },
+  "productionKicker": "Production Notes",
+  "productionTitle": "実運用の画像 API ワークフロー向け",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "アカウント連動の実行",
+      "body": "ユーザーはログイン後にジョブを送信し、既存の SdanceAI 生成フローでクレジットを消費します。"
+    },
+    {
+      "icon": "image",
+      "title": "入力画像の扱い",
+      "body": "Image to Image は入力画像 URL を受け取るため、参照素材を既存のアセットパイプラインに置いたまま新しいバリエーションを生成できます。"
+    },
+    {
+      "icon": "zap",
+      "title": "解像度でコスト調整",
+      "body": "まず 1K で素早く反復し、プロンプトと方向性が決まったら 2K または 4K で最終画像を作成できます。"
+    }
+  ],
+  "faqKicker": "FAQ",
+  "faqTitle": "GPT Image 2 API FAQ",
+  "faqs": [
+    {
+      "question": "GPT Image 2 API は何に向いていますか？",
+      "answer": "プロンプトによる画像生成と参照画像ベースの編集に向いています。商品画像、広告、SNS クリエイティブ、ポスター、デザインモックなどに使えます。"
+    },
+    {
+      "question": "Text to Image と Image to Image の違いは？",
+      "answer": "Text to Image はプロンプトだけで生成します。Image to Image は 1 枚以上の入力画像 URL とプロンプトを使うため、編集、バリエーション、参照を保つワークフローに向いています。"
+    },
+    {
+      "question": "どの解像度に対応していますか？",
+      "answer": "現在の API 設定では 1K、2K、4K の料金ティアがあります。反復には低解像度、最終素材には高解像度を選ぶのがおすすめです。"
+    },
+    {
+      "question": "どのアスペクト比を使えますか？",
+      "answer": "auto、1:1、9:16、16:9、4:3、3:4 を利用できます。最終生成前に配信先に合わせて比率を選んでください。"
+    },
+    {
+      "question": "Image to Image では何枚の入力画像を使えますか？",
+      "answer": "現在の画像編集 payload は入力画像 URL 配列に対応しており、最大 16 枚の参照画像を指定できます。"
+    },
+    {
+      "question": "統合前にどこで試せますか？",
+      "answer": "このページの Playground で、プロンプト、入力画像 URL、アスペクト比、解像度、API payload を試せます。"
+    },
+    {
+      "question": "GPT Image 2 API は商用ワークフローで使えますか？",
+      "answer": "このページは本番画像ワークフロー向けに構成されています。商用利用前に、アカウントプラン、クレジット残高、モデル提供状況、適用されるコンテンツポリシーを確認してください。"
+    },
+    {
+      "question": "API はコールバックに対応していますか？",
+      "answer": "はい。リクエスト schema には任意の callback URL があり、サービス側でタスク完了通知を受け取れます。"
+    },
+    {
+      "question": "コストはどう管理すればよいですか？",
+      "answer": "1K でプロンプト探索と下書きを行い、良い方向性だけを 2K または 4K で再生成すると管理しやすくなります。"
+    },
+    {
+      "question": "既存の商品写真を編集できますか？",
+      "answer": "はい。Image to Image に入力画像 URL を渡し、背景、ライティング、構図、スタイルなど必要な変更をプロンプトで指定してください。"
+    }
+  ],
+  "cta": {
+    "kicker": "Start building",
+    "title": "GPT Image 2 を画像ワークフローへ",
+    "description": "まず生成画面でプロンプトや参照画像を試し、結果を確認してから API ドキュメントで本番フローに接続できます。",
+    "primaryLabel": "GPT Image 2 を開く",
+    "secondaryLabel": "API 機能を見る",
+    "stats": [
+      {
+        "value": "API ready",
+        "label": "workflow"
+      },
+      {
+        "value": "1K-4K",
+        "label": "resolution"
+      },
+      {
+        "value": "16枚",
+        "label": "references"
+      }
+    ]
+  }
+}

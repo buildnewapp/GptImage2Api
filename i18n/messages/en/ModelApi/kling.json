@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "title": "Kling API",
+    "description": "Test and integrate Kling API for text-to-video, image-to-video, motion control, and AI avatar video generation."
+  },
+  "title": "Kling API",
+  "badge": "API workflow",
+  "description": [
+    "Kling is a video generation model family for creators and product teams that need flexible text-to-video and image-to-video workflows. This page brings the available Kling variants into one API-first experience so you can compare model behavior, pricing, request fields, and generated results.",
+    "Use Kling when your workflow needs cinematic motion, image-driven animation, motion control, or avatar-style video output. Choose a model version in the playground, test the output, then move the same model into your production API flow."
+  ],
+  "monitor": {
+    "label": "24h Status Monitor"
+  },
+  "pricingNote": "USD estimates use $0.005/credit with the best annual plan.",
+  "labels": {
+    "apiDocs": "API docs",
+    "apiDocsDetail": "View detailed API docs",
+    "apiDocsDetailDescription": "Open the full API documentation for endpoints, authentication, task polling, and payload details.",
+    "apiInputDescription": "Request fields follow the selected Kling model, so the payload stays aligned with text, image, motion, or avatar generation.",
+    "apiInputKicker": "API Input",
+    "apiInputTitle": "Core request fields",
+    "descriptionColumn": "Description",
+    "fieldColumn": "Field",
+    "lowestCostPrefix": "Lowest cost starts at",
+    "modelType": "Model Type:",
+    "pricingTitle": "Pricing",
+    "requestJson": "Request JSON",
+    "runWithApi": "Run with API",
+    "selectedModel": "Selected model",
+    "selectedModelNote": "The playground, request sample, request fields, and pricing on this page follow the selected model type.",
+    "typeColumn": "Type",
+    "useModelForGeneration": "Use {model} for generation"
+  },
+  "featuresKicker": "Capabilities",
+  "featuresTitle": "What Kling API adds to your video workflow",
+  "featuresDescription": "The page follows the same API-first structure as the reference: test the model, understand the fields, then move into integration.",
+  "capabilities": [
+    {
+      "icon": "video",
+      "title": "Text and image to video",
+      "description": "Generate clips from prompts or animate source images while keeping the selected Kling version, duration, and quality settings explicit."
+    },
+    {
+      "icon": "sparkles",
+      "title": "Cinematic motion",
+      "description": "Use Kling for dynamic camera movement, stylized action, product reveals, character shots, and short-form visual storytelling."
+    },
+    {
+      "icon": "layers",
+      "title": "Multiple model variants",
+      "description": "Switch between Kling 3.0, 2.6, 2.5 Turbo, 2.1, motion-control, and avatar variants without leaving the page."
+    },
+    {
+      "icon": "image",
+      "title": "Reference-led output",
+      "description": "Use image or motion references where the selected model supports them, so generated clips can follow a clearer subject and scene direction."
+    }
+  ],
+  "quickStartKicker": "Quick Start",
+  "quickStartTitle": "From Kling test to production request",
+  "quickStartDescription": "A compact integration path for teams that want to validate a Kling variant before wiring it into an app.",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. Pick a Kling model",
+      "description": "Choose the Kling version that matches your job, such as text-to-video, image-to-video, motion control, or avatar generation."
+    },
+    {
+      "icon": "key",
+      "title": "2. Submit generation",
+      "description": "Call the API with your account key, model id, prompt, media URLs, duration, resolution, and model-specific fields."
+    },
+    {
+      "icon": "play",
+      "title": "3. Poll and deliver",
+      "description": "Track the task until it succeeds, then retrieve the generated video URL for your app, campaign, or production pipeline."
+    }
+  ],
+  "useCasesKicker": "Use Cases",
+  "useCasesTitle": "What you can create with Kling API",
+  "useCasesDescription": "Use the API when your product needs repeatable Kling video output, not just a one-off playground result.",
+  "useCases": [
+    "Social clips for TikTok, Reels, and Shorts",
+    "Image animation for products, portraits, and concepts",
+    "Motion-controlled creative shots",
+    "Avatar and spokesperson videos",
+    "Storyboard and pre-visualization clips",
+    "Batch video production for templates and campaigns"
+  ],
+  "communityShowcase": {
+    "kicker": "Community Showcase",
+    "title": "Successful Kling generations from the community",
+    "description": "Browse public Kling outputs that finished successfully, then open any case to inspect the prompt, settings, and result.",
+    "viewAll": "View more",
+    "viewDetails": "View details"
+  },
+  "productionKicker": "Production Notes",
+  "productionTitle": "Built for real API workflows",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "Account-gated execution",
+      "body": "Users sign in, submit Kling jobs, and consume credits through the existing SdanceAI generation flow."
+    },
+    {
+      "icon": "image",
+      "title": "Media-aware requests",
+      "body": "The studio supports uploaded reference media, direct URLs, previews, and form/API payload editing where the selected Kling model supports media input."
+    },
+    {
+      "icon": "zap",
+      "title": "Version-specific control",
+      "body": "Switch between Kling versions based on output type, quality target, price, and generation controls."
+    }
+  ],
+  "faqKicker": "FAQ",
+  "faqTitle": "Kling API questions",
+  "faqs": [
+    {
+      "question": "What is Kling API best for?",
+      "answer": "It is best for short AI video generation workflows that need text-to-video, image-to-video, motion control, or avatar-style outputs."
+    },
+    {
+      "question": "Which Kling versions are available on this page?",
+      "answer": "The page follows the configured Kling family in SdanceAI, including Kling 3.0, Kling 3.0 Motion Control, Kling 2.6, Kling 2.5 Turbo, Kling V2.1, and avatar variants."
+    },
+    {
+      "question": "Can I use an image reference with Kling API?",
+      "answer": "Yes. Choose an image-to-video or media-capable Kling version, then provide the image URL or upload media through the studio flow."
+    },
+    {
+      "question": "Where can I test Kling before integrating?",
+      "answer": "Use the playground on this page to test prompts, media inputs, model versions, request payloads, pricing, and output behavior before moving into production."
+    },
+    {
+      "question": "Does Kling API support motion control?",
+      "answer": "Yes. The configured Kling family includes motion-control variants, and the request fields update based on the selected model."
+    },
+    {
+      "question": "Can I build avatar videos with Kling API?",
+      "answer": "Yes. The configured Kling family includes AI avatar standard and pro variants for avatar-style video workflows."
+    },
+    {
+      "question": "How does pricing work?",
+      "answer": "Pricing is shown per selected Kling model using the existing credit table. The page also shows an estimated USD cost based on the configured credit value."
+    },
+    {
+      "question": "Can I use Kling API for commercial projects?",
+      "answer": "This page is configured for API workflows. For production use, review your account plan, credit balance, model availability, and any applicable content policy requirements."
+    }
+  ],
+  "cta": {
+    "kicker": "Start building",
+    "title": "Turn Kling into your video workflow",
+    "description": "Open the generator, test a Kling version, then use the API docs when you are ready to wire Kling into production.",
+    "primaryLabel": "Open Kling",
+    "secondaryLabel": "Review API features",
+    "stats": [
+      {
+        "value": "13",
+        "label": "model variants"
+      },
+      {
+        "value": "Text + image",
+        "label": "inputs"
+      },
+      {
+        "value": "API-ready",
+        "label": "workflow"
+      }
+    ]
+  }
+}

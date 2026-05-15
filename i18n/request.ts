@@ -31,6 +31,16 @@ export default getRequestConfig(async ({ requestLocale }) => {
       SvgTemplate: (await import(`./messages/${locale}/SvgTemplate.json`)).default,
       ToolHome: (await import(`./messages/${locale}/ToolHome.json`)).default,
       ApiDoc: (await import(`./messages/${locale}/ApiDoc.json`)).default,
+      ModelApi: {
+        seedance2: (await import(`./messages/${locale}/ModelApi/seedance2.json`)).default,
+        seedance15: (await import(`./messages/${locale}/ModelApi/seedance15.json`)).default,
+        gptImage2: (await import(`./messages/${locale}/ModelApi/gptImage2.json`)).default,
+        grokVideo: (await import(`./messages/${locale}/ModelApi/grokVideo.json`)).default,
+        wan: (await import(`./messages/${locale}/ModelApi/wan.json`)).default,
+        veo31: (await import(`./messages/${locale}/ModelApi/veo31.json`)).default,
+        sora2: (await import(`./messages/${locale}/ModelApi/sora2.json`)).default,
+        kling: (await import(`./messages/${locale}/ModelApi/kling.json`)).default,
+      },
 
       // Dashboard - User
       Settings: (

@@ -398,7 +398,7 @@ test("does not advertise callback capability when schema has no callback field",
 test("does not inject legacy kie callback fallback for apimart models", () => {
   const body = applyAiStudioSystemFields(
     {
-      id: "video:apimart-seedance-2-0",
+      id: "video:fal-seedance-2-0",
       vendor: "apimart",
       category: "video",
       title: "Seedance 2.0",
@@ -459,7 +459,7 @@ test("submits apimart executions against the apimart base url and extracts task 
 
   const result = await submitAiStudioExecution(
     {
-      id: "video:apimart-seedance-2-0",
+      id: "video:fal-seedance-2-0",
       vendor: "apimart",
       category: "video",
       title: "Seedance 2.0",
@@ -508,7 +508,7 @@ test("queries apimart task status using the task path template", async () => {
       generatedAt: "2026-03-08T00:00:00.000Z",
       items: [
         {
-          id: "video:apimart-seedance-2-0",
+          id: "video:fal-seedance-2-0",
           vendor: "apimart",
           category: "video",
           title: "Seedance 2.0",
@@ -560,7 +560,7 @@ test("queries apimart task status using the task path template", async () => {
   };
 
   const result = await queryAiStudioTask(
-    "video:apimart-seedance-2-0",
+    "video:fal-seedance-2-0",
     "task_apimart_123",
   );
 
@@ -599,7 +599,7 @@ test("deduplicates concurrent task status queries for the same task", async () =
       generatedAt: "2026-04-29T00:00:00.000Z",
       items: [
         {
-          id: "video:apimart-seedance-2-0",
+          id: "video:fal-seedance-2-0",
           vendor: "apimart",
           category: "video",
           title: "Seedance 2.0",
@@ -642,8 +642,8 @@ test("deduplicates concurrent task status queries for the same task", async () =
   };
 
   const [first, second] = await Promise.all([
-    queryAiStudioTask("video:apimart-seedance-2-0", "task_apimart_123"),
-    queryAiStudioTask("video:apimart-seedance-2-0", "task_apimart_123"),
+    queryAiStudioTask("video:fal-seedance-2-0", "task_apimart_123"),
+    queryAiStudioTask("video:fal-seedance-2-0", "task_apimart_123"),
   ]);
 
   assert.equal(fetchCount, 1);
@@ -672,7 +672,7 @@ test("prepareAiStudioExecution applies dynamic official pricing for seedance 2.0
       generatedAt: "2026-04-12T00:00:00.000Z",
       items: [
         {
-          id: "video:apimart-seedance-2-0",
+          id: "video:fal-seedance-2-0",
           alias: "seedance-2-0",
           vendor: "apimart",
           category: "video",
@@ -714,7 +714,7 @@ test("prepareAiStudioExecution applies dynamic official pricing for seedance 2.0
     },
   });
 
-  assert.equal(prepared.detail.id, "video:apimart-seedance-2-0");
+  assert.equal(prepared.detail.id, "video:fal-seedance-2-0");
   assert.equal(prepared.body.model, "doubao-seedance-2.0");
   assert.equal("__local_reference_metadata" in prepared.body, false);
   assert.equal(prepared.selectedPricing?.creditPrice, "325");

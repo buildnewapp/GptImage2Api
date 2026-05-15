@@ -1,9 +1,9 @@
 type SeedanceModelId =
   | "video:seedance-2-0"
-  | "video:apimart-seedance-2-0"
+  | "video:fal-seedance-2-0"
   | "video:seedance-2-0-vip"
   | "video:seedance-2-0-fast"
-  | "video:apimart-seedance-2-0-fast"
+  | "video:fal-seedance-2-0-fast"
   | "video:seedance-2-0-fast-vip";
 
 type SeedanceResolution = "480p" | "720p" | "1080p";
@@ -244,7 +244,7 @@ function parseInputVideoDuration(payload: Record<string, any>) {
 function getSeedanceTier(model: string): SeedanceTier | null {
   if (
     model === "video:seedance-2-0" ||
-    model === "video:apimart-seedance-2-0" ||
+    model === "video:fal-seedance-2-0" ||
     model === "video:seedance-2-0-vip"
   ) {
     return "standard";
@@ -252,7 +252,7 @@ function getSeedanceTier(model: string): SeedanceTier | null {
 
   if (
     model === "video:seedance-2-0-fast" ||
-    model === "video:apimart-seedance-2-0-fast" ||
+    model === "video:fal-seedance-2-0-fast" ||
     model === "video:seedance-2-0-fast-vip"
   ) {
     return "fast";

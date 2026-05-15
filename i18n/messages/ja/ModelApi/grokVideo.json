@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "title": "Grok Video API",
+    "description": "テキスト動画、画像から動画、動画アップスケール、動画延長に対応した Grok Video API をテストして統合できます。"
+  },
+  "title": "Grok Video API",
+  "badge": "動画 API",
+  "description": [
+    "Grok Video API は、Grok Imagine の動画生成を本番ワークフローに組み込むための API ファーストなページです。1つのモデルファミリーで、テキストから動画、画像から動画、動画アップスケール、動画延長に対応します。",
+    "Playground でプロンプト、元画像、タスク ID、長さ、アスペクト比、payload の挙動を確認してから、アプリ、制作ツール、コンテンツパイプラインに接続できます。"
+  ],
+  "monitor": {
+    "label": "24時間ステータス"
+  },
+  "pricingNote": "USD 見積もりは最適な年額プランの $0.005/クレジットで計算しています。最終的な課金は選択した Grok 動画モードと出力設定に従います。",
+  "labels": {
+    "apiDocs": "API ドキュメント",
+    "apiDocsDetail": "API 詳細ドキュメントを見る",
+    "apiDocsDetailDescription": "エンドポイント、認証、タスクのポーリング、payload の詳細を確認できます。",
+    "apiInputDescription": "プロンプト、画像 URL、元タスク ID、アスペクト比、コールバック設定を予測しやすい payload で扱えます。",
+    "apiInputKicker": "API 入力",
+    "apiInputTitle": "主要リクエストフィールド",
+    "descriptionColumn": "説明",
+    "fieldColumn": "フィールド",
+    "lowestCostPrefix": "最低コスト",
+    "modelType": "モデルタイプ:",
+    "pricingTitle": "料金",
+    "requestJson": "Request JSON",
+    "runWithApi": "API で実行",
+    "selectedModel": "選択中モデル",
+    "selectedModelNote": "Playground、リクエスト例、入力フィールド、料金は選択中のモデルタイプに連動します。",
+    "typeColumn": "型",
+    "useModelForGeneration": "{model} で生成"
+  },
+  "featuresKicker": "Capabilities",
+  "featuresTitle": "Grok Video API が動画ワークフローに加える機能",
+  "featuresDescription": "モデルを試し、フィールドを確認し、そのまま統合へ進める API ファーストの構成です。",
+  "capabilities": [
+    {
+      "icon": "sparkles",
+      "title": "テキストから動画",
+      "description": "詳細なプロンプトから、SNS、広告、製品シーン、素早いコンセプト探索向けの短尺動画を生成できます。"
+    },
+    {
+      "icon": "image",
+      "title": "画像から動画",
+      "description": "元画像の被写体、構図、ビジュアル方針を保ちながら、静止画に動きを加えられます。"
+    },
+    {
+      "icon": "video",
+      "title": "アップスケールと延長",
+      "description": "成功した Grok クリップをアップスケールしたり、既存の生成結果を延長タスクで続けたりできます。"
+    },
+    {
+      "icon": "code",
+      "title": "API ready payload",
+      "description": "モデル ID、プロンプト、画像 URL、タスク ID、比率、コールバック、タスク取得を1つの統合フローで扱えます。"
+    }
+  ],
+  "quickStartKicker": "Quick Start",
+  "quickStartTitle": "Grok 動画テストから本番リクエストへ",
+  "quickStartDescription": "API を製品に組み込む前に、Grok 動画の出力品質を素早く確認できます。",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. モードを選択",
+      "description": "プロンプトのみなら Text to Video、元画像を動かすなら Image to Video、成功結果には Upscale や Extend を選びます。"
+    },
+    {
+      "icon": "key",
+      "title": "2. 生成を送信",
+      "description": "API キー、モデル ID、プロンプト、任意の画像 URL または元タスク ID、コールバック URL を指定して呼び出します。"
+    },
+    {
+      "icon": "play",
+      "title": "3. ポーリングして再利用",
+      "description": "タスク完了まで追跡し、出力 URL を製品、キャンペーン、次の動画タスクに利用します。"
+    }
+  ],
+  "useCasesKicker": "Use Cases",
+  "useCasesTitle": "Grok Video API で作れるもの",
+  "useCasesDescription": "単発生成ではなく、繰り返し使える Grok 動画出力を製品に組み込めます。",
+  "useCases": [
+    "TikTok、Reels、Shorts 向けのプロンプト動画",
+    "製品画像のアニメーションとキャンペーン素材",
+    "ストーリーボードとコンセプト動画の探索",
+    "広告、サムネイル、LP 向け動画バリエーション",
+    "成功した生成クリップの高品質版",
+    "反復制作パイプライン向けの動画延長"
+  ],
+  "communityShowcase": {
+    "kicker": "Community Showcase",
+    "title": "コミュニティの Grok 動画成功事例",
+    "description": "公開され、正常に生成された Grok 動画を確認できます。各事例からプロンプト、設定、結果を詳しく見られます。",
+    "viewAll": "もっと見る",
+    "viewDetails": "詳細を見る"
+  },
+  "productionKicker": "Production Notes",
+  "productionTitle": "実運用の Grok 動画 API ワークフロー向け",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "アカウント連動の実行",
+      "body": "ユーザーはログイン後にジョブを送信し、既存の SdanceAI 生成フローでクレジットを消費します。"
+    },
+    {
+      "icon": "image",
+      "title": "参照とタスク入力",
+      "body": "Image to Video は元画像 URL を受け取り、Upscale と Extend は完了済み動画タスク ID から続けられます。"
+    },
+    {
+      "icon": "zap",
+      "title": "モード別の反復",
+      "body": "まず Text to Video や Image to Video で方向性を探り、良い出力を Upscale や Extend に進められます。"
+    }
+  ],
+  "faqKicker": "FAQ",
+  "faqTitle": "Grok Video API FAQ",
+  "faqs": [
+    {
+      "question": "Grok Video API は何に向いていますか？",
+      "answer": "プロンプト動画、元画像のアニメーション、動画バリエーション、アップスケール、クリエイティブシーケンスの延長など、繰り返し使う短尺動画生成に向いています。"
+    },
+    {
+      "question": "どの Grok 動画モードが使えますか？",
+      "answer": "このページでは Grok Imagine Text to Video、Grok Imagine Image to Video、Grok Imagine Video Upscale、Grok Imagine Video Extend を提供しています。"
+    },
+    {
+      "question": "Text to Video と Image to Video の違いは？",
+      "answer": "Text to Video はプロンプトのみで開始します。Image to Video は元画像とプロンプトを使うため、被写体や構図の連続性が必要な場合に向いています。"
+    },
+    {
+      "question": "Upscale と Extend はいつ使いますか？",
+      "answer": "成功した Grok 動画をより高品質にしたい場合は Upscale、完了済み生成をさらに続けたい場合は Extend を使います。"
+    },
+    {
+      "question": "統合前にどこで試せますか？",
+      "answer": "このページの Playground で、プロンプト、画像 URL、元タスク ID、比率、コールバック、API payload を試せます。"
+    },
+    {
+      "question": "API はコールバックに対応していますか？",
+      "answer": "はい。対応するモードでは request schema にコールバック設定があり、サービス側でタスク完了通知を受け取れます。"
+    },
+    {
+      "question": "Grok Video API は商用ワークフローで使えますか？",
+      "answer": "このページは本番動画ワークフロー向けに構成されています。商用利用前に、アカウントプラン、クレジット残高、モデル提供状況、適用されるコンテンツポリシーを確認してください。"
+    },
+    {
+      "question": "既存の商品画像を動かせますか？",
+      "answer": "はい。Image to Video モードで元画像 URL を渡し、動き、カメラ、最終的な見た目をプロンプトで指定します。"
+    },
+    {
+      "question": "コストはどう管理すればよいですか？",
+      "answer": "まずプロンプトや Image to Video で素早く検証し、目標に近いクリップだけを Upscale や Extend に進めるのがおすすめです。"
+    },
+    {
+      "question": "実際の API フィールドを確認できますか？",
+      "answer": "はい。このページで Grok 動画モードを選ぶと、Request JSON、フィールド一覧、料金パネルがそのモデルに合わせて更新されます。"
+    }
+  ],
+  "cta": {
+    "kicker": "Start building",
+    "title": "Grok 動画を本番ワークフローへ",
+    "description": "まず生成画面で Grok 動画プロンプトや元画像を試し、結果を確認してから API ドキュメントで本番フローに接続できます。",
+    "primaryLabel": "Grok Video を開く",
+    "secondaryLabel": "API 機能を見る",
+    "stats": [
+      {
+        "value": "API ready",
+        "label": "workflow"
+      },
+      {
+        "value": "4 modes",
+        "label": "video tools"
+      },
+      {
+        "value": "Task ID",
+        "label": "follow-ups"
+      }
+    ]
+  }
+}

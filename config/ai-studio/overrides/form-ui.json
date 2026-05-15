@@ -1,6 +1,6 @@
 {
   "models": {
-    "video:apimart-seedance-2-0": {
+    "video:fal-seedance-2-0": {
       "advancedFields": [
         "audio_urls",
         "image_with_roles",
@@ -10,7 +10,7 @@
         "generate_audio"
       ]
     },
-    "video:apimart-seedance-2-0-fast": {
+    "video:fal-seedance-2-0-fast": {
       "advancedFields": [
         "audio_urls",
         "image_with_roles",

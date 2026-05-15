@@ -35,6 +35,11 @@ const STATIC_PAGE_CONFIG: StaticPageConfig[] = [
   { path: '/prompts', priority: 0.8, changeFrequency: 'weekly' },
   { path: '/pricing', priority: 0.8, changeFrequency: 'weekly' },
   { path: '/apidoc', priority: 0.8, changeFrequency: 'weekly' },
+  { path: '/seedance-2-0-api', priority: 0.6, changeFrequency: 'monthly' },
+  { path: '/gpt-image-2-api', priority: 0.6, changeFrequency: 'monthly' },
+  { path: '/veo-3-1-api', priority: 0.6, changeFrequency: 'monthly' },
+  { path: '/grok-video-api', priority: 0.6, changeFrequency: 'monthly' },
+  { path: '/wan-api', priority: 0.6, changeFrequency: 'monthly' },
 ]
 
 const CMS_MODULES = {

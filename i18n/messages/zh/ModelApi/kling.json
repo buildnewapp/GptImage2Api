@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "title": "Kling API",
+    "description": "测试并集成 Kling API，支持文生视频、图生视频、运动控制和 AI Avatar 视频生成。"
+  },
+  "title": "Kling API",
+  "badge": "API 工作流",
+  "description": [
+    "Kling 是面向创作者和产品团队的视频生成模型系列，适合文生视频、图生视频等灵活工作流。本页把可用的 Kling 版本集中到同一个 API 优先体验里，方便比较模型效果、价格、请求字段和生成结果。",
+    "当你的流程需要电影感运动、图片驱动动画、运动控制或 Avatar 风格视频时，可以选择 Kling。先在 Playground 中选择版本并测试输出，再把同一个模型接入生产 API 流程。"
+  ],
+  "monitor": {
+    "label": "24 小时状态监控"
+  },
+  "pricingNote": "美元估算按最佳年付套餐 $0.005/积分 计算。",
+  "labels": {
+    "apiDocs": "API 文档",
+    "apiDocsDetail": "查看 API 详细文档",
+    "apiDocsDetailDescription": "打开完整 API 文档，查看接口、鉴权、任务轮询和 payload 细节。",
+    "apiInputDescription": "请求字段会跟随当前选择的 Kling 模型变化，让文生视频、图生视频、运动控制或 Avatar 生成都保持对应的 payload。",
+    "apiInputKicker": "API 输入",
+    "apiInputTitle": "核心请求字段",
+    "descriptionColumn": "说明",
+    "fieldColumn": "字段",
+    "lowestCostPrefix": "最低成本从",
+    "modelType": "模型类型：",
+    "pricingTitle": "价格",
+    "requestJson": "请求 JSON",
+    "runWithApi": "使用 API 运行",
+    "selectedModel": "当前模型",
+    "selectedModelNote": "本页的 Playground、请求示例、请求字段和价格都会跟随当前选择的模型类型变化。",
+    "typeColumn": "类型",
+    "useModelForGeneration": "使用 {model} 生成"
+  },
+  "featuresKicker": "能力",
+  "featuresTitle": "Kling API 为视频工作流带来的能力",
+  "featuresDescription": "页面按 API 优先的结构组织：先测试模型，再理解字段，最后进入集成。",
+  "capabilities": [
+    {
+      "icon": "video",
+      "title": "文生视频和图生视频",
+      "description": "通过提示词生成视频，或把源图片动画化，同时明确选择 Kling 版本、时长和质量设置。"
+    },
+    {
+      "icon": "sparkles",
+      "title": "电影感运动",
+      "description": "适合动态镜头、风格化动作、产品展示、角色镜头和短视频叙事。"
+    },
+    {
+      "icon": "layers",
+      "title": "多版本模型",
+      "description": "可在 Kling 3.0、2.6、2.5 Turbo、2.1、Motion Control 和 Avatar 版本之间切换。"
+    },
+    {
+      "icon": "image",
+      "title": "参考驱动输出",
+      "description": "在所选模型支持时使用图片或运动参考，让生成视频更贴近主体、场景和镜头方向。"
+    }
+  ],
+  "quickStartKicker": "快速开始",
+  "quickStartTitle": "从 Kling 测试到生产请求",
+  "quickStartDescription": "适合团队先验证某个 Kling 版本，再把它接入自己的产品。",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. 选择 Kling 模型",
+      "description": "根据任务选择文生视频、图生视频、运动控制或 Avatar 生成等 Kling 版本。"
+    },
+    {
+      "icon": "key",
+      "title": "2. 提交生成",
+      "description": "使用账户密钥、模型 ID、提示词、素材 URL、时长、分辨率和模型专属字段调用 API。"
+    },
+    {
+      "icon": "play",
+      "title": "3. 轮询并交付",
+      "description": "跟踪任务直到成功，然后获取生成视频 URL，用于产品、活动或生产流水线。"
+    }
+  ],
+  "useCasesKicker": "使用场景",
+  "useCasesTitle": "你可以用 Kling API 创作什么",
+  "useCasesDescription": "当产品需要可重复的 Kling 视频输出时，可以直接接入 API，而不只是做一次性测试。",
+  "useCases": [
+    "TikTok、Reels、Shorts 社媒短片",
+    "产品、人像和概念图的图片动画",
+    "运动控制创意镜头",
+    "Avatar 和虚拟发言人视频",
+    "分镜和预演短片",
+    "模板化活动和批量视频生产"
+  ],
+  "communityShowcase": {
+    "kicker": "社区案例",
+    "title": "社区公开的 Kling 成功案例",
+    "description": "查看数据库中公开且已成功生成的 Kling 作品，打开案例可继续查看提示词、参数和生成结果。",
+    "viewAll": "查看更多",
+    "viewDetails": "查看详情"
+  },
+  "productionKicker": "生产说明",
+  "productionTitle": "面向真实 API 工作流构建",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "账户级执行",
+      "body": "用户登录后提交 Kling 任务，并通过现有 SdanceAI 生成流程消耗积分。"
+    },
+    {
+      "icon": "image",
+      "title": "素材感知请求",
+      "body": "在所选 Kling 模型支持素材输入时，Studio 支持上传素材、直接 URL、预览以及表单/API payload 编辑。"
+    },
+    {
+      "icon": "zap",
+      "title": "按版本控制",
+      "body": "可根据输出类型、质量目标、价格和生成控制能力选择不同 Kling 版本。"
+    }
+  ],
+  "faqKicker": "常见问题",
+  "faqTitle": "Kling API 常见问题",
+  "faqs": [
+    {
+      "question": "Kling API 最适合什么场景？",
+      "answer": "它适合短视频生成工作流，尤其是文生视频、图生视频、运动控制和 Avatar 风格输出。"
+    },
+    {
+      "question": "本页支持哪些 Kling 版本？",
+      "answer": "页面跟随 SdanceAI 中已配置的 Kling 系列，包括 Kling 3.0、Kling 3.0 Motion Control、Kling 2.6、Kling 2.5 Turbo、Kling V2.1 和 Avatar 版本。"
+    },
+    {
+      "question": "Kling API 可以使用图片参考吗？",
+      "answer": "可以。选择图生视频或支持素材输入的 Kling 版本，然后提供图片 URL，或通过 Studio 流程上传素材。"
+    },
+    {
+      "question": "接入前在哪里测试 Kling？",
+      "answer": "可以直接使用本页 Playground 测试提示词、素材输入、模型版本、请求 payload、价格和输出效果。"
+    },
+    {
+      "question": "Kling API 支持运动控制吗？",
+      "answer": "支持。已配置的 Kling 系列包含 motion-control 版本，请求字段会跟随当前选择的模型自动变化。"
+    },
+    {
+      "question": "可以用 Kling API 做 Avatar 视频吗？",
+      "answer": "可以。已配置的 Kling 系列包含 AI Avatar Standard 和 Pro 版本，适合 Avatar 风格视频工作流。"
+    },
+    {
+      "question": "价格如何计算？",
+      "answer": "价格会按当前选择的 Kling 模型从现有积分价格表中读取。本页也会基于配置的积分价值展示美元估算。"
+    },
+    {
+      "question": "Kling API 可以用于商业项目吗？",
+      "answer": "本页面面向 API 工作流配置。生产环境使用前，请确认账户套餐、积分余额、模型可用性以及适用的内容政策要求。"
+    }
+  ],
+  "cta": {
+    "kicker": "开始接入",
+    "title": "把 Kling 接入你的视频工作流",
+    "description": "先打开生成器测试 Kling 版本，确认效果后再通过 API 文档接入到生产流程。",
+    "primaryLabel": "打开 Kling",
+    "secondaryLabel": "查看 API 能力",
+    "stats": [
+      {
+        "value": "13",
+        "label": "模型版本"
+      },
+      {
+        "value": "文本 + 图片",
+        "label": "输入"
+      },
+      {
+        "value": "API 就绪",
+        "label": "工作流"
+      }
+    ]
+  }
+}

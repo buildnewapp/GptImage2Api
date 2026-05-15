@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "title": "Seedance 2.0 API",
+    "description": "测试并集成 Seedance 2.0 API，支持文本、图片、视频和音频参考的多模态 AI 视频生成。"
+  },
+  "title": "Seedance 2.0 API",
+  "badge": "商用工作流",
+  "description": [
+    "Seedance 2.0 是字节跳动推出的多模态 AI 视频模型，适合快速生成真实、稳定的高质量视频。它强调多镜头一致性，能让虚拟人物、场景运动和镜头衔接更自然。",
+    "Seedance 2.0 通常约 5 分钟完成一次生成，Seedance 2.0 Fast 通常约 4 分钟完成一次生成，适合可规模化的内容生产流程。"
+  ],
+  "monitor": {
+    "label": "24 小时状态监控"
+  },
+  "pricingNote": "美元估算按最佳年付套餐 $0.005/积分 计算。",
+  "labels": {
+    "apiDocs": "API 文档",
+    "apiDocsDetail": "查看 API 详细文档",
+    "apiDocsDetailDescription": "打开完整 API 文档，查看接口、鉴权、任务轮询和 payload 细节。",
+    "apiInputDescription": "保持请求结构可预测，同时保留多模态控制能力。",
+    "apiInputKicker": "API 输入",
+    "apiInputTitle": "核心请求字段",
+    "descriptionColumn": "说明",
+    "fieldColumn": "字段",
+    "lowestCostPrefix": "最低成本从",
+    "modelType": "模型类型：",
+    "pricingTitle": "价格",
+    "requestJson": "请求 JSON",
+    "runWithApi": "使用 API 运行",
+    "selectedModel": "当前模型",
+    "selectedModelNote": "本页的 Playground、请求示例、请求字段和价格都会跟随当前选择的模型类型变化。",
+    "typeColumn": "类型",
+    "useModelForGeneration": "使用 {model} 生成"
+  },
+  "featuresKicker": "能力",
+  "featuresTitle": "Seedance 2.0 API 为视频工作流带来的能力",
+  "featuresDescription": "页面按 API 优先的结构组织：先测试模型，再理解字段，最后进入集成。",
+  "capabilities": [
+    {
+      "icon": "layers",
+      "title": "多模态参考",
+      "description": "结合提示词、图片、视频和音频，让模型理解主体、动作、节奏和视觉风格。"
+    },
+    {
+      "icon": "video",
+      "title": "多镜头一致性",
+      "description": "生成更稳定的短片序列，让角色、镜头逻辑和场景衔接更连贯。"
+    },
+    {
+      "icon": "sparkles",
+      "title": "参考驱动动作",
+      "description": "用源视频引导镜头运动、动作节奏、转场和视觉节拍。"
+    },
+    {
+      "icon": "music",
+      "title": "音频感知创作",
+      "description": "上传音频参考或启用生成音频，制作更贴合节奏的短片和音乐视频。"
+    }
+  ],
+  "quickStartKicker": "快速开始",
+  "quickStartTitle": "从 Playground 测试到生产请求",
+  "quickStartDescription": "适合团队先验证输出质量，再把 API 接入自己的产品。",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. 准备请求",
+      "description": "选择 Seedance 2.0 或 Seedance 2.0 Fast，然后填写提示词和参考素材。"
+    },
+    {
+      "icon": "key",
+      "title": "2. 提交生成",
+      "description": "使用账户密钥、模型 ID、时长、分辨率、比例和素材 URL 调用 API。"
+    },
+    {
+      "icon": "play",
+      "title": "3. 轮询并渲染",
+      "description": "跟踪任务直到成功，然后获取生成视频 URL。"
+    }
+  ],
+  "useCasesKicker": "使用场景",
+  "useCasesTitle": "你可以用 Seedance 2.0 API 创作什么",
+  "useCasesDescription": "当产品需要可重复的 AI 视频输出时，可以直接接入 API，而不只是做一次性测试。",
+  "useCases": [
+    "TikTok、Reels、Shorts 社媒短片",
+    "产品演示和发布广告",
+    "影视、游戏、分镜预演",
+    "音乐视频和节奏同步创意",
+    "模板化批量视频生产",
+    "虚拟人和角色驱动场景"
+  ],
+  "communityShowcase": {
+    "kicker": "社区案例",
+    "title": "社区公开的 Seedance 2.0 成功案例",
+    "description": "查看数据库中公开且已成功生成的 Seedance 2.0 作品，打开案例可继续查看提示词、参数和生成结果。",
+    "viewAll": "查看更多",
+    "viewDetails": "查看详情"
+  },
+  "productionKicker": "生产说明",
+  "productionTitle": "面向真实 API 工作流构建",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "账户级执行",
+      "body": "用户登录后提交任务，并通过现有 SdanceAI 生成流程消耗积分。"
+    },
+    {
+      "icon": "image",
+      "title": "参考素材处理",
+      "body": "Studio 支持上传素材、直接 URL、预览以及表单/API payload 编辑。"
+    },
+    {
+      "icon": "zap",
+      "title": "可扩展模型选择",
+      "body": "可根据质量、成本和延迟在标准和 Fast 模式间切换。"
+    }
+  ],
+  "faqKicker": "常见问题",
+  "faqTitle": "Seedance 2.0 API 常见问题",
+  "faqs": [
+    {
+      "question": "Seedance 2.0 API 最适合什么场景？",
+      "answer": "它适合短片、广告、产品视频、动作复刻和多镜头叙事，尤其适合需要提示词和参考素材共同控制的场景。"
+    },
+    {
+      "question": "Seedance 2.0 和 Seedance 2.0 Fast 有什么区别？",
+      "answer": "Seedance 2.0 更偏质量和控制力，Seedance 2.0 Fast 更适合快速迭代和批量生产。"
+    },
+    {
+      "question": "一次请求可以同时使用图片、视频和音频吗？",
+      "answer": "可以。Seedance 2.0 工作流支持文本加混合参考输入，包括图片、视频片段和音频参考。"
+    },
+    {
+      "question": "接入前在哪里测试？",
+      "answer": "可以直接使用本页 Playground 测试提示词、参考素材、分辨率、比例、时长和 API payload。"
+    },
+    {
+      "question": "Seedance 2.0 API 有哪些新能力？",
+      "answer": "Seedance 2.0 增强了文本、图片、视频和音频参考的多模态控制，适合更稳定的运动指导、场景一致性和电影感输出。"
+    },
+    {
+      "question": "Seedance 2.0 API 和普通 AI 视频生成器有什么不同？",
+      "answer": "很多视频生成器主要依赖提示词理解，而 Seedance 2.0 更强调参考驱动，可以用源素材引导镜头运动、动作节奏、转场、主体风格和视觉节拍。"
+    },
+    {
+      "question": "一个 Seedance 2.0 API 项目可以上传多少参考素材？",
+      "answer": "工作流支持最多 9 张图片参考、最多 3 段视频参考和最多 3 段音频参考。视频和音频参考应控制在文档说明的时长限制内。"
+    },
+    {
+      "question": "Seedance 2.0 API 支持语音引导和口型同步吗？",
+      "answer": "模型工作流支持音频感知生成。你可以使用音频参考来控制节奏和氛围，也可以在所选版本支持时启用生成音频。"
+    },
+    {
+      "question": "可以生成多长的视频？",
+      "answer": "Seedance 2.0 面向短视频生成，常见时长为 4 到 15 秒。时长、分辨率和画面比例应一起选择，以匹配目标输出格式。"
+    },
+    {
+      "question": "Seedance 2.0 API 可以用于商业项目吗？",
+      "answer": "本页面面向商用工作流配置。生产环境使用前，请确认账户套餐、积分余额、模型可用性以及适用的内容政策要求。"
+    }
+  ],
+  "cta": {
+    "kicker": "开始接入",
+    "title": "把 Seedance 2.0 接入你的视频工作流",
+    "description": "先打开生成器测试提示词和参考素材，确认效果后再通过 API 文档接入到生产流程。",
+    "primaryLabel": "打开 Seedance 2.0",
+    "secondaryLabel": "查看 API 能力",
+    "stats": [
+      {
+        "value": "API 就绪",
+        "label": "工作流"
+      },
+      {
+        "value": "4-15 秒",
+        "label": "短片时长"
+      },
+      {
+        "value": "1080p",
+        "label": "公开输出"
+      }
+    ]
+  }
+}

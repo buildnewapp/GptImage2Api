@@ -42,7 +42,9 @@ function mapShowcaseRow(row: {
     reservedCredits: row.reservedCredits,
     capturedCredits: row.capturedCredits,
     refundedCredits: row.refundedCredits,
-    resultUrls: Array.isArray(row.resultUrls) ? (row.resultUrls as string[]) : [],
+    resultUrls: Array.isArray(row.resultUrls)
+      ? (row.resultUrls as string[])
+      : [],
     createdAt: row.createdAt.toISOString(),
     requestPayload:
       row.requestPayload && typeof row.requestPayload === "object"
@@ -59,25 +61,33 @@ function mapShowcaseRow(row: {
   } satisfies ShowcaseGenerationRecord;
 }
 
-function getPublicShowcaseWhereClause() {
-  return and(
+function getPublicShowcaseWhereClause(modelIds?: string[]) {
+  const clauses = [
     inArray(aiStudioGenerations.category, ["video", "image"]),
     eq(aiStudioGenerations.status, "succeeded"),
     eq(aiStudioGenerations.isPublic, true),
     isNull(aiStudioGenerations.userDeletedAt),
-  );
+  ];
+
+  if (modelIds && modelIds.length > 0) {
+    clauses.push(inArray(aiStudioGenerations.catalogModelId, modelIds));
+  }
+
+  return and(...clauses);
 }
 
 export async function getShowcaseGenerations({
   page = 1,
   limit = 12,
+  modelIds,
 }: {
   page?: number;
   limit?: number;
+  modelIds?: string[];
 } = {}) {
   const requestedPage = Math.max(1, page);
   const safeLimit = Math.min(Math.max(1, limit), 24);
-  const whereClause = getPublicShowcaseWhereClause();
+  const whereClause = getPublicShowcaseWhereClause(modelIds);
 
   const totalResult = await getDb()
     .select({ value: count() })

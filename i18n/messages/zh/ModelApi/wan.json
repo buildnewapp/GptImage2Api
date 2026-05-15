@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "title": "Wan API",
+    "description": "测试并集成 Wan API，支持文生视频、图生视频、视频编辑和参考驱动的 AI 视频生成。"
+  },
+  "title": "Wan API",
+  "badge": "视频 API",
+  "description": [
+    "Wan API 把多种 AI 视频工作流整合到同一个生产路径里，包括文生视频、图生视频、视频转视频、视频编辑、动画和参考生视频。",
+    "可以用 Wan 2.7 生成 720p 与 1080p 视频，并根据产品或营销场景的输入方式，在文本、图片、视频和参考素材模式之间切换。"
+  ],
+  "monitor": {
+    "label": "24 小时状态监控"
+  },
+  "pricingNote": "美元估算按最佳年付套餐 $0.005/积分 计算。最终计费会跟随所选 Wan 模型、分辨率、时长和输入类型变化。",
+  "labels": {
+    "apiDocs": "API 文档",
+    "apiDocsDetail": "查看 API 详细文档",
+    "apiDocsDetailDescription": "打开完整 API 文档，查看接口、鉴权、任务轮询和 payload 细节。",
+    "apiInputDescription": "按模型使用对应 payload，配置提示词、源素材、分辨率、画面比例、时长、回调和生成选项。",
+    "apiInputKicker": "API 输入",
+    "apiInputTitle": "核心请求字段",
+    "descriptionColumn": "说明",
+    "fieldColumn": "字段",
+    "lowestCostPrefix": "最低成本从",
+    "modelType": "模型类型：",
+    "pricingTitle": "价格",
+    "requestJson": "请求 JSON",
+    "runWithApi": "使用 API 运行",
+    "selectedModel": "当前模型",
+    "selectedModelNote": "本页的 Playground、请求示例、请求字段和价格都会跟随当前选择的模型类型变化。",
+    "typeColumn": "类型",
+    "useModelForGeneration": "使用 {model} 生成"
+  },
+  "featuresKicker": "能力",
+  "featuresTitle": "Wan API 为视频工作流带来的能力",
+  "featuresDescription": "页面沿用 API 优先结构：先测试 Wan 模型，再理解字段，最后进入集成。",
+  "capabilities": [
+    {
+      "icon": "sparkles",
+      "title": "文生视频生成",
+      "description": "用提示词生成电影感短片，并控制分辨率、比例、时长、负向提示词、种子和提示词扩展。"
+    },
+    {
+      "icon": "image",
+      "title": "图生视频动效",
+      "description": "把静态图片转成短视频，同时尽量保留主体、构图和视觉风格。"
+    },
+    {
+      "icon": "video",
+      "title": "视频编辑工作流",
+      "description": "使用源视频和参考图片修改服装、物体、风格或动作，同时保持场景整体连贯。"
+    },
+    {
+      "icon": "layers",
+      "title": "参考生视频控制",
+      "description": "结合参考图、参考视频、首帧和语音输入，控制角色、动作、节奏和场景布局。"
+    }
+  ],
+  "quickStartKicker": "快速开始",
+  "quickStartTitle": "从 Wan Playground 测试到生产请求",
+  "quickStartDescription": "适合团队先验证 Wan 输出质量，再把生成能力接入应用或内容管线。",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. 选择 Wan 模式",
+      "description": "根据源输入选择文生视频、图生视频、视频编辑、参考生视频，或其他旧版 Wan 工作流。"
+    },
+    {
+      "icon": "key",
+      "title": "2. 提交生成",
+      "description": "使用账户密钥、模型 ID、提示词、素材 URL、分辨率、时长、比例和回调设置调用 API。"
+    },
+    {
+      "icon": "play",
+      "title": "3. 轮询并使用",
+      "description": "跟踪任务直到成功，然后获取生成视频 URL，用于应用、营销活动或自动化流程。"
+    }
+  ],
+  "useCasesKicker": "使用场景",
+  "useCasesTitle": "你可以用 Wan API 创作什么",
+  "useCasesDescription": "当产品需要覆盖多种输入方式的可重复 AI 视频输出时，可以直接接入 API，而不只是做一次性生成。",
+  "useCases": [
+    "提示词生成的社媒短片和广告",
+    "产品图片动效和主视觉视频",
+    "参考驱动的角色与场景视频",
+    "服装、道具和视觉风格的视频编辑",
+    "视频转视频风格化工作流",
+    "内容管线中的批量创意生成"
+  ],
+  "communityShowcase": {
+    "kicker": "社区案例",
+    "title": "社区公开的 Wan 成功案例",
+    "description": "查看数据库中公开且已成功生成的 Wan 作品，打开案例可继续查看提示词、参数和生成结果。",
+    "viewAll": "查看更多",
+    "viewDetails": "查看详情"
+  },
+  "productionKicker": "生产说明",
+  "productionTitle": "面向真实 Wan API 工作流构建",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "账户级执行",
+      "body": "用户登录后提交任务，并通过现有 SdanceAI 生成流程消耗积分。"
+    },
+    {
+      "icon": "image",
+      "title": "灵活源素材",
+      "body": "Wan 工作流既支持纯提示词请求，也支持图片、视频、首帧、参考素材和部分音频输入。"
+    },
+    {
+      "icon": "zap",
+      "title": "按分辨率控制成本",
+      "body": "可以先用 720p 快速迭代，再在方向确认后切换到 1080p 做更清晰的最终渲染。"
+    }
+  ],
+  "faqKicker": "常见问题",
+  "faqTitle": "Wan API 常见问题",
+  "faqs": [
+    {
+      "question": "Wan API 最适合什么场景？",
+      "answer": "它适合需要在一个集成里覆盖多种 AI 视频工作流的团队，包括文生视频、图生视频、视频编辑、视频转视频、动画和参考驱动生成。"
+    },
+    {
+      "question": "本页支持哪些 Wan 模型？",
+      "answer": "本页跟随已配置的 Wan family，包括 Wan 2.7 文生视频、图生视频、视频编辑、参考生视频，Wan 2.6 工作流，Wan 2.5 工作流，以及 Wan 2.2 动画模式。"
+    },
+    {
+      "question": "文生视频和图生视频有什么区别？",
+      "answer": "文生视频只从提示词开始生成。图生视频会使用源图片，让生成视频尽量保留输入中的主体、构图或视觉风格。"
+    },
+    {
+      "question": "什么时候应该使用 Wan 2.7 Reference to Video？",
+      "answer": "当你需要参考图片、参考视频、首帧或语音输入提供更强控制，而不是只依赖文字提示词时，适合使用 Reference to Video。"
+    },
+    {
+      "question": "Wan API 支持 1080p 输出吗？",
+      "answer": "本页的 Wan 2.7 条目包含 720p 和 1080p 价格行。可以根据质量和成本目标选择分辨率。"
+    },
+    {
+      "question": "可以编辑已有视频吗？",
+      "answer": "可以。需要通过提示词和参考素材修改源视频时，可以使用 Wan 2.7 Video Edit 或其他视频输入工作流。"
+    },
+    {
+      "question": "可以使用负向提示词吗？",
+      "answer": "支持的 Wan 请求 schema 包含 negative prompt 字段，可用于减少模糊、畸变、低质量和其他不想要的细节。"
+    },
+    {
+      "question": "接入前在哪里测试 Wan？",
+      "answer": "可以直接使用本页 Playground 测试模型、提示词、素材 URL、分辨率、时长和 API payload。"
+    },
+    {
+      "question": "如何控制成本？",
+      "answer": "提示词探索阶段建议使用较低分辨率和较短时长，方向确认后再切换到 1080p 或更长时长。"
+    },
+    {
+      "question": "Wan API 可以用于商业项目吗？",
+      "answer": "本页面面向生产视频工作流配置。商业使用前，请确认账户套餐、积分余额、模型可用性以及适用的内容政策要求。"
+    }
+  ],
+  "cta": {
+    "kicker": "开始接入",
+    "title": "把 Wan 接入你的视频工作流",
+    "description": "先打开生成器测试 Wan 提示词或参考素材工作流，确认效果后再通过 API 文档接入到生产流程。",
+    "primaryLabel": "打开 Wan",
+    "secondaryLabel": "查看 API 能力",
+    "stats": [
+      {
+        "value": "API 就绪",
+        "label": "工作流"
+      },
+      {
+        "value": "720p-1080p",
+        "label": "分辨率"
+      },
+      {
+        "value": "多输入",
+        "label": "控制方式"
+      }
+    ]
+  }
+}

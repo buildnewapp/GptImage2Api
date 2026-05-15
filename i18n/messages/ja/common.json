@@ -480,12 +480,8 @@
           "title": "製品",
           "links": [
             {
-              "href": "/#features",
-              "name": "機能特性"
-            },
-            {
-              "href": "/dashboard/generate",
-              "name": "Gpt Image 2 Generator"
+              "href": "/gpt-image-2-api",
+              "name": "GPT Image 2 API"
             }
           ]
         },

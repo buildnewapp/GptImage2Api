@@ -169,11 +169,16 @@ export async function getUserBenefits(userId: string): Promise<UserBenefits> {
         ),
       );
     const activeSubscriptionBalance = Number(activeSubRows[0]?.balance ?? 0);
+    const storedSubscriptionBalance =
+      finalUsageData?.subscriptionCreditsBalance ?? activeSubscriptionBalance;
 
     const subscription = await fetchSubscriptionData(userId);
 
     const normalizedUsage: UsageData = {
-      subscriptionCreditsBalance: activeSubscriptionBalance,
+      subscriptionCreditsBalance: Math.min(
+        storedSubscriptionBalance,
+        activeSubscriptionBalance,
+      ),
       oneTimeCreditsBalance: finalUsageData?.oneTimeCreditsBalance ?? 0,
       balanceJsonb: finalUsageData?.balanceJsonb ?? {},
     };

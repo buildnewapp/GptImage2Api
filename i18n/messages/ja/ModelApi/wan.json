@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "title": "Wan API",
+    "description": "テキストから動画、画像から動画、動画編集、参照ベースの AI 動画生成に対応した Wan API をテストして統合できます。"
+  },
+  "title": "Wan API",
+  "badge": "動画 API",
+  "description": [
+    "Wan API は、テキストから動画、画像から動画、動画から動画、動画編集、アニメーション、参照から動画まで、複数の AI 動画ワークフローを 1 つの本番導線にまとめます。",
+    "Wan 2.7 では 720p と 1080p の生成を扱えます。製品やキャンペーンで必要な入力に合わせて、テキスト、画像、動画、参照素材の各モードを切り替えられます。"
+  ],
+  "monitor": {
+    "label": "24時間ステータス"
+  },
+  "pricingNote": "USD 見積もりは最適な年額プランの $0.005/クレジットで計算しています。最終的な課金は選択した Wan モデル、解像度、長さ、入力タイプに従います。",
+  "labels": {
+    "apiDocs": "API ドキュメント",
+    "apiDocsDetail": "API 詳細ドキュメントを見る",
+    "apiDocsDetailDescription": "エンドポイント、認証、タスクのポーリング、payload の詳細を確認できます。",
+    "apiInputDescription": "プロンプト、入力メディア、解像度、アスペクト比、長さ、callback、生成オプションをモデル別 payload で指定します。",
+    "apiInputKicker": "API 入力",
+    "apiInputTitle": "主要リクエストフィールド",
+    "descriptionColumn": "説明",
+    "fieldColumn": "フィールド",
+    "lowestCostPrefix": "最低コスト",
+    "modelType": "モデルタイプ:",
+    "pricingTitle": "料金",
+    "requestJson": "Request JSON",
+    "runWithApi": "API で実行",
+    "selectedModel": "選択中モデル",
+    "selectedModelNote": "Playground、リクエスト例、入力フィールド、料金は選択中のモデルタイプに連動します。",
+    "typeColumn": "型",
+    "useModelForGeneration": "{model} で生成"
+  },
+  "featuresKicker": "Capabilities",
+  "featuresTitle": "Wan API が動画ワークフローに加える機能",
+  "featuresDescription": "Wan モデルを試し、フィールドを確認し、そのまま統合へ進める API ファーストの構成です。",
+  "capabilities": [
+    {
+      "icon": "sparkles",
+      "title": "テキストから動画",
+      "description": "プロンプトから映画的なクリップを生成し、解像度、比率、長さ、ネガティブプロンプト、seed、prompt extension を制御できます。"
+    },
+    {
+      "icon": "image",
+      "title": "画像から動画",
+      "description": "静止画を短い動画に変換しながら、被写体、構図、ビジュアルスタイルを保ちやすくします。"
+    },
+    {
+      "icon": "video",
+      "title": "動画編集ワークフロー",
+      "description": "元動画と参照画像を使い、服装、物体、スタイル、動きを変更しながらシーン全体の一貫性を保てます。"
+    },
+    {
+      "icon": "layers",
+      "title": "参照から動画の制御",
+      "description": "参照画像、参照動画、最初のフレーム、音声入力を組み合わせ、キャラクター、動き、タイミング、レイアウトを誘導できます。"
+    }
+  ],
+  "quickStartKicker": "Quick Start",
+  "quickStartTitle": "Wan Playground から本番リクエストへ",
+  "quickStartDescription": "Wan の出力品質を確認してから、アプリやコンテンツパイプラインへ接続できます。",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. Wan モードを選択",
+      "description": "入力に合わせて、テキストから動画、画像から動画、動画編集、参照から動画、または旧 Wan ワークフローを選びます。"
+    },
+    {
+      "icon": "key",
+      "title": "2. 生成を送信",
+      "description": "API キー、モデル ID、プロンプト、メディア URL、解像度、長さ、比率、callback 設定を指定して呼び出します。"
+    },
+    {
+      "icon": "play",
+      "title": "3. ポーリングして利用",
+      "description": "タスク完了まで追跡し、生成された動画 URL をアプリ、キャンペーン、自動化に利用します。"
+    }
+  ],
+  "useCasesKicker": "Use Cases",
+  "useCasesTitle": "Wan API で作れるもの",
+  "useCasesDescription": "単発生成ではなく、複数の入力形式を扱う反復可能な AI 動画生成を製品に組み込めます。",
+  "useCases": [
+    "プロンプトベースの SNS クリップと短尺広告",
+    "製品画像のアニメーションとヒーロー動画",
+    "参照素材を使ったキャラクター動画とシーン動画",
+    "服装、道具、ビジュアルスタイルの動画編集",
+    "動画から動画への変換ワークフロー",
+    "コンテンツパイプライン向け一括生成"
+  ],
+  "communityShowcase": {
+    "kicker": "Community Showcase",
+    "title": "コミュニティの Wan 成功事例",
+    "description": "公開され、正常に生成された Wan の出力を確認できます。各事例からプロンプト、設定、結果を詳しく見られます。",
+    "viewAll": "もっと見る",
+    "viewDetails": "詳細を見る"
+  },
+  "productionKicker": "Production Notes",
+  "productionTitle": "実運用の Wan API ワークフロー向け",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "アカウント連動の実行",
+      "body": "ユーザーはログイン後にジョブを送信し、既存の SdanceAI 生成フローでクレジットを消費します。"
+    },
+    {
+      "icon": "image",
+      "title": "柔軟な入力メディア",
+      "body": "Wan ワークフローは、プロンプトのみのリクエストに加え、画像、動画、最初のフレーム、参照素材、一部の音声入力にも対応します。"
+    },
+    {
+      "icon": "zap",
+      "title": "解像度ごとのコスト管理",
+      "body": "まず 720p で素早く試し、方向性が固まったら 1080p でより鮮明な最終レンダーに進めます。"
+    }
+  ],
+  "faqKicker": "FAQ",
+  "faqTitle": "Wan API FAQ",
+  "faqs": [
+    {
+      "question": "Wan API は何に向いていますか？",
+      "answer": "テキストから動画、画像から動画、動画編集、動画から動画、アニメーション、参照ガイド生成など、複数の AI 動画ワークフローを 1 つの統合で扱いたいチームに向いています。"
+    },
+    {
+      "question": "このページではどの Wan モデルを使えますか？",
+      "answer": "設定済みの Wan family に従い、Wan 2.7 の text-to-video、image-to-video、video edit、reference-to-video、Wan 2.6、Wan 2.5、Wan 2.2 のアニメーションモードを扱えます。"
+    },
+    {
+      "question": "Text to Video と Image to Video の違いは？",
+      "answer": "Text to Video はプロンプトだけから生成します。Image to Video は元画像を使うため、入力の被写体、構図、スタイルを保ちやすくなります。"
+    },
+    {
+      "question": "Wan 2.7 Reference to Video はいつ使うべきですか？",
+      "answer": "テキストだけでなく、参照画像、参照動画、最初のフレーム、音声入力でより強く制御したい場合に適しています。"
+    },
+    {
+      "question": "Wan API は 1080p 出力に対応していますか？",
+      "answer": "このページの Wan 2.7 には 720p と 1080p の料金行があります。品質とコストに合わせて選択してください。"
+    },
+    {
+      "question": "既存動画を編集できますか？",
+      "answer": "はい。元動画をプロンプトや参照素材で変更したい場合は、Wan 2.7 Video Edit または動画入力ワークフローを使用できます。"
+    },
+    {
+      "question": "ネガティブプロンプトは使えますか？",
+      "answer": "対応する Wan のリクエスト schema には negative prompt フィールドがあり、ぼけ、歪み、低品質、不要なディテールを減らすために使えます。"
+    },
+    {
+      "question": "統合前にどこで試せますか？",
+      "answer": "このページの Playground で、モデル、プロンプト、メディア URL、解像度、長さ、API payload を試せます。"
+    },
+    {
+      "question": "コストはどう管理すべきですか？",
+      "answer": "プロンプト探索では低めの解像度と短めの動画から始め、方向性が固まってから 1080p や長い duration に進むのがおすすめです。"
+    },
+    {
+      "question": "Wan API は商用プロジェクトで使えますか？",
+      "answer": "このページは本番動画ワークフロー向けに構成されています。商用利用前に、アカウントプラン、クレジット残高、モデル提供状況、適用されるコンテンツポリシーを確認してください。"
+    }
+  ],
+  "cta": {
+    "kicker": "Start building",
+    "title": "Wan を動画ワークフローへ",
+    "description": "まず生成画面で Wan のプロンプトや参照ワークフローを試し、結果を確認してから API ドキュメントで本番フローに接続できます。",
+    "primaryLabel": "Wan を開く",
+    "secondaryLabel": "API 機能を見る",
+    "stats": [
+      {
+        "value": "API ready",
+        "label": "workflow"
+      },
+      {
+        "value": "720p-1080p",
+        "label": "resolution"
+      },
+      {
+        "value": "Multi-input",
+        "label": "control"
+      }
+    ]
+  }
+}

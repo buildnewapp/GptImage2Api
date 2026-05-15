@@ -480,12 +480,8 @@
           "title": "Products",
           "links": [
             {
-              "href": "/#features",
-              "name": "Features"
-            },
-            {
-              "href": "/dashboard/generate",
-              "name": "Gpt Image 2 Generator"
+              "href": "/gpt-image-2-api",
+              "name": "GPT Image 2 API"
             }
           ]
         },
