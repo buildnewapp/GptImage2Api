@@ -5,7 +5,6 @@ import ReferralAutoAccept from "@/components/tracking/ReferralAutoAccept";
 import ReferralCapture from "@/components/tracking/ReferralCapture";
 import { Toaster } from "@/components/ui/sonner";
 import { siteConfig } from "@/config/site";
-import { getClientMessages } from "@/i18n/client-messages";
 import { DEFAULT_LOCALE, Locale, routing } from "@/i18n/routing";
 import { constructMetadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
@@ -14,6 +13,7 @@ import "@/styles/loading.css";
 import { Metadata, Viewport } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import {
+  getMessages,
   getTranslations,
   setRequestLocale,
 } from "next-intl/server";
@@ -110,7 +110,7 @@ export default async function LocaleLayout({
   }
   setRequestLocale(locale);
 
-  const messages = await getClientMessages(locale);
+  const messages = await getMessages();
   const ConsentBannerComponent = COOKIE_CONSENT_ENABLED
     ? (await import("@/components/shared/CookieConsent/ConsentBanner")).default
     : null;
