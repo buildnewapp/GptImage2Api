@@ -4,13 +4,14 @@ import HomeTemplate1 from "@/components/home/HomeTemplate1";
 import SeedanceHome from "@/components/home/SeedanceHome";
 import ImageTemplate from "@/components/home/image/ImageTemplate";
 import ToolHomeComponent from "@/components/home/ToolHomeComponent";
+import VideoTemplate from "@/components/home/video/VideoTemplate";
 
 export default function Home() {
   // return <Seedance15Home />;
   // return <SeedanceHome />;
   // return <HomeTemplate1 />;
-  // return <VideoTemplate />;
-  return <ImageTemplate />;
+  return <VideoTemplate />;
+  // return <ImageTemplate />;
   // return <HomeComponent />;
   // return <ToolHomeComponent />;
 }

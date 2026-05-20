@@ -1,4 +1,4 @@
-import AIVideoMiniStudio from "@/components/ai/AIVideoMiniStudio";
+import AIVideoMiniStudioLazy from "@/components/ai/AIVideoMiniStudioLazy";
 import HeroPhotoWall from "@/components/home/video/HeroPhotoWall";
 import { VideoHeroMedia } from "@/components/home/video/Media";
 import type { VideoTemplateHero } from "@/components/home/video/types";
@@ -51,7 +51,7 @@ export default function Hero({ hero }: HeroProps) {
         </div>
         <div className="w-full space-y-4">
           <div data-aos="fade-up">
-            <AIVideoMiniStudio />
+            <AIVideoMiniStudioLazy />
           </div>
         </div>
       </div>

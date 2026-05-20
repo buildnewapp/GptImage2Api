@@ -14,13 +14,17 @@ declare global {
 }
 
 export default function CrispChat() {
+  if (!CRISP_WEBSITE_ID) return null;
+
+  return <ConfiguredCrispChat />;
+}
+
+function ConfiguredCrispChat() {
   const { data: session } = authClient.useSession();
 
   const email = session?.user?.email;
   const name = session?.user?.name;
   const image = session?.user?.image;
-
-  if (!CRISP_WEBSITE_ID) return null;
 
   useEffect(() => {
     // Ensure widget is visible (queued if Crisp isn't ready yet).

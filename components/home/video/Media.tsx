@@ -25,6 +25,7 @@ export function VideoHeroMedia({
   videos,
 }: VideoTemplateHeroBackgroundProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
 
   useEffect(() => {
     if (videos.length < 2) {
@@ -38,20 +39,43 @@ export function VideoHeroMedia({
     return () => window.clearInterval(intervalId);
   }, [videos]);
 
+  useEffect(() => {
+    if (videos.length === 0) {
+      return undefined;
+    }
+
+    if ("requestIdleCallback" in window) {
+      const idleId = window.requestIdleCallback(
+        () => setShouldLoadVideo(true),
+        { timeout: 1800 },
+      );
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timerId = globalThis.setTimeout(() => setShouldLoadVideo(true), 900);
+    return () => globalThis.clearTimeout(timerId);
+  }, [videos.length]);
+
   const activeVideo = videos[activeIndex] ?? videos[0];
 
   return (
     <>
       <div className="absolute inset-0">
-        <video
-          key={activeVideo}
-          src={activeVideo}
-          autoPlay
-          muted
-          playsInline
-          preload="auto"
-          className="absolute inset-0 h-full w-full object-cover"
+        <div
+          data-video-hero-placeholder
+          className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.22),transparent_30%),linear-gradient(180deg,rgba(3,7,18,0.94)_0%,rgba(3,7,18,1)_100%)]"
         />
+        {shouldLoadVideo ? (
+          <video
+            key={activeVideo}
+            src={activeVideo}
+            autoPlay
+            muted
+            playsInline
+            preload="metadata"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        ) : null}
       </div>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)]"></div>
