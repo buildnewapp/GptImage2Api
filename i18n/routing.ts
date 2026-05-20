@@ -20,6 +20,7 @@ export const routing = defineRouting({
   localeDetection: process.env.NEXT_PUBLIC_LOCALE_DETECTION && process.env.NEXT_PUBLIC_LOCALE_DETECTION === 'true' || false,
 
   localePrefix: 'as-needed',
+  localeCookie: false,
 });
 
 export const {

@@ -11,6 +11,7 @@ import VideoMobileMenu from "@/components/home/video/MobileMenu";
 import { ThemeToggle } from "@/components/home/video/ThemeToggle";
 import { videoThemeVarsClass } from "@/components/home/video/constants";
 import { Link as I18nLink, usePathname } from "@/i18n/routing";
+import { authClient } from "@/lib/auth/auth-client";
 import { cn } from "@/lib/utils";
 import { user as userSchema } from "@/lib/db/schema";
 import { useTranslations } from "next-intl";
@@ -28,6 +29,9 @@ export default function HeaderShell({
 }: VideoHeaderShellProps) {
   const t = useTranslations("Home");
   const pathname = usePathname();
+  const { data: session } = authClient.useSession();
+  const resolvedUser = user ?? ((session?.user ?? null) as User | null);
+  const resolvedTotalAvailableCredits = totalAvailableCredits ?? null;
   const [overlay, setOverlay] = useState(() => pathname === "/");
   const accountButtonClassName = cn(
     "h-10 rounded-full border px-3 py-2 text-sm shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring/70 focus:ring-offset-2",
@@ -136,20 +140,20 @@ export default function HeaderShell({
               triggerId="video-header-locale-switcher-trigger"
             />
             <ThemeToggle overlay={overlay} />
-            {user && typeof totalAvailableCredits === "number" ? (
+            {resolvedUser && typeof resolvedTotalAvailableCredits === "number" ? (
               <I18nLink
                 href="/dashboard/credit-history"
                 className={creditsButtonClassName}
               >
                 <Zap className="h-4 w-4 text-primary" />
                 <span>
-                  {totalAvailableCredits.toLocaleString()}
+                  {resolvedTotalAvailableCredits.toLocaleString()}
                 </span>
               </I18nLink>
             ) : null}
             <UserAvatar
-              user={user as User}
-              totalAvailableCredits={totalAvailableCredits}
+              user={resolvedUser as User}
+              totalAvailableCredits={resolvedTotalAvailableCredits}
               avatarClassName={avatarClassName}
               loginButtonClassName={accountButtonClassName}
               triggerClassName={avatarTriggerClassName}
@@ -167,8 +171,8 @@ export default function HeaderShell({
           <div className="flex items-center gap-2 lg:hidden">
             <VideoMobileMenu
               overlay={overlay}
-              user={user as User}
-              totalAvailableCredits={totalAvailableCredits}
+              user={resolvedUser as User}
+              totalAvailableCredits={resolvedTotalAvailableCredits}
             />
           </div>
         </div>

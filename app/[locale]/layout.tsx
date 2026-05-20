@@ -69,6 +69,10 @@ export const viewport: Viewport = {
   themeColor: siteConfig.themeColors,
 };
 
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
 export default async function LocaleLayout({
   children,
   params,
@@ -110,7 +114,7 @@ export default async function LocaleLayout({
   }
   setRequestLocale(locale);
 
-  const messages = await getMessages();
+  const messages = await getMessages({ locale });
   const ConsentBannerComponent = COOKIE_CONSENT_ENABLED
     ? (await import("@/components/shared/CookieConsent/ConsentBanner")).default
     : null;
@@ -164,7 +168,7 @@ export default async function LocaleLayout({
           instrumentSerif.variable
         )}
       >
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider
             attribute="class"
             defaultTheme={siteConfig.defaultNextTheme}
