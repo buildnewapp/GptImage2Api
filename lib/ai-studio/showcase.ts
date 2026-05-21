@@ -7,6 +7,7 @@ import {
 import { getDb } from "@/lib/db";
 import { aiStudioGenerations } from "@/lib/db/schema";
 import { and, count, desc, eq, inArray, isNull } from "drizzle-orm";
+import { unstable_cache } from "next/cache";
 
 export type ShowcaseGenerationRecord = LegacyVideoHistoryRecord & {
   title: string;
@@ -76,7 +77,9 @@ function getPublicShowcaseWhereClause(modelIds?: string[]) {
   return and(...clauses);
 }
 
-export async function getShowcaseGenerations({
+const PUBLIC_SHOWCASE_REVALIDATE_SECONDS = 300;
+
+async function fetchShowcaseGenerations({
   page = 1,
   limit = 12,
   modelIds,
@@ -126,6 +129,25 @@ export async function getShowcaseGenerations({
     total,
     totalPages,
   };
+}
+
+const getCachedShowcaseGenerations = unstable_cache(
+  fetchShowcaseGenerations,
+  ["public-showcase-generations"],
+  {
+    revalidate: PUBLIC_SHOWCASE_REVALIDATE_SECONDS,
+    tags: ["public-showcase-generations"],
+  },
+);
+
+export async function getShowcaseGenerations(
+  input: {
+    page?: number;
+    limit?: number;
+    modelIds?: string[];
+  } = {},
+) {
+  return getCachedShowcaseGenerations(input);
 }
 
 export async function getShowcaseGenerationById(id: string) {

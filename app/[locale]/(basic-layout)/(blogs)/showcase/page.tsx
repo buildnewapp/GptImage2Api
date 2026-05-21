@@ -22,7 +22,7 @@ import { CalendarDays, ChevronLeft, ChevronRight, Sparkles } from "lucide-react"
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 type Params = Promise<{ locale: string }>;
 type SearchParams = Promise<{ page?: string | string[] }>;
