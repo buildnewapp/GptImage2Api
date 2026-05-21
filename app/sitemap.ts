@@ -1,4 +1,3 @@
-import { listPublishedPostsAction } from "@/actions/posts/posts";
 import { siteConfig } from "@/config/site";
 import { DEFAULT_LOCALE, LOCALES } from "@/i18n/routing";
 import { getBlogDataSource } from "@/lib/blog-source";
@@ -16,10 +15,13 @@ import {
   shouldIncludeInSitemap,
 } from "@/lib/seo/metadata";
 import { listGeoBlogPosts } from "@/lib/geo/blog";
+import { getDb } from "@/lib/db";
+import { posts } from "@/lib/db/schema";
+import { and, eq, inArray } from "drizzle-orm";
 import { MetadataRoute } from "next";
 
 const siteUrl = siteConfig.url;
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 type ChangeFrequency =
   | "always"
@@ -198,26 +200,40 @@ async function getGeoBlogEntries(
   return entries;
 }
 
-async function getServerEntries(
-  locale: string,
-  config: SeoSitemapContentConfig,
-): Promise<SitemapEntry[]> {
-  if (config.postType === "blog" && getBlogDataSource() === "geo") {
-    return getGeoBlogEntries(locale, config);
-  }
+async function getServerEntries(): Promise<SitemapEntry[]> {
+  const configByPostType = new Map(
+    SEO_SITEMAP_CONTENT_CONFIG.map((config) => [config.postType, config]),
+  );
+  const postTypes = SEO_SITEMAP_CONTENT_CONFIG.map(
+    (config) => config.postType,
+  ).filter((postType) => getBlogDataSource() !== "geo" || postType !== "blog");
 
-  const serverResult = await listPublishedPostsAction({
-    locale,
-    pageSize: 1000,
-    visibility: "public",
-    postType: config.postType,
-  });
-
-  if (!serverResult.success || !serverResult.data?.posts) {
+  if (postTypes.length === 0) {
     return [];
   }
 
-  return serverResult.data.posts
+  const db = getDb();
+  const serverPosts = await db
+    .select({
+      language: posts.language,
+      postType: posts.postType,
+      slug: posts.slug,
+      publishedAt: posts.publishedAt,
+      updatedAt: posts.updatedAt,
+      status: posts.status,
+      visibility: posts.visibility,
+    })
+    .from(posts)
+    .where(
+      and(
+        eq(posts.status, "published"),
+        eq(posts.visibility, "public"),
+        inArray(posts.postType, postTypes),
+        inArray(posts.language, LOCALES),
+      ),
+    );
+
+  return serverPosts
     .filter((post) =>
       shouldIncludeInSitemap({
         status: post.status,
@@ -225,13 +241,18 @@ async function getServerEntries(
       }),
     )
     .map((post) => {
+      const config = post.postType
+        ? configByPostType.get(post.postType)
+        : undefined;
+      if (!config) return null;
+
       const slugPart = normalizeSlug(post.slug, config.slugPrefixToTrim);
       if (!slugPart) return null;
 
       return createEntry(
-        buildLocalizedUrl(locale, `${config.routeBase}/${slugPart}`),
+        buildLocalizedUrl(post.language, `${config.routeBase}/${slugPart}`),
         {
-          lastModified: post.publishedAt || new Date(),
+          lastModified: post.updatedAt || post.publishedAt || new Date(),
           changeFrequency: config.changeFrequency,
           priority: config.priority,
         },
@@ -240,28 +261,56 @@ async function getServerEntries(
     .filter((entry): entry is SitemapEntry => Boolean(entry));
 }
 
+async function getLocalEntries(): Promise<SitemapEntry[]> {
+  const entryGroups = await Promise.all(
+    SEO_SITEMAP_CONTENT_CONFIG.flatMap((config) =>
+      LOCALES.map((locale) => getCmsEntries(locale, config)),
+    ),
+  );
+
+  return entryGroups.flat();
+}
+
+async function getGeoEntries(): Promise<SitemapEntry[]> {
+  if (getBlogDataSource() !== "geo") {
+    return [];
+  }
+
+  const blogConfig = SEO_SITEMAP_CONTENT_CONFIG.find(
+    (config) => config.postType === "blog",
+  );
+
+  if (!blogConfig) {
+    return [];
+  }
+
+  const entryGroups = await Promise.all(
+    LOCALES.map((locale) => getGeoBlogEntries(locale, blogConfig)),
+  );
+
+  return entryGroups.flat();
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries = LOCALES.flatMap((locale) =>
     STATIC_PAGE_CONFIG.map((page) =>
       createEntry(buildLocalizedUrl(locale, page.path), {
-        lastModified: new Date(),
         changeFrequency: page.changeFrequency,
         priority: page.priority,
       }),
     ),
   );
 
-  const contentEntries: SitemapEntry[] = [];
+  const [localEntries, serverEntries, geoEntries] = await Promise.all([
+    getLocalEntries(),
+    getServerEntries(),
+    getGeoEntries(),
+  ]);
 
-  for (const config of SEO_SITEMAP_CONTENT_CONFIG) {
-    for (const locale of LOCALES) {
-      const [cmsEntries, serverEntries] = await Promise.all([
-        getCmsEntries(locale, config),
-        getServerEntries(locale, config),
-      ]);
-      contentEntries.push(...cmsEntries, ...serverEntries);
-    }
-  }
-
-  return dedupeSitemapEntries([...staticEntries, ...contentEntries]);
+  return dedupeSitemapEntries([
+    ...staticEntries,
+    ...localEntries,
+    ...serverEntries,
+    ...geoEntries,
+  ]);
 }
