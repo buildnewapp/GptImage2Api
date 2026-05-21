@@ -21,23 +21,9 @@ interface VideoShowcaseMediaProps {
   items: readonly VideoTemplateShowcaseItem[];
 }
 
-export function VideoHeroMedia({
-  videos,
-}: VideoTemplateHeroBackgroundProps) {
+export function VideoHeroMedia({ videos }: VideoTemplateHeroBackgroundProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
-
-  useEffect(() => {
-    if (videos.length < 2) {
-      return undefined;
-    }
-
-    const intervalId = window.setInterval(() => {
-      setActiveIndex((currentIndex) => (currentIndex + 1) % videos.length);
-    }, 4500);
-
-    return () => window.clearInterval(intervalId);
-  }, [videos]);
 
   useEffect(() => {
     if (videos.length === 0) {
@@ -73,6 +59,13 @@ export function VideoHeroMedia({
             muted
             playsInline
             preload="metadata"
+            onEnded={() => {
+              if (videos.length > 1) {
+                setActiveIndex(
+                  (currentIndex) => (currentIndex + 1) % videos.length,
+                );
+              }
+            }}
             className="absolute inset-0 h-full w-full object-cover"
           />
         ) : null}
@@ -107,13 +100,12 @@ export function VideoHeroMedia({
   );
 }
 
-export function VideoShowcaseMedia({
-  items,
-}: VideoShowcaseMediaProps) {
+export function VideoShowcaseMedia({ items }: VideoShowcaseMediaProps) {
   const [selectedItem, setSelectedItem] =
     useState<VideoTemplateShowcaseItem | null>(null);
-  const selectedItemIsImage =
-    selectedItem ? IMAGE_FILE_RE.test(selectedItem.src) : false;
+  const selectedItemIsImage = selectedItem
+    ? IMAGE_FILE_RE.test(selectedItem.src)
+    : false;
 
   return (
     <>
@@ -122,7 +114,11 @@ export function VideoShowcaseMedia({
           const isImage = IMAGE_FILE_RE.test(item.src);
 
           return (
-            <div key={item.src} data-aos="fade-up" data-aos-delay={50 + index * 200}>
+            <div
+              key={item.src}
+              data-aos="fade-up"
+              data-aos-delay={50 + index * 200}
+            >
               <button
                 type="button"
                 aria-label={`Open ${item.title} preview`}
@@ -203,7 +199,9 @@ export function VideoShowcaseMedia({
         >
           {selectedItem ? (
             <>
-              <DialogTitle className="sr-only">{selectedItem.title}</DialogTitle>
+              <DialogTitle className="sr-only">
+                {selectedItem.title}
+              </DialogTitle>
               <div className="relative flex max-h-[calc(100svh-20rem)] flex-col bg-black sm:max-h-[90vh]">
                 <DialogClose
                   aria-label="Close preview"
