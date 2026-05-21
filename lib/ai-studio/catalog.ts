@@ -326,15 +326,19 @@ function shouldIncludeCatalogEntry(title: string, docUrl: string): boolean {
   ];
   const blockedTitleFragments = [
     " Callbacks",
+    " Callback",
     "Download URL",
     "Get 1080P",
     "Get 4K",
     "Get Direct Download URL",
     "Get Task Details",
+    "Integration Guide",
+    "使用指南",
   ];
   const blockedUrlFragments = [
     "/quickstart",
     "/callbacks",
+    "-callback",
     "/get-",
     "/download-url",
     "/webhook-verification",

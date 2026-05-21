@@ -19,6 +19,9 @@ const llmsSample = `
 - Veo3.1 API [Generate Veo3.1 Video](https://docs.kie.ai/veo3-api/generate-veo-3-video.md): ::: info[]
 - Suno API > Music Generation [Generate Music](https://docs.kie.ai/suno-api/generate-music.md): Generate music with or without lyrics using AI models.
 - [Get Task Details](https://docs.kie.ai/market/common/get-task-detail.md): Query the status and results
+- [Claude Code + kie.ai Integration Guide](https://docs.kie.ai/2152008m0.md): Integration setup
+- [Claude Code 对接 kie.ai 使用指南](https://docs.kie.ai/2151374m0.md): Integration setup
+- Suno API > Voice [Suno Voice Generation Callback](https://docs.kie.ai/suno-api/suno-voice-generate-callback.md): Callback payload
 `;
 
 const imageDocSample = `
