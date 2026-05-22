@@ -5,7 +5,7 @@
   },
   "inviteCard": {
     "title": "招待コード",
-    "description": "招待コードを設定し、招待リンクを共有して新規ユーザーを招待します。",
+    "description": "招待コードを設定し、招待リンクを共有します。新規ユーザーの登録で {signupCredit} クレジット、支払いで {firstOrderReward} のキャッシュ報酬を獲得できます。",
     "codeLabel": "自分のコード",
     "linkLabel": "自分の招待リンク",
     "noCode": "まだ招待コードがありません",
@@ -26,7 +26,7 @@
   },
   "withdraw": {
     "title": "出金",
-    "description": "報酬は審査期間後に出金申請できます。申請後は管理者へ連絡してください。",
+    "description": "キャッシュ報酬は {lockDays} 日間の審査期間後に出金申請できます。申請後は管理者へ連絡してください。",
     "claimable": "出金可能",
     "pending": "出金処理中",
     "paid": "支払い済み",
@@ -46,7 +46,7 @@
   },
   "rewards": {
     "title": "報酬記録",
-    "description": "紹介クレジットと初回注文報酬を確認できます。",
+    "description": "紹介クレジットとキャッシュ報酬を確認できます。",
     "empty": "まだ報酬記録がありません。",
     "columns": {
       "user": "招待ユーザー",

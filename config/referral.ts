@@ -24,7 +24,7 @@ export const referralConfig = {
   // 首单返现为固定金额时的美元数
   firstOrderRewardFixedUsd: 1,
   // 首单返现为百分比时的比例，如 10 表示 10%
-  firstOrderRewardPercent: 3,
+  firstOrderRewardPercent: 10,
 } as const;
 
 interface CalculateFirstOrderCashRewardParams {
