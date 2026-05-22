@@ -243,11 +243,15 @@ export default function VideoMobileMenu({
               <ThemeToggle overlay={overlay} />
               <I18nLink
                   className="flex-1 inline-flex h-11 w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] ring-offset-background transition-all duration-300 ease-out hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  href="/dashboard/generate"
+                  href={user ? "/dashboard/generate" : "/dashboard/tasks"}
                   onClick={() => setOpen(false)}
               >
-                <Sparkles className="mr-2 h-4 w-4" />
-                {tHome("createVideo")}
+                {user ? (
+                  <Sparkles className="mr-2 h-4 w-4" />
+                ) : (
+                  <Gift className="mr-2 h-4 w-4" />
+                )}
+                {user ? tHome("createVideo") : tHome("freeCredits")}
               </I18nLink>
             </div>
 
