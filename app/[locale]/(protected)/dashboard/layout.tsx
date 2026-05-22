@@ -22,6 +22,7 @@ export default async function DashboardLayout({
         <DashboardSidebar
           showMemberSubscription={showMemberSubscription}
           totalAvailableCredits={benefits?.totalAvailableCredits}
+          initialUser={user}
         />
         <SidebarInset className="min-w-0">
           <SidebarInsetHeader />
