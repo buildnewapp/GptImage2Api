@@ -11,34 +11,34 @@
     "resolutionLabel": "480p",
     "title": "Seedance 2.0 AI Video Generator—",
     "videos": [
-      "https://cdn.sdanceai.com/sdanceai/sdance_videos/4vr3llg33.mp4",
-      "https://cdn.sdanceai.com/sdanceai/sdance_videos/cslx142y0.mp4",
-      "https://cdn.sdanceai.com/sdanceai/sdance_videos/0yk60yijj.mp4",
-      "https://cdn.sdanceai.com/sdanceai/sdance_videos/598uoczz9.mp4"
+      "https://v.sdanceai.com/sdanceai/sdance_videos/4vr3llg33.mp4",
+      "https://v.sdanceai.com/sdanceai/sdance_videos/cslx142y0.mp4",
+      "https://v.sdanceai.com/sdanceai/sdance_videos/0yk60yijj.mp4",
+      "https://v.sdanceai.com/sdanceai/sdance_videos/598uoczz9.mp4"
     ]
   },
   "featureRows": [
     {
       "description": "Write a prompt, choose aspect ratio, duration, and resolution, then render a short-form clip in the current web app. New users can access Seedance 2.0 right away and keep earning plenty of credits through daily tasks.",
       "title": "Short-Form Text to Video",
-      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/gomdqjkt4.mp4"
+      "videoSrc": "https://v.sdanceai.com/sdanceai/sdance_videos/gomdqjkt4.mp4"
     },
     {
       "description": "Use one still image as your starting frame to lock the subject, framing, or art direction before motion begins. The current web app supports image-to-video with a single reference image.",
       "reverse": true,
       "title": "Reference Image Guidance",
-      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/es600fg0x.mp4"
+      "videoSrc": "https://v.sdanceai.com/sdanceai/sdance_videos/es600fg0x.mp4"
     },
     {
       "description": "Start on Seedance 2.0 right away, then keep earning plenty of credits through daily tasks. Model limits are shown in the generator before you render.",
       "title": "Start on 2.0 Right Away",
-      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/88jhjdm4l.mp4"
+      "videoSrc": "https://v.sdanceai.com/sdanceai/sdance_videos/88jhjdm4l.mp4"
     },
     {
       "description": "Current public plans in seedance2.app top out at 1080p and 15 seconds for Seedance 2.0. We surface those limits in the UI so you can scope prompts realistically before spending credits.",
       "reverse": true,
       "title": "Clear Output Limits",
-      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/nf3vdfl8a.mp4"
+      "videoSrc": "https://v.sdanceai.com/sdanceai/sdance_videos/nf3vdfl8a.mp4"
     }
   ],
   "scope": {
@@ -209,7 +209,7 @@
         "duration": "13.0s",
         "prompt": "The actress from @Image1 as the main subject. Reference @Video1 for rhythmic push-pull-pan-tilt camera work. The actress mirrors the dance movements from @Video1's female dancer, performing energetically on stage.",
         "resolution": "720x1280",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/cslx142y0.mp4",
+        "src": "https://v.sdanceai.com/sdanceai/sdance_videos/cslx142y0.mp4",
         "title": "Camera & Motion Replication"
       },
       {
@@ -217,7 +217,7 @@
         "duration": "15.0s",
         "prompt": "The character in the painting has a guilty expression, glances left and right, then reaches out of the frame to grab a cola and takes a sip with a satisfied look. Hearing footsteps, the character quickly puts the cola back. A cowboy picks up the cola and walks away. The camera pushes forward to a pure black background with a spotlight on the canned cola, with artistic subtitles: \"Yikou Cola, a must-try!\"",
         "resolution": "1280x720",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/3xh83niox.mp4",
+        "src": "https://v.sdanceai.com/sdanceai/sdance_videos/3xh83niox.mp4",
         "title": "Enhanced Fundamentals"
       },
       {
@@ -225,7 +225,7 @@
         "duration": "15.0s",
         "prompt": "The man (@Image1) walks wearily down a corridor after work, his pace slowing. He stops at his front door, close-up shot of his face as he takes a deep breath, adjusts his emotions, puts on a relaxed expression. Close-up of him finding his keys, inserting the lock. After entering, his little daughter and pet dog run joyfully to greet and hug him. The interior is very warm and cozy, with natural dialogue throughout.",
         "resolution": "1280x720",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/kewve4hf7.mp4",
+        "src": "https://v.sdanceai.com/sdanceai/sdance_videos/kewve4hf7.mp4",
         "title": "Brand Explainer Sequence"
       },
       {
@@ -233,7 +233,7 @@
         "duration": "10.0s",
         "prompt": "Reference the model's facial features from the first image. The model wears the outfits from reference images 2-6, approaching the camera with playful, cool, cute, surprised, and stylish poses.",
         "resolution": "720x1280",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/nnxk9k7w5.mp4",
+        "src": "https://v.sdanceai.com/sdanceai/sdance_videos/nnxk9k7w5.mp4",
         "title": "Creative Templates & Effects"
       },
       {
@@ -241,7 +241,7 @@
         "duration": "14.0s",
         "prompt": "Reference Video1's audio, using Image1-5 as inspiration to create an emotionally-driven video. Background music references @Video1.",
         "resolution": "1280x720",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/q3zb6o149.mp4",
+        "src": "https://v.sdanceai.com/sdanceai/sdance_videos/q3zb6o149.mp4",
         "title": "Creative Story Completion"
       },
       {
@@ -249,7 +249,7 @@
         "duration": "15.0s",
         "prompt": "Extend the video by 15 seconds. Reference @Image1 and @Image2's donkey-on-motorcycle character for a wild ad sequence.",
         "resolution": "1280x720",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/598uoczz9.mp4",
+        "src": "https://v.sdanceai.com/sdanceai/sdance_videos/598uoczz9.mp4",
         "title": "Video Extension"
       }
     ]

@@ -11,34 +11,34 @@
     "resolutionLabel": "480p",
     "title": "直接生成短视频",
     "videos": [
-      "https://cdn.sdanceai.com/sdanceai/sdance_videos/4vr3llg33.mp4",
-      "https://cdn.sdanceai.com/sdanceai/sdance_videos/cslx142y0.mp4",
-      "https://cdn.sdanceai.com/sdanceai/sdance_videos/0yk60yijj.mp4",
-      "https://cdn.sdanceai.com/sdanceai/sdance_videos/598uoczz9.mp4"
+      "https://v.sdanceai.com/sdanceai/sdance_videos/4vr3llg33.mp4",
+      "https://v.sdanceai.com/sdanceai/sdance_videos/cslx142y0.mp4",
+      "https://v.sdanceai.com/sdanceai/sdance_videos/0yk60yijj.mp4",
+      "https://v.sdanceai.com/sdanceai/sdance_videos/598uoczz9.mp4"
     ]
   },
   "featureRows": [
     {
       "description": "编写提示词，选择画幅比例、时长和分辨率，然后在当前 Web 应用中渲染短视频片段。新手即可直接使用 Seedance 2.0，并可通过每日任务持续获得大量积分。",
       "title": "短视频文生视频",
-      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/gomdqjkt4.mp4"
+      "videoSrc": "https://v.sdanceai.com/sdanceai/sdance_videos/gomdqjkt4.mp4"
     },
     {
       "description": "用一张静态图片作为起始帧，在运动开始前锁定主体、构图或美术方向。当前 Web 应用支持使用单张参考图进行图生视频。",
       "reverse": true,
       "title": "参考图引导",
-      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/es600fg0x.mp4"
+      "videoSrc": "https://v.sdanceai.com/sdanceai/sdance_videos/es600fg0x.mp4"
     },
     {
       "description": "新手可以直接使用 Seedance 2.0，后续也可以通过每日任务持续获得大量积分。渲染前，生成器里会显示模型限制。",
       "title": "直接开始使用 2.0",
-      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/88jhjdm4l.mp4"
+      "videoSrc": "https://v.sdanceai.com/sdanceai/sdance_videos/88jhjdm4l.mp4"
     },
     {
       "description": "当前 seedance2.app 的公开方案中，Seedance 2.0 最高支持 1080p 和 15 秒。我们会在界面中直接展示这些限制，方便你在消耗积分前合理规划提示词。",
       "reverse": true,
       "title": "输出限制一目了然",
-      "videoSrc": "https://cdn.sdanceai.com/sdanceai/sdance_videos/nf3vdfl8a.mp4"
+      "videoSrc": "https://v.sdanceai.com/sdanceai/sdance_videos/nf3vdfl8a.mp4"
     }
   ],
   "scope": {
@@ -209,7 +209,7 @@
         "duration": "13.0s",
         "prompt": "以 @Image1 中的女演员为主体。参考 @Video1 的节奏型推拉摇移镜头。女演员复现 @Video1 中女舞者的舞蹈动作，在舞台上充满活力地表演。",
         "resolution": "720x1280",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/cslx142y0.mp4",
+        "src": "https://v.sdanceai.com/sdanceai/sdance_videos/cslx142y0.mp4",
         "title": "镜头与动作复刻"
       },
       {
@@ -217,7 +217,7 @@
         "duration": "15.0s",
         "prompt": "画中的角色露出心虚的表情，左右张望后伸手到画框外拿起一罐可乐，满足地喝了一口。听到脚步声后，角色迅速把可乐放回去。一个牛仔拿起可乐后离开。镜头继续向前推进到纯黑背景，聚光灯打在罐装可乐上，并出现艺术字幕：“一口可乐，必须试试！”",
         "resolution": "1280x720",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/3xh83niox.mp4",
+        "src": "https://v.sdanceai.com/sdanceai/sdance_videos/3xh83niox.mp4",
         "title": "基础能力增强"
       },
       {
@@ -225,7 +225,7 @@
         "duration": "15.0s",
         "prompt": "男人（@Image1）下班后疲惫地走在走廊里，步伐越来越慢。他站在家门口，面部特写，深呼吸一口，整理情绪，露出放松的表情。镜头特写他寻找钥匙并插入门锁。进门后，他的小女儿和宠物狗欢快地跑来拥抱他。室内氛围温暖舒适，全程带有自然对白。",
         "resolution": "1280x720",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/kewve4hf7.mp4",
+        "src": "https://v.sdanceai.com/sdanceai/sdance_videos/kewve4hf7.mp4",
         "title": "品牌讲解序列"
       },
       {
@@ -233,7 +233,7 @@
         "duration": "10.0s",
         "prompt": "参考第一张图中的模特五官特征。模特穿着参考图 2-6 中的服装走向镜头，依次摆出俏皮、冷酷、可爱、惊讶和时髦的姿势。",
         "resolution": "720x1280",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/nnxk9k7w5.mp4",
+        "src": "https://v.sdanceai.com/sdanceai/sdance_videos/nnxk9k7w5.mp4",
         "title": "创意模板与特效"
       },
       {
@@ -241,7 +241,7 @@
         "duration": "14.0s",
         "prompt": "参考 Video1 的音频，并以 Image1-5 为灵感创作一支情绪驱动的视频。背景音乐参考 @Video1。",
         "resolution": "1280x720",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/q3zb6o149.mp4",
+        "src": "https://v.sdanceai.com/sdanceai/sdance_videos/q3zb6o149.mp4",
         "title": "创意故事补全"
       },
       {
@@ -249,7 +249,7 @@
         "duration": "15.0s",
         "prompt": "将视频再延长 15 秒。参考 @Image1 和 @Image2 中骑摩托车的驴子角色，制作一段夸张又疯狂的广告序列。",
         "resolution": "1280x720",
-        "src": "https://cdn.sdanceai.com/sdanceai/sdance_videos/598uoczz9.mp4",
+        "src": "https://v.sdanceai.com/sdanceai/sdance_videos/598uoczz9.mp4",
         "title": "视频延展"
       }
     ]

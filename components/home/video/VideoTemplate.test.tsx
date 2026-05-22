@@ -29,7 +29,7 @@ test("renders the key Seedance 2.0 homepage sections and media urls", async () =
   assert.match(html, /Create Your First Clip Today/);
   assert.match(
     html,
-    /https:\/\/cdn\.sdanceai\.com\/sdanceai\/sdance_videos\/gomdqjkt4\.mp4/,
+    /https:\/\/v\.sdanceai\.com\/sdanceai\/sdance_videos\/gomdqjkt4\.mp4/,
   );
 });
 
