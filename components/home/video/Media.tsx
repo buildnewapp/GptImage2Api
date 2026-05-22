@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Clock3, X } from "lucide-react";
 
 import {
@@ -19,6 +19,82 @@ interface VideoTemplateHeroBackgroundProps {
 
 interface VideoShowcaseMediaProps {
   items: readonly VideoTemplateShowcaseItem[];
+}
+
+interface LazyPreviewVideoProps {
+  className?: string;
+  loadDelayMs?: number;
+  rootMargin?: string;
+  src: string;
+}
+
+export function LazyPreviewVideo({
+  className,
+  loadDelayMs = 0,
+  rootMargin = "200px 0px",
+  src,
+}: LazyPreviewVideoProps) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    let timerId: ReturnType<typeof globalThis.setTimeout> | undefined;
+
+    if (!video || shouldLoad) {
+      return undefined;
+    }
+
+    const loadVideo = () => {
+      if (loadDelayMs > 0) {
+        timerId = globalThis.setTimeout(() => setShouldLoad(true), loadDelayMs);
+        return;
+      }
+
+      setShouldLoad(true);
+    };
+
+    if (!("IntersectionObserver" in window)) {
+      loadVideo();
+      return () => {
+        if (timerId) {
+          globalThis.clearTimeout(timerId);
+        }
+      };
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          loadVideo();
+          observer.disconnect();
+        }
+      },
+      { rootMargin },
+    );
+
+    observer.observe(video);
+    return () => {
+      observer.disconnect();
+      if (timerId) {
+        globalThis.clearTimeout(timerId);
+      }
+    };
+  }, [loadDelayMs, rootMargin, shouldLoad]);
+
+  return (
+    <video
+      ref={videoRef}
+      src={shouldLoad ? src : undefined}
+      data-lazy-video-src={src}
+      autoPlay={shouldLoad}
+      muted
+      playsInline
+      loop
+      preload={shouldLoad ? "metadata" : "none"}
+      className={className}
+    />
+  );
 }
 
 export function VideoHeroMedia({ videos }: VideoTemplateHeroBackgroundProps) {
@@ -134,13 +210,10 @@ export function VideoShowcaseMedia({ items }: VideoShowcaseMediaProps) {
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   ) : (
-                    <video
+                    <LazyPreviewVideo
                       src={item.src}
-                      autoPlay
-                      muted
-                      playsInline
-                      loop
-                      preload="metadata"
+                      loadDelayMs={900 + index * 250}
+                      rootMargin="0px"
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   )}

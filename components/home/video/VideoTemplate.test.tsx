@@ -88,6 +88,25 @@ test("defers heavy hero video downloads on first paint", () => {
   assert.match(source, /data-video-hero-placeholder/);
 });
 
+test("defers below-the-fold video preview sources until they enter the viewport", () => {
+  const mediaSource = readFileSync(
+    path.join(projectRoot, "components/home/video/Media.tsx"),
+    "utf8",
+  );
+  const featureRowsSource = readFileSync(
+    path.join(projectRoot, "components/home/video/FeatureRows.tsx"),
+    "utf8",
+  );
+
+  assert.match(mediaSource, /IntersectionObserver/);
+  assert.match(mediaSource, /data-lazy-video-src/);
+  assert.match(mediaSource, /src=\{shouldLoad \? src : undefined\}/);
+  assert.match(mediaSource, /loadDelayMs/);
+  assert.match(mediaSource, /loadDelayMs=\{900 \+ index \* 250\}/);
+  assert.match(featureRowsSource, /LazyPreviewVideo/);
+  assert.doesNotMatch(featureRowsSource, /<video[\s\S]*autoPlay/);
+});
+
 test("renders showcase preview triggers for all six sample items", async () => {
   const html = await renderVideoTemplate();
 

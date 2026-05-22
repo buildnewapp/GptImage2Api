@@ -1,4 +1,5 @@
 import { featureTitleClass } from "@/components/home/video/constants";
+import { LazyPreviewVideo } from "@/components/home/video/Media";
 import type { VideoTemplateFeatureRow } from "@/components/home/video/types";
 
 interface FeatureRowsProps {
@@ -83,13 +84,8 @@ function FeaturePreview({
             loading="lazy"
           />
         ) : videoSrc ? (
-          <video
+          <LazyPreviewVideo
             src={videoSrc}
-            autoPlay
-            muted
-            playsInline
-            loop
-            preload="metadata"
             className="h-full w-full object-cover"
           />
         ) : null}
