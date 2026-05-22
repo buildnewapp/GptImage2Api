@@ -12,7 +12,7 @@ import { authClient } from "@/lib/auth/auth-client";
 import { user as userSchema } from "@/lib/db/schema";
 import { cn } from "@/lib/utils";
 import type { HeaderLink } from "@/types/common";
-import { BookOpen, GraduationCap, LogOut, Menu, Newspaper, Sparkles, X } from "lucide-react";
+import { BookOpen, Gift, GraduationCap, LogOut, Menu, Newspaper, Sparkles, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -49,6 +49,7 @@ export function VideoMobileUserCard({
   user?: User | null;
 }) {
   const tLogin = useTranslations("Login");
+  const tHome = useTranslations("Home");
   const router = useRouter();
   const userMenus = tLogin.raw("UserMenus") as UserMenu[];
 
@@ -126,6 +127,19 @@ export function VideoMobileUserCard({
         </button>
       </div>
       <div className="mt-3 flex flex-col gap-1">
+        <button
+          type="button"
+          onClick={() => onNavigate("/dashboard/tasks")}
+          className={cn(
+            "flex items-center gap-2 rounded-xl px-2 py-2 text-left text-sm font-semibold transition-colors",
+            overlay
+              ? "bg-white/8 text-white hover:bg-white/12"
+              : "bg-primary/8 text-primary hover:bg-primary/12"
+          )}
+        >
+          <Gift className="h-4 w-4" />
+          <span>{tHome("earnCredits")}</span>
+        </button>
         {userMenus.map((menu) => (
           <button
             key={menu.href}
@@ -229,11 +243,15 @@ export default function VideoMobileMenu({
               <ThemeToggle overlay={overlay} />
               <I18nLink
                   className="flex-1 inline-flex h-11 w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] ring-offset-background transition-all duration-300 ease-out hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  href="/dashboard/generate"
+                  href={user ? "/dashboard/generate" : "/dashboard/tasks"}
                   onClick={() => setOpen(false)}
               >
-                <Sparkles className="mr-2 h-4 w-4" />
-                {tHome("createVideo")}
+                {user ? (
+                  <Sparkles className="mr-2 h-4 w-4" />
+                ) : (
+                  <Gift className="mr-2 h-4 w-4" />
+                )}
+                {user ? tHome("createVideo") : tHome("freeCredits")}
               </I18nLink>
             </div>
 

@@ -28,7 +28,7 @@ export function SidebarUserNav({
   user,
   totalAvailableCredits,
 }: {
-  user: User;
+  user: User | null;
   totalAvailableCredits?: number | null;
 }) {
   const router = useRouter();

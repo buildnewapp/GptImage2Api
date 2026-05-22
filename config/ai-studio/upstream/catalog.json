@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-05-15T08:48:10.155Z",
+  "generatedAt": "2026-05-21T09:15:06.240Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -10348,1083 +10348,6 @@
       "pricingRows": []
     },
     {
-      "id": "video:sora2-image-to-video",
-      "category": "video",
-      "title": "Sora2 - Image to Video",
-      "docUrl": "https://docs.kie.ai/market/sora2/sora-2-image-to-video.md",
-      "provider": "Sora2",
-      "endpoint": "/api/v1/jobs/createTask",
-      "method": "POST",
-      "modelKeys": [
-        "sora-2-image-to-video"
-      ],
-      "requestSchema": {
-        "type": "object",
-        "required": [
-          "model"
-        ],
-        "properties": {
-          "model": {
-            "type": "string",
-            "enum": [
-              "sora-2-image-to-video"
-            ],
-            "default": "sora-2-image-to-video",
-            "description": "The model name to use for generation. Required field.\n\n- Must be `sora-2-image-to-video` for this endpoint",
-            "examples": [
-              "sora-2-image-to-video"
-            ]
-          },
-          "callBackUrl": {
-            "type": "string",
-            "format": "uri",
-            "description": "The URL to receive generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when generation completes\n- Callback includes generated content URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
-            "examples": [
-              "https://your-domain.com/api/callback"
-            ]
-          },
-          "progressCallBackUrl": {
-            "type": "string",
-            "description": "User progress callback address\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
-            "format": "uri",
-            "examples": [
-              "https://your-domain.com/api/v1/jobs/progressCallBackUrl"
-            ]
-          },
-          "input": {
-            "type": "object",
-            "description": "Input parameters for the generation task",
-            "properties": {
-              "prompt": {
-                "description": "The text prompt describing the desired video motion (Max length: 10000 characters)",
-                "type": "string",
-                "maxLength": 10000,
-                "examples": [
-                  "A claymation conductor passionately leads a claymation orchestra, while the entire group joyfully sings in chorus the phrase: “Sora 2 is now available on Kie AI."
-                ]
-              },
-              "image_urls": {
-                "description": "URL of the image to use as the first frame. Must be publicly accessible (File URL after upload, not file content; Accepted types: image/jpeg, image/png, image/webp; Max size: 10.0MB)",
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "format": "uri"
-                },
-                "maxItems": 1,
-                "examples": [
-                  [
-                    "https://file.aiquickdraw.com/custom-page/akr/section-images/17594315607644506ltpf.jpg"
-                  ]
-                ]
-              },
-              "aspect_ratio": {
-                "description": "This parameter defines the aspect ratio of the image.",
-                "type": "string",
-                "enum": [
-                  "portrait",
-                  "landscape"
-                ],
-                "default": "landscape",
-                "examples": [
-                  "landscape"
-                ]
-              },
-              "n_frames": {
-                "description": "The number of frames to be generated.",
-                "type": "string",
-                "enum": [
-                  "10",
-                  "15"
-                ],
-                "default": "10",
-                "examples": [
-                  "10"
-                ]
-              },
-              "remove_watermark": {
-                "description": "When enabled, removes watermarks from the generated video. (Boolean value (true/false))",
-                "type": "boolean",
-                "examples": [
-                  true
-                ]
-              },
-              "character_id_list": {
-                "description": "Optional array of character IDs from Sora-2-characters model to incorporate character animations into the video generation. Maximum 5 character IDs allowed. Leave empty if not using character animations.",
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "maxItems": 5,
-                "examples": [
-                  [
-                    "example_123456789",
-                    "example_987654321"
-                  ]
-                ]
-              },
-              "upload_method": {
-                "type": "string",
-                "description": "Upload destination. Defaults to s3; choose oss for Aliyun storage (better access within China).",
-                "enum": [
-                  "s3",
-                  "oss"
-                ],
-                "x-apidog-enum": [
-                  {
-                    "value": "s3",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "oss",
-                    "name": "",
-                    "description": ""
-                  }
-                ],
-                "default": "s3"
-              }
-            },
-            "required": [
-              "prompt",
-              "image_urls",
-              "upload_method"
-            ],
-            "x-apidog-orders": [
-              "prompt",
-              "image_urls",
-              "aspect_ratio",
-              "n_frames",
-              "remove_watermark",
-              "character_id_list",
-              "upload_method",
-              "01KH0FE6RJQ2K3CT9HW94ZPAT5"
-            ],
-            "x-apidog-refs": {
-              "01KH0FE6RJQ2K3CT9HW94ZPAT5": {
-                "type": "object",
-                "properties": {}
-              }
-            },
-            "x-apidog-ignore-properties": []
-          }
-        },
-        "x-apidog-orders": [
-          "model",
-          "callBackUrl",
-          "progressCallBackUrl",
-          "input"
-        ],
-        "x-apidog-ignore-properties": []
-      },
-      "examplePayload": {
-        "model": "sora-2-image-to-video",
-        "callBackUrl": "https://your-domain.com/api/callback",
-        "progressCallBackUrl": "https://your-domain.com/api/v1/jobs/progressCallBackUrl",
-        "input": {
-          "prompt": "A claymation conductor passionately leads a claymation orchestra, while the entire group joyfully sings in chorus the phrase: “Sora 2 is now available on Kie AI.",
-          "image_urls": [
-            "https://file.aiquickdraw.com/custom-page/akr/section-images/17594315607644506ltpf.jpg"
-          ],
-          "aspect_ratio": "landscape",
-          "n_frames": "10",
-          "remove_watermark": true,
-          "upload_method": "s3",
-          "character_id_list": [
-            "example_123456789"
-          ]
-        }
-      },
-      "pricingRows": []
-    },
-    {
-      "id": "video:sora2-text-to-video",
-      "category": "video",
-      "title": "Sora2 - Text to Video",
-      "docUrl": "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
-      "provider": "Sora2",
-      "endpoint": "/api/v1/jobs/createTask",
-      "method": "POST",
-      "modelKeys": [
-        "sora-2-text-to-video"
-      ],
-      "requestSchema": {
-        "type": "object",
-        "required": [
-          "model"
-        ],
-        "properties": {
-          "model": {
-            "type": "string",
-            "enum": [
-              "sora-2-text-to-video"
-            ],
-            "default": "sora-2-text-to-video",
-            "description": "The model name to use for generation. Required field.\n\n- Must be `sora-2-text-to-video` for this endpoint",
-            "examples": [
-              "sora-2-text-to-video"
-            ]
-          },
-          "callBackUrl": {
-            "type": "string",
-            "format": "uri",
-            "description": "The URL to receive generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when generation completes\n- Callback includes generated content URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
-            "examples": [
-              "https://your-domain.com/api/callback"
-            ]
-          },
-          "progressCallBackUrl": {
-            "type": "string",
-            "description": "User progress callback address\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
-            "format": "uri",
-            "examples": [
-              "https://your-domain.com/api/v1/jobs/progressCallBackUrl"
-            ]
-          },
-          "input": {
-            "type": "object",
-            "description": "Input parameters for the generation task",
-            "properties": {
-              "prompt": {
-                "description": "The text prompt describing the desired video motion (Max length: 10000 characters)",
-                "type": "string",
-                "maxLength": 10000,
-                "examples": [
-                  "A professor stands at the front of a lively classroom, enthusiastically giving a lecture. On the blackboard behind him are colorful chalk diagrams. With an animated gesture, he declares to the students: “Sora 2 is now available on Kie AI, making it easier than ever to create stunning videos.” The students listen attentively, some smiling and taking notes."
-                ]
-              },
-              "aspect_ratio": {
-                "description": "This parameter defines the aspect ratio of the image.",
-                "type": "string",
-                "enum": [
-                  "portrait",
-                  "landscape"
-                ],
-                "default": "landscape",
-                "examples": [
-                  "landscape"
-                ]
-              },
-              "n_frames": {
-                "description": "The number of frames to be generated.",
-                "type": "string",
-                "enum": [
-                  "10",
-                  "15"
-                ],
-                "default": "10",
-                "examples": [
-                  "10"
-                ]
-              },
-              "remove_watermark": {
-                "description": "When enabled, removes watermarks from the generated video. (Boolean value (true/false))",
-                "type": "boolean",
-                "examples": [
-                  true
-                ]
-              },
-              "character_id_list": {
-                "description": "Optional array of character IDs from Sora-2-characters model to incorporate character animations into the video generation. Maximum 5 character IDs allowed. Leave empty if not using character animations.",
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "maxItems": 5,
-                "examples": [
-                  [
-                    "example_123456789",
-                    "example_987654321"
-                  ]
-                ]
-              },
-              "upload_method": {
-                "type": "string",
-                "description": "Upload destination. Defaults to s3; choose oss for Aliyun storage (better access within China).",
-                "enum": [
-                  "s3",
-                  "oss"
-                ],
-                "x-apidog-enum": [
-                  {
-                    "value": "s3",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "oss",
-                    "name": "",
-                    "description": ""
-                  }
-                ],
-                "default": "s3"
-              }
-            },
-            "required": [
-              "prompt",
-              "upload_method"
-            ],
-            "x-apidog-orders": [
-              "prompt",
-              "aspect_ratio",
-              "n_frames",
-              "remove_watermark",
-              "character_id_list",
-              "upload_method",
-              "01KH0FEQ5CMWYDEAW6BTYB4B18"
-            ],
-            "x-apidog-refs": {
-              "01KH0FEQ5CMWYDEAW6BTYB4B18": {
-                "type": "object",
-                "properties": {}
-              }
-            },
-            "x-apidog-ignore-properties": []
-          }
-        },
-        "x-apidog-orders": [
-          "model",
-          "callBackUrl",
-          "progressCallBackUrl",
-          "input"
-        ],
-        "x-apidog-ignore-properties": []
-      },
-      "examplePayload": {
-        "model": "sora-2-text-to-video",
-        "callBackUrl": "https://your-domain.com/api/callback",
-        "progressCallBackUrl": "https://your-domain.com/api/v1/jobs/progressCallBackUrl",
-        "input": {
-          "prompt": "A professor stands at the front of a lively classroom, enthusiastically giving a lecture. On the blackboard behind him are colorful chalk diagrams. With an animated gesture, he declares to the students: “Sora 2 is now available on Kie AI, making it easier than ever to create stunning videos.” The students listen attentively, some smiling and taking notes.",
-          "aspect_ratio": "landscape",
-          "n_frames": "10",
-          "remove_watermark": true,
-          "upload_method": "s3",
-          "character_id_list": [
-            "example_123456789"
-          ]
-        }
-      },
-      "pricingRows": []
-    },
-    {
-      "id": "video:sora2-pro-image-to-video",
-      "category": "video",
-      "title": "Sora2 - Pro Image to Video",
-      "docUrl": "https://docs.kie.ai/market/sora2/sora-2-pro-image-to-video.md",
-      "provider": "Sora2",
-      "endpoint": "/api/v1/jobs/createTask",
-      "method": "POST",
-      "modelKeys": [
-        "sora-2-pro-image-to-video"
-      ],
-      "requestSchema": {
-        "type": "object",
-        "required": [
-          "model"
-        ],
-        "properties": {
-          "model": {
-            "type": "string",
-            "enum": [
-              "sora-2-pro-image-to-video"
-            ],
-            "default": "sora-2-pro-image-to-video",
-            "description": "The model name to use for generation. Required field.\n\n- Must be `sora-2-pro-image-to-video` for this endpoint",
-            "examples": [
-              "sora-2-pro-image-to-video"
-            ]
-          },
-          "callBackUrl": {
-            "type": "string",
-            "format": "uri",
-            "description": "The URL to receive generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when generation completes\n- Callback includes generated content URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
-            "examples": [
-              "https://your-domain.com/api/callback"
-            ]
-          },
-          "progressCallBackUrl": {
-            "type": "string",
-            "description": "User progress callback address\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
-            "format": "uri",
-            "examples": [
-              "https://your-domain.com/api/v1/jobs/progressCallBackUrl"
-            ]
-          },
-          "input": {
-            "type": "object",
-            "description": "Input parameters for the generation task",
-            "properties": {
-              "prompt": {
-                "description": "The text prompt describing the desired video motion (Max length: 10000 characters)",
-                "type": "string",
-                "maxLength": 10000,
-                "examples": [
-                  ""
-                ]
-              },
-              "image_urls": {
-                "description": "URL of the image to use as the first frame. Must be publicly accessible (File URL after upload, not file content; Accepted types: image/jpeg, image/png, image/webp; Max size: 10.0MB)",
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "format": "uri"
-                },
-                "maxItems": 1,
-                "examples": [
-                  []
-                ]
-              },
-              "aspect_ratio": {
-                "description": "This parameter defines the aspect ratio of the image.",
-                "type": "string",
-                "enum": [
-                  "portrait",
-                  "landscape"
-                ],
-                "default": "landscape",
-                "examples": [
-                  "landscape"
-                ]
-              },
-              "n_frames": {
-                "description": "The number of frames to be generated.",
-                "type": "string",
-                "enum": [
-                  "10",
-                  "15"
-                ],
-                "default": "10",
-                "examples": [
-                  "10"
-                ]
-              },
-              "size": {
-                "description": "The quality or size of the generated image.",
-                "type": "string",
-                "enum": [
-                  "standard",
-                  "high"
-                ],
-                "default": "standard",
-                "examples": [
-                  "standard"
-                ]
-              },
-              "remove_watermark": {
-                "description": "When enabled, removes watermarks from the generated video. (Boolean value (true/false))",
-                "type": "boolean",
-                "examples": [
-                  true
-                ]
-              },
-              "character_id_list": {
-                "description": "Optional array of character IDs from Sora-2-characters model to incorporate character animations into the video generation. Maximum 5 character IDs allowed. Leave empty if not using character animations.",
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "maxItems": 5,
-                "examples": [
-                  [
-                    "example_123456789",
-                    "example_987654321"
-                  ]
-                ]
-              },
-              "upload_method": {
-                "type": "string",
-                "description": "Upload destination. Defaults to s3; choose oss for Aliyun storage (better access within China).",
-                "enum": [
-                  "oss",
-                  "s3"
-                ],
-                "x-apidog-enum": [
-                  {
-                    "value": "oss",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "s3",
-                    "name": "",
-                    "description": ""
-                  }
-                ],
-                "default": "s3"
-              }
-            },
-            "required": [
-              "prompt",
-              "image_urls",
-              "upload_method"
-            ],
-            "x-apidog-orders": [
-              "prompt",
-              "image_urls",
-              "aspect_ratio",
-              "n_frames",
-              "size",
-              "remove_watermark",
-              "character_id_list",
-              "upload_method",
-              "01KH0FF8M78NHA5MW6PRWPAKCG"
-            ],
-            "x-apidog-refs": {
-              "01KH0FF8M78NHA5MW6PRWPAKCG": {
-                "type": "object",
-                "properties": {}
-              }
-            },
-            "x-apidog-ignore-properties": []
-          }
-        },
-        "x-apidog-orders": [
-          "model",
-          "callBackUrl",
-          "progressCallBackUrl",
-          "input"
-        ],
-        "x-apidog-ignore-properties": []
-      },
-      "examplePayload": {
-        "model": "sora-2-pro-image-to-video",
-        "callBackUrl": "https://your-domain.com/api/callback",
-        "progressCallBackUrl": "https://your-domain.com/api/v1/jobs/progressCallBackUrl",
-        "input": {
-          "prompt": "",
-          "image_urls": [],
-          "aspect_ratio": "landscape",
-          "n_frames": "10",
-          "size": "standard",
-          "remove_watermark": true,
-          "upload_method": "s3",
-          "character_id_list": [
-            "example_123456789"
-          ]
-        }
-      },
-      "pricingRows": []
-    },
-    {
-      "id": "video:sora2-pro-text-to-video",
-      "category": "video",
-      "title": "Sora2 - Pro Text to Video",
-      "docUrl": "https://docs.kie.ai/market/sora2/sora-2-pro-text-to-video.md",
-      "provider": "Sora2",
-      "endpoint": "/api/v1/jobs/createTask",
-      "method": "POST",
-      "modelKeys": [
-        "sora-2-pro-text-to-video"
-      ],
-      "requestSchema": {
-        "type": "object",
-        "required": [
-          "model"
-        ],
-        "properties": {
-          "model": {
-            "type": "string",
-            "enum": [
-              "sora-2-pro-text-to-video"
-            ],
-            "default": "sora-2-pro-text-to-video",
-            "description": "The model name to use for generation. Required field.\n\n- Must be `sora-2-pro-text-to-video` for this endpoint",
-            "examples": [
-              "sora-2-pro-text-to-video"
-            ]
-          },
-          "callBackUrl": {
-            "type": "string",
-            "format": "uri",
-            "description": "The URL to receive generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when generation completes\n- Callback includes generated content URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
-            "examples": [
-              "https://your-domain.com/api/callback"
-            ]
-          },
-          "progressCallBackUrl": {
-            "type": "string",
-            "description": "User progress callback address\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
-            "format": "uri",
-            "examples": [
-              "https://your-domain.com/api/v1/jobs/progressCallBackUrl"
-            ]
-          },
-          "input": {
-            "type": "object",
-            "description": "Input parameters for the generation task",
-            "properties": {
-              "prompt": {
-                "description": "The text prompt describing the desired video motion (Max length: 10000 characters)",
-                "type": "string",
-                "maxLength": 10000,
-                "examples": [
-                  "a happy dog running in the garden"
-                ]
-              },
-              "aspect_ratio": {
-                "description": "This parameter defines the aspect ratio of the image.",
-                "type": "string",
-                "enum": [
-                  "portrait",
-                  "landscape"
-                ],
-                "default": "landscape",
-                "examples": [
-                  "landscape"
-                ]
-              },
-              "n_frames": {
-                "description": "The number of frames to be generated.",
-                "type": "string",
-                "enum": [
-                  "10",
-                  "15"
-                ],
-                "default": "10",
-                "examples": [
-                  "10"
-                ]
-              },
-              "size": {
-                "description": "The quality or size of the generated image.",
-                "type": "string",
-                "enum": [
-                  "standard",
-                  "high"
-                ],
-                "default": "high",
-                "examples": [
-                  "high"
-                ]
-              },
-              "remove_watermark": {
-                "description": "When enabled, removes watermarks from the generated video. (Boolean value (true/false))",
-                "type": "boolean",
-                "examples": [
-                  true
-                ]
-              },
-              "character_id_list": {
-                "description": "Optional array of character IDs from Sora-2-characters model to incorporate character animations into the video generation. Maximum 5 character IDs allowed. Leave empty if not using character animations.",
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "maxItems": 5,
-                "examples": [
-                  [
-                    "example_123456789",
-                    "example_987654321"
-                  ]
-                ]
-              },
-              "upload_method": {
-                "type": "string",
-                "description": "Upload destination. Defaults to s3; choose oss for Aliyun storage (better access within China).",
-                "enum": [
-                  "s3",
-                  "oss"
-                ],
-                "x-apidog-enum": [
-                  {
-                    "value": "s3",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "oss",
-                    "name": "",
-                    "description": ""
-                  }
-                ],
-                "default": "s3"
-              }
-            },
-            "required": [
-              "prompt",
-              "upload_method"
-            ],
-            "x-apidog-orders": [
-              "prompt",
-              "aspect_ratio",
-              "n_frames",
-              "size",
-              "remove_watermark",
-              "character_id_list",
-              "upload_method",
-              "01KH0FFQCX0SGEAB3F4G2G0BHW"
-            ],
-            "x-apidog-refs": {
-              "01KH0FFQCX0SGEAB3F4G2G0BHW": {
-                "type": "object",
-                "properties": {}
-              }
-            },
-            "x-apidog-ignore-properties": []
-          }
-        },
-        "x-apidog-orders": [
-          "model",
-          "callBackUrl",
-          "progressCallBackUrl",
-          "input"
-        ],
-        "x-apidog-ignore-properties": []
-      },
-      "examplePayload": {
-        "model": "sora-2-pro-text-to-video",
-        "callBackUrl": "https://your-domain.com/api/callback",
-        "progressCallBackUrl": "https://your-domain.com/api/v1/jobs/progressCallBackUrl",
-        "input": {
-          "prompt": "a happy dog running in the garden",
-          "aspect_ratio": "landscape",
-          "n_frames": "10",
-          "size": "high",
-          "remove_watermark": true,
-          "upload_method": "s3",
-          "character_id_list": [
-            "example_123456789"
-          ]
-        }
-      },
-      "pricingRows": []
-    },
-    {
-      "id": "video:sora2-watermark-remover",
-      "category": "video",
-      "title": "Sora2 - Watermark Remover",
-      "docUrl": "https://docs.kie.ai/market/sora2/sora-watermark-remover.md",
-      "provider": "Sora2",
-      "endpoint": "/api/v1/jobs/createTask",
-      "method": "POST",
-      "modelKeys": [
-        "sora-watermark-remover"
-      ],
-      "requestSchema": {
-        "type": "object",
-        "required": [
-          "model"
-        ],
-        "properties": {
-          "model": {
-            "type": "string",
-            "enum": [
-              "sora-watermark-remover"
-            ],
-            "default": "sora-watermark-remover",
-            "description": "The model name to use for generation. Required field.\n\n- Must be `sora-watermark-remover` for this endpoint",
-            "examples": [
-              "sora-watermark-remover"
-            ]
-          },
-          "callBackUrl": {
-            "type": "string",
-            "format": "uri",
-            "description": "The URL to receive generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when generation completes\n- Callback includes generated content URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
-            "examples": [
-              "https://your-domain.com/api/callback"
-            ]
-          },
-          "input": {
-            "type": "object",
-            "description": "Input parameters for the generation task",
-            "properties": {
-              "video_url": {
-                "description": "Enter the Sora 2 video URL — it must be a publicly accessible link from OpenAI (starting with sora.chatgpt.com). (Max length: 500 characters)",
-                "type": "string",
-                "maxLength": 500,
-                "examples": [
-                  "https://sora.chatgpt.com/p/s_68e83bd7eee88191be79d2ba7158516f"
-                ]
-              },
-              "upload_method": {
-                "type": "string",
-                "description": "Upload destination. Defaults to s3; choose oss for Aliyun storage (better access within China).",
-                "enum": [
-                  "oss",
-                  "s3"
-                ],
-                "x-apidog-enum": [
-                  {
-                    "value": "oss",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "s3",
-                    "name": "",
-                    "description": ""
-                  }
-                ],
-                "default": "s3"
-              }
-            },
-            "required": [
-              "video_url",
-              "upload_method"
-            ],
-            "x-apidog-orders": [
-              "video_url",
-              "upload_method",
-              "01KH0FGH7Y80Q0FG475XE754KH"
-            ],
-            "x-apidog-refs": {
-              "01KH0FGH7Y80Q0FG475XE754KH": {
-                "type": "object",
-                "properties": {}
-              }
-            },
-            "x-apidog-ignore-properties": []
-          }
-        },
-        "x-apidog-orders": [
-          "model",
-          "callBackUrl",
-          "input"
-        ],
-        "x-apidog-ignore-properties": []
-      },
-      "examplePayload": {
-        "model": "sora-watermark-remover",
-        "callBackUrl": "https://your-domain.com/api/callback",
-        "input": {
-          "video_url": "https://sora.chatgpt.com/p/s_68e83bd7eee88191be79d2ba7158516f",
-          "upload_method": "s3"
-        }
-      },
-      "pricingRows": []
-    },
-    {
-      "id": "video:sora2-pro-storyboard",
-      "category": "video",
-      "title": "Sora2 - Pro Storyboard",
-      "docUrl": "https://docs.kie.ai/market/sora-2-pro-storyboard.md",
-      "provider": "Sora2",
-      "endpoint": "/api/v1/jobs/createTask",
-      "method": "POST",
-      "modelKeys": [
-        "sora-2-pro-storyboard"
-      ],
-      "requestSchema": {
-        "type": "object",
-        "required": [
-          "model"
-        ],
-        "properties": {
-          "model": {
-            "type": "string",
-            "enum": [
-              "sora-2-pro-storyboard"
-            ],
-            "default": "sora-2-pro-storyboard",
-            "description": "The model name to use for generation. Required field.\n\n- Must be `sora-2-pro-storyboard` for this endpoint",
-            "examples": [
-              "sora-2-pro-storyboard"
-            ]
-          },
-          "callBackUrl": {
-            "type": "string",
-            "format": "uri",
-            "description": "The URL to receive generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when generation completes\n- Callback includes generated content URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
-            "examples": [
-              "https://your-domain.com/api/callback"
-            ]
-          },
-          "input": {
-            "type": "object",
-            "description": "Input parameters for the generation task",
-            "properties": {
-              "shots": {
-                "description": "Array of shot descriptions with durations. Total duration of all shots cannot exceed the selected n_frames value.",
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "Scene": {
-                      "type": "string",
-                      "description": "Detailed description of the scene/shot",
-                      "examples": [
-                        "A cute fluffy orange-and-white kitten wearing orange headphones, sitting at a cozy indoor table with a small slice of cake on a plate, a toy fish and a silver microphone nearby, warm soft lighting, cinematic close-up, shallow depth of field, gentle ASMR atmosphere."
-                      ]
-                    },
-                    "duration": {
-                      "type": "number",
-                      "description": "Duration of this shot in seconds. Total duration of all shots cannot exceed n_frames.",
-                      "minimum": 0.1,
-                      "maximum": 15,
-                      "examples": [
-                        7.5
-                      ]
-                    }
-                  },
-                  "required": [
-                    "Scene",
-                    "duration"
-                  ],
-                  "x-apidog-orders": [
-                    "Scene",
-                    "duration"
-                  ],
-                  "x-apidog-ignore-properties": []
-                },
-                "minItems": 1,
-                "maxItems": 10,
-                "examples": [
-                  [
-                    {
-                      "Scene": "A cute fluffy orange-and-white kitten wearing orange headphones, sitting at a cozy indoor table with a small slice of cake on a plate, a toy fish and a silver microphone nearby, warm soft lighting, cinematic close-up, shallow depth of field, gentle ASMR atmosphere.",
-                      "duration": 7.5
-                    },
-                    {
-                      "Scene": "The same cute fluffy orange-and-white kitten wearing orange headphones, in the same cozy indoor ASMR setup with the toy fish and microphone, the cake now finished, the kitten gently licks its lips with a satisfied smile, warm ambient lighting, cinematic close-up, shallow depth of field, calm and content mood.",
-                      "duration": 7.5
-                    }
-                  ]
-                ]
-              },
-              "n_frames": {
-                "description": "Total length of the video",
-                "type": "string",
-                "enum": [
-                  "10",
-                  "15",
-                  "25"
-                ],
-                "default": "15",
-                "examples": [
-                  "15"
-                ]
-              },
-              "image_urls": {
-                "description": "Upload an image file to use as input for the API (File URL after upload, not file content; Accepted types: image/jpeg, image/png, image/webp; Max size: 10.0MB). Limited to exactly 1 image.",
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "format": "uri"
-                },
-                "minItems": 1,
-                "maxItems": 1,
-                "examples": [
-                  [
-                    "https://file.aiquickdraw.com/custom-page/akr/section-images/1760776438785hyue5ogz.png"
-                  ]
-                ]
-              },
-              "aspect_ratio": {
-                "description": "This parameter defines the aspect ratio of the image.",
-                "type": "string",
-                "enum": [
-                  "portrait",
-                  "landscape"
-                ],
-                "default": "landscape",
-                "examples": [
-                  "landscape"
-                ]
-              },
-              "upload_method": {
-                "type": "string",
-                "description": "Upload destination. Defaults to s3; choose oss for Aliyun storage (better access within China).",
-                "enum": [
-                  "s3",
-                  "oss"
-                ],
-                "x-apidog-enum": [
-                  {
-                    "value": "s3",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "oss",
-                    "name": "",
-                    "description": ""
-                  }
-                ]
-              }
-            },
-            "x-apidog-orders": [
-              "shots",
-              "n_frames",
-              "image_urls",
-              "aspect_ratio",
-              "upload_method",
-              "01KH0FG3QMQV42KBJHG2PZQVNE"
-            ],
-            "x-apidog-refs": {
-              "01KH0FG3QMQV42KBJHG2PZQVNE": {
-                "type": "object",
-                "properties": {}
-              }
-            },
-            "required": [
-              "upload_method"
-            ],
-            "x-apidog-ignore-properties": []
-          }
-        },
-        "x-apidog-orders": [
-          "model",
-          "callBackUrl",
-          "input"
-        ],
-        "x-apidog-ignore-properties": []
-      },
-      "examplePayload": {
-        "model": "sora-2-pro-storyboard",
-        "callBackUrl": "https://your-domain.com/api/callback",
-        "input": {
-          "n_frames": "15",
-          "image_urls": [
-            "https://file.aiquickdraw.com/custom-page/akr/section-images/1760776438785hyue5ogz.png"
-          ],
-          "aspect_ratio": "landscape",
-          "upload_method": "s3",
-          "shots": [
-            {
-              "Scene": "A cute fluffy orange-and-white kitten wearing orange headphones, sitting at a cozy indoor table with a small slice of cake on a plate, a toy fish and a silver microphone nearby, warm soft lighting, cinematic close-up, shallow depth of field, gentle ASMR atmosphere.",
-              "duration": 7.5
-            },
-            {
-              "Scene": "The same cute fluffy orange-and-white kitten wearing orange headphones, in the same cozy indoor ASMR setup with the toy fish and microphone, the cake now finished, the kitten gently licks its lips with a satisfied smile, warm ambient lighting, cinematic close-up, shallow depth of field, calm and content mood.",
-              "duration": 7.5
-            }
-          ]
-        }
-      },
-      "pricingRows": []
-    },
-    {
-      "id": "video:sora2-characters",
-      "category": "video",
-      "title": "Sora2 - Characters",
-      "docUrl": "https://docs.kie.ai/market/sora2/sora-2-characters.md",
-      "provider": "Sora2",
-      "endpoint": "/api/v1/jobs/createTask",
-      "method": "POST",
-      "modelKeys": [
-        "api"
-      ],
-      "requestSchema": null,
-      "examplePayload": {},
-      "pricingRows": []
-    },
-    {
-      "id": "video:sora2-characters-pro",
-      "category": "video",
-      "title": "Sora2 - Characters Pro",
-      "docUrl": "https://docs.kie.ai/market/sora2/sora-2-characters-pro.md",
-      "provider": "Sora2",
-      "endpoint": "/api/v1/jobs/createTask",
-      "method": "POST",
-      "modelKeys": [
-        "api"
-      ],
-      "requestSchema": null,
-      "examplePayload": {},
-      "pricingRows": []
-    },
-    {
       "id": "video:wan-image-to-video",
       "category": "video",
       "title": "Wan - Image to Video",
@@ -14874,6 +13797,381 @@
           "audio_setting": "auto",
           "seed": 1764574909
         }
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:gemini-omni-video",
+      "category": "video",
+      "title": "Gemini Omni Video",
+      "docUrl": "https://docs.kie.ai/market/gemini-omni-video.md",
+      "provider": "Gemini Omni Video",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "gemini-omni-video"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "gemini-omni-video"
+            ],
+            "default": "gemini-omni-video",
+            "description": "The model name used for generation. This field is required. This endpoint must use the `gemini-omni-video` model.",
+            "examples": [
+              "gemini-omni-video"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Callback URL for task completion notifications. Optional parameter. If provided, the system will send a POST request to this URL when the task completes, whether it succeeds or fails. If omitted, no callback notification will be sent.",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the multimodal video generation task.",
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "description": "Video prompt used to describe the target content, style, camera language, or character actions in the generated video.",
+                "examples": [
+                  "Create a futuristic night city short film with a slow push-in shot as the character walks out from a neon-lit street."
+                ]
+              },
+              "image_urls": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "description": "Array of image URLs. You can provide one or more reference images for characters, scenes, styles, or storyboard guidance.\n\nImage limits:\n- Each file must be no larger than `20MB`\n- Use publicly accessible image URLs\n- Max 7 images",
+                "examples": [
+                  [
+                    "https://example.com/assets/scene-1.png",
+                    "https://example.com/assets/scene-2.png"
+                  ]
+                ]
+              },
+              "audio_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Array of audio IDs generated by the `gemini-omni-audio` endpoint. Useful for narration, dialogue, music, or audio guidance in the generated video. Max 3 items.",
+                "examples": [
+                  [
+                    "audio_01hx8p0demo"
+                  ]
+                ]
+              },
+              "video_list": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "url",
+                    "start",
+                    "ends"
+                  ],
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "Video URL. Each source video file must be no larger than `100MB` and no longer than `30s`."
+                    },
+                    "start": {
+                      "type": "number",
+                      "minimum": 0,
+                      "description": "Start time in seconds."
+                    },
+                    "ends": {
+                      "type": "number",
+                      "minimum": 0,
+                      "description": "End time in seconds. It should be greater than `start`.The difference between the end time and the start time must not exceed 10s"
+                    }
+                  },
+                  "x-apidog-orders": [
+                    "url",
+                    "start",
+                    "ends"
+                  ]
+                },
+                "description": "Array of video clips. Each item defines a source video and the trim range to use during generation.\n\nVideo limits:\n- Each file must be no larger than `100MB`\n- Video duration must not exceed `30s`\n- `ends` should be greater than `start`\n- The difference between the end time and the start time must not exceed `10s`.\n- Max 1 items. Equal 2 images",
+                "examples": [
+                  [
+                    {
+                      "url": "https://example.com/assets/source-video.mp4",
+                      "start": 0,
+                      "ends": 10
+                    }
+                  ]
+                ]
+              },
+              "character_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "An array of character IDs generated by the `gemini-omni-character` API. Used to provide character appearance, identity, or person references for the video. Each character_id uses 1 image slot. The base limit is 7 image slots; if video_list is also provided, video_list uses 2 image slots, so character_ids can contain up to 3 IDs.",
+                "examples": [
+                  [
+                    "character_01hx8p0demo"
+                  ]
+                ]
+              },
+              "duration": {
+                "type": "string",
+                "enum": [
+                  "4",
+                  "6",
+                  "8",
+                  "10"
+                ],
+                "description": "The duration of the generated video in seconds. Available values are 4, 6, 8, and 10. When video input is provided, the output duration is determined by the model automatically. This duration parameter will not take effect.Note: when video input is provided, the output duration is determined by the model automatically. This duration parameter will not take effect.",
+                "examples": [
+                  "8"
+                ]
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "enum": [
+                  "16:9",
+                  "9:16"
+                ],
+                "description": "The aspect ratio of the generated video. `16:9` is landscape, and `9:16` is portrait.",
+                "examples": [
+                  "16:9"
+                ]
+              },
+              "seed": {
+                "type": "integer",
+                "description": "Random seed. Range: [0, 2147483647]. If not specified, the system generates a seed automatically. Fixing the seed can improve reproducibility, but results may still vary due to the model’s stochasticity."
+              },
+              "resolution": {
+                "type": "string",
+                "enum": [
+                  "720p",
+                  "1080p",
+                  "4k"
+                ],
+                "description": "The resolution of the generated video. Available values are 720p, 1080p, and 4k.",
+                "default": "720p",
+                "examples": [
+                  "720p"
+                ]
+              }
+            },
+            "x-apidog-orders": [
+              "prompt",
+              "image_urls",
+              "audio_ids",
+              "video_list",
+              "character_ids",
+              "duration",
+              "aspect_ratio",
+              "resolution",
+              "seed"
+            ],
+            "required": [
+              "prompt",
+              "duration"
+            ]
+          }
+        },
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ]
+      },
+      "examplePayload": {
+        "model": "gemini-omni-video",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "Create a futuristic night city short film with a slow push-in shot as the character walks out from a neon-lit street.",
+          "image_urls": [
+            "https://example.com/assets/scene-1.png",
+            "https://example.com/assets/scene-2.png"
+          ],
+          "audio_ids": [
+            "audio_01hx8p0demo"
+          ],
+          "video_list": [
+            {
+              "url": "https://example.com/assets/source-video.mp4",
+              "start": 0,
+              "ends": 10
+            }
+          ],
+          "duration": "4"
+        }
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:gemini-omni-audio",
+      "category": "video",
+      "title": "Gemini Omni Audio",
+      "docUrl": "https://docs.kie.ai/market/gemini-omni-audio.md",
+      "provider": "Gemini Omni Audio",
+      "endpoint": "/api/v1/omni/audio/create",
+      "method": "POST",
+      "modelKeys": [
+        "api"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "audio_id",
+          "name"
+        ],
+        "properties": {
+          "audio_id": {
+            "type": "string",
+            "description": "Enum voice ID, used to select a preset voice character.\n achernar - female, soft, high pitch \n  achird - male, friendly, mid pitch \n  algenib - male, raspy, low pitch \n algieba - male, easygoing, mid-low pitch  \n alnilam - male, steady, mid-low pitch \n aoede - female, brisk, mid pitch \n autonoe - female, bright, mid pitch \n callirrhoe - female, easygoing, mid pitch \n charon - male, intellectual, low pitch \n  despina - female, smooth, mid  pitch \n enceladus - male, breathy, low pitch \n erinome - female, clear, mid pitch \n fenrir -  male, lively, younger pitch \n gacrux - female, mature, mid pitch \n iapetus - male, clear, mid-low pitch \n kore - female, capable, mid pitch  \n  laomedeia - female, cheerful, mid-high pitch \n leda - female, young, mid-high pitch \n orus - male, steady, mid-low pitch \n puck - male, cheerful, mid pitch \n pulcherrima - genderless, forward, mid-high pitch \n rasalgethi - male, intellectual, mid pitch \n sadachbia -  male, vivid, low pitch \n sadaltager - male, knowledgeable, mid pitch \n  schedar - male, smooth, mid-low pitch \n sulafat - female, warm, mid pitch \n  umbriel - male, smooth, low pitch \n  vindemiatrix - female, gentle, mid pitch \n zephyr - female, bright, mid-high pitch \n zubenelgenubi -   male, casual, mid-low pitch",
+            "examples": [
+              "achernar",
+              "achird",
+              "algenib",
+              "algieba",
+              "alnilam",
+              "aoede",
+              "autonoe",
+              "callirrhoe",
+              "charon",
+              "despina",
+              "enceladus",
+              "erinome",
+              "fenrir",
+              "gacrux",
+              "iapetus",
+              "kore",
+              "laomedeia",
+              "leda",
+              "orus",
+              "puck",
+              "pulcherrima",
+              "rasalgethi",
+              "sadachbia",
+              "sadaltager",
+              "schedar",
+              "sulafat",
+              "umbriel",
+              "vindemiatrix",
+              "zephyr",
+              "zubenelgenubi"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "Voice name. Maximum length: `210` characters."
+          },
+          "voice_description": {
+            "type": "string",
+            "description": "Voice characteristic description used to define timbre, style, speaking rate, emotion, and other traits. Maximum length: `20000` characters."
+          },
+          "example_dialogue": {
+            "type": "string",
+            "description": "Example dialogue, such as \"Hello, I am Adam\". Maximum length: `120` characters."
+          }
+        },
+        "x-apidog-orders": [
+          "audio_id",
+          "name",
+          "voice_description",
+          "example_dialogue"
+        ]
+      },
+      "examplePayload": {
+        "audio_id": "achernar",
+        "name": "achernar Narrator",
+        "voice_description": "A calm, clear, and friendly male voice suitable for tech explainers and daily conversation.",
+        "example_dialogue": "Hello, I am achernar"
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:gemini-omni-character",
+      "category": "video",
+      "title": "Gemini Omni Character",
+      "docUrl": "https://docs.kie.ai/market/gemini-omni-character.md",
+      "provider": "Gemini Omni Character",
+      "endpoint": "/api/v1/omni/character/create",
+      "method": "POST",
+      "modelKeys": [
+        "api"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "descriptions",
+          "image_urls"
+        ],
+        "properties": {
+          "descriptions": {
+            "type": "string",
+            "description": "Character description used to define the appearance, identity, style, clothing, or personality of the character.",
+            "examples": [
+              "A young female character with short silver hair and a futuristic utility jacket, calm, agile, and strongly cyberpunk in style."
+            ]
+          },
+          "image_urls": {
+            "type": "array",
+            "maxItems": 1,
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Array of character reference image URLs. Only `1` image is supported.\n\nImage limits:\n- Each image must be no larger than `20MB`\n- Use a publicly accessible image URL",
+            "examples": [
+              [
+                "https://example.com/assets/character-reference.png"
+              ]
+            ]
+          },
+          "audio_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of audio IDs generated by the `gemini-omni-audio` endpoint. These can be used to provide voice traits, tone, or persona guidance for the character.",
+            "examples": [
+              [
+                "audio_01hx8p0demo"
+              ]
+            ]
+          },
+          "character_name": {
+            "type": "string",
+            "description": "Character name"
+          }
+        },
+        "x-apidog-orders": [
+          "descriptions",
+          "image_urls",
+          "audio_ids",
+          "character_name"
+        ]
+      },
+      "examplePayload": {
+        "description": "A young female character with short silver hair and a futuristic utility jacket, calm, agile, and strongly cyberpunk in style.",
+        "image_urls": [
+          "https://example.com/assets/character-reference.png"
+        ],
+        "audio_ids": [
+          "audio_01hx8p0demo"
+        ],
+        "character_name": "Jenny"
       },
       "pricingRows": []
     },
@@ -18997,10 +18295,30 @@
           },
           "personaId": {
             "type": "string",
-            "description": "Only available when Custom Mode (`customMode: true`) is enabled. Persona ID to apply to the generated music. Optional. Use this to apply a specific persona style to your music generation. \n\nTo generate a persona ID, use the [Generate Persona](https://docs.kie.ai/suno-api/generate-persona) endpoint to create a personalized music Persona based on generated music.",
+            "description": "Only available when Custom Mode (`customMode: true`) is enabled. Persona ID or Voice ID to apply to the generated music. Optional. Use this to apply a specific persona style to your music generation. \n\nTo generate a persona ID, use the [Generate Persona](https://docs.kie.ai/suno-api/generate-persona) endpoint to create a personalized music Persona based on generated music.\n\nTo generate a Voice ID, use the [Generate Voice](https://docs.kie.ai/suno-api/suno-voice-generate)endpoint",
             "examples": [
               "persona_123"
             ]
+          },
+          "personaModel": {
+            "type": "string",
+            "enum": [
+              "style_persona",
+              "voice_persona"
+            ],
+            "x-apidog-enum": [
+              {
+                "value": "style_persona",
+                "name": "",
+                "description": ""
+              },
+              {
+                "value": "voice_persona",
+                "name": "",
+                "description": ""
+              }
+            ],
+            "description": "The persona model is only available for models version 5 and 5.5."
           }
         },
         "x-apidog-orders": [
@@ -19017,6 +18335,7 @@
           "weirdnessConstraint",
           "audioWeight",
           "personaId",
+          "personaModel",
           "01KH5V28NSDZMWXJ325JSPFS29"
         ],
         "x-apidog-refs": {
@@ -19218,10 +18537,30 @@
           },
           "personaId": {
             "type": "string",
-            "description": "Only available when Custom Mode (`customMode: true`) is enabled. Persona ID to apply to the generated music. Optional. Use this to apply a specific persona style to your music generation. \n\nTo generate a persona ID, use the [](generate-persona) endpoint to create a personalized music Persona based on generated music.",
+            "description": "Only available when Custom Mode (`customMode: true`) is enabled. Persona ID or Voice ID to apply to the generated music. Optional. Use this to apply a specific persona style to your music generation. \n\nTo generate a persona ID, use the [Generate Persona](https://docs.kie.ai/suno-api/generate-persona) endpoint to create a personalized music Persona based on generated music.\n\nTo generate a Voice ID, use the [Generate Voice](https://docs.kie.ai/suno-api/suno-voice-generate)endpoint",
             "examples": [
               "persona_123"
             ]
+          },
+          "personaModel": {
+            "type": "string",
+            "enum": [
+              "style_persona",
+              "voice_persona"
+            ],
+            "x-apidog-enum": [
+              {
+                "value": "style_persona",
+                "name": "",
+                "description": ""
+              },
+              {
+                "value": "voice_persona",
+                "name": "",
+                "description": ""
+              }
+            ],
+            "description": "The persona model is only available for models version 5 and 5.5."
           }
         },
         "x-apidog-orders": [
@@ -19239,6 +18578,7 @@
           "weirdnessConstraint",
           "audioWeight",
           "personaId",
+          "personaModel",
           "01KH5V3MA50W3NF9XV737X3882"
         ],
         "x-apidog-refs": {
@@ -19443,10 +18783,30 @@
           },
           "personaId": {
             "type": "string",
-            "description": "Only available when Custom Mode (`customMode: true`) is enabled. Persona ID to apply to the generated music. Optional. Use this to apply a specific persona style to your music generation. \n\nTo generate a persona ID, use the [Generate Persona](https://docs.kie.ai/suno-api/generate-persona) endpoint to create a personalized music Persona based on generated music.",
+            "description": "Only available when Custom Mode (`customMode: true`) is enabled. Persona ID or Voice ID to apply to the generated music. Optional. Use this to apply a specific persona style to your music generation. \n\nTo generate a persona ID, use the [Generate Persona](https://docs.kie.ai/suno-api/generate-persona) endpoint to create a personalized music Persona based on generated music.\n\nTo generate a Voice ID, use the [Generate Voice](https://docs.kie.ai/suno-api/suno-voice-generate)endpoint",
             "examples": [
               "persona_123"
             ]
+          },
+          "personaModel": {
+            "type": "string",
+            "enum": [
+              "voice_persona",
+              "style_persona"
+            ],
+            "x-apidog-enum": [
+              {
+                "value": "voice_persona",
+                "name": "",
+                "description": ""
+              },
+              {
+                "value": "style_persona",
+                "name": "",
+                "description": ""
+              }
+            ],
+            "description": "The persona model is only available for models version 5 and 5.5."
           }
         },
         "x-apidog-orders": [
@@ -19464,6 +18824,7 @@
           "weirdnessConstraint",
           "audioWeight",
           "personaId",
+          "personaModel",
           "01KH5V41Q3E8XKP9P8AJVPBG98"
         ],
         "x-apidog-refs": {
@@ -19675,10 +19036,30 @@
           },
           "personaId": {
             "type": "string",
-            "description": "Only available when Custom Mode (`defaultParamFlag: true`) is enabled. Persona ID to apply to the generated music. Optional. Use this to apply a specific persona style to your music generation. \n\nTo generate a persona ID, use the [Generate Persona](https://docs.kie.ai/suno-api/generate-persona) endpoint to create a personalized music Persona based on generated music.",
+            "description": "Only available when Custom Mode (`customMode: true`) is enabled. Persona ID or Voice ID to apply to the generated music. Optional. Use this to apply a specific persona style to your music generation. \n\nTo generate a persona ID, use the [Generate Persona](https://docs.kie.ai/suno-api/generate-persona) endpoint to create a personalized music Persona based on generated music.\n\nTo generate a Voice ID, use the [Generate Voice](https://docs.kie.ai/suno-api/suno-voice-generate)endpoint",
             "examples": [
               "persona_123"
             ]
+          },
+          "personaModel": {
+            "type": "string",
+            "enum": [
+              "style_persona",
+              "voice_persona"
+            ],
+            "x-apidog-enum": [
+              {
+                "value": "style_persona",
+                "name": "",
+                "description": ""
+              },
+              {
+                "value": "voice_persona",
+                "name": "",
+                "description": ""
+              }
+            ],
+            "description": "The persona model is only available for models version 5 and 5.5."
           }
         },
         "x-apidog-orders": [
@@ -19697,6 +19078,7 @@
           "weirdnessConstraint",
           "audioWeight",
           "personaId",
+          "personaModel",
           "01KH5V4EJ53J4835SRBTS01PZG"
         ],
         "x-apidog-refs": {
@@ -21035,6 +20417,258 @@
         "soundTempo": 166,
         "soundKey": "D#m",
         "grabLyrics": true
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "music:suno-voice-generate-verification-phrase-api",
+      "category": "music",
+      "title": "Suno Voice Generate Verification Phrase API",
+      "docUrl": "https://docs.kie.ai/suno-api/suno-voice-validate.md",
+      "provider": "Suno Voice Generate Verification Phrase API",
+      "endpoint": "/api/v1/voice/validate",
+      "method": "POST",
+      "modelKeys": [
+        "api"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "voiceUrl": {
+            "description": "The original recording URL uploaded by the user [Required]",
+            "type": "string"
+          },
+          "vocalStartS": {
+            "description": "Start time (in seconds) for extracting the vocal segment [Required]",
+            "type": "integer"
+          },
+          "vocalEndS": {
+            "description": "End time (in seconds) for extracting the vocal segment, must be greater than vocalStartS [Required]",
+            "type": "integer"
+          },
+          "language": {
+            "description": "Verify the language of the short phrase. Supported languages ​​include: English (en), Chinese (zh), Spanish (es), French (fr), Portuguese (pt), German (de), Japanese (ja), Korean (ko), Hindi (hi), and Russian (ru).",
+            "type": "string"
+          },
+          "callBackUrl": {
+            "description": "Callback URL after the task is completed",
+            "type": "string"
+          }
+        },
+        "required": [
+          "voiceUrl",
+          "vocalStartS",
+          "vocalEndS"
+        ],
+        "x-apidog-orders": [
+          "voiceUrl",
+          "vocalStartS",
+          "vocalEndS",
+          "language",
+          "callBackUrl"
+        ]
+      },
+      "examplePayload": {
+        "voiceUrl": "https://example.com/audio/user_voice.mp3",
+        "vocalStartS": 0,
+        "vocalEndS": 10,
+        "language": "en",
+        "callBackUrl": "https://example.com/callback/suno/voice_prepare"
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "music:suno-voice-get-verification-phrase-api",
+      "category": "music",
+      "title": "Suno Voice Get Verification Phrase API",
+      "docUrl": "https://docs.kie.ai/suno-api/suno-voice-validate-info.md",
+      "provider": "Suno Voice Get Verification Phrase API",
+      "endpoint": "/api/v1/voice/validate-info",
+      "method": "GET",
+      "modelKeys": [
+        "api"
+      ],
+      "requestSchema": null,
+      "examplePayload": {},
+      "pricingRows": []
+    },
+    {
+      "id": "music:suno-voice-create-custom-voice-api",
+      "category": "music",
+      "title": "Suno Voice Create Custom Voice API",
+      "docUrl": "https://docs.kie.ai/suno-api/suno-voice-generate.md",
+      "provider": "Suno Voice Create Custom Voice API",
+      "endpoint": "/api/v1/voice/generate",
+      "method": "POST",
+      "modelKeys": [
+        "api"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "description": "Task ID",
+            "type": "string"
+          },
+          "verifyUrl": {
+            "description": "Audio URL for the user's recording of the server-returned `validateInfo` validation phrase. For best voice generation results, recording the phrase in a singing voice rather than plain speech is recommended. [Required]",
+            "type": "string"
+          },
+          "voiceName": {
+            "description": "Voice name",
+            "type": "string"
+          },
+          "description": {
+            "description": "Voice description",
+            "type": "string"
+          },
+          "style": {
+            "description": "Voice style",
+            "type": "string"
+          },
+          "callBackUrl": {
+            "description": "Callback URL after the task is completed",
+            "type": "string"
+          },
+          "singerSkillLevel": {
+            "type": "string",
+            "description": "Singer skill level. Supported: beginner, intermediate, advanced, professional",
+            "default": "beginner",
+            "enum": [
+              "beginner",
+              "intermediate",
+              "advanced",
+              "professional"
+            ],
+            "x-apidog-enum": [
+              {
+                "value": "beginner",
+                "name": "",
+                "description": ""
+              },
+              {
+                "value": "intermediate",
+                "name": "",
+                "description": ""
+              },
+              {
+                "value": "advanced",
+                "name": "",
+                "description": ""
+              },
+              {
+                "value": "professional",
+                "name": "",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "required": [
+          "taskId",
+          "verifyUrl"
+        ],
+        "x-apidog-orders": [
+          "taskId",
+          "verifyUrl",
+          "voiceName",
+          "description",
+          "style",
+          "singerSkillLevel",
+          "callBackUrl"
+        ]
+      },
+      "examplePayload": {
+        "taskId": "voice_create_001",
+        "verifyUrl": "https://example.com/audio/verify_read.mp3",
+        "voiceName": "My Voice",
+        "description": "created from uploaded voice",
+        "style": "Pop, Female Vocal",
+        "callBackUrl": "https://example.com/callback/suno/voice_create",
+        "singerSkillLevel": "beginner"
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "music:suno-voice-get-custom-voice-records",
+      "category": "music",
+      "title": "Suno Voice Get Custom Voice Records",
+      "docUrl": "https://docs.kie.ai/suno-api/suno-voice-record-info.md",
+      "provider": "Suno Voice Get Custom Voice Records",
+      "endpoint": "/api/v1/voice/record-info",
+      "method": "GET",
+      "modelKeys": [
+        "api"
+      ],
+      "requestSchema": null,
+      "examplePayload": {},
+      "pricingRows": []
+    },
+    {
+      "id": "music:suno-voice-regenerate-verification-phrase",
+      "category": "music",
+      "title": "Suno Voice Regenerate Verification Phrase",
+      "docUrl": "https://docs.kie.ai/suno-api/suno-voice-regenerate.md",
+      "provider": "Suno Voice Regenerate Verification Phrase",
+      "endpoint": "/api/v1/voice/regenerate",
+      "method": "POST",
+      "modelKeys": [
+        "api"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "description": "Task ID",
+            "type": "string"
+          },
+          "calBackUrl": {
+            "type": "string",
+            "description": "Callback URL after the task is completed"
+          }
+        },
+        "required": [
+          "taskId",
+          "calBackUrl"
+        ],
+        "x-apidog-orders": [
+          "taskId",
+          "calBackUrl"
+        ]
+      },
+      "examplePayload": {
+        "taskId": "xxxxxxx"
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "music:suno-voice-check-availability-api",
+      "category": "music",
+      "title": "Suno Voice Check Availability API",
+      "docUrl": "https://docs.kie.ai/suno-api/suno-voice-check-voice.md",
+      "provider": "Suno Voice Check Availability API",
+      "endpoint": "/api/v1/voice/check-voice",
+      "method": "POST",
+      "modelKeys": [
+        "api"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "description": "Task ID that needs to be checked",
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id"
+        ],
+        "x-apidog-orders": [
+          "task_id"
+        ]
+      },
+      "examplePayload": {
+        "task_id": ""
       },
       "pricingRows": []
     },

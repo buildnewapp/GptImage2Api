@@ -61,6 +61,29 @@ export interface VideoTemplateUseCases {
   items: VideoTemplateUseCaseItem[];
 }
 
+export interface VideoTemplateApiWorkflowItem {
+  description: string;
+  icon: string;
+  title: string;
+}
+
+export interface VideoTemplateApiWorkflowAction {
+  href: string;
+  label: string;
+  variant?: "primary" | "secondary";
+}
+
+export interface VideoTemplateApiWorkflow {
+  actions: VideoTemplateApiWorkflowAction[];
+  description: string;
+  items: VideoTemplateApiWorkflowItem[];
+  kicker: string;
+  requestLabel: string;
+  requestLines: string[];
+  requestTitle: string;
+  title: string;
+}
+
 export interface VideoTemplateShowcaseSection {
   ctaText: string;
   description: string;
@@ -183,6 +206,7 @@ export interface VideoTemplatePage {
   faq: VideoTemplateFaq;
   featureRows: VideoTemplateFeatureRow[];
   hero: VideoTemplateHero;
+  apiWorkflow: VideoTemplateApiWorkflow;
   pricing: VideoTemplatePricing;
   scope: VideoTemplateScope;
   showcase: VideoTemplateShowcaseSection;

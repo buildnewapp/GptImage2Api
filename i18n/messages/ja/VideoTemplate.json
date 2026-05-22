@@ -137,6 +137,66 @@
       }
     ]
   },
+  "apiWorkflow": {
+    "actions": [
+      {
+        "href": "/apidoc",
+        "label": "API ドキュメントを見る",
+        "variant": "primary"
+      },
+      {
+        "href": "/dashboard/apikeys",
+        "label": "API キーを取得",
+        "variant": "secondary"
+      },
+      {
+        "href": "/pricing",
+        "label": "API 料金を見る",
+        "variant": "secondary"
+      }
+    ],
+    "description": "同じ AI 動画生成ワークフローを自分のプロダクトに組み込めます。API キーを作成し、生成リクエストを送り、タスク進行を追跡し、既存のダッシュボードでクレジット利用を管理できます。",
+    "items": [
+      {
+        "description": "ダッシュボードでキーを作成し、各リクエストに Authorization: Bearer 形式で送信します。",
+        "icon": "key",
+        "title": "API キー認証"
+      },
+      {
+        "description": "/api/ai-studio/execute に modelId、公開設定、payload を渡して動画タスクを開始します。",
+        "icon": "code",
+        "title": "生成エンドポイント"
+      },
+      {
+        "description": "作成後にタスク API をポーリングし、queued、running、succeeded、failed の状態を確認します。",
+        "icon": "list",
+        "title": "タスク状態"
+      },
+      {
+        "description": "API 利用はクレジット課金で、同じアカウント残高と料金ルールを使います。",
+        "icon": "coins",
+        "title": "クレジット課金"
+      }
+    ],
+    "kicker": "開発者 API",
+    "requestLines": [
+      "curl -X POST \"https://YOUR_DOMAIN/api/ai-studio/execute\" \\",
+      "  -H \"Authorization: Bearer YOUR_API_KEY\" \\",
+      "  -H \"Content-Type: application/json\" \\",
+      "  -d '{",
+      "    \"modelId\": \"video:seedance-2-text-to-video\",",
+      "    \"isPublic\": false,",
+      "    \"payload\": {",
+      "      \"prompt\": \"A cinematic product launch clip\",",
+      "      \"duration\": 5,",
+      "      \"resolution\": \"720p\"",
+      "    }",
+      "  }'"
+    ],
+    "requestLabel": "API リクエスト",
+    "requestTitle": "動画生成タスクを作成",
+    "title": "Seedance 動画生成をアプリに組み込む"
+  },
   "showcase": {
     "ctaText": "あなた自身の短いクリップを作る準備はできましたか？",
     "description": "このページのプレビュー素材は短いローカルクリップです。ここに表示しているメタデータは、このサイト上の実ファイル情報を反映しています。",
@@ -415,6 +475,26 @@
       {
         "answer": "seedance2.app では、新規ユーザーが Seedance 2.0 をすぐに使い始められ、デイリータスクで多くのクレジットを継続的に獲得できます。",
         "question": "どこで使えますか？"
+      },
+      {
+        "answer": "ログイン後に API Keys ダッシュボードを開き、有効なキーを作成して、Authorization: Bearer YOUR_API_KEY として送信します。",
+        "question": "API リクエストはどう認証しますか？"
+      },
+      {
+        "answer": "API 生成はアカウントのクレジットで課金されます。消費量は選択したモデル、長さ、品質、解像度、料金行によって変わります。",
+        "question": "API 利用はどのように課金されますか？"
+      },
+      {
+        "answer": "上流サービスからのコールバックはプラットフォーム側で処理されます。アプリ連携では、execute が taskId を返した後に /api/ai-studio/tasks/{taskId}?modelId={modelId} をポーリングしてください。",
+        "question": "API はコールバックや Webhook に対応していますか？"
+      },
+      {
+        "answer": "失敗したタスクは failed 状態になり、取得可能な場合はエラー理由も返ります。再試行前にタスク状態または動画履歴を確認し、プロンプトや設定を調整してください。",
+        "question": "API 生成が失敗した場合はどうすればよいですか？"
+      },
+      {
+        "answer": "クライアント側で適切にスロットリングし、同じタスクの重複送信を避けてください。アカウントのクレジット不足でも新しい生成は停止します。",
+        "question": "API にレート制限はありますか？"
       },
       {
         "answer": "商用利用はプラットフォームの利用規約と、参照素材に対するあなたの権利に依存します。詳細は利用規約を確認してください。",

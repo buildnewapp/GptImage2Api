@@ -126,3 +126,32 @@ test("stops loading template navigation copy from ImageTemplate and VideoTemplat
     assert.equal("brand" in (messages.Home || {}), false, `${relativePath} should not include Home.brand`);
   }
 });
+
+test("keeps the public homepage cacheable by avoiding request-bound header auth", () => {
+  const pageSource = readFileSync(
+    path.join(projectRoot, "app/[locale]/(basic-layout)/page.tsx"),
+    "utf8"
+  );
+  const headerSource = readFileSync(
+    path.join(projectRoot, "components/home/video/Header.tsx"),
+    "utf8"
+  );
+  const pricesSource = readFileSync(
+    path.join(projectRoot, "actions/prices/public.ts"),
+    "utf8"
+  );
+  const routingSource = readFileSync(
+    path.join(projectRoot, "i18n/routing.ts"),
+    "utf8"
+  );
+
+  assert.match(pageSource, /export const revalidate =/);
+  assert.match(pageSource, /export const dynamic = "force-static"/);
+  assert.match(pageSource, /generateStaticParams/);
+  assert.match(pageSource, /setRequestLocale\(locale\)/);
+  assert.doesNotMatch(headerSource, /getSession/);
+  assert.doesNotMatch(headerSource, /getUserBenefits/);
+  assert.doesNotMatch(headerSource, /headers\(/);
+  assert.match(pricesSource, /unstable_cache/);
+  assert.match(routingSource, /localeCookie:\s*false/);
+});

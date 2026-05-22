@@ -21,37 +21,54 @@ interface VideoShowcaseMediaProps {
   items: readonly VideoTemplateShowcaseItem[];
 }
 
-export function VideoHeroMedia({
-  videos,
-}: VideoTemplateHeroBackgroundProps) {
+export function VideoHeroMedia({ videos }: VideoTemplateHeroBackgroundProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
 
   useEffect(() => {
-    if (videos.length < 2) {
+    if (videos.length === 0) {
       return undefined;
     }
 
-    const intervalId = window.setInterval(() => {
-      setActiveIndex((currentIndex) => (currentIndex + 1) % videos.length);
-    }, 4500);
+    if ("requestIdleCallback" in window) {
+      const idleId = window.requestIdleCallback(
+        () => setShouldLoadVideo(true),
+        { timeout: 1800 },
+      );
+      return () => window.cancelIdleCallback(idleId);
+    }
 
-    return () => window.clearInterval(intervalId);
-  }, [videos]);
+    const timerId = globalThis.setTimeout(() => setShouldLoadVideo(true), 900);
+    return () => globalThis.clearTimeout(timerId);
+  }, [videos.length]);
 
   const activeVideo = videos[activeIndex] ?? videos[0];
 
   return (
     <>
       <div className="absolute inset-0">
-        <video
-          key={activeVideo}
-          src={activeVideo}
-          autoPlay
-          muted
-          playsInline
-          preload="auto"
-          className="absolute inset-0 h-full w-full object-cover"
+        <div
+          data-video-hero-placeholder
+          className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.22),transparent_30%),linear-gradient(180deg,rgba(3,7,18,0.94)_0%,rgba(3,7,18,1)_100%)]"
         />
+        {shouldLoadVideo ? (
+          <video
+            key={activeVideo}
+            src={activeVideo}
+            autoPlay
+            muted
+            playsInline
+            preload="metadata"
+            onEnded={() => {
+              if (videos.length > 1) {
+                setActiveIndex(
+                  (currentIndex) => (currentIndex + 1) % videos.length,
+                );
+              }
+            }}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        ) : null}
       </div>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)]"></div>
@@ -83,13 +100,12 @@ export function VideoHeroMedia({
   );
 }
 
-export function VideoShowcaseMedia({
-  items,
-}: VideoShowcaseMediaProps) {
+export function VideoShowcaseMedia({ items }: VideoShowcaseMediaProps) {
   const [selectedItem, setSelectedItem] =
     useState<VideoTemplateShowcaseItem | null>(null);
-  const selectedItemIsImage =
-    selectedItem ? IMAGE_FILE_RE.test(selectedItem.src) : false;
+  const selectedItemIsImage = selectedItem
+    ? IMAGE_FILE_RE.test(selectedItem.src)
+    : false;
 
   return (
     <>
@@ -98,7 +114,11 @@ export function VideoShowcaseMedia({
           const isImage = IMAGE_FILE_RE.test(item.src);
 
           return (
-            <div key={item.src} data-aos="fade-up" data-aos-delay={50 + index * 200}>
+            <div
+              key={item.src}
+              data-aos="fade-up"
+              data-aos-delay={50 + index * 200}
+            >
               <button
                 type="button"
                 aria-label={`Open ${item.title} preview`}
@@ -179,7 +199,9 @@ export function VideoShowcaseMedia({
         >
           {selectedItem ? (
             <>
-              <DialogTitle className="sr-only">{selectedItem.title}</DialogTitle>
+              <DialogTitle className="sr-only">
+                {selectedItem.title}
+              </DialogTitle>
               <div className="relative flex max-h-[calc(100svh-20rem)] flex-col bg-black sm:max-h-[90vh]">
                 <DialogClose
                   aria-label="Close preview"

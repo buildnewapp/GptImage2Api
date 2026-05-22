@@ -39,6 +39,7 @@ interface PostListProps {
   pageSize: number;
   showTagSelector?: boolean;
   showCover?: boolean;
+  useNativeImages?: boolean;
   gridClassName?: string;
   emptyMessage?: string;
 }
@@ -54,13 +55,14 @@ export function PostList({
   pageSize,
   showTagSelector = false,
   showCover = true,
+  useNativeImages = false,
   gridClassName,
   emptyMessage = "No posts found.",
 }: PostListProps) {
   const [posts, setPosts] = useState<PublicPost[]>(initialPosts);
   const [pageIndex, setPageIndex] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(
-    initialPosts.length < initialTotal
+    initialPosts.length < initialTotal,
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
@@ -177,6 +179,7 @@ export function PostList({
                   post={post}
                   baseUrl={baseUrl}
                   showCover={showCover}
+                  useNativeImage={useNativeImages}
                 />
               ))}
 
@@ -186,6 +189,7 @@ export function PostList({
                 post={mapServerPostToCard(post, locale)}
                 baseUrl={baseUrl}
                 showCover={showCover}
+                useNativeImage={useNativeImages}
               />
             ))}
           </div>

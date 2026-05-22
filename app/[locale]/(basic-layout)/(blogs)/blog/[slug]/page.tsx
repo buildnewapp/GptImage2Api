@@ -9,8 +9,10 @@ import { TableOfContents } from "@/components/tiptap/TableOfContents";
 import { TiptapRenderer } from "@/components/tiptap/TiptapRenderer";
 import { Button } from "@/components/ui/button";
 import { Link as I18nLink, Locale, LOCALES } from "@/i18n/routing";
+import { getBlogDataSource } from "@/lib/blog-source";
 import { blogCms } from "@/lib/cms";
 import { loadLocalizedMetadata } from "@/lib/cms/page-data";
+import { getGeoBlogPostBySlug, getGeoBlogPostMetadata } from "@/lib/geo/blog";
 import { constructMetadata } from "@/lib/metadata";
 import { PostBase } from "@/types/cms";
 import dayjs from "dayjs";
@@ -35,6 +37,42 @@ export async function generateMetadata({
   params,
 }: MetadataProps): Promise<Metadata> {
   const { locale, slug } = await params;
+  const blogDataSource = getBlogDataSource();
+
+  if (blogDataSource === "geo") {
+    const { metadata: postMetadata } = await getGeoBlogPostMetadata(
+      slug,
+      locale,
+    ).catch((error) => {
+      console.error("Failed to fetch GEO blog metadata:", error);
+      return { metadata: null };
+    });
+
+    if (!postMetadata) {
+      return constructMetadata({
+        title: "404",
+        description: "Page not found",
+        noIndex: true,
+        locale: locale as Locale,
+        path: `/blog/${slug}`,
+      });
+    }
+
+    const metadataPath = slug.startsWith("/") ? slug : `/${slug}`;
+
+    return constructMetadata({
+      title: postMetadata.title,
+      description: postMetadata.description || undefined,
+      images: postMetadata.featuredImageUrl
+        ? [postMetadata.featuredImageUrl]
+        : undefined,
+      locale: locale as Locale,
+      path: `/blog${metadataPath}`,
+      noIndex: postMetadata.visibility !== "public",
+      useDefaultOgImage: false,
+    });
+  }
+
   const { currentMetadata: postMetadata, availableLocales } =
     await loadLocalizedMetadata({
       locales: LOCALES,
@@ -72,11 +110,20 @@ export async function generateMetadata({
 
 export default async function BlogPage({ params }: { params: Params }) {
   const { slug, locale } = await params;
+  const blogDataSource = getBlogDataSource();
+  const isGeoBlog = blogDataSource === "geo";
   const viewCountConfig = POST_CONFIGS.blog.viewCount;
   const [t, { post, errorCode }, viewCountResult] = await Promise.all([
     getTranslations("Blogs"),
-    blogCms.getBySlug(slug, locale),
-    viewCountConfig.enabled && viewCountConfig.showInUI
+    isGeoBlog
+      ? getGeoBlogPostBySlug(slug, locale)
+          .then((result) => ({ ...result, errorCode: undefined }))
+          .catch((error) => {
+            console.error("Failed to fetch GEO blog post:", error);
+            return { post: null, errorCode: undefined };
+          })
+      : blogCms.getBySlug(slug, locale),
+    !isGeoBlog && viewCountConfig.enabled && viewCountConfig.showInUI
       ? getViewCountAction({
           slug,
           postType: "blog",
@@ -155,7 +202,7 @@ export default async function BlogPage({ params }: { params: Params }) {
       <ViewCounter
         slug={slug}
         postType="blog"
-        trackView={viewCountConfig.enabled}
+        trackView={!isGeoBlog && viewCountConfig.enabled}
         trackMode={viewCountConfig.mode}
       />
       <div className="flex gap-8">
@@ -218,14 +265,25 @@ export default async function BlogPage({ params }: { params: Params }) {
 
           {post.featuredImageUrl && (
             <div className="my-10 rounded-xl overflow-hidden shadow-md aspect-video relative">
-              <Image
-                src={post.featuredImageUrl}
-                alt={post.title}
-                fill
-                sizes="(max-width: 768px) 100vw, 1200px"
-                priority
-                className="object-cover"
-              />
+              {isGeoBlog ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={post.featuredImageUrl}
+                  alt={post.title}
+                  className="h-full w-full object-cover"
+                  loading="eager"
+                  decoding="async"
+                />
+              ) : (
+                <Image
+                  src={post.featuredImageUrl}
+                  alt={post.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 1200px"
+                  priority
+                  className="object-cover"
+                />
+              )}
             </div>
           )}
 
@@ -265,7 +323,7 @@ export default async function BlogPage({ params }: { params: Params }) {
           )}
 
           {/* Related Posts */}
-          {post.id && (
+          {!isGeoBlog && post.id && (
             <RelatedPosts
               postId={post.id}
               postType="blog"
@@ -309,6 +367,10 @@ const BlogPostCard = ({ post }: { post: PostBase }) => (
 );
 
 export async function generateStaticParams() {
+  if (getBlogDataSource() === "geo") {
+    return [];
+  }
+
   const allParams: { locale: string; slug: string }[] = [];
 
   for (const locale of LOCALES) {
@@ -340,7 +402,7 @@ export async function generateStaticParams() {
   }
 
   const uniqueParams = Array.from(
-    new Map(allParams.map((p) => [`${p.locale}-${p.slug}`, p])).values()
+    new Map(allParams.map((p) => [`${p.locale}-${p.slug}`, p])).values(),
   );
   // console.log("Generated Static Params:", uniqueParams.slice(0, 10), "...");
   return uniqueParams;

@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 type Params = Promise<{ locale: string }>;
 type MetadataProps = { params: Params };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 const config = {
   docsHref: "/models/seedance-1.5.md",

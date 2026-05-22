@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/sidebar";
 import { referralConfig } from "@/config/referral";
 import { Link as I18nLink, usePathname } from "@/i18n/routing";
-import { authClient } from "@/lib/auth/auth-client";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 
@@ -32,14 +31,15 @@ type Menu = {
 type DashboardSidebarProps = {
   showMemberSubscription: boolean;
   totalAvailableCredits?: number | null;
+  initialUser?: any;
 };
 
 export function DashboardSidebar({
   showMemberSubscription,
   totalAvailableCredits,
+  initialUser,
 }: DashboardSidebarProps) {
-  const { data: session } = authClient.useSession();
-  const user = session?.user as any | undefined;
+  const user = initialUser as any;
   const pathname = usePathname();
   const t = useTranslations("Login");
   const tHome = useTranslations("Home");

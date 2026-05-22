@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { referralConfig } from "@/config/referral";
 import dayjs from "dayjs";
 import { Coins, Copy, DollarSign, Gift, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -71,6 +72,10 @@ export default function ReferralsClient({ data }: { data: ReferralDashboardData 
   const [inviteCodeInput, setInviteCodeInput] = useState(data.inviteCode ?? "");
   const [isSavingInviteCode, setIsSavingInviteCode] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
+  const firstOrderReward =
+    referralConfig.firstOrderRewardMode === "fixed"
+      ? `$${referralConfig.firstOrderRewardFixedUsd}`
+      : `${referralConfig.firstOrderRewardPercent}%`;
 
   const refresh = () => startTransition(() => router.refresh());
 
@@ -113,7 +118,12 @@ export default function ReferralsClient({ data }: { data: ReferralDashboardData 
       <Card>
         <CardHeader>
           <CardTitle>{t("inviteCard.title")}</CardTitle>
-          <CardDescription>{t("inviteCard.description")}</CardDescription>
+          <CardDescription>
+            {t("inviteCard.description", {
+              signupCredit: referralConfig.signupInviteCredit,
+              firstOrderReward,
+            })}
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
@@ -169,7 +179,11 @@ export default function ReferralsClient({ data }: { data: ReferralDashboardData 
       <Card>
         <CardHeader>
           <CardTitle>{t("withdraw.title")}</CardTitle>
-          <CardDescription>{t("withdraw.description")}</CardDescription>
+          <CardDescription>
+            {t("withdraw.description", {
+              lockDays: referralConfig.cashRewardLockDays,
+            })}
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-3">

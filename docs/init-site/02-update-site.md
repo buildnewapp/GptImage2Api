@@ -23,7 +23,7 @@ pricing 根据当前产品跳转，保留 demo，语言 en/zh/ja ，竞品： ht
 
 方式二，直接使用skill
 ```
-[SKILL.md](.claude/skills/create-new-site/SKILL.md) 使用这个 skill 网站网站初始化：
+使用这个create-new-site skill 网站网站初始化：
 
 项目信息：
 - 产品名：Tikdek

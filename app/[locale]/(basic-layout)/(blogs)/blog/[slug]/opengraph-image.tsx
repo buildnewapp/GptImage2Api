@@ -1,5 +1,7 @@
 import { siteConfig } from "@/config/site";
+import { getBlogDataSource } from "@/lib/blog-source";
 import { blogCms } from "@/lib/cms";
+import { getGeoBlogPostMetadata } from "@/lib/geo/blog";
 import { ImageResponse } from "next/og";
 
 export const alt = "Blog Post";
@@ -18,7 +20,16 @@ type Props = {
 
 export default async function Image({ params }: Props) {
   const { locale, slug } = await params;
-  const { metadata } = await blogCms.getPostMetadata(slug, locale);
+  const { metadata } =
+    getBlogDataSource() === "geo"
+      ? await getGeoBlogPostMetadata(slug, locale).catch((error) => {
+          console.error(
+            "Failed to fetch GEO blog metadata for OG image:",
+            error,
+          );
+          return { metadata: null };
+        })
+      : await blogCms.getPostMetadata(slug, locale);
 
   if (!metadata) {
     // Return a default image if post not found
@@ -42,7 +53,7 @@ export default async function Image({ params }: Props) {
       ),
       {
         ...size,
-      }
+      },
     );
   }
 
@@ -116,6 +127,6 @@ export default async function Image({ params }: Props) {
     ),
     {
       ...size,
-    }
+    },
   );
 }

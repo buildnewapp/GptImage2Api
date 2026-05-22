@@ -137,6 +137,66 @@
       }
     ]
   },
+  "apiWorkflow": {
+    "actions": [
+      {
+        "href": "/apidoc",
+        "label": "查看 API 文档",
+        "variant": "primary"
+      },
+      {
+        "href": "/dashboard/apikeys",
+        "label": "获取 API Key",
+        "variant": "secondary"
+      },
+      {
+        "href": "/pricing",
+        "label": "查看 API 价格",
+        "variant": "secondary"
+      }
+    ],
+    "description": "把同样的 AI 视频生成流程接入你的产品。创建 API Key，发送生成请求，追踪任务进度，并在现有仪表盘中管理积分消耗。",
+    "items": [
+      {
+        "description": "在仪表盘创建密钥，并在每次请求中通过 Authorization: Bearer 传入。",
+        "icon": "key",
+        "title": "API Key 认证"
+      },
+      {
+        "description": "通过 /api/ai-studio/execute 提交视频任务，传入 modelId、可见性和 payload 字段。",
+        "icon": "code",
+        "title": "生成接口"
+      },
+      {
+        "description": "任务创建后轮询任务接口，读取 queued、running、succeeded 或 failed 状态。",
+        "icon": "list",
+        "title": "任务状态"
+      },
+      {
+        "description": "API 使用按积分计费，与同一账号余额和价格规则保持一致。",
+        "icon": "coins",
+        "title": "积分计费"
+      }
+    ],
+    "kicker": "开发者 API",
+    "requestLines": [
+      "curl -X POST \"https://YOUR_DOMAIN/api/ai-studio/execute\" \\",
+      "  -H \"Authorization: Bearer YOUR_API_KEY\" \\",
+      "  -H \"Content-Type: application/json\" \\",
+      "  -d '{",
+      "    \"modelId\": \"video:seedance-2-text-to-video\",",
+      "    \"isPublic\": false,",
+      "    \"payload\": {",
+      "      \"prompt\": \"A cinematic product launch clip\",",
+      "      \"duration\": 5,",
+      "      \"resolution\": \"720p\"",
+      "    }",
+      "  }'"
+    ],
+    "requestLabel": "API 请求",
+    "requestTitle": "创建视频生成任务",
+    "title": "把 Seedance 视频生成接入你的应用"
+  },
   "showcase": {
     "ctaText": "准备好创建你自己的短片了吗？",
     "description": "本页展示的预览素材都是站内短视频片段。这里显示的元数据反映的是本站实际文件信息。",
@@ -415,6 +475,26 @@
       {
         "answer": "在 seedance2.app 中，新手可以直接使用 Seedance 2.0，并通过每日任务持续获得大量积分。",
         "question": "我可以在哪里使用它？"
+      },
+      {
+        "answer": "登录后进入 API Keys 仪表盘，创建一个可用密钥，并在请求中按 Authorization: Bearer YOUR_API_KEY 格式传入。",
+        "question": "API 请求如何认证？"
+      },
+      {
+        "answer": "API 生成按账号积分计费。实际消耗取决于所选模型、时长、质量、分辨率和对应价格规则。",
+        "question": "API 使用如何计费？"
+      },
+      {
+        "answer": "平台会处理上游服务的回调。你的应用接入时，可以在 execute 返回 taskId 后轮询 /api/ai-studio/tasks/{taskId}?modelId={modelId} 获取结果。",
+        "question": "API 支持回调或 Webhook 吗？"
+      },
+      {
+        "answer": "失败任务会返回 failed 状态，并在可用时带上失败原因。重试前建议先检查任务状态或视频历史，再调整提示词或生成设置。",
+        "question": "API 生成失败时应该怎么处理？"
+      },
+      {
+        "answer": "请在客户端做合理限流，避免重复提交同一任务。账号积分不足时，新的生成请求也会停止。",
+        "question": "API 有速率限制吗？"
       },
       {
         "answer": "商业使用取决于平台条款以及你对参考素材拥有的权利。完整细节请查看服务条款。",

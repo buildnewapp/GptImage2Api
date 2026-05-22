@@ -15,6 +15,7 @@ interface PostCardProps {
   baseUrl: string;
   showDescription?: boolean;
   showCover?: boolean;
+  useNativeImage?: boolean;
 }
 
 function getVisibilityInfo(visibility: string) {
@@ -47,8 +48,10 @@ function PostCardCover({
   post,
   baseUrl,
   showDescription,
+  useNativeImage,
 }: Omit<PostCardProps, "showCover">) {
   const visibilityInfo = getVisibilityInfo(post.visibility || "public");
+  const imageUrl = post.featuredImageUrl || "/placeholder.svg";
 
   return (
     <I18nLink
@@ -59,12 +62,23 @@ function PostCardCover({
     >
       <div className="bg-card border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1 h-full flex flex-col">
         <div className="relative w-full overflow-hidden aspect-video shrink-0">
-          <Image
-            src={post.featuredImageUrl || "/placeholder.svg"}
-            alt={post.title}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+          {useNativeImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={imageUrl}
+              alt={post.title}
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <Image
+              src={imageUrl}
+              alt={post.title}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          )}
 
           <div className="absolute top-3 right-3 flex gap-2">
             {post.isPinned && (
@@ -165,6 +179,7 @@ export function PostCard({
   baseUrl,
   showDescription = true,
   showCover = true,
+  useNativeImage = false,
 }: PostCardProps) {
   if (showCover) {
     return (
@@ -172,6 +187,7 @@ export function PostCard({
         post={post}
         baseUrl={baseUrl}
         showDescription={showDescription}
+        useNativeImage={useNativeImage}
       />
     );
   }

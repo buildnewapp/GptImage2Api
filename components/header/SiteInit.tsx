@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-// @ts-ignore
-import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 /**
@@ -13,7 +11,18 @@ import 'aos/dist/aos.css';
 export default function SiteInit() {
 
     useEffect(() => {
-        AOS.init({disable:'phone'});
+        let mounted = true;
+
+        // @ts-expect-error AOS does not ship TypeScript declarations.
+        import("aos").then(({ default: AOS }) => {
+            if (mounted) {
+                AOS.init({disable:'phone'});
+            }
+        });
+
+        return () => {
+            mounted = false;
+        };
     }, []);
 
     return null;

@@ -3,6 +3,7 @@ import "server-only";
 import { getDb } from "@/lib/db";
 import { promptGalleryItems } from "@/lib/db/schema";
 import { and, asc, count, desc, eq, ilike, or, sql } from "drizzle-orm";
+import { unstable_cache } from "next/cache";
 import {
   type PromptGalleryAdminData,
   type PromptGalleryAdminListInput,
@@ -12,7 +13,8 @@ import {
 } from "@/lib/prompt-gallery-shared";
 
 type PromptGalleryRow = typeof promptGalleryItems.$inferSelect;
-const PUBLIC_PROMPT_GALLERY_DEFAULT_PAGE_SIZE = 30;
+const PUBLIC_PROMPT_GALLERY_DEFAULT_PAGE_SIZE = 16;
+const PUBLIC_PROMPT_GALLERY_STATS_REVALIDATE_SECONDS = 300;
 
 export type PublicPromptGalleryListInput = {
   language?: string;
@@ -31,6 +33,52 @@ export type PublicPromptGalleryPageData = {
   page: number;
   pageSize: number;
 };
+
+const getCachedPublicPromptGalleryStats = unstable_cache(
+  async (language: string) => {
+    const conditions = [eq(promptGalleryItems.status, "online")];
+
+    if (language) {
+      conditions.push(eq(promptGalleryItems.language, language));
+    }
+
+    const db = getDb();
+    const [categoryRows, modelRows] = await Promise.all([
+      db
+        .select({
+          category: sql<string>`jsonb_array_elements_text(${promptGalleryItems.categories})`,
+        })
+        .from(promptGalleryItems)
+        .where(and(...conditions)),
+      db
+        .select({
+          model: promptGalleryItems.model,
+        })
+        .from(promptGalleryItems)
+        .where(and(...conditions)),
+    ]);
+
+    return {
+      categories: Array.from(
+        new Set(
+          categoryRows
+            .map((row) =>
+              typeof row.category === "string" ? row.category.trim() : "",
+            )
+            .filter(Boolean),
+        ),
+      ).sort((left, right) => left.localeCompare(right)),
+      models: Array.from(
+        new Set(modelRows.map((row) => row.model.trim()).filter(Boolean)),
+      ).sort((left, right) => left.localeCompare(right)),
+    };
+  },
+  ["public-prompt-gallery-stats"],
+  {
+    revalidate: PUBLIC_PROMPT_GALLERY_STATS_REVALIDATE_SECONDS,
+    tags: ["public-prompt-gallery-stats"],
+  },
+);
 
 export function mapPromptGalleryItem(row: PromptGalleryRow): PromptGalleryItem {
   return {
@@ -70,7 +118,10 @@ export async function getPublicPromptGalleryItems(
   const normalizedKeyword = input?.q?.trim().toLowerCase() || "";
   const normalizedCategory = input?.category?.trim() || "";
   const normalizedModel = input?.model?.trim() || "";
-  const pageSize = Math.min(Math.max(input?.pageSize ?? PUBLIC_PROMPT_GALLERY_DEFAULT_PAGE_SIZE, 1), 48);
+  const pageSize = Math.min(
+    Math.max(input?.pageSize ?? PUBLIC_PROMPT_GALLERY_DEFAULT_PAGE_SIZE, 1),
+    48,
+  );
   const requestedPage = Math.max(input?.page ?? 1, 1);
 
   const baseConditions = [eq(promptGalleryItems.status, "online")];
@@ -107,23 +158,12 @@ export async function getPublicPromptGalleryItems(
   const whereCondition = and(...listConditions);
   const db = getDb();
 
-  const [countRows, categoryRows, modelRows] = await Promise.all([
+  const [countRows, stats] = await Promise.all([
     db
       .select({ value: count() })
       .from(promptGalleryItems)
       .where(whereCondition),
-    db
-      .select({
-        category: sql<string>`jsonb_array_elements_text(${promptGalleryItems.categories})`,
-      })
-      .from(promptGalleryItems)
-      .where(and(...baseConditions)),
-    db
-      .select({
-        model: promptGalleryItems.model,
-      })
-      .from(promptGalleryItems)
-      .where(and(...baseConditions)),
+    getCachedPublicPromptGalleryStats(normalizedLanguage),
   ]);
 
   const total = countRows[0]?.value ?? 0;
@@ -147,26 +187,11 @@ export async function getPublicPromptGalleryItems(
     .limit(pageSize)
     .offset((page - 1) * pageSize);
 
-  const categories = Array.from(
-    new Set(
-      categoryRows
-        .map((row) => (typeof row.category === "string" ? row.category.trim() : ""))
-        .filter(Boolean),
-    ),
-  ).sort((left, right) => left.localeCompare(right));
-  const models = Array.from(
-    new Set(
-      modelRows
-        .map((row) => row.model.trim())
-        .filter(Boolean),
-    ),
-  ).sort((left, right) => left.localeCompare(right));
-
   return {
     items: rows.map(mapPromptGalleryItem),
     total,
-    categories,
-    models,
+    categories: stats.categories,
+    models: stats.models,
     page,
     pageSize,
   };

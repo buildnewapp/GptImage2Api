@@ -29,7 +29,7 @@ test("renders the key Seedance 2.0 homepage sections and media urls", async () =
   assert.match(html, /Create Your First Clip Today/);
   assert.match(
     html,
-    /https:\/\/cdn\.sdanceai\.com\/sdanceai\/sdance_videos\/4vr3llg33\.mp4/,
+    /https:\/\/cdn\.sdanceai\.com\/sdanceai\/sdance_videos\/gomdqjkt4\.mp4/,
   );
 });
 
@@ -65,17 +65,27 @@ test("renders hero video rotator controls for hero-1 through hero-4", async () =
 test("renders the hero ai video mini studio instead of static placeholder pills", async () => {
   const html = await renderVideoTemplate();
 
-  assert.match(html, /data-ai-video-mini-studio/);
-  assert.match(html, /data-ai-video-mini-studio-upload/);
-  assert.match(html, /data-ai-video-mini-studio-model/);
-  assert.match(html, /data-ai-video-mini-studio-aspect-ratio/);
-  assert.match(html, /data-ai-video-mini-studio-resolution/);
-  assert.match(html, /data-ai-video-mini-studio-price/);
-  assert.match(html, /data-ai-video-mini-studio-submit/);
+  assert.match(html, /data-ai-video-mini-studio-placeholder/);
+  assert.doesNotMatch(html, /data-ai-video-mini-studio-upload/);
+  assert.doesNotMatch(html, /data-ai-video-mini-studio-model/);
+  assert.doesNotMatch(html, /data-ai-video-mini-studio-aspect-ratio/);
+  assert.doesNotMatch(html, /data-ai-video-mini-studio-resolution/);
+  assert.doesNotMatch(html, /data-ai-video-mini-studio-price/);
+  assert.doesNotMatch(html, /data-ai-video-mini-studio-submit/);
   assert.doesNotMatch(
     html,
     /role="combobox" aria-expanded="false" aria-autocomplete="none"/,
   );
+});
+
+test("defers heavy hero video downloads on first paint", () => {
+  const source = readFileSync(
+    path.join(projectRoot, "components/home/video/Media.tsx"),
+    "utf8",
+  );
+
+  assert.doesNotMatch(source, /preload="auto"/);
+  assert.match(source, /data-video-hero-placeholder/);
 });
 
 test("renders showcase preview triggers for all six sample items", async () => {

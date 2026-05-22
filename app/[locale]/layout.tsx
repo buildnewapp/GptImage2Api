@@ -1,20 +1,8 @@
 import { GoogleOneTap } from "@/components/auth/GoogleOneTap";
 import { LanguageDetectionAlert } from "@/components/LanguageDetectionAlert";
-import ConsentBanner from "@/components/shared/CookieConsent/ConsentBanner";
-import ConsentGate from "@/components/shared/CookieConsent/ConsentGate";
-import CrispChat from "@/components/support/CrispChat";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
-import GoogleAdsense from "@/components/tracking/GoogleAdsense";
-import GoogleAnalytics from "@/components/tracking/GoogleAnalytics";
-import MicrosoftClarity from "@/components/tracking/MicrosoftClarity";
-import PlausibleAnalytics from "@/components/tracking/PlausibleAnalytics";
-import PostHogPageView from "@/components/tracking/PostHogPageView";
-import PostHogProvider from "@/components/tracking/PostHogProvider";
 import ReferralAutoAccept from "@/components/tracking/ReferralAutoAccept";
 import ReferralCapture from "@/components/tracking/ReferralCapture";
-import RybbitScript from "@/components/tracking/RybbitScript";
-import ToltScript from "@/components/tracking/ToltScript";
-import UmamiScript from "@/components/tracking/UmamiScript";
 import { Toaster } from "@/components/ui/sonner";
 import { siteConfig } from "@/config/site";
 import { DEFAULT_LOCALE, Locale, routing } from "@/i18n/routing";
@@ -22,7 +10,6 @@ import { constructMetadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 import "@/styles/loading.css";
-import { Analytics } from "@vercel/analytics/react";
 import { Metadata, Viewport } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import {
@@ -82,6 +69,10 @@ export const viewport: Viewport = {
   themeColor: siteConfig.themeColors,
 };
 
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
 export default async function LocaleLayout({
   children,
   params,
@@ -92,6 +83,30 @@ export default async function LocaleLayout({
   const { locale } = await params;
   const COOKIE_CONSENT_ENABLED =
     process.env.NEXT_PUBLIC_COOKIE_CONSENT_ENABLED === "true";
+  const isProduction = process.env.NODE_ENV !== "development";
+  const postHogEnabled =
+    isProduction &&
+    !!process.env.NEXT_PUBLIC_POSTHOG_KEY &&
+    !!process.env.NEXT_PUBLIC_POSTHOG_HOST;
+  const googleAnalyticsEnabled =
+    isProduction && !!process.env.NEXT_PUBLIC_GOOGLE_ID;
+  const googleAdsenseEnabled =
+    isProduction && !!process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID;
+  const clarityEnabled =
+    isProduction && !!process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
+  const plausibleEnabled =
+    isProduction && !!process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;
+  const rybbitEnabled =
+    isProduction &&
+    !!process.env.NEXT_PUBLIC_RYBBIT_SRC &&
+    !!process.env.NEXT_PUBLIC_RYBBIT_SITE_ID;
+  const umamiEnabled =
+    isProduction &&
+    !!process.env.NEXT_PUBLIC_UMAMI_SRC &&
+    !!process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
+  const toltEnabled = isProduction && !!process.env.NEXT_PUBLIC_TOLT_ID;
+  const crispEnabled = !!process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID;
+  const vercelAnalyticsEnabled = isProduction && !!process.env.VERCEL_ENV;
 
   // Ensure that the incoming `locale` is valid
   if (!hasLocale(routing.locales, locale)) {
@@ -99,12 +114,51 @@ export default async function LocaleLayout({
   }
   setRequestLocale(locale);
 
-  const messages = await getMessages();
+  const messages = await getMessages({ locale });
+  const ConsentBannerComponent = COOKIE_CONSENT_ENABLED
+    ? (await import("@/components/shared/CookieConsent/ConsentBanner")).default
+    : null;
+  const ConsentGateComponent = COOKIE_CONSENT_ENABLED
+    ? (await import("@/components/shared/CookieConsent/ConsentGate")).default
+    : null;
+  const CrispChatComponent = crispEnabled
+    ? (await import("@/components/support/CrispChat")).default
+    : null;
+  const PostHogProviderComponent = postHogEnabled
+    ? (await import("@/components/tracking/PostHogProvider")).default
+    : null;
+  const PostHogPageViewComponent = postHogEnabled
+    ? (await import("@/components/tracking/PostHogPageView")).default
+    : null;
+  const GoogleAnalyticsComponent = googleAnalyticsEnabled
+    ? (await import("@/components/tracking/GoogleAnalytics")).default
+    : null;
+  const GoogleAdsenseComponent = googleAdsenseEnabled
+    ? (await import("@/components/tracking/GoogleAdsense")).default
+    : null;
+  const MicrosoftClarityComponent = clarityEnabled
+    ? (await import("@/components/tracking/MicrosoftClarity")).default
+    : null;
+  const PlausibleAnalyticsComponent = plausibleEnabled
+    ? (await import("@/components/tracking/PlausibleAnalytics")).default
+    : null;
+  const RybbitScriptComponent = rybbitEnabled
+    ? (await import("@/components/tracking/RybbitScript")).default
+    : null;
+  const UmamiScriptComponent = umamiEnabled
+    ? (await import("@/components/tracking/UmamiScript")).default
+    : null;
+  const ToltScriptComponent = toltEnabled
+    ? (await import("@/components/tracking/ToltScript")).default
+    : null;
+  const AnalyticsComponent = vercelAnalyticsEnabled
+    ? (await import("@vercel/analytics/react")).Analytics
+    : null;
 
   return (
     <html lang={locale || DEFAULT_LOCALE} suppressHydrationWarning>
       <head>
-        <ToltScript />
+        {ToltScriptComponent ? <ToltScriptComponent /> : null}
       </head>
       <body
         className={cn(
@@ -114,59 +168,72 @@ export default async function LocaleLayout({
           instrumentSerif.variable
         )}
       >
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider
             attribute="class"
             defaultTheme={siteConfig.defaultNextTheme}
             enableSystem
           >
-            <PostHogProvider>
-              <ReferralCapture />
-              <ReferralAutoAccept />
-              <SiteInit/>
-              {messages.LanguageDetection && <LanguageDetectionAlert />}
+            {PostHogProviderComponent ? (
+              <PostHogProviderComponent>
+                <ReferralCapture />
+                <ReferralAutoAccept />
+                <SiteInit/>
+                {messages.LanguageDetection && <LanguageDetectionAlert />}
 
-              {children}
-            </PostHogProvider>
+                {children}
+              </PostHogProviderComponent>
+            ) : (
+              <>
+                <ReferralCapture />
+                <ReferralAutoAccept />
+                <SiteInit/>
+                {messages.LanguageDetection && <LanguageDetectionAlert />}
+
+                {children}
+              </>
+            )}
           </ThemeProvider>
         </NextIntlClientProvider>
         <GoogleOneTap />
-        <CrispChat />
+        {CrispChatComponent ? <CrispChatComponent /> : null}
         <Toaster richColors />
         <TailwindIndicator />
         <>
           {COOKIE_CONSENT_ENABLED ? (
             <>
-              {process.env.NODE_ENV === "development" ? null : (
+              {isProduction ? (
                 <>
-                  {process.env.VERCEL_ENV ? <Analytics /> : <></>}
-                  <PlausibleAnalytics />
-                  <RybbitScript />
-                  <UmamiScript />
-                  <ConsentGate>
-                    <GoogleAnalytics />
-                    <GoogleAdsense />
-                    <MicrosoftClarity />
-                    <PostHogPageView />
-                  </ConsentGate>
+                  {AnalyticsComponent ? <AnalyticsComponent /> : null}
+                  {PlausibleAnalyticsComponent ? <PlausibleAnalyticsComponent /> : null}
+                  {RybbitScriptComponent ? <RybbitScriptComponent /> : null}
+                  {UmamiScriptComponent ? <UmamiScriptComponent /> : null}
+                  {ConsentGateComponent ? (
+                    <ConsentGateComponent>
+                      {GoogleAnalyticsComponent ? <GoogleAnalyticsComponent /> : null}
+                      {GoogleAdsenseComponent ? <GoogleAdsenseComponent /> : null}
+                      {MicrosoftClarityComponent ? <MicrosoftClarityComponent /> : null}
+                      {PostHogPageViewComponent ? <PostHogPageViewComponent /> : null}
+                    </ConsentGateComponent>
+                  ) : null}
                 </>
-              )}
-              <ConsentBanner />
+              ) : null}
+              {ConsentBannerComponent ? <ConsentBannerComponent /> : null}
             </>
           ) : (
             <>
-              {process.env.NODE_ENV === "development" ? null : (
+              {isProduction ? (
                 <>
-                  {process.env.VERCEL_ENV ? <Analytics /> : <></>}
-                  <PlausibleAnalytics />
-                  <GoogleAnalytics />
-                  <GoogleAdsense />
-                  <MicrosoftClarity />
-                  <RybbitScript />
-                  <UmamiScript />
-                  <PostHogPageView />
+                  {AnalyticsComponent ? <AnalyticsComponent /> : null}
+                  {PlausibleAnalyticsComponent ? <PlausibleAnalyticsComponent /> : null}
+                  {GoogleAnalyticsComponent ? <GoogleAnalyticsComponent /> : null}
+                  {GoogleAdsenseComponent ? <GoogleAdsenseComponent /> : null}
+                  {MicrosoftClarityComponent ? <MicrosoftClarityComponent /> : null}
+                  {RybbitScriptComponent ? <RybbitScriptComponent /> : null}
+                  {UmamiScriptComponent ? <UmamiScriptComponent /> : null}
+                  {PostHogPageViewComponent ? <PostHogPageViewComponent /> : null}
                 </>
-              )}
+              ) : null}
             </>
           )}
         </>

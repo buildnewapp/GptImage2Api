@@ -3,8 +3,10 @@ import { listTagsAction } from "@/actions/posts/tags";
 import { POST_CONFIGS } from "@/components/cms/post-config";
 import { PostList } from "@/components/cms/PostList";
 import { Locale } from "@/i18n/routing";
+import { getBlogDataSource } from "@/lib/blog-source";
 import { blogCms } from "@/lib/cms";
 import { loadPublicListPageData } from "@/lib/cms/page-data";
+import { listGeoBlogPosts } from "@/lib/geo/blog";
 import { constructMetadata } from "@/lib/metadata";
 import { Tag } from "@/types/cms";
 import { TextSearch } from "lucide-react";
@@ -35,6 +37,56 @@ const SERVER_POST_PAGE_SIZE = 48;
 
 export default async function Page({ params }: { params: Params }) {
   const { locale } = await params;
+  const blogDataSource = getBlogDataSource();
+
+  if (blogDataSource === "geo") {
+    const [t, geoListData] = await Promise.all([
+      getTranslations("Blogs"),
+      listGeoBlogPosts({
+        locale,
+        pageIndex: 0,
+        pageSize: SERVER_POST_PAGE_SIZE,
+      }).catch((error) => {
+        console.error("Failed to fetch GEO blog posts:", error);
+        return { posts: [], count: 0 };
+      }),
+    ]);
+
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold mb-8 text-center">{t("title")}</h1>
+
+        {geoListData.posts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+            <TextSearch className="h-16 w-16 text-gray-400 mb-4" />
+            <h2 className="text-2xl font-semibold mb-2">
+              {t("emptyState.title") || "No blog posts"}
+            </h2>
+            <p className="text-gray-500 max-w-md">
+              {t("emptyState.description") ||
+                "We are creating exciting content, please stay tuned!"}
+            </p>
+          </div>
+        ) : (
+          <PostList
+            postType="blog"
+            baseUrl="/blog"
+            localPosts={[]}
+            initialPosts={geoListData.posts}
+            initialTotal={geoListData.posts.length}
+            serverTags={[]}
+            locale={locale}
+            pageSize={SERVER_POST_PAGE_SIZE}
+            showTagSelector={false}
+            showCover={POST_CONFIGS.blog.showCoverInList}
+            useNativeImages
+            emptyMessage="No posts found."
+          />
+        )}
+      </div>
+    );
+  }
+
   const [t, listData] = await Promise.all([
     getTranslations("Blogs"),
     loadPublicListPageData({
@@ -51,10 +103,7 @@ export default async function Page({ params }: { params: Params }) {
   ]);
 
   if (listData.postsError) {
-    console.error(
-      "Failed to fetch initial server posts:",
-      listData.postsError
-    );
+    console.error("Failed to fetch initial server posts:", listData.postsError);
   }
 
   const noPostsFound =

@@ -16,7 +16,7 @@ import {
 } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { useLocaleStore } from "@/stores/localeStore";
-import { ChevronDown, Languages } from "lucide-react";
+import { Languages } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useParams } from "next/navigation";
 import { useTransition } from "react";
@@ -56,27 +56,18 @@ export default function VideoLocaleSwitcher({
       <DropdownMenuTrigger
         id={triggerId}
         className={cn(
-          "flex items-center justify-between gap-2 rounded-full border px-3 py-2 text-sm shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring/70 focus:ring-offset-2",
+          "inline-flex items-center justify-center rounded-full border shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-ring/70 focus:ring-offset-2",
           overlay
             ? "border-white/16 bg-white/8 text-white hover:border-white/24 hover:bg-white/12"
             : "border-border/75 bg-background/80 text-foreground hover:border-border hover:bg-card/90",
-          fullWidth ? "h-10 w-full px-4" : "h-10 min-w-[7rem]"
+          fullWidth ? "h-10 w-full" : "h-10 w-10"
         )}
         aria-label="Select language"
       >
-        <span className="flex items-center gap-2">
-          <Languages
-            className={cn(
-              "h-4 w-4",
-              overlay ? "text-white/72" : "text-muted-foreground"
-            )}
-          />
-          <span>{LOCALE_NAMES[locale]}</span>
-        </span>
-        <ChevronDown
+        <Languages
           className={cn(
             "h-4 w-4",
-            overlay ? "text-white/56" : "text-muted-foreground/70"
+            overlay ? "text-white/72" : "text-muted-foreground"
           )}
         />
       </DropdownMenuTrigger>

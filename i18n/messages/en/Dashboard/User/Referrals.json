@@ -5,7 +5,7 @@
   },
   "inviteCard": {
     "title": "Invite Code",
-    "description": "Set your invite code and share your referral link to invite new users.",
+    "description": "Set your invite code and share your referral link. Earn {signupCredit} credits when a new user signs up, and {firstOrderReward} cash rewards when they pay.",
     "codeLabel": "Your code",
     "linkLabel": "Your invite link",
     "noCode": "No invite code yet",
@@ -26,7 +26,7 @@
   },
   "withdraw": {
     "title": "Withdrawals",
-    "description": "Cash rewards unlock after the review period. Apply here, then contact the administrator.",
+    "description": "Cash rewards unlock after a {lockDays}-day review period. Apply here, then contact the administrator.",
     "claimable": "Claimable",
     "pending": "Pending withdrawal",
     "paid": "Paid",
@@ -46,7 +46,7 @@
   },
   "rewards": {
     "title": "Reward Records",
-    "description": "Track referral credits and first-order cash rewards.",
+    "description": "Track referral credits and cash rewards.",
     "empty": "No rewards yet.",
     "columns": {
       "user": "Invitee",

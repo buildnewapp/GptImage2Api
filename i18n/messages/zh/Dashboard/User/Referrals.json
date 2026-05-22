@@ -5,7 +5,7 @@
   },
   "inviteCard": {
     "title": "邀请码",
-    "description": "设置你的邀请码并分享邀请链接，邀请新用户注册。",
+    "description": "设置你的邀请码并分享邀请链接，邀请新用户注册获得 {signupCredit} 积分，付费获取 {firstOrderReward} 返现。",
     "codeLabel": "我的邀请码",
     "linkLabel": "我的邀请链接",
     "noCode": "暂未生成邀请码",
@@ -26,7 +26,7 @@
   },
   "withdraw": {
     "title": "提现",
-    "description": "返现经过考察期后可申请提现，提交后请联系管理员处理。",
+    "description": "返现经过 {lockDays} 天考察期后可申请提现，提交后请联系管理员处理。",
     "claimable": "可提现",
     "pending": "提现处理中",
     "paid": "已提现",
@@ -46,7 +46,7 @@
   },
   "rewards": {
     "title": "奖励记录",
-    "description": "查看邀请积分和首单返现奖励。",
+    "description": "查看邀请积分和返现奖励。",
     "empty": "暂无奖励记录。",
     "columns": {
       "user": "被邀请用户",
