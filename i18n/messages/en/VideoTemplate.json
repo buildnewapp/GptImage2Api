@@ -137,6 +137,66 @@
       }
     ]
   },
+  "apiWorkflow": {
+    "actions": [
+      {
+        "href": "/apidoc",
+        "label": "View API Docs",
+        "variant": "primary"
+      },
+      {
+        "href": "/dashboard/apikeys",
+        "label": "Get API Key",
+        "variant": "secondary"
+      },
+      {
+        "href": "/pricing",
+        "label": "View API Pricing",
+        "variant": "secondary"
+      }
+    ],
+    "description": "Build the same AI video workflow into your product. Create an API key, send a generation request, track task progress, and manage credit usage from the existing dashboard.",
+    "items": [
+      {
+        "description": "Create a key in the dashboard and send it with Authorization: Bearer on every request.",
+        "icon": "key",
+        "title": "API key auth"
+      },
+      {
+        "description": "Start video jobs through /api/ai-studio/execute with modelId, visibility, and payload fields.",
+        "icon": "code",
+        "title": "Generation endpoint"
+      },
+      {
+        "description": "Poll the task endpoint after creation to read queued, running, succeeded, or failed states.",
+        "icon": "list",
+        "title": "Task status"
+      },
+      {
+        "description": "API usage is billed with credits, using the same account balance and pricing rules.",
+        "icon": "coins",
+        "title": "Credit billing"
+      }
+    ],
+    "kicker": "Developer API",
+    "requestLines": [
+      "curl -X POST \"https://YOUR_DOMAIN/api/ai-studio/execute\" \\",
+      "  -H \"Authorization: Bearer YOUR_API_KEY\" \\",
+      "  -H \"Content-Type: application/json\" \\",
+      "  -d '{",
+      "    \"modelId\": \"video:seedance-2-text-to-video\",",
+      "    \"isPublic\": false,",
+      "    \"payload\": {",
+      "      \"prompt\": \"A cinematic product launch clip\",",
+      "      \"duration\": 5,",
+      "      \"resolution\": \"720p\"",
+      "    }",
+      "  }'"
+    ],
+    "requestLabel": "API Request",
+    "requestTitle": "Create a video generation task",
+    "title": "Add Seedance Video Generation to Your App"
+  },
   "showcase": {
     "ctaText": "Ready to create your own short clip?",
     "description": "These preview assets on the page are short local clips. The metadata shown here reflects the actual file in this site.",
@@ -415,6 +475,26 @@
       {
         "answer": "On seedance2.app, new users can start on Seedance 2.0 right away and keep earning plenty of credits through daily tasks.",
         "question": "Where can I use it?"
+      },
+      {
+        "answer": "Log in, open the API Keys dashboard, create an active key, and send it as Authorization: Bearer YOUR_API_KEY.",
+        "question": "How do I authenticate API requests?"
+      },
+      {
+        "answer": "API generation uses account credits. The consumed amount depends on the selected model, duration, quality, resolution, and pricing row.",
+        "question": "How is API usage billed?"
+      },
+      {
+        "answer": "Provider callbacks are handled by the platform. For your app integration, poll /api/ai-studio/tasks/{taskId}?modelId={modelId} after the execute response returns a taskId.",
+        "question": "Does the API support callbacks or webhooks?"
+      },
+      {
+        "answer": "Failed tasks return a failed state and an error reason when available. Check task status or video history before retrying with a revised prompt or settings.",
+        "question": "How should I handle failed API generations?"
+      },
+      {
+        "answer": "Use reasonable client-side throttling and avoid duplicate task submissions. Generation can also stop when the account has insufficient credits.",
+        "question": "Are there API rate limits?"
       },
       {
         "answer": "Commercial use depends on the platform terms and your rights to any referenced materials. Review the terms of service for full details.",

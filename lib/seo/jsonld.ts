@@ -1,5 +1,23 @@
 import { FaqSchemaItem, SeoBreadcrumb } from "@/lib/seo/content-schema";
 
+export type SoftwareApplicationOfferJsonLdInput = {
+  name: string;
+  price: string;
+  priceCurrency: string;
+  url: string;
+};
+
+export type SoftwareApplicationJsonLdInput = {
+  name: string;
+  description: string;
+  url: string;
+  inLanguage: string;
+  logo?: string;
+  applicationCategory?: string;
+  operatingSystem?: string;
+  offers?: SoftwareApplicationOfferJsonLdInput[];
+};
+
 export function buildBreadcrumbJsonLd(items: SeoBreadcrumb[]) {
   if (items.length === 0) {
     return null;
@@ -33,5 +51,39 @@ export function buildFaqJsonLd(items: FaqSchemaItem[] | null | undefined) {
         text: item.answer,
       },
     })),
+  };
+}
+
+export function buildSoftwareApplicationJsonLd({
+  name,
+  description,
+  url,
+  inLanguage,
+  logo,
+  applicationCategory = "MultimediaApplication",
+  operatingSystem = "Web",
+  offers,
+}: SoftwareApplicationJsonLdInput) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name,
+    description,
+    url,
+    inLanguage,
+    ...(logo ? { image: logo } : {}),
+    applicationCategory,
+    operatingSystem,
+    ...(offers && offers.length > 0
+      ? {
+          offers: offers.map((offer) => ({
+            "@type": "Offer",
+            name: offer.name,
+            price: offer.price,
+            priceCurrency: offer.priceCurrency,
+            url: offer.url,
+          })),
+        }
+      : {}),
   };
 }

@@ -3,15 +3,29 @@ import test from "node:test";
 
 import {
   SEO_SITEMAP_CONTENT_CONFIG,
+  buildAlternateLanguageUrls,
   buildCanonicalUrl,
   shouldNoIndexContent,
   shouldIncludeInSitemap,
 } from "@/lib/seo/metadata";
-import { buildBreadcrumbJsonLd, buildFaqJsonLd } from "@/lib/seo/jsonld";
+import {
+  buildBreadcrumbJsonLd,
+  buildFaqJsonLd,
+  buildSoftwareApplicationJsonLd,
+} from "@/lib/seo/jsonld";
 
 test("builds canonical urls for default and non-default locales", () => {
   assert.equal(buildCanonicalUrl({ locale: "en", path: "/templates/demo" }), "https://sdanceai.com/templates/demo");
   assert.equal(buildCanonicalUrl({ locale: "zh", path: "/templates/demo" }), "https://sdanceai.com/zh/templates/demo");
+});
+
+test("builds alternate language urls with default locale as x-default", () => {
+  assert.deepEqual(buildAlternateLanguageUrls("/apidoc", ["en", "zh", "ja"]), {
+    "en-US": "https://sdanceai.com/apidoc",
+    "zh-CN": "https://sdanceai.com/zh/apidoc",
+    "ja-JP": "https://sdanceai.com/ja/apidoc",
+    "x-default": "https://sdanceai.com/apidoc",
+  });
 });
 
 test("marks draft or gated content as noindex", () => {
@@ -65,6 +79,46 @@ test("builds breadcrumb json ld with ordered list items", () => {
 test("omits faq json ld when there are no faq items", () => {
   assert.equal(buildFaqJsonLd(null), null);
   assert.equal(buildFaqJsonLd([]), null);
+});
+
+test("builds software application json ld with product offers", () => {
+  assert.deepEqual(
+    buildSoftwareApplicationJsonLd({
+      name: "Seedance 2.0 AI Video Generator",
+      description: "Create AI videos from prompts and reference images.",
+      url: "https://sdanceai.com",
+      inLanguage: "en",
+      logo: "https://sdanceai.com/logo.png",
+      offers: [
+        {
+          name: "Basic",
+          price: "41",
+          priceCurrency: "USD",
+          url: "https://sdanceai.com/pricing",
+        },
+      ],
+    }),
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "Seedance 2.0 AI Video Generator",
+      description: "Create AI videos from prompts and reference images.",
+      url: "https://sdanceai.com",
+      inLanguage: "en",
+      image: "https://sdanceai.com/logo.png",
+      applicationCategory: "MultimediaApplication",
+      operatingSystem: "Web",
+      offers: [
+        {
+          "@type": "Offer",
+          name: "Basic",
+          price: "41",
+          priceCurrency: "USD",
+          url: "https://sdanceai.com/pricing",
+        },
+      ],
+    },
+  );
 });
 
 test("only includes published public seo content in sitemap", () => {

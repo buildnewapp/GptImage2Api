@@ -10,6 +10,7 @@ import Hero from "@/components/home/video/Hero";
 import FeatureRows from "@/components/home/video/FeatureRows";
 import Scope from "@/components/home/video/Scope";
 import UseCases from "@/components/home/video/UseCases";
+import ApiWorkflow from "@/components/home/video/ApiWorkflow";
 import Showcase from "@/components/home/video/Showcase";
 import Testimonials from "@/components/home/video/Testimonials";
 import Pricing from "@/components/home/video/Pricing";
@@ -31,6 +32,7 @@ export default async function VideoTemplate() {
     featureRows: t.raw("featureRows"),
     scope: t.raw("scope"),
     useCases: t.raw("useCases"),
+    apiWorkflow: t.raw("apiWorkflow"),
     showcase: t.raw("showcase"),
     testimonials: t.raw("testimonials"),
     pricing: buildVideoTemplatePricingSection({
@@ -47,12 +49,13 @@ export default async function VideoTemplate() {
       <TemplateJsonLd templateName="VideoTemplate" />
       {/*<Header />*/}
       <Hero hero={page.hero} />
+      <Scope section={page.scope} />
+      <Showcase section={page.showcase} />
       <div id="features">
         <FeatureRows items={page.featureRows} />
       </div>
-      <Scope section={page.scope} />
       <UseCases section={page.useCases} />
-      <Showcase section={page.showcase} />
+      <ApiWorkflow section={page.apiWorkflow} />
       <Testimonials section={page.testimonials} />
       <Pricing section={page.pricing} />
       <FAQ section={page.faq} />
