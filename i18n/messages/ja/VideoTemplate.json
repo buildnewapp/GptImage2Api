@@ -155,7 +155,7 @@
         "variant": "secondary"
       }
     ],
-    "description": "同じ AI 動画生成ワークフローを自分のプロダクトに組み込めます。API キーを作成し、生成リクエストを送り、タスク進行を追跡し、既存のダッシュボードでクレジット利用を管理できます。",
+    "description": "同じ AI 動画/画像生成ワークフローを自分のプロダクトに組み込めます。API キーを作成し、生成リクエストを送り、タスク進行を追跡し、既存のダッシュボードでクレジット利用を管理できます。",
     "items": [
       {
         "description": "ダッシュボードでキーを作成し、各リクエストに Authorization: Bearer 形式で送信します。",
@@ -163,7 +163,7 @@
         "title": "API キー認証"
       },
       {
-        "description": "/api/ai-studio/execute に modelId、公開設定、payload を渡して動画タスクを開始します。",
+        "description": "/api/ai-studio/execute に modelId、公開設定、payload を渡してタスクを開始します。",
         "icon": "code",
         "title": "生成エンドポイント"
       },
@@ -184,7 +184,7 @@
       "  -H \"Authorization: Bearer YOUR_API_KEY\" \\",
       "  -H \"Content-Type: application/json\" \\",
       "  -d '{",
-      "    \"modelId\": \"video:seedance-2-text-to-video\",",
+      "    \"modelId\": \"type:ai-model-ai\",",
       "    \"isPublic\": false,",
       "    \"payload\": {",
       "      \"prompt\": \"A cinematic product launch clip\",",
@@ -195,7 +195,7 @@
     ],
     "requestLabel": "API リクエスト",
     "requestTitle": "動画生成タスクを作成",
-    "title": "Seedance 動画生成をアプリに組み込む"
+    "title": "AI 動画/画像生成をアプリに組み込む"
   },
   "showcase": {
     "ctaText": "あなた自身の短いクリップを作る準備はできましたか？",

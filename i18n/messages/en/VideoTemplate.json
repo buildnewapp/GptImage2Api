@@ -155,7 +155,7 @@
         "variant": "secondary"
       }
     ],
-    "description": "Build the same AI video workflow into your product. Create an API key, send a generation request, track task progress, and manage credit usage from the existing dashboard.",
+    "description": "Build the same AI Video/Image workflow into your product. Create an API key, send a generation request, track task progress, and manage credit usage from the existing dashboard.",
     "items": [
       {
         "description": "Create a key in the dashboard and send it with Authorization: Bearer on every request.",
@@ -163,7 +163,7 @@
         "title": "API key auth"
       },
       {
-        "description": "Start video jobs through /api/ai-studio/execute with modelId, visibility, and payload fields.",
+        "description": "Start jobs through /api/ai-studio/execute with modelId, visibility, and payload fields.",
         "icon": "code",
         "title": "Generation endpoint"
       },
@@ -184,7 +184,7 @@
       "  -H \"Authorization: Bearer YOUR_API_KEY\" \\",
       "  -H \"Content-Type: application/json\" \\",
       "  -d '{",
-      "    \"modelId\": \"video:seedance-2-text-to-video\",",
+      "    \"modelId\": \"type:ai-model-ai\",",
       "    \"isPublic\": false,",
       "    \"payload\": {",
       "      \"prompt\": \"A cinematic product launch clip\",",
@@ -195,7 +195,7 @@
     ],
     "requestLabel": "API Request",
     "requestTitle": "Create a video generation task",
-    "title": "Add Seedance Video Generation to Your App"
+    "title": "Add AI Video/Image Generation to Your App"
   },
   "showcase": {
     "ctaText": "Ready to create your own short clip?",
