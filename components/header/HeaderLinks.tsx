@@ -45,11 +45,7 @@ const HeaderLinks = () => {
                           <I18nLink
                             href={child.href}
                             title={child.name}
-                            prefetch={
-                              child.target && child.target === "_blank"
-                                ? false
-                                : true
-                            }
+                            prefetch={false}
                             target={child.target || "_self"}
                             rel={child.rel || undefined}
                             className={cn(
@@ -81,9 +77,7 @@ const HeaderLinks = () => {
                 key={link.name}
                 href={link.href}
                 title={link.name}
-                prefetch={
-                  link.target && link.target === "_blank" ? false : true
-                }
+                prefetch={false}
                 target={link.target || "_self"}
                 rel={link.rel || undefined}
                 className={cn(

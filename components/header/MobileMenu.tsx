@@ -40,7 +40,7 @@ export default function MobileMenu() {
           <I18nLink
             href="/"
             title={t("title")}
-            prefetch={true}
+            prefetch={false}
             className="flex items-center space-x-1 font-bold"
           >
             <Image
@@ -67,11 +67,7 @@ export default function MobileMenu() {
                       <I18nLink
                         href={child.href}
                         title={child.name}
-                        prefetch={
-                          child.target && child.target === "_blank"
-                            ? false
-                            : true
-                        }
+                        prefetch={false}
                         target={child.target || "_self"}
                         rel={child.rel || undefined}
                         className="flex flex-col gap-y-1"
@@ -92,9 +88,7 @@ export default function MobileMenu() {
                 <I18nLink
                   href={link.href}
                   title={link.name}
-                  prefetch={
-                    link.target && link.target === "_blank" ? false : true
-                  }
+                  prefetch={false}
                   target={link.target || "_self"}
                   rel={link.rel || undefined}
                 >
