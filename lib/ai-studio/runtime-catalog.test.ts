@@ -752,7 +752,7 @@ test("uses the bundled runtime catalog by default in a Cloudflare worker cwd", a
       `process.chdir(${JSON.stringify(bundleDir)});`,
       "process.env.DEPLOYMENT_PLATFORM = 'cloudflare';",
       `const mod = await import(${JSON.stringify(moduleUrl)});`,
-      "const entry = await mod.default.getCachedAiStudioCatalogEntry('video:sora2-text-to-video-standard');",
+      "const entry = await mod.default.getCachedAiStudioCatalogEntry('video:fal-sora-2');",
       "process.stdout.write(JSON.stringify({ found: Boolean(entry), id: entry?.id ?? null }));",
     ].join("\n");
     const { stdout } = await execFile(
@@ -768,7 +768,7 @@ test("uses the bundled runtime catalog by default in a Cloudflare worker cwd", a
     };
 
     assert.equal(result.found, true);
-    assert.equal(result.id, "video:sora2-text-to-video-standard");
+    assert.equal(result.id, "video:fal-sora-2");
   } finally {
     if (originalPlatform === undefined) {
       delete process.env.DEPLOYMENT_PLATFORM;
