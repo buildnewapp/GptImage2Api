@@ -270,17 +270,11 @@ export default function AiStudioVideoHistoryClient() {
           (record: VideoGeneration) =>
             record.status === "pending" &&
             typeof record.providerTaskId === "string" &&
-            record.providerTaskId.length > 0 &&
-            typeof record.catalogModelId === "string" &&
-            record.catalogModelId.length > 0,
+            record.providerTaskId.length > 0,
         );
 
         pendingRecords.slice(0, 5).forEach((record: VideoGeneration) => {
-          fetch(
-            `/api/ai-studio/tasks/${record.providerTaskId}?modelId=${encodeURIComponent(
-              record.catalogModelId!,
-            )}`,
-          )
+          fetch(`/api/ai-studio/tasks/${record.providerTaskId}`)
             .then((response) => response.json())
             .then((statusData) => {
               if (statusData.success && statusData.data) {

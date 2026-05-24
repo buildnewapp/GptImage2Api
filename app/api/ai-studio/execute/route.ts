@@ -9,11 +9,9 @@ import {
   submitAiStudioExecution,
 } from "@/lib/ai-studio/execute";
 import {
-  archiveAiStudioGenerationMediaUrlsInBackground,
   markAiStudioGenerationSubmitted,
   reserveAiStudioGeneration,
   settleAiStudioGenerationFailure,
-  settleAiStudioGenerationSuccess,
 } from "@/lib/ai-studio/generations";
 import {
   getPublicAiStudioModelId,
@@ -126,52 +124,9 @@ export async function POST(request: Request) {
       selectedPricing: prepared.selectedPricing,
     });
 
+    let result: Awaited<ReturnType<typeof submitAiStudioExecution>>;
     try {
-      const result = await submitAiStudioExecution(prepared.detail, prepared.body);
-      const state =
-        result.taskId && result.statusEndpoint
-          ? "queued"
-          : "succeeded";
-      let settledMediaUrls = result.mediaUrls;
-
-      await markAiStudioGenerationSubmitted(generation.id, {
-        providerTaskId: result.taskId,
-        raw: result.raw,
-        state,
-        mediaUrls: result.mediaUrls,
-      });
-
-      if (state === "succeeded") {
-        const settled = await settleAiStudioGenerationSuccess(generation.id, {
-          raw: result.raw,
-          mediaUrls: result.mediaUrls,
-          providerState: "succeeded",
-        });
-        archiveAiStudioGenerationMediaUrlsInBackground(generation.id);
-        if (Array.isArray(settled?.resultUrls)) {
-          settledMediaUrls = settled.resultUrls as string[];
-        }
-      }
-
-      return apiResponse.success({
-        modelId: getPublicAiStudioModelId(prepared.detail),
-        generationId: generation.id,
-        reservedCredits,
-        taskId: result.taskId,
-        state,
-        statusMode: result.statusMode,
-        statusSupported: Boolean(result.statusEndpoint && result.taskId),
-        statusEndpoint: result.statusEndpoint,
-        raw: sanitizeAiStudioDebugValue(result.raw),
-        mediaUrls: settledMediaUrls,
-        artifacts: result.artifacts,
-        selectedPricing: prepared.selectedPricing
-          ? toPublicPricingRow(prepared.selectedPricing, prepared.detail)
-          : null,
-        pricingRows: prepared.detail.pricingRows.map((row) =>
-          toPublicPricingRow(row, prepared.detail),
-        ),
-      });
+      result = await submitAiStudioExecution(prepared.detail, prepared.body);
     } catch (error: any) {
       await settleAiStudioGenerationFailure(generation.id, {
         raw: {
@@ -182,6 +137,34 @@ export async function POST(request: Request) {
       });
       throw error;
     }
+
+    if (!result.taskId || !result.statusEndpoint) {
+      const reason = "Provider did not return task polling metadata";
+      await settleAiStudioGenerationFailure(generation.id, {
+        raw: result.raw,
+        reason,
+        providerState: "failed",
+      });
+      throw new Error(reason);
+    }
+
+    await markAiStudioGenerationSubmitted(generation.id, {
+      providerTaskId: result.taskId,
+      raw: result.raw,
+      mediaUrls: result.mediaUrls,
+    });
+
+    return apiResponse.success({
+      modelId: getPublicAiStudioModelId(prepared.detail),
+      generationId: generation.id,
+      reservedCredits,
+      taskId: result.taskId,
+      state: "queued",
+      raw: sanitizeAiStudioDebugValue(result.raw),
+      selectedPricing: prepared.selectedPricing
+        ? toPublicPricingRow(prepared.selectedPricing, prepared.detail)
+        : null,
+    });
   } catch (error: any) {
     const status = typeof error?.status === "number" ? error.status : 500;
     return apiResponse.error(

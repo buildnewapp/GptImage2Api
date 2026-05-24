@@ -63,8 +63,6 @@ type ExecuteResponse = {
     reservedCredits?: number;
     state?: string;
     taskId?: string | null;
-    statusSupported: boolean;
-    mediaUrls: string[];
     selectedPricing?: AiStudioPublicPricingRow | null;
   };
   error?: string;
@@ -539,7 +537,7 @@ export default function AIVideoMiniStudio({
   }, []);
 
   const pollStatus = useCallback(
-    (localId: string, taskId: string, modelId: string) => {
+    (localId: string, taskId: string) => {
       clearTaskPolling(localId);
       const startedAt = Date.now();
 
@@ -553,7 +551,7 @@ export default function AIVideoMiniStudio({
 
         try {
           const response = await fetchWithTimeout(
-            `/api/ai-studio/tasks/${taskId}?modelId=${encodeURIComponent(modelId)}`,
+            `/api/ai-studio/tasks/${taskId}`,
             { timeoutMs: 15000 },
           );
           const json = (await response.json()) as TaskResponse;
@@ -695,30 +693,19 @@ export default function AIVideoMiniStudio({
         throw new Error(json.error || "Execution failed");
       }
 
-      const nextState = resolveAiVideoMiniStudioTaskState(json.data.state);
+      if (!json.data.taskId) {
+        throw new Error("Task id is missing");
+      }
 
       updateGenerationTask(localTask.localId, {
-        taskId: json.data.taskId ?? undefined,
-        state: nextState,
-        mediaUrls: json.data.mediaUrls ?? [],
+        taskId: json.data.taskId,
+        state: "queued",
         creditsRequired: json.data.reservedCredits ?? estimatedCredits,
-        progress:
-          nextState === "succeeded" || nextState === "failed" || !json.data.taskId
-            ? 100
-            : 10,
+        progress: 10,
       });
 
-      if (nextState === "failed") {
-        toast.error(t("form.generationFailed"));
-        return;
-      }
-
-      if (nextState === "succeeded" || !json.data.taskId) {
-        toast.success(t("form.generationSuccess"));
-      } else {
-        toast.success(t("form.generationQueued"));
-        pollStatus(localTask.localId, json.data.taskId, resolvedModelId);
-      }
+      toast.success(t("form.generationQueued"));
+      pollStatus(localTask.localId, json.data.taskId);
     } catch (error: any) {
       updateGenerationTask(localTask.localId, {
         state: "failed",

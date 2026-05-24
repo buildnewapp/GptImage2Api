@@ -47,7 +47,7 @@ export type AiStudioResultArtifact = {
   targetField?: string | null;
 };
 
-const TASK_STATUS_CACHE_TTL_MS = 5000;
+const TASK_STATUS_CACHE_TTL_MS = 10000;
 const taskStatusCache = new Map<
   string,
   { expiresAt: number; result: AiStudioTaskQueryResult }

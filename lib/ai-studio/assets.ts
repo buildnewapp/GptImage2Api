@@ -65,6 +65,7 @@ export async function persistAiStudioMediaUrls(input: {
   r2PublicUrl?: string | null;
   now?: Date;
   uploadExternalUrl?: typeof fetchExternalUrlToR2;
+  fallbackToSourceUrl?: boolean;
 }) {
   const autoUploadEnabled =
     input.autoUploadEnabled ?? isAiStudioR2AutoUploadEnabled();
@@ -92,6 +93,9 @@ export async function persistAiStudioMediaUrls(input: {
         const uploaded = await uploadExternalUrl(url, key);
         return uploaded.url;
       } catch (error) {
+        if (input.fallbackToSourceUrl === false) {
+          throw error;
+        }
         console.warn("AI Studio media upload to R2 failed, fallback to source URL", {
           url,
           key,

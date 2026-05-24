@@ -83,13 +83,10 @@ type ExecuteResponse = {
     reservedCredits?: number;
     state?: string;
     taskId?: string | null;
-    statusMode?: "sync" | "poll" | "callback" | "poll+callback";
-    statusSupported: boolean;
     raw: unknown;
-    mediaUrls: string[];
+    mediaUrls?: string[];
     artifacts?: AiStudioResultArtifact[];
     selectedPricing?: AiStudioPublicPricingRow | null;
-    pricingRows: AiStudioPublicPricingRow[];
   };
   error?: string;
 };
@@ -699,8 +696,7 @@ export default function AiStudioShell({
 
   useEffect(() => {
     const taskId = executeResult?.taskId;
-    const modelId = resolvePublicModelId(selectedId, detail);
-    if (!taskId || !modelId || !executeResult?.statusSupported) {
+    if (!taskId) {
       return;
     }
 
@@ -710,9 +706,7 @@ export default function AiStudioShell({
 
     async function poll() {
       try {
-        const response = await fetch(
-          `/api/ai-studio/tasks/${taskId}?modelId=${encodeURIComponent(modelId)}`,
-        );
+        const response = await fetch(`/api/ai-studio/tasks/${taskId}`);
         const json = (await response.json()) as TaskResponse;
         if (!response.ok || !json.success) {
           throw new Error(json.error || "Task polling failed");
@@ -754,7 +748,7 @@ export default function AiStudioShell({
         clearTimeout(timer);
       }
     };
-  }, [detail, executeResult?.statusSupported, executeResult?.taskId, selectedId]);
+  }, [executeResult?.taskId]);
 
   async function handleRun() {
     const modelId = resolvePublicModelId(selectedId, detail);
@@ -786,26 +780,19 @@ export default function AiStudioShell({
         optimisticDeduct(json.data.reservedCredits ?? 0);
       }
       setExecuteResult(json.data);
-      if (json.data.taskId) {
-        setTaskState("queued");
-      } else if (json.data.state) {
-        setTaskState(json.data.state);
-      }
+      setTaskState("queued");
       refreshHistory();
     } catch (error) {
       setExecuteResult({
         raw: {
           error: error instanceof Error ? error.message : "Execution failed",
         },
-        mediaUrls: [],
-        pricingRows: detail?.pricingRows ?? [],
         selectedPricing: guessSelectedPricing(
           detail,
           detail?.pricingRows ?? [],
           detail?.id ?? null,
           payload,
         ),
-        statusSupported: false,
       });
     } finally {
       setRunLoading(false);

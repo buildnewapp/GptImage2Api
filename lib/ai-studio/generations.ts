@@ -264,28 +264,18 @@ export async function markAiStudioGenerationSubmitted(
   input: {
     providerTaskId: string | null;
     raw: unknown;
-    state: "submitted" | "queued" | "running" | "succeeded";
     mediaUrls: string[];
   },
 ) {
-  const update: Partial<typeof aiStudioGenerations.$inferInsert> = {
-    providerTaskId: input.providerTaskId ?? undefined,
-    responsePayload: input.raw,
-    providerState: input.state,
-    status: input.state,
-  };
-
-  if (input.mediaUrls.length > 0) {
-    update.resultUrls = input.mediaUrls;
-  }
-
-  if (input.state === "succeeded") {
-    update.completedAt = new Date();
-  }
-
   const result = await getDb()
     .update(aiStudioGenerations)
-    .set(update)
+    .set({
+      providerTaskId: input.providerTaskId ?? undefined,
+      responsePayload: input.raw,
+      providerState: "queued",
+      status: "queued",
+      resultUrls: input.mediaUrls.length > 0 ? input.mediaUrls : undefined,
+    })
     .where(eq(aiStudioGenerations.id, generationId))
     .returning();
 
@@ -460,7 +450,7 @@ async function refundReservedCredits(
   return updated[0] ?? generation;
 }
 
-export async function settleAiStudioGenerationSuccess(
+async function settleAiStudioGenerationSuccess(
   generationId: string,
   input: {
     raw: unknown;
@@ -468,21 +458,6 @@ export async function settleAiStudioGenerationSuccess(
     providerState?: string | null;
   },
 ) {
-  const existing = await getDb()
-    .select()
-    .from(aiStudioGenerations)
-    .where(eq(aiStudioGenerations.id, generationId))
-    .limit(1);
-
-  const generation = existing[0];
-  if (!generation) {
-    return null;
-  }
-
-  if (generation.status === "succeeded" || generation.status === "failed") {
-    return generation;
-  }
-
   return getDb().transaction(async (tx) => {
     const current = await tx
       .select()
@@ -517,20 +492,38 @@ export async function settleAiStudioGenerationSuccess(
   });
 }
 
-export async function archiveAiStudioGenerationMediaUrls(generationId: string) {
-  const existing = await getDb()
-    .select()
-    .from(aiStudioGenerations)
-    .where(eq(aiStudioGenerations.id, generationId))
-    .limit(1);
+export async function settleAiStudioGenerationSuccessWithMediaArchive(
+  generationId: string,
+  input: {
+    raw: unknown;
+    mediaUrls: string[];
+    providerState?: string | null;
+    requireR2Urls?: boolean;
+  },
+) {
+  const settled = await settleAiStudioGenerationSuccess(generationId, {
+    raw: input.raw,
+    mediaUrls: input.mediaUrls,
+    providerState: input.providerState,
+  });
 
-  const generation = existing[0];
-  if (!generation || generation.status !== "succeeded") {
-    return generation ?? null;
+  if (!settled) {
+    return settled;
   }
 
+  return archiveAiStudioGenerationMediaUrlsForRecord(
+    settled,
+    input.requireR2Urls === true,
+  );
+}
+
+async function archiveAiStudioGenerationMediaUrlsForRecord(
+  generation: AiStudioGenerationRecord,
+  requireR2Urls = false,
+) {
   const mediaUrls = normalizeMediaUrls(generation.resultUrls);
   if (
+    generation.status !== "succeeded" ||
     mediaUrls.length === 0 ||
     !hasNonR2AiStudioMediaUrls(mediaUrls)
   ) {
@@ -540,6 +533,7 @@ export async function archiveAiStudioGenerationMediaUrls(generationId: string) {
   const persistedUrls = await persistAiStudioMediaUrls({
     category: generation.category,
     mediaUrls,
+    fallbackToSourceUrl: requireR2Urls ? false : undefined,
   });
 
   if (areStringArraysEqual(mediaUrls, persistedUrls)) {
@@ -555,17 +549,6 @@ export async function archiveAiStudioGenerationMediaUrls(generationId: string) {
     .returning();
 
   return updated[0] ?? generation;
-}
-
-export function archiveAiStudioGenerationMediaUrlsInBackground(
-  generationId: string,
-) {
-  void archiveAiStudioGenerationMediaUrls(generationId).catch((error) => {
-    console.warn("AI Studio media archival to R2 failed", {
-      generationId,
-      error,
-    });
-  });
 }
 
 export async function archivePendingAiStudioGenerationMediaUrls(limit = 10) {
@@ -594,7 +577,7 @@ export async function archivePendingAiStudioGenerationMediaUrls(limit = 10) {
     }
 
     processed += 1;
-    const archived = await archiveAiStudioGenerationMediaUrls(generation.id);
+    const archived = await archiveAiStudioGenerationMediaUrlsForRecord(generation);
     if (
       archived &&
       !areStringArraysEqual(mediaUrls, normalizeMediaUrls(archived.resultUrls))

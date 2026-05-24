@@ -6,11 +6,10 @@ import {
   queryAiStudioTask,
 } from "@/lib/ai-studio/execute";
 import {
-  archiveAiStudioGenerationMediaUrlsInBackground,
   getAiStudioGenerationByTaskId,
   setAiStudioGenerationCallback,
   settleAiStudioGenerationFailure,
-  settleAiStudioGenerationSuccess,
+  settleAiStudioGenerationSuccessWithMediaArchive,
   updateAiStudioGenerationProgress,
 } from "@/lib/ai-studio/generations";
 import { apiResponse } from "@/lib/api-response";
@@ -72,30 +71,12 @@ export async function POST(request: NextRequest) {
 
     await setAiStudioGenerationCallback(generation.id, body);
 
-    const callbackCode =
+    const callbackCode = Number(
       body && typeof body === "object"
         ? (body as Record<string, unknown>).code
-        : null;
-    const normalizedCallbackCode = Number(callbackCode);
-
-    if (normalizedCallbackCode === 501) {
-      await settleAiStudioGenerationFailure(generation.id, {
-        raw: body,
-        reason:
-          extractProviderFailureReason(body) ||
-          "Provider task failed",
-        providerState: "failed",
-      });
-
-      return apiResponse.success({
-        ok: true,
-        taskId,
-        state: "failed",
-      });
-    }
-
-    const shouldFetchKieResult = normalizedCallbackCode === 200;
-    const result = shouldFetchKieResult
+        : null,
+    );
+    const result = callbackCode === 200
       ? await queryAiStudioTask(generation.catalogModelId, taskId)
       : null;
     const raw = result?.raw ?? body;
@@ -103,12 +84,11 @@ export async function POST(request: NextRequest) {
     const mediaUrls = result?.mediaUrls ?? extractMediaUrls(body);
 
     if (state === "succeeded") {
-      await settleAiStudioGenerationSuccess(generation.id, {
+      await settleAiStudioGenerationSuccessWithMediaArchive(generation.id, {
         raw,
         mediaUrls,
         providerState: state,
       });
-      archiveAiStudioGenerationMediaUrlsInBackground(generation.id);
     } else if (state === "failed") {
       await settleAiStudioGenerationFailure(generation.id, {
         raw,

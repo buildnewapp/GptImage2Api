@@ -93,9 +93,6 @@ type ExecuteResponse = {
     reservedCredits?: number;
     state?: string;
     taskId?: string | null;
-    statusSupported: boolean;
-    mediaUrls: string[];
-    artifacts?: AiStudioResultArtifact[];
     selectedPricing?: AiStudioPublicPricingRow | null;
   };
   error?: string;
@@ -1120,7 +1117,7 @@ export default function AIVideoStudio({
 
         try {
           const response = await fetchWithTimeout(
-            `/api/ai-studio/tasks/${taskId}?modelId=${encodeURIComponent(modelId)}`,
+            `/api/ai-studio/tasks/${taskId}`,
             { timeoutMs: 15000 },
           );
           const json = (await response.json()) as TaskResponse;
@@ -1404,57 +1401,20 @@ export default function AIVideoStudio({
         optimisticDeduct(json.data.reservedCredits ?? 0);
       }
 
-      const nextState = resolveGenerationTaskState(json.data.state);
-      const shouldPoll = Boolean(
-        json.data.taskId &&
-          json.data.statusSupported &&
-          nextState !== "succeeded" &&
-          nextState !== "failed",
-      );
+      if (!json.data.taskId) {
+        throw new Error("Task id is missing");
+      }
 
       updateGenerationTask(localTaskId, {
-        taskId: json.data.taskId ?? undefined,
-        state: nextState,
-        mediaUrls: json.data.mediaUrls ?? [],
-        artifacts: json.data.artifacts ?? [],
+        taskId: json.data.taskId,
+        state: "queued",
         selectedPricing: json.data.selectedPricing ?? selectedPricing,
         creditsRequired: json.data.reservedCredits ?? estimatedCredits,
-        progress: shouldPoll ? 10 : 100,
+        progress: 10,
       });
 
-      if (nextState === "failed") {
-        const failureReason = json.error || t("form.generationFailed");
-        updateGenerationTask(localTaskId, {
-          failureReason,
-        });
-        toast.error(failureReason);
-        void refreshBenefits();
-      } else if (!shouldPoll) {
-        toast.success(
-          t(
-            selectedModelMediaKind === "image"
-              ? "form.generationSuccessImage"
-              : "form.generationSuccess",
-          ),
-        );
-        void refreshBenefits();
-      } else {
-        const queuedTaskId = json.data.taskId;
-        if (!queuedTaskId) {
-          toast.success(
-            t(
-              selectedModelMediaKind === "image"
-                ? "form.generationSuccessImage"
-                : "form.generationSuccess",
-            ),
-          );
-          void refreshBenefits();
-          return;
-        }
-
-        toast.success(t("form.generationQueued"));
-        pollStatus(localTaskId, queuedTaskId, resolvedModelId);
-      }
+      toast.success(t("form.generationQueued"));
+      pollStatus(localTaskId, json.data.taskId, resolvedModelId);
     } catch (error: any) {
       updateGenerationTask(localTaskId, {
         state: "failed",
