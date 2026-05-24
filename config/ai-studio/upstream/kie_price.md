@@ -224,3 +224,13 @@ Pricing: 无视频输入：
 有视频输入：
 - 720P/1080P：每次生成 80 积分（$0.4）
 - 4K：每次生成 120 积分（$0.6）
+
+
+happyhorse/text-to-video
+Pricing: 28 credits/s ($0.14) for 720 p or 48 credits/s ($0.24) for 1080 p
+
+happyhorse/image-to-video
+Pricing: 28 credits/s ($0.14) for 720 p or 48 credits/s ($0.24) for 1080 p
+
+happyhorse/reference-to-video
+Pricing: 28 credits/s ($0.14) for 720 p or 48 credits/s ($0.24) for 1080 p

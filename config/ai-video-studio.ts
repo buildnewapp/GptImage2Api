@@ -8,6 +8,7 @@ export type AiVideoStudioTag = {
 };
 
 export type AiVideoStudioFamilyIconKey =
+  | "alibaba-cloud"
   | "bytedance"
   | "gemini"
   | "google"
@@ -440,6 +441,33 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "Wan Animate Replace",
         familyKey: "wan",
         modelId: "video:wan-animate-replace",
+      },
+    ],
+  },
+  {
+    key: "happyhorse",
+    label: "HappyHorse",
+    description: "HappyHorse text, image, and reference-to-video generation",
+    icon: "alibaba-cloud",
+    selectable: true,
+    versions: [
+      {
+        key: "happyhorse-text-to-video",
+        label: "HappyHorse Text to Video",
+        familyKey: "happyhorse",
+        modelId: "video:happyhorse-text-to-video",
+      },
+      {
+        key: "happyhorse-image-to-video",
+        label: "HappyHorse Image to Video",
+        familyKey: "happyhorse",
+        modelId: "video:happyhorse-image-to-video",
+      },
+      {
+        key: "happyhorse-reference-to-video",
+        label: "HappyHorse Reference to Video",
+        familyKey: "happyhorse",
+        modelId: "video:happyhorse-reference-to-video",
       },
     ],
   },

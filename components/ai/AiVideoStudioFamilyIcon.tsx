@@ -1,4 +1,5 @@
 import {
+  AlibabaCloud,
   ByteDance,
   Gemini,
   Google,
@@ -25,6 +26,8 @@ export function AiVideoStudioFamilyIcon({
   size = 28,
 }: AiVideoStudioFamilyIconProps) {
   switch (icon) {
+    case "alibaba-cloud":
+      return <AlibabaCloud.Color className={className} size={size} />;
     case "bytedance":
       return <ByteDance.Color className={className} size={size} />;
     case "gemini":

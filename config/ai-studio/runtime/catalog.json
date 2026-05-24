@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-05-24T09:08:04.612Z",
+  "generatedAt": "2026-05-24T09:38:04.249Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -16498,7 +16498,49 @@
           "seed": 1622429582
         }
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "happyhorse/text-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "HappyHorse",
+          "creditPrice": "28",
+          "creditUnit": "per second",
+          "usdPrice": "0.14",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/happyhorse/text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:happyhorse-text-to-video",
+          "runtimeModel": "happyhorse/text-to-video",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "happyhorse/text-to-video, 1080p",
+          "interfaceType": "video",
+          "provider": "HappyHorse",
+          "creditPrice": "48",
+          "creditUnit": "per second",
+          "usdPrice": "0.24",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/happyhorse/text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:happyhorse-text-to-video",
+          "runtimeModel": "happyhorse/text-to-video",
+          "resolution": "1080p"
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": [
+            "input.resolution"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:happyhorse-image-to-video",
@@ -16639,7 +16681,46 @@
           "seed": 1546095068
         }
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "happyhorse/image-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "HappyHorse",
+          "creditPrice": "28",
+          "creditUnit": "per second",
+          "usdPrice": "0.14",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/happyhorse/image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:happyhorse-image-to-video",
+          "runtimeModel": "happyhorse/image-to-video",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "happyhorse/image-to-video, 1080p",
+          "interfaceType": "video",
+          "provider": "HappyHorse",
+          "creditPrice": "48",
+          "creditUnit": "per second",
+          "usdPrice": "0.24",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/happyhorse/image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:happyhorse-image-to-video",
+          "runtimeModel": "happyhorse/image-to-video",
+          "resolution": "1080p"
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": [
+            "input.resolution"
+          ]
+        }
+      }
     },
     {
       "id": "video:happyhorse-reference-to-video",
@@ -16827,7 +16908,49 @@
           "seed": 1308038620
         }
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "happyhorse/reference-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "HappyHorse",
+          "creditPrice": "28",
+          "creditUnit": "per second",
+          "usdPrice": "0.14",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/happyhorse/reference-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:happyhorse-reference-to-video",
+          "runtimeModel": "happyhorse/reference-to-video",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "happyhorse/reference-to-video, 1080p",
+          "interfaceType": "video",
+          "provider": "HappyHorse",
+          "creditPrice": "48",
+          "creditUnit": "per second",
+          "usdPrice": "0.24",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/happyhorse/reference-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:happyhorse-reference-to-video",
+          "runtimeModel": "happyhorse/reference-to-video",
+          "resolution": "1080p"
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": [
+            "input.resolution"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:happyhorse-video-edit",
