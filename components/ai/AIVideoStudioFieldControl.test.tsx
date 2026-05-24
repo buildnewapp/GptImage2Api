@@ -370,6 +370,28 @@ test("renders audio url arrays with the specialized audio reference UI", () => {
   assert.doesNotMatch(html, /0\/9/);
 });
 
+test("renders audio id fields as plain text inputs", () => {
+  const html = renderToStaticMarkup(
+    <AIVideoStudioFieldControl
+      field={{
+        key: "audio_id",
+        path: ["audio_id"],
+        kind: "text",
+        schema: {
+          type: "string",
+          description: "Enum voice ID, used to select a preset voice character.",
+        },
+      } as any}
+      label="audio_id"
+      value="achernar"
+      onChange={() => {}}
+    />,
+  );
+
+  assert.match(html, /value="achernar"/);
+  assert.doesNotMatch(html, /data-ai-video-studio-reference-field="audio"/);
+});
+
 test("renders image_with_roles as fixed first and end frame upload slots", () => {
   const html = renderToStaticMarkup(
     <AIVideoStudioFieldControl

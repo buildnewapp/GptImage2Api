@@ -16,6 +16,32 @@
       "title": "Seedance 2.0 Fast VIP",
       "provider": "ByteDance"
     },
+    "video:gemini-omni-text-to-video": {
+      "alias": "gemini-omni/text-to-video"
+    },
+    "video:gemini-omni-image-to-video": {
+      "alias": "gemini-omni/image-to-video"
+    },
+    "video:gemini-omni-audio": {
+      "resultArtifacts": [
+        {
+          "kind": "audio-id",
+          "path": "data.audioId",
+          "labelPath": "data.name",
+          "targetField": "audio_ids"
+        }
+      ]
+    },
+    "video:gemini-omni-character": {
+      "resultArtifacts": [
+        {
+          "kind": "character-id",
+          "path": "data.characterId",
+          "labelPath": "data.characterName",
+          "targetField": "character_ids"
+        }
+      ]
+    },
     "video:generate-veo3-1-video": {
       "splitModels": [
         {

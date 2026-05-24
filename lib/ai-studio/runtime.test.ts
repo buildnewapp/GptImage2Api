@@ -238,6 +238,58 @@ test("resolves exact pricing rows from explicit structured duration metadata", (
   assert.equal(row?.creditPrice, "30");
 });
 
+test("resolves video-input pricing rows from source metadata", () => {
+  const row = resolveExactPricingRow(
+    [
+      {
+        modelDescription: "Gemini Omni Video, 720p, 4s, no video input",
+        interfaceType: "video",
+        provider: "Gemini Omni Video",
+        creditPrice: "30",
+        creditUnit: "per video",
+        usdPrice: "0.15",
+        falPrice: "",
+        discountRate: 0,
+        discountPrice: false,
+        runtimeModel: "gemini-omni-video",
+        resolution: "720p",
+        duration: 4,
+        source: "no-video-input",
+      },
+      {
+        modelDescription: "Gemini Omni Video, 720p, with video input",
+        interfaceType: "video",
+        provider: "Gemini Omni Video",
+        creditPrice: "80",
+        creditUnit: "per video",
+        usdPrice: "0.4",
+        falPrice: "",
+        discountRate: 0,
+        discountPrice: false,
+        runtimeModel: "gemini-omni-video",
+        resolution: "720p",
+        source: "video-input",
+      },
+    ],
+    {
+      model: "gemini-omni-video",
+      input: {
+        duration: "4",
+        resolution: "720p",
+        video_list: [
+          {
+            url: "https://example.com/source.mp4",
+            start: 0,
+            ends: 4,
+          },
+        ],
+      },
+    },
+  );
+
+  assert.equal(row?.creditPrice, "80");
+});
+
 test("resolves sora 2 pro pricing rows from input size and n_frames", () => {
   const row = resolveExactPricingRow(
     [

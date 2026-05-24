@@ -146,6 +146,14 @@ export function resolveReferenceFieldKind(
       ? field.schema.description.toLowerCase()
       : "";
 
+  if (
+    (tokens.includes("id") || tokens.includes("ids")) &&
+    !tokens.includes("url") &&
+    !tokens.includes("urls")
+  ) {
+    return null;
+  }
+
   if (tokens.includes("image") || tokens.includes("images")) {
     return "image";
   }

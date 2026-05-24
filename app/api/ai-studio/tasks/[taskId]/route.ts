@@ -1,5 +1,11 @@
-import { getCachedAiStudioCatalogEntry } from "@/lib/ai-studio/catalog";
-import { queryAiStudioTask } from "@/lib/ai-studio/execute";
+import {
+  getCachedAiStudioCatalogDetail,
+  getCachedAiStudioCatalogEntry,
+} from "@/lib/ai-studio/catalog";
+import {
+  extractResultArtifacts,
+  queryAiStudioTask,
+} from "@/lib/ai-studio/execute";
 import { extractProviderFailureReason } from "@/lib/ai-studio/execute";
 import {
   archiveAiStudioGenerationMediaUrlsInBackground,
@@ -47,6 +53,9 @@ export async function GET(
       : input.modelId;
 
     if (generation.status === "succeeded" || generation.status === "failed") {
+      const detail = await getCachedAiStudioCatalogDetail(generation.catalogModelId);
+      const raw = generation.callbackPayload ?? generation.responsePayload ?? {};
+
       return apiResponse.success({
         generationId: generation.id,
         taskId,
@@ -55,9 +64,8 @@ export async function GET(
         mediaUrls: Array.isArray(generation.resultUrls)
           ? (generation.resultUrls as string[])
           : [],
-        raw: sanitizeAiStudioDebugValue(
-          generation.callbackPayload ?? generation.responsePayload ?? {},
-        ),
+        artifacts: detail ? extractResultArtifacts(raw, detail) : [],
+        raw: sanitizeAiStudioDebugValue(raw),
         reservedCredits: generation.creditsReserved,
         refundedCredits: generation.creditsRefunded,
       });
@@ -98,6 +106,7 @@ export async function GET(
       modelId: publicModelId,
       state: result.state,
       mediaUrls: result.mediaUrls,
+      artifacts: result.artifacts,
       raw: sanitizeAiStudioDebugValue(result.raw),
       reservedCredits: generation.creditsReserved,
       refundedCredits:

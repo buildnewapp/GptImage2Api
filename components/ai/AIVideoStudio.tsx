@@ -95,6 +95,7 @@ type ExecuteResponse = {
     taskId?: string | null;
     statusSupported: boolean;
     mediaUrls: string[];
+    artifacts?: AiStudioResultArtifact[];
     selectedPricing?: AiStudioPublicPricingRow | null;
   };
   error?: string;
@@ -105,6 +106,7 @@ type TaskResponse = {
   data: {
     state: string;
     mediaUrls: string[];
+    artifacts?: AiStudioResultArtifact[];
     raw?: unknown;
     reason?: string | null;
   };
@@ -147,6 +149,7 @@ type GenerationTask = {
   taskId?: string;
   state: GenerationTaskState;
   mediaUrls: string[];
+  artifacts: AiStudioResultArtifact[];
   failureReason?: string | null;
   familyKey: AiVideoStudioFamilyKey;
   versionKey: AiVideoStudioVersionKey;
@@ -159,6 +162,13 @@ type GenerationTask = {
   selectedPricing: AiStudioPublicPricingRow | null;
   progress: number;
   createdAt: number;
+};
+
+type AiStudioResultArtifact = {
+  kind: string;
+  value: string;
+  label?: string | null;
+  targetField?: string | null;
 };
 
 type SubmitMode = "form" | "api";
@@ -590,6 +600,7 @@ function mapHistoryItemToGenerationTask(
     taskId: item.providerTaskId ?? undefined,
     state: resolveGenerationTaskState(item.status),
     mediaUrls: item.resultUrls,
+    artifacts: [],
     familyKey: selection.familyKey,
     versionKey: selection.versionKey,
     modelId: item.catalogModelId,
@@ -1125,6 +1136,7 @@ export default function AIVideoStudio({
             updateGenerationTask(localId, {
               state: "succeeded",
               mediaUrls: json.data.mediaUrls,
+              artifacts: json.data.artifacts ?? [],
               progress: 100,
               failureReason: null,
             });
@@ -1147,6 +1159,7 @@ export default function AIVideoStudio({
             updateGenerationTask(localId, {
               state: "failed",
               mediaUrls: json.data.mediaUrls,
+              artifacts: json.data.artifacts ?? [],
               progress: 100,
               failureReason,
             });
@@ -1156,6 +1169,7 @@ export default function AIVideoStudio({
             updateGenerationTask(localId, {
               state: resolveGenerationTaskState(json.data.state),
               mediaUrls: json.data.mediaUrls,
+              artifacts: json.data.artifacts ?? [],
             });
             increaseTaskProgress(localId);
           }
@@ -1350,6 +1364,7 @@ export default function AIVideoStudio({
         localId: localTaskId,
         state: "queued",
         mediaUrls: [],
+        artifacts: [],
         failureReason: null,
         familyKey: selectedFamilyKey,
         versionKey: selectedVersionKey,
@@ -1401,6 +1416,7 @@ export default function AIVideoStudio({
         taskId: json.data.taskId ?? undefined,
         state: nextState,
         mediaUrls: json.data.mediaUrls ?? [],
+        artifacts: json.data.artifacts ?? [],
         selectedPricing: json.data.selectedPricing ?? selectedPricing,
         creditsRequired: json.data.reservedCredits ?? estimatedCredits,
         progress: shouldPoll ? 10 : 100,
@@ -2052,7 +2068,9 @@ export default function AIVideoStudio({
                               )
                             ) : (
                               <div className="w-full h-full flex items-center justify-center text-[11px] text-white/70">
-                                {task.state === "failed"
+                                {task.artifacts.length > 0
+                                  ? task.artifacts[0]?.kind
+                                  : task.state === "failed"
                                   ? t("form.generationFailed")
                                   : t("form.generating")}
                               </div>
@@ -2132,6 +2150,34 @@ export default function AIVideoStudio({
                                   </span>
                                 </div>
                               </>
+                            ) : null}
+
+                            {task.artifacts.length > 0 ? (
+                              <div className="mt-2 space-y-1.5">
+                                {task.artifacts.map((artifact) => (
+                                  <button
+                                    key={`${artifact.kind}-${artifact.value}`}
+                                    type="button"
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      void navigator.clipboard.writeText(
+                                        artifact.value,
+                                      );
+                                      toast.success(t("form.taskIdCopied"));
+                                    }}
+                                    className="flex max-w-full items-center gap-1.5 rounded-lg border border-border/60 bg-background/70 px-2 py-1 text-left text-[11px] text-muted-foreground transition hover:bg-muted"
+                                    title={artifact.value}
+                                  >
+                                    <span className="shrink-0 font-medium text-foreground">
+                                      {artifact.label ?? artifact.kind}
+                                    </span>
+                                    <span className="truncate font-mono">
+                                      {artifact.value}
+                                    </span>
+                                    <Copy className="h-3 w-3 shrink-0" />
+                                  </button>
+                                ))}
+                              </div>
                             ) : null}
 
                             <div className="mt-2 flex flex-wrap gap-1.5">

@@ -80,6 +80,47 @@
         }
       }
     },
+    "video:gemini-omni-audio": {
+      "set": {
+        "properties.audio_id": {
+          "type": "string",
+          "enum": [
+            "achernar",
+            "achird",
+            "algenib",
+            "algieba",
+            "alnilam",
+            "aoede",
+            "autonoe",
+            "callirrhoe",
+            "charon",
+            "despina",
+            "enceladus",
+            "erinome",
+            "fenrir",
+            "gacrux",
+            "iapetus",
+            "kore",
+            "laomedeia",
+            "leda",
+            "orus",
+            "puck",
+            "pulcherrima",
+            "rasalgethi",
+            "sadachbia",
+            "sadaltager",
+            "schedar",
+            "sulafat",
+            "umbriel",
+            "vindemiatrix",
+            "zephyr",
+            "zubenelgenubi"
+          ],
+          "default": "achernar",
+          "description": "Preset voice ID."
+        }
+      }
+    },
     "video:kling-3-0": {
       "replace": {
         "type": "object",

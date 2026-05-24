@@ -69,6 +69,7 @@ type PricingSelectionRow = {
   duration?: number | null;
   audio?: boolean | null;
   aspectRatio?: string | null;
+  source?: string | null;
 };
 
 type PricingSelectionConfig = {
@@ -91,6 +92,9 @@ function getPricingSpecificity(row: PricingSelectionRow) {
     score += 1;
   }
   if (row.aspectRatio !== undefined && row.aspectRatio !== null) {
+    score += 1;
+  }
+  if (row.source !== undefined && row.source !== null) {
     score += 1;
   }
 
@@ -336,6 +340,35 @@ function extractAspectRatioHint(
   return null;
 }
 
+function hasNonEmptyValue(value: unknown): boolean {
+  if (typeof value === "string") {
+    return value.trim().length > 0;
+  }
+
+  if (Array.isArray(value)) {
+    return value.length > 0;
+  }
+
+  return Boolean(value);
+}
+
+function extractSourceHint(payload: Record<string, any>) {
+  const videoInputs = [
+    payload.video_list,
+    payload.input?.video_list,
+    payload.video_url,
+    payload.input?.video_url,
+    payload.video_urls,
+    payload.input?.video_urls,
+    payload.reference_video_urls,
+    payload.input?.reference_video_urls,
+    payload.video_input,
+    payload.input?.video_input,
+  ];
+
+  return videoInputs.some(hasNonEmptyValue) ? "video-input" : "no-video-input";
+}
+
 function parseAudioHint(value: unknown) {
   if (typeof value === "boolean") {
     return value;
@@ -397,6 +430,7 @@ export function resolveExactPricingRow<Row extends PricingSelectionRow>(
   const resolutionHint = extractResolutionHint(payload, config?.selectors);
   const audioHint = extractAudioHint(payload, config?.selectors);
   const aspectRatioHint = extractAspectRatioHint(payload, config?.selectors);
+  const sourceHint = extractSourceHint(payload);
   const scopedRows = payloadModel
     ? pricingRows.filter((row) => {
         const runtimeModel = row.runtimeModel
@@ -414,6 +448,8 @@ export function resolveExactPricingRow<Row extends PricingSelectionRow>(
     countDistinctDefinedValues(scopedRows, (row) => row.audio) > 1;
   const requiresAspectRatioHint =
     countDistinctDefinedValues(scopedRows, (row) => row.aspectRatio) > 1;
+  const requiresSourceHint =
+    countDistinctDefinedValues(scopedRows, (row) => row.source) > 1;
   const candidates = pricingRows.filter((row) => {
     const runtimeModel = row.runtimeModel ? normalizeRuntimeModel(row.runtimeModel) : "";
 
@@ -453,6 +489,15 @@ export function resolveExactPricingRow<Row extends PricingSelectionRow>(
         (aspectRatioHint === null && requiresAspectRatioHint) ||
         (aspectRatioHint !== null &&
           row.aspectRatio.toLowerCase() !== aspectRatioHint)
+      ) {
+        return false;
+      }
+    }
+
+    if (row.source !== undefined && row.source !== null) {
+      if (
+        (sourceHint === null && requiresSourceHint) ||
+        (sourceHint !== null && row.source.toLowerCase() !== sourceHint)
       ) {
         return false;
       }

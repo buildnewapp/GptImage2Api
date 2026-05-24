@@ -65,6 +65,53 @@ function isFieldValueSupported(
   }
 
   if (field.kind !== "enum") {
+    if (field.kind === "number") {
+      const numberValue =
+        typeof value === "number"
+          ? value
+          : typeof value === "string" && value.trim() !== ""
+            ? Number(value)
+            : NaN;
+
+      if (!Number.isFinite(numberValue)) {
+        return false;
+      }
+
+      if (field.schema.type === "integer" && !Number.isInteger(numberValue)) {
+        return false;
+      }
+
+      if (
+        typeof field.schema.minimum === "number" &&
+        numberValue < field.schema.minimum
+      ) {
+        return false;
+      }
+
+      if (
+        typeof field.schema.maximum === "number" &&
+        numberValue > field.schema.maximum
+      ) {
+        return false;
+      }
+
+      const step = typeof field.schema.multipleOf === "number"
+        ? field.schema.multipleOf
+        : typeof field.schema.step === "number"
+          ? field.schema.step
+          : null;
+
+      if (step && step > 0) {
+        const base = typeof field.schema.minimum === "number"
+          ? field.schema.minimum
+          : 0;
+        const remainder = Math.abs((numberValue - base) / step);
+        if (Math.abs(remainder - Math.round(remainder)) > Number.EPSILON) {
+          return false;
+        }
+      }
+    }
+
     return true;
   }
 

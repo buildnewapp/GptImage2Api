@@ -215,3 +215,12 @@ gpt-image-2-text-to-image
 Pricing: GPT-2 Image costs 6 credits ($0.03) per image.
 gpt-image-2-image-to-image
 Pricing: GPT-2 Image costs 6 credits ($0.03) per image.
+
+video:gemini-omni-video
+Pricing: 无视频输入：
+- 720P/1080P：4s 30 积分（$0.15），6s 40 积分（$0.2），8s 50 积分（$0.25），10s 60 积分（$0.3）
+- 4K：4s 70 积分（$0.35），6s 80 积分（$0.4），8s 90 积分（$0.45），10s 100 积分（$0.5）
+
+有视频输入：
+- 720P/1080P：每次生成 80 积分（$0.4）
+- 4K：每次生成 120 积分（$0.6）

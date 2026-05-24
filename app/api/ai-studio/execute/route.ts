@@ -164,6 +164,7 @@ export async function POST(request: Request) {
         statusEndpoint: result.statusEndpoint,
         raw: sanitizeAiStudioDebugValue(result.raw),
         mediaUrls: settledMediaUrls,
+        artifacts: result.artifacts,
         selectedPricing: prepared.selectedPricing
           ? toPublicPricingRow(prepared.selectedPricing, prepared.detail)
           : null,

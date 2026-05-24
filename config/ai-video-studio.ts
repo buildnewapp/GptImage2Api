@@ -9,6 +9,7 @@ export type AiVideoStudioTag = {
 
 export type AiVideoStudioFamilyIconKey =
   | "bytedance"
+  | "gemini"
   | "google"
   | "grok"
   | "hailuo"
@@ -57,6 +58,51 @@ const AI_VIDEO_STUDIO_LEVEL_LIMIT_RANK: Record<AiVideoStudioLevelLimit, number> 
 };
 
 export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
+  {
+    key: "gemini-omni",
+    label: "Gemini Omni",
+    description: "Gemini Omni video generation with text and image variants",
+    icon: "gemini",
+    selectable: true,
+    versions: [
+      {
+        key: "gemini-omni-text-to-video",
+        label: "Omni Text to Video",
+        familyKey: "gemini-omni",
+        modelId: "video:gemini-omni-text-to-video",
+      },
+      {
+        key: "gemini-omni-image-to-video",
+        label: "Omni Image to Video",
+        familyKey: "gemini-omni",
+        modelId: "video:gemini-omni-image-to-video",
+      },
+      {
+        key: "omni-flash-ext",
+        label: "Omni Flash Pro",
+        familyKey: "gemini-omni",
+        modelId: "video:fal-omni-flash-ext",
+      },
+      {
+        key: "gemini-omni-video",
+        label: "Gemini Omni Video",
+        familyKey: "gemini-omni",
+        modelId: "video:gemini-omni-video",
+      },
+      {
+        key: "gemini-omni-character",
+        label: "Gemini Omni Character",
+        familyKey: "gemini-omni",
+        modelId: "video:gemini-omni-character",
+      },
+      {
+        key: "gemini-omni-audio",
+        label: "Gemini Omni Audio",
+        familyKey: "gemini-omni",
+        modelId: "video:gemini-omni-audio",
+      }
+    ],
+  },
   {
     key: "seedance-2.0",
     label: "Seedance 2.0",
@@ -136,28 +182,6 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "V1 Pro Fast Image To Video",
         familyKey: "seedance-1.0",
         modelId: "video:bytedance-v1-pro-fast-image-to-video",
-      },
-    ],
-  },
-  {
-    key: "sora2",
-    label: "Sora 2",
-    description: "OpenAI model with realistic physics",
-    icon: "sora",
-    tags: [{ text: "With Audio", type: "audio" }],
-    versions: [
-      {
-        key: "sora-2",
-        label: "Sora 2",
-        familyKey: "sora2",
-        modelId: "video:fal-sora-2",
-      },
-      {
-        key: "sora-2-pro",
-        label: "Sora 2 Pro",
-        familyKey: "sora2",
-        modelId: "video:fal-sora-2-pro",
-        levelLimit: "pro",
       },
     ],
   },
@@ -524,6 +548,12 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "Image to Image",
         familyKey: "gpt-image-2",
         modelId: "image:gpt-image-2-image-to-image",
+      },
+      {
+        key: "fal-gpt-image-2",
+        label: "Gpt image 2 Special offer",
+        familyKey: "gpt-image-2",
+        modelId: "image:fal-gpt-image-2",
       }
     ],
   },

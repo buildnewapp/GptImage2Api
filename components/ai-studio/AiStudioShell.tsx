@@ -40,6 +40,7 @@ import { cn } from "@/lib/utils";
 import {
   AudioLines,
   Bot,
+  Copy,
   Film,
   ImageIcon,
   LoaderCircle,
@@ -86,6 +87,7 @@ type ExecuteResponse = {
     statusSupported: boolean;
     raw: unknown;
     mediaUrls: string[];
+    artifacts?: AiStudioResultArtifact[];
     selectedPricing?: AiStudioPublicPricingRow | null;
     pricingRows: AiStudioPublicPricingRow[];
   };
@@ -98,11 +100,19 @@ type TaskResponse = {
     generationId?: string | null;
     state: string;
     mediaUrls: string[];
+    artifacts?: AiStudioResultArtifact[];
     raw: unknown;
     reservedCredits?: number;
     refundedCredits?: number;
   };
   error?: string;
+};
+
+type AiStudioResultArtifact = {
+  kind: string;
+  value: string;
+  label?: string | null;
+  targetField?: string | null;
 };
 
 type HistoryResponse = {
@@ -719,6 +729,7 @@ export default function AiStudioShell({
                 mediaUrls: json.data.mediaUrls.length
                   ? json.data.mediaUrls
                   : current.mediaUrls,
+                artifacts: json.data.artifacts ?? current.artifacts,
               }
             : current,
         );
@@ -1700,6 +1711,31 @@ export default function AiStudioShell({
                                 </a>
                               )}
                             </div>
+                          ))}
+                        </div>
+                      ) : null}
+
+                      {executeResult?.artifacts?.length ? (
+                        <div className="space-y-2 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-slate-900">
+                          <div className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+                            Result Artifacts
+                          </div>
+                          {executeResult.artifacts.map((artifact) => (
+                            <button
+                              key={`${artifact.kind}-${artifact.value}`}
+                              type="button"
+                              onClick={() => navigator.clipboard.writeText(artifact.value)}
+                              className="flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-left text-sm transition hover:bg-slate-100 dark:border-white/10 dark:bg-slate-950 dark:hover:bg-slate-900"
+                              title={artifact.value}
+                            >
+                              <span className="shrink-0 font-semibold text-slate-900 dark:text-white">
+                                {artifact.label ?? artifact.kind}
+                              </span>
+                              <span className="min-w-0 flex-1 truncate font-mono text-xs text-slate-500 dark:text-slate-400">
+                                {artifact.value}
+                              </span>
+                              <Copy className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+                            </button>
                           ))}
                         </div>
                       ) : null}

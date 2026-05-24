@@ -51,6 +51,13 @@ export interface AiStudioPricingConfig {
   selectors?: AiStudioPricingSelectors;
 }
 
+export interface AiStudioResultArtifactRule {
+  kind: string;
+  path: string;
+  labelPath?: string | null;
+  targetField?: string | null;
+}
+
 export interface AiStudioDocDetail extends AiStudioCatalogSeedEntry {
   vendor?: string;
   endpoint: string;
@@ -62,6 +69,7 @@ export interface AiStudioDocDetail extends AiStudioCatalogSeedEntry {
   statusEndpoint?: string | null;
   formUi?: AiStudioFormUiModelOverride;
   pricing?: AiStudioPricingConfig;
+  resultArtifacts?: AiStudioResultArtifactRule[];
 }
 
 export interface AiStudioCatalogEntry extends AiStudioCatalogSeedEntry {
@@ -88,6 +96,7 @@ export interface AiStudioModelOverride {
   provider?: string;
   schemaModel?: string;
   splitModels?: AiStudioSplitModelOverride[];
+  resultArtifacts?: AiStudioResultArtifactRule[];
 }
 
 export interface AiStudioPricingRowMatch {
@@ -1737,6 +1746,9 @@ function cloneDetail(detail: AiStudioDocDetail): AiStudioDocDetail {
     pricingRows: detail.pricingRows.map(clonePricingRow),
     formUi: cloneFormUiOverride(detail.formUi),
     pricing: clonePricingConfig(detail.pricing),
+    resultArtifacts: detail.resultArtifacts
+      ? structuredClone(detail.resultArtifacts)
+      : undefined,
   };
 }
 
@@ -1941,6 +1953,9 @@ function applyModelOverrideToDetail(
   }
   if (override.schemaModel) {
     rewriteSchemaModel(detail, override.schemaModel);
+  }
+  if (override.resultArtifacts) {
+    detail.resultArtifacts = structuredClone(override.resultArtifacts);
   }
 
   return detail;

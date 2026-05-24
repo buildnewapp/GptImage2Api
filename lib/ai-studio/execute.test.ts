@@ -8,6 +8,7 @@ import {
   applyAiStudioSystemFields,
   clearAiStudioTaskStatusCacheForTests,
   estimatePricingRow,
+  extractResultArtifacts,
   extractMediaUrls,
   extractProviderFailureReason,
   extractTaskId,
@@ -81,6 +82,38 @@ test("extracts media urls from nested JSON strings like resultJson", () => {
       "https://tempfile.aiquickdraw.com/r/097ff77ea1f25d348da62d0de2c453ab_1773029425_n07jf415.mp4",
     ],
   );
+});
+
+test("extracts configured result artifacts from provider responses", () => {
+  const artifacts = extractResultArtifacts(
+    {
+      code: 200,
+      msg: "success",
+      data: {
+        audioId: "680af8e7ec3e4a2b9eba55e954aa3161",
+        name: "hahah",
+      },
+    },
+    {
+      resultArtifacts: [
+        {
+          kind: "audio-id",
+          path: "data.audioId",
+          labelPath: "data.name",
+          targetField: "audio_ids",
+        },
+      ],
+    },
+  );
+
+  assert.deepEqual(artifacts, [
+    {
+      kind: "audio-id",
+      value: "680af8e7ec3e4a2b9eba55e954aa3161",
+      label: "hahah",
+      targetField: "audio_ids",
+    },
+  ]);
 });
 
 test("normalizes provider states into the ai studio polling states", () => {

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-05-24T03:36:17.225Z",
+  "generatedAt": "2026-05-24T09:08:04.612Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -17042,7 +17042,8 @@
                 "description": "Video prompt used to describe the target content, style, camera language, or character actions in the generated video.",
                 "examples": [
                   "Create a futuristic night city short film with a slow push-in shot as the character walks out from a neon-lit street."
-                ]
+                ],
+                "maxLength": 20000
               },
               "image_urls": {
                 "type": "array",
@@ -17212,7 +17213,274 @@
           "duration": "4"
         }
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "Gemini Omni Video, 720p, 4s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "0.15",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "720p",
+          "duration": 4,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 720p, 6s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "40",
+          "creditUnit": "per video",
+          "usdPrice": "0.2",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "720p",
+          "duration": 6,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 720p, 8s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "50",
+          "creditUnit": "per video",
+          "usdPrice": "0.25",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "720p",
+          "duration": 8,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 720p, 10s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "60",
+          "creditUnit": "per video",
+          "usdPrice": "0.3",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "720p",
+          "duration": 10,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 1080p, 4s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "0.15",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "1080p",
+          "duration": 4,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 1080p, 6s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "40",
+          "creditUnit": "per video",
+          "usdPrice": "0.2",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "1080p",
+          "duration": 6,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 1080p, 8s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "50",
+          "creditUnit": "per video",
+          "usdPrice": "0.25",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "1080p",
+          "duration": 8,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 1080p, 10s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "60",
+          "creditUnit": "per video",
+          "usdPrice": "0.3",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "1080p",
+          "duration": 10,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 4k, 4s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "70",
+          "creditUnit": "per video",
+          "usdPrice": "0.35",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "4k",
+          "duration": 4,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 4k, 6s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "80",
+          "creditUnit": "per video",
+          "usdPrice": "0.4",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "4k",
+          "duration": 6,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 4k, 8s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "90",
+          "creditUnit": "per video",
+          "usdPrice": "0.45",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "4k",
+          "duration": 8,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 4k, 10s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "100",
+          "creditUnit": "per video",
+          "usdPrice": "0.5",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "4k",
+          "duration": 10,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 720p, with video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "80",
+          "creditUnit": "per video",
+          "usdPrice": "0.4",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "720p",
+          "source": "video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 1080p, with video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "80",
+          "creditUnit": "per video",
+          "usdPrice": "0.4",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "1080p",
+          "source": "video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 4k, with video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "120",
+          "creditUnit": "per video",
+          "usdPrice": "0.6",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "4k",
+          "source": "video-input"
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "input.duration"
+          ],
+          "resolution": [
+            "input.resolution"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      }
     },
     {
       "id": "video:gemini-omni-audio",
@@ -17234,8 +17502,7 @@
         "properties": {
           "audio_id": {
             "type": "string",
-            "description": "Enum voice ID, used to select a preset voice character.\n achernar - female, soft, high pitch \n  achird - male, friendly, mid pitch \n  algenib - male, raspy, low pitch \n algieba - male, easygoing, mid-low pitch  \n alnilam - male, steady, mid-low pitch \n aoede - female, brisk, mid pitch \n autonoe - female, bright, mid pitch \n callirrhoe - female, easygoing, mid pitch \n charon - male, intellectual, low pitch \n  despina - female, smooth, mid  pitch \n enceladus - male, breathy, low pitch \n erinome - female, clear, mid pitch \n fenrir -  male, lively, younger pitch \n gacrux - female, mature, mid pitch \n iapetus - male, clear, mid-low pitch \n kore - female, capable, mid pitch  \n  laomedeia - female, cheerful, mid-high pitch \n leda - female, young, mid-high pitch \n orus - male, steady, mid-low pitch \n puck - male, cheerful, mid pitch \n pulcherrima - genderless, forward, mid-high pitch \n rasalgethi - male, intellectual, mid pitch \n sadachbia -  male, vivid, low pitch \n sadaltager - male, knowledgeable, mid pitch \n  schedar - male, smooth, mid-low pitch \n sulafat - female, warm, mid pitch \n  umbriel - male, smooth, low pitch \n  vindemiatrix - female, gentle, mid pitch \n zephyr - female, bright, mid-high pitch \n zubenelgenubi -   male, casual, mid-low pitch",
-            "examples": [
+            "enum": [
               "achernar",
               "achird",
               "algenib",
@@ -17266,7 +17533,9 @@
               "vindemiatrix",
               "zephyr",
               "zubenelgenubi"
-            ]
+            ],
+            "default": "achernar",
+            "description": "Preset voice ID."
           },
           "name": {
             "type": "string",
@@ -17294,7 +17563,30 @@
         "voice_description": "A calm, clear, and friendly male voice suitable for tech explainers and daily conversation.",
         "example_dialogue": "Hello, I am achernar"
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "Gemini Omni Audio",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Audio",
+          "creditPrice": "1",
+          "creditUnit": "per request",
+          "usdPrice": "0.005",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-audio.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-audio",
+          "runtimeModel": "api"
+        }
+      ],
+      "resultArtifacts": [
+        {
+          "kind": "audio-id",
+          "path": "data.audioId",
+          "labelPath": "data.name",
+          "targetField": "audio_ids"
+        }
+      ]
     },
     {
       "id": "video:gemini-omni-character",
@@ -17369,7 +17661,30 @@
         ],
         "character_name": "Jenny"
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "Gemini Omni Character",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Character",
+          "creditPrice": "1",
+          "creditUnit": "per request",
+          "usdPrice": "0.005",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-character.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-character",
+          "runtimeModel": "api"
+        }
+      ],
+      "resultArtifacts": [
+        {
+          "kind": "character-id",
+          "path": "data.characterId",
+          "labelPath": "data.characterName",
+          "targetField": "character_ids"
+        }
+      ]
     },
     {
       "id": "music:elevenlabs-audio-isolation",
@@ -29701,6 +30016,334 @@
       ]
     },
     {
+      "id": "video:fal-omni-flash-ext",
+      "category": "video",
+      "title": "Omni-Flash-Ext Video Generation",
+      "docUrl": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+      "provider": "Omni-Flash-Ext",
+      "vendor": "apimart",
+      "endpoint": "/v1/videos/generations",
+      "statusEndpoint": "/v1/tasks/{taskId}?language=en",
+      "method": "POST",
+      "modelKeys": [
+        "Omni-Flash-Ext"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Video generation model name, fixed value: Omni-Flash-Ext.",
+            "enum": [
+              "Omni-Flash-Ext"
+            ],
+            "default": "Omni-Flash-Ext",
+            "examples": [
+              "Omni-Flash-Ext"
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Video content description. Describe the scene, subject, action, environment, camera movement, visual style, and audio hints in detail.",
+            "examples": [
+              "a girl is dancing happily in a sunny garden"
+            ]
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Video duration in seconds. Only 4, 6, 8, and 10 are supported.",
+            "enum": [
+              4,
+              6,
+              8,
+              10
+            ],
+            "default": 6,
+            "examples": [
+              10
+            ]
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Video resolution. Values are case-insensitive.",
+            "enum": [
+              "720p",
+              "1080p",
+              "4k"
+            ],
+            "default": "720p",
+            "examples": [
+              "1080p"
+            ]
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "Video aspect ratio. Use 16:9 for landscape or 9:16 for portrait.",
+            "enum": [
+              "16:9",
+              "9:16"
+            ],
+            "default": "16:9",
+            "examples": [
+              "9:16"
+            ]
+          },
+          "image_urls": {
+            "type": "array",
+            "description": "Reference image URL array. Omit or pass an empty array for text-to-video, pass 1 image for image-to-video, or pass 3 images for reference image fusion. Two images are not supported.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "maxItems": 3,
+            "examples": [
+              [
+                "https://example.com/character.jpg"
+              ]
+            ]
+          }
+        },
+        "x-apidog-orders": [
+          "model",
+          "prompt",
+          "duration",
+          "resolution",
+          "aspect_ratio",
+          "size",
+          "image_urls"
+        ],
+        "examples": [
+          {
+            "model": "Omni-Flash-Ext",
+            "prompt": "a girl is dancing happily in a sunny garden",
+            "duration": 10,
+            "resolution": "1080p",
+            "aspect_ratio": "9:16"
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "Omni-Flash-Ext",
+        "prompt": "a girl is dancing happily in a sunny garden",
+        "duration": 10,
+        "resolution": "1080p",
+        "aspect_ratio": "9:16"
+      },
+      "pricingRows": [
+        {
+          "modelDescription": "Omni-Flash-Ext, 720p, 4s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "0.15",
+          "falPrice": "0.1875",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "720p",
+          "duration": 4
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 1080p, 4s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "0.15",
+          "falPrice": "0.1875",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "1080p",
+          "duration": 4
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 720p, 6s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "34",
+          "creditUnit": "per video",
+          "usdPrice": "0.17",
+          "falPrice": "0.2125",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "720p",
+          "duration": 6
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 1080p, 6s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "34",
+          "creditUnit": "per video",
+          "usdPrice": "0.17",
+          "falPrice": "0.2125",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "1080p",
+          "duration": 6
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 720p, 8s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "36",
+          "creditUnit": "per video",
+          "usdPrice": "0.18",
+          "falPrice": "0.225",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "720p",
+          "duration": 8
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 1080p, 8s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "36",
+          "creditUnit": "per video",
+          "usdPrice": "0.18",
+          "falPrice": "0.225",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "1080p",
+          "duration": 8
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 720p, 10s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "40",
+          "creditUnit": "per video",
+          "usdPrice": "0.20",
+          "falPrice": "0.25",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "720p",
+          "duration": 10
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 1080p, 10s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "40",
+          "creditUnit": "per video",
+          "usdPrice": "0.20",
+          "falPrice": "0.25",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "1080p",
+          "duration": 10
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 4k, 4s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "60",
+          "creditUnit": "per video",
+          "usdPrice": "0.30",
+          "falPrice": "0.375",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "4k",
+          "duration": 4
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 4k, 6s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "68",
+          "creditUnit": "per video",
+          "usdPrice": "0.34",
+          "falPrice": "0.425",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "4k",
+          "duration": 6
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 4k, 8s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "72",
+          "creditUnit": "per video",
+          "usdPrice": "0.36",
+          "falPrice": "0.45",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "4k",
+          "duration": 8
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 4k, 10s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "80",
+          "creditUnit": "per video",
+          "usdPrice": "0.40",
+          "falPrice": "0.50",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "4k",
+          "duration": 10
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "duration": [
+            "duration"
+          ],
+          "resolution": [
+            "resolution"
+          ],
+          "aspectRatio": [
+            "aspect_ratio"
+          ]
+        }
+      }
+    },
+    {
       "id": "chat:qwen3-6-flash-openrouter",
       "category": "chat",
       "title": "Qwen 3.6 Flash (OpenRouter)",
@@ -30065,6 +30708,406 @@
       "pricingRows": []
     },
     {
+      "id": "video:gemini-omni-text-to-video",
+      "category": "video",
+      "title": "Gemini Omni Text to Video",
+      "docUrl": "https://docs.kie.ai/market/grok-imagine/text-to-video.md",
+      "provider": "Gemini Omni Text to Video",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "grok-imagine/text-to-video"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "grok-imagine/text-to-video"
+            ],
+            "default": "grok-imagine/text-to-video",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `grok-imagine/text-to-video` for this endpoint",
+            "examples": [
+              "grok-imagine/text-to-video"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to receive video generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when video generation completes\n- Callback includes generated video URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing video results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the video generation task",
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "description": "Text prompt describing the desired video motion. Required field.\n\n- Should be detailed and specific about the desired visual motion\n- Describe movement, action sequences, camera work, and timing\n- Include details about subjects, environments, and motion dynamics\n- Maximum length: 5000 characters\n- Supports English language prompts",
+                "examples": [
+                  "A couple of doors open to the right one by one randomly and stay open, to show the inside, each is either a living room, or a kitchen, or a bedroom or an office, with little people living inside."
+                ]
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "description": "Specifies the width-to-height ratio of the generated video. Supported values: 16:9 and 9:16.",
+                "enum": [
+                  "16:9",
+                  "9:16"
+                ],
+                "default": "16:9",
+                "examples": [
+                  "16:9"
+                ]
+              },
+              "duration": {
+                "type": "string",
+                "enum": [
+                  "6",
+                  "8",
+                  "15",
+                  "10"
+                ],
+                "default": "8",
+                "description": "The duration of the generated video in seconds. ",
+                "examples": [
+                  "8"
+                ]
+              },
+              "resolution": {
+                "type": "string",
+                "description": "The resolution of the generated video.",
+                "enum": [
+                  "480p",
+                  "720p"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "480p",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "720p",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "default": "480p",
+                "examples": [
+                  "480p"
+                ]
+              },
+              "nsfw_checker": {
+                "type": "boolean",
+                "default": false,
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+              }
+            },
+            "required": [
+              "prompt"
+            ],
+            "x-apidog-orders": [
+              "prompt",
+              "aspect_ratio",
+              "mode",
+              "duration",
+              "resolution",
+              "nsfw_checker"
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "required": [
+          "model",
+          "input"
+        ],
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "examples": [
+          {
+            "model": "gemini-omni/text-to-video",
+            "callBackUrl": "https://your-domain.com/api/callback",
+            "input": {
+              "prompt": "A couple of doors open to the right one by one randomly and stay open, to show the inside, each is either a living room, or a kitchen, or a bedroom or an office, with little people living inside.",
+              "aspect_ratio": "16:9",
+              "duration": "8"
+            }
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "gemini-omni/text-to-video",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "A couple of doors open to the right one by one randomly and stay open, to show the inside, each is either a living room, or a kitchen, or a bedroom or an office, with little people living inside.",
+          "aspect_ratio": "16:9",
+          "duration": "8",
+          "resolution": "480p"
+        }
+      },
+      "pricingRows": [
+        {
+          "modelDescription": "gemini-omni/text-to-video, 480p",
+          "interfaceType": "video",
+          "provider": "Gemini Omni",
+          "creditPrice": "3",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-text-to-video",
+          "runtimeModel": "grok-imagine/text-to-video",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "gemini-omni/text-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "Gemini Omni",
+          "creditPrice": "5",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-text-to-video",
+          "runtimeModel": "grok-imagine/text-to-video",
+          "resolution": "720p"
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": [
+            "input.resolution"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      },
+      "alias": "gemini-omni/text-to-video"
+    },
+    {
+      "id": "video:gemini-omni-image-to-video",
+      "category": "video",
+      "title": "Gemini Omni Image to Video",
+      "docUrl": "https://docs.kie.ai/market/grok-imagine/image-to-video.md",
+      "provider": "Gemini Omni Image to Video",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "grok-imagine/image-to-video"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "grok-imagine/image-to-video"
+            ],
+            "default": "grok-imagine/image-to-video",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `grok-imagine/image-to-video` for this endpoint",
+            "examples": [
+              "grok-imagine/image-to-video"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to receive video generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when video generation completes\n- Callback includes generated video URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing video results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the video generation task",
+            "properties": {
+              "image_urls": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "description": "Provide an external image URL as a reference for video generation. Up to 7 images are supported. Do not use it simultaneously with task_id. In your prompt, reference an uploaded image by typing @image(n) followed by a space (for example: @image1 a sunset over the ocean).\n- Supports JPEG, PNG, and WEBP formats\n- Maximum file size for each image: 10MB\n- The Spicy mode is not available when using external images\n- The array can contain a maximum of seven URLs",
+                "maxItems": 7,
+                "examples": [
+                  [
+                    "https://file.aiquickdraw.com/custom-page/akr/section-images/1762247692373tw5di116.png"
+                  ]
+                ]
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Text prompt describing the desired video motion. Optional field.\n\n- Should be detailed and specific about the desired visual motion\n- Describe movement, action sequences, camera work, and timing\n- Include details about subjects, environments, and motion dynamics\n- Maximum length: 5000 characters\n- Supports English language prompts",
+                "examples": [
+                  "POV hand comes into frame handing the girl a cup of take away coffee, the girl steps out of the screen looking tired, then takes it and she says happily: \"thanks! Back to work\" she exits the frame and walks right to a different part of the office."
+                ]
+              },
+              "duration": {
+                "type": "string",
+                "enum": [
+                  "6",
+                  "8",
+                  "15",
+                  "10"
+                ],
+                "default": "8",
+                "description": "The duration of the generated video in seconds. ",
+                "examples": [
+                  "8"
+                ]
+              },
+              "resolution": {
+                "type": "string",
+                "description": "The resolution of the generated video.",
+                "enum": [
+                  "480p",
+                  "720p"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "480p",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "720p",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "default": "480p",
+                "examples": [
+                  "480p"
+                ]
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "description": "Specifies the width-to-height ratio of the generated video. Supported values: 16:9 and 9:16.",
+                "enum": [
+                  "16:9",
+                  "9:16"
+                ],
+                "default": "16:9",
+                "examples": [
+                  "16:9"
+                ]
+              },
+              "nsfw_checker": {
+                "type": "boolean",
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.",
+                "default": false
+              }
+            },
+            "x-apidog-orders": [
+              "image_urls",
+              "prompt",
+              "mode",
+              "duration",
+              "resolution",
+              "aspect_ratio",
+              "nsfw_checker"
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "required": [
+          "model",
+          "input"
+        ],
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "examples": [
+          {
+            "model": "gemini-omni/image-to-video",
+            "callBackUrl": "https://your-domain.com/api/callback",
+            "input": {
+              "image_urls": [
+                "https://file.aiquickdraw.com/custom-page/akr/section-images/1762247692373tw5di116.png"
+              ],
+              "prompt": "POV hand comes into frame handing the girl a cup of take away coffee, the girl steps out of the screen looking tired, then takes it and she says happily: \"thanks! Back to work\" she exits the frame and walks right to a different part of the office.",
+              "aspect_ratio": "16:9",
+              "duration": "8"
+            }
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "gemini-omni/image-to-video",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "image_urls": [
+            "https://file.aiquickdraw.com/custom-page/akr/section-images/1762247692373tw5di116.png"
+          ],
+          "prompt": "POV hand comes into frame handing the girl a cup of take away coffee, the girl steps out of the screen looking tired, then takes it and she says happily: \"thanks! Back to work\" she exits the frame and walks right to a different part of the office.",
+          "duration": "8",
+          "resolution": "480p",
+          "aspect_ratio": "16:9"
+        }
+      },
+      "pricingRows": [
+        {
+          "modelDescription": "gemini-omni/image-to-video, 480p",
+          "interfaceType": "video",
+          "provider": "Gemini Omni",
+          "creditPrice": "3",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-image-to-video",
+          "runtimeModel": "grok-imagine/image-to-video",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "gemini-omni/image-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "Gemini Omni",
+          "creditPrice": "5",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-image-to-video",
+          "runtimeModel": "grok-imagine/image-to-video",
+          "resolution": "720p"
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": [
+            "input.resolution"
+          ],
+          "aspectRatio": [
+            "input.aspect_ratio"
+          ]
+        }
+      },
+      "alias": "gemini-omni/image-to-video"
+    },
+    {
       "id": "image:fal-gpt-image-2",
       "vendor": "apimart",
       "category": "image",
@@ -30146,7 +31189,61 @@
         "size": "16:9",
         "resolution": "1k"
       },
-      "pricingRows": []
+      "pricingRows": [
+        {
+          "modelDescription": "gpt-image-2, 1K",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "1",
+          "creditUnit": "per image",
+          "usdPrice": "0.006",
+          "falPrice": "0.0075",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/en/api-reference/images/gpt-image-2/generation",
+          "discountPrice": true,
+          "catalogModelId": "image:fal-gpt-image-2",
+          "runtimeModel": "gpt-image-2",
+          "resolution": "1k"
+        },
+        {
+          "modelDescription": "gpt-image-2, 2K",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "2",
+          "creditUnit": "per image",
+          "usdPrice": "0.012",
+          "falPrice": "0.015",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/en/api-reference/images/gpt-image-2/generation",
+          "discountPrice": true,
+          "catalogModelId": "image:fal-gpt-image-2",
+          "runtimeModel": "gpt-image-2",
+          "resolution": "2k"
+        },
+        {
+          "modelDescription": "gpt-image-2, 4K",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "4",
+          "creditUnit": "per image",
+          "usdPrice": "0.018",
+          "falPrice": "0.0225",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/en/api-reference/images/gpt-image-2/generation",
+          "discountPrice": true,
+          "catalogModelId": "image:fal-gpt-image-2",
+          "runtimeModel": "gpt-image-2",
+          "resolution": "4k"
+        }
+      ],
+      "pricing": {
+        "strategy": "exact",
+        "selectors": {
+          "resolution": [
+            "resolution"
+          ]
+        }
+      }
     },
     {
       "id": "image:fal-gpt-image-2-official",

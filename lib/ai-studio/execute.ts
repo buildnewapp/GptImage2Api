@@ -37,6 +37,14 @@ export type AiStudioTaskQueryResult = {
   raw: unknown;
   state: AiStudioNormalizedState;
   mediaUrls: string[];
+  artifacts: AiStudioResultArtifact[];
+};
+
+export type AiStudioResultArtifact = {
+  kind: string;
+  value: string;
+  label?: string | null;
+  targetField?: string | null;
 };
 
 const TASK_STATUS_CACHE_TTL_MS = 5000;
@@ -261,6 +269,53 @@ function getNestedValue(record: Record<string, unknown>, path: string[]) {
     current = (current as Record<string, unknown>)[segment];
   }
   return current;
+}
+
+function stringifyArtifactValue(value: unknown) {
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    return trimmed.length > 0 ? trimmed : null;
+  }
+  if (typeof value === "number" || typeof value === "boolean") {
+    return String(value);
+  }
+  return null;
+}
+
+export function extractResultArtifacts(
+  raw: unknown,
+  detail: Pick<AiStudioDocDetail, "resultArtifacts">,
+): AiStudioResultArtifact[] {
+  if (!raw || typeof raw !== "object") {
+    return [];
+  }
+
+  const rules = detail.resultArtifacts ?? [];
+  const record = raw as Record<string, unknown>;
+
+  return rules.flatMap((rule) => {
+    const value = stringifyArtifactValue(
+      getNestedValue(record, rule.path.split(".").filter(Boolean)),
+    );
+    if (!value) {
+      return [];
+    }
+
+    const label = rule.labelPath
+      ? stringifyArtifactValue(
+          getNestedValue(record, rule.labelPath.split(".").filter(Boolean)),
+        )
+      : null;
+
+    return [
+      {
+        kind: rule.kind,
+        value,
+        ...(label ? { label } : {}),
+        ...(rule.targetField ? { targetField: rule.targetField } : {}),
+      },
+    ];
+  });
 }
 
 export function extractProviderFailureReason(raw: unknown): string | null {
@@ -539,6 +594,7 @@ export async function submitAiStudioExecution(
     statusEndpoint: taskMeta.statusEndpoint,
     statusMode: resolveTaskMode(detail),
     mediaUrls: extractMediaUrls(raw),
+    artifacts: extractResultArtifacts(raw, detail),
   };
 }
 
@@ -590,6 +646,7 @@ async function queryAiStudioTaskUncached(
     raw,
     state: normalizeTaskState(raw),
     mediaUrls: extractMediaUrls(raw),
+    artifacts: extractResultArtifacts(raw, detail),
   };
 }
 

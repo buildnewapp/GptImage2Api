@@ -1,5 +1,6 @@
 import {
   ByteDance,
+  Gemini,
   Google,
   Grok,
   Hailuo,
@@ -26,6 +27,8 @@ export function AiVideoStudioFamilyIcon({
   switch (icon) {
     case "bytedance":
       return <ByteDance.Color className={className} size={size} />;
+    case "gemini":
+      return <Gemini.Color className={className} size={size} />;
     case "google":
       return <Google.Color className={className} size={size} />;
     case "grok":
