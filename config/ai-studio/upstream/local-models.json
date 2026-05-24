@@ -471,6 +471,225 @@
         "stream": true
       },
       "pricingRows": []
+    },
+    {
+      "id": "image:fal-gpt-image-2",
+      "vendor": "apimart",
+      "category": "image",
+      "title": "GPT-Image-2 Image Generation",
+      "docUrl": "https://docs.apimart.ai/en/api-reference/images/gpt-image-2/generation",
+      "provider": "GPT-Image-2",
+      "endpoint": "/v1/images/generations",
+      "method": "POST",
+      "statusEndpoint": "/v1/tasks/{taskId}?language=en",
+      "modelKeys": [
+        "gpt-image-2"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Image generation model name. Fixed to gpt-image-2.",
+            "default": "gpt-image-2",
+            "enum": [
+              "gpt-image-2"
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Text description for image generation. Supports English and Chinese; detailed descriptions are recommended. Prompts are moderated before submission."
+          },
+          "size": {
+            "type": "string",
+            "description": "Image aspect ratio, or a direct pixel size such as 1881x836 / 887x1774. Use auto to let the server select a ratio; auto defaults to 1:1.",
+            "default": "1:1",
+            "enum": [
+              "auto",
+              "1:1",
+              "3:2",
+              "2:3",
+              "4:3",
+              "3:4",
+              "5:4",
+              "4:5",
+              "16:9",
+              "9:16",
+              "2:1",
+              "1:2",
+              "3:1",
+              "1:3",
+              "21:9",
+              "9:21"
+            ]
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Output resolution tier. Supported values: 1k, 2k, 4k. The selected size ratio is mapped to actual pixels for the chosen tier; 4k supports all listed ratios.",
+            "default": "1k",
+            "enum": [
+              "1k",
+              "2k",
+              "4k"
+            ]
+          },
+          "image_urls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Reference image array for image-to-image mode. Supports public image URLs and base64 data URIs, and URL/base64 values can be mixed. Without size, output follows the input image resolution; with size, output is forced to the specified ratio.",
+            "maxItems": 9
+          }
+        }
+      },
+      "examplePayload": {
+        "model": "gpt-image-2",
+        "prompt": "A ginger cat sitting on a windowsill watching the sunset, watercolor style",
+        "n": 1,
+        "size": "16:9",
+        "resolution": "1k"
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "image:fal-gpt-image-2-official",
+      "vendor": "apimart",
+      "category": "image",
+      "title": "GPT-Image-2 Official Channel Image Generation",
+      "docUrl": "https://docs.apimart.ai/en/api-reference/images/gpt-image-2/official",
+      "provider": "GPT-Image-2 Official Channel",
+      "endpoint": "/v1/images/generations",
+      "method": "POST",
+      "statusEndpoint": "/v1/tasks/{taskId}?language=en",
+      "modelKeys": [
+        "gpt-image-2-official"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Image generation model name. Fixed to gpt-image-2-official (OpenAI official gpt-image-2 model).",
+            "default": "gpt-image-2-official",
+            "enum": [
+              "gpt-image-2-official"
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Text description for image generation. Supports English and Chinese; detailed descriptions are recommended. Prompts are moderated before submission."
+          },
+          "size": {
+            "type": "string",
+            "description": "Image aspect ratio, or a direct pixel size such as 1881x836 / 887x1774. Use auto to let the server pick a ratio based on prompt or reference images; auto defaults to 1:1.",
+            "default": "1:1",
+            "enum": [
+              "auto",
+              "1:1",
+              "3:2",
+              "2:3",
+              "4:3",
+              "3:4",
+              "5:4",
+              "4:5",
+              "16:9",
+              "9:16",
+              "2:1",
+              "1:2",
+              "3:1",
+              "1:3",
+              "21:9",
+              "9:21"
+            ]
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Resolution tier controlling output clarity. 1k is the default/cost-efficient tier, 2k is suitable for HD posters, and 4k supports the documented 15 ratios.",
+            "default": "1k",
+            "enum": [
+              "1k",
+              "2k",
+              "4k"
+            ]
+          },
+          "quality": {
+            "type": "string",
+            "description": "Image quality. auto is the default and is typically equivalent to low; high provides maximum precision and can take over 120 seconds with 4k.",
+            "default": "auto",
+            "enum": [
+              "auto",
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "background": {
+            "type": "string",
+            "description": "Background mode. gpt-image-2-official does not support transparent backgrounds; transparent is silently downgraded to auto by the server.",
+            "default": "auto",
+            "enum": [
+              "auto",
+              "opaque",
+              "transparent"
+            ]
+          },
+          "moderation": {
+            "type": "string",
+            "description": "Moderation strength. auto uses the default moderation strength; low is more lenient.",
+            "default": "auto",
+            "enum": [
+              "auto",
+              "low"
+            ]
+          },
+          "output_format": {
+            "type": "string",
+            "description": "Output format. png is the default; jpeg produces smaller files; webp is optimized for modern browsers.",
+            "default": "png",
+            "enum": [
+              "png",
+              "jpeg",
+              "webp"
+            ]
+          },
+          "output_compression": {
+            "type": "integer",
+            "description": "Output compression level from 0 to 100. Only effective for jpeg and webp output formats.",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "image_urls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Reference image URL array for image-to-image mode. Up to 16 publicly accessible, stable image URLs are supported.",
+            "maxItems": 16
+          },
+          "mask_url": {
+            "type": "string",
+            "description": "Mask image URL for inpainting. Must be used together with image_urls. The mask must have an alpha channel and match the first reference image dimensions."
+          }
+        }
+      },
+      "examplePayload": {
+        "model": "gpt-image-2-official",
+        "prompt": "An ancient castle beneath a starry sky",
+        "size": "16:9",
+        "resolution": "2k",
+        "quality": "high",
+        "n": 1
+      },
+      "pricingRows": []
     }
   ]
 }
