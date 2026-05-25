@@ -23,6 +23,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 export const dynamicParams = true;
+export const dynamic = "force-dynamic";
 
 type Params = Promise<{
   locale: string;
@@ -73,12 +74,16 @@ export async function generateMetadata({
     });
   }
 
-  const { currentMetadata: postMetadata, availableLocales } =
-    await loadLocalizedMetadata({
+  const localizedMetadata = await loadLocalizedMetadata({
       locales: LOCALES,
       currentLocale: locale,
       loadMetadata: (checkLocale) => blogCms.getPostMetadata(slug, checkLocale),
+    }).catch((error) => {
+      console.error("Failed to fetch blog metadata:", error);
+      return null;
     });
+  const postMetadata = localizedMetadata?.currentMetadata;
+  const availableLocales = localizedMetadata?.availableLocales ?? [];
 
   if (!postMetadata) {
     return constructMetadata({
@@ -113,7 +118,7 @@ export default async function BlogPage({ params }: { params: Params }) {
   const blogDataSource = getBlogDataSource();
   const isGeoBlog = blogDataSource === "geo";
   const viewCountConfig = POST_CONFIGS.blog.viewCount;
-  const [t, { post, errorCode }, viewCountResult] = await Promise.all([
+  const pageData = await Promise.all([
     getTranslations("Blogs"),
     isGeoBlog
       ? getGeoBlogPostBySlug(slug, locale)
@@ -130,7 +135,16 @@ export default async function BlogPage({ params }: { params: Params }) {
           locale,
         })
       : Promise.resolve(null),
-  ]);
+  ]).catch((error) => {
+    console.error("Failed to load blog post page:", error);
+    return null;
+  });
+
+  if (!pageData) {
+    notFound();
+  }
+
+  const [t, { post, errorCode }, viewCountResult] = pageData;
 
   if (!post) {
     notFound();
