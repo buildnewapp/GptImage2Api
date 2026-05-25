@@ -5,6 +5,7 @@ import { PostType } from "@/lib/db/schema";
 import { PostBase, PublicPost, Tag } from "@/types/cms";
 import dayjs from "dayjs";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { toast } from "sonner";
@@ -40,6 +41,7 @@ interface PostListProps {
   showTagSelector?: boolean;
   showCover?: boolean;
   useNativeImages?: boolean;
+  enableLoadMore?: boolean;
   gridClassName?: string;
   emptyMessage?: string;
 }
@@ -56,16 +58,18 @@ export function PostList({
   showTagSelector = false,
   showCover = true,
   useNativeImages = false,
+  enableLoadMore = true,
   gridClassName,
   emptyMessage = "No posts found.",
 }: PostListProps) {
   const [posts, setPosts] = useState<PublicPost[]>(initialPosts);
   const [pageIndex, setPageIndex] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(
-    initialPosts.length < initialTotal,
+    enableLoadMore && initialPosts.length < initialTotal,
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
+  const t = useTranslations(postType === "glossary" ? "Glossary" : "Blogs");
   const { ref, inView } = useInView({
     threshold: 0,
     triggerOnce: false,
@@ -78,7 +82,7 @@ export function PostList({
     : "flex flex-col gap-1"; // List view for no cover
 
   const loadMorePosts = useCallback(async () => {
-    if (isLoading || !hasMore) return;
+    if (!enableLoadMore || isLoading || !hasMore) return;
 
     setIsLoading(true);
     const result = await listPublishedPostsAction({
@@ -97,7 +101,7 @@ export function PostList({
       setHasMore(posts.length + newPosts.length < newTotal);
     } else {
       console.error("Failed to load more posts:", result.error);
-      toast.error("Failed to load more posts", {
+      toast.error(t("loadMorePostsFailed"), {
         description: result.error,
       });
     }
@@ -113,19 +117,20 @@ export function PostList({
     postType,
     showTagSelector,
     locale,
+    enableLoadMore,
   ]);
 
   useEffect(() => {
-    if (inView && hasMore && !isLoading) {
+    if (enableLoadMore && inView && hasMore && !isLoading) {
       loadMorePosts();
     }
-  }, [inView, hasMore, isLoading, loadMorePosts]);
+  }, [inView, hasMore, isLoading, loadMorePosts, enableLoadMore]);
 
   useEffect(() => {
     setPosts(initialPosts);
     setPageIndex(1);
-    setHasMore(initialPosts.length < initialTotal);
-  }, [initialPosts, initialTotal]);
+    setHasMore(enableLoadMore && initialPosts.length < initialTotal);
+  }, [initialPosts, initialTotal, enableLoadMore]);
 
   const handleTagSelect = async (tagId: string | null) => {
     if (tagId === selectedTagId) return;
@@ -147,13 +152,17 @@ export function PostList({
       setHasMore(result.data.posts.length < (result.data.count ?? 0));
     } else {
       console.error("Failed to filter posts by tag:", result.error);
-      toast.error("Failed to filter posts by tag", {
+      toast.error(t("filterPostsFailed"), {
         description: result.error,
       });
     }
 
     setIsLoading(false);
   };
+
+  const visiblePostCount =
+    posts.length +
+    (!showTagSelector || selectedTagId === null ? localPosts.length : 0);
 
   return (
     <>
@@ -194,19 +203,25 @@ export function PostList({
             ))}
           </div>
 
-          {hasMore && (
+          {enableLoadMore && hasMore && (
             <div ref={ref} className="flex justify-center items-center py-8">
               {isLoading ? (
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
               ) : (
-                <span className="text-gray-500">Loading more posts...</span>
+                <span className="text-gray-500">{t("loadMorePosts")}</span>
               )}
             </div>
           )}
 
-          {!hasMore && posts.length >= 0 && (
+          {(!enableLoadMore || !hasMore) && visiblePostCount === 0 && (
             <p className="text-center text-gray-500 py-8 text-sm">
-              {posts.length === 0 ? emptyMessage : "You've reached the end."}
+              {emptyMessage}
+            </p>
+          )}
+
+          {enableLoadMore && !hasMore && visiblePostCount > 0 && (
+            <p className="text-center text-gray-500 py-8 text-sm">
+              {t("reachedTheEnd")}
             </p>
           )}
         </>

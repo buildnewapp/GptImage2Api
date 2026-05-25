@@ -28,29 +28,29 @@ git push origin main
 ## Jsontranslate
 cd /Users/syx/WebstormProjects/Jsontranslate/Jsontranslate-new
 git fetch upstream
-git merge upstream/main
+git merge --no-ff --no-commit upstream/main
 git push origin main
 
 ## autogeo
 cd /Users/syx/WebstormProjects/autogeo/autogeo-v2
 git fetch upstream
-git merge upstream/main
+git merge --no-ff --no-commit upstream/main
 git push origin main
 
 ## tikdek-web
 cd /Users/syx/WebstormProjects/tikdek/tikdek-web
 git fetch upstream
-git merge upstream/main
+git merge --no-ff --no-commit upstream/main
 git push origin main
 
 ## Omniink-web
 cd /Users/syx/WebstormProjects/Omni/Omniink-web
 git fetch upstream
-git merge upstream/main
+git merge --no-ff --no-commit upstream/main
 git push origin main
 
 ## FreeOmni-web
 cd /Users/syx/WebstormProjects/Omni/FreeOmni-web
 git fetch upstream
-git merge upstream/main
+git merge --no-ff --no-commit upstream/main
 git push origin main
