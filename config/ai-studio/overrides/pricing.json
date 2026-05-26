@@ -190,6 +190,298 @@
         }
       ]
     },
+    "video:gemini-omni-video": {
+      "addRows": [
+        {
+          "modelDescription": "Gemini Omni Video, 720p, 4s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "0.15",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "720p",
+          "duration": 4,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 720p, 6s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "40",
+          "creditUnit": "per video",
+          "usdPrice": "0.2",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "720p",
+          "duration": 6,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 720p, 8s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "50",
+          "creditUnit": "per video",
+          "usdPrice": "0.25",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "720p",
+          "duration": 8,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 720p, 10s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "60",
+          "creditUnit": "per video",
+          "usdPrice": "0.3",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "720p",
+          "duration": 10,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 1080p, 4s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "0.15",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "1080p",
+          "duration": 4,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 1080p, 6s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "40",
+          "creditUnit": "per video",
+          "usdPrice": "0.2",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "1080p",
+          "duration": 6,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 1080p, 8s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "50",
+          "creditUnit": "per video",
+          "usdPrice": "0.25",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "1080p",
+          "duration": 8,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 1080p, 10s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "60",
+          "creditUnit": "per video",
+          "usdPrice": "0.3",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "1080p",
+          "duration": 10,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 4k, 4s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "70",
+          "creditUnit": "per video",
+          "usdPrice": "0.35",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "4k",
+          "duration": 4,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 4k, 6s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "80",
+          "creditUnit": "per video",
+          "usdPrice": "0.4",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "4k",
+          "duration": 6,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 4k, 8s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "90",
+          "creditUnit": "per video",
+          "usdPrice": "0.45",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "4k",
+          "duration": 8,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 4k, 10s, no video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "100",
+          "creditUnit": "per video",
+          "usdPrice": "0.5",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "4k",
+          "duration": 10,
+          "source": "no-video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 720p, with video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "80",
+          "creditUnit": "per video",
+          "usdPrice": "0.4",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "720p",
+          "source": "video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 1080p, with video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "80",
+          "creditUnit": "per video",
+          "usdPrice": "0.4",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "1080p",
+          "source": "video-input"
+        },
+        {
+          "modelDescription": "Gemini Omni Video, 4k, with video input",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Video",
+          "creditPrice": "120",
+          "creditUnit": "per video",
+          "usdPrice": "0.6",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-video",
+          "runtimeModel": "gemini-omni-video",
+          "resolution": "4k",
+          "source": "video-input"
+        }
+      ]
+    },
+    "video:gemini-omni-audio": {
+      "addRows": [
+        {
+          "modelDescription": "Gemini Omni Audio",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Audio",
+          "creditPrice": "1",
+          "creditUnit": "per request",
+          "usdPrice": "0.005",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-audio.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-audio",
+          "runtimeModel": "api"
+        }
+      ]
+    },
+    "video:gemini-omni-character": {
+      "addRows": [
+        {
+          "modelDescription": "Gemini Omni Character",
+          "interfaceType": "video",
+          "provider": "Gemini Omni Character",
+          "creditPrice": "1",
+          "creditUnit": "per request",
+          "usdPrice": "0.005",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/gemini-omni-character.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-character",
+          "runtimeModel": "api"
+        }
+      ]
+    },
     "video:veo-3.1-lite": {
       "addRows": [
         {
@@ -991,334 +1283,6 @@
         }
       ]
     },
-    "video:sora2-image-to-video-standard": {
-      "addRows": [
-        {
-          "modelDescription": "sora-2-image-to-video, 10s, with audio, no watermark",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "3",
-          "creditUnit": "per video",
-          "usdPrice": "0.015",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora2/sora-2-image-to-video.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-image-to-video-standard",
-          "runtimeModel": "sora-2-image-to-video",
-          "duration": 10,
-          "audio": true
-        },
-        {
-          "modelDescription": "sora-2-image-to-video, 15s, with audio, no watermark",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "5",
-          "creditUnit": "per video",
-          "usdPrice": "0.025",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora2/sora-2-image-to-video.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-image-to-video-standard",
-          "runtimeModel": "sora-2-image-to-video",
-          "duration": 15,
-          "audio": true
-        }
-      ]
-    },
-    "video:sora2-text-to-video-standard": {
-      "addRows": [
-        {
-          "modelDescription": "sora-2-text-to-video, 10s, with audio, no watermark",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "3",
-          "creditUnit": "per video",
-          "usdPrice": "0.015",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-text-to-video-standard",
-          "runtimeModel": "sora-2-text-to-video",
-          "duration": 10,
-          "audio": true
-        },
-        {
-          "modelDescription": "sora-2-text-to-video, 15s, with audio, no watermark",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "5",
-          "creditUnit": "per video",
-          "usdPrice": "0.025",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-text-to-video-standard",
-          "runtimeModel": "sora-2-text-to-video",
-          "duration": 15,
-          "audio": true
-        }
-      ]
-    },
-    "video:sora2-image-to-video-stable": {
-      "addRows": [
-        {
-          "modelDescription": "sora-2-image-to-video-stable, 10s",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "20",
-          "creditUnit": "per video",
-          "usdPrice": "0.10",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora2/sora-2-image-to-video.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-image-to-video-stable",
-          "runtimeModel": "sora-2-image-to-video-stable",
-          "duration": 10
-        },
-        {
-          "modelDescription": "sora-2-image-to-video-stable, 15s",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "30",
-          "creditUnit": "per video",
-          "usdPrice": "0.15",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora2/sora-2-image-to-video.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-image-to-video-stable",
-          "runtimeModel": "sora-2-image-to-video-stable",
-          "duration": 15
-        }
-      ]
-    },
-    "video:sora2-text-to-video-stable": {
-      "addRows": [
-        {
-          "modelDescription": "sora-2-text-to-video-stable, 10s",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "20",
-          "creditUnit": "per video",
-          "usdPrice": "0.10",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-text-to-video-stable",
-          "runtimeModel": "sora-2-text-to-video-stable",
-          "duration": 10
-        },
-        {
-          "modelDescription": "sora-2-text-to-video-stable, 15s",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "30",
-          "creditUnit": "per video",
-          "usdPrice": "0.15",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-text-to-video-stable",
-          "runtimeModel": "sora-2-text-to-video-stable",
-          "duration": 15
-        }
-      ]
-    },
-    "video:sora2-pro-image-to-video": {
-      "addRows": [
-        {
-          "modelDescription": "sora-2-pro-image-to-video, standard, 10s",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "75",
-          "creditUnit": "per video",
-          "usdPrice": "0.375",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora2/sora-2-pro-image-to-video.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-pro-image-to-video",
-          "runtimeModel": "sora-2-pro-image-to-video",
-          "resolution": "standard",
-          "duration": 10
-        },
-        {
-          "modelDescription": "sora-2-pro-image-to-video, standard, 15s",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "135",
-          "creditUnit": "per video",
-          "usdPrice": "0.675",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora2/sora-2-pro-image-to-video.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-pro-image-to-video",
-          "runtimeModel": "sora-2-pro-image-to-video",
-          "resolution": "standard",
-          "duration": 15
-        },
-        {
-          "modelDescription": "sora-2-pro-image-to-video, high, 10s",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "165",
-          "creditUnit": "per video",
-          "usdPrice": "0.825",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora2/sora-2-pro-image-to-video.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-pro-image-to-video",
-          "runtimeModel": "sora-2-pro-image-to-video",
-          "resolution": "high",
-          "duration": 10
-        },
-        {
-          "modelDescription": "sora-2-pro-image-to-video, high, 15s",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "315",
-          "creditUnit": "per video",
-          "usdPrice": "1.575",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora2/sora-2-pro-image-to-video.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-pro-image-to-video",
-          "runtimeModel": "sora-2-pro-image-to-video",
-          "resolution": "high",
-          "duration": 15
-        }
-      ]
-    },
-    "video:sora2-pro-text-to-video": {
-      "addRows": [
-        {
-          "modelDescription": "sora-2-pro-text-to-video, standard, 10s",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "75",
-          "creditUnit": "per video",
-          "usdPrice": "0.375",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora2/sora-2-pro-text-to-video.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-pro-text-to-video",
-          "runtimeModel": "sora-2-pro-text-to-video",
-          "resolution": "standard",
-          "duration": 10
-        },
-        {
-          "modelDescription": "sora-2-pro-text-to-video, standard, 15s",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "135",
-          "creditUnit": "per video",
-          "usdPrice": "0.675",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora2/sora-2-pro-text-to-video.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-pro-text-to-video",
-          "runtimeModel": "sora-2-pro-text-to-video",
-          "resolution": "standard",
-          "duration": 15
-        },
-        {
-          "modelDescription": "sora-2-pro-text-to-video, high, 10s",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "165",
-          "creditUnit": "per video",
-          "usdPrice": "0.825",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora2/sora-2-pro-text-to-video.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-pro-text-to-video",
-          "runtimeModel": "sora-2-pro-text-to-video",
-          "resolution": "high",
-          "duration": 10
-        },
-        {
-          "modelDescription": "sora-2-pro-text-to-video, high, 15s",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "315",
-          "creditUnit": "per video",
-          "usdPrice": "1.575",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora2/sora-2-pro-text-to-video.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-pro-text-to-video",
-          "runtimeModel": "sora-2-pro-text-to-video",
-          "resolution": "high",
-          "duration": 15
-        }
-      ]
-    },
-    "video:sora2-pro-storyboard": {
-      "addRows": [
-        {
-          "modelDescription": "sora-2-pro-storyboard, standard, 10s",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "75",
-          "creditUnit": "per video",
-          "usdPrice": "0.375",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora-2-pro-storyboard.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-pro-storyboard",
-          "runtimeModel": "sora-2-pro-storyboard",
-          "resolution": "standard",
-          "duration": 10
-        },
-        {
-          "modelDescription": "sora-2-pro-storyboard, standard, 15s",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "135",
-          "creditUnit": "per video",
-          "usdPrice": "0.675",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora-2-pro-storyboard.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-pro-storyboard",
-          "runtimeModel": "sora-2-pro-storyboard",
-          "resolution": "standard",
-          "duration": 15
-        },
-        {
-          "modelDescription": "sora-2-pro-storyboard, standard, 25s",
-          "interfaceType": "video",
-          "provider": "OpenAI",
-          "creditPrice": "135",
-          "creditUnit": "per video",
-          "usdPrice": "0.675",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "https://docs.kie.ai/market/sora-2-pro-storyboard.md",
-          "discountPrice": false,
-          "catalogModelId": "video:sora2-pro-storyboard",
-          "runtimeModel": "sora-2-pro-storyboard",
-          "resolution": "standard",
-          "duration": 25
-        }
-      ]
-    },
     "video:grok-imagine-image-to-video": {
       "addRows": [
         {
@@ -1481,6 +1445,55 @@
           "discountPrice": false,
           "catalogModelId": "image:google-nano-banana-2",
           "runtimeModel": "nano-banana-2",
+          "resolution": "4k"
+        }
+      ]
+    },
+    "image:fal-gpt-image-2": {
+      "addRows": [
+        {
+          "modelDescription": "gpt-image-2, 1K",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "1",
+          "creditUnit": "per image",
+          "usdPrice": "0.006",
+          "falPrice": "0.0075",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/en/api-reference/images/gpt-image-2/generation",
+          "discountPrice": true,
+          "catalogModelId": "image:fal-gpt-image-2",
+          "runtimeModel": "gpt-image-2",
+          "resolution": "1k"
+        },
+        {
+          "modelDescription": "gpt-image-2, 2K",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "2",
+          "creditUnit": "per image",
+          "usdPrice": "0.012",
+          "falPrice": "0.015",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/en/api-reference/images/gpt-image-2/generation",
+          "discountPrice": true,
+          "catalogModelId": "image:fal-gpt-image-2",
+          "runtimeModel": "gpt-image-2",
+          "resolution": "2k"
+        },
+        {
+          "modelDescription": "gpt-image-2, 4K",
+          "interfaceType": "image",
+          "provider": "GPT Image 2",
+          "creditPrice": "4",
+          "creditUnit": "per image",
+          "usdPrice": "0.018",
+          "falPrice": "0.0225",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/en/api-reference/images/gpt-image-2/generation",
+          "discountPrice": true,
+          "catalogModelId": "image:fal-gpt-image-2",
+          "runtimeModel": "gpt-image-2",
           "resolution": "4k"
         }
       ]
@@ -2478,6 +2491,108 @@
         }
       ]
     },
+    "video:happyhorse-text-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "happyhorse/text-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "HappyHorse",
+          "creditPrice": "28",
+          "creditUnit": "per second",
+          "usdPrice": "0.14",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/happyhorse/text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:happyhorse-text-to-video",
+          "runtimeModel": "happyhorse/text-to-video",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "happyhorse/text-to-video, 1080p",
+          "interfaceType": "video",
+          "provider": "HappyHorse",
+          "creditPrice": "48",
+          "creditUnit": "per second",
+          "usdPrice": "0.24",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/happyhorse/text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:happyhorse-text-to-video",
+          "runtimeModel": "happyhorse/text-to-video",
+          "resolution": "1080p"
+        }
+      ]
+    },
+    "video:happyhorse-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "happyhorse/image-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "HappyHorse",
+          "creditPrice": "28",
+          "creditUnit": "per second",
+          "usdPrice": "0.14",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/happyhorse/image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:happyhorse-image-to-video",
+          "runtimeModel": "happyhorse/image-to-video",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "happyhorse/image-to-video, 1080p",
+          "interfaceType": "video",
+          "provider": "HappyHorse",
+          "creditPrice": "48",
+          "creditUnit": "per second",
+          "usdPrice": "0.24",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/happyhorse/image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:happyhorse-image-to-video",
+          "runtimeModel": "happyhorse/image-to-video",
+          "resolution": "1080p"
+        }
+      ]
+    },
+    "video:happyhorse-reference-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "happyhorse/reference-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "HappyHorse",
+          "creditPrice": "28",
+          "creditUnit": "per second",
+          "usdPrice": "0.14",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/happyhorse/reference-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:happyhorse-reference-to-video",
+          "runtimeModel": "happyhorse/reference-to-video",
+          "resolution": "720p"
+        },
+        {
+          "modelDescription": "happyhorse/reference-to-video, 1080p",
+          "interfaceType": "video",
+          "provider": "HappyHorse",
+          "creditPrice": "48",
+          "creditUnit": "per second",
+          "usdPrice": "0.24",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/happyhorse/reference-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:happyhorse-reference-to-video",
+          "runtimeModel": "happyhorse/reference-to-video",
+          "resolution": "1080p"
+        }
+      ]
+    },
     "video:wan-2-6-video-to-video": {
       "addRows": [
         {
@@ -3283,6 +3398,270 @@
           "catalogModelId": "video:hailuo-standard-image-to-video",
           "runtimeModel": "hailuo/02-image-to-video-standard",
           "resolution": "768P"
+        }
+      ]
+    },
+    "video:fal-omni-flash-ext": {
+      "addRows": [
+        {
+          "modelDescription": "Omni-Flash-Ext, 720p, 4s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "0.15",
+          "falPrice": "0.1875",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "720p",
+          "duration": 4
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 1080p, 4s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "30",
+          "creditUnit": "per video",
+          "usdPrice": "0.15",
+          "falPrice": "0.1875",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "1080p",
+          "duration": 4
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 720p, 6s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "34",
+          "creditUnit": "per video",
+          "usdPrice": "0.17",
+          "falPrice": "0.2125",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "720p",
+          "duration": 6
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 1080p, 6s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "34",
+          "creditUnit": "per video",
+          "usdPrice": "0.17",
+          "falPrice": "0.2125",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "1080p",
+          "duration": 6
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 720p, 8s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "36",
+          "creditUnit": "per video",
+          "usdPrice": "0.18",
+          "falPrice": "0.225",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "720p",
+          "duration": 8
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 1080p, 8s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "36",
+          "creditUnit": "per video",
+          "usdPrice": "0.18",
+          "falPrice": "0.225",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "1080p",
+          "duration": 8
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 720p, 10s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "40",
+          "creditUnit": "per video",
+          "usdPrice": "0.20",
+          "falPrice": "0.25",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "720p",
+          "duration": 10
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 1080p, 10s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "40",
+          "creditUnit": "per video",
+          "usdPrice": "0.20",
+          "falPrice": "0.25",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "1080p",
+          "duration": 10
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 4k, 4s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "60",
+          "creditUnit": "per video",
+          "usdPrice": "0.30",
+          "falPrice": "0.375",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "4k",
+          "duration": 4
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 4k, 6s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "68",
+          "creditUnit": "per video",
+          "usdPrice": "0.34",
+          "falPrice": "0.425",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "4k",
+          "duration": 6
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 4k, 8s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "72",
+          "creditUnit": "per video",
+          "usdPrice": "0.36",
+          "falPrice": "0.45",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "4k",
+          "duration": 8
+        },
+        {
+          "modelDescription": "Omni-Flash-Ext, 4k, 10s",
+          "interfaceType": "video",
+          "provider": "Omni-Flash-Ext",
+          "creditPrice": "80",
+          "creditUnit": "per video",
+          "usdPrice": "0.40",
+          "falPrice": "0.50",
+          "discountRate": 20,
+          "anchor": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+          "discountPrice": false,
+          "catalogModelId": "video:fal-omni-flash-ext",
+          "runtimeModel": "Omni-Flash-Ext",
+          "resolution": "4k",
+          "duration": 10
+        }
+      ]
+    },
+    "video:gemini-omni-text-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "gemini-omni/text-to-video, 480p",
+          "interfaceType": "video",
+          "provider": "Gemini Omni",
+          "creditPrice": "3",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-text-to-video",
+          "runtimeModel": "grok-imagine/text-to-video",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "gemini-omni/text-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "Gemini Omni",
+          "creditPrice": "5",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/text-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-text-to-video",
+          "runtimeModel": "grok-imagine/text-to-video",
+          "resolution": "720p"
+        }
+      ]
+    },
+    "video:gemini-omni-image-to-video": {
+      "addRows": [
+        {
+          "modelDescription": "gemini-omni/image-to-video, 480p",
+          "interfaceType": "video",
+          "provider": "Gemini Omni",
+          "creditPrice": "3",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-image-to-video",
+          "runtimeModel": "grok-imagine/image-to-video",
+          "resolution": "480p"
+        },
+        {
+          "modelDescription": "gemini-omni/image-to-video, 720p",
+          "interfaceType": "video",
+          "provider": "Gemini Omni",
+          "creditPrice": "5",
+          "creditUnit": "per second",
+          "usdPrice": "",
+          "falPrice": "",
+          "discountRate": 0,
+          "anchor": "https://docs.kie.ai/market/grok-imagine/image-to-video.md",
+          "discountPrice": false,
+          "catalogModelId": "video:gemini-omni-image-to-video",
+          "runtimeModel": "grok-imagine/image-to-video",
+          "resolution": "720p"
         }
       ]
     },

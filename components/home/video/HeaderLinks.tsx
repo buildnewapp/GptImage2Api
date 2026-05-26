@@ -83,7 +83,7 @@ export default function VideoHeaderLinks({
                               <I18nLink
                                 href={child.href}
                                 title={child.name}
-                                prefetch={child.target === "_blank" ? false : true}
+                                prefetch={false}
                                 target={child.target || "_self"}
                                 rel={child.rel || undefined}
                                 className={cn(
@@ -131,7 +131,7 @@ export default function VideoHeaderLinks({
                 <I18nLink
                   href={link.href}
                   title={link.name}
-                  prefetch={link.target === "_blank" ? false : true}
+                  prefetch={false}
                   target={link.target || "_self"}
                   rel={link.rel || undefined}
                   className={cn(

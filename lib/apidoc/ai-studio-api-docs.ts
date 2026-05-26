@@ -105,13 +105,8 @@ export const apiDocEndpoints: ApiDocEndpoint[] = [
     "reservedCredits": 20,
     "taskId": "provider-task-id",
     "state": "queued",
-    "statusMode": "poll+callback",
-    "statusSupported": true,
-    "statusEndpoint": "/api/v1/jobs/recordInfo",
     "raw": {},
-    "mediaUrls": [],
-    "selectedPricing": {},
-    "pricingRows": []
+    "selectedPricing": {}
   }
 }`,
     errorExample: `{
@@ -122,7 +117,7 @@ export const apiDocEndpoints: ApiDocEndpoint[] = [
   {
     id: "task",
     method: "GET",
-    endpoint: "/api/ai-studio/tasks/{taskId}?modelId={modelId}",
+    endpoint: "/api/ai-studio/tasks/{taskId}",
     descriptionKey: "endpoints.task.description",
     headers: [authHeader],
     parameters: [
@@ -133,16 +128,8 @@ export const apiDocEndpoints: ApiDocEndpoint[] = [
         defaultValue: "-",
         descriptionKey: "parameters.taskId",
       },
-      {
-        name: "modelId",
-        type: "string",
-        required: true,
-        defaultValue: "-",
-        enumValues: aiVideoStudioModelIds,
-        descriptionKey: "parameters.modelIdQuery",
-      },
     ],
-    curl: `curl -X GET "https://YOUR_DOMAIN/api/ai-studio/tasks/provider-task-id?modelId=video%3Asora2-text-to-video-standard" \\
+    curl: `curl -X GET "https://YOUR_DOMAIN/api/ai-studio/tasks/provider-task-id" \\
   -H "Authorization: Bearer YOUR_API_KEY"`,
     responseExample: `{
   "success": true,

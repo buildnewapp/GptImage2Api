@@ -40,6 +40,7 @@ import { cn } from "@/lib/utils";
 import {
   AudioLines,
   Bot,
+  Copy,
   Film,
   ImageIcon,
   LoaderCircle,
@@ -82,12 +83,10 @@ type ExecuteResponse = {
     reservedCredits?: number;
     state?: string;
     taskId?: string | null;
-    statusMode?: "sync" | "poll" | "callback" | "poll+callback";
-    statusSupported: boolean;
     raw: unknown;
-    mediaUrls: string[];
+    mediaUrls?: string[];
+    artifacts?: AiStudioResultArtifact[];
     selectedPricing?: AiStudioPublicPricingRow | null;
-    pricingRows: AiStudioPublicPricingRow[];
   };
   error?: string;
 };
@@ -98,11 +97,19 @@ type TaskResponse = {
     generationId?: string | null;
     state: string;
     mediaUrls: string[];
+    artifacts?: AiStudioResultArtifact[];
     raw: unknown;
     reservedCredits?: number;
     refundedCredits?: number;
   };
   error?: string;
+};
+
+type AiStudioResultArtifact = {
+  kind: string;
+  value: string;
+  label?: string | null;
+  targetField?: string | null;
 };
 
 type HistoryResponse = {
@@ -689,8 +696,7 @@ export default function AiStudioShell({
 
   useEffect(() => {
     const taskId = executeResult?.taskId;
-    const modelId = resolvePublicModelId(selectedId, detail);
-    if (!taskId || !modelId || !executeResult?.statusSupported) {
+    if (!taskId) {
       return;
     }
 
@@ -700,9 +706,7 @@ export default function AiStudioShell({
 
     async function poll() {
       try {
-        const response = await fetch(
-          `/api/ai-studio/tasks/${taskId}?modelId=${encodeURIComponent(modelId)}`,
-        );
+        const response = await fetch(`/api/ai-studio/tasks/${taskId}`);
         const json = (await response.json()) as TaskResponse;
         if (!response.ok || !json.success) {
           throw new Error(json.error || "Task polling failed");
@@ -719,6 +723,7 @@ export default function AiStudioShell({
                 mediaUrls: json.data.mediaUrls.length
                   ? json.data.mediaUrls
                   : current.mediaUrls,
+                artifacts: json.data.artifacts ?? current.artifacts,
               }
             : current,
         );
@@ -743,7 +748,7 @@ export default function AiStudioShell({
         clearTimeout(timer);
       }
     };
-  }, [detail, executeResult?.statusSupported, executeResult?.taskId, selectedId]);
+  }, [executeResult?.taskId]);
 
   async function handleRun() {
     const modelId = resolvePublicModelId(selectedId, detail);
@@ -775,26 +780,19 @@ export default function AiStudioShell({
         optimisticDeduct(json.data.reservedCredits ?? 0);
       }
       setExecuteResult(json.data);
-      if (json.data.taskId) {
-        setTaskState("queued");
-      } else if (json.data.state) {
-        setTaskState(json.data.state);
-      }
+      setTaskState("queued");
       refreshHistory();
     } catch (error) {
       setExecuteResult({
         raw: {
           error: error instanceof Error ? error.message : "Execution failed",
         },
-        mediaUrls: [],
-        pricingRows: detail?.pricingRows ?? [],
         selectedPricing: guessSelectedPricing(
           detail,
           detail?.pricingRows ?? [],
           detail?.id ?? null,
           payload,
         ),
-        statusSupported: false,
       });
     } finally {
       setRunLoading(false);
@@ -1700,6 +1698,31 @@ export default function AiStudioShell({
                                 </a>
                               )}
                             </div>
+                          ))}
+                        </div>
+                      ) : null}
+
+                      {executeResult?.artifacts?.length ? (
+                        <div className="space-y-2 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-slate-900">
+                          <div className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+                            Result Artifacts
+                          </div>
+                          {executeResult.artifacts.map((artifact) => (
+                            <button
+                              key={`${artifact.kind}-${artifact.value}`}
+                              type="button"
+                              onClick={() => navigator.clipboard.writeText(artifact.value)}
+                              className="flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-left text-sm transition hover:bg-slate-100 dark:border-white/10 dark:bg-slate-950 dark:hover:bg-slate-900"
+                              title={artifact.value}
+                            >
+                              <span className="shrink-0 font-semibold text-slate-900 dark:text-white">
+                                {artifact.label ?? artifact.kind}
+                              </span>
+                              <span className="min-w-0 flex-1 truncate font-mono text-xs text-slate-500 dark:text-slate-400">
+                                {artifact.value}
+                              </span>
+                              <Copy className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+                            </button>
                           ))}
                         </div>
                       ) : null}

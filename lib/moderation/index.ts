@@ -176,10 +176,7 @@ export async function assertGenerationPromptAllowed(input: AssertGenerationModer
 
   const prompt = extractGenerationPrompt(input.payload);
   if (!prompt) {
-    throw Object.assign(
-      new Error("Prompt is required for moderation."),
-      { status: 400 },
-    );
+    return;
   }
 
   let result: { decision: CreemModerationDecision; id: string | null };

@@ -140,7 +140,7 @@ export default function HeaderShell({
           <I18nLink
             href="/"
             title={t("title")}
-            prefetch={true}
+            prefetch={false}
             className="flex items-center gap-3"
           >
             <span
@@ -181,6 +181,7 @@ export default function HeaderShell({
               <I18nLink
                 href="/dashboard/tasks"
                 title={t("earnCredits")}
+                prefetch={false}
                 className={creditsButtonClassName}
               >
                 <Gift className="h-3.5 w-3.5 text-primary" />
@@ -211,6 +212,7 @@ export default function HeaderShell({
             />
             <I18nLink
               href={resolvedUser ? "/dashboard/generate" : "/dashboard/tasks"}
+              prefetch={false}
               className="inline-flex h-11 items-center justify-center rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-5 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110"
             >
               {resolvedUser ? (

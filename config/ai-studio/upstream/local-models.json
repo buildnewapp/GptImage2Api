@@ -109,6 +109,127 @@
       "pricingRows": []
     },
     {
+      "id": "video:fal-omni-flash-ext",
+      "category": "video",
+      "title": "Omni-Flash-Ext Video Generation",
+      "docUrl": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+      "provider": "Omni-Flash-Ext",
+      "vendor": "apimart",
+      "endpoint": "/v1/videos/generations",
+      "statusEndpoint": "/v1/tasks/{taskId}?language=en",
+      "method": "POST",
+      "modelKeys": [
+        "Omni-Flash-Ext"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Video generation model name, fixed value: Omni-Flash-Ext.",
+            "enum": [
+              "Omni-Flash-Ext"
+            ],
+            "default": "Omni-Flash-Ext",
+            "examples": [
+              "Omni-Flash-Ext"
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Video content description. Describe the scene, subject, action, environment, camera movement, visual style, and audio hints in detail.",
+            "examples": [
+              "a girl is dancing happily in a sunny garden"
+            ]
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Video duration in seconds. Only 4, 6, 8, and 10 are supported.",
+            "enum": [
+              4,
+              6,
+              8,
+              10
+            ],
+            "default": 6,
+            "examples": [
+              10
+            ]
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Video resolution. Values are case-insensitive.",
+            "enum": [
+              "720p",
+              "1080p",
+              "4k"
+            ],
+            "default": "720p",
+            "examples": [
+              "1080p"
+            ]
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "Video aspect ratio. Use 16:9 for landscape or 9:16 for portrait.",
+            "enum": [
+              "16:9",
+              "9:16"
+            ],
+            "default": "16:9",
+            "examples": [
+              "9:16"
+            ]
+          },
+          "image_urls": {
+            "type": "array",
+            "description": "Reference image URL array. Omit or pass an empty array for text-to-video, pass 1 image for image-to-video, or pass 3 images for reference image fusion. Two images are not supported.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "maxItems": 3,
+            "examples": [
+              [
+                "https://example.com/character.jpg"
+              ]
+            ]
+          }
+        },
+        "x-apidog-orders": [
+          "model",
+          "prompt",
+          "duration",
+          "resolution",
+          "aspect_ratio",
+          "size",
+          "image_urls"
+        ],
+        "examples": [
+          {
+            "model": "Omni-Flash-Ext",
+            "prompt": "a girl is dancing happily in a sunny garden",
+            "duration": 10,
+            "resolution": "1080p",
+            "aspect_ratio": "9:16"
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "Omni-Flash-Ext",
+        "prompt": "a girl is dancing happily in a sunny garden",
+        "duration": 10,
+        "resolution": "1080p",
+        "aspect_ratio": "9:16"
+      },
+      "pricingRows": []
+    },
+    {
       "id": "chat:qwen3-6-flash-openrouter",
       "category": "chat",
       "title": "Qwen 3.6 Flash (OpenRouter)",
@@ -469,6 +590,539 @@
           }
         ],
         "stream": true
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:gemini-omni-text-to-video",
+      "category": "video",
+      "title": "Gemini Omni Text to Video",
+      "docUrl": "https://docs.kie.ai/market/grok-imagine/text-to-video.md",
+      "provider": "Gemini Omni Text to Video",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "grok-imagine/text-to-video"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "grok-imagine/text-to-video"
+            ],
+            "default": "grok-imagine/text-to-video",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `grok-imagine/text-to-video` for this endpoint",
+            "examples": [
+              "grok-imagine/text-to-video"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to receive video generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when video generation completes\n- Callback includes generated video URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing video results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the video generation task",
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "description": "Text prompt describing the desired video motion. Required field.\n\n- Should be detailed and specific about the desired visual motion\n- Describe movement, action sequences, camera work, and timing\n- Include details about subjects, environments, and motion dynamics\n- Maximum length: 5000 characters\n- Supports English language prompts",
+                "examples": [
+                  "A couple of doors open to the right one by one randomly and stay open, to show the inside, each is either a living room, or a kitchen, or a bedroom or an office, with little people living inside."
+                ]
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "description": "Specifies the width-to-height ratio of the generated video. Supported values: 16:9 and 9:16.",
+                "enum": [
+                  "16:9",
+                  "9:16"
+                ],
+                "default": "16:9",
+                "examples": [
+                  "16:9"
+                ]
+              },
+              "duration": {
+                "type": "string",
+                "enum": [
+                  "6",
+                  "8",
+                  "15",
+                  "10"
+                ],
+                "default": "8",
+                "description": "The duration of the generated video in seconds. ",
+                "examples": [
+                  "8"
+                ]
+              },
+              "resolution": {
+                "type": "string",
+                "description": "The resolution of the generated video.",
+                "enum": [
+                  "480p",
+                  "720p"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "480p",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "720p",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "default": "480p",
+                "examples": [
+                  "480p"
+                ]
+              },
+              "nsfw_checker": {
+                "type": "boolean",
+                "default": false,
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+              }
+            },
+            "required": [
+              "prompt"
+            ],
+            "x-apidog-orders": [
+              "prompt",
+              "aspect_ratio",
+              "mode",
+              "duration",
+              "resolution",
+              "nsfw_checker"
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "required": [
+          "model",
+          "input"
+        ],
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "examples": [
+          {
+            "model": "gemini-omni/text-to-video",
+            "callBackUrl": "https://your-domain.com/api/callback",
+            "input": {
+              "prompt": "A couple of doors open to the right one by one randomly and stay open, to show the inside, each is either a living room, or a kitchen, or a bedroom or an office, with little people living inside.",
+              "aspect_ratio": "16:9",
+              "duration": "8"
+            }
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "gemini-omni/text-to-video",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "A couple of doors open to the right one by one randomly and stay open, to show the inside, each is either a living room, or a kitchen, or a bedroom or an office, with little people living inside.",
+          "aspect_ratio": "16:9",
+          "duration": "8",
+          "resolution": "480p"
+        }
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:gemini-omni-image-to-video",
+      "category": "video",
+      "title": "Gemini Omni Image to Video",
+      "docUrl": "https://docs.kie.ai/market/grok-imagine/image-to-video.md",
+      "provider": "Gemini Omni Image to Video",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "grok-imagine/image-to-video"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "grok-imagine/image-to-video"
+            ],
+            "default": "grok-imagine/image-to-video",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `grok-imagine/image-to-video` for this endpoint",
+            "examples": [
+              "grok-imagine/image-to-video"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to receive video generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when video generation completes\n- Callback includes generated video URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing video results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the video generation task",
+            "properties": {
+              "image_urls": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "description": "Provide an external image URL as a reference for video generation. Up to 7 images are supported. Do not use it simultaneously with task_id. In your prompt, reference an uploaded image by typing @image(n) followed by a space (for example: @image1 a sunset over the ocean).\n- Supports JPEG, PNG, and WEBP formats\n- Maximum file size for each image: 10MB\n- The Spicy mode is not available when using external images\n- The array can contain a maximum of seven URLs",
+                "maxItems": 7,
+                "examples": [
+                  [
+                    "https://file.aiquickdraw.com/custom-page/akr/section-images/1762247692373tw5di116.png"
+                  ]
+                ]
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Text prompt describing the desired video motion. Optional field.\n\n- Should be detailed and specific about the desired visual motion\n- Describe movement, action sequences, camera work, and timing\n- Include details about subjects, environments, and motion dynamics\n- Maximum length: 5000 characters\n- Supports English language prompts",
+                "examples": [
+                  "POV hand comes into frame handing the girl a cup of take away coffee, the girl steps out of the screen looking tired, then takes it and she says happily: \"thanks! Back to work\" she exits the frame and walks right to a different part of the office."
+                ]
+              },
+              "duration": {
+                "type": "string",
+                "enum": [
+                  "6",
+                  "8",
+                  "15",
+                  "10"
+                ],
+                "default": "8",
+                "description": "The duration of the generated video in seconds. ",
+                "examples": [
+                  "8"
+                ]
+              },
+              "resolution": {
+                "type": "string",
+                "description": "The resolution of the generated video.",
+                "enum": [
+                  "480p",
+                  "720p"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "480p",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "720p",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "default": "480p",
+                "examples": [
+                  "480p"
+                ]
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "description": "Specifies the width-to-height ratio of the generated video. Supported values: 16:9 and 9:16.",
+                "enum": [
+                  "16:9",
+                  "9:16"
+                ],
+                "default": "16:9",
+                "examples": [
+                  "16:9"
+                ]
+              },
+              "nsfw_checker": {
+                "type": "boolean",
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.",
+                "default": false
+              }
+            },
+            "x-apidog-orders": [
+              "image_urls",
+              "prompt",
+              "mode",
+              "duration",
+              "resolution",
+              "aspect_ratio",
+              "nsfw_checker"
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "required": [
+          "model",
+          "input"
+        ],
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "examples": [
+          {
+            "model": "gemini-omni/image-to-video",
+            "callBackUrl": "https://your-domain.com/api/callback",
+            "input": {
+              "image_urls": [
+                "https://file.aiquickdraw.com/custom-page/akr/section-images/1762247692373tw5di116.png"
+              ],
+              "prompt": "POV hand comes into frame handing the girl a cup of take away coffee, the girl steps out of the screen looking tired, then takes it and she says happily: \"thanks! Back to work\" she exits the frame and walks right to a different part of the office.",
+              "aspect_ratio": "16:9",
+              "duration": "8"
+            }
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "gemini-omni/image-to-video",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "image_urls": [
+            "https://file.aiquickdraw.com/custom-page/akr/section-images/1762247692373tw5di116.png"
+          ],
+          "prompt": "POV hand comes into frame handing the girl a cup of take away coffee, the girl steps out of the screen looking tired, then takes it and she says happily: \"thanks! Back to work\" she exits the frame and walks right to a different part of the office.",
+          "duration": "8",
+          "resolution": "480p",
+          "aspect_ratio": "16:9"
+        }
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "image:fal-gpt-image-2",
+      "vendor": "apimart",
+      "category": "image",
+      "title": "GPT-Image-2 Image Generation",
+      "docUrl": "https://docs.apimart.ai/en/api-reference/images/gpt-image-2/generation",
+      "provider": "GPT-Image-2",
+      "endpoint": "/v1/images/generations",
+      "method": "POST",
+      "statusEndpoint": "/v1/tasks/{taskId}?language=en",
+      "modelKeys": [
+        "gpt-image-2"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Image generation model name. Fixed to gpt-image-2.",
+            "default": "gpt-image-2",
+            "enum": [
+              "gpt-image-2"
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Text description for image generation. Supports English and Chinese; detailed descriptions are recommended. Prompts are moderated before submission."
+          },
+          "size": {
+            "type": "string",
+            "description": "Image aspect ratio, or a direct pixel size such as 1881x836 / 887x1774. Use auto to let the server select a ratio; auto defaults to 1:1.",
+            "default": "1:1",
+            "enum": [
+              "auto",
+              "1:1",
+              "3:2",
+              "2:3",
+              "4:3",
+              "3:4",
+              "5:4",
+              "4:5",
+              "16:9",
+              "9:16",
+              "2:1",
+              "1:2",
+              "3:1",
+              "1:3",
+              "21:9",
+              "9:21"
+            ]
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Output resolution tier. Supported values: 1k, 2k, 4k. The selected size ratio is mapped to actual pixels for the chosen tier; 4k supports all listed ratios.",
+            "default": "1k",
+            "enum": [
+              "1k",
+              "2k",
+              "4k"
+            ]
+          },
+          "image_urls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Reference image array for image-to-image mode. Supports public image URLs and base64 data URIs, and URL/base64 values can be mixed. Without size, output follows the input image resolution; with size, output is forced to the specified ratio.",
+            "maxItems": 9
+          }
+        }
+      },
+      "examplePayload": {
+        "model": "gpt-image-2",
+        "prompt": "A ginger cat sitting on a windowsill watching the sunset, watercolor style",
+        "n": 1,
+        "size": "16:9",
+        "resolution": "1k"
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "image:fal-gpt-image-2-official",
+      "vendor": "apimart",
+      "category": "image",
+      "title": "GPT-Image-2 Official Channel Image Generation",
+      "docUrl": "https://docs.apimart.ai/en/api-reference/images/gpt-image-2/official",
+      "provider": "GPT-Image-2 Official Channel",
+      "endpoint": "/v1/images/generations",
+      "method": "POST",
+      "statusEndpoint": "/v1/tasks/{taskId}?language=en",
+      "modelKeys": [
+        "gpt-image-2-official"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Image generation model name. Fixed to gpt-image-2-official (OpenAI official gpt-image-2 model).",
+            "default": "gpt-image-2-official",
+            "enum": [
+              "gpt-image-2-official"
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Text description for image generation. Supports English and Chinese; detailed descriptions are recommended. Prompts are moderated before submission."
+          },
+          "size": {
+            "type": "string",
+            "description": "Image aspect ratio, or a direct pixel size such as 1881x836 / 887x1774. Use auto to let the server pick a ratio based on prompt or reference images; auto defaults to 1:1.",
+            "default": "1:1",
+            "enum": [
+              "auto",
+              "1:1",
+              "3:2",
+              "2:3",
+              "4:3",
+              "3:4",
+              "5:4",
+              "4:5",
+              "16:9",
+              "9:16",
+              "2:1",
+              "1:2",
+              "3:1",
+              "1:3",
+              "21:9",
+              "9:21"
+            ]
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Resolution tier controlling output clarity. 1k is the default/cost-efficient tier, 2k is suitable for HD posters, and 4k supports the documented 15 ratios.",
+            "default": "1k",
+            "enum": [
+              "1k",
+              "2k",
+              "4k"
+            ]
+          },
+          "quality": {
+            "type": "string",
+            "description": "Image quality. auto is the default and is typically equivalent to low; high provides maximum precision and can take over 120 seconds with 4k.",
+            "default": "auto",
+            "enum": [
+              "auto",
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "background": {
+            "type": "string",
+            "description": "Background mode. gpt-image-2-official does not support transparent backgrounds; transparent is silently downgraded to auto by the server.",
+            "default": "auto",
+            "enum": [
+              "auto",
+              "opaque",
+              "transparent"
+            ]
+          },
+          "moderation": {
+            "type": "string",
+            "description": "Moderation strength. auto uses the default moderation strength; low is more lenient.",
+            "default": "auto",
+            "enum": [
+              "auto",
+              "low"
+            ]
+          },
+          "output_format": {
+            "type": "string",
+            "description": "Output format. png is the default; jpeg produces smaller files; webp is optimized for modern browsers.",
+            "default": "png",
+            "enum": [
+              "png",
+              "jpeg",
+              "webp"
+            ]
+          },
+          "output_compression": {
+            "type": "integer",
+            "description": "Output compression level from 0 to 100. Only effective for jpeg and webp output formats.",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "image_urls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Reference image URL array for image-to-image mode. Up to 16 publicly accessible, stable image URLs are supported.",
+            "maxItems": 16
+          },
+          "mask_url": {
+            "type": "string",
+            "description": "Mask image URL for inpainting. Must be used together with image_urls. The mask must have an alpha channel and match the first reference image dimensions."
+          }
+        }
+      },
+      "examplePayload": {
+        "model": "gpt-image-2-official",
+        "prompt": "An ancient castle beneath a starry sky",
+        "size": "16:9",
+        "resolution": "2k",
+        "quality": "high",
+        "n": 1
       },
       "pricingRows": []
     }

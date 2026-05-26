@@ -211,9 +211,26 @@ Pricing: WAN-2.7 Image Pro costs 12 credits per image (≈ $0.06), while WAN-2.7
 wan/2-7-image-pro
 Pricing: WAN-2.7 Image Pro costs 12 credits per image (≈ $0.06), while WAN-2.7 Image costs 4.8 credits per image (≈ $0.024). 
 
-
 gpt-image-2-text-to-image
-Pricing: GPT-2 Image — now just 3 credits ($0.015) for 1 K, 5 credits ($0.025) for 2 K, and 8 credits ($0.040) for 4 K.
-
+Pricing: GPT-2 Image costs 6 credits ($0.03) per image.
 gpt-image-2-image-to-image
-Pricing: GPT-2 Image — now just 3 credits ($0.015) for 1 K, 5 credits ($0.025) for 2 K, and 8 credits ($0.040) for 4 K.
+Pricing: GPT-2 Image costs 6 credits ($0.03) per image.
+
+video:gemini-omni-video
+Pricing: 无视频输入：
+- 720P/1080P：4s 30 积分（$0.15），6s 40 积分（$0.2），8s 50 积分（$0.25），10s 60 积分（$0.3）
+- 4K：4s 70 积分（$0.35），6s 80 积分（$0.4），8s 90 积分（$0.45），10s 100 积分（$0.5）
+
+有视频输入：
+- 720P/1080P：每次生成 80 积分（$0.4）
+- 4K：每次生成 120 积分（$0.6）
+
+
+happyhorse/text-to-video
+Pricing: 28 credits/s ($0.14) for 720 p or 48 credits/s ($0.24) for 1080 p
+
+happyhorse/image-to-video
+Pricing: 28 credits/s ($0.14) for 720 p or 48 credits/s ($0.24) for 1080 p
+
+happyhorse/reference-to-video
+Pricing: 28 credits/s ($0.14) for 720 p or 48 credits/s ($0.24) for 1080 p

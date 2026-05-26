@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-05-21T09:15:06.240Z",
+  "generatedAt": "2026-05-24T05:24:15.201Z",
   "items": [
     {
       "id": "image:seedream3-0-text-to-image",
@@ -13846,7 +13846,8 @@
                 "description": "Video prompt used to describe the target content, style, camera language, or character actions in the generated video.",
                 "examples": [
                   "Create a futuristic night city short film with a slow push-in shot as the character walks out from a neon-lit street."
-                ]
+                ],
+                "maxLength": 20000
               },
               "image_urls": {
                 "type": "array",

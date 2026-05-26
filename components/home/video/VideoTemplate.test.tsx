@@ -29,7 +29,7 @@ test("renders the key Seedance 2.0 homepage sections and media urls", async () =
   assert.match(html, /Create Your First Clip Today/);
   assert.match(
     html,
-    /https:\/\/cdn\.sdanceai\.com\/sdanceai\/sdance_videos\/gomdqjkt4\.mp4/,
+    /https:\/\/v\.sdanceai\.com\/sdanceai\/sdance_videos\/gomdqjkt4\.mp4/,
   );
 });
 
@@ -86,6 +86,25 @@ test("defers heavy hero video downloads on first paint", () => {
 
   assert.doesNotMatch(source, /preload="auto"/);
   assert.match(source, /data-video-hero-placeholder/);
+});
+
+test("defers below-the-fold video preview sources until they enter the viewport", () => {
+  const mediaSource = readFileSync(
+    path.join(projectRoot, "components/home/video/Media.tsx"),
+    "utf8",
+  );
+  const featureRowsSource = readFileSync(
+    path.join(projectRoot, "components/home/video/FeatureRows.tsx"),
+    "utf8",
+  );
+
+  assert.match(mediaSource, /IntersectionObserver/);
+  assert.match(mediaSource, /data-lazy-video-src/);
+  assert.match(mediaSource, /src=\{shouldLoad \? src : undefined\}/);
+  assert.match(mediaSource, /loadDelayMs/);
+  assert.match(mediaSource, /loadDelayMs=\{900 \+ index \* 250\}/);
+  assert.match(featureRowsSource, /LazyPreviewVideo/);
+  assert.doesNotMatch(featureRowsSource, /<video[\s\S]*autoPlay/);
 });
 
 test("renders showcase preview triggers for all six sample items", async () => {

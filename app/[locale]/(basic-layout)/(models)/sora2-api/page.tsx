@@ -16,17 +16,8 @@ const config = {
   messageKey: "sora2",
   path: "/sora2-api",
   showcaseModelIds: [
-    "video:sora2-text-to-video-standard",
-    "video:sora2-image-to-video-standard",
-    "video:sora2-text-to-video-stable",
-    "video:sora2-image-to-video-stable",
-    "video:sora2-pro-text-to-video",
-    "video:sora2-pro-image-to-video",
-    "video:sora2-pro-storyboard",
+    "video:fal-sora-2",
     "video:fal-sora-2-pro",
-    "video:fal-sora-2-vip",
-    "video:fal-sora-2-preview",
-    "video:fal-sora-2-pro-preview",
   ],
 } satisfies ModelApiPageConfig;
 

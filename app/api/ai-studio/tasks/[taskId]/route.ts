@@ -1,24 +1,26 @@
-import { getCachedAiStudioCatalogEntry } from "@/lib/ai-studio/catalog";
-import { queryAiStudioTask } from "@/lib/ai-studio/execute";
-import { extractProviderFailureReason } from "@/lib/ai-studio/execute";
 import {
-  archiveAiStudioGenerationMediaUrlsInBackground,
+  getCachedAiStudioCatalogDetail,
+  getCachedAiStudioCatalogEntry,
+} from "@/lib/ai-studio/catalog";
+import {
+  extractProviderFailureReason,
+  extractResultArtifacts,
+  queryAiStudioTask,
+} from "@/lib/ai-studio/execute";
+import {
   getAiStudioGenerationForUserByTaskId,
   settleAiStudioGenerationFailure,
-  settleAiStudioGenerationSuccess,
+  settleAiStudioGenerationSuccessWithMediaArchive,
   updateAiStudioGenerationProgress,
 } from "@/lib/ai-studio/generations";
-import { sanitizeAiStudioDebugValue } from "@/lib/ai-studio/public";
-import { getPublicAiStudioModelId } from "@/lib/ai-studio/public";
+import {
+  getPublicAiStudioModelId,
+  sanitizeAiStudioDebugValue,
+} from "@/lib/ai-studio/public";
 import { apiResponse } from "@/lib/api-response";
 import { getRequestUser } from "@/lib/auth/request-user";
-import { z } from "zod";
 
 type Params = Promise<{ taskId: string }>;
-
-const querySchema = z.object({
-  modelId: z.string().min(1),
-});
 
 export async function GET(
   request: Request,
@@ -31,11 +33,6 @@ export async function GET(
     }
 
     const { taskId } = await context.params;
-    const { searchParams } = new URL(request.url);
-    const input = querySchema.parse({
-      modelId: searchParams.get("modelId"),
-    });
-
     const generation = await getAiStudioGenerationForUserByTaskId(user.id, taskId);
     if (!generation) {
       return apiResponse.notFound("Generation record not found");
@@ -44,9 +41,12 @@ export async function GET(
     const catalogEntry = await getCachedAiStudioCatalogEntry(generation.catalogModelId);
     const publicModelId = catalogEntry
       ? getPublicAiStudioModelId(catalogEntry)
-      : input.modelId;
+      : generation.catalogModelId;
 
     if (generation.status === "succeeded" || generation.status === "failed") {
+      const detail = await getCachedAiStudioCatalogDetail(generation.catalogModelId);
+      const raw = generation.callbackPayload ?? generation.responsePayload ?? {};
+
       return apiResponse.success({
         generationId: generation.id,
         taskId,
@@ -55,23 +55,25 @@ export async function GET(
         mediaUrls: Array.isArray(generation.resultUrls)
           ? (generation.resultUrls as string[])
           : [],
-        raw: sanitizeAiStudioDebugValue(
-          generation.callbackPayload ?? generation.responsePayload ?? {},
-        ),
+        artifacts: detail ? extractResultArtifacts(raw, detail) : [],
+        raw: sanitizeAiStudioDebugValue(raw),
         reservedCredits: generation.creditsReserved,
         refundedCredits: generation.creditsRefunded,
       });
     }
 
-    const result = await queryAiStudioTask(input.modelId, taskId);
+    const result = await queryAiStudioTask(generation.catalogModelId, taskId);
 
     if (result.state === "succeeded") {
-      const settled = await settleAiStudioGenerationSuccess(generation.id, {
-        raw: result.raw,
-        mediaUrls: result.mediaUrls,
-        providerState: result.state,
-      });
-      archiveAiStudioGenerationMediaUrlsInBackground(generation.id);
+      const settled = await settleAiStudioGenerationSuccessWithMediaArchive(
+        generation.id,
+        {
+          raw: result.raw,
+          mediaUrls: result.mediaUrls,
+          providerState: result.state,
+          requireR2Urls: true,
+        },
+      );
       if (Array.isArray(settled?.resultUrls)) {
         result.mediaUrls = settled.resultUrls as string[];
       }
@@ -98,6 +100,7 @@ export async function GET(
       modelId: publicModelId,
       state: result.state,
       mediaUrls: result.mediaUrls,
+      artifacts: result.artifacts,
       raw: sanitizeAiStudioDebugValue(result.raw),
       reservedCredits: generation.creditsReserved,
       refundedCredits:

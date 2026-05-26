@@ -8,7 +8,9 @@ export type AiVideoStudioTag = {
 };
 
 export type AiVideoStudioFamilyIconKey =
+  | "alibaba-cloud"
   | "bytedance"
+  | "gemini"
   | "google"
   | "grok"
   | "hailuo"
@@ -76,6 +78,12 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         familyKey: "gpt-image-2",
         modelId: "image:gpt-image-2-image-to-image",
       },
+      {
+        key: "fal-gpt-image-2",
+        label: "Gpt image 2 Special offer",
+        familyKey: "gpt-image-2",
+        modelId: "image:fal-gpt-image-2",
+      }
     ],
   },
   {

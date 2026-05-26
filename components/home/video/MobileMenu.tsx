@@ -226,7 +226,7 @@ export default function VideoMobileMenu({
                       : "text-muted-foreground hover:text-primary"
                 )}
                 href={link.href}
-                prefetch={link.target === "_blank" ? false : true}
+                prefetch={false}
                 target={link.target || "_self"}
                 rel={link.rel || undefined}
                 onClick={() => setOpen(false)}
@@ -244,6 +244,7 @@ export default function VideoMobileMenu({
               <I18nLink
                   className="flex-1 inline-flex h-11 w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] ring-offset-background transition-all duration-300 ease-out hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   href={user ? "/dashboard/generate" : "/dashboard/tasks"}
+                  prefetch={false}
                   onClick={() => setOpen(false)}
               >
                 {user ? (

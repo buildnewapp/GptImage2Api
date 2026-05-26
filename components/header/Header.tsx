@@ -25,7 +25,7 @@ const Header = async () => {
           <I18nLink
             href="/"
             title={t("title")}
-            prefetch={true}
+            prefetch={false}
             className="flex items-center space-x-1"
           >
             <Image src="/logo.png" alt="Logo" width={28} height={28} />

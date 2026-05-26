@@ -469,3 +469,51 @@ test("drops stale enum values that are not supported by the newly selected model
     },
   );
 });
+
+test("drops stale number values outside the supported range", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    requestSchema: {
+      type: "object",
+      properties: {
+        input: {
+          type: "object",
+          properties: {
+            prompt: {
+              type: "string",
+            },
+            duration: {
+              type: "integer",
+              minimum: 6,
+              maximum: 30,
+              multipleOf: 1,
+              default: 6,
+            },
+          },
+          required: ["prompt"],
+          "x-apidog-orders": ["prompt", "duration"],
+        },
+      },
+    },
+    examplePayload: {
+      input: {
+        prompt: "Animate this image",
+        duration: 6,
+      },
+    },
+  });
+
+  assert.deepEqual(
+    mergeAiVideoStudioFormValues({
+      fields: normalized.fields,
+      defaults: normalized.defaults,
+      previousValues: {
+        prompt: "Animate this image",
+        duration: "4",
+      },
+    }),
+    {
+      prompt: "Animate this image",
+      duration: 6,
+    },
+  );
+});

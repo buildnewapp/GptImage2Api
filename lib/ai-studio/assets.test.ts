@@ -87,6 +87,23 @@ test("uploads provider urls into typed date-based r2 directories", async () => {
   assert.deepEqual(result, [`https://cdn.example.com/${uploadCalls[0]!.key}`]);
 });
 
+test("throws on provider upload failure when source url fallback is disabled", async () => {
+  await assert.rejects(
+    persistAiStudioMediaUrls({
+      category: "image",
+      mediaUrls: ["https://provider.example.com/generated/fresh.png"],
+      autoUploadEnabled: true,
+      r2PublicUrl: "https://cdn.example.com",
+      uploadExternalUrl: async () => {
+        throw new Error("upload unavailable");
+      },
+      fallbackToSourceUrl: false,
+      now: new Date("2026-03-09T08:00:00.000Z"),
+    }),
+    /upload unavailable/,
+  );
+});
+
 test("skips urls that already point at the configured r2 public host", async () => {
   const uploadCalls: Array<{ url: string; key: string }> = [];
 
