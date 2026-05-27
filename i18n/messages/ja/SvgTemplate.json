@@ -20,6 +20,13 @@
         "price": "0",
         "priceCurrency": "USD"
       },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": 4.8,
+        "ratingCount": 76,
+        "bestRating": 5,
+        "worstRating": 1
+      },
       "operatingSystem": "Web",
       "url": "https://tikdek.com"
     },
@@ -89,6 +96,11 @@
   },
   "hero": {
     "description": "PNG、JPG、JPEG、WebP などの画像を、クリーンで編集可能な SVG ファイルに変換します。ベクター結果を無料でプレビューし、クレジットでクリーンな SVG をダウンロードできます。",
+    "rating": {
+      "count": "76",
+      "label": "{count} 件のクリエイターレビューで {value} 評価",
+      "value": "4.8"
+    },
     "showPreview": "{title} のプレビューを表示",
     "titleAccent": "画像から SVG",
     "titleSuffix": "コンバーター",

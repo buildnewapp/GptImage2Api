@@ -62,7 +62,7 @@ export default function BannerAdClient({
       <style>
         {`
           :root {
-            --promo-banner-height: 52px;
+            --promo-banner-height: 40px;
           }
 
           [data-video-header-shell] {

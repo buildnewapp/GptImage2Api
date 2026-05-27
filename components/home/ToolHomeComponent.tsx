@@ -1,4 +1,6 @@
 import { PricingByGroup } from "@/components/pricing";
+import HomeJsonLd from "@/components/home/HomeJsonLd";
+import HomeStructuredRating from "@/components/home/HomeStructuredRating";
 import {
   Accordion,
   AccordionContent,
@@ -302,7 +304,13 @@ export default async function ToolHomeComponent() {
   const contact = t.raw("contact") as ContactContent;
 
   return (
-    <div className="w-full overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(245,158,11,0.18),_transparent_24%),radial-gradient(circle_at_88%_12%,_rgba(15,23,42,0.12),_transparent_30%),linear-gradient(180deg,_#fffaf1_0%,_#f8f4eb_22%,_#ffffff_56%,_#f3efe6_100%)] dark:bg-[radial-gradient(circle_at_top_left,_rgba(245,158,11,0.12),_transparent_24%),radial-gradient(circle_at_88%_12%,_rgba(56,189,248,0.1),_transparent_26%),linear-gradient(180deg,_#020617_0%,_#0f172a_24%,_#111827_58%,_#020617_100%)]">
+    <>
+      <HomeJsonLd
+        applicationCategory="BusinessApplication"
+        description={hero.description}
+        name="JsonTranslate"
+      />
+      <div className="w-full overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(245,158,11,0.18),_transparent_24%),radial-gradient(circle_at_88%_12%,_rgba(15,23,42,0.12),_transparent_30%),linear-gradient(180deg,_#fffaf1_0%,_#f8f4eb_22%,_#ffffff_56%,_#f3efe6_100%)] dark:bg-[radial-gradient(circle_at_top_left,_rgba(245,158,11,0.12),_transparent_24%),radial-gradient(circle_at_88%_12%,_rgba(56,189,248,0.1),_transparent_26%),linear-gradient(180deg,_#020617_0%,_#0f172a_24%,_#111827_58%,_#020617_100%)]">
       <section className="relative mx-auto max-w-7xl px-4 pb-10 pt-14 sm:px-6 lg:px-8 lg:pb-20 lg:pt-24">
         <div className="absolute inset-x-0 top-0 -z-10 h-64 bg-[linear-gradient(180deg,rgba(15,23,42,0.04),transparent)] dark:bg-[linear-gradient(180deg,rgba(148,163,184,0.08),transparent)]" />
 
@@ -895,6 +903,8 @@ export default async function ToolHomeComponent() {
         </div>
       </section>
 
+      <HomeStructuredRating className="py-6" />
+
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
         <div className="grid gap-6 lg:grid-cols-[0.98fr_1.02fr]">
           <div className="rounded-[34px] border border-white/80 bg-white/80 p-7 shadow-[0_24px_70px_rgba(15,23,42,0.08)] backdrop-blur dark:border-white/10 dark:bg-slate-950/60 dark:shadow-[0_24px_70px_rgba(2,6,23,0.36)] sm:p-8">
@@ -979,6 +989,7 @@ export default async function ToolHomeComponent() {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 }

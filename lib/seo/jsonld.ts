@@ -7,6 +7,21 @@ export type SoftwareApplicationOfferJsonLdInput = {
   url: string;
 };
 
+export type SoftwareApplicationRatingJsonLdInput = {
+  ratingValue: number | string;
+  ratingCount: number | string;
+  bestRating?: number | string;
+  worstRating?: number | string;
+};
+
+export type SoftwareApplicationReviewJsonLdInput = {
+  authorName: string;
+  reviewBody: string;
+  ratingValue: number | string;
+  bestRating?: number | string;
+  worstRating?: number | string;
+};
+
 export type SoftwareApplicationJsonLdInput = {
   name: string;
   description: string;
@@ -16,6 +31,8 @@ export type SoftwareApplicationJsonLdInput = {
   applicationCategory?: string;
   operatingSystem?: string;
   offers?: SoftwareApplicationOfferJsonLdInput[];
+  aggregateRating?: SoftwareApplicationRatingJsonLdInput;
+  reviews?: SoftwareApplicationReviewJsonLdInput[];
 };
 
 export function buildBreadcrumbJsonLd(items: SeoBreadcrumb[]) {
@@ -63,6 +80,8 @@ export function buildSoftwareApplicationJsonLd({
   applicationCategory = "MultimediaApplication",
   operatingSystem = "Web",
   offers,
+  aggregateRating,
+  reviews,
 }: SoftwareApplicationJsonLdInput) {
   return {
     "@context": "https://schema.org",
@@ -82,6 +101,41 @@ export function buildSoftwareApplicationJsonLd({
             price: offer.price,
             priceCurrency: offer.priceCurrency,
             url: offer.url,
+          })),
+        }
+      : {}),
+    ...(aggregateRating
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: aggregateRating.ratingValue,
+            ratingCount: aggregateRating.ratingCount,
+            ...(aggregateRating.bestRating
+              ? { bestRating: aggregateRating.bestRating }
+              : {}),
+            ...(aggregateRating.worstRating
+              ? { worstRating: aggregateRating.worstRating }
+              : {}),
+          },
+        }
+      : {}),
+    ...(reviews && reviews.length > 0
+      ? {
+          review: reviews.map((review) => ({
+            "@type": "Review",
+            author: {
+              "@type": "Person",
+              name: review.authorName,
+            },
+            reviewBody: review.reviewBody,
+            reviewRating: {
+              "@type": "Rating",
+              ratingValue: review.ratingValue,
+              ...(review.bestRating ? { bestRating: review.bestRating } : {}),
+              ...(review.worstRating
+                ? { worstRating: review.worstRating }
+                : {}),
+            },
           })),
         }
       : {}),

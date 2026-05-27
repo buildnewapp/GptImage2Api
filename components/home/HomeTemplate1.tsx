@@ -8,6 +8,8 @@ import Stats from "@/components/home/template1/stats";
 import Testimonial from "@/components/home/template1/testimonial";
 import FAQ from "@/components/home/template1/faq";
 import CTA from "@/components/home/template1/cta";
+import HomeJsonLd from "@/components/home/HomeJsonLd";
+import HomeStructuredRating from "@/components/home/HomeStructuredRating";
 import {LandingPage} from "@/types/template1";
 import {getTranslations} from "next-intl/server";
 
@@ -30,6 +32,13 @@ export default async function HomeTemplate1() {
 
   return (
       <>
+        {page.hero && (
+          <HomeJsonLd
+            applicationCategory="DesignApplication"
+            description={page.hero.description || ""}
+            name={page.hero.title || "Nano Banana 2"}
+          />
+        )}
         {page.hero && <Hero hero={page.hero} />}
         {page.branding && <Branding section={page.branding} />}
         {page.introduce && <Feature1 section={page.introduce} />}
@@ -41,6 +50,7 @@ export default async function HomeTemplate1() {
 
         {page.testimonial && <Testimonial section={page.testimonial} />}
         {page.faq && <FAQ section={page.faq} />}
+        {page.faq && <HomeStructuredRating className="my-6" />}
         {page.cta && <CTA section={page.cta} />}
       </>
   );

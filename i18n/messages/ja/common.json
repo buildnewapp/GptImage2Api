@@ -581,6 +581,18 @@
       ]
     }
   },
+  "StructuredData": {
+    "offer": {
+      "name": "無料プレビュー"
+    },
+    "rating": {
+      "bestRating": "5",
+      "count": "76",
+      "label": "{count} 件のクリエイターレビューで {value} 評価",
+      "value": "4.8",
+      "worstRating": "1"
+    }
+  },
   "Navigation": {
     "product": "製品",
     "resources": "リソース",

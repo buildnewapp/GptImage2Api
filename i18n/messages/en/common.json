@@ -581,6 +581,18 @@
       ]
     }
   },
+  "StructuredData": {
+    "offer": {
+      "name": "Free preview"
+    },
+    "rating": {
+      "bestRating": "5",
+      "count": "76",
+      "label": "Rated {value} from {count} creator reviews",
+      "value": "4.8",
+      "worstRating": "1"
+    }
+  },
   "Navigation": {
     "product": "Product",
     "resources": "Resources",

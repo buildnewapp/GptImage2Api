@@ -4,6 +4,7 @@ import type {
   VideoTemplateFaq,
   VideoTemplateHero,
   VideoTemplatePricing,
+  VideoTemplateTestimonials,
 } from "@/components/home/video/types";
 import { siteConfig } from "@/config/site";
 import { buildCanonicalUrl } from "@/lib/seo/metadata";
@@ -26,9 +27,17 @@ export default async function TemplateJsonLd({
 }: TemplateJsonLdProps) {
   const locale = await getLocale();
   const t = await getTranslations(templateName);
+  const structuredData = await getTranslations("StructuredData");
   const hero = t.raw("hero") as VideoTemplateHero;
   const faq = t.raw("faq") as VideoTemplateFaq;
   const pricing = t.raw("pricing") as VideoTemplatePricing;
+  const testimonials = t.raw("testimonials") as VideoTemplateTestimonials;
+  const rating = structuredData.raw("rating") as {
+    bestRating: string;
+    count: string;
+    value: string;
+    worstRating: string;
+  };
   const canonicalUrl = buildCanonicalUrl({
     locale,
     path: "/",
@@ -90,6 +99,19 @@ export default async function TemplateJsonLd({
     inLanguage: locale,
     logo: `${siteConfig.url}/logo.png`,
     offers,
+    aggregateRating: {
+      ratingValue: rating.value,
+      ratingCount: rating.count,
+      bestRating: rating.bestRating,
+      worstRating: rating.worstRating,
+    },
+    reviews: testimonials.items.map((item) => ({
+      authorName: item.name,
+      reviewBody: item.quote,
+      ratingValue: 5,
+      bestRating: 5,
+      worstRating: 1,
+    })),
   });
   const productJsonLd = {
     "@context": "https://schema.org",
