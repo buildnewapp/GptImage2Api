@@ -30,7 +30,27 @@ export function GoogleOneTap() {
     if (isPending || session || !process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
       return;
     }
-    initializeOneTap();
+
+    let cancelled = false;
+    const startOneTap = () => {
+      if (!cancelled) {
+        void initializeOneTap();
+      }
+    };
+
+    if ("requestIdleCallback" in window) {
+      const idleId = window.requestIdleCallback(startOneTap, { timeout: 5000 });
+      return () => {
+        cancelled = true;
+        window.cancelIdleCallback(idleId);
+      };
+    }
+
+    const timeoutId = globalThis.setTimeout(startOneTap, 3000);
+    return () => {
+      cancelled = true;
+      globalThis.clearTimeout(timeoutId);
+    };
   }, [isPending, session, initializeOneTap]);
 
   return null;

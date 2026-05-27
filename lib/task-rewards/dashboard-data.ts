@@ -158,7 +158,7 @@ export function buildTaskRewardItems({
     });
   }
 
-  if (taskRewardsConfig.githubStar.enabled) {
+  if (taskRewardsConfig.githubStar.enabled && taskRewardsConfig.githubStar.targetUrl) {
     tasks.push({
       taskKey: "github_star",
       creditAmount: taskRewardsConfig.githubStar.credits,
@@ -172,7 +172,10 @@ export function buildTaskRewardItems({
     });
   }
 
-  if (taskRewardsConfig.huggingFaceLike.enabled) {
+  if (
+    taskRewardsConfig.huggingFaceLike.enabled &&
+    taskRewardsConfig.huggingFaceLike.targetUrl
+  ) {
     tasks.push({
       taskKey: "huggingface_like",
       creditAmount: taskRewardsConfig.huggingFaceLike.credits,

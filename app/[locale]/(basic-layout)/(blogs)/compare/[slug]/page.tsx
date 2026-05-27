@@ -1,4 +1,5 @@
 import { listPublishedPostsAction } from "@/actions/posts/posts";
+import "@/styles/code-highlight.css";
 import { SeoComparePage } from "@/components/cms/public/SeoComparePage";
 import { Locale, LOCALES } from "@/i18n/routing";
 import { loadLocalizedMetadata } from "@/lib/cms/page-data";

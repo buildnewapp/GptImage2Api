@@ -10,6 +10,10 @@ import {
 const enabledConfig = {
   ...taskRewardsConfig,
   enabled: true,
+  huggingFaceLike: {
+    ...taskRewardsConfig.huggingFaceLike,
+    targetUrl: "https://huggingface.co/spaces/example/example",
+  },
 };
 
 test("daily check-in can only be claimed once per calendar date", async () => {
