@@ -36,10 +36,10 @@ export default function HeaderShell({
   const resolvedTotalAvailableCredits = totalAvailableCredits ?? clientCredits;
   const [overlay, setOverlay] = useState(() => pathname === "/");
   const accountButtonClassName = cn(
-    "h-10 rounded-full border px-3 py-2 text-sm shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring/70 focus:ring-offset-2",
+    "h-9 rounded-full border border-transparent !px-2.5 !py-1 text-sm font-medium !shadow-none transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring/70 focus:ring-offset-2",
     overlay
-      ? "border-white/16 bg-white/8 text-white hover:border-white/24 hover:bg-white/12"
-      : "border-border/75 bg-background/80 text-foreground hover:border-border hover:bg-card/90",
+      ? "!bg-transparent !text-white hover:!bg-white/10"
+      : "!bg-transparent !text-foreground hover:!bg-accent",
   );
   const avatarTriggerClassName = cn(
     "h-10 w-10 rounded-full border transition-all duration-200",
@@ -57,6 +57,8 @@ export default function HeaderShell({
       ? "border-white/16 bg-white/10 text-white/80 hover:border-white/24 hover:bg-white/12"
       : "border-border/75 bg-background/80 text-foreground/80 hover:border-border hover:bg-card/90",
   );
+  const freeCreditsButtonClassName =
+    "group inline-flex h-9 min-w-[104px] items-center justify-center gap-1.5 rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-3 text-[11px] font-semibold leading-none text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] ring-offset-background transition-all duration-300 ease-out hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 
   useEffect(() => {
     if (!resolvedUserId || typeof totalAvailableCredits === "number") {
@@ -202,6 +204,19 @@ export default function HeaderShell({
                 </div>
               </I18nLink>
             ) : null}
+            {!resolvedUser ? (
+              <I18nLink
+                href="/dashboard/tasks"
+                prefetch={false}
+                className={freeCreditsButtonClassName}
+              >
+                <span aria-hidden="true" className="animate-gift-wiggle text-base leading-none">🎁</span>
+                <span className="flex flex-col items-center gap-0.5">
+                  <span>Get 50 Credits</span>
+                  <span>for Free</span>
+                </span>
+              </I18nLink>
+            ) : null}
             <UserAvatar
               user={resolvedUser as User}
               totalAvailableCredits={resolvedTotalAvailableCredits}
@@ -213,7 +228,10 @@ export default function HeaderShell({
             <I18nLink
               href={resolvedUser ? "/dashboard/generate" : "/dashboard/tasks"}
               prefetch={false}
-              className="inline-flex h-11 items-center justify-center rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-5 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110"
+              className={cn(
+                "inline-flex h-11 items-center justify-center rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-5 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110",
+                !resolvedUser && "hidden",
+              )}
             >
               {resolvedUser ? (
                 <Sparkles className="mr-2 h-4 w-4" />
