@@ -16,6 +16,7 @@ import Testimonials from "@/components/home/video/Testimonials";
 import Pricing from "@/components/home/video/Pricing";
 import FAQ from "@/components/home/video/FAQ";
 import CTA from "@/components/home/video/CTA";
+import BannerAd from "@/components/home/video/BannerAd";
 
 export default async function VideoTemplate() {
   const locale = await getLocale();
@@ -48,6 +49,7 @@ export default async function VideoTemplate() {
     <div className={pageShellClass + " -mt-20 w-full overflow-x-hidden"}>
       <TemplateJsonLd templateName="VideoTemplate" />
       {/*<Header />*/}
+      <BannerAd />
       <Hero hero={page.hero} />
       <Scope section={page.scope} />
       <Showcase section={page.showcase} />
