@@ -101,10 +101,10 @@ type CreemModerationResponse = {
 };
 
 async function moderateWithCreem(input: ModerateWithCreemInput) {
-  const apiKey = process.env.CREEM_API_KEY;
+  const apiKey = process.env.MODERATION_API_KEY || process.env.CREEM_API_KEY;
   if (!apiKey) {
     throw Object.assign(
-      new Error("CREEM_API_KEY is not configured for moderation."),
+      new Error("MODERATION_API_KEY or CREEM_API_KEY is not configured for moderation."),
       { status: 500 },
     );
   }
