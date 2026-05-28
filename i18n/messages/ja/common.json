@@ -9,6 +9,14 @@
     "earnCreditsShort": "獲得",
     "mobileMenuLabel": "メニューを開く"
   },
+  "BannerAd": {
+    "title": "Gemini Omni Flash リリース",
+    "badge": "40%オフ",
+    "description": "年間プランの期間限定オファー",
+    "href": "/pricing?billing=yearly",
+    "cta": "オファーを受け取る",
+    "closeLabel": "プロモーションバナーを閉じる"
+  },
   "Login": {
     "title": "おかえりなさい",
     "description": "以下の方法でログインしていただけます",
@@ -539,6 +547,18 @@
           ]
         }
       ]
+    }
+  },
+  "StructuredData": {
+    "offer": {
+      "name": "無料プレビュー"
+    },
+    "rating": {
+      "bestRating": "5",
+      "count": "76",
+      "label": "{count} 件のクリエイターレビューで {value} 評価",
+      "value": "4.8",
+      "worstRating": "1"
     }
   },
   "Navigation": {

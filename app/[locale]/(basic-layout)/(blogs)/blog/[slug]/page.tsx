@@ -1,5 +1,6 @@
 import { listPublishedPostsAction } from "@/actions/posts/posts";
 import { getViewCountAction } from "@/actions/posts/views";
+import "@/styles/code-highlight.css";
 import { ContentRestrictionMessage } from "@/components/cms/ContentRestrictionMessage";
 import { POST_CONFIGS } from "@/components/cms/post-config";
 import { PostCard } from "@/components/cms/PostCard";

@@ -20,6 +20,13 @@
         "price": "0",
         "priceCurrency": "USD"
       },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": 4.8,
+        "ratingCount": 76,
+        "bestRating": 5,
+        "worstRating": 1
+      },
       "operatingSystem": "Web",
       "url": "https://tikdek.com"
     },
@@ -89,6 +96,11 @@
   },
   "hero": {
     "description": "Convert PNG, JPG, JPEG, WebP, and other images into clean, editable SVG files. Preview the vector result for free, then use credits for clean SVG downloads.",
+    "rating": {
+      "count": "76",
+      "label": "Rated {value} from {count} creator reviews",
+      "value": "4.8"
+    },
     "showPreview": "Show {title} preview",
     "titleAccent": "Image to SVG",
     "titleSuffix": "Converter",

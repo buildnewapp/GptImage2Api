@@ -14,6 +14,7 @@ import Testimonials from "@/components/home/video/Testimonials";
 import Pricing from "@/components/home/video/Pricing";
 import FAQ from "@/components/home/video/FAQ";
 import CTA from "@/components/home/video/CTA";
+import BannerAd from "@/components/home/video/BannerAd";
 
 export default async function ImageTemplate() {
   const locale = await getLocale();
@@ -45,13 +46,14 @@ export default async function ImageTemplate() {
     <div className={pageShellClass + " -mt-20 w-full overflow-x-hidden"}>
       <TemplateJsonLd templateName="ImageTemplate" />
       {/*<Header />*/}
+      <BannerAd />
       <Hero hero={page.hero} />
-      <div id="features">
-        <FeatureRows items={page.featureRows} />
-      </div>
       <Scope section={page.scope} />
       <UseCases section={page.useCases} />
       <Showcase section={page.showcase} />
+      <div id="features">
+          <FeatureRows items={page.featureRows} />
+      </div>
       {/*<Testimonials section={page.testimonials} />*/}
       <Pricing section={page.pricing} />
       <FAQ section={page.faq} />

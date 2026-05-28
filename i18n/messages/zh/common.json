@@ -9,6 +9,14 @@
     "earnCreditsShort": "赚积分",
     "mobileMenuLabel": "打开菜单"
   },
+  "BannerAd": {
+    "title": "Gemini Omni Flash 上线",
+    "badge": "立省 40%",
+    "description": "年度套餐限时优惠",
+    "href": "/pricing?billing=yearly",
+    "cta": "领取优惠",
+    "closeLabel": "关闭促销横幅"
+  },
   "Login": {
     "title": "欢迎回来",
     "description": "你可以通过以下方式登录",
@@ -539,6 +547,18 @@
           ]
         }
       ]
+    }
+  },
+  "StructuredData": {
+    "offer": {
+      "name": "免费预览"
+    },
+    "rating": {
+      "bestRating": "5",
+      "count": "76",
+      "label": "来自 {count} 条创作者评价，评分 {value}",
+      "value": "4.8",
+      "worstRating": "1"
     }
   },
   "Navigation": {

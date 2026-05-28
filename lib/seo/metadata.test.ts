@@ -121,6 +121,65 @@ test("builds software application json ld with product offers", () => {
   );
 });
 
+test("builds software application json ld with ratings and reviews", () => {
+  assert.deepEqual(
+    buildSoftwareApplicationJsonLd({
+      name: "Seedance 2.0 AI Video Generator",
+      description: "Create AI videos from prompts and reference images.",
+      url: "https://sdanceai.com",
+      inLanguage: "en",
+      aggregateRating: {
+        ratingValue: 5,
+        ratingCount: 6,
+        bestRating: 5,
+        worstRating: 1,
+      },
+      reviews: [
+        {
+          authorName: "Sarah Chen",
+          reviewBody: "The workflow saves us days of iteration.",
+          ratingValue: 5,
+          bestRating: 5,
+          worstRating: 1,
+        },
+      ],
+    }),
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "Seedance 2.0 AI Video Generator",
+      description: "Create AI videos from prompts and reference images.",
+      url: "https://sdanceai.com",
+      inLanguage: "en",
+      applicationCategory: "MultimediaApplication",
+      operatingSystem: "Web",
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: 5,
+        ratingCount: 6,
+        bestRating: 5,
+        worstRating: 1,
+      },
+      review: [
+        {
+          "@type": "Review",
+          author: {
+            "@type": "Person",
+            name: "Sarah Chen",
+          },
+          reviewBody: "The workflow saves us days of iteration.",
+          reviewRating: {
+            "@type": "Rating",
+            ratingValue: 5,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        },
+      ],
+    },
+  );
+});
+
 test("only includes published public seo content in sitemap", () => {
   assert.equal(
     shouldIncludeInSitemap({ status: "published", visibility: "public" }),

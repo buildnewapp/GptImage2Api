@@ -1,5 +1,4 @@
 @import './custom.utilities.css';
-@import './code-highlight.css';
 
 @import 'tailwindcss';
 
@@ -112,6 +111,32 @@
     100% {
       background-position: 200%;
     }
+  }
+}
+
+.animate-gift-wiggle {
+  transform-origin: 50% 70%;
+  animation: gift-wiggle 1.5s ease-in-out infinite;
+  display: inline-block;
+}
+
+.group:hover .animate-gift-wiggle {
+  animation-duration: 0.6s;
+}
+
+@keyframes gift-wiggle {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-8deg) scale(1);
+  }
+  25% {
+    transform: translateY(-2px) rotate(8deg) scale(1.1);
+  }
+  50% {
+    transform: translateY(0) rotate(-4deg) scale(1.02);
+  }
+  75% {
+    transform: translateY(-1px) rotate(6deg) scale(1.06);
   }
 }
 

@@ -798,6 +798,7 @@ export default function AIVideoMiniStudio({
       <div className="flex flex-wrap items-center gap-2.5 border-t border-white/8 px-5 py-3.5 sm:px-7">
         <label data-ai-video-mini-studio-model className="min-w-0">
           <select
+            aria-label={t("form.aiModel")}
             value={selectedModelValue}
             onChange={(event) => {
               const [familyKey, versionKey] = event.target.value.split("::");
@@ -821,6 +822,7 @@ export default function AIVideoMiniStudio({
         {displayedAspectRatioOptions.length > 0 ? (
           <label data-ai-video-mini-studio-aspect-ratio className="min-w-0">
             <select
+              aria-label={t("form.aspectRatio")}
               value={String(
                 formValues[primaryFields.aspectRatioField?.key ?? "aspect_ratio"] ??
                   displayedAspectRatioOptions[0],
@@ -848,6 +850,7 @@ export default function AIVideoMiniStudio({
         {displayedDurationOptions.length > 0 ? (
           <label data-ai-video-mini-studio-duration className="min-w-0">
             <select
+              aria-label={t("form.duration")}
               value={String(
                 formValues[primaryFields.durationField?.key ?? "duration"] ??
                   displayedDurationOptions[0],
@@ -878,6 +881,7 @@ export default function AIVideoMiniStudio({
         {displayedResolutionOptions.length > 0 ? (
           <label data-ai-video-mini-studio-resolution className="min-w-0">
             <select
+              aria-label={t("form.resolution")}
               value={String(
                 formValues[primaryFields.resolutionField?.key ?? "resolution"] ??
                   displayedResolutionOptions[0],

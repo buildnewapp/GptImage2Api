@@ -80,15 +80,13 @@ export const taskRewardsConfig = {
     enabled: true,
     credits: 10,
     cooldownSeconds: 15,
-    targetUrl: siteConfig.socialLinks?.github ?? "https://github.com",
+    targetUrl: siteConfig.socialLinks?.github ?? "",
   },
   huggingFaceLike: {
     enabled: true,
     credits: 10,
     cooldownSeconds: 15,
-    targetUrl:
-      process.env.NEXT_PUBLIC_HUGGINGFACE_SPACE_URL ||
-      "https://huggingface.co/spaces",
+    targetUrl: siteConfig.socialLinks?.huggingface ?? "",
   },
 } satisfies TaskRewardsConfig;
 

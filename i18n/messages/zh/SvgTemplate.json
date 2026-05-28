@@ -20,6 +20,13 @@
         "price": "0",
         "priceCurrency": "USD"
       },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": 4.8,
+        "ratingCount": 76,
+        "bestRating": 5,
+        "worstRating": 1
+      },
       "operatingSystem": "Web",
       "url": "https://tikdek.com"
     },
@@ -89,6 +96,11 @@
   },
   "hero": {
     "description": "将 PNG、JPG、JPEG、WebP 和其他图片转换为干净、可编辑的 SVG 文件。免费预览矢量结果，再使用积分下载干净 SVG。",
+    "rating": {
+      "count": "76",
+      "label": "来自 {count} 条创作者评价，评分 {value}",
+      "value": "4.8"
+    },
     "showPreview": "显示 {title} 预览",
     "titleAccent": "图片转 SVG",
     "titleSuffix": "转换器",

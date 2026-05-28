@@ -197,10 +197,10 @@ export function VideoShowcaseMedia({ items }: VideoShowcaseMediaProps) {
             >
               <button
                 type="button"
-                aria-label={`Open ${item.title} preview`}
                 onClick={() => setSelectedItem(item)}
                 className="group w-full overflow-hidden rounded-[calc(var(--radius)+0.45rem)] border border-border/85 bg-card text-left text-card-foreground shadow-[0_28px_80px_-50px_rgba(15,23,42,0.5)] backdrop-blur-md transition-all hover:-translate-y-1 hover:shadow-[0_28px_70px_-42px_rgba(15,23,42,0.58)]"
               >
+                <span className="sr-only">{`Open ${item.title} preview`}</span>
                 <div className="relative aspect-video overflow-hidden">
                   {isImage ? (
                     <img

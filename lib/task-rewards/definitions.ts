@@ -143,13 +143,19 @@ export const taskDefinitions: Record<ClaimableTaskKey, TaskDefinition> = {
     },
   },
   github_star: createTimedExternalTaskDefinition({
-    isEnabled: (config) => config.enabled && config.githubStar.enabled,
+    isEnabled: (config) =>
+      config.enabled &&
+      config.githubStar.enabled &&
+      Boolean(config.githubStar.targetUrl),
     getCredits: (config) => config.githubStar.credits,
     getCooldownSeconds: (config) => config.githubStar.cooldownSeconds,
     taskKey: "github_star",
   }),
   huggingface_like: createTimedExternalTaskDefinition({
-    isEnabled: (config) => config.enabled && config.huggingFaceLike.enabled,
+    isEnabled: (config) =>
+      config.enabled &&
+      config.huggingFaceLike.enabled &&
+      Boolean(config.huggingFaceLike.targetUrl),
     getCredits: (config) => config.huggingFaceLike.credits,
     getCooldownSeconds: (config) => config.huggingFaceLike.cooldownSeconds,
     taskKey: "huggingface_like",

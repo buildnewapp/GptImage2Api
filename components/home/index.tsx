@@ -2,6 +2,8 @@ import CTA from "@/components/home/CTA";
 import FAQ from "@/components/home/FAQ";
 import Features from "@/components/home/Features";
 import Hero from "@/components/home/Hero";
+import HomeJsonLd from "@/components/home/HomeJsonLd";
+import HomeStructuredRating from "@/components/home/HomeStructuredRating";
 import Testimonials from "@/components/home/Testimonials";
 import UseCases from "@/components/home/UseCases";
 import { PricingByGroup } from "@/components/pricing";
@@ -13,6 +15,10 @@ export default async function HomeComponent() {
 
   return (
     <div className="w-full">
+      <HomeJsonLd
+        description={messages.Landing.Hero.description}
+        name={`${messages.Landing.Hero.title} AI Video Generator`}
+      />
       <BG1 />
 
       {messages.Landing.Hero && <Hero />}
@@ -26,6 +32,7 @@ export default async function HomeComponent() {
       {messages.Landing.Testimonials && <Testimonials />}
 
       {messages.Landing.FAQ && <FAQ />}
+      {messages.Landing.FAQ && <HomeStructuredRating className="my-6" />}
 
       {messages.Landing.CTA && <CTA />}
     </div>

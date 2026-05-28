@@ -19,6 +19,7 @@ import {
   ShieldCheck,
   SlidersHorizontal,
   Sparkles,
+  Star,
   Upload,
   Waypoints,
   WandSparkles,
@@ -477,6 +478,11 @@ export default function SvgTemplate() {
     answer: string;
     question: string;
   }>;
+  const rating = t.raw("hero.rating") as {
+    count: string;
+    label: string;
+    value: string;
+  };
   const sample = localizedHeroSamples[activeSample];
 
   return (
@@ -496,6 +502,23 @@ export default function SvgTemplate() {
               <p className="mt-5 max-w-3xl px-2 text-[14px] font-normal leading-[1.62] text-[#666666]">
                 {t("hero.description")}
               </p>
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-sm font-semibold text-slate-700">
+                <span className="flex items-center gap-0.5 text-amber-400">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <Star
+                      aria-hidden="true"
+                      className="h-4 w-4 fill-current"
+                      key={index}
+                    />
+                  ))}
+                </span>
+                <span>
+                  {t("hero.rating.label", {
+                    count: rating.count,
+                    value: rating.value,
+                  })}
+                </span>
+              </div>
             </div>
 
             <div className="mx-auto mt-7 grid max-w-[1080px] items-stretch gap-6 lg:mt-8 lg:grid-cols-[1.12fr_0.88fr] lg:gap-8">

@@ -8,6 +8,7 @@ const YOUTUBE_URL = ''
 const INSTAGRAM_URL = ''
 const TIKTOK_URL = ''
 const DISCORD_URL = process.env.NEXT_PUBLIC_DISCORD_INVITE_URL
+const HUGGINGFACE_URL = process.env.NEXT_PUBLIC_HUGGINGFACE_SPACE_URL
 const EMAIL_URL = 'support@gptimage2api.net'
 
 export const siteConfig: SiteConfig = {
@@ -30,6 +31,7 @@ export const siteConfig: SiteConfig = {
     instagram: INSTAGRAM_URL,
     tiktok: TIKTOK_URL,
     discord: DISCORD_URL,
+    huggingface: HUGGINGFACE_URL,
     email: EMAIL_URL,
     // add more social links here
   },
