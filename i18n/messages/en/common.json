@@ -10,9 +10,9 @@
     "mobileMenuLabel": "Open menu"
   },
   "BannerAd": {
-    "title": "Gemini Omni Flash Launch",
-    "badge": "40% OFF",
-    "description": "Limited-time annual plan offer",
+    "title": "Gpt image 2 Special Offer",
+    "badge": "Save 200%",
+    "description": "Limited time: 1 credit/image, from $0.05/image",
     "href": "/pricing?billing=yearly",
     "cta": "Claim Offer",
     "closeLabel": "Close promotion banner"

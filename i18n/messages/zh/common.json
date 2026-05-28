@@ -10,9 +10,9 @@
     "mobileMenuLabel": "打开菜单"
   },
   "BannerAd": {
-    "title": "Gemini Omni Flash 上线",
-    "badge": "立省 40%",
-    "description": "年度套餐限时优惠",
+    "title": "Gpt image 2 特价",
+    "badge": "立省 200%",
+    "description": "限时 1 积分/张，最低0.05$/张",
     "href": "/pricing?billing=yearly",
     "cta": "领取优惠",
     "closeLabel": "关闭促销横幅"
