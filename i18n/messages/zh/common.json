@@ -10,12 +10,12 @@
     "mobileMenuLabel": "打开菜单"
   },
   "BannerAd": {
-    "title": "Gemini Omni Flash Launch",
-    "badge": "40% OFF",
-    "description": "Limited-time annual plan offer",
+    "title": "Gemini Omni Flash 上线",
+    "badge": "立省 40%",
+    "description": "年度套餐限时优惠",
     "href": "/pricing?billing=yearly",
-    "cta": "Claim Offer",
-    "closeLabel": "Close promotion banner"
+    "cta": "领取优惠",
+    "closeLabel": "关闭促销横幅"
   },
   "Login": {
     "title": "欢迎回来",
