@@ -186,14 +186,28 @@ test("keeps versions nested under each family for single-source config managemen
 
   assert.deepEqual(
     soraFamily?.versions.map((version) => version.key),
-    ["sora-2", "sora-2-pro"],
+    [
+      "sora-2",
+      "sora-2-image-to-video",
+      "sora-2-pro",
+      "sora-2-pro-image-to-video",
+      "sora-2-pro-storyboard",
+      "sora-2-official",
+    ],
   );
 });
 
 test("returns the supported Sora2 versions", () => {
   assert.deepEqual(
     getAiVideoStudioVersions("sora2").map((version) => version.key),
-    ["sora-2", "sora-2-pro"],
+    [
+      "sora-2",
+      "sora-2-image-to-video",
+      "sora-2-pro",
+      "sora-2-pro-image-to-video",
+      "sora-2-pro-storyboard",
+      "sora-2-official",
+    ],
   );
 });
 
@@ -230,14 +244,21 @@ test("resolves version selections to a single ai-studio model id", () => {
       familyKey: "sora2",
       versionKey: "sora-2",
     }),
-    "video:fal-sora-2",
+    "video:sora2-text-to-video-standard",
   );
   assert.equal(
     resolveAiVideoStudioModelId({
       familyKey: "sora2",
       versionKey: "sora-2-pro",
     }),
-    "video:fal-sora-2-pro",
+    "video:sora2-pro-text-to-video",
+  );
+  assert.equal(
+    resolveAiVideoStudioModelId({
+      familyKey: "sora2",
+      versionKey: "sora-2-official",
+    }),
+    "video:sora2-official",
   );
   assert.equal(
     resolveAiVideoStudioModelId({

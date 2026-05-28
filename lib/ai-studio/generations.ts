@@ -21,6 +21,7 @@ import {
   desc,
   eq,
   gt,
+  isNull,
   sql,
 } from "drizzle-orm";
 
@@ -771,7 +772,12 @@ export async function listAiStudioGenerationsForUser(userId: string, limit = 20)
   return getDb()
     .select()
     .from(aiStudioGenerations)
-    .where(eq(aiStudioGenerations.userId, userId))
+    .where(
+      and(
+        eq(aiStudioGenerations.userId, userId),
+        isNull(aiStudioGenerations.userDeletedAt),
+      ),
+    )
     .orderBy(desc(aiStudioGenerations.createdAt))
     .limit(limit);
 }
