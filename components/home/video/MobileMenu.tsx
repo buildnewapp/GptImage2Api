@@ -190,7 +190,7 @@ export default function VideoMobileMenu({
       <button
         type="button"
         className={cn(
-          "inline-flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+          "z-50 inline-flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
           overlay
             ? "border-white/16 bg-white/8 text-white hover:bg-white/12"
             : "border-border/75 bg-background/70 text-foreground hover:bg-card"
@@ -241,19 +241,25 @@ export default function VideoMobileMenu({
                 triggerId="video-mobile-menu-locale-switcher-trigger"
               />
               <ThemeToggle overlay={overlay} />
-              <I18nLink
+              {user ? (<I18nLink
                   className="flex-1 inline-flex h-11 w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] ring-offset-background transition-all duration-300 ease-out hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   href={user ? "/dashboard/generate" : "/dashboard/tasks"}
                   prefetch={false}
                   onClick={() => setOpen(false)}
               >
-                {user ? (
-                  <Sparkles className="mr-2 h-4 w-4" />
-                ) : (
-                  <Gift className="mr-2 h-4 w-4" />
-                )}
-                {user ? tHome("createVideo") : tHome("freeCredits")}
-              </I18nLink>
+                <Sparkles className="mr-2 h-4 w-4" />
+                {tHome("createVideo")}
+              </I18nLink>) : (<I18nLink
+                  href="/dashboard/tasks"
+                  prefetch={false}
+                  className="flex-1 inline-flex h-11 w-full gap-4 items-center justify-center rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] ring-offset-background transition-all duration-300 ease-out hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                <span aria-hidden="true" className="animate-gift-wiggle text-base leading-none">🎁</span>
+                <span className="flex flex-col items-center">
+                  <span>{tHome("freeCreditsCtaLine1")}</span>
+                  <span>{tHome("freeCreditsCtaLine2")}</span>
+                </span>
+              </I18nLink>)}
             </div>
 
 
