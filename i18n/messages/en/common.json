@@ -458,7 +458,7 @@
     "links": [
       {
         "name": "Generator",
-        "href": "/dashboard/generate"
+        "href": "/generator"
       },
       {
         "name": "Showcase",
