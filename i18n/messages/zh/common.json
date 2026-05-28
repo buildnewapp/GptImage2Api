@@ -457,7 +457,7 @@
   "Header": {
     "links": [
       {
-        "name": "Generator",
+        "name": "生成器",
         "href": "/generator"
       },
       {
