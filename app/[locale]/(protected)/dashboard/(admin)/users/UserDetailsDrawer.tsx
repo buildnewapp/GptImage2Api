@@ -1,6 +1,10 @@
 "use client";
 
-import { getUserDetails, grantManualUserBenefits } from "@/actions/users/admin";
+import {
+  getUserDetails,
+  grantManualUserBenefits,
+  updateUserRole,
+} from "@/actions/users/admin";
 import type {
   AdminManualBenefitPlan,
   AdminUserDetails,
@@ -492,11 +496,14 @@ function UserDetailsContent({
 }) {
   const { user, buckets, subscriptions, orders } = details;
   const locale = useLocale();
+  const router = useRouter();
+  const [isRolePending, startRoleTransition] = useTransition();
   const links = buildAdminUserQuickActionLinks({ locale, userId: user.id });
   const totalCredits = user.totalCredits ?? 0;
   const subscriptionCredits = user.subscriptionCreditsBalance ?? 0;
   const oneTimeCredits = user.oneTimeCreditsBalance ?? 0;
   const subscriptionListHref = links.orders;
+  const nextRole = user.role === "admin" ? "user" : "admin";
 
   return (
     <div className="space-y-6">
@@ -513,7 +520,39 @@ function UserDetailsContent({
           />
           <InfoRow
             label="角色"
-            value={<Badge variant="secondary">{user.role || "user"}</Badge>}
+            value={
+              <div className="flex items-center gap-2">
+                <Badge variant="secondary">{user.role || "user"}</Badge>
+                <Button
+                  size="xs"
+                  variant="outline"
+                  disabled={isRolePending}
+                  onClick={() => {
+                    if (!window.confirm(`确认将该用户设置为 ${nextRole}？`)) {
+                      return;
+                    }
+
+                    startRoleTransition(async () => {
+                      const res = await updateUserRole({
+                        userId: user.id,
+                        role: nextRole,
+                      });
+                      if (res.success) {
+                        toast.success(`角色已设置为 ${nextRole}`);
+                        onRefresh();
+                        router.refresh();
+                      } else {
+                        toast.error("角色设置失败", {
+                          description: res.error,
+                        });
+                      }
+                    });
+                  }}
+                >
+                  {user.role === "admin" ? "设为用户" : "设为 admin"}
+                </Button>
+              </div>
+            }
           />
           <InfoRow
             label="状态"
