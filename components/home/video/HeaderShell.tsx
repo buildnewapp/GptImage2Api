@@ -36,10 +36,10 @@ export default function HeaderShell({
   const resolvedTotalAvailableCredits = totalAvailableCredits ?? clientCredits;
   const [overlay, setOverlay] = useState(() => pathname === "/");
   const accountButtonClassName = cn(
-    "h-9 rounded-full border border-transparent !px-2.5 !py-1 text-sm font-medium !shadow-none transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring/70 focus:ring-offset-2",
-    overlay
-      ? "!bg-transparent !text-white hover:!bg-white/10"
-      : "!bg-transparent !text-foreground hover:!bg-accent",
+      "h-9 rounded-full border px-3 py-2 text-sm shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring/70 focus:ring-offset-2",
+      overlay
+          ? "border-white/16 bg-white/8 text-white hover:border-white/24 hover:bg-white/12"
+          : "border-border/75 bg-background/80 text-foreground hover:border-border hover:bg-card/90",
   );
   const avatarTriggerClassName = cn(
     "h-10 w-10 rounded-full border transition-all duration-200",
@@ -212,8 +212,8 @@ export default function HeaderShell({
               >
                 <span aria-hidden="true" className="animate-gift-wiggle text-base leading-none">🎁</span>
                 <span className="flex flex-col items-center gap-0.5">
-                  <span>Get 50 Credits</span>
-                  <span>for Free</span>
+                  <span>{t("freeCreditsCtaLine1")}</span>
+                  <span>{t("freeCreditsCtaLine2")}</span>
                 </span>
               </I18nLink>
             ) : null}
@@ -225,21 +225,18 @@ export default function HeaderShell({
               triggerClassName={avatarTriggerClassName}
               triggerId="video-header-user-menu-trigger"
             />
-            <I18nLink
-              href={resolvedUser ? "/dashboard/generate" : "/dashboard/tasks"}
-              prefetch={false}
-              className={cn(
-                "inline-flex h-11 items-center justify-center rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-5 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110",
-                !resolvedUser && "hidden",
-              )}
-            >
-              {resolvedUser ? (
-                <Sparkles className="mr-2 h-4 w-4" />
-              ) : (
-                <Gift className="mr-2 h-4 w-4" />
-              )}
-              {resolvedUser ? t("createVideo") : t("freeCredits")}
-            </I18nLink>
+            {resolvedUser ? (
+                <I18nLink
+                    href="/dashboard/generate"
+                    prefetch={false}
+                    className={cn(
+                        "inline-flex h-11 items-center justify-center rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-5 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110",
+                    )}
+                >
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  {t("createVideo")}
+                </I18nLink>
+            ) : null}
           </div>
 
           <div className="flex items-center gap-2 lg:hidden">
