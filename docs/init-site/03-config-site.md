@@ -104,6 +104,7 @@ PAY_ENV=test pnpm db:sync-creem-products -- --force
 PAY_ENV=live pnpm db:sync-creem-products -- --force
 # moderation provider: none | creem
 MODERATION=creem
+MODERATION_API_KEY=
 
 ### 定时任务
 GET /api/ai-studio/archive-r2?secret=YOUR_SECRET&limit=10

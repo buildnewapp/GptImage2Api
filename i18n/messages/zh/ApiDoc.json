@@ -22,7 +22,7 @@
       },
       {
         "label": "开始接入",
-        "href": "/dashboard/generate"
+        "href": "/generator"
       },
       {
         "label": "查看价格",
@@ -233,7 +233,7 @@
       },
       {
         "label": "开始接入",
-        "href": "/dashboard/generate"
+        "href": "/generator"
       },
       {
         "label": "查看价格",

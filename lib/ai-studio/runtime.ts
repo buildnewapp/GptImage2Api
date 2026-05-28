@@ -21,7 +21,7 @@ export function applyPricingRowToPayload(
   payload: Record<string, any>,
   pricingRow: Pick<
     AiStudioPublicPricingRow,
-    "runtimeModel" | "duration"
+    "runtimeModel" | "duration" | "resolution"
   > & {
     modelDescription?: string | null;
   },
@@ -56,6 +56,14 @@ export function applyPricingRowToPayload(
       } else if (typeof next.input.n_frames === "number") {
         next.input.n_frames = duration;
       }
+    }
+  }
+
+  if (typeof pricingRow.resolution === "string" && pricingRow.resolution.length > 0) {
+    if (next.input && typeof next.input === "object") {
+      next.input.resolution = pricingRow.resolution;
+    } else {
+      next.resolution = pricingRow.resolution;
     }
   }
 

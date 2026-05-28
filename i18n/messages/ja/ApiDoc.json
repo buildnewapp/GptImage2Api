@@ -22,7 +22,7 @@
       },
       {
         "label": "Start Building",
-        "href": "/dashboard/generate"
+        "href": "/generator"
       },
       {
         "label": "View Pricing",
@@ -233,7 +233,7 @@
       },
       {
         "label": "Start Building",
-        "href": "/dashboard/generate"
+        "href": "/generator"
       },
       {
         "label": "View Pricing",

@@ -337,7 +337,7 @@ export default async function ToolHomeComponent() {
 
             <div className="flex flex-col justify-center gap-3 sm:flex-row">
               <I18nLink
-                href="/dashboard/generate"
+                href="/generator"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-950 px-6 py-3.5 text-sm font-semibold text-white shadow-[0_18px_50px_rgba(15,23,42,0.24)] transition hover:bg-slate-800 dark:bg-amber-400 dark:text-slate-950 dark:shadow-[0_22px_60px_rgba(251,191,36,0.18)] dark:hover:bg-amber-300"
               >
                 {hero.primaryCta}
@@ -973,7 +973,7 @@ export default async function ToolHomeComponent() {
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <I18nLink
-                href="/dashboard/generate"
+                href="/generator"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-semibold text-slate-950 transition hover:bg-slate-100"
               >
                 {contact.primaryCta}

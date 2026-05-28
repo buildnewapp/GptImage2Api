@@ -908,6 +908,764 @@
       "pricingRows": []
     },
     {
+      "id": "video:sora2-text-to-video-standard",
+      "category": "video",
+      "title": "Sora 2 Text to Video",
+      "docUrl": "https://docs.kie.ai/market/grok-imagine/text-to-video.md",
+      "provider": "Sora 2",
+      "alias": "sora-2-text-to-video",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "grok-imagine/text-to-video"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "sora-2-text-to-video"
+            ],
+            "default": "sora-2-text-to-video",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `sora-2-text-to-video` for this endpoint",
+            "examples": [
+              "sora-2-text-to-video"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to receive video generation task completion updates. Optional but recommended for production use.",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the video generation task",
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "description": "Text prompt describing the desired video motion. Required field.",
+                "examples": [
+                  "A cinematic shot with realistic motion, natural lighting, and smooth camera movement."
+                ]
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "description": "Specifies the width-to-height ratio of the generated video. Supported values: 16:9 and 9:16.",
+                "enum": [
+                  "16:9",
+                  "9:16"
+                ],
+                "default": "16:9",
+                "examples": [
+                  "16:9"
+                ]
+              },
+              "duration": {
+                "type": "string",
+                "enum": [
+                  "10",
+                  "15"
+                ],
+                "default": "10",
+                "description": "The duration of the generated video in seconds.",
+                "examples": [
+                  "10"
+                ]
+              },
+              "nsfw_checker": {
+                "type": "boolean",
+                "default": false,
+                "description": "Defaults to false. You can set it to false based on your needs."
+              }
+            },
+            "required": [
+              "prompt"
+            ],
+            "x-apidog-orders": [
+              "prompt",
+              "aspect_ratio",
+              "duration",
+              "nsfw_checker"
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "required": [
+          "model",
+          "input"
+        ],
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "examples": [
+          {
+            "model": "sora-2-text-to-video",
+            "callBackUrl": "https://your-domain.com/api/callback",
+            "input": {
+              "prompt": "A cinematic shot with realistic motion, natural lighting, and smooth camera movement.",
+              "aspect_ratio": "16:9",
+              "duration": "10"
+            }
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "sora-2-text-to-video",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "A cinematic shot with realistic motion, natural lighting, and smooth camera movement.",
+          "aspect_ratio": "16:9",
+          "duration": "10"
+        }
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:sora2-image-to-video-standard",
+      "category": "video",
+      "title": "Sora 2 Image to Video",
+      "docUrl": "https://docs.kie.ai/market/grok-imagine/image-to-video.md",
+      "provider": "Sora 2",
+      "alias": "sora-2-image-to-video",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "grok-imagine/image-to-video"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "sora-2-image-to-video"
+            ],
+            "default": "sora-2-image-to-video",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `sora-2-image-to-video` for this endpoint",
+            "examples": [
+              "sora-2-image-to-video"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to receive video generation task completion updates. Optional but recommended for production use.",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the video generation task",
+            "properties": {
+              "image_urls": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "description": "Provide external image URLs as references for video generation.",
+                "maxItems": 7,
+                "examples": [
+                  [
+                    "https://file.aiquickdraw.com/custom-page/akr/section-images/1762247692373tw5di116.png"
+                  ]
+                ]
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Text prompt describing the desired video motion. Optional field.",
+                "examples": [
+                  "A cinematic shot with realistic motion, natural lighting, and smooth camera movement."
+                ]
+              },
+              "duration": {
+                "type": "string",
+                "enum": [
+                  "10",
+                  "15"
+                ],
+                "default": "10",
+                "description": "The duration of the generated video in seconds.",
+                "examples": [
+                  "10"
+                ]
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "description": "Specifies the width-to-height ratio of the generated video. Supported values: 16:9 and 9:16.",
+                "enum": [
+                  "16:9",
+                  "9:16"
+                ],
+                "default": "16:9",
+                "examples": [
+                  "16:9"
+                ]
+              },
+              "nsfw_checker": {
+                "type": "boolean",
+                "default": false,
+                "description": "Defaults to false. You can set it to false based on your needs."
+              }
+            },
+            "x-apidog-orders": [
+              "image_urls",
+              "prompt",
+              "duration",
+              "aspect_ratio",
+              "nsfw_checker"
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "required": [
+          "model",
+          "input"
+        ],
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "examples": [
+          {
+            "model": "sora-2-image-to-video",
+            "callBackUrl": "https://your-domain.com/api/callback",
+            "input": {
+              "image_urls": [
+                "https://file.aiquickdraw.com/custom-page/akr/section-images/1762247692373tw5di116.png"
+              ],
+              "prompt": "Animate the subject with cinematic movement and realistic lighting.",
+              "aspect_ratio": "16:9",
+              "duration": "10"
+            }
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "sora-2-image-to-video",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "image_urls": [
+            "https://file.aiquickdraw.com/custom-page/akr/section-images/1762247692373tw5di116.png"
+          ],
+          "prompt": "Animate the subject with cinematic movement and realistic lighting.",
+          "duration": "10",
+          "aspect_ratio": "16:9"
+        }
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:sora2-pro-text-to-video",
+      "category": "video",
+      "title": "Sora 2 Pro Text to Video",
+      "docUrl": "https://docs.kie.ai/market/grok-imagine/text-to-video.md",
+      "provider": "Sora 2 Pro",
+      "alias": "sora-2-pro-text-to-video",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "grok-imagine/text-to-video"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "sora-2-pro-text-to-video"
+            ],
+            "default": "sora-2-pro-text-to-video",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `sora-2-pro-text-to-video` for this endpoint",
+            "examples": [
+              "sora-2-pro-text-to-video"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to receive video generation task completion updates. Optional but recommended for production use.",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the video generation task",
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "description": "Text prompt describing the desired video motion. Required field.",
+                "examples": [
+                  "A cinematic shot with realistic motion, natural lighting, and smooth camera movement."
+                ]
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "description": "Specifies the width-to-height ratio of the generated video. Supported values: 16:9 and 9:16.",
+                "enum": [
+                  "16:9",
+                  "9:16"
+                ],
+                "default": "16:9",
+                "examples": [
+                  "16:9"
+                ]
+              },
+              "duration": {
+                "type": "string",
+                "enum": [
+                  "10",
+                  "15"
+                ],
+                "default": "10",
+                "description": "The duration of the generated video in seconds.",
+                "examples": [
+                  "10"
+                ]
+              },
+              "nsfw_checker": {
+                "type": "boolean",
+                "default": false,
+                "description": "Defaults to false. You can set it to false based on your needs."
+              }
+            },
+            "required": [
+              "prompt"
+            ],
+            "x-apidog-orders": [
+              "prompt",
+              "aspect_ratio",
+              "duration",
+              "nsfw_checker"
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "required": [
+          "model",
+          "input"
+        ],
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "examples": [
+          {
+            "model": "sora-2-pro-text-to-video",
+            "callBackUrl": "https://your-domain.com/api/callback",
+            "input": {
+              "prompt": "A cinematic shot with realistic motion, natural lighting, and smooth camera movement.",
+              "aspect_ratio": "16:9",
+              "duration": "10"
+            }
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "sora-2-pro-text-to-video",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "A cinematic shot with realistic motion, natural lighting, and smooth camera movement.",
+          "aspect_ratio": "16:9",
+          "duration": "10"
+        }
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:sora2-pro-image-to-video",
+      "category": "video",
+      "title": "Sora 2 Pro Image to Video",
+      "docUrl": "https://docs.kie.ai/market/grok-imagine/image-to-video.md",
+      "provider": "Sora 2 Pro",
+      "alias": "sora-2-pro-image-to-video",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "grok-imagine/image-to-video"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "sora-2-pro-image-to-video"
+            ],
+            "default": "sora-2-pro-image-to-video",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `sora-2-pro-image-to-video` for this endpoint",
+            "examples": [
+              "sora-2-pro-image-to-video"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to receive video generation task completion updates. Optional but recommended for production use.",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the video generation task",
+            "properties": {
+              "image_urls": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "description": "Provide external image URLs as references for video generation.",
+                "maxItems": 7,
+                "examples": [
+                  [
+                    "https://file.aiquickdraw.com/custom-page/akr/section-images/1762247692373tw5di116.png"
+                  ]
+                ]
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Text prompt describing the desired video motion. Optional field.",
+                "examples": [
+                  "A cinematic shot with realistic motion, natural lighting, and smooth camera movement."
+                ]
+              },
+              "duration": {
+                "type": "string",
+                "enum": [
+                  "10",
+                  "15"
+                ],
+                "default": "10",
+                "description": "The duration of the generated video in seconds.",
+                "examples": [
+                  "10"
+                ]
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "description": "Specifies the width-to-height ratio of the generated video. Supported values: 16:9 and 9:16.",
+                "enum": [
+                  "16:9",
+                  "9:16"
+                ],
+                "default": "16:9",
+                "examples": [
+                  "16:9"
+                ]
+              },
+              "nsfw_checker": {
+                "type": "boolean",
+                "default": false,
+                "description": "Defaults to false. You can set it to false based on your needs."
+              }
+            },
+            "x-apidog-orders": [
+              "image_urls",
+              "prompt",
+              "duration",
+              "aspect_ratio",
+              "nsfw_checker"
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "required": [
+          "model",
+          "input"
+        ],
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "examples": [
+          {
+            "model": "sora-2-pro-image-to-video",
+            "callBackUrl": "https://your-domain.com/api/callback",
+            "input": {
+              "image_urls": [
+                "https://file.aiquickdraw.com/custom-page/akr/section-images/1762247692373tw5di116.png"
+              ],
+              "prompt": "Animate the subject with cinematic movement and realistic lighting.",
+              "aspect_ratio": "16:9",
+              "duration": "10"
+            }
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "sora-2-pro-image-to-video",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "image_urls": [
+            "https://file.aiquickdraw.com/custom-page/akr/section-images/1762247692373tw5di116.png"
+          ],
+          "prompt": "Animate the subject with cinematic movement and realistic lighting.",
+          "duration": "10",
+          "aspect_ratio": "16:9"
+        }
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:sora2-pro-storyboard",
+      "category": "video",
+      "title": "Sora 2 Pro Storyboard",
+      "docUrl": "https://docs.kie.ai/market/grok-imagine/text-to-video.md",
+      "provider": "Sora 2 Pro",
+      "alias": "sora-2-pro-storyboard",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "grok-imagine/text-to-video"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "sora-2-pro-storyboard"
+            ],
+            "default": "sora-2-pro-storyboard",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `sora-2-pro-storyboard` for this endpoint",
+            "examples": [
+              "sora-2-pro-storyboard"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to receive video generation task completion updates. Optional but recommended for production use.",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the video generation task",
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "description": "Text prompt describing the desired video motion. Required field.",
+                "examples": [
+                  "A cinematic shot with realistic motion, natural lighting, and smooth camera movement."
+                ]
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "description": "Specifies the width-to-height ratio of the generated video. Supported values: 16:9 and 9:16.",
+                "enum": [
+                  "16:9",
+                  "9:16"
+                ],
+                "default": "16:9",
+                "examples": [
+                  "16:9"
+                ]
+              },
+              "duration": {
+                "type": "string",
+                "enum": [
+                  "25"
+                ],
+                "default": "25",
+                "description": "The duration of the generated video in seconds.",
+                "examples": [
+                  "25"
+                ]
+              },
+              "nsfw_checker": {
+                "type": "boolean",
+                "default": false,
+                "description": "Defaults to false. You can set it to false based on your needs."
+              }
+            },
+            "required": [
+              "prompt"
+            ],
+            "x-apidog-orders": [
+              "prompt",
+              "aspect_ratio",
+              "duration",
+              "nsfw_checker"
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "required": [
+          "model",
+          "input"
+        ],
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "examples": [
+          {
+            "model": "sora-2-pro-storyboard",
+            "callBackUrl": "https://your-domain.com/api/callback",
+            "input": {
+              "prompt": "A cinematic shot with realistic motion, natural lighting, and smooth camera movement.",
+              "aspect_ratio": "16:9",
+              "duration": "25"
+            }
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "sora-2-pro-storyboard",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "A cinematic shot with realistic motion, natural lighting, and smooth camera movement.",
+          "aspect_ratio": "16:9",
+          "duration": "25"
+        }
+      },
+      "pricingRows": []
+    },
+    {
+      "id": "video:sora2-official",
+      "category": "video",
+      "title": "Sora 2 Official",
+      "docUrl": "https://docs.kie.ai/market/grok-imagine/text-to-video.md",
+      "provider": "Sora 2 Official",
+      "alias": "sora-2-official",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "grok-imagine/text-to-video"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "sora-2-official"
+            ],
+            "default": "sora-2-official",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `sora-2-official` for this endpoint",
+            "examples": [
+              "sora-2-official"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to receive video generation task completion updates. Optional but recommended for production use.",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the video generation task",
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "description": "Text prompt describing the desired video motion. Required field.",
+                "examples": [
+                  "A cinematic shot with realistic motion, natural lighting, and smooth camera movement."
+                ]
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "description": "Specifies the width-to-height ratio of the generated video. Supported values: 16:9 and 9:16.",
+                "enum": [
+                  "16:9",
+                  "9:16"
+                ],
+                "default": "16:9",
+                "examples": [
+                  "16:9"
+                ]
+              },
+              "duration": {
+                "type": "string",
+                "enum": [
+                  "4",
+                  "8",
+                  "12",
+                  "16",
+                  "20"
+                ],
+                "default": "8",
+                "description": "The duration of the generated video in seconds.",
+                "examples": [
+                  "8"
+                ]
+              },
+              "nsfw_checker": {
+                "type": "boolean",
+                "default": false,
+                "description": "Defaults to false. You can set it to false based on your needs."
+              }
+            },
+            "required": [
+              "prompt"
+            ],
+            "x-apidog-orders": [
+              "prompt",
+              "aspect_ratio",
+              "duration",
+              "nsfw_checker"
+            ],
+            "x-apidog-ignore-properties": []
+          }
+        },
+        "required": [
+          "model",
+          "input"
+        ],
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "examples": [
+          {
+            "model": "sora-2-official",
+            "callBackUrl": "https://your-domain.com/api/callback",
+            "input": {
+              "prompt": "A cinematic shot with realistic motion, natural lighting, and smooth camera movement.",
+              "aspect_ratio": "16:9",
+              "duration": "8"
+            }
+          }
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "sora-2-official",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "A cinematic shot with realistic motion, natural lighting, and smooth camera movement.",
+          "aspect_ratio": "16:9",
+          "duration": "8"
+        }
+      },
+      "pricingRows": []
+    },
+    {
       "id": "image:fal-gpt-image-2",
       "vendor": "apimart",
       "category": "image",

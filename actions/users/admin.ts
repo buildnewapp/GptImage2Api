@@ -2,7 +2,7 @@
 
 import type { ActionResult } from "@/lib/action-response";
 import { actionResponse } from "@/lib/action-response";
-import { isAdmin } from "@/lib/auth/server";
+import { getSession, isAdmin } from "@/lib/auth/server";
 import { getDb } from "@/lib/db";
 import {
   getManualOrderTypeForPlan,
@@ -114,6 +114,11 @@ const DEFAULT_PAGE_SIZE = 20;
 const SetUserPasswordSchema = z.object({
   userId: z.string().uuid(),
   password: z.string().min(8).max(128),
+});
+
+const UpdateUserRoleSchema = z.object({
+  userId: z.string().uuid(),
+  role: z.enum(["user", "admin"]),
 });
 
 export async function getUsers({
@@ -508,6 +513,62 @@ export async function unbanUser({
       .update(userSchema)
       .set({ banned: false, banReason: null, banExpires: null })
       .where(eq(userSchema.id, userId));
+
+    return actionResponse.success();
+  } catch (error: any) {
+    return actionResponse.error(getErrorMessage(error));
+  }
+}
+
+export async function updateUserRole(
+  input: z.infer<typeof UpdateUserRoleSchema>,
+): Promise<ActionResult> {
+  const session = await getSession();
+  if (!session?.user) {
+    return actionResponse.unauthorized("User not authenticated.");
+  }
+
+  if (!(await isAdmin())) {
+    return actionResponse.forbidden("Admin privileges required.");
+  }
+
+  const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+  const currentEmail = session.user.email?.trim().toLowerCase();
+  if (!adminEmail || currentEmail !== adminEmail) {
+    return actionResponse.forbidden("Super admin privileges required.");
+  }
+
+  const parsed = UpdateUserRoleSchema.safeParse(input);
+  if (!parsed.success) {
+    return actionResponse.badRequest(
+      parsed.error.issues[0]?.message || "Invalid input.",
+    );
+  }
+
+  const db = getDb();
+
+  try {
+    const target = await db
+      .select({ id: userSchema.id })
+      .from(userSchema)
+      .where(eq(userSchema.id, parsed.data.userId))
+      .limit(1);
+
+    if (target.length === 0) {
+      return actionResponse.notFound("User not found.");
+    }
+
+    await db
+      .update(userSchema)
+      .set({
+        role: parsed.data.role,
+        updatedAt: new Date(),
+      })
+      .where(eq(userSchema.id, parsed.data.userId));
+
+    await db
+      .delete(sessionSchema)
+      .where(eq(sessionSchema.userId, parsed.data.userId));
 
     return actionResponse.success();
   } catch (error: any) {

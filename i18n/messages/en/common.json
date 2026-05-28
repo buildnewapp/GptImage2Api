@@ -457,8 +457,8 @@
   "Header": {
     "links": [
       {
-        "name": "Features",
-        "href": "/#features"
+        "name": "Generator",
+        "href": "/generator"
       },
       {
         "name": "Showcase",

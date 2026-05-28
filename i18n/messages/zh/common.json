@@ -457,8 +457,8 @@
   "Header": {
     "links": [
       {
-        "name": "功能特性",
-        "href": "/#features"
+        "name": "生成器",
+        "href": "/generator"
       },
       {
         "name": "作品展示",

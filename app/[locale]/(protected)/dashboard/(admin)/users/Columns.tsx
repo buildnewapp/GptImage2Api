@@ -4,6 +4,7 @@ import {
   banUser,
   setUserPassword,
   unbanUser,
+  updateUserRole,
   UserWithSource,
 } from "@/actions/users/admin";
 import { buildAdminUserQuickActionLinks } from "@/lib/admin/dashboard-users";
@@ -285,11 +286,13 @@ const ActionsCell = ({ user }: { user: UserType }) => {
   const [openBan, setOpenBan] = useState(false);
   const [openUnban, setOpenUnban] = useState(false);
   const [openPassword, setOpenPassword] = useState(false);
+  const [isRolePending, startRoleTransition] = useTransition();
   const quickLinks = buildAdminUserQuickActionLinks({
     locale,
     userId: user.id,
   });
   const showDevPasswordAction = process.env.NODE_ENV === "development";
+  const nextRole = user.role === "admin" ? "user" : "admin";
 
   return (
     <>
@@ -319,6 +322,32 @@ const ActionsCell = ({ user }: { user: UserType }) => {
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => router.push(quickLinks.generations)}>
             用户生成记录
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            disabled={isRolePending}
+            onClick={() => {
+              if (!window.confirm(`确认将该用户设置为 ${nextRole}？`)) {
+                return;
+              }
+
+              startRoleTransition(async () => {
+                const res = await updateUserRole({
+                  userId: user.id,
+                  role: nextRole,
+                });
+                if (res.success) {
+                  toast.success(`角色已设置为 ${nextRole}`);
+                  router.refresh();
+                } else {
+                  toast.error("角色设置失败", {
+                    description: res.error,
+                  });
+                }
+              });
+            }}
+          >
+            {user.role === "admin" ? "设置为用户" : "设置为 admin"}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           {showDevPasswordAction && (
