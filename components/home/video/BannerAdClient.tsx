@@ -83,12 +83,12 @@ export default function BannerAdClient({
           }
         `}
       </style>
-      <div className="fixed left-0 right-0 top-0 z-[60] overflow-hidden border-b border-purple-400/50 bg-gradient-to-r from-purple-600 via-indigo-500 to-purple-700">
+      <div className="fixed left-0 right-0 top-0 z-[60] h-10 overflow-hidden border-b border-purple-400/50 bg-gradient-to-r from-purple-600 via-indigo-500 to-purple-700">
         <div
           aria-hidden="true"
           className="promo-light-sweep pointer-events-none absolute inset-y-0 -left-1/2 z-10 w-1/2 bg-gradient-to-r from-transparent via-white/55 to-transparent mix-blend-screen blur-sm"
         />
-        <div className="relative z-20 mx-auto max-w-7xl px-3 py-2 md:px-4 md:py-2.5">
+        <div className="relative z-20 mx-auto h-full max-w-7xl px-3 md:px-4">
           <button
             type="button"
             aria-label={closeLabel}
@@ -98,7 +98,7 @@ export default function BannerAdClient({
             ×
           </button>
 
-          <div className="hidden items-center justify-center gap-2.5 pr-10 text-sm md:flex lg:gap-3">
+          <div className="hidden h-full items-center justify-center gap-2.5 pr-10 text-sm md:flex lg:gap-3">
             <span className="text-lg leading-none">🎁</span>
             <div className="flex items-center gap-1 font-mono">
               {segments.map((segment, index) => (
@@ -129,7 +129,7 @@ export default function BannerAdClient({
             </I18nLink>
           </div>
 
-          <div className="flex items-center justify-center gap-2 pr-8 text-xs font-medium text-white md:hidden">
+          <div className="flex h-full items-center justify-center gap-2 pr-8 text-xs font-medium text-white md:hidden">
             <span>🎁</span>
             <span className="whitespace-nowrap font-semibold">{title}</span>
             <span className="rounded bg-white px-2 py-0.5 text-[10px] font-bold text-purple-900">
