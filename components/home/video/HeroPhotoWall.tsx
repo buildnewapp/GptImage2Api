@@ -3,9 +3,13 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 
+import { LazyPreviewVideo } from "@/components/home/video/Media";
+
 interface HeroPhotoWallProps {
   images: string[];
 }
+
+const VIDEO_FILE_RE = /\.(mp4|webm|mov|m4v)(?:[?#].*)?$/i;
 
 export const HERO_PHOTO_WALL_COLUMN_COUNT = 10;
 export const HERO_PHOTO_WALL_ITEMS_PER_COLUMN = 6;
@@ -98,14 +102,23 @@ export default function HeroPhotoWall({ images }: HeroPhotoWallProps) {
                   key={`${src}-${columnIndex}-${imageIndex}`}
                   className={`group relative overflow-hidden rounded-[1rem] border border-white/12 bg-white/6 shadow-[0_20px_40px_-24px_rgba(15,23,42,0.65)] ${HERO_PHOTO_WALL_CARD_VARIANTS[(imageIndex + columnIndex) % HERO_PHOTO_WALL_CARD_VARIANTS.length]}`}
                 >
-                  <img
-                    src={src}
-                    alt="AI-generated showcase sample"
-                    loading="lazy"
-                    decoding="async"
-                    fetchPriority="low"
-                    className="h-full w-full transform-gpu object-cover transition-transform duration-200 ease-out will-change-transform group-hover:scale-[1.2]"
-                  />
+                  {VIDEO_FILE_RE.test(src) ? (
+                    <LazyPreviewVideo
+                      src={src}
+                      loadDelayMs={700 + ((imageIndex + columnIndex) % 8) * 120}
+                      rootMargin="80px 0px"
+                      className="h-full w-full transform-gpu object-cover transition-transform duration-200 ease-out will-change-transform group-hover:scale-[1.2]"
+                    />
+                  ) : (
+                    <img
+                      src={src}
+                      alt="AI-generated showcase sample"
+                      loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
+                      className="h-full w-full transform-gpu object-cover transition-transform duration-200 ease-out will-change-transform group-hover:scale-[1.2]"
+                    />
+                  )}
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/18 via-transparent to-white/10 opacity-80" />
                 </div>
               ))}
