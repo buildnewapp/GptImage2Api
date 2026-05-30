@@ -4,9 +4,10 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 
 import { LazyPreviewVideo } from "@/components/home/video/Media";
+import type { VideoTemplateHeroImagePreview } from "@/components/home/video/types";
 
 interface HeroPhotoWallProps {
-  images: string[];
+  images: Array<string | VideoTemplateHeroImagePreview>;
 }
 
 const VIDEO_FILE_RE = /\.(mp4|webm|mov|m4v)(?:[?#].*)?$/i;
@@ -97,31 +98,95 @@ export default function HeroPhotoWall({ images }: HeroPhotoWallProps) {
               }}
               className="flex transform-gpu flex-col gap-2 will-change-transform sm:gap-3 lg:gap-4"
             >
-              {columnImages.map((src, imageIndex) => (
-                <div
-                  key={`${src}-${columnIndex}-${imageIndex}`}
-                  className={`group relative overflow-hidden rounded-[1rem] border border-white/12 bg-white/6 shadow-[0_20px_40px_-24px_rgba(15,23,42,0.65)] ${HERO_PHOTO_WALL_CARD_VARIANTS[(imageIndex + columnIndex) % HERO_PHOTO_WALL_CARD_VARIANTS.length]}`}
-                >
-                  {VIDEO_FILE_RE.test(src) ? (
-                    <LazyPreviewVideo
-                      src={src}
-                      loadDelayMs={700 + ((imageIndex + columnIndex) % 8) * 120}
-                      rootMargin="80px 0px"
-                      className="h-full w-full transform-gpu object-cover transition-transform duration-200 ease-out will-change-transform group-hover:scale-[1.2]"
-                    />
-                  ) : (
-                    <img
-                      src={src}
-                      alt="AI-generated showcase sample"
-                      loading="lazy"
-                      decoding="async"
-                      fetchPriority="low"
-                      className="h-full w-full transform-gpu object-cover transition-transform duration-200 ease-out will-change-transform group-hover:scale-[1.2]"
-                    />
-                  )}
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/18 via-transparent to-white/10 opacity-80" />
-                </div>
-              ))}
+              {columnImages.map((image, imageIndex) => {
+                const isPreview = typeof image !== "string";
+                const src = isPreview ? image.cover : image;
+                const videoSrc = isPreview ? image.src : src;
+                const title = isPreview ? image.title : undefined;
+                const imageKey = isPreview
+                  ? `${image.cover}-${image.src}-${image.title ?? ""}`
+                  : image;
+
+                return (
+                  <div
+                    key={`${imageKey}-${columnIndex}-${imageIndex}`}
+                    onMouseEnter={(event) => {
+                      if (!isPreview) {
+                        return;
+                      }
+
+                      const video = event.currentTarget.querySelector(
+                        "video[data-hover-video-src]",
+                      );
+
+                      if (!(video instanceof HTMLVideoElement)) {
+                        return;
+                      }
+
+                      if (!video.src) {
+                        video.src = video.dataset.hoverVideoSrc ?? "";
+                      }
+
+                      void video.play();
+                    }}
+                    onMouseLeave={(event) => {
+                      if (!isPreview) {
+                        return;
+                      }
+
+                      const video = event.currentTarget.querySelector(
+                        "video[data-hover-video-src]",
+                      );
+
+                      if (video instanceof HTMLVideoElement) {
+                        video.pause();
+                        video.currentTime = 0;
+                      }
+                    }}
+                    className={`group relative overflow-hidden rounded-[1rem] border border-white/12 bg-white/6 shadow-[0_20px_40px_-24px_rgba(15,23,42,0.65)] ${HERO_PHOTO_WALL_CARD_VARIANTS[(imageIndex + columnIndex) % HERO_PHOTO_WALL_CARD_VARIANTS.length]}`}
+                  >
+                    {isPreview ? (
+                      <>
+                        <img
+                          src={src}
+                          alt={title ?? "AI-generated showcase sample"}
+                          loading="lazy"
+                          decoding="async"
+                          fetchPriority="low"
+                          className="h-full w-full transform-gpu object-cover transition-transform duration-200 ease-out will-change-transform group-hover:scale-[1.2]"
+                        />
+                        <video
+                          data-hover-video-src={videoSrc}
+                          muted
+                          playsInline
+                          loop
+                          preload="none"
+                          poster={src}
+                          aria-label={title}
+                          className="absolute inset-0 h-full w-full transform-gpu object-cover opacity-0 transition-[opacity,transform] duration-200 ease-out will-change-transform group-hover:scale-[1.2] group-hover:opacity-100"
+                        />
+                      </>
+                    ) : VIDEO_FILE_RE.test(src) ? (
+                      <LazyPreviewVideo
+                        src={src}
+                        loadDelayMs={700 + ((imageIndex + columnIndex) % 8) * 120}
+                        rootMargin="80px 0px"
+                        className="h-full w-full transform-gpu object-cover transition-transform duration-200 ease-out will-change-transform group-hover:scale-[1.2]"
+                      />
+                    ) : (
+                      <img
+                        src={src}
+                        alt="AI-generated showcase sample"
+                        loading="lazy"
+                        decoding="async"
+                        fetchPriority="low"
+                        className="h-full w-full transform-gpu object-cover transition-transform duration-200 ease-out will-change-transform group-hover:scale-[1.2]"
+                      />
+                    )}
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/18 via-transparent to-white/10 opacity-80" />
+                  </div>
+                );
+              })}
             </motion.div>
           </div>
         ))}
