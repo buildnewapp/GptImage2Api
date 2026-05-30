@@ -46,6 +46,35 @@ GOOGLE_CLIENT_SECRET=
 ```
 
 ### 配置 r2
+https://nexty.dev/zh/docs/integration/cloudflare-r2
+```
+[
+  {
+    "AllowedOrigins": [
+      "http://127.0.0.1:3000",
+      "http://localhost:3000",
+      "https://demo.com"
+    ],
+    "AllowedMethods": [
+      "GET",
+      "PUT",
+      "HEAD"
+    ],
+    "AllowedHeaders": [
+      "Content-Type",
+      "Content-Length"
+    ],
+    "ExposeHeaders": [
+      "Content-Length",
+      "Content-Type",
+      "Content-Disposition",
+      "ETag",
+      "Last-Modified"
+    ],
+    "MaxAgeSeconds": 3600
+  }
+]
+```
 
 ### 修改对外提供模型
 config/ai-video-studio.ts
