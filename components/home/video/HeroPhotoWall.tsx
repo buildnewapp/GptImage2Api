@@ -74,7 +74,7 @@ export default function HeroPhotoWall({ images }: HeroPhotoWallProps) {
         {photoColumns.map((columnImages, columnIndex) => (
           <div
             key={`photo-column-${columnIndex}`}
-            className="overflow-hidden"
+            className={`${columnIndex >= 4 ? "hidden sm:block" : ""} overflow-hidden`}
             style={{
               paddingTop: `${HERO_PHOTO_WALL_COLUMN_PADDING_TOP[columnIndex] ?? HERO_PHOTO_WALL_COLUMN_PADDING_TOP[HERO_PHOTO_WALL_COLUMN_PADDING_TOP.length - 1]}px`,
             }}
