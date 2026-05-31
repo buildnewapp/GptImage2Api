@@ -32,6 +32,7 @@ import {
   toCurrencyAmount,
   updateOrderStatusAfterRefund,
 } from '@/lib/payments/webhook-helpers';
+import { sendPaymentSuccessWeComNotification } from '@/lib/payments/wecom-notification';
 import { eq, InferInsertModel } from 'drizzle-orm';
 
 export async function handleCreemPaymentSucceeded(
@@ -107,6 +108,7 @@ export async function handleCreemPaymentSucceeded(
       sourceOrderId: insertedOrder.id,
       orderAmountUsd: Number(orderData.amountTotal ?? 0),
     });
+    await sendPaymentSuccessWeComNotification(insertedOrder.id);
     // --- End: [custom] Upgrade the user's benefits ---
   } catch (error) {
     console.error(
@@ -214,6 +216,7 @@ export async function handleCreemInvoicePaid(
       sourceOrderId: insertedOrder.id,
       orderAmountUsd: Number(orderData.amountTotal ?? 0),
     });
+    await sendPaymentSuccessWeComNotification(insertedOrder.id);
     // --- End: [custom] Upgrade the user's benefits ---
   } catch (error) {
     console.error(
