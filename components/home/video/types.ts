@@ -33,6 +33,7 @@ export interface VideoTemplateFeatureRow {
   imageSrc?: string;
   reverse?: boolean;
   title: string;
+  video?: string;
   videoSrc?: string;
 }
 

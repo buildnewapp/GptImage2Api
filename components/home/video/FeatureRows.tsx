@@ -1,4 +1,5 @@
 import { featureTitleClass } from "@/components/home/video/constants";
+import FeatureHoverVideo from "@/components/home/video/FeatureHoverVideo";
 import { LazyPreviewVideo } from "@/components/home/video/Media";
 import type { VideoTemplateFeatureRow } from "@/components/home/video/types";
 
@@ -26,6 +27,7 @@ export default function FeatureRows({ items }: FeatureRowsProps) {
                     <FeaturePreview
                       imageSrc={item.imageSrc}
                       title={item.title}
+                      video={item.video}
                       videoSrc={item.videoSrc}
                     />
                     <FeatureCopy title={item.title} description={item.description} />
@@ -36,6 +38,7 @@ export default function FeatureRows({ items }: FeatureRowsProps) {
                     <FeaturePreview
                       imageSrc={item.imageSrc}
                       title={item.title}
+                      video={item.video}
                       videoSrc={item.videoSrc}
                     />
                   </>
@@ -67,29 +70,47 @@ function FeatureCopy({
 function FeaturePreview({
   imageSrc,
   title,
+  video,
   videoSrc,
 }: {
   imageSrc?: string;
   title: string;
+  video?: string;
   videoSrc?: string;
 }) {
   return (
     <div data-aos="fade-left" className="flex items-center justify-center">
-      <div className="relative aspect-video overflow-hidden rounded-[2rem] border border-border/70 shadow-[0_30px_60px_-42px_rgba(15,23,42,0.56)]">
+      <div className="group relative aspect-video overflow-hidden rounded-[2rem] border border-border/70 shadow-[0_30px_60px_-42px_rgba(15,23,42,0.56)]">
         {imageSrc ? (
-          <img
-            src={imageSrc}
-            alt={`${title} preview image`}
-            className="h-full w-full object-cover"
-            loading="lazy"
-          />
+          <>
+            <img
+              src={imageSrc}
+              alt={`${title} preview image`}
+              className="h-full w-full object-cover"
+              loading="lazy"
+            />
+            {video ? (
+              <FeatureHoverVideo
+                src={video}
+                poster={imageSrc}
+                title={title}
+                className="absolute inset-0 h-full w-full cursor-pointer object-cover transition-opacity duration-200"
+              />
+            ) : null}
+          </>
         ) : videoSrc ? (
           <LazyPreviewVideo
             src={videoSrc}
             className="h-full w-full object-cover"
           />
+        ) : video ? (
+          <FeatureHoverVideo
+            src={video}
+            title={title}
+            className="h-full w-full cursor-pointer object-cover transition-opacity duration-200"
+          />
         ) : null}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 hover:opacity-100"></div>
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
       </div>
     </div>
   );
