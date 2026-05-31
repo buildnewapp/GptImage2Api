@@ -13,6 +13,7 @@ interface HeroPhotoWallProps {
 const VIDEO_FILE_RE = /\.(mp4|webm|mov|m4v)(?:[?#].*)?$/i;
 
 export const HERO_PHOTO_WALL_COLUMN_COUNT = 10;
+export const HERO_PHOTO_WALL_MOBILE_COLUMN_COUNT = 4;
 export const HERO_PHOTO_WALL_ITEMS_PER_COLUMN = 6;
 export const HERO_PHOTO_WALL_COLUMN_START_STEP = 2;
 export const HERO_PHOTO_WALL_COLUMN_PADDING_TOP = [
@@ -27,6 +28,9 @@ export const HERO_PHOTO_WALL_CARD_VARIANTS = [
 export default function HeroPhotoWall({ images }: HeroPhotoWallProps) {
   const shouldReduceMotion = useReducedMotion();
   const [displayImages, setDisplayImages] = useState(images);
+  const [columnCount, setColumnCount] = useState(
+    HERO_PHOTO_WALL_MOBILE_COLUMN_COUNT,
+  );
 
   useEffect(() => {
     if (images.length < 2) {
@@ -47,9 +51,25 @@ export default function HeroPhotoWall({ images }: HeroPhotoWallProps) {
     setDisplayImages(nextImages);
   }, [images]);
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 640px)");
+    const updateColumnCount = () => {
+      setColumnCount(
+        mediaQuery.matches
+          ? HERO_PHOTO_WALL_COLUMN_COUNT
+          : HERO_PHOTO_WALL_MOBILE_COLUMN_COUNT,
+      );
+    };
+
+    updateColumnCount();
+    mediaQuery.addEventListener("change", updateColumnCount);
+
+    return () => mediaQuery.removeEventListener("change", updateColumnCount);
+  }, []);
+
   const photoColumns = useMemo(
     () =>
-      Array.from({ length: HERO_PHOTO_WALL_COLUMN_COUNT }, (_, columnIndex) => {
+      Array.from({ length: columnCount }, (_, columnIndex) => {
         if (displayImages.length === 0) {
           return [];
         }
@@ -65,7 +85,7 @@ export default function HeroPhotoWall({ images }: HeroPhotoWallProps) {
 
         return [...columnImages, ...columnImages, ...columnImages];
       }),
-    [displayImages],
+    [columnCount, displayImages],
   );
 
   return (
@@ -74,7 +94,7 @@ export default function HeroPhotoWall({ images }: HeroPhotoWallProps) {
         {photoColumns.map((columnImages, columnIndex) => (
           <div
             key={`photo-column-${columnIndex}`}
-            className={`${columnIndex >= 4 ? "hidden sm:block" : ""} overflow-hidden`}
+            className="overflow-hidden"
             style={{
               paddingTop: `${HERO_PHOTO_WALL_COLUMN_PADDING_TOP[columnIndex] ?? HERO_PHOTO_WALL_COLUMN_PADDING_TOP[HERO_PHOTO_WALL_COLUMN_PADDING_TOP.length - 1]}px`,
             }}
