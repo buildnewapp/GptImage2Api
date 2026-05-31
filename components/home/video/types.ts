@@ -30,7 +30,7 @@ export interface VideoTemplateHero {
 
 export interface VideoTemplateFeatureRow {
   description: string;
-  imageSrc?: string;
+  imageSrc?: string | string[];
   reverse?: boolean;
   title: string;
   video?: string;

@@ -73,18 +73,67 @@ function FeaturePreview({
   video,
   videoSrc,
 }: {
-  imageSrc?: string;
+  imageSrc?: string | string[];
   title: string;
   video?: string;
   videoSrc?: string;
 }) {
+  const imageSources = Array.isArray(imageSrc) && imageSrc.length > 0 ? imageSrc : undefined;
+  const singleImageSrc = typeof imageSrc === "string" ? imageSrc : undefined;
+  const posterSrc = imageSources?.[0] ?? singleImageSrc;
+  const scrollingImageSources = imageSources ? [...imageSources, ...imageSources] : [];
+
   return (
-    <div data-aos="fade-left" className="flex items-center justify-center">
-      <div className="group relative aspect-video overflow-hidden rounded-[2rem] border border-border/70 shadow-[0_30px_60px_-42px_rgba(15,23,42,0.56)]">
-        {imageSrc ? (
+    <div data-aos="fade-left" className="flex w-full min-w-0 items-center justify-center">
+      <div className="group relative aspect-video w-full max-w-[42rem] min-w-0 overflow-hidden rounded-[2rem] border border-border/70 shadow-[0_30px_60px_-42px_rgba(15,23,42,0.56)]">
+        {imageSources ? (
+          <div className="relative h-full w-full overflow-hidden bg-black p-2 sm:p-2">
+            <style>
+              {`
+                @keyframes feature-image-scroll {
+                  from { transform: translateX(0); }
+                  to { transform: translateX(-50%); }
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                  [data-feature-image-scroll] {
+                    animation: none !important;
+                  }
+                }
+              `}
+            </style>
+            <div
+              data-feature-image-scroll
+              className="flex h-full w-max items-stretch gap-2 sm:gap-2"
+              style={{ animation: "feature-image-scroll 28s linear infinite" }}
+            >
+              {scrollingImageSources.map((src, index) => (
+                <div
+                  key={`${src}-${index}`}
+                  className="aspect-[9/16] h-full shrink-0 overflow-hidden rounded-md"
+                >
+                  <img
+                    src={src}
+                    alt={`${title} preview ${(index % imageSources.length) + 1}`}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+            {video ? (
+              <FeatureHoverVideo
+                src={video}
+                poster={posterSrc}
+                title={title}
+                className="absolute inset-0 h-full w-full cursor-pointer object-cover transition-opacity duration-200"
+              />
+            ) : null}
+          </div>
+        ) : singleImageSrc ? (
           <>
             <img
-              src={imageSrc}
+              src={singleImageSrc}
               alt={`${title} preview image`}
               className="h-full w-full object-cover"
               loading="lazy"
@@ -92,7 +141,7 @@ function FeaturePreview({
             {video ? (
               <FeatureHoverVideo
                 src={video}
-                poster={imageSrc}
+                poster={posterSrc}
                 title={title}
                 className="absolute inset-0 h-full w-full cursor-pointer object-cover transition-opacity duration-200"
               />
