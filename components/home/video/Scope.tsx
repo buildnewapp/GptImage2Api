@@ -85,7 +85,7 @@ export default function Scope({ section }: ScopeProps) {
           <p className="mb-2 text-lg text-muted-foreground">
             {section.footerDescription}
           </p>
-          <div className="mt-6 flex items-center justify-center gap-2">
+          <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-2">
             <div className="flex -space-x-2">
               {footerAvatars.map((src, index) => (
                 <Avatar
@@ -96,7 +96,7 @@ export default function Scope({ section }: ScopeProps) {
                 </Avatar>
               ))}
             </div>
-            <span className="ml-2 text-sm text-muted-foreground">
+            <span className="text-sm text-muted-foreground sm:ml-2">
               {section.footerStat}
             </span>
           </div>
