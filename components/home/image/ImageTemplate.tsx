@@ -48,12 +48,12 @@ export default async function ImageTemplate() {
       {/*<Header />*/}
       <BannerAd />
       <Hero hero={page.hero} />
-      <Scope section={page.scope} />
-      <UseCases section={page.useCases} />
       <Showcase section={page.showcase} />
+      <Scope section={page.scope} />
       <div id="features">
-          <FeatureRows items={page.featureRows} />
+        <FeatureRows items={page.featureRows} />
       </div>
+      <UseCases section={page.useCases} />
       <Testimonials section={page.testimonials} />
       <Pricing section={page.pricing} />
       <FAQ section={page.faq} />
