@@ -210,6 +210,10 @@ function isCallbackField(key: string) {
 
 function isPromptField(key: string) {
   const normalized = key.toLowerCase();
+  if (normalized === "negative_prompt") {
+    return false;
+  }
+
   return normalized === "prompt" || normalized.endsWith("_prompt");
 }
 

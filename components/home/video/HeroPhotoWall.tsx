@@ -15,7 +15,7 @@ const VIDEO_FILE_RE = /\.(mp4|webm|mov|m4v)(?:[?#].*)?$/i;
 export const HERO_PHOTO_WALL_COLUMN_COUNT = 10;
 export const HERO_PHOTO_WALL_MOBILE_COLUMN_COUNT = 4;
 export const HERO_PHOTO_WALL_ITEMS_PER_COLUMN = 6;
-export const HERO_PHOTO_WALL_COLUMN_START_STEP = 2;
+export const HERO_PHOTO_WALL_COLUMN_START_STEP = HERO_PHOTO_WALL_ITEMS_PER_COLUMN;
 export const HERO_PHOTO_WALL_COLUMN_PADDING_TOP = [
   28, 64, 48, 84, 68, 104, 88, 124, 108, 144,
 ] as const;
