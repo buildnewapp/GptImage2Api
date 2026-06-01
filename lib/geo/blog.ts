@@ -2,6 +2,7 @@ import "server-only";
 
 import { DEFAULT_LOCALE } from "@/i18n/routing";
 import { PostBase, PublicPost } from "@/types/cms";
+import { normalizeGeoFileCdnUrls } from "@/lib/geo/file-cdn";
 
 type GeoApiResponse<TData> = {
   success?: boolean;
@@ -186,7 +187,7 @@ function mapGeoArticleToPublicPost(
         author: article.author ?? null,
       },
     },
-    featuredImageUrl: article.cover_image_url || null,
+    featuredImageUrl: normalizeGeoFileCdnUrls(article.cover_image_url) || null,
     status: "published",
     visibility: "public",
     isPinned: article.is_featured ?? false,
@@ -216,7 +217,7 @@ function mapGeoArticleToPostBase(
     status: "published",
     visibility: "public",
     isPinned: publicPost.isPinned,
-    content: article.content ?? "",
+    content: normalizeGeoFileCdnUrls(article.content),
   };
 }
 

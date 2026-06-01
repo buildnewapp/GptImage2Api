@@ -27,7 +27,12 @@ export function GoogleOneTap() {
   }, []);
 
   useEffect(() => {
-    if (isPending || session || !process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
+    if (
+      process.env.NODE_ENV !== "production" ||
+      isPending ||
+      session ||
+      !process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
+    ) {
       return;
     }
 

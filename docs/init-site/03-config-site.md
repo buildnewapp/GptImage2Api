@@ -24,8 +24,10 @@ GRANT ALL PRIVILEGES ON DATABASE db_demo1 TO user_demo1;
 postgresql://user_demo1:tN6wN9cE4wQ0eX9k@31.97.65.98:9876/db_demo1
 postgresql://user_demo1:tN6wN9cE4wQ0eX9k@localhost:5432/db_demo1
 
-### 初始化数据库
+### 初始化数据库 （正式库+测试库）
 pnpm db:migrate
+pnpm db:seed
+pnpm db:initAdmin
 
 ### 导入示例定价计划种子数据
 [pricing-config.ts](lib/db/seed/pricing-config.ts)   置空数据中所有 paypalProductId、paypalPlanId、creemProductId
@@ -46,6 +48,35 @@ GOOGLE_CLIENT_SECRET=
 ```
 
 ### 配置 r2
+https://nexty.dev/zh/docs/integration/cloudflare-r2
+```
+[
+  {
+    "AllowedOrigins": [
+      "http://127.0.0.1:3000",
+      "http://localhost:3000",
+      "https://demo.com"
+    ],
+    "AllowedMethods": [
+      "GET",
+      "PUT",
+      "HEAD"
+    ],
+    "AllowedHeaders": [
+      "Content-Type",
+      "Content-Length"
+    ],
+    "ExposeHeaders": [
+      "Content-Length",
+      "Content-Type",
+      "Content-Disposition",
+      "ETag",
+      "Last-Modified"
+    ],
+    "MaxAgeSeconds": 3600
+  }
+]
+```
 
 ### 修改对外提供模型
 config/ai-video-studio.ts

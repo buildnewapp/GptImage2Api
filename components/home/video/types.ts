@@ -7,6 +7,12 @@ export interface VideoTemplateShowcaseItem {
   title: string;
 }
 
+export interface VideoTemplateHeroImagePreview {
+  cover: string;
+  src: string;
+  title?: string;
+}
+
 export interface VideoTemplateHero {
   badge: string;
   ctaLabel: string;
@@ -14,7 +20,7 @@ export interface VideoTemplateHero {
   description: string;
   durationLabel: string;
   highlight: string;
-  images?: string[];
+  images?: Array<string | VideoTemplateHeroImagePreview>;
   modelLabel: string;
   placeholder: string;
   resolutionLabel: string;
@@ -24,9 +30,10 @@ export interface VideoTemplateHero {
 
 export interface VideoTemplateFeatureRow {
   description: string;
-  imageSrc?: string;
+  imageSrc?: string | string[];
   reverse?: boolean;
   title: string;
+  video?: string;
   videoSrc?: string;
 }
 

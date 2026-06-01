@@ -29,6 +29,7 @@ import {
   toCurrencyAmount,
   updateOrderStatusAfterRefund,
 } from '@/lib/payments/webhook-helpers';
+import { sendPaymentSuccessWeComNotification } from '@/lib/payments/wecom-notification';
 import { stripe } from '@/lib/stripe';
 import { and, eq, InferInsertModel } from 'drizzle-orm';
 import Stripe from 'stripe';
@@ -106,6 +107,7 @@ export async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Se
         sourceOrderId: orderId,
         orderAmountUsd: Number(orderData.amountTotal ?? 0),
       });
+      await sendPaymentSuccessWeComNotification(orderId);
     } catch (error) {
       console.error(`CRITICAL: Failed to upgrade one-time credits for user ${userId}, order ${orderId}:`, error);
       await sendCreditUpgradeFailedEmail({ userId, orderId, planId, error });
@@ -265,6 +267,7 @@ export async function handleInvoicePaid(invoice: Stripe.Invoice) {
           sourceOrderId: orderId,
           orderAmountUsd: Number(orderData.amountTotal ?? 0),
         });
+        await sendPaymentSuccessWeComNotification(orderId);
       } catch (error) {
         console.error(`CRITICAL: Failed to upgrade subscription credits for user ${userId}, order ${orderId}:`, error);
         await sendCreditUpgradeFailedEmail({ userId, orderId, planId, error });

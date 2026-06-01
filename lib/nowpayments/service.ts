@@ -16,6 +16,7 @@ import {
   upgradeOneTimeCredits,
   upgradeSubscriptionCredits,
 } from "@/lib/payments/credit-manager";
+import { sendPaymentSuccessWeComNotification } from "@/lib/payments/wecom-notification";
 import { grantConfiguredFirstOrderReward } from "@/lib/referrals/first-order";
 import { getURL } from "@/lib/url";
 import { and, eq, sql } from "drizzle-orm";
@@ -592,6 +593,7 @@ export async function syncNowpaymentsOrder(params: {
       orderId: processingOrder.id,
       status: "succeeded",
     });
+    await sendPaymentSuccessWeComNotification(updated?.id ?? processingOrder.id);
 
     return {
       message: "Payment confirmed.",

@@ -29,6 +29,7 @@ import {
 } from "@/lib/payments/credit-manager";
 import { ORDER_TYPES } from "@/lib/payments/provider-utils";
 import { createOrderWithIdempotency } from "@/lib/payments/webhook-helpers";
+import { sendPaymentSuccessWeComNotification } from "@/lib/payments/wecom-notification";
 import { and, desc, eq, InferInsertModel } from "drizzle-orm";
 
 function toDate(value?: string | null) {
@@ -230,6 +231,7 @@ async function createInitialPayPalSubscriptionOrder(subscription: {
     sourceOrderId: insertedOrder.id,
     orderAmountUsd: Number(orderData.amountTotal ?? 0),
   });
+  await sendPaymentSuccessWeComNotification(insertedOrder.id);
 
   return insertedOrder.id;
 }
@@ -410,6 +412,7 @@ export async function syncPayPalOrderData(
     sourceOrderId: insertedOrder.id,
     orderAmountUsd: Number(orderData.amountTotal ?? 0),
   });
+  await sendPaymentSuccessWeComNotification(insertedOrder.id);
 
   return {
     existed: false,
@@ -534,4 +537,5 @@ export async function handlePayPalSubscriptionPaymentCompleted(resource: any) {
     sourceOrderId: insertedOrder.id,
     orderAmountUsd: Number(orderData.amountTotal ?? 0),
   });
+  await sendPaymentSuccessWeComNotification(insertedOrder.id);
 }

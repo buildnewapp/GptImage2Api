@@ -89,13 +89,15 @@ function PostCardCover({
                 <PinIcon className="h-3.5 w-3.5" />
               </div>
             )}
-            <div
-              className={`${visibilityInfo.bgColor} text-white text-xs px-2 py-1 rounded-full flex items-center gap-1`}
-              title={visibilityInfo.label}
-            >
-              {visibilityInfo.icon}
-              <span className="text-xs">{visibilityInfo.label}</span>
-            </div>
+            {post.visibility !== "public" && (
+              <div
+                className={`${visibilityInfo.bgColor} text-white text-xs px-2 py-1 rounded-full flex items-center gap-1`}
+                title={visibilityInfo.label}
+              >
+                {visibilityInfo.icon}
+                <span className="text-xs">{visibilityInfo.label}</span>
+              </div>
+            )}
           </div>
 
           <div className="absolute bottom-3 left-3 bg-slate-900/80 text-white text-xs px-2.5 py-1 rounded-full">

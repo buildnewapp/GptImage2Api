@@ -205,6 +205,9 @@ test("forces prompt-like fields to stay required even when upstream schema omits
             ending_prompt: {
               type: "string",
             },
+            negative_prompt: {
+              type: "string",
+            },
             aspect_ratio: {
               type: "string",
               enum: ["16:9", "9:16"],
@@ -227,6 +230,10 @@ test("forces prompt-like fields to stay required even when upstream schema omits
   assert.equal(
     normalized.fields.find((field) => field.key === "ending_prompt")?.required,
     true,
+  );
+  assert.equal(
+    normalized.fields.find((field) => field.key === "negative_prompt")?.required,
+    false,
   );
   assert.equal(
     normalized.fields.find((field) => field.key === "aspect_ratio")?.required,
