@@ -188,10 +188,12 @@ export function VideoShowcaseMedia({ items }: VideoShowcaseMediaProps) {
       <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
         {items.map((item, index) => {
           const isImage = IMAGE_FILE_RE.test(item.src);
+          const thumbnailSrc = item.cover ?? item.src;
+          const thumbnailIsImage = IMAGE_FILE_RE.test(thumbnailSrc);
 
           return (
             <div
-              key={item.src}
+              key={`${item.cover ?? ""}-${item.src}`}
               data-aos="fade-up"
               data-aos-delay={50 + index * 200}
             >
@@ -202,16 +204,16 @@ export function VideoShowcaseMedia({ items }: VideoShowcaseMediaProps) {
               >
                 <span className="sr-only">{`Open ${item.title} preview`}</span>
                 <div className="relative aspect-video overflow-hidden">
-                  {isImage ? (
+                  {thumbnailIsImage ? (
                     <img
-                      src={item.src}
+                      src={thumbnailSrc}
                       alt={`${item.title} preview image`}
                       loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
                     />
                   ) : (
                     <LazyPreviewVideo
-                      src={item.src}
+                      src={thumbnailSrc}
                       loadDelayMs={900 + index * 250}
                       rootMargin="0px"
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"

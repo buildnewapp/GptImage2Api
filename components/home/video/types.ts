@@ -1,5 +1,6 @@
 export interface VideoTemplateShowcaseItem {
   category: string;
+  cover?: string;
   duration?: string;
   prompt?: string;
   resolution?: string;

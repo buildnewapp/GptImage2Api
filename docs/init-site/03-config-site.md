@@ -131,6 +131,7 @@ pnpm db:sync-paypal-products
 回调地址
 https://many-fine-bullfrog.ngrok-free.app/api/creem/webhook
 https://xxxx/api/creem/webhook
+*修改 .env 配置*
 PAY_ENV=test pnpm db:sync-creem-products -- --force
 PAY_ENV=live pnpm db:sync-creem-products -- --force
 # moderation provider: none | creem
