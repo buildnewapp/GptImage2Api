@@ -171,6 +171,11 @@
         "icon": "DollarSign"
       },
       {
+        "name": "設定管理",
+        "href": "/dashboard/config",
+        "icon": "SlidersHorizontal"
+      },
+      {
         "name": "ブログ管理",
         "href": "/dashboard/blogs",
         "icon": "Rss"

@@ -10,10 +10,12 @@ import { SiDiscord, SiTiktok } from "react-icons/si";
 
 import { TwitterX } from "@/components/social-icons/icons";
 import { studioPanelClass } from "@/components/home/video/constants";
+import { getPartnerSnippetsForPlacement } from "@/lib/partners/partner-snippets";
 
 export default async function VideoFooter() {
   const t = await getTranslations("Home");
   const tFooter = await getTranslations("Footer");
+  const partnerSnippets = await getPartnerSnippetsForPlacement("home");
   const footerLinks = tFooter.raw("Links.groups") as FooterLink[];
 
   footerLinks.forEach((group) => {
@@ -194,6 +196,14 @@ export default async function VideoFooter() {
               </Link>
             </div>
           </div>
+        </div>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          {partnerSnippets.map((snippet) => (
+            <div
+              key={snippet.key}
+              dangerouslySetInnerHTML={{ __html: snippet.html }}
+            />
+          ))}
         </div>
       </div>
     </footer>
