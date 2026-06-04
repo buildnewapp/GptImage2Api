@@ -1,9 +1,9 @@
 # 日常更新
 git fetch upstream
-git merge upstream/main
+git merge --no-ff --no-commit upstream/main
 
 git fetch template
-git merge --allow-unrelated-histories --no-commit template/main
+git merge --no-ff --no-commit template/main
 
 
 open -na "WebStorm" --args "./"
