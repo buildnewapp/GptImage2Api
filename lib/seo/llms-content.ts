@@ -7,6 +7,8 @@ import commonMessagesZh from "@/i18n/messages/zh/common.json";
 import { DEFAULT_LOCALE, LOCALES } from "@/i18n/routing";
 
 type SiteMapEntry = Awaited<ReturnType<typeof sitemap>>[number];
+type BasicLink = { name: string; href: string };
+type DescribedLink = BasicLink & { description: string };
 
 const llmsCopy = {
   en: {
@@ -217,6 +219,56 @@ function formatSitemapUrl(entry: SiteMapEntry) {
   return `- ${entry.url}`;
 }
 
+function normalizeUrlForSitemapMatch(url: string) {
+  try {
+    const parsedUrl = new URL(url);
+    const normalizedPathname =
+      parsedUrl.pathname === "/"
+        ? ""
+        : parsedUrl.pathname.replace(/\/$/, "");
+
+    return `${parsedUrl.origin}${normalizedPathname}${parsedUrl.search}${parsedUrl.hash}`;
+  } catch {
+    return url.replace(/\/$/, "");
+  }
+}
+
+function getSitemapUrlSet(entries: SiteMapEntry[]) {
+  return new Set(entries.map((entry) => normalizeUrlForSitemapMatch(entry.url)));
+}
+
+function getHrefKey(href: string) {
+  try {
+    const parsedUrl = new URL(absoluteUrl(href));
+    return parsedUrl.pathname === "/"
+      ? "/"
+      : parsedUrl.pathname.replace(/\/$/, "");
+  } catch {
+    return href === "/" ? "/" : href.replace(/\/$/, "");
+  }
+}
+
+function isHrefInSitemap(href: string, sitemapUrlSet: Set<string>) {
+  return sitemapUrlSet.has(normalizeUrlForSitemapMatch(absoluteUrl(href)));
+}
+
+function filterLinksBySitemap<TLink extends BasicLink>(
+  links: TLink[],
+  sitemapUrlSet: Set<string>,
+) {
+  return links.filter((link) => isHrefInSitemap(link.href, sitemapUrlSet));
+}
+
+function filterLocaleLinksBySitemap<TLink extends BasicLink>(
+  links: TLink[],
+  locale: string,
+  sitemapUrlSet: Set<string>,
+) {
+  return links.filter((link) =>
+    isHrefInSitemap(localizedHref(link.href, locale), sitemapUrlSet)
+  );
+}
+
 function getCopy(locale: string) {
   return llmsCopy[locale as keyof typeof llmsCopy] ?? llmsCopy.en;
 }
@@ -234,6 +286,112 @@ function localizedHref(href: string, locale: string) {
   const localePrefix = locale === DEFAULT_LOCALE ? "" : `/${locale}`;
 
   return `${localePrefix}${normalizedHref || "/"}`;
+}
+
+function titleCasePathSegment(segment: string) {
+  return segment
+    .split(/[-_]+/)
+    .filter(Boolean)
+    .map((word) => {
+      const upperWord = word.toUpperCase();
+      if (["ai", "api", "gpt", "seo", "llm"].includes(word.toLowerCase())) {
+        return upperWord;
+      }
+
+      return `${word.charAt(0).toUpperCase()}${word.slice(1)}`;
+    })
+    .join(" ");
+}
+
+function getFallbackPageDescription(pageName: string, locale = DEFAULT_LOCALE) {
+  if (locale === "zh") {
+    return `${pageName} 公开页面。`;
+  }
+
+  if (locale === "ja") {
+    return `${pageName} の公開ページ。`;
+  }
+
+  return `${pageName} public page.`;
+}
+
+function getSitemapHrefForLocale(entry: SiteMapEntry, locale: string) {
+  const pathname = new URL(entry.url).pathname || "/";
+  const localePrefix = locale === DEFAULT_LOCALE ? "" : `/${locale}`;
+
+  if (locale === DEFAULT_LOCALE) {
+    const isOtherLocalePath = LOCALES.some(
+      (item) =>
+        item !== DEFAULT_LOCALE &&
+        (pathname === `/${item}` || pathname.startsWith(`/${item}/`)),
+    );
+
+    return isOtherLocalePath ? null : pathname;
+  }
+
+  if (pathname === localePrefix) {
+    return "/";
+  }
+
+  if (!pathname.startsWith(`${localePrefix}/`)) {
+    return null;
+  }
+
+  return pathname.slice(localePrefix.length) || "/";
+}
+
+function isStandaloneSitemapHref(href: string) {
+  return href.split("/").filter(Boolean).length <= 1;
+}
+
+function getStandaloneSitemapPages(
+  entries: SiteMapEntry[],
+  locale: string,
+): DescribedLink[] {
+  return entries
+    .map((entry) => getSitemapHrefForLocale(entry, locale))
+    .filter((href): href is string => Boolean(href))
+    .filter(isStandaloneSitemapHref)
+    .map((href) => {
+      if (href === "/") {
+        const copy = getCopy(locale);
+        return {
+          name: copy.labels.home,
+          href,
+          description: copy.descriptions.home,
+        };
+      }
+
+      const pageName = titleCasePathSegment(href.replace(/^\//, ""));
+      return {
+        name: pageName,
+        href,
+        description: getFallbackPageDescription(pageName, locale),
+      };
+    });
+}
+
+function mergeKnownDetailsIntoSitemapPages(
+  sitemapPages: DescribedLink[],
+  knownPages: DescribedLink[],
+) {
+  const knownPagesByHref = new Map(
+    knownPages.map((page) => [getHrefKey(page.href), page]),
+  );
+  const seen = new Set<string>();
+
+  return sitemapPages
+    .map((page) => knownPagesByHref.get(getHrefKey(page.href)) ?? page)
+    .filter((page) => {
+      const hrefKey = getHrefKey(page.href);
+      if (seen.has(hrefKey)) return false;
+      seen.add(hrefKey);
+      return true;
+    });
+}
+
+function isProductApiPage(page: BasicLink) {
+  return /(?:^|-)api$/.test(page.href.replace(/\/$/, "").split("/").pop() ?? "");
 }
 
 function getUniqueLinks(links: Array<{ name: string; href: string }>) {
@@ -491,10 +649,7 @@ function getModelDocPages(locale = DEFAULT_LOCALE) {
     }));
 }
 
-function formatLocaleDescribedLink(
-  page: { name: string; href: string; description: string },
-  locale: string,
-) {
+function formatLocaleDescribedLink(page: DescribedLink, locale: string) {
   return formatDescribedLink(
     page.name,
     localizedHref(page.href, locale),
@@ -502,16 +657,39 @@ function formatLocaleDescribedLink(
   );
 }
 
-function buildLocaleSection(locale: string) {
+function buildLocaleSection(
+  locale: string,
+  sitemapEntries: SiteMapEntry[],
+  sitemapUrlSet: Set<string>,
+) {
   const copy = getCopy(locale);
   const localizedSiteUrl = absoluteUrl(localizedHref("/", locale));
-  const keyPages = getLocalizedKeyPages(locale).filter(
-    (page) => !["/seedance2", "/seedance-2-0-api"].includes(page.href)
+  const standaloneSitemapPages = getStandaloneSitemapPages(sitemapEntries, locale);
+  const keyPages = filterLocaleLinksBySitemap(
+    getLocalizedKeyPages(locale).filter(
+      (page) => !["/seedance2", "/seedance-2-0-api"].includes(page.href)
+    ),
+    locale,
+    sitemapUrlSet,
   );
-  const productPages = getProductPages(locale);
-  const modelDocPages = getModelDocPages(locale);
-  const contentResourcePages = getContentResourcePages(locale).filter(
-    (page) => ![...keyPages, ...productPages].some((item) => item.href === page.href)
+  const productPages = mergeKnownDetailsIntoSitemapPages(
+    standaloneSitemapPages.filter(isProductApiPage),
+    getProductPages(locale),
+  );
+  const modelDocPages = filterLocaleLinksBySitemap(
+    getModelDocPages(locale),
+    locale,
+    sitemapUrlSet,
+  );
+  const contentResourcePages = mergeKnownDetailsIntoSitemapPages(
+    standaloneSitemapPages.filter(
+      (page) =>
+        !isProductApiPage(page) &&
+        ![...keyPages, ...productPages].some(
+          (item) => getHrefKey(item.href) === getHrefKey(page.href),
+        ),
+    ),
+    getContentResourcePages(locale),
   );
 
   return [
@@ -535,27 +713,58 @@ function buildLocaleSection(locale: string) {
       formatLocaleDescribedLink(page, locale)
     ),
     "",
-    `### ${copy.modelDocs}`,
-    "",
-    copy.modelDocIntro,
-    "",
-    ...modelDocPages.map((page) =>
-      formatLocaleDescribedLink(page, locale)
-    ),
-    "",
-    `### ${copy.contentResources}`,
-    "",
-    ...contentResourcePages.map((page) =>
-      formatLocaleDescribedLink(page, locale)
-    ),
-    "",
+    ...(modelDocPages.length
+      ? [
+          `### ${copy.modelDocs}`,
+          "",
+          copy.modelDocIntro,
+          "",
+          ...modelDocPages.map((page) =>
+            formatLocaleDescribedLink(page, locale)
+          ),
+          "",
+        ]
+      : []),
+    ...(contentResourcePages.length
+      ? [
+          `### ${copy.contentResources}`,
+          "",
+          ...contentResourcePages.map((page) =>
+            formatLocaleDescribedLink(page, locale)
+          ),
+          "",
+        ]
+      : []),
   ];
 }
 
 export async function buildLlmsText() {
-  const navigationLinks = getNavigationLinks();
-  const keyPages = getKeyPages();
-  const modelDocPages = getModelDocPages();
+  const sitemapEntries = await getSitemapEntries();
+  const sitemapUrlSet = getSitemapUrlSet(sitemapEntries);
+  const standaloneSitemapPages = getStandaloneSitemapPages(
+    sitemapEntries,
+    DEFAULT_LOCALE,
+  );
+  const knownStandalonePages = [
+    ...getKeyPages(),
+    ...getProductPages(),
+    ...getContentResourcePages(),
+  ];
+  const navigationLinks = mergeKnownDetailsIntoSitemapPages(
+    standaloneSitemapPages,
+    [
+      ...getNavigationLinks().map((link) => ({
+        ...link,
+        description: getFallbackPageDescription(link.name),
+      })),
+      ...knownStandalonePages,
+    ],
+  );
+  const keyPages = mergeKnownDetailsIntoSitemapPages(
+    standaloneSitemapPages,
+    knownStandalonePages,
+  );
+  const modelDocPages = filterLinksBySitemap(getModelDocPages(), sitemapUrlSet);
 
   return [
     `# ${siteConfig.name}`,
@@ -579,12 +788,16 @@ export async function buildLlmsText() {
     "",
     ...navigationLinks.slice(0, 12).map((link) => formatLink(link.name, link.href)),
     "",
-    "## Model API Docs",
-    "",
-    ...modelDocPages.map((page) =>
-      formatDescribedLink(page.name, page.href, page.description)
-    ),
-    "",
+    ...(modelDocPages.length
+      ? [
+          "## Model API Docs",
+          "",
+          ...modelDocPages.map((page) =>
+            formatDescribedLink(page.name, page.href, page.description)
+          ),
+          "",
+        ]
+      : []),
     "## Languages",
     "",
     formatDescribedLink("English", "/", "Default language."),
@@ -601,8 +814,19 @@ export async function buildLlmsText() {
 
 export async function buildLlmsFullText() {
   const sitemapEntries = await getSitemapEntries();
+  const sitemapUrlSet = getSitemapUrlSet(sitemapEntries);
   const socialLinks = getSocialLinks();
-  const localeSections = LOCALES.flatMap((locale) => buildLocaleSection(locale));
+  const legalPages = filterLinksBySitemap(
+    [
+      { name: "Privacy Policy", href: "/privacy-policy" },
+      { name: "Terms of Service", href: "/terms-of-service" },
+      { name: "Refund Policy", href: "/refund-policy" },
+    ],
+    sitemapUrlSet,
+  );
+  const localeSections = LOCALES.flatMap((locale) =>
+    buildLocaleSection(locale, sitemapEntries, sitemapUrlSet)
+  );
 
   return [
     `# ${siteConfig.name}`,
@@ -636,12 +860,14 @@ export async function buildLlmsFullText() {
       ? socialLinks.map((link) => formatLink(link.name, link.href))
       : ["- No public social links configured."]),
     "",
-    "## Legal Pages",
-    "",
-    formatLink("Privacy Policy", "/privacy-policy"),
-    formatLink("Terms of Service", "/terms-of-service"),
-    formatLink("Refund Policy", "/refund-policy"),
-    "",
+    ...(legalPages.length
+      ? [
+          "## Legal Pages",
+          "",
+          ...legalPages.map((link) => formatLink(link.name, link.href)),
+          "",
+        ]
+      : []),
     "## AI Assistant Notes",
     "",
     "- Use the root URL for English/default pages.",
