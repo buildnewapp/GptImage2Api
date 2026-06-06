@@ -1,6 +1,9 @@
 import { PricingByGroup } from "@/components/pricing";
 import HomeJsonLd from "@/components/home/HomeJsonLd";
 import HomeStructuredRating from "@/components/home/HomeStructuredRating";
+import ToolHomeGallery, {
+  type GalleryItem,
+} from "@/components/home/ToolHomeGallery";
 import {
   Accordion,
   AccordionContent,
@@ -36,33 +39,6 @@ type HeroStat = {
   description: string;
 };
 
-type PreviewActionKey =
-  | "upload"
-  | "projectSettings"
-  | "modelSettings"
-  | "taskCenter"
-  | "startTranslation"
-  | "downloadProject";
-
-type PreviewAction = {
-  key: PreviewActionKey;
-  label: string;
-  primary?: boolean;
-};
-
-type PreviewTab = {
-  locale: string;
-  active: boolean;
-};
-
-type PreviewPane = {
-  eyebrow: string;
-  title: string;
-  badge: string;
-  tags: string[];
-  code: string;
-};
-
 type HeroContent = {
   badge: string;
   eyebrow: string;
@@ -74,27 +50,7 @@ type HeroContent = {
   primaryCta: string;
   secondaryCta: string;
   stats: HeroStat[];
-  preview: {
-    eyebrow: string;
-    title: string;
-    modeBadge: string;
-    studioLabel: string;
-    studioTitle: string;
-    chips: string[];
-    actions: PreviewAction[];
-    browser: {
-      eyebrow: string;
-      title: string;
-      projectBadge: string;
-      tree: string[];
-      activeTreeItem: string;
-    };
-    source: PreviewPane;
-    target: PreviewPane & {
-      tabs: PreviewTab[];
-    };
-    summary: string[];
-  };
+  gallery: GalleryItem[];
 };
 
 type CapabilityCardKey =
@@ -240,15 +196,6 @@ const capabilityIcons: Record<CapabilityCardKey, LucideIcon> = {
   terminal: TerminalSquare,
 };
 
-const previewActionIcons: Record<PreviewActionKey, LucideIcon> = {
-  upload: Upload,
-  projectSettings: FolderTree,
-  modelSettings: CreditCard,
-  taskCenter: ListTodo,
-  startTranslation: Languages,
-  downloadProject: Download,
-};
-
 const languageModelIcons: Record<LanguageModelCardKey, LucideIcon> = {
   languages: Languages,
   official: Sparkles,
@@ -371,195 +318,7 @@ export default async function ToolHomeComponent() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-6xl">
-            <div className="absolute -left-8 top-10 hidden h-40 w-40 rounded-full bg-amber-200/45 blur-3xl dark:bg-amber-400/20 lg:block" />
-            <div className="absolute -right-10 bottom-8 hidden h-44 w-44 rounded-full bg-slate-300/30 blur-3xl dark:bg-cyan-400/10 lg:block" />
-
-            <div className="relative rounded-[28px] border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(255,251,245,0.82))] p-3 shadow-[0_36px_120px_rgba(15,23,42,0.18)] backdrop-blur dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(15,23,42,0.84),rgba(2,6,23,0.92))] dark:shadow-[0_40px_120px_rgba(2,6,23,0.5)] sm:rounded-[36px] sm:p-5">
-              <div className="rounded-[24px] border border-[#e8dfd0] bg-[#f9f5ee] p-2.5 shadow-inner dark:border-white/10 dark:bg-slate-950/80 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:rounded-[28px] sm:p-4">
-                <div className="mb-4 flex flex-col items-start gap-3 border-b border-[#e4dac9] px-2 pb-4 dark:border-white/10 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.26em] text-slate-400 dark:text-slate-500">
-                      {hero.preview.eyebrow}
-                    </p>
-                    <h3 className="mt-2 font-serif text-xl text-slate-950 dark:text-slate-50 sm:text-2xl">
-                      {hero.preview.title}
-                    </h3>
-                  </div>
-                  <div className="rounded-full border border-[#deceb4] bg-white px-4 py-1.5 text-xs font-semibold text-amber-800 dark:border-amber-300/20 dark:bg-amber-400/10 dark:text-amber-200">
-                    {hero.preview.modeBadge}
-                  </div>
-                </div>
-
-                <div className="rounded-[22px] border border-[#e1d6c4] bg-white p-2.5 shadow-sm dark:border-white/10 dark:bg-slate-900/80 dark:shadow-[0_12px_40px_rgba(2,6,23,0.3)] sm:rounded-[26px] sm:p-4">
-                  <div className="rounded-[18px] border border-slate-200 bg-white p-2.5 shadow-[0_16px_40px_rgba(15,23,42,0.06)] dark:border-white/10 dark:bg-slate-950 dark:shadow-[0_24px_60px_rgba(2,6,23,0.4)] sm:rounded-[22px] sm:p-3">
-                    <div className="mb-3 flex flex-col gap-3 border-b border-slate-200 pb-3 dark:border-white/10 lg:flex-row lg:items-center lg:justify-between">
-                      <div className="min-w-0">
-                        <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-emerald-600 dark:text-emerald-300">
-                          {hero.preview.studioLabel}
-                        </div>
-                        <h4 className="mt-1 text-lg font-semibold tracking-tight text-slate-950 dark:text-slate-50">
-                          {hero.preview.studioTitle}
-                        </h4>
-                        <div className="hidden md:flex mt-2 flex flex-wrap gap-2 text-[11px] text-slate-600 dark:text-slate-300">
-                          {hero.preview.chips.map((chip) => (
-                            <span
-                              key={chip}
-                              className="rounded-full bg-slate-100 px-2.5 py-1 dark:bg-white/[0.08] dark:text-slate-200"
-                            >
-                              {chip}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="flex flex-wrap items-center gap-2 lg:justify-end">
-                        {hero.preview.actions.map((action) => {
-                          const Icon = previewActionIcons[action.key];
-                          const actionClass = action.primary
-                            ? "inline-flex items-center gap-1 rounded-xl bg-emerald-500 px-3 py-2 text-xs font-semibold text-white shadow-sm dark:bg-emerald-400 dark:text-slate-950"
-                            : "inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-200";
-
-                          return (
-                            <div key={action.key} className={actionClass}>
-                              <Icon className="h-3.5 w-3.5" />
-                              {action.label}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    <div className="grid min-h-0 gap-3 lg:grid-cols-[220px_minmax(0,1fr)_minmax(0,1fr)] xl:grid-cols-[260px_minmax(0,1fr)_minmax(0,1fr)]">
-                      <aside className="order-3 flex min-h-0 flex-col rounded-[18px] border border-slate-200 bg-slate-50 p-3 dark:border-white/10 dark:bg-slate-900/70 sm:rounded-[20px] lg:order-none">
-                        <div className="mb-3 flex items-center justify-between">
-                          <div>
-                            <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-500">
-                              {hero.preview.browser.eyebrow}
-                            </div>
-                            <div className="text-sm font-semibold text-slate-950 dark:text-slate-50">
-                              {hero.preview.browser.title}
-                            </div>
-                          </div>
-                          <div className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-[11px] text-slate-500 dark:border-white/10 dark:bg-white/5 dark:text-slate-400">
-                            {hero.preview.browser.projectBadge}
-                          </div>
-                        </div>
-
-                        <div className="rounded-xl border border-slate-200 bg-white p-2 dark:border-white/10 dark:bg-slate-950">
-                          {hero.preview.browser.tree.map((item) => (
-                            <div
-                              key={item}
-                              className={
-                                item === hero.preview.browser.activeTreeItem
-                                  ? "rounded-lg bg-emerald-50 px-2.5 py-2 text-xs font-medium text-emerald-700 dark:bg-emerald-400/10 dark:text-emerald-300"
-                                  : "rounded-lg px-2.5 py-2 text-xs text-slate-600 dark:text-slate-300"
-                              }
-                            >
-                              {item}
-                            </div>
-                          ))}
-                        </div>
-                      </aside>
-
-                      <div className="order-1 flex min-h-0 flex-col rounded-[18px] border border-slate-200 bg-slate-50 p-3 dark:border-white/10 dark:bg-slate-900/70 sm:rounded-[20px] lg:order-none">
-                        <div className="mb-3 flex items-center justify-between gap-3">
-                          <div>
-                            <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-500">
-                              {hero.preview.source.eyebrow}
-                            </div>
-                            <div className="text-sm font-semibold text-slate-950 dark:text-slate-50">
-                              {hero.preview.source.title}
-                            </div>
-                          </div>
-                          <div className="hidden md:block rounded-full bg-white px-3 py-1 text-[11px] text-slate-600 shadow-sm dark:bg-white/5 dark:text-slate-300 dark:shadow-none">
-                            {hero.preview.source.badge}
-                          </div>
-                        </div>
-
-                        <div className="mb-3 flex flex-wrap gap-2">
-                          {hero.preview.source.tags.map((tag) => (
-                            <div
-                              key={tag}
-                              className="rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-semibold text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300"
-                            >
-                              {tag}
-                            </div>
-                          ))}
-                        </div>
-
-                        <pre className="min-h-[180px] overflow-auto whitespace-pre-wrap rounded-[18px] bg-[#161616] p-4 font-mono text-xs leading-6 text-amber-50 shadow-inner sm:min-h-[240px] xl:min-h-[280px] dark:bg-[#0b1120] dark:text-amber-100">
-                          <code>{hero.preview.source.code}</code>
-                        </pre>
-                      </div>
-
-                      <div className="order-2 flex min-h-0 flex-col rounded-[18px] border border-slate-200 bg-slate-50 p-3 dark:border-white/10 dark:bg-slate-900/70 sm:rounded-[20px] lg:order-none">
-                        <div className="mb-3 flex items-center justify-between gap-3">
-                          <div>
-                            <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-500">
-                              {hero.preview.target.eyebrow}
-                            </div>
-                            <div className="text-sm font-semibold text-slate-950 dark:text-slate-50">
-                              {hero.preview.target.title}
-                            </div>
-                          </div>
-                          <div className="hidden md:block rounded-full bg-white px-3 py-1 text-[11px] text-slate-600 shadow-sm dark:bg-white/5 dark:text-slate-300 dark:shadow-none">
-                            {hero.preview.target.badge}
-                          </div>
-                        </div>
-
-                        <div className="mb-3 flex flex-wrap gap-2">
-                          {hero.preview.target.tabs.map((tab) => (
-                            <div
-                              key={tab.locale}
-                              className={
-                                tab.active
-                                  ? "rounded-full bg-slate-950 px-3 py-1.5 text-[11px] font-semibold text-white dark:bg-emerald-400 dark:text-slate-950"
-                                  : "rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300"
-                              }
-                            >
-                              {tab.locale}
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className="mb-3 h-2 overflow-hidden rounded-full bg-white dark:bg-white/10">
-                          <div className="h-full w-[82%] rounded-full bg-emerald-500 dark:bg-emerald-400" />
-                        </div>
-
-                        <pre className="min-h-[180px] overflow-auto whitespace-pre-wrap rounded-[18px] bg-[#102016] p-4 font-mono text-xs leading-6 text-emerald-100 shadow-inner sm:min-h-[240px] xl:min-h-[280px] dark:bg-[#07130d] dark:text-emerald-200">
-                          <code>{hero.preview.target.code}</code>
-                        </pre>
-
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {hero.preview.target.tags.map((tag) => (
-                            <div
-                              key={tag}
-                              className="rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300"
-                            >
-                              {tag}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 grid gap-3 rounded-[24px] border border-[#e4dacb] bg-white/75 p-3 dark:border-white/10 dark:bg-white/5 md:grid-cols-3 sm:rounded-[28px] sm:p-4">
-                  {hero.preview.summary.map((item) => (
-                    <div
-                      key={item}
-                      className="flex items-center gap-2 rounded-2xl bg-[#fbf8f2] px-4 py-3 text-sm font-medium text-slate-700 dark:bg-slate-900/80 dark:text-slate-200"
-                    >
-                      <Check className="h-4 w-4 text-emerald-600" />
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+          <ToolHomeGallery items={hero.gallery} />
         </div>
       </section>
 

@@ -26,92 +26,26 @@
         "description": "Keep one continuous translation loop from the hosted workspace to your local repository."
       }
     ],
-    "preview": {
-      "eyebrow": "Workspace preview",
-      "title": "Preview the latest responsive Web Studio",
-      "modeBadge": "Hosted by us / Bring your own key",
-      "studioLabel": "JsonAIStudio",
-      "studioTitle": "A responsive Web Studio designed for translation tasks",
-      "chips": [
-        "marketing-site",
-        "Source locale: en",
-        "File type: json",
-        "Target locales: zh-CN, ja-JP, de-DE"
-      ],
-      "actions": [
-        {
-          "key": "upload",
-          "label": "Upload"
-        },
-        {
-          "key": "projectSettings",
-          "label": "Project settings"
-        },
-        {
-          "key": "modelSettings",
-          "label": "Model settings"
-        },
-        {
-          "key": "taskCenter",
-          "label": "Task center"
-        },
-        {
-          "key": "startTranslation",
-          "label": "Start translation",
-          "primary": true
-        },
-        {
-          "key": "downloadProject",
-          "label": "Download project"
-        }
-      ],
-      "browser": {
-        "eyebrow": "Project file browser",
-        "title": "File tree",
-        "projectBadge": "demo1",
-        "tree": [
-          "marketing-site",
-          "i18n/messages/en/common.json",
-          "i18n/messages/en/pricing.json",
-          "i18n/messages/en/dashboard.json",
-          "docs/help/faq.md"
-        ],
-        "activeTreeItem": "i18n/messages/en/common.json"
+    "gallery": [
+      {
+        "title": "Workspace overview",
+        "src": "/og.png",
+        "thrumb": "/og.png",
+        "desc": "A temporary preview image for the gallery layout. Replace this source with the final workspace screenshot later."
       },
-      "source": {
-        "eyebrow": "Source editor",
-        "title": "en / common.json",
-        "badge": "Diff: 2 added, 1 changed",
-        "tags": ["JSON", "Incremental mode", "Keep structure", "Auto compare"],
-        "code": "{\n  \"hero\": {\n    \"title\": \"Ship localization faster\",\n    \"cta\": \"Start now\"\n  },\n  \"pricing\": {\n    \"headline\": \"Flexible plans\",\n    \"badge\": \"For global teams\"\n  }\n}"
+      {
+        "title": "Project files",
+        "src": "/logo-512.png",
+        "thrumb": "/logo-512.png",
+        "desc": "A test image used to verify thumbnail switching and the large preview state."
       },
-      "target": {
-        "eyebrow": "Target results",
-        "title": "Multi-language tabs and side-by-side output",
-        "badge": "Task status: Running 82%",
-        "tabs": [
-          {
-            "locale": "zh-CN",
-            "active": true
-          },
-          {
-            "locale": "ja-JP",
-            "active": false
-          },
-          {
-            "locale": "de-DE",
-            "active": false
-          }
-        ],
-        "tags": ["Queued", "Running", "Pausable", "Resumable", "ZIP export"],
-        "code": "{\n  \"hero\": {\n    \"title\": \"更快交付本地化版本\",\n    \"cta\": \"立即开始\"\n  },\n  \"pricing\": {\n    \"headline\": \"为全球化团队准备的灵活套餐\",\n    \"badge\": \"适合长期维护项目\"\n  }\n}"
-      },
-      "summary": [
-        "Top-level actions keep upload, settings, task center, translation, and export in one place.",
-        "Project browser, source editor, and target output stay visible together for side-by-side work.",
-        "The layout stacks vertically on mobile and expands into a real three-column workspace on desktop."
-      ]
-    }
+      {
+        "title": "Translation result",
+        "src": "/images/users/1.png",
+        "thrumb": "/images/users/1.png",
+        "desc": "A placeholder item for checking gallery behavior before final product images are ready."
+      }
+    ]
   },
   "capabilities": {
     "eyebrow": "Six capabilities",

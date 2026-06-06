@@ -7,22 +7,22 @@
 
 ```
 -- 1. 创建新用户（请替换为强密码）
-CREATE USER user_demo1 WITH ENCRYPTED PASSWORD 'tN6wN9cE4wQ0eX9k';
+CREATE USER user_gptapi WITH ENCRYPTED PASSWORD 'yS1cG5gW3aY8sK0j';
 
 -- 2. 创建新数据库，并将所有者直接指定为刚才创建的新用户
-CREATE DATABASE db_demo1 OWNER user_demo1;
+CREATE DATABASE db_gptapi OWNER user_gptapi;
 
 -- 3. 撤销默认 PUBLIC 角色对该数据库的所有权限（这是隔离的核心）
 -- 这一步确保了其他普通用户（哪怕是以后创建的用户）无法连接到这个新库
-REVOKE ALL PRIVILEGES ON DATABASE db_demo1 FROM PUBLIC;
+REVOKE ALL PRIVILEGES ON DATABASE db_gptapi FROM PUBLIC;
  
 -- 4. 显式授予新用户对该库的所有权限
 -- （注意：因为该用户已经是 Owner，默认就有完整权限，但作为标准化脚本显式声明会更清晰）
-GRANT ALL PRIVILEGES ON DATABASE db_demo1 TO user_demo1;
+GRANT ALL PRIVILEGES ON DATABASE db_gptapi TO user_gptapi;
 
 ```
-postgresql://user_demo1:tN6wN9cE4wQ0eX9k@31.97.65.98:9876/db_demo1
-postgresql://user_demo1:tN6wN9cE4wQ0eX9k@localhost:5432/db_demo1
+postgresql://user_gptapi:yS1cG5gW3aY8sK0j@31.97.65.98:9876/db_gptapi
+postgresql://user_gptapi:yS1cG5gW3aY8sK0j@localhost:5432/db_gptapi
 
 ### 初始化数据库 （正式库+测试库）
 pnpm db:migrate
