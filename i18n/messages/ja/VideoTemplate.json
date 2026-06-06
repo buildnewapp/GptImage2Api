@@ -137,6 +137,38 @@
       }
     ]
   },
+  "benefit": {
+    "name": "benefit",
+    "title": "チームが Nano Banana Pro を選ぶ理由",
+    "label": "メリット",
+    "description": "Gemini 3 Pro 級の鮮明さ、文脈理解、処理速度により、より少ない編集でビジュアルを素早く公開できます。",
+    "items": [
+      {
+        "title": "鮮明なテキストとディテール",
+        "description": "長文の段落、表、多言語コピーでも読みやすさを維持でき、ポスター、パッケージ、インフォグラフィックに最適です。",
+        "icon": "RiFileTextLine",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      },
+      {
+        "title": "文脈を尊重するセマンティック編集",
+        "description": "プロンプトと参照画像を理解し、シーンを調整する際もライティング、遠近感、素材感を保ちます。",
+        "icon": "RiMagicLine",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      },
+      {
+        "title": "迅速な納品",
+        "description": "10～30秒で生成と編集が可能で、一貫したキャラクター、ストーリーボード、バッチワークフローにも対応します。",
+        "icon": "RiFlashlightFill",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      }
+    ]
+  },
   "apiWorkflow": {
     "actions": [
       {

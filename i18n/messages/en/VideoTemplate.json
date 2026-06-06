@@ -137,6 +137,38 @@
       }
     ]
   },
+  "benefit": {
+    "name": "benefit",
+    "title": "Why teams choose Nano Banana Pro",
+    "label": "Benefits",
+    "description": "Gemini 3 Pro-grade clarity, contextual reasoning, and speed help you ship visuals faster with fewer edits.",
+    "items": [
+      {
+        "title": "Crisp text & detail",
+        "description": "Long paragraphs, tables, and multilingual copy stay readable—ideal for posters, packaging, and infographics.",
+        "icon": "RiFileTextLine",
+        "image": {
+          "src": "https://nanobananapro.cloud/imgs/features/5.webp"
+        }
+      },
+      {
+        "title": "Semantic edits that respect context",
+        "description": "Understands prompts and references, preserving lighting, perspective, and materials when you tweak scenes.",
+        "icon": "RiMagicLine",
+        "image": {
+          "src": "https://nanobananapro.cloud/imgs/features/6.webp"
+        }
+      },
+      {
+        "title": "Fast turnaround",
+        "description": "10–30s generations and edits, with support for consistent characters, storyboards, and batch workflows.",
+        "icon": "RiFlashlightFill",
+        "image": {
+          "src": "https://nanobananapro.cloud/imgs/features/7.webp"
+        }
+      }
+    ]
+  },
   "apiWorkflow": {
     "actions": [
       {

@@ -137,6 +137,38 @@
       }
     ]
   },
+  "benefit": {
+    "name": "benefit",
+    "title": "团队为什么选择 Nano Banana Pro",
+    "label": "优势",
+    "description": "Gemini 3 Pro 级的清晰度、上下文理解和生成速度，帮助你用更少修改更快交付视觉内容。",
+    "items": [
+      {
+        "title": "清晰文本与细节",
+        "description": "长段落、表格和多语言文案依然保持可读，适合海报、包装和信息图。",
+        "icon": "RiFileTextLine",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      },
+      {
+        "title": "尊重上下文的语义编辑",
+        "description": "理解提示词和参考图，调整场景时也能保留光线、透视和材质质感。",
+        "icon": "RiMagicLine",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      },
+      {
+        "title": "快速交付",
+        "description": "10 到 30 秒完成生成和编辑，并支持一致角色、分镜和批量工作流。",
+        "icon": "RiFlashlightFill",
+        "image": {
+          "src": "/placeholder.svg"
+        }
+      }
+    ]
+  },
   "apiWorkflow": {
     "actions": [
       {
