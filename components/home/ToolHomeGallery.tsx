@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export type GalleryItem = {
   title: string;
@@ -13,6 +13,18 @@ export type GalleryItem = {
 export default function ToolHomeGallery({ items }: { items: GalleryItem[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const activeItem = items[activeIndex] ?? items[0];
+
+  useEffect(() => {
+    if (items.length <= 1) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setActiveIndex((activeIndex + 1) % items.length);
+    }, 5000);
+
+    return () => window.clearTimeout(timer);
+  }, [activeIndex, items.length]);
 
   if (!activeItem) {
     return null;
@@ -54,21 +66,32 @@ export default function ToolHomeGallery({ items }: { items: GalleryItem[] }) {
                     onClick={() => setActiveIndex(index)}
                     className={
                       isActive
-                        ? "min-w-[150px] rounded-[18px] border-2 border-emerald-500 bg-white p-1.5 text-left shadow-sm dark:border-emerald-300 dark:bg-white/10 sm:min-w-[180px]"
+                        ? "relative min-w-[150px] overflow-hidden rounded-[18px] p-[2px] text-left opacity-100 shadow-sm sm:min-w-[180px]"
                         : "min-w-[150px] rounded-[18px] border border-white/80 bg-white/75 p-1.5 text-left opacity-75 transition hover:opacity-100 dark:border-white/10 dark:bg-white/5 sm:min-w-[180px]"
                     }
                   >
-                    <span className="relative block aspect-[16/10] overflow-hidden rounded-[14px] bg-slate-100 dark:bg-slate-900">
-                      <Image
-                        src={item.thrumb}
-                        alt={item.title}
-                        fill
-                        sizes="180px"
-                        className="object-cover"
-                      />
-                    </span>
-                    <span className="mt-2 block truncate px-1 text-xs font-semibold text-slate-700 dark:text-slate-200">
-                      {item.title}
+                    {isActive ? (
+                      <span className="absolute -inset-1/2 bg-[conic-gradient(from_0deg,#10b981,#f59e0b,#06b6d4,#10b981)] [animation:spin_2.4s_linear_infinite]" />
+                    ) : null}
+                    <span
+                      className={
+                        isActive
+                          ? "relative block rounded-[16px] bg-white p-1.5 dark:bg-slate-950"
+                          : "block"
+                      }
+                    >
+                      <span className="relative block aspect-[16/10] overflow-hidden rounded-[14px] bg-slate-100 dark:bg-slate-900">
+                        <Image
+                          src={item.thrumb}
+                          alt={item.title}
+                          fill
+                          sizes="180px"
+                          className="object-cover"
+                        />
+                      </span>
+                      <span className="mt-2 block truncate px-1 text-xs font-semibold text-slate-700 dark:text-slate-200">
+                        {item.title}
+                      </span>
                     </span>
                   </button>
                 );
