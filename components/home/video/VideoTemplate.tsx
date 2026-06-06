@@ -21,6 +21,7 @@ import BannerAd from "@/components/home/video/BannerAd";
 export default async function VideoTemplate() {
   const locale = await getLocale();
   const t = await getTranslations("VideoTemplate");
+  const pricingT = await getTranslations("VideoPricing");
   const plansResult = await getPublicPricingPlans();
   const plans = plansResult.success ? plansResult.data ?? [] : [];
 
@@ -37,7 +38,7 @@ export default async function VideoTemplate() {
     showcase: t.raw("showcase"),
     testimonials: t.raw("testimonials"),
     pricing: buildVideoTemplatePricingSection({
-      baseSection: t.raw("pricing"),
+      baseSection: pricingT.raw("section"),
       locale,
       plans,
     }),
@@ -47,7 +48,10 @@ export default async function VideoTemplate() {
 
   return (
     <div className={pageShellClass + " -mt-20 w-full overflow-x-hidden"}>
-      <TemplateJsonLd templateName="VideoTemplate" />
+      <TemplateJsonLd
+        pricingNamespace="VideoPricing"
+        templateName="VideoTemplate"
+      />
       {/*<Header />*/}
       <BannerAd />
       <Hero hero={page.hero} />

@@ -9,7 +9,7 @@ import { useState } from "react";
 
 const Pricing = () => {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annually" | "onetime">("annually");
-  const t = useTranslations("Landing.Pricing");
+  const t = useTranslations("PricingPlans");
 
   const mailtoUrl = `mailto:support@sdanceai.com?subject=${encodeURIComponent("Application to use SdanceAI")}&body=${encodeURIComponent("Reason for application:")}`;
 

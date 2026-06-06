@@ -29,7 +29,7 @@ interface PricingByGroupProps {
 export default async function PricingByGroup({
   checkoutMode = "default",
 }: PricingByGroupProps = {}) {
-  const t = await getTranslations("Landing.Pricing");
+  const t = await getTranslations("PricingPlans");
   const checkoutAvailabilityEnv = {
     nowpaymentsEnabled: Boolean(process.env.NOWPAYMENTS_API_KEY),
     paypalEnabled: isPayPalEnabled,

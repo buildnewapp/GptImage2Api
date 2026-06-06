@@ -120,7 +120,7 @@ const AI_STUDIO_HISTORY_VIEW_MODE_STORAGE_KEY = "ai-studio-history-view-mode";
 
 export default function AiStudioVideoHistoryClient() {
   const t = useTranslations("VideoGeneration");
-  const tLanding = useTranslations("Landing.Hero");
+  const tAiStudio = useTranslations("AIVideoStudio");
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
@@ -334,7 +334,7 @@ export default function AiStudioVideoHistoryClient() {
     (record: VideoGeneration) => {
       const isImage = record.category === "image";
       const parts: string[] = [
-        tLanding("form.creditsRequired", {
+        tAiStudio("form.creditsRequired", {
           count: record.creditsRequired ?? record.creditsUsed,
         }),
         isImage
@@ -343,29 +343,29 @@ export default function AiStudioVideoHistoryClient() {
             : t("media.text_to_image")
           : record.mode === "image-to-video" ||
               (!record.mode && record.uploadedImage)
-            ? tLanding("form.imageToVideo")
-            : tLanding("form.textToVideo"),
+            ? tAiStudio("form.imageToVideo")
+            : tAiStudio("form.textToVideo"),
       ];
 
       if (record.providerValues?.resolution) {
         parts.push(
-          `${tLanding("form.resolution")}: ${record.providerValues.resolution}`,
+          `${tAiStudio("form.resolution")}: ${record.providerValues.resolution}`,
         );
       }
       if (record.providerValues?.aspectRatio) {
         parts.push(
-          `${tLanding("form.aspectRatio")}: ${record.providerValues.aspectRatio}`,
+          `${tAiStudio("form.aspectRatio")}: ${record.providerValues.aspectRatio}`,
         );
       }
       if (record.providerValues?.duration) {
         parts.push(
-          `${tLanding("form.duration")}: ${record.providerValues.duration}`,
+          `${tAiStudio("form.duration")}: ${record.providerValues.duration}`,
         );
       }
 
       return parts.join(" · ");
     },
-    [t, tLanding],
+    [t, tAiStudio],
   );
 
   const formatCompactDateTime = useCallback(
@@ -425,12 +425,12 @@ export default function AiStudioVideoHistoryClient() {
 
       try {
         await navigator.clipboard.writeText(prompt);
-        toast.success(tLanding("form.promptCopied"));
+        toast.success(tAiStudio("form.promptCopied"));
       } catch {
-        toast.error(tLanding("form.copyFailed"));
+        toast.error(tAiStudio("form.copyFailed"));
       }
     },
-    [tLanding],
+    [tAiStudio],
   );
 
   const copyText = useCallback(
@@ -866,8 +866,8 @@ export default function AiStudioVideoHistoryClient() {
           key: "visibility",
           label: t("detail.fields.visibility"),
           value: selectedRecord.isPublic
-            ? tLanding("form.public")
-            : tLanding("form.private"),
+            ? tAiStudio("form.public")
+            : tAiStudio("form.private"),
         },
         {
           key: "credits",
@@ -902,8 +902,8 @@ export default function AiStudioVideoHistoryClient() {
           label: t("detail.fields.mode"),
           value: selectedRecord.mode
             ? selectedRecord.mode === "image-to-video"
-              ? tLanding("form.imageToVideo")
-              : tLanding("form.textToVideo")
+              ? tAiStudio("form.imageToVideo")
+              : tAiStudio("form.textToVideo")
             : "-",
         },
       ]
@@ -1011,7 +1011,7 @@ export default function AiStudioVideoHistoryClient() {
             disabled={!record.modelKey || !record.versionKey}
           >
             <WandSparkles className="w-4 h-4" />
-            {tLanding("form.remix")}
+            {tAiStudio("form.remix")}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -1285,8 +1285,8 @@ export default function AiStudioVideoHistoryClient() {
                       </span>
                       <span className="shrink-0 text-[11px] text-muted-foreground">
                         {record.isPublic
-                          ? tLanding("form.public")
-                          : tLanding("form.private")}
+                          ? tAiStudio("form.public")
+                          : tAiStudio("form.private")}
                       </span>
                     </div>
 
@@ -1477,8 +1477,8 @@ export default function AiStudioVideoHistoryClient() {
                         </div>
                         <Badge variant={record.isPublic ? "default" : "outline"}>
                           {record.isPublic
-                            ? tLanding("form.public")
-                            : tLanding("form.private")}
+                            ? tAiStudio("form.public")
+                            : tAiStudio("form.private")}
                         </Badge>
                       </div>
                     </TableCell>
@@ -1575,8 +1575,8 @@ export default function AiStudioVideoHistoryClient() {
                   )}
                   <Badge variant="secondary">
                     {selectedRecord.isPublic
-                      ? tLanding("form.public")
-                      : tLanding("form.private")}
+                      ? tAiStudio("form.public")
+                      : tAiStudio("form.private")}
                   </Badge>
                 </div>
               </DrawerHeader>

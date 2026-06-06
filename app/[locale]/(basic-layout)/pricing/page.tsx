@@ -37,8 +37,11 @@ export async function generateMetadata({
 
 export default async function PricingPage({ params }: { params: Params }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "VideoTemplate" });
   const pricingT = await getTranslations({ locale, namespace: "Pricing" });
+  const videoPricingT = await getTranslations({
+    locale,
+    namespace: "VideoPricing",
+  });
   const plansResult = await getPublicPricingPlans();
   const plans = plansResult.success ? plansResult.data ?? [] : [];
 
@@ -47,7 +50,7 @@ export default async function PricingPage({ params }: { params: Params }) {
   }
 
   const pricing = buildVideoTemplatePricingSection({
-    baseSection: t.raw("pricing"),
+    baseSection: videoPricingT.raw("section"),
     locale,
     plans,
   });

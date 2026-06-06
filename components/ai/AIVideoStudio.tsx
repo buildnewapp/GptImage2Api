@@ -623,7 +623,7 @@ interface AIVideoStudioProps {
 export default function AIVideoStudio({
   initialModelId = null,
 }: AIVideoStudioProps = {}) {
-  const t = useTranslations("Landing.Hero");
+  const t = useTranslations("AIVideoStudio");
   const { data: session } = authClient.useSession();
   const {
     benefits,

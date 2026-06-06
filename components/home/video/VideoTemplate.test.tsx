@@ -172,10 +172,17 @@ test("ships localized VideoTemplate message files with core sections", () => {
       "utf8",
     ),
   ) as Record<string, unknown>;
+  const englishCommonMessages = JSON.parse(
+    readFileSync(
+      path.join(projectRoot, "i18n/messages/en/common.json"),
+      "utf8",
+    ),
+  ) as Record<string, unknown>;
 
   assert.equal("hero" in englishMessages, true);
   assert.equal("showcase" in englishMessages, true);
-  assert.equal("pricing" in englishMessages, true);
+  assert.equal("pricing" in englishMessages, false);
+  assert.equal("VideoPricing" in englishCommonMessages, true);
   assert.equal("faq" in englishMessages, true);
   assert.equal("cta" in englishMessages, true);
   assert.equal("items" in englishPage.showcase, true);
