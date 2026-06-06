@@ -139,32 +139,32 @@
   },
   "benefit": {
     "name": "benefit",
-    "title": "团队为什么选择 Nano Banana Pro",
+    "title": "创作者为什么选择 Seedance 2.0",
     "label": "优势",
-    "description": "Gemini 3 Pro 级的清晰度、上下文理解和生成速度，帮助你用更少修改更快交付视觉内容。",
+    "description": "Seedance 2.0 帮助团队把提示词和参考图转成精致短视频，并提供实用控制项和清晰的输出限制。",
     "items": [
       {
-        "title": "清晰文本与细节",
-        "description": "长段落、表格和多语言文案依然保持可读，适合海报、包装和信息图。",
+        "title": "提示词生成视频",
+        "description": "输入场景描述，选择画幅、时长和分辨率，即可在 Web 应用中直接渲染短视频片段。",
         "icon": "RiFileTextLine",
         "image": {
-          "src": "/placeholder.svg"
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/4ryp8bssv.png"
         }
       },
       {
-        "title": "尊重上下文的语义编辑",
-        "description": "理解提示词和参考图，调整场景时也能保留光线、透视和材质质感。",
+        "title": "参考图控制画面",
+        "description": "从单张静态图开始，锁定主体、构图或视觉方向，再让画面进入稳定运动。",
         "icon": "RiMagicLine",
         "image": {
-          "src": "/placeholder.svg"
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/sel4unt33.png"
         }
       },
       {
-        "title": "快速交付",
-        "description": "10 到 30 秒完成生成和编辑，并支持一致角色、分镜和批量工作流。",
+        "title": "快速交付短视频",
+        "description": "生成最高 1080p、最长 15 秒的短片，快速测试多个创意，并通过每日任务持续获得积分。",
         "icon": "RiFlashlightFill",
         "image": {
-          "src": "/placeholder.svg"
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/9qfkzq75i.png"
         }
       }
     ]

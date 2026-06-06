@@ -139,32 +139,32 @@
   },
   "benefit": {
     "name": "benefit",
-    "title": "チームが Nano Banana Pro を選ぶ理由",
+    "title": "クリエイターが Seedance 2.0 を選ぶ理由",
     "label": "メリット",
-    "description": "Gemini 3 Pro 級の鮮明さ、文脈理解、処理速度により、より少ない編集でビジュアルを素早く公開できます。",
+    "description": "Seedance 2.0 は、プロンプトと参照画像から短尺動画を作成し、実用的な制御と明確な出力上限で制作を進められます。",
     "items": [
       {
-        "title": "鮮明なテキストとディテール",
-        "description": "長文の段落、表、多言語コピーでも読みやすさを維持でき、ポスター、パッケージ、インフォグラフィックに最適です。",
+        "title": "プロンプトから動画生成",
+        "description": "シーンを入力し、アスペクト比・長さ・解像度を選ぶだけで、Web アプリ内で短尺クリップを生成できます。",
         "icon": "RiFileTextLine",
         "image": {
-          "src": "/placeholder.svg"
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/4ryp8bssv.png"
         }
       },
       {
-        "title": "文脈を尊重するセマンティック編集",
-        "description": "プロンプトと参照画像を理解し、シーンを調整する際もライティング、遠近感、素材感を保ちます。",
+        "title": "参照画像で画作りを固定",
+        "description": "1 枚の静止画から始めることで、被写体、構図、ビジュアル方向を保ったままモーションを加えられます。",
         "icon": "RiMagicLine",
         "image": {
-          "src": "/placeholder.svg"
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/sel4unt33.png"
         }
       },
       {
-        "title": "迅速な納品",
-        "description": "10～30秒で生成と編集が可能で、一貫したキャラクター、ストーリーボード、バッチワークフローにも対応します。",
+        "title": "短尺動画を素早く制作",
+        "description": "最大 1080p・15 秒のクリップを作成し、複数のアイデアを素早く検証しながらデイリータスクでクレジットも獲得できます。",
         "icon": "RiFlashlightFill",
         "image": {
-          "src": "/placeholder.svg"
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/9qfkzq75i.png"
         }
       }
     ]

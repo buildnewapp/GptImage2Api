@@ -139,32 +139,32 @@
   },
   "benefit": {
     "name": "benefit",
-    "title": "Why teams choose Nano Banana Pro",
+    "title": "Why creators choose Seedance 2.0",
     "label": "Benefits",
-    "description": "Gemini 3 Pro-grade clarity, contextual reasoning, and speed help you ship visuals faster with fewer edits.",
+    "description": "Seedance 2.0 helps teams turn prompts and reference images into polished short-form video with practical controls and clear output limits.",
     "items": [
       {
-        "title": "Crisp text & detail",
-        "description": "Long paragraphs, tables, and multilingual copy stay readable—ideal for posters, packaging, and infographics.",
+        "title": "Prompt-to-video workflow",
+        "description": "Write a scene, choose aspect ratio, duration, and resolution, then render short clips directly in the web app.",
         "icon": "RiFileTextLine",
         "image": {
-          "src": "https://nanobananapro.cloud/imgs/features/5.webp"
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/4ryp8bssv.png"
         }
       },
       {
-        "title": "Semantic edits that respect context",
-        "description": "Understands prompts and references, preserving lighting, perspective, and materials when you tweak scenes.",
+        "title": "Reference image control",
+        "description": "Start from a still image to keep the subject, framing, or visual direction stable before motion begins.",
         "icon": "RiMagicLine",
         "image": {
-          "src": "https://nanobananapro.cloud/imgs/features/6.webp"
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/sel4unt33.png"
         }
       },
       {
-        "title": "Fast turnaround",
-        "description": "10–30s generations and edits, with support for consistent characters, storyboards, and batch workflows.",
+        "title": "Fast short-form delivery",
+        "description": "Create 1080p clips up to 15 seconds, test several ideas quickly, and keep earning credits through daily tasks.",
         "icon": "RiFlashlightFill",
         "image": {
-          "src": "https://nanobananapro.cloud/imgs/features/7.webp"
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/9qfkzq75i.png"
         }
       }
     ]
