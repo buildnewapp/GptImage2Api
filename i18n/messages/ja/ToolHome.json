@@ -34,16 +34,22 @@
         "desc": "gallery レイアウト確認用の一時プレビュー画像です。後で正式なワークスペース画像に差し替えられます。"
       },
       {
-        "title": "プロジェクトファイル",
-        "src": "/logo-512.png",
-        "thrumb": "/logo-512.png",
-        "desc": "サムネイル切り替えと大きなプレビュー表示を確認するためのテスト画像です。"
+        "title": "オンラインテスト画像 1",
+        "src": "https://picsum.photos/id/1015/1400/788",
+        "thrumb": "https://picsum.photos/id/1015/300/188",
+        "desc": "リモート画像表示とサムネイル切り替えを確認するためのオンラインテスト画像です。"
       },
       {
-        "title": "翻訳結果",
-        "src": "/images/users/1.png",
-        "thrumb": "/images/users/1.png",
-        "desc": "正式なプロダクト画像が用意されるまで、gallery の挙動確認に使うプレースホルダーです。"
+        "title": "オンラインテスト画像 2",
+        "src": "https://picsum.photos/id/1016/1400/788",
+        "thrumb": "https://picsum.photos/id/1016/300/188",
+        "desc": "大きなプレビュー表示を確認するための 2 枚目のオンラインテスト画像です。"
+      },
+      {
+        "title": "オンラインテスト画像 3",
+        "src": "https://picsum.photos/id/1025/1400/788",
+        "thrumb": "https://picsum.photos/id/1025/300/188",
+        "desc": "横スクロールのサムネイル一覧を確認するための 3 枚目のオンラインテスト画像です。"
       }
     ]
   },

@@ -28,6 +28,10 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_OPTIMIZED_IMAGES &&
       process.env.NEXT_PUBLIC_OPTIMIZED_IMAGES === "false",
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
+      },
       ...(process.env.R2_PUBLIC_URL
         ? [
             {

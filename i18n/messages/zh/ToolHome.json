@@ -34,16 +34,22 @@
         "desc": "用于验证 gallery 布局的临时预览图，后续可直接替换为正式工作台截图。"
       },
       {
-        "title": "项目文件",
-        "src": "/logo-512.png",
-        "thrumb": "/logo-512.png",
-        "desc": "用于测试缩略图点击切换和大图展示状态的测试图片。"
+        "title": "线上测试图 1",
+        "src": "https://picsum.photos/id/1015/1400/788",
+        "thrumb": "https://picsum.photos/id/1015/300/188",
+        "desc": "用于验证远程图片渲染和缩略图切换的线上测试图片。"
       },
       {
-        "title": "翻译结果",
-        "src": "/images/users/1.png",
-        "thrumb": "/images/users/1.png",
-        "desc": "正式产品图准备好之前，用来检查 gallery 交互效果的占位项。"
+        "title": "线上测试图 2",
+        "src": "https://picsum.photos/id/1016/1400/788",
+        "thrumb": "https://picsum.photos/id/1016/300/188",
+        "desc": "第二张线上测试图片，用于检查大图预览状态。"
+      },
+      {
+        "title": "线上测试图 3",
+        "src": "https://picsum.photos/id/1025/1400/788",
+        "thrumb": "https://picsum.photos/id/1025/300/188",
+        "desc": "第三张线上测试图片，用于验证横向缩略图列表。"
       }
     ]
   },

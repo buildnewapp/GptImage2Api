@@ -34,16 +34,22 @@
         "desc": "A temporary preview image for the gallery layout. Replace this source with the final workspace screenshot later."
       },
       {
-        "title": "Project files",
-        "src": "/logo-512.png",
-        "thrumb": "/logo-512.png",
-        "desc": "A test image used to verify thumbnail switching and the large preview state."
+        "title": "Online test image 1",
+        "src": "https://picsum.photos/id/1015/1400/788",
+        "thrumb": "https://picsum.photos/id/1015/300/188",
+        "desc": "An online test image used to verify remote gallery rendering and thumbnail switching."
       },
       {
-        "title": "Translation result",
-        "src": "/images/users/1.png",
-        "thrumb": "/images/users/1.png",
-        "desc": "A placeholder item for checking gallery behavior before final product images are ready."
+        "title": "Online test image 2",
+        "src": "https://picsum.photos/id/1016/1400/788",
+        "thrumb": "https://picsum.photos/id/1016/300/188",
+        "desc": "A second online test image for checking the large preview state."
+      },
+      {
+        "title": "Online test image 3",
+        "src": "https://picsum.photos/id/1025/1400/788",
+        "thrumb": "https://picsum.photos/id/1025/300/188",
+        "desc": "A third online test image for validating the horizontal thumbnail list."
       }
     ]
   },
