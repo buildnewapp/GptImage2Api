@@ -55,8 +55,8 @@ export default async function VideoTemplate() {
       {/*<Header />*/}
       <BannerAd />
       <Hero hero={page.hero} />
-      <Scope section={page.scope} />
       <Showcase section={page.showcase} />
+      <Scope section={page.scope} />
       <div id="features">
         <FeatureRows items={page.featureRows} />
       </div>
