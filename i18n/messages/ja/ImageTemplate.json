@@ -133,6 +133,98 @@
       }
     ]
   },
+  "benefit": {
+    "name": "benefit",
+    "title": "クリエイターが Seedance 2.0 を選ぶ理由",
+    "label": "メリット",
+    "description": "Seedance 2.0 は、プロンプトと参照画像から短尺動画を作成し、実用的な制御と明確な出力上限で制作を進められます。",
+    "items": [
+      {
+        "title": "プロンプトから動画生成",
+        "description": "シーンを入力し、アスペクト比・長さ・解像度を選ぶだけで、Web アプリ内で短尺クリップを生成できます。",
+        "icon": "RiFileTextLine",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/4ryp8bssv.png"
+        }
+      },
+      {
+        "title": "参照画像で画作りを固定",
+        "description": "1 枚の静止画から始めることで、被写体、構図、ビジュアル方向を保ったままモーションを加えられます。",
+        "icon": "RiMagicLine",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/sel4unt33.png"
+        }
+      },
+      {
+        "title": "短尺動画を素早く制作",
+        "description": "最大 1080p・15 秒のクリップを作成し、複数のアイデアを素早く検証しながらデイリータスクでクレジットも獲得できます。",
+        "icon": "RiFlashlightFill",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/9qfkzq75i.png"
+        }
+      }
+    ]
+  },
+  "apiWorkflow": {
+    "actions": [
+      {
+        "href": "/apidoc",
+        "label": "API ドキュメントを見る",
+        "variant": "primary"
+      },
+      {
+        "href": "/dashboard/apikeys",
+        "label": "API キーを取得",
+        "variant": "secondary"
+      },
+      {
+        "href": "/pricing",
+        "label": "API 料金を見る",
+        "variant": "secondary"
+      }
+    ],
+    "description": "同じ AI 動画/画像生成ワークフローを自分のプロダクトに組み込めます。API キーを作成し、生成リクエストを送り、タスク進行を追跡し、既存のダッシュボードでクレジット利用を管理できます。",
+    "items": [
+      {
+        "description": "ダッシュボードでキーを作成し、各リクエストに Authorization: Bearer 形式で送信します。",
+        "icon": "key",
+        "title": "API キー認証"
+      },
+      {
+        "description": "/api/ai-studio/execute に modelId、公開設定、payload を渡してタスクを開始します。",
+        "icon": "code",
+        "title": "生成エンドポイント"
+      },
+      {
+        "description": "作成後にタスク API をポーリングし、queued、running、succeeded、failed の状態を確認します。",
+        "icon": "list",
+        "title": "タスク状態"
+      },
+      {
+        "description": "API 利用はクレジット課金で、同じアカウント残高と料金ルールを使います。",
+        "icon": "coins",
+        "title": "クレジット課金"
+      }
+    ],
+    "kicker": "開発者 API",
+    "requestLines": [
+      "curl -X POST \"https://YOUR_DOMAIN/api/ai-studio/execute\" \\",
+      "  -H \"Authorization: Bearer YOUR_API_KEY\" \\",
+      "  -H \"Content-Type: application/json\" \\",
+      "  -d '{",
+      "    \"modelId\": \"type:ai-model-ai\",",
+      "    \"isPublic\": false,",
+      "    \"payload\": {",
+      "      \"prompt\": \"A cinematic product launch clip\",",
+      "      \"duration\": 5,",
+      "      \"resolution\": \"720p\"",
+      "    }",
+      "  }'"
+    ],
+    "requestLabel": "API リクエスト",
+    "requestTitle": "動画生成タスクを作成",
+    "title": "AI 動画/画像生成をアプリに組み込む"
+  },
   "showcase": {
     "kicker": "画像ショーケース",
     "title": "このサイトで使う作例イメージ",

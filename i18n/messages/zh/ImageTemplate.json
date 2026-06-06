@@ -133,6 +133,98 @@
       }
     ]
   },
+  "benefit": {
+    "name": "benefit",
+    "title": "创作者为什么选择 Seedance 2.0",
+    "label": "优势",
+    "description": "Seedance 2.0 帮助团队把提示词和参考图转成精致短视频，并提供实用控制项和清晰的输出限制。",
+    "items": [
+      {
+        "title": "提示词生成视频",
+        "description": "输入场景描述，选择画幅、时长和分辨率，即可在 Web 应用中直接渲染短视频片段。",
+        "icon": "RiFileTextLine",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/4ryp8bssv.png"
+        }
+      },
+      {
+        "title": "参考图控制画面",
+        "description": "从单张静态图开始，锁定主体、构图或视觉方向，再让画面进入稳定运动。",
+        "icon": "RiMagicLine",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/sel4unt33.png"
+        }
+      },
+      {
+        "title": "快速交付短视频",
+        "description": "生成最高 1080p、最长 15 秒的短片，快速测试多个创意，并通过每日任务持续获得积分。",
+        "icon": "RiFlashlightFill",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/9qfkzq75i.png"
+        }
+      }
+    ]
+  },
+  "apiWorkflow": {
+    "actions": [
+      {
+        "href": "/apidoc",
+        "label": "查看 API 文档",
+        "variant": "primary"
+      },
+      {
+        "href": "/dashboard/apikeys",
+        "label": "获取 API Key",
+        "variant": "secondary"
+      },
+      {
+        "href": "/pricing",
+        "label": "查看 API 价格",
+        "variant": "secondary"
+      }
+    ],
+    "description": "把同样的 AI 视频/图像生成流程接入你的产品。创建 API Key，发送生成请求，追踪任务进度，并在现有仪表盘中管理积分消耗。",
+    "items": [
+      {
+        "description": "在仪表盘创建密钥，并在每次请求中通过 Authorization: Bearer 传入。",
+        "icon": "key",
+        "title": "API Key 认证"
+      },
+      {
+        "description": "通过 /api/ai-studio/execute 提交任务，传入 modelId、可见性和 payload 字段。",
+        "icon": "code",
+        "title": "生成接口"
+      },
+      {
+        "description": "任务创建后轮询任务接口，读取 queued、running、succeeded 或 failed 状态。",
+        "icon": "list",
+        "title": "任务状态"
+      },
+      {
+        "description": "API 使用按积分计费，与同一账号余额和价格规则保持一致。",
+        "icon": "coins",
+        "title": "积分计费"
+      }
+    ],
+    "kicker": "开发者 API",
+    "requestLines": [
+      "curl -X POST \"https://YOUR_DOMAIN/api/ai-studio/execute\" \\",
+      "  -H \"Authorization: Bearer YOUR_API_KEY\" \\",
+      "  -H \"Content-Type: application/json\" \\",
+      "  -d '{",
+      "    \"modelId\": \"type:ai-model-ai\",",
+      "    \"isPublic\": false,",
+      "    \"payload\": {",
+      "      \"prompt\": \"A cinematic product launch clip\",",
+      "      \"duration\": 5,",
+      "      \"resolution\": \"720p\"",
+      "    }",
+      "  }'"
+    ],
+    "requestLabel": "API 请求",
+    "requestTitle": "创建视频生成任务",
+    "title": "把 AI 视频/图像生成接入你的应用"
+  },
   "showcase": {
     "kicker": "图像示例",
     "title": "本站页面示例视觉方向",

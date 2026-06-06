@@ -150,6 +150,98 @@
       }
     ]
   },
+  "benefit": {
+    "name": "benefit",
+    "title": "Why creators choose Seedance 2.0",
+    "label": "Benefits",
+    "description": "Seedance 2.0 helps teams turn prompts and reference images into polished short-form video with practical controls and clear output limits.",
+    "items": [
+      {
+        "title": "Prompt-to-video workflow",
+        "description": "Write a scene, choose aspect ratio, duration, and resolution, then render short clips directly in the web app.",
+        "icon": "RiFileTextLine",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/4ryp8bssv.png"
+        }
+      },
+      {
+        "title": "Reference image control",
+        "description": "Start from a still image to keep the subject, framing, or visual direction stable before motion begins.",
+        "icon": "RiMagicLine",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/sel4unt33.png"
+        }
+      },
+      {
+        "title": "Fast short-form delivery",
+        "description": "Create 1080p clips up to 15 seconds, test several ideas quickly, and keep earning credits through daily tasks.",
+        "icon": "RiFlashlightFill",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/9qfkzq75i.png"
+        }
+      }
+    ]
+  },
+  "apiWorkflow": {
+    "actions": [
+      {
+        "href": "/apidoc",
+        "label": "View API Docs",
+        "variant": "primary"
+      },
+      {
+        "href": "/dashboard/apikeys",
+        "label": "Get API Key",
+        "variant": "secondary"
+      },
+      {
+        "href": "/pricing",
+        "label": "View API Pricing",
+        "variant": "secondary"
+      }
+    ],
+    "description": "Build the same AI Video/Image workflow into your product. Create an API key, send a generation request, track task progress, and manage credit usage from the existing dashboard.",
+    "items": [
+      {
+        "description": "Create a key in the dashboard and send it with Authorization: Bearer on every request.",
+        "icon": "key",
+        "title": "API key auth"
+      },
+      {
+        "description": "Start jobs through /api/ai-studio/execute with modelId, visibility, and payload fields.",
+        "icon": "code",
+        "title": "Generation endpoint"
+      },
+      {
+        "description": "Poll the task endpoint after creation to read queued, running, succeeded, or failed states.",
+        "icon": "list",
+        "title": "Task status"
+      },
+      {
+        "description": "API usage is billed with credits, using the same account balance and pricing rules.",
+        "icon": "coins",
+        "title": "Credit billing"
+      }
+    ],
+    "kicker": "Developer API",
+    "requestLines": [
+      "curl -X POST \"https://YOUR_DOMAIN/api/ai-studio/execute\" \\",
+      "  -H \"Authorization: Bearer YOUR_API_KEY\" \\",
+      "  -H \"Content-Type: application/json\" \\",
+      "  -d '{",
+      "    \"modelId\": \"type:ai-model-ai\",",
+      "    \"isPublic\": false,",
+      "    \"payload\": {",
+      "      \"prompt\": \"A cinematic product launch clip\",",
+      "      \"duration\": 5,",
+      "      \"resolution\": \"720p\"",
+      "    }",
+      "  }'"
+    ],
+    "requestLabel": "API Request",
+    "requestTitle": "Create a video generation task",
+    "title": "Add AI Video/Image Generation to Your App"
+  },
   "showcase": {
     "kicker": "Image Showcase",
     "title": "Sample Visual Directions from This Site",

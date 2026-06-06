@@ -2,6 +2,8 @@ import { getLocale, getTranslations } from "next-intl/server";
 
 import { getPublicPricingPlans } from "@/actions/prices/public";
 import TemplateJsonLd from "@/components/home/image/TemplateJsonLd";
+import Feature2 from "@/components/home/template1/feature2";
+import ApiWorkflow from "@/components/home/video/ApiWorkflow";
 import { buildVideoTemplatePricingSection } from "@/components/home/video/pricing-data";
 import type { VideoTemplatePage } from "@/components/home/video/types";
 import { pageShellClass } from "@/components/home/video/constants";
@@ -31,6 +33,8 @@ export default async function ImageTemplate() {
     featureRows: t.raw("featureRows"),
     scope: t.raw("scope"),
     useCases: t.raw("useCases"),
+    benefit: t.raw("benefit"),
+    apiWorkflow: t.raw("apiWorkflow"),
     showcase: t.raw("showcase"),
     testimonials: t.raw("testimonials"),
     pricing: buildVideoTemplatePricingSection({
@@ -54,6 +58,8 @@ export default async function ImageTemplate() {
         <FeatureRows items={page.featureRows} />
       </div>
       <UseCases section={page.useCases} />
+      <Feature2 section={page.benefit} />
+      <ApiWorkflow section={page.apiWorkflow} />
       <Testimonials section={page.testimonials} />
       <Pricing section={page.pricing} />
       <FAQ section={page.faq} />
