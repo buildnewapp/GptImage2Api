@@ -27,14 +27,14 @@ export const PARTNER_SNIPPETS_CACHE_KEY = "partner_snippets";
 export const PARTNER_SNIPPETS_CACHE_TAG = "partner-snippets";
 
 export const defaultPartnerSnippets: PartnerSnippet[] = [
-  {
-    key: "product-hunt",
-    html: `<a href="https://www.producthunt.com/" target="_blank" rel="nofollow sponsored noopener noreferrer" aria-label="Visit Product Hunt" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:inherit;font-weight:600;font-size:14px;line-height:1;"><img src="https://cdn.simpleicons.org/producthunt/da552f" alt="Product Hunt" width="20" height="20" /><span>Product Hunt</span></a>`,
-    sort: 10,
-    home: true,
-    partners: true,
-    enabled: true,
-  },
+  // {
+  //   key: "product-hunt",
+  //   html: `<a href="https://www.producthunt.com/" target="_blank" rel="nofollow sponsored noopener noreferrer" aria-label="Visit Product Hunt" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:inherit;font-weight:600;font-size:14px;line-height:1;"><img src="https://cdn.simpleicons.org/producthunt/da552f" alt="Product Hunt" width="20" height="20" /><span>Product Hunt</span></a>`,
+  //   sort: 10,
+  //   home: true,
+  //   partners: true,
+  //   enabled: true,
+  // },
 ];
 
 const SETTINGS_EXPIRES_AT = new Date("2099-01-01T00:00:00.000Z");

@@ -41,7 +41,7 @@ export default async function PartnersPage({ params }: { params: Params }) {
   const guidelineItems = t.raw("content.guidelines.items") as string[];
   const noteItems = t.raw("content.notes.items") as string[];
   const contactItems = t.raw("content.contact.items") as string[];
-  const supportEmail = siteConfig.socialLinks?.email || "support@sdanceai.com";
+  const supportEmail = siteConfig.socialLinks?.email;
   const partnerSnippets = await getPartnerSnippetsForPlacement("partners");
 
   const suggestedHtml = `<a href="${siteConfig.url}" title="${siteConfig.name}">${siteConfig.name}</a>`;
