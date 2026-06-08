@@ -133,6 +133,99 @@
       }
     ]
   },
+  "benefit": {
+    "name": "benefit",
+    "title": "Why teams choose GptImage2Api",
+    "label": "Benefits",
+    "description": "GptImage2Api helps teams generate and edit production-ready images with readable text, stable style control, and API-friendly output settings.",
+    "items": [
+      {
+        "title": "Prompt-to-image workflow",
+        "description": "Describe the subject, layout, lighting, and mood, then create polished visuals for posters, mockups, ads, and product pages.",
+        "icon": "RiFileTextLine",
+        "image": {
+          "src": "https://file.gptimage2api.net/media/1776756799069_v5dm3d_HGaEzbEasAAe7sy.jpg"
+        }
+      },
+      {
+        "title": "Controlled image editing",
+        "description": "Use source or reference images to adjust backgrounds, subjects, style direction, and local details without rebuilding the whole asset.",
+        "icon": "RiMagicLine",
+        "image": {
+          "src": "https://file.gptimage2api.net/media/1776695106960_424uv9_HGBnGc4bgAA2vft.jpg"
+        }
+      },
+      {
+        "title": "API-ready image production",
+        "description": "Generate 1K, 2K, or 4K outputs through the dashboard or API, track task status, and manage credit usage from one account.",
+        "icon": "RiFlashlightFill",
+        "image": {
+          "src": "https://file.gptimage2api.net/media/1776756858951_6ijm10_HGV6HyHaUAA68FT.jpg"
+        }
+      }
+    ]
+  },
+  "apiWorkflow": {
+    "actions": [
+      {
+        "href": "/apidoc",
+        "label": "View API Docs",
+        "variant": "primary"
+      },
+      {
+        "href": "/dashboard/apikeys",
+        "label": "Get API Key",
+        "variant": "secondary"
+      },
+      {
+        "href": "/pricing",
+        "label": "View API Pricing",
+        "variant": "secondary"
+      }
+    ],
+    "description": "Build GPT Image 2 generation and editing into your product. Create an API key, send an image task, track progress, and manage credit usage from the existing dashboard.",
+    "items": [
+      {
+        "description": "Create a key in the dashboard and send it with Authorization: Bearer on every request.",
+        "icon": "key",
+        "title": "API key auth"
+      },
+      {
+        "description": "Start image jobs through /api/ai-studio/execute with modelId, visibility, and GPT Image 2 payload fields.",
+        "icon": "code",
+        "title": "Image endpoint"
+      },
+      {
+        "description": "Poll the task endpoint after creation to read queued, running, succeeded, or failed states.",
+        "icon": "list",
+        "title": "Task status"
+      },
+      {
+        "description": "API usage is billed with credits, using the same account balance and pricing rules.",
+        "icon": "coins",
+        "title": "Credit billing"
+      }
+    ],
+    "kicker": "Developer API",
+    "requestLines": [
+      "curl -X POST \"https://YOUR_DOMAIN/api/ai-studio/execute\" \\",
+      "  -H \"Authorization: Bearer YOUR_API_KEY\" \\",
+      "  -H \"Content-Type: application/json\" \\",
+      "  -d '{",
+      "    \"modelId\": \"image:fal-gpt-image-2\",",
+      "    \"isPublic\": false,",
+      "    \"payload\": {",
+      "      \"model\": \"gpt-image-2\",",
+      "      \"prompt\": \"A clean coffee packaging poster with readable headline text\",",
+      "      \"size\": \"1:1\",",
+      "      \"resolution\": \"1k\"",
+      "    }",
+      "  }'"
+    ],
+    "requestLabel": "API Request",
+    "requestTitle": "Create an image generation task",
+    "title": "Add GPT Image 2 Generation to Your App"
+  },
   "showcase": {
     "kicker": "Image Showcase",
     "title": "Sample Visual Directions from This Site",

@@ -137,6 +137,38 @@
       }
     ]
   },
+  "benefit": {
+    "name": "benefit",
+    "title": "创作者为什么选择 Seedance 2.0",
+    "label": "优势",
+    "description": "Seedance 2.0 帮助团队把提示词和参考图转成精致短视频，并提供实用控制项和清晰的输出限制。",
+    "items": [
+      {
+        "title": "提示词生成视频",
+        "description": "输入场景描述，选择画幅、时长和分辨率，即可在 Web 应用中直接渲染短视频片段。",
+        "icon": "RiFileTextLine",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/4ryp8bssv.png"
+        }
+      },
+      {
+        "title": "参考图控制画面",
+        "description": "从单张静态图开始，锁定主体、构图或视觉方向，再让画面进入稳定运动。",
+        "icon": "RiMagicLine",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/sel4unt33.png"
+        }
+      },
+      {
+        "title": "快速交付短视频",
+        "description": "生成最高 1080p、最长 15 秒的短片，快速测试多个创意，并通过每日任务持续获得积分。",
+        "icon": "RiFlashlightFill",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/9qfkzq75i.png"
+        }
+      }
+    ]
+  },
   "apiWorkflow": {
     "actions": [
       {
@@ -301,137 +333,6 @@
         "role": "Bright Launch 增长负责人"
       }
     ]
-  },
-  "pricing": {
-    "comparisonRows": [
-      {
-        "feature": "Seedance 2.0 访问",
-        "other": "视情况而定",
-        "seedance": "可用"
-      },
-      {
-        "feature": "Web 应用内新手与任务积分",
-        "other": "视情况而定",
-        "seedance": "所有模型"
-      },
-      {
-        "feature": "当前公开最长时长",
-        "other": "视情况而定",
-        "seedance": "15 秒"
-      },
-      {
-        "feature": "当前公开最高分辨率",
-        "other": "视情况而定",
-        "seedance": "1080p"
-      },
-      {
-        "feature": "文生视频",
-        "other": "通常可用",
-        "seedance": "可用"
-      },
-      {
-        "feature": "图生视频",
-        "other": "视情况而定",
-        "seedance": "可用"
-      },
-      {
-        "feature": "付费方案优先处理",
-        "other": "视情况而定",
-        "seedance": "可用"
-      },
-      {
-        "feature": "MP4 下载",
-        "other": "视情况而定",
-        "seedance": "可用"
-      }
-    ],
-    "comparisonTitle": "当前公开方案对比",
-    "creditPacks": [
-      {
-        "cta": "购买积分",
-        "description": "约可生成 13 个 5 秒片段或 4 个 15 秒片段",
-        "price": "$50",
-        "title": "500 积分"
-      },
-      {
-        "cta": "购买积分",
-        "description": "约可生成 55 个 5 秒片段或 18 个 15 秒片段",
-        "price": "$200",
-        "title": "2100 积分"
-      }
-    ],
-    "creditPacksDescription": "无需订阅，也可以按次购买积分",
-    "cryptoPaymentLinkLabel": "点击查看",
-    "cryptoPaymentText": "支持虚拟货币支付，",
-    "creditPacksTitle": "只需要少量视频？",
-    "description": "新手可直接使用 Seedance 2.0，并通过每日任务持续获得大量积分。",
-    "monthlyLabel": "月付",
-    "plans": [
-      {
-        "accent": "foreground",
-        "approx": "每年约可生成 157 个 5 秒 Seedance 2.0 片段",
-        "billed": "按年计费 $490",
-        "credits": "总计 6,000 积分",
-        "cta": "开始使用",
-        "description": "面向个人创作者的短视频访问方案",
-        "features": [
-          { "text": "480p、720p 与 1080p 输出选项" },
-          { "text": "Seedance 2.0 最长支持 15 秒片段" },
-          { "text": "按积分消耗渲染" },
-          { "text": "优先处理" },
-          { "text": "支持 MP4 下载" },
-          { "text": "无水印" },
-          { "highlight": true, "text": "含企业证书" }
-        ],
-        "icon": "camera",
-        "name": "基础版",
-        "price": "$41"
-      },
-      {
-        "accent": "primary",
-        "approx": "每年约可生成 347 个 5 秒 Seedance 2.0 片段",
-        "billed": "按年计费 $990",
-        "credits": "总计 13,200 积分",
-        "cta": "升级 Pro",
-        "description": "适合高频短视频迭代的更多积分",
-        "featured": true,
-        "features": [
-          { "text": "480p、720p 与 1080p 输出选项" },
-          { "text": "Seedance 2.0 最长支持 15 秒片段" },
-          { "text": "更高的月度积分池" },
-          { "text": "优先处理" },
-          { "text": "适合批量生成" },
-          { "text": "API 访问" },
-          { "highlight": true, "text": "含企业证书" }
-        ],
-        "icon": "crown",
-        "name": "Pro",
-        "price": "$83"
-      },
-      {
-        "accent": "accent",
-        "approx": "每年约可生成 757 个 5 秒 Seedance 2.0 片段",
-        "billed": "按年计费 $2,000",
-        "credits": "总计 28,800 积分",
-        "cta": "升级 Max",
-        "description": "为团队与更大产量准备的最大积分池",
-        "features": [
-          { "text": "480p、720p 与 1080p 输出选项" },
-          { "text": "Seedance 2.0 最长支持 15 秒片段" },
-          { "text": "最大的月度积分池" },
-          { "text": "优先处理" },
-          { "text": "团队级产能" },
-          { "text": "API 访问与支持" },
-          { "highlight": true, "text": "含企业证书" }
-        ],
-        "icon": "rocket",
-        "name": "Max",
-        "price": "$167"
-      }
-    ],
-    "saveLabel": "节省 17%",
-    "title": "当前应用的透明定价",
-    "yearlyLabel": "年付"
   },
   "faq": {
     "description": "你需要了解的 Seedance 2.0 信息都在这里",

@@ -201,7 +201,7 @@ const LoginDialog = lazy(() => import("@/components/auth/LoginDialog"));
 export default function AIVideoMiniStudio({
   initialModelId = null,
 }: AIVideoMiniStudioProps) {
-  const t = useTranslations("Landing.Hero");
+  const t = useTranslations("AIVideoStudio");
   const router = useRouter();
   const defaultSelection = useMemo(
     () => getDefaultSelection(initialModelId),

@@ -8,6 +8,7 @@ import {
 } from "@/components/home/video/constants";
 import { Locale } from "@/i18n/routing";
 import { constructMetadata } from "@/lib/metadata";
+import { getPartnerSnippetsForPlacement } from "@/lib/partners/partner-snippets";
 import { cn } from "@/lib/utils";
 import { Sparkles } from "lucide-react";
 import { Metadata } from "next";
@@ -15,18 +16,6 @@ import { getTranslations } from "next-intl/server";
 
 type Params = Promise<{ locale: string }>;
 type MetadataProps = { params: Params };
-
-type PartnerHtmlSnippet = {
-  key: string;
-  html: string;
-};
-
-const partnerSnippets: PartnerHtmlSnippet[] = [
-  {
-    key: "product-hunt",
-    html: `<a href="https://www.producthunt.com/" target="_blank" rel="nofollow sponsored noopener noreferrer" aria-label="Visit Product Hunt" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:inherit;font-weight:600;font-size:14px;line-height:1;"><img src="https://cdn.simpleicons.org/producthunt/da552f" alt="Product Hunt" width="20" height="20" /><span>Product Hunt</span></a>`,
-  },
-];
 
 const panelClass =
   "mx-auto mt-10 max-w-5xl rounded-[2rem] border border-border/70 bg-card/80 p-6 shadow-[0_28px_72px_-48px_rgba(148,163,184,0.36)] backdrop-blur-sm sm:p-8";
@@ -52,7 +41,8 @@ export default async function PartnersPage({ params }: { params: Params }) {
   const guidelineItems = t.raw("content.guidelines.items") as string[];
   const noteItems = t.raw("content.notes.items") as string[];
   const contactItems = t.raw("content.contact.items") as string[];
-  const supportEmail = siteConfig.socialLinks?.email || "support@sdanceai.com";
+  const supportEmail = siteConfig.socialLinks?.email;
+  const partnerSnippets = await getPartnerSnippetsForPlacement("partners");
 
   const suggestedHtml = `<a href="${siteConfig.url}" title="${siteConfig.name}">${siteConfig.name}</a>`;
 

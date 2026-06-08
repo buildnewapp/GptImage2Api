@@ -171,6 +171,11 @@
         "icon": "DollarSign"
       },
       {
+        "name": "Config",
+        "href": "/dashboard/config",
+        "icon": "SlidersHorizontal"
+      },
+      {
         "name": "Blogs",
         "href": "/dashboard/blogs",
         "icon": "Rss"
@@ -578,5 +583,403 @@
     "terms": "Terms of Service",
     "signIn": "Sign In",
     "footerAbout": "A production-ready platform for high-fidelity AI image generation and editing."
+  },
+  "PricingPlans": {
+    "badge": "Pricing",
+    "title": "Simple, Transparent Pricing",
+    "titleOnetime": "One-Time Credit Packs",
+    "description": "Choose the plan that works best for you. All plans include access to our core features.",
+    "descriptionOnetime": "One-time purchase • Credits never expire",
+    "monthly": "Monthly",
+    "annually": "Annually",
+    "onetime": "One-Time",
+    "discount": "-50%",
+    "limitedOffer": "Annual Billing Offer",
+    "saveOffer": "Save 50% with Annual Billing",
+    "billedYearly": "Billed ${amount} yearly",
+    "monthShort": "/mo",
+    "subscribe": "Subscribe",
+    "buyNow": "Buy Now",
+    "mostPopular": "Most Popular",
+    "bestValue": "Best Value",
+    "contactSales": "Need a custom plan? Contact our sales team.",
+    "checkOnetime": "Looking for one-time credits? Check out our Credit Packs",
+    "packs": {
+      "standard": {
+        "name": "Standard Pack",
+        "desc": "Perfect for trying out.",
+        "features": [
+          "1,000 Credits",
+          "Never expire"
+        ]
+      },
+      "pro": {
+        "name": "Pro Pack",
+        "desc": "Most popular choice.",
+        "features": [
+          "3,750 Credits",
+          "Never expire",
+          "Priority Generation"
+        ]
+      },
+      "max": {
+        "name": "Max Pack",
+        "desc": "For heavy users.",
+        "features": [
+          "12,000 Credits",
+          "Never expire",
+          "Priority Generation"
+        ]
+      }
+    },
+    "plans": {
+      "standard": {
+        "name": "Standard",
+        "desc": "For individuals just getting started.",
+        "features": [
+          "{credits} Credits / month",
+          "Standard Queue",
+          "Commercial Use"
+        ]
+      },
+      "pro": {
+        "name": "Pro",
+        "desc": "For creators who need more power.",
+        "features": [
+          "{credits} Credits / month",
+          "Fast Generation Queue",
+          "Priority Support"
+        ]
+      },
+      "max": {
+        "name": "Max",
+        "desc": "For studios and professionals.",
+        "features": [
+          "{credits} Credits / month",
+          "Instant Queue",
+          "API Access"
+        ]
+      }
+    }
+  },
+  "AIVideoStudio": {
+    "form": {
+      "imageToVideo": "Image to Video",
+      "textToVideo": "Text to Video",
+      "aiModel": "AI Model",
+      "selectModel": "Select a model to start generating",
+      "images": "Images",
+      "referenceAudios": "Reference Audios",
+      "referenceImages": "Reference Images",
+      "referenceVideos": "Reference Videos",
+      "referenceUrls": "Reference URLs",
+      "uploadTitle": "Click to upload or drag & drop",
+      "uploadFormats": "PNG, JPG, JPEG, WEBP",
+      "audioUploadFormats": "audio/*.mp3,.wav,.m4a,.aac,.ogg",
+      "imageUploadFormats": "image/*.png,.jpg,.jpeg,.webp",
+      "videoUploadFormats": "video/*.mp4,.mov,.webm,.mkv",
+      "uploadingImage": "Uploading...",
+      "uploadingReference": "Uploading...",
+      "uploadSuccess": "Image uploaded successfully.",
+      "uploadFailed": "Image upload failed.",
+      "referenceUploadFailed": "Reference upload failed.",
+      "uploadTooLarge": "Image must be 10MB or smaller.",
+      "referenceUploadTooLarge": "File size must be {size}MB or smaller.",
+      "audioOnlyError": "Only audio files are allowed.",
+      "imageOnlyError": "Only image files are allowed.",
+      "videoOnlyError": "Only video files are allowed.",
+      "videoDurationRequiredError": "We couldn't read this video's duration. Please use a direct video file URL that can be accessed publicly.",
+      "prompt": "Prompt",
+      "promptPlaceholder": "Describe how you want your image to animate...",
+      "promptPlaceholderImage": "Describe the image you want to generate or edit...",
+      "audioReferenceHint": "Upload beat, narration, or soundtrack reference audios, up to {count}.",
+      "imageReferenceHint": "Upload character, style, or composition reference images, up to {count}.",
+      "videoReferenceHint": "Upload camera, motion, or transition reference videos, up to {count}.",
+      "urlReferenceHint": "Add public reference URLs, up to {count}.",
+      "referencesCount": "{current}/{max} references",
+      "invalidUrl": "Please enter a valid URL.",
+      "audioUrlPlaceholder": "https://example.com/reference-audio.mp3",
+      "imageUrlPlaceholder": "https://example.com/reference-image.png",
+      "videoUrlPlaceholder": "https://example.com/reference-video.mp4",
+      "genericUrlPlaceholder": "https://example.com/resource",
+      "resolution": "Resolution",
+      "size": "Quality",
+      "duration": "Duration",
+      "aspectRatio": "Aspect Ratio",
+      "auto": "Auto",
+      "advanced": "Advanced",
+      "isPublic": "Public Visibility",
+      "public": "Public",
+      "private": "Private",
+      "generate": "Generate",
+      "generateImage": "Generate Image",
+      "generating": "Generating...",
+      "loginRequired": "Please sign in to generate videos",
+      "loginRequiredImage": "Please sign in to generate images",
+      "insufficientCredits": "Insufficient credits",
+      "membershipRequired": "This model requires {level} membership.",
+      "creditsRequired": "{count} credits",
+      "generationSuccess": "Video generation started!",
+      "generationSuccessImage": "Image generation started!",
+      "generationQueued": "Generation queued.",
+      "generationCompleted": "Video generation finished!",
+      "generationFailed": "Generation failed, please try again",
+      "modelUnavailable": "This endpoint is not open yet. Please contact support if you need access.",
+      "historyHint": "New tasks appear here after you submit.",
+      "readyToPreview": "Ready to preview",
+      "viewResult": "View in My Videos",
+      "addEndFrame": "Add end frame",
+      "useUrl": "Use URL",
+      "add": "Add",
+      "remove": "Remove",
+      "seed": "Seed",
+      "randomSeed": "Random (-1)",
+      "fixCamera": "Fix Camera",
+      "safetyChecker": "Safety Checker",
+      "shots": "Scenes",
+      "addShot": "Add Scene",
+      "shotNumber": "Scene {index}",
+      "shotScene": "Describe what happens in this scene...",
+      "shotDuration": "Duration (s)",
+      "totalDuration": "Total: {current}s / {total}s",
+      "modelVersion": "Model Version",
+      "soraDisclaimer": "Sora service is experiencing high demand and may fail. We recommend using other models for more reliable results.",
+      "sora2": {
+        "name": "Sora 2",
+        "description": "Standard quality, fast generation"
+      },
+      "sora2pro": {
+        "name": "Sora 2 Pro",
+        "description": "Premium quality with advanced features"
+      },
+      "estimatedCredits": "Estimated credits",
+      "pricingLogicTitle": "Pricing Logic",
+      "pricingLogicWithVideoSummary": "With video input: charged as (input video duration + output duration) × rate",
+      "pricingLogicWithoutVideoSummary": "Without video input: charged as output duration × rate",
+      "pricingLogicWithVideoFormula": "Current: ({input}s + {output}s) × {rate} credits/s = {credits} credits",
+      "pricingLogicWithoutVideoFormula": "Current: {output}s × {rate} credits/s = {credits} credits",
+      "currentCredits": "Current credits balance",
+      "unsupportedCombination": "This model combination does not support current settings. Please adjust.",
+      "loadModelDetailFailed": "Failed to load model detail",
+      "provider": "Provider",
+      "loadingModelSettings": "Loading model settings...",
+      "tasks": "Tasks",
+      "noTasks": "No tasks yet. Click Generate to start.",
+      "task": "Task #{index}",
+      "copyTaskId": "Copy task ID",
+      "taskIdCopied": "Task ID copied",
+      "reference": "Reference",
+      "referencePreview": "Reference preview",
+      "replace": "Replace",
+      "open": "Open",
+      "download": "Download",
+      "copy": "Copy",
+      "openVideo": "Open Video",
+      "openImage": "Open Image",
+      "downloadVideo": "Download Video",
+      "downloadImage": "Download Image",
+      "copyPrompt": "Copy Prompt",
+      "remix": "Remix",
+      "promptCopied": "Prompt copied",
+      "copyFailed": "Copy failed",
+      "remixApplied": "Parameters applied. Ready to generate.",
+      "watermark": "Watermark",
+      "watermarkPlaceholder": "Add a watermark (optional)",
+      "enableTranslation": "Auto Translate Prompt",
+      "veoQuality": "Veo 3.1 Quality",
+      "veoFast": "Veo 3.1 Fast",
+      "submitModeForm": "Form",
+      "submitModeApi": "API",
+      "apiRequestJsonTitle": "Request JSON",
+      "apiRequestJsonDescription": "Empty fields are kept in the payload. You can edit values before submit.",
+      "apiJsonRequired": "JSON payload is required.",
+      "apiJsonMustBeObject": "JSON payload must be an object.",
+      "apiJsonInvalid": "Invalid JSON payload.",
+      "apiFieldDocsTitle": "Field Docs",
+      "apiFieldDocRequired": "Required",
+      "apiFieldDocType": "Type",
+      "apiFieldDocEnum": "Options",
+      "apiFieldDocRange": "Range",
+      "apiFieldDocMinimum": "Minimum",
+      "apiFieldDocMaximum": "Maximum"
+    }
+  },
+  "VideoPricing": {
+    "section": {
+      "comparisonRows": [
+        {
+          "feature": "Seedance 2.0 access",
+          "other": "Varies",
+          "seedance": "Available"
+        },
+        {
+          "feature": "Starter and daily-task credits in the web app",
+          "other": "Varies",
+          "seedance": "All models"
+        },
+        {
+          "feature": "Current public max length",
+          "other": "Varies",
+          "seedance": "15s"
+        },
+        {
+          "feature": "Current public max resolution",
+          "other": "Varies",
+          "seedance": "1080p"
+        },
+        {
+          "feature": "Text-to-video",
+          "other": "Usually available",
+          "seedance": "Available"
+        },
+        {
+          "feature": "Image-to-video",
+          "other": "Varies",
+          "seedance": "Available"
+        },
+        {
+          "feature": "Priority processing on paid plans",
+          "other": "Varies",
+          "seedance": "Available"
+        },
+        {
+          "feature": "MP4 download",
+          "other": "Varies",
+          "seedance": "Available"
+        }
+      ],
+      "comparisonTitle": "Current Public Offer Comparison",
+      "creditPacks": [
+        {
+          "cta": "Buy Credits",
+          "description": "About 13 5s clips or 4 15s clips",
+          "price": "$50",
+          "title": "500 Credits"
+        },
+        {
+          "cta": "Buy Credits",
+          "description": "About 55 5s clips or 18 15s clips",
+          "price": "$200",
+          "title": "2100 Credits"
+        }
+      ],
+      "creditPacksDescription": "Buy credits for one-off runs without a subscription plan",
+      "cryptoPaymentLinkLabel": "click to view",
+      "cryptoPaymentText": "Crypto payments are supported,",
+      "creditPacksTitle": "Need just a few videos?",
+      "description": "New users can start on Seedance 2.0 right away and keep earning plenty of credits through daily tasks.",
+      "monthlyLabel": "Monthly",
+      "plans": [
+        {
+          "accent": "foreground",
+          "approx": "~157 5s Seedance 2.0 clips/year",
+          "billed": "Billed yearly at $490",
+          "credits": "6,000 credits total",
+          "cta": "Get Started",
+          "description": "Short-form video access for solo creators",
+          "features": [
+            {
+              "text": "480p, 720p, and 1080p output options"
+            },
+            {
+              "text": "Up to 15 second Seedance 2.0 clips"
+            },
+            {
+              "text": "Credit-based rendering"
+            },
+            {
+              "text": "Priority processing"
+            },
+            {
+              "text": "MP4 download"
+            },
+            {
+              "text": "No watermark"
+            },
+            {
+              "highlight": true,
+              "text": "Business Certificate Included"
+            }
+          ],
+          "icon": "camera",
+          "name": "Basic",
+          "price": "$41"
+        },
+        {
+          "accent": "primary",
+          "approx": "~347 5s Seedance 2.0 clips/year",
+          "billed": "Billed yearly at $990",
+          "credits": "13,200 credits total",
+          "cta": "Get Pro",
+          "description": "More credits for heavier short-form iteration",
+          "featured": true,
+          "features": [
+            {
+              "text": "480p, 720p, and 1080p output options"
+            },
+            {
+              "text": "Up to 15 second Seedance 2.0 clips"
+            },
+            {
+              "text": "Higher monthly credit pool"
+            },
+            {
+              "text": "Priority processing"
+            },
+            {
+              "text": "Batch-friendly volume"
+            },
+            {
+              "text": "API access"
+            },
+            {
+              "highlight": true,
+              "text": "Business Certificate Included"
+            }
+          ],
+          "icon": "crown",
+          "name": "Pro",
+          "price": "$83"
+        },
+        {
+          "accent": "accent",
+          "approx": "~757 5s Seedance 2.0 clips/year",
+          "billed": "Billed yearly at $2,000",
+          "credits": "28,800 credits total",
+          "cta": "Get Max",
+          "description": "Largest credit pool for teams and production volume",
+          "features": [
+            {
+              "text": "480p, 720p, and 1080p output options"
+            },
+            {
+              "text": "Up to 15 second Seedance 2.0 clips"
+            },
+            {
+              "text": "Largest monthly credit pool"
+            },
+            {
+              "text": "Priority processing"
+            },
+            {
+              "text": "Team-scale volume"
+            },
+            {
+              "text": "API access & support"
+            },
+            {
+              "highlight": true,
+              "text": "Business Certificate Included"
+            }
+          ],
+          "icon": "rocket",
+          "name": "Max",
+          "price": "$167"
+        }
+      ],
+      "saveLabel": "Save 17%",
+      "title": "Transparent Pricing for the Current App",
+      "yearlyLabel": "Yearly"
+    }
   }
 }

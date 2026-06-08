@@ -137,6 +137,38 @@
       }
     ]
   },
+  "benefit": {
+    "name": "benefit",
+    "title": "クリエイターが Seedance 2.0 を選ぶ理由",
+    "label": "メリット",
+    "description": "Seedance 2.0 は、プロンプトと参照画像から短尺動画を作成し、実用的な制御と明確な出力上限で制作を進められます。",
+    "items": [
+      {
+        "title": "プロンプトから動画生成",
+        "description": "シーンを入力し、アスペクト比・長さ・解像度を選ぶだけで、Web アプリ内で短尺クリップを生成できます。",
+        "icon": "RiFileTextLine",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/4ryp8bssv.png"
+        }
+      },
+      {
+        "title": "参照画像で画作りを固定",
+        "description": "1 枚の静止画から始めることで、被写体、構図、ビジュアル方向を保ったままモーションを加えられます。",
+        "icon": "RiMagicLine",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/sel4unt33.png"
+        }
+      },
+      {
+        "title": "短尺動画を素早く制作",
+        "description": "最大 1080p・15 秒のクリップを作成し、複数のアイデアを素早く検証しながらデイリータスクでクレジットも獲得できます。",
+        "icon": "RiFlashlightFill",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/9qfkzq75i.png"
+        }
+      }
+    ]
+  },
   "apiWorkflow": {
     "actions": [
       {
@@ -301,137 +333,6 @@
         "role": "Bright Launch グロースリード"
       }
     ]
-  },
-  "pricing": {
-    "comparisonRows": [
-      {
-        "feature": "Seedance 2.0 アクセス",
-        "other": "ケースによる",
-        "seedance": "利用可能"
-      },
-      {
-        "feature": "Web アプリ内の新規・タスククレジット",
-        "other": "ケースによる",
-        "seedance": "すべてのモデル"
-      },
-      {
-        "feature": "現在の公開最大尺",
-        "other": "ケースによる",
-        "seedance": "15秒"
-      },
-      {
-        "feature": "現在の公開最大解像度",
-        "other": "ケースによる",
-        "seedance": "1080p"
-      },
-      {
-        "feature": "テキストから動画",
-        "other": "通常は利用可能",
-        "seedance": "利用可能"
-      },
-      {
-        "feature": "画像から動画",
-        "other": "ケースによる",
-        "seedance": "利用可能"
-      },
-      {
-        "feature": "有料プランでの優先処理",
-        "other": "ケースによる",
-        "seedance": "利用可能"
-      },
-      {
-        "feature": "MP4 ダウンロード",
-        "other": "ケースによる",
-        "seedance": "利用可能"
-      }
-    ],
-    "comparisonTitle": "現在の公開オファー比較",
-    "creditPacks": [
-      {
-        "cta": "クレジットを購入",
-        "description": "5 秒クリップなら約 13 本、15 秒クリップなら約 4 本",
-        "price": "$50",
-        "title": "500 クレジット"
-      },
-      {
-        "cta": "クレジットを購入",
-        "description": "5 秒クリップなら約 55 本、15 秒クリップなら約 18 本",
-        "price": "$200",
-        "title": "2100 クレジット"
-      }
-    ],
-    "creditPacksDescription": "サブスクリプションなしで単発利用向けのクレジットを購入できます",
-    "cryptoPaymentLinkLabel": "こちらを確認",
-    "cryptoPaymentText": "暗号資産での支払いにも対応しています。",
-    "creditPacksTitle": "少数の動画だけ必要ですか？",
-    "description": "新規ユーザーは Seedance 2.0 をすぐに使い始められ、デイリータスクで多くのクレジットを継続的に獲得できます。",
-    "monthlyLabel": "月額",
-    "plans": [
-      {
-        "accent": "foreground",
-        "approx": "年間で約 157 本の 5 秒 Seedance 2.0 クリップ",
-        "billed": "年額課金 $490",
-        "credits": "合計 6,000 クレジット",
-        "cta": "始める",
-        "description": "個人クリエイター向け短尺動画プラン",
-        "features": [
-          { "text": "480p・720p・1080p の出力オプション" },
-          { "text": "Seedance 2.0 は最大 15 秒のクリップに対応" },
-          { "text": "クレジットベースのレンダリング" },
-          { "text": "優先処理" },
-          { "text": "MP4 ダウンロード" },
-          { "text": "透かしなし" },
-          { "highlight": true, "text": "Business Certificate Included" }
-        ],
-        "icon": "camera",
-        "name": "Basic",
-        "price": "$41"
-      },
-      {
-        "accent": "primary",
-        "approx": "年間で約 347 本の 5 秒 Seedance 2.0 クリップ",
-        "billed": "年額課金 $990",
-        "credits": "合計 13,200 クレジット",
-        "cta": "Pro を利用",
-        "description": "より多くの短尺試行向けクレジット量",
-        "featured": true,
-        "features": [
-          { "text": "480p・720p・1080p の出力オプション" },
-          { "text": "Seedance 2.0 は最大 15 秒のクリップに対応" },
-          { "text": "より大きな月間クレジット枠" },
-          { "text": "優先処理" },
-          { "text": "バッチ運用向きのボリューム" },
-          { "text": "API アクセス" },
-          { "highlight": true, "text": "Business Certificate Included" }
-        ],
-        "icon": "crown",
-        "name": "Pro",
-        "price": "$83"
-      },
-      {
-        "accent": "accent",
-        "approx": "年間で約 757 本の 5 秒 Seedance 2.0 クリップ",
-        "billed": "年額課金 $2,000",
-        "credits": "合計 28,800 クレジット",
-        "cta": "Max を利用",
-        "description": "チームと大量制作向けの最大クレジット枠",
-        "features": [
-          { "text": "480p・720p・1080p の出力オプション" },
-          { "text": "Seedance 2.0 は最大 15 秒のクリップに対応" },
-          { "text": "最大の月間クレジット枠" },
-          { "text": "優先処理" },
-          { "text": "チーム規模の運用量" },
-          { "text": "API アクセスとサポート" },
-          { "highlight": true, "text": "Business Certificate Included" }
-        ],
-        "icon": "rocket",
-        "name": "Max",
-        "price": "$167"
-      }
-    ],
-    "saveLabel": "17% お得",
-    "title": "現在のWebアプリ向け明瞭な料金体系",
-    "yearlyLabel": "年額"
   },
   "faq": {
     "description": "Seedance 2.0 について知っておきたい内容をまとめました",

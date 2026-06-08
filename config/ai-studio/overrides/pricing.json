@@ -1366,7 +1366,7 @@
           "discountPrice": false,
           "catalogModelId": "image:google-nano-banana-pro",
           "runtimeModel": "nano-banana-pro",
-          "resolution": "1k"
+          "resolution": "1K"
         },
         {
           "modelDescription": "Nano Banana Pro, 2K",
@@ -1381,7 +1381,7 @@
           "discountPrice": false,
           "catalogModelId": "image:google-nano-banana-pro",
           "runtimeModel": "nano-banana-pro",
-          "resolution": "2k"
+          "resolution": "2K"
         },
         {
           "modelDescription": "Nano Banana Pro, 4K",
@@ -1396,7 +1396,7 @@
           "discountPrice": false,
           "catalogModelId": "image:google-nano-banana-pro",
           "runtimeModel": "nano-banana-pro",
-          "resolution": "4k"
+          "resolution": "4K"
         }
       ]
     },
@@ -1415,7 +1415,7 @@
           "discountPrice": false,
           "catalogModelId": "image:google-nano-banana-2",
           "runtimeModel": "nano-banana-2",
-          "resolution": "1k"
+          "resolution": "1K"
         },
         {
           "modelDescription": "Nano Banana 2, 2K",
@@ -1430,7 +1430,7 @@
           "discountPrice": false,
           "catalogModelId": "image:google-nano-banana-2",
           "runtimeModel": "nano-banana-2",
-          "resolution": "2k"
+          "resolution": "2K"
         },
         {
           "modelDescription": "Nano Banana 2, 4K",
@@ -1445,7 +1445,7 @@
           "discountPrice": false,
           "catalogModelId": "image:google-nano-banana-2",
           "runtimeModel": "nano-banana-2",
-          "resolution": "4k"
+          "resolution": "4K"
         }
       ]
     },
@@ -1513,7 +1513,7 @@
           "discountPrice": false,
           "catalogModelId": "image:gpt-image-2-text-to-image",
           "runtimeModel": "gpt-image-2-text-to-image",
-          "resolution": "1k"
+          "resolution": "1K"
         },
         {
           "modelDescription": "gpt-image-2 text-to-image, 2K",
@@ -1528,7 +1528,7 @@
           "discountPrice": false,
           "catalogModelId": "image:gpt-image-2-text-to-image",
           "runtimeModel": "gpt-image-2-text-to-image",
-          "resolution": "2k"
+          "resolution": "2K"
         },
         {
           "modelDescription": "gpt-image-2 text-to-image, 4K",
@@ -1543,7 +1543,7 @@
           "discountPrice": false,
           "catalogModelId": "image:gpt-image-2-text-to-image",
           "runtimeModel": "gpt-image-2-text-to-image",
-          "resolution": "4k"
+          "resolution": "4K"
         }
       ]
     },
@@ -1562,7 +1562,7 @@
           "discountPrice": false,
           "catalogModelId": "image:gpt-image-2-image-to-image",
           "runtimeModel": "gpt-image-2-image-to-image",
-          "resolution": "1k"
+          "resolution": "1K"
         },
         {
           "modelDescription": "gpt-image-2 image-to-image, 2K",
@@ -1577,7 +1577,7 @@
           "discountPrice": false,
           "catalogModelId": "image:gpt-image-2-image-to-image",
           "runtimeModel": "gpt-image-2-image-to-image",
-          "resolution": "2k"
+          "resolution": "2K"
         },
         {
           "modelDescription": "gpt-image-2 image-to-image, 4K",
@@ -1592,7 +1592,7 @@
           "discountPrice": false,
           "catalogModelId": "image:gpt-image-2-image-to-image",
           "runtimeModel": "gpt-image-2-image-to-image",
-          "resolution": "4k"
+          "resolution": "4K"
         }
       ]
     },
@@ -1682,7 +1682,7 @@
           "anchor": "https://docs.kie.ai/30861522e0.md",
           "discountPrice": false,
           "catalogModelId": "image:qwen2-text-to-image",
-          "runtimeModel": "qwen2/text-to-image"
+          "runtimeModel": "qwen2/image-edit"
         }
       ]
     },
@@ -2628,22 +2628,6 @@
           "duration": 10
         },
         {
-          "modelDescription": "wan/2-6-video-to-video, 720p, 15s",
-          "interfaceType": "video",
-          "provider": "Wan 2.6",
-          "creditPrice": "209.5",
-          "creditUnit": "per video",
-          "usdPrice": "1.05",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "",
-          "discountPrice": false,
-          "catalogModelId": "video:wan-2-6-video-to-video",
-          "runtimeModel": "wan/2-6-video-to-video",
-          "resolution": "720p",
-          "duration": 15
-        },
-        {
           "modelDescription": "wan/2-6-video-to-video, 1080p, 5s",
           "interfaceType": "video",
           "provider": "Wan 2.6",
@@ -2674,22 +2658,6 @@
           "runtimeModel": "wan/2-6-video-to-video",
           "resolution": "1080p",
           "duration": 10
-        },
-        {
-          "modelDescription": "wan/2-6-video-to-video, 1080p, 15s",
-          "interfaceType": "video",
-          "provider": "Wan 2.6",
-          "creditPrice": "315",
-          "creditUnit": "per video",
-          "usdPrice": "1.58",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "",
-          "discountPrice": false,
-          "catalogModelId": "video:wan-2-6-video-to-video",
-          "runtimeModel": "wan/2-6-video-to-video",
-          "resolution": "1080p",
-          "duration": 15
         }
       ]
     },
@@ -3126,21 +3094,6 @@
           "resolution": "480p"
         },
         {
-          "modelDescription": "wan/2-2-a14b-text-to-video-turbo, 580p",
-          "interfaceType": "video",
-          "provider": "Wan",
-          "creditPrice": "12",
-          "creditUnit": "per second",
-          "usdPrice": "0.06",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "",
-          "discountPrice": false,
-          "catalogModelId": "video:wan-text-to-video",
-          "runtimeModel": "wan/2-2-a14b-text-to-video-turbo",
-          "resolution": "580p"
-        },
-        {
           "modelDescription": "wan/2-2-a14b-text-to-video-turbo, 720p",
           "interfaceType": "video",
           "provider": "Wan",
@@ -3173,21 +3126,6 @@
           "catalogModelId": "video:wan-image-to-video",
           "runtimeModel": "wan/2-2-a14b-image-to-video-turbo",
           "resolution": "480p"
-        },
-        {
-          "modelDescription": "wan/2-2-a14b-image-to-video-turbo, 580p",
-          "interfaceType": "video",
-          "provider": "Wan",
-          "creditPrice": "12",
-          "creditUnit": "per second",
-          "usdPrice": "0.06",
-          "falPrice": "",
-          "discountRate": 0,
-          "anchor": "",
-          "discountPrice": false,
-          "catalogModelId": "video:wan-image-to-video",
-          "runtimeModel": "wan/2-2-a14b-image-to-video-turbo",
-          "resolution": "580p"
         },
         {
           "modelDescription": "wan/2-2-a14b-image-to-video-turbo, 720p",

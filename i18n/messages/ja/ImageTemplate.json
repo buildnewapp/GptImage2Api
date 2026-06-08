@@ -133,6 +133,99 @@
       }
     ]
   },
+  "benefit": {
+    "name": "benefit",
+    "title": "チームが GptImage2Api を選ぶ理由",
+    "label": "メリット",
+    "description": "GptImage2Api は、読みやすい文字、安定したスタイル制御、API に適した出力設定で、実務向け画像の生成と編集を支援します。",
+    "items": [
+      {
+        "title": "プロンプトから画像生成",
+        "description": "被写体、レイアウト、照明、雰囲気を指定して、ポスター、モックアップ、広告、商品ページ向けの完成度の高い画像を作成できます。",
+        "icon": "RiFileTextLine",
+        "image": {
+          "src": "https://file.gptimage2api.net/media/1776756799069_v5dm3d_HGaEzbEasAAe7sy.jpg"
+        }
+      },
+      {
+        "title": "制御しやすい画像編集",
+        "description": "元画像や参照画像を使って、背景、被写体、スタイル方向、細部だけを調整できます。素材全体を作り直す必要はありません。",
+        "icon": "RiMagicLine",
+        "image": {
+          "src": "https://file.gptimage2api.net/media/1776695106960_424uv9_HGBnGc4bgAA2vft.jpg"
+        }
+      },
+      {
+        "title": "API 向け画像制作",
+        "description": "ダッシュボードまたは API から 1K、2K、4K の画像を生成し、タスク状態とクレジット利用を同じアカウントで管理できます。",
+        "icon": "RiFlashlightFill",
+        "image": {
+          "src": "https://file.gptimage2api.net/media/1776756858951_6ijm10_HGV6HyHaUAA68FT.jpg"
+        }
+      }
+    ]
+  },
+  "apiWorkflow": {
+    "actions": [
+      {
+        "href": "/apidoc",
+        "label": "API ドキュメントを見る",
+        "variant": "primary"
+      },
+      {
+        "href": "/dashboard/apikeys",
+        "label": "API キーを取得",
+        "variant": "secondary"
+      },
+      {
+        "href": "/pricing",
+        "label": "API 料金を見る",
+        "variant": "secondary"
+      }
+    ],
+    "description": "GPT Image 2 の画像生成・編集機能を自分のプロダクトに組み込めます。API キーを作成し、画像タスクを送信し、進行状況を追跡し、既存のダッシュボードでクレジット利用を管理できます。",
+    "items": [
+      {
+        "description": "ダッシュボードでキーを作成し、各リクエストに Authorization: Bearer 形式で送信します。",
+        "icon": "key",
+        "title": "API キー認証"
+      },
+      {
+        "description": "/api/ai-studio/execute に modelId、公開設定、GPT Image 2 用 payload を渡して画像タスクを開始します。",
+        "icon": "code",
+        "title": "画像生成エンドポイント"
+      },
+      {
+        "description": "作成後にタスク API をポーリングし、queued、running、succeeded、failed の状態を確認します。",
+        "icon": "list",
+        "title": "タスク状態"
+      },
+      {
+        "description": "API 利用はクレジット課金で、同じアカウント残高と料金ルールを使います。",
+        "icon": "coins",
+        "title": "クレジット課金"
+      }
+    ],
+    "kicker": "開発者 API",
+    "requestLines": [
+      "curl -X POST \"https://YOUR_DOMAIN/api/ai-studio/execute\" \\",
+      "  -H \"Authorization: Bearer YOUR_API_KEY\" \\",
+      "  -H \"Content-Type: application/json\" \\",
+      "  -d '{",
+      "    \"modelId\": \"image:fal-gpt-image-2\",",
+      "    \"isPublic\": false,",
+      "    \"payload\": {",
+      "      \"model\": \"gpt-image-2\",",
+      "      \"prompt\": \"A clean coffee packaging poster with readable headline text\",",
+      "      \"size\": \"1:1\",",
+      "      \"resolution\": \"1k\"",
+      "    }",
+      "  }'"
+    ],
+    "requestLabel": "API リクエスト",
+    "requestTitle": "画像生成タスクを作成",
+    "title": "GPT Image 2 生成をアプリに組み込む"
+  },
   "showcase": {
     "kicker": "画像ショーケース",
     "title": "このサイトで使う作例イメージ",

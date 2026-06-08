@@ -171,6 +171,11 @@
         "icon": "DollarSign"
       },
       {
+        "name": "設定管理",
+        "href": "/dashboard/config",
+        "icon": "SlidersHorizontal"
+      },
+      {
         "name": "ブログ管理",
         "href": "/dashboard/blogs",
         "icon": "Rss"
@@ -578,5 +583,403 @@
     "terms": "利用規約",
     "signIn": "サインイン",
     "footerAbout": "実務向けの高精細AI画像生成・編集プラットフォーム。"
+  },
+  "PricingPlans": {
+    "badge": "料金プラン",
+    "title": "シンプルで透明な価格設定",
+    "titleOnetime": "ワンタイムクレジットパック",
+    "description": "あなたに最適なプランをお選びください。すべてのプランに主要機能へのアクセスが含まれています。",
+    "descriptionOnetime": "一回限りの購入 • クレジット有効期限なし",
+    "monthly": "月払い",
+    "annually": "年払い",
+    "onetime": "都度払い",
+    "discount": "50%OFF",
+    "limitedOffer": "年払いオファー",
+    "saveOffer": "年払いで50%お得",
+    "billedYearly": "年間請求 ${amount}",
+    "monthShort": "/月",
+    "subscribe": "登録する",
+    "buyNow": "今すぐ購入",
+    "mostPopular": "一番人気",
+    "bestValue": "ベストバリュー",
+    "contactSales": "カスタムプランが必要ですか？営業チームにお問い合わせください。",
+    "checkOnetime": "都度払いクレジットをお探しですか？クレジットパックをチェック",
+    "packs": {
+      "standard": {
+        "name": "スタンダードパック",
+        "desc": "お試しに最適。",
+        "features": [
+          "1,000 クレジット",
+          "有効期限なし"
+        ]
+      },
+      "pro": {
+        "name": "プロパック",
+        "desc": "一番人気の選択。",
+        "features": [
+          "3,750 クレジット",
+          "有効期限なし",
+          "優先生成"
+        ]
+      },
+      "max": {
+        "name": "マックスパック",
+        "desc": "ヘビーユーザー向け。",
+        "features": [
+          "12,000 クレジット",
+          "有効期限なし",
+          "優先生成"
+        ]
+      }
+    },
+    "plans": {
+      "standard": {
+        "name": "スタンダード",
+        "desc": "これから始める個人向け。",
+        "features": [
+          "{credits} クレジット / 月",
+          "標準キュー",
+          "商用利用可能"
+        ]
+      },
+      "pro": {
+        "name": "プロ",
+        "desc": "より高い能力を求めるクリエイター向け。",
+        "features": [
+          "{credits} クレジット / 月",
+          "高速生成キュー",
+          "優先サポート"
+        ]
+      },
+      "max": {
+        "name": "マックス",
+        "desc": "スタジオやプロフェッショナル向け。",
+        "features": [
+          "{credits} クレジット / 月",
+          "即時生成キュー",
+          "APIアクセス"
+        ]
+      }
+    }
+  },
+  "AIVideoStudio": {
+    "form": {
+      "imageToVideo": "画像から動画",
+      "textToVideo": "テキストから動画",
+      "aiModel": "AIモデル",
+      "selectModel": "モデルを選択して生成を開始",
+      "images": "画像",
+      "referenceAudios": "参考音声",
+      "referenceImages": "参考画像",
+      "referenceVideos": "参考動画",
+      "referenceUrls": "参照URL",
+      "uploadTitle": "クリックしてアップロードまたはドラッグ＆ドロップ",
+      "uploadFormats": "PNG, JPG, JPEG, WEBP",
+      "audioUploadFormats": "audio/*.mp3,.wav,.m4a,.aac,.ogg",
+      "imageUploadFormats": "image/*.png,.jpg,.jpeg,.webp",
+      "videoUploadFormats": "video/*.mp4,.mov,.webm,.mkv",
+      "uploadingImage": "アップロード中...",
+      "uploadingReference": "アップロード中...",
+      "uploadSuccess": "画像をアップロードしました。",
+      "uploadFailed": "画像のアップロードに失敗しました。",
+      "referenceUploadFailed": "参照素材のアップロードに失敗しました。",
+      "uploadTooLarge": "画像サイズは 10MB 以下にしてください。",
+      "referenceUploadTooLarge": "ファイルサイズは {size}MB 以下にしてください。",
+      "audioOnlyError": "音声ファイルのみアップロードできます。",
+      "imageOnlyError": "画像ファイルのみアップロードできます。",
+      "videoOnlyError": "動画ファイルのみアップロードできます。",
+      "videoDurationRequiredError": "この動画の長さを取得できませんでした。公開アクセス可能な直リンクの動画ファイルURLを使用してください。",
+      "prompt": "プロンプト",
+      "promptPlaceholder": "画像のアニメーション方法を記述してください...",
+      "promptPlaceholderImage": "生成または編集したい画像内容を記述してください...",
+      "audioReferenceHint": "ビート、ナレーション、BGM の参考音声をアップロードできます。最大 {count} 件。",
+      "imageReferenceHint": "キャラクター、スタイル、構図の参考画像をアップロードできます。最大 {count} 件。",
+      "videoReferenceHint": "カメラワーク、動き、トランジションの参考動画をアップロードできます。最大 {count} 件。",
+      "urlReferenceHint": "公開アクセス可能な参照URLを追加できます。最大 {count} 件。",
+      "referencesCount": "{current}/{max} 件の参照",
+      "invalidUrl": "有効なURLを入力してください。",
+      "audioUrlPlaceholder": "https://example.com/reference-audio.mp3",
+      "imageUrlPlaceholder": "https://example.com/reference-image.png",
+      "videoUrlPlaceholder": "https://example.com/reference-video.mp4",
+      "genericUrlPlaceholder": "https://example.com/resource",
+      "resolution": "解像度",
+      "size": "画質",
+      "duration": "長さ",
+      "aspectRatio": "アスペクト比",
+      "auto": "自動",
+      "advanced": "詳細設定",
+      "isPublic": "公開設定",
+      "public": "公開",
+      "private": "非公開",
+      "generate": "動画を生成",
+      "generateImage": "画像を生成",
+      "generating": "生成中...",
+      "loginRequired": "動画を生成するにはサインインしてください",
+      "loginRequiredImage": "画像を生成するにはサインインしてください",
+      "insufficientCredits": "クレジット不足",
+      "membershipRequired": "このモデルの利用には {level} メンバーシップが必要です。",
+      "creditsRequired": "{count} クレジット",
+      "generationSuccess": "動画生成を開始しました！",
+      "generationSuccessImage": "画像生成を開始しました！",
+      "generationQueued": "生成キューに追加しました。",
+      "generationCompleted": "動画生成が完了しました！",
+      "generationFailed": "生成に失敗しました。再試行してください",
+      "modelUnavailable": "このAPIは現在未開放です。利用をご希望の場合はサポートまでお問い合わせください。",
+      "historyHint": "送信したタスクはここに表示されます。",
+      "readyToPreview": "プレビュー可能",
+      "viewResult": "「マイビデオ」で確認",
+      "addEndFrame": "エンドフレームを追加",
+      "useUrl": "URLを使用",
+      "add": "追加",
+      "remove": "削除",
+      "seed": "シード",
+      "randomSeed": "ランダム (-1)",
+      "fixCamera": "カメラ固定",
+      "safetyChecker": "セーフティチェック",
+      "shots": "シーン",
+      "addShot": "シーンを追加",
+      "shotNumber": "シーン {index}",
+      "shotScene": "このシーンで何が起こるか説明してください...",
+      "shotDuration": "長さ (秒)",
+      "totalDuration": "合計: {current}s / {total}s",
+      "modelVersion": "モデルバージョン",
+      "soraDisclaimer": "Soraサービスは現在需要が高まっており、失敗する可能性があります。より確実な結果を得るために、他のモデルの使用をお勧めします。",
+      "sora2": {
+        "name": "Sora 2",
+        "description": "標準品質、高速生成"
+      },
+      "sora2pro": {
+        "name": "Sora 2 Pro",
+        "description": "高品質、高度な機能付き"
+      },
+      "estimatedCredits": "推定クレジット",
+      "pricingLogicTitle": "価格計算ロジック",
+      "pricingLogicWithVideoSummary": "動画入力あり: (入力動画の長さ + 出力時間) × 単価 で計算",
+      "pricingLogicWithoutVideoSummary": "動画入力なし: 出力時間 × 単価 で計算",
+      "pricingLogicWithVideoFormula": "現在: ({input}s + {output}s) × {rate} credits/s = {credits} credits",
+      "pricingLogicWithoutVideoFormula": "現在: {output}s × {rate} credits/s = {credits} credits",
+      "currentCredits": "現在のクレジット残高",
+      "unsupportedCombination": "現在のモデル組み合わせではこの設定をサポートしていません。調整してください。",
+      "loadModelDetailFailed": "モデル詳細の読み込みに失敗しました",
+      "provider": "プロバイダー",
+      "loadingModelSettings": "モデル設定を読み込み中...",
+      "tasks": "タスクリスト",
+      "noTasks": "タスクはまだありません。生成をクリックして開始してください",
+      "task": "タスク #{index}",
+      "copyTaskId": "タスク ID をコピー",
+      "taskIdCopied": "タスク ID をコピーしました",
+      "reference": "参照画像",
+      "referencePreview": "参照画像のプレビュー",
+      "replace": "差し替え",
+      "open": "開く",
+      "download": "ダウンロード",
+      "copy": "コピー",
+      "openVideo": "動画を開く",
+      "openImage": "画像を開く",
+      "downloadVideo": "動画をダウンロード",
+      "downloadImage": "画像をダウンロード",
+      "copyPrompt": "プロンプトをコピー",
+      "remix": "リミックス",
+      "promptCopied": "プロンプトをコピーしました",
+      "copyFailed": "コピーに失敗しました",
+      "remixApplied": "パラメータを反映しました。すぐに生成できます。",
+      "watermark": "透かし",
+      "watermarkPlaceholder": "透かしを追加（オプション）",
+      "enableTranslation": "プロンプト自動翻訳",
+      "veoQuality": "Veo 3.1 高画質",
+      "veoFast": "Veo 3.1 高速",
+      "submitModeForm": "フォーム",
+      "submitModeApi": "API",
+      "apiRequestJsonTitle": "リクエスト JSON",
+      "apiRequestJsonDescription": "空のフィールドも payload に保持されます。送信前に値を手動で編集できます。",
+      "apiJsonRequired": "JSON payload は必須です。",
+      "apiJsonMustBeObject": "JSON payload はオブジェクトである必要があります。",
+      "apiJsonInvalid": "JSON payload の形式が正しくありません。",
+      "apiFieldDocsTitle": "フィールド説明",
+      "apiFieldDocRequired": "必須",
+      "apiFieldDocType": "型",
+      "apiFieldDocEnum": "選択肢",
+      "apiFieldDocRange": "範囲",
+      "apiFieldDocMinimum": "最小値",
+      "apiFieldDocMaximum": "最大値"
+    }
+  },
+  "VideoPricing": {
+    "section": {
+      "comparisonRows": [
+        {
+          "feature": "Seedance 2.0 アクセス",
+          "other": "ケースによる",
+          "seedance": "利用可能"
+        },
+        {
+          "feature": "Web アプリ内の新規・タスククレジット",
+          "other": "ケースによる",
+          "seedance": "すべてのモデル"
+        },
+        {
+          "feature": "現在の公開最大尺",
+          "other": "ケースによる",
+          "seedance": "15秒"
+        },
+        {
+          "feature": "現在の公開最大解像度",
+          "other": "ケースによる",
+          "seedance": "1080p"
+        },
+        {
+          "feature": "テキストから動画",
+          "other": "通常は利用可能",
+          "seedance": "利用可能"
+        },
+        {
+          "feature": "画像から動画",
+          "other": "ケースによる",
+          "seedance": "利用可能"
+        },
+        {
+          "feature": "有料プランでの優先処理",
+          "other": "ケースによる",
+          "seedance": "利用可能"
+        },
+        {
+          "feature": "MP4 ダウンロード",
+          "other": "ケースによる",
+          "seedance": "利用可能"
+        }
+      ],
+      "comparisonTitle": "現在の公開オファー比較",
+      "creditPacks": [
+        {
+          "cta": "クレジットを購入",
+          "description": "5 秒クリップなら約 13 本、15 秒クリップなら約 4 本",
+          "price": "$50",
+          "title": "500 クレジット"
+        },
+        {
+          "cta": "クレジットを購入",
+          "description": "5 秒クリップなら約 55 本、15 秒クリップなら約 18 本",
+          "price": "$200",
+          "title": "2100 クレジット"
+        }
+      ],
+      "creditPacksDescription": "サブスクリプションなしで単発利用向けのクレジットを購入できます",
+      "cryptoPaymentLinkLabel": "こちらを確認",
+      "cryptoPaymentText": "暗号資産での支払いにも対応しています。",
+      "creditPacksTitle": "少数の動画だけ必要ですか？",
+      "description": "新規ユーザーは Seedance 2.0 をすぐに使い始められ、デイリータスクで多くのクレジットを継続的に獲得できます。",
+      "monthlyLabel": "月額",
+      "plans": [
+        {
+          "accent": "foreground",
+          "approx": "年間で約 157 本の 5 秒 Seedance 2.0 クリップ",
+          "billed": "年額課金 $490",
+          "credits": "合計 6,000 クレジット",
+          "cta": "始める",
+          "description": "個人クリエイター向け短尺動画プラン",
+          "features": [
+            {
+              "text": "480p・720p・1080p の出力オプション"
+            },
+            {
+              "text": "Seedance 2.0 は最大 15 秒のクリップに対応"
+            },
+            {
+              "text": "クレジットベースのレンダリング"
+            },
+            {
+              "text": "優先処理"
+            },
+            {
+              "text": "MP4 ダウンロード"
+            },
+            {
+              "text": "透かしなし"
+            },
+            {
+              "highlight": true,
+              "text": "Business Certificate Included"
+            }
+          ],
+          "icon": "camera",
+          "name": "Basic",
+          "price": "$41"
+        },
+        {
+          "accent": "primary",
+          "approx": "年間で約 347 本の 5 秒 Seedance 2.0 クリップ",
+          "billed": "年額課金 $990",
+          "credits": "合計 13,200 クレジット",
+          "cta": "Pro を利用",
+          "description": "より多くの短尺試行向けクレジット量",
+          "featured": true,
+          "features": [
+            {
+              "text": "480p・720p・1080p の出力オプション"
+            },
+            {
+              "text": "Seedance 2.0 は最大 15 秒のクリップに対応"
+            },
+            {
+              "text": "より大きな月間クレジット枠"
+            },
+            {
+              "text": "優先処理"
+            },
+            {
+              "text": "バッチ運用向きのボリューム"
+            },
+            {
+              "text": "API アクセス"
+            },
+            {
+              "highlight": true,
+              "text": "Business Certificate Included"
+            }
+          ],
+          "icon": "crown",
+          "name": "Pro",
+          "price": "$83"
+        },
+        {
+          "accent": "accent",
+          "approx": "年間で約 757 本の 5 秒 Seedance 2.0 クリップ",
+          "billed": "年額課金 $2,000",
+          "credits": "合計 28,800 クレジット",
+          "cta": "Max を利用",
+          "description": "チームと大量制作向けの最大クレジット枠",
+          "features": [
+            {
+              "text": "480p・720p・1080p の出力オプション"
+            },
+            {
+              "text": "Seedance 2.0 は最大 15 秒のクリップに対応"
+            },
+            {
+              "text": "最大の月間クレジット枠"
+            },
+            {
+              "text": "優先処理"
+            },
+            {
+              "text": "チーム規模の運用量"
+            },
+            {
+              "text": "API アクセスとサポート"
+            },
+            {
+              "highlight": true,
+              "text": "Business Certificate Included"
+            }
+          ],
+          "icon": "rocket",
+          "name": "Max",
+          "price": "$167"
+        }
+      ],
+      "saveLabel": "17% お得",
+      "title": "現在のWebアプリ向け明瞭な料金体系",
+      "yearlyLabel": "年額"
+    }
   }
 }

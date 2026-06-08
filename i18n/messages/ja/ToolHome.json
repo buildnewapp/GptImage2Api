@@ -26,92 +26,32 @@
         "description": "オンラインのワークスペースからローカルリポジトリまで、ひとつの翻訳ループを保ちます。"
       }
     ],
-    "preview": {
-      "eyebrow": "ワークスペースプレビュー",
-      "title": "最新のレスポンシブ Web Studio を確認",
-      "modeBadge": "ホスト利用 / 自前キー利用",
-      "studioLabel": "JsonAIStudio",
-      "studioTitle": "翻訳タスク向けに設計されたレスポンシブ Web Studio",
-      "chips": [
-        "marketing-site",
-        "ソース言語: en",
-        "ファイル種別: json",
-        "対象言語: zh-CN, ja-JP, de-DE"
-      ],
-      "actions": [
-        {
-          "key": "upload",
-          "label": "アップロード"
-        },
-        {
-          "key": "projectSettings",
-          "label": "プロジェクト設定"
-        },
-        {
-          "key": "modelSettings",
-          "label": "モデル設定"
-        },
-        {
-          "key": "taskCenter",
-          "label": "タスクセンター"
-        },
-        {
-          "key": "startTranslation",
-          "label": "翻訳を開始",
-          "primary": true
-        },
-        {
-          "key": "downloadProject",
-          "label": "プロジェクトをダウンロード"
-        }
-      ],
-      "browser": {
-        "eyebrow": "プロジェクトファイルブラウザ",
-        "title": "ファイルツリー",
-        "projectBadge": "demo1",
-        "tree": [
-          "marketing-site",
-          "i18n/messages/en/common.json",
-          "i18n/messages/en/pricing.json",
-          "i18n/messages/en/dashboard.json",
-          "docs/help/faq.md"
-        ],
-        "activeTreeItem": "i18n/messages/en/common.json"
+    "gallery": [
+      {
+        "title": "ワークスペース概要",
+        "src": "/og.png",
+        "thrumb": "/og.png",
+        "desc": "gallery レイアウト確認用の一時プレビュー画像です。後で正式なワークスペース画像に差し替えられます。"
       },
-      "source": {
-        "eyebrow": "ソース編集エリア",
-        "title": "en / common.json",
-        "badge": "差分: 2 件追加、1 件変更",
-        "tags": ["JSON", "差分モード", "構造保持", "自動比較"],
-        "code": "{\n  \"hero\": {\n    \"title\": \"Ship localization faster\",\n    \"cta\": \"Start now\"\n  },\n  \"pricing\": {\n    \"headline\": \"Flexible plans\",\n    \"badge\": \"For global teams\"\n  }\n}"
+      {
+        "title": "オンラインテスト画像 1",
+        "src": "https://picsum.photos/id/1015/1400/788",
+        "thrumb": "https://picsum.photos/id/1015/300/188",
+        "desc": "リモート画像表示とサムネイル切り替えを確認するためのオンラインテスト画像です。"
       },
-      "target": {
-        "eyebrow": "翻訳結果エリア",
-        "title": "多言語タブと対照表示",
-        "badge": "タスク状態: 実行中 82%",
-        "tabs": [
-          {
-            "locale": "zh-CN",
-            "active": true
-          },
-          {
-            "locale": "ja-JP",
-            "active": false
-          },
-          {
-            "locale": "de-DE",
-            "active": false
-          }
-        ],
-        "tags": ["待機中", "実行中", "一時停止可", "再開可", "ZIP 出力"],
-        "code": "{\n  \"hero\": {\n    \"title\": \"更快交付本地化版本\",\n    \"cta\": \"立即开始\"\n  },\n  \"pricing\": {\n    \"headline\": \"为全球化团队准备的灵活套餐\",\n    \"badge\": \"适合长期维护项目\"\n  }\n}"
+      {
+        "title": "オンラインテスト画像 2",
+        "src": "https://picsum.photos/id/1016/1400/788",
+        "thrumb": "https://picsum.photos/id/1016/300/188",
+        "desc": "大きなプレビュー表示を確認するための 2 枚目のオンラインテスト画像です。"
       },
-      "summary": [
-        "アップロード、設定、タスク管理、翻訳、エクスポートを上部アクションに集約します。",
-        "プロジェクトブラウザ、ソース編集、翻訳結果を同じ画面で見比べながら作業できます。",
-        "モバイルでは縦積み、デスクトップでは本格的な 3 カラムワークスペースに切り替わります。"
-      ]
-    }
+      {
+        "title": "オンラインテスト画像 3",
+        "src": "https://picsum.photos/id/1025/1400/788",
+        "thrumb": "https://picsum.photos/id/1025/300/188",
+        "desc": "横スクロールのサムネイル一覧を確認するための 3 枚目のオンラインテスト画像です。"
+      }
+    ]
   },
   "capabilities": {
     "eyebrow": "6 つの機能",

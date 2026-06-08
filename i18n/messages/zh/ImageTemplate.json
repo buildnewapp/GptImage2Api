@@ -133,6 +133,99 @@
       }
     ]
   },
+  "benefit": {
+    "name": "benefit",
+    "title": "团队为什么选择 GptImage2Api",
+    "label": "优势",
+    "description": "GptImage2Api 帮助团队生成和编辑可用于生产的图片，并提供更清晰的文字、更稳定的风格控制和适合 API 接入的输出设置。",
+    "items": [
+      {
+        "title": "提示词生成图片",
+        "description": "描述主体、版式、光线和氛围，即可生成适用于海报、样机、广告和商品页的高完成度视觉素材。",
+        "icon": "RiFileTextLine",
+        "image": {
+          "src": "https://file.gptimage2api.net/media/1776756799069_v5dm3d_HGaEzbEasAAe7sy.jpg"
+        }
+      },
+      {
+        "title": "可控图片编辑",
+        "description": "使用原图或参考图调整背景、主体、风格方向和局部细节，无需从零重新生成整张素材。",
+        "icon": "RiMagicLine",
+        "image": {
+          "src": "https://file.gptimage2api.net/media/1776695106960_424uv9_HGBnGc4bgAA2vft.jpg"
+        }
+      },
+      {
+        "title": "适合 API 的图片生产",
+        "description": "通过仪表盘或 API 生成 1K、2K、4K 图片，追踪任务状态，并在同一账号下管理积分消耗。",
+        "icon": "RiFlashlightFill",
+        "image": {
+          "src": "https://file.gptimage2api.net/media/1776756858951_6ijm10_HGV6HyHaUAA68FT.jpg"
+        }
+      }
+    ]
+  },
+  "apiWorkflow": {
+    "actions": [
+      {
+        "href": "/apidoc",
+        "label": "查看 API 文档",
+        "variant": "primary"
+      },
+      {
+        "href": "/dashboard/apikeys",
+        "label": "获取 API Key",
+        "variant": "secondary"
+      },
+      {
+        "href": "/pricing",
+        "label": "查看 API 价格",
+        "variant": "secondary"
+      }
+    ],
+    "description": "把 GPT Image 2 图片生成和编辑能力接入你的产品。创建 API Key，发送图片任务，追踪进度，并在现有仪表盘中管理积分消耗。",
+    "items": [
+      {
+        "description": "在仪表盘创建密钥，并在每次请求中通过 Authorization: Bearer 传入。",
+        "icon": "key",
+        "title": "API Key 认证"
+      },
+      {
+        "description": "通过 /api/ai-studio/execute 提交图片任务，传入 modelId、可见性和 GPT Image 2 payload 字段。",
+        "icon": "code",
+        "title": "图片生成接口"
+      },
+      {
+        "description": "任务创建后轮询任务接口，读取 queued、running、succeeded 或 failed 状态。",
+        "icon": "list",
+        "title": "任务状态"
+      },
+      {
+        "description": "API 使用按积分计费，与同一账号余额和价格规则保持一致。",
+        "icon": "coins",
+        "title": "积分计费"
+      }
+    ],
+    "kicker": "开发者 API",
+    "requestLines": [
+      "curl -X POST \"https://YOUR_DOMAIN/api/ai-studio/execute\" \\",
+      "  -H \"Authorization: Bearer YOUR_API_KEY\" \\",
+      "  -H \"Content-Type: application/json\" \\",
+      "  -d '{",
+      "    \"modelId\": \"image:fal-gpt-image-2\",",
+      "    \"isPublic\": false,",
+      "    \"payload\": {",
+      "      \"model\": \"gpt-image-2\",",
+      "      \"prompt\": \"A clean coffee packaging poster with readable headline text\",",
+      "      \"size\": \"1:1\",",
+      "      \"resolution\": \"1k\"",
+      "    }",
+      "  }'"
+    ],
+    "requestLabel": "API 请求",
+    "requestTitle": "创建图片生成任务",
+    "title": "把 GPT Image 2 生成能力接入你的应用"
+  },
   "showcase": {
     "kicker": "图像示例",
     "title": "本站页面示例视觉方向",

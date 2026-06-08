@@ -137,6 +137,38 @@
       }
     ]
   },
+  "benefit": {
+    "name": "benefit",
+    "title": "Why creators choose Seedance 2.0",
+    "label": "Benefits",
+    "description": "Seedance 2.0 helps teams turn prompts and reference images into polished short-form video with practical controls and clear output limits.",
+    "items": [
+      {
+        "title": "Prompt-to-video workflow",
+        "description": "Write a scene, choose aspect ratio, duration, and resolution, then render short clips directly in the web app.",
+        "icon": "RiFileTextLine",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/4ryp8bssv.png"
+        }
+      },
+      {
+        "title": "Reference image control",
+        "description": "Start from a still image to keep the subject, framing, or visual direction stable before motion begins.",
+        "icon": "RiMagicLine",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/sel4unt33.png"
+        }
+      },
+      {
+        "title": "Fast short-form delivery",
+        "description": "Create 1080p clips up to 15 seconds, test several ideas quickly, and keep earning credits through daily tasks.",
+        "icon": "RiFlashlightFill",
+        "image": {
+          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/9qfkzq75i.png"
+        }
+      }
+    ]
+  },
   "apiWorkflow": {
     "actions": [
       {
@@ -301,137 +333,6 @@
         "role": "Growth Lead at Bright Launch"
       }
     ]
-  },
-  "pricing": {
-    "comparisonRows": [
-      {
-        "feature": "Seedance 2.0 access",
-        "other": "Varies",
-        "seedance": "Available"
-      },
-      {
-        "feature": "Starter and daily-task credits in the web app",
-        "other": "Varies",
-        "seedance": "All models"
-      },
-      {
-        "feature": "Current public max length",
-        "other": "Varies",
-        "seedance": "15s"
-      },
-      {
-        "feature": "Current public max resolution",
-        "other": "Varies",
-        "seedance": "1080p"
-      },
-      {
-        "feature": "Text-to-video",
-        "other": "Usually available",
-        "seedance": "Available"
-      },
-      {
-        "feature": "Image-to-video",
-        "other": "Varies",
-        "seedance": "Available"
-      },
-      {
-        "feature": "Priority processing on paid plans",
-        "other": "Varies",
-        "seedance": "Available"
-      },
-      {
-        "feature": "MP4 download",
-        "other": "Varies",
-        "seedance": "Available"
-      }
-    ],
-    "comparisonTitle": "Current Public Offer Comparison",
-    "creditPacks": [
-      {
-        "cta": "Buy Credits",
-        "description": "About 13 5s clips or 4 15s clips",
-        "price": "$50",
-        "title": "500 Credits"
-      },
-      {
-        "cta": "Buy Credits",
-        "description": "About 55 5s clips or 18 15s clips",
-        "price": "$200",
-        "title": "2100 Credits"
-      }
-    ],
-    "creditPacksDescription": "Buy credits for one-off runs without a subscription plan",
-    "cryptoPaymentLinkLabel": "click to view",
-    "cryptoPaymentText": "Crypto payments are supported,",
-    "creditPacksTitle": "Need just a few videos?",
-    "description": "New users can start on Seedance 2.0 right away and keep earning plenty of credits through daily tasks.",
-    "monthlyLabel": "Monthly",
-    "plans": [
-      {
-        "accent": "foreground",
-        "approx": "~157 5s Seedance 2.0 clips/year",
-        "billed": "Billed yearly at $490",
-        "credits": "6,000 credits total",
-        "cta": "Get Started",
-        "description": "Short-form video access for solo creators",
-        "features": [
-          { "text": "480p, 720p, and 1080p output options" },
-          { "text": "Up to 15 second Seedance 2.0 clips" },
-          { "text": "Credit-based rendering" },
-          { "text": "Priority processing" },
-          { "text": "MP4 download" },
-          { "text": "No watermark" },
-          { "highlight": true, "text": "Business Certificate Included" }
-        ],
-        "icon": "camera",
-        "name": "Basic",
-        "price": "$41"
-      },
-      {
-        "accent": "primary",
-        "approx": "~347 5s Seedance 2.0 clips/year",
-        "billed": "Billed yearly at $990",
-        "credits": "13,200 credits total",
-        "cta": "Get Pro",
-        "description": "More credits for heavier short-form iteration",
-        "featured": true,
-        "features": [
-          { "text": "480p, 720p, and 1080p output options" },
-          { "text": "Up to 15 second Seedance 2.0 clips" },
-          { "text": "Higher monthly credit pool" },
-          { "text": "Priority processing" },
-          { "text": "Batch-friendly volume" },
-          { "text": "API access" },
-          { "highlight": true, "text": "Business Certificate Included" }
-        ],
-        "icon": "crown",
-        "name": "Pro",
-        "price": "$83"
-      },
-      {
-        "accent": "accent",
-        "approx": "~757 5s Seedance 2.0 clips/year",
-        "billed": "Billed yearly at $2,000",
-        "credits": "28,800 credits total",
-        "cta": "Get Max",
-        "description": "Largest credit pool for teams and production volume",
-        "features": [
-          { "text": "480p, 720p, and 1080p output options" },
-          { "text": "Up to 15 second Seedance 2.0 clips" },
-          { "text": "Largest monthly credit pool" },
-          { "text": "Priority processing" },
-          { "text": "Team-scale volume" },
-          { "text": "API access & support" },
-          { "highlight": true, "text": "Business Certificate Included" }
-        ],
-        "icon": "rocket",
-        "name": "Max",
-        "price": "$167"
-      }
-    ],
-    "saveLabel": "Save 17%",
-    "title": "Transparent Pricing for the Current App",
-    "yearlyLabel": "Yearly"
   },
   "faq": {
     "description": "Everything you need to know about Seedance 2.0",

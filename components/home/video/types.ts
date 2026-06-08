@@ -1,5 +1,8 @@
+import type { Section } from "@/types/template1";
+
 export interface VideoTemplateShowcaseItem {
   category: string;
+  cover?: string;
   duration?: string;
   prompt?: string;
   resolution?: string;
@@ -209,6 +212,7 @@ export interface VideoTemplateCta {
 }
 
 export interface VideoTemplatePage {
+  benefit: Section;
   cta: VideoTemplateCta;
   faq: VideoTemplateFaq;
   featureRows: VideoTemplateFeatureRow[];

@@ -14,6 +14,7 @@ import {
 } from "@/lib/seo/jsonld";
 
 interface TemplateJsonLdProps {
+  pricingNamespace?: string;
   templateName: string;
 }
 
@@ -23,14 +24,20 @@ function normalizeOfferPrice(price: string) {
 }
 
 export default async function TemplateJsonLd({
+  pricingNamespace,
   templateName,
 }: TemplateJsonLdProps) {
   const locale = await getLocale();
   const t = await getTranslations(templateName);
+  const pricingT = pricingNamespace
+    ? await getTranslations(pricingNamespace)
+    : null;
   const structuredData = await getTranslations("StructuredData");
   const hero = t.raw("hero") as VideoTemplateHero;
   const faq = t.raw("faq") as VideoTemplateFaq;
-  const pricing = t.raw("pricing") as VideoTemplatePricing;
+  const pricing = (
+    pricingT ? pricingT.raw("section") : t.raw("pricing")
+  ) as VideoTemplatePricing;
   const testimonials = t.raw("testimonials") as VideoTemplateTestimonials;
   const rating = structuredData.raw("rating") as {
     bestRating: string;
