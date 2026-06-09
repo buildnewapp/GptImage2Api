@@ -1,5 +1,4 @@
 import { GoogleOneTap } from "@/components/auth/GoogleOneTap";
-import { LanguageDetectionAlert } from "@/components/LanguageDetectionAlert";
 import { TailwindIndicator } from "@/components/TailwindIndicator";
 import ReferralAutoAccept from "@/components/tracking/ReferralAutoAccept";
 import ReferralCapture from "@/components/tracking/ReferralCapture";
@@ -110,7 +109,6 @@ export default async function LocaleLayout({
             <ReferralCapture />
             <ReferralAutoAccept />
             <SiteInit/>
-            {messages.LanguageDetection && <LanguageDetectionAlert />}
 
             {children}
           </ThemeProvider>
