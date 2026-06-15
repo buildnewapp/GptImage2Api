@@ -20,7 +20,7 @@ import { betterAuth, BetterAuthOptions } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { admin, anonymous, captcha, emailOTP, lastLoginMethod, magicLink, oneTap } from "better-auth/plugins";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { cache } from "react";
 
 /**
@@ -100,7 +100,11 @@ function createAuthConfig(databaseInstance: ReturnType<typeof getDb>): BetterAut
               }
             }
             try {
-              await grantConfiguredSignupBonusCredits(createdUser.id);
+              const headerStore = await headers();
+              await grantConfiguredSignupBonusCredits(
+                createdUser.id,
+                headerStore.get("cf-ipcountry")
+              );
             } catch (error) {
               console.error('Failed to grant signup bonus credits:', error);
             }

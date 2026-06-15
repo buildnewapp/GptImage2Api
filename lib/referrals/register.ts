@@ -150,7 +150,8 @@ export async function bindReferralOnRegistration({
 
 export async function acceptConfiguredReferralInvite(
   inviteeUserId: string,
-  inviteCode: string | null | undefined
+  inviteCode: string | null | undefined,
+  countryCode?: string | null
 ): Promise<{ status: ReferralBindingStatus }> {
   const db = getDb();
 
@@ -161,7 +162,10 @@ export async function acceptConfiguredReferralInvite(
       store,
       inviteeUserId,
       inviteCode,
-      signupCreditAmount: resolveReferralSignupCreditAmount(referralConfig),
+      signupCreditAmount: resolveReferralSignupCreditAmount(
+        referralConfig,
+        countryCode
+      ),
       dailyRewardLimit: referralConfig.signupInviteDailyRewardLimit,
     });
   });

@@ -1,4 +1,9 @@
 import { creditConfig } from "@/config/credit";
+import {
+  referralConfig,
+  resolveFreeCreditAmountByCountry,
+  type FreeCreditCountryPolicy,
+} from "@/config/referral";
 import { getDb } from "@/lib/db";
 import {
   creditLogs as creditLogsSchema,
@@ -31,6 +36,8 @@ interface GrantSignupBonusCreditsParams {
   store: SignupBonusStore;
   userId: string;
   amount: number;
+  countryCode?: string | null;
+  countryPolicy?: FreeCreditCountryPolicy;
   notes?: string;
 }
 
@@ -42,9 +49,17 @@ export async function grantSignupBonusCredits({
   store,
   userId,
   amount,
+  countryCode,
+  countryPolicy = referralConfig.freeCreditCountryPolicy,
   notes = SIGNUP_BONUS_CREDIT_LOG_NOTES,
 }: GrantSignupBonusCreditsParams): Promise<boolean> {
-  if (amount <= 0) {
+  const resolvedAmount = resolveFreeCreditAmountByCountry(
+    amount,
+    countryCode,
+    countryPolicy
+  );
+
+  if (resolvedAmount <= 0) {
     return false;
   }
 
@@ -54,11 +69,11 @@ export async function grantSignupBonusCredits({
     return false;
   }
 
-  const balances = await store.applyOneTimeCredits(userId, amount);
+  const balances = await store.applyOneTimeCredits(userId, resolvedAmount);
 
   await store.insertCreditLog({
     userId,
-    amount,
+    amount: resolvedAmount,
     oneTimeCreditsSnapshot: balances.oneTimeCreditsSnapshot,
     subscriptionCreditsSnapshot: balances.subscriptionCreditsSnapshot,
     type: SIGNUP_BONUS_CREDIT_LOG_TYPE,
@@ -68,7 +83,10 @@ export async function grantSignupBonusCredits({
   return true;
 }
 
-export async function grantConfiguredSignupBonusCredits(userId: string): Promise<boolean> {
+export async function grantConfiguredSignupBonusCredits(
+  userId: string,
+  countryCode?: string | null
+): Promise<boolean> {
   const amount = creditConfig.signupBonusCredits;
 
   if (amount <= 0) {
@@ -84,6 +102,7 @@ export async function grantConfiguredSignupBonusCredits(userId: string): Promise
       store,
       userId,
       amount,
+      countryCode,
     });
   });
 }

@@ -1,8 +1,15 @@
 export type ReferralRewardMode = "fixed" | "percentage";
+
+export interface FreeCreditCountryPolicy {
+  limited: readonly string[];
+  blocked: readonly string[];
+}
+
 export interface ReferralRuntimeConfig {
   enabled: boolean;
   signupInviteCredit: number;
   signupInviteDailyRewardLimit: number;
+  freeCreditCountryPolicy: FreeCreditCountryPolicy;
 }
 
 export const referralConfig = {
@@ -12,6 +19,12 @@ export const referralConfig = {
   signupInviteCredit: 10,
   // 每个邀请人每天最多多少个新注册用户可以获得注册邀请积分
   signupInviteDailyRewardLimit: 3,
+  // 免费积分地区策略：limited 减半，blocked 为 0，其他国家默认全额
+  // 开启 cf 安全： domain -> Security -> Settings -> Bot fight mode : On
+  freeCreditCountryPolicy: {
+    limited: ["PK", "BD", "NG", "ID", "VN", "PH", "BR"],
+    blocked: ["IN"],
+  },
   // 新用户注册后，最多允许在多少天内接受邀请绑定
   inviteAcceptanceWindowDays: 1,
   // 邀请码最少字符数
@@ -56,8 +69,46 @@ export function shouldEnableReferralRewards(
   return config.enabled;
 }
 
-export function resolveReferralSignupCreditAmount(
-  config: ReferralRuntimeConfig = referralConfig
+function normalizeCountryCode(countryCode: string | null | undefined) {
+  const normalized = countryCode?.trim().toUpperCase();
+  return normalized && /^[A-Z]{2}$/.test(normalized) ? normalized : null;
+}
+
+export function resolveFreeCreditAmountByCountry(
+  amount: number,
+  countryCode: string | null | undefined,
+  policy: FreeCreditCountryPolicy = referralConfig.freeCreditCountryPolicy
 ): number {
-  return shouldEnableReferralRewards(config) ? config.signupInviteCredit : 0;
+  const normalizedAmount = Math.max(0, Math.trunc(amount));
+  const normalizedCountry = normalizeCountryCode(countryCode);
+
+  if (!normalizedCountry) {
+    return normalizedAmount;
+  }
+
+  if (policy.blocked.includes(normalizedCountry)) {
+    return 0;
+  }
+
+  if (policy.limited.includes(normalizedCountry)) {
+    return Math.floor(normalizedAmount / 2);
+  }
+
+  return normalizedAmount;
+}
+
+export function resolveReferralSignupCreditAmount(
+  config: ReferralRuntimeConfig = referralConfig,
+  countryCode?: string | null,
+  countryPolicy: FreeCreditCountryPolicy = config.freeCreditCountryPolicy
+): number {
+  if (!shouldEnableReferralRewards(config)) {
+    return 0;
+  }
+
+  return resolveFreeCreditAmountByCountry(
+    config.signupInviteCredit,
+    countryCode,
+    countryPolicy
+  );
 }
