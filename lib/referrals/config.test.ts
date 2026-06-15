@@ -8,6 +8,11 @@ import {
   shouldEnableReferralRewards,
 } from "@/config/referral";
 
+const testCountryPolicy = {
+  limited: ["IN"],
+  blocked: [],
+};
+
 test("returns configured fixed cash reward when reward mode is fixed", () => {
   const reward = calculateFirstOrderCashReward({
     orderAmountUsd: 99,
@@ -35,6 +40,7 @@ test("exposes qualification and lock periods from referral config", () => {
   assert.equal(referralConfig.cashRewardLockDays, 30);
   assert.equal(referralConfig.inviteCodeMinLength, 4);
   assert.equal(referralConfig.inviteCodePostCreationChangeLimit, 1);
+  assert.equal(referralConfig.signupInviteDailyRewardLimit, 3);
 });
 
 test("disables referral rewards when enabled is false", () => {
@@ -43,6 +49,8 @@ test("disables referral rewards when enabled is false", () => {
     resolveReferralSignupCreditAmount({
       enabled: false,
       signupInviteCredit: 100,
+      signupInviteDailyRewardLimit: 3,
+      freeCreditCountryPolicy: testCountryPolicy,
     }),
     0
   );
@@ -54,7 +62,40 @@ test("keeps configured signup credits when referral rewards are enabled", () => 
     resolveReferralSignupCreditAmount({
       enabled: true,
       signupInviteCredit: 100,
+      signupInviteDailyRewardLimit: 3,
+      freeCreditCountryPolicy: testCountryPolicy,
     }),
     100
+  );
+});
+
+test("limits referral signup credits by country policy", () => {
+  assert.equal(
+    resolveReferralSignupCreditAmount(
+      {
+        enabled: true,
+        signupInviteCredit: 100,
+        signupInviteDailyRewardLimit: 3,
+        freeCreditCountryPolicy: testCountryPolicy,
+      },
+      "IN"
+    ),
+    50
+  );
+  assert.equal(
+    resolveReferralSignupCreditAmount(
+      {
+        enabled: true,
+        signupInviteCredit: 100,
+        signupInviteDailyRewardLimit: 3,
+        freeCreditCountryPolicy: testCountryPolicy,
+      },
+      "ZZ",
+      {
+        limited: [],
+        blocked: ["ZZ"],
+      }
+    ),
+    0
   );
 });

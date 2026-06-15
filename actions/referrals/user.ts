@@ -23,6 +23,7 @@ import {
 } from "@/lib/referrals/withdrawals";
 import { referralConfig } from "@/config/referral";
 import { desc, eq } from "drizzle-orm";
+import { headers } from "next/headers";
 
 export interface ReferralDashboardData {
   inviteCode: string | null;
@@ -275,7 +276,12 @@ export async function acceptReferralInviteAction(
   if (!user) return actionResponse.unauthorized();
 
   try {
-    const result = await acceptConfiguredReferralInvite(user.id, inviteCode);
+    const headerStore = await headers();
+    const result = await acceptConfiguredReferralInvite(
+      user.id,
+      inviteCode,
+      headerStore.get("cf-ipcountry")
+    );
     return actionResponse.success(result);
   } catch (error) {
     console.error("Error accepting referral invite", error);

@@ -6,10 +6,13 @@ import {
   type ReferralRegistrationStore,
 } from "@/lib/referrals/register";
 
+const recentInviteeCreatedAt = () => new Date(Date.now() - 60 * 60 * 1000);
+
 class FakeReferralRegistrationStore implements ReferralRegistrationStore {
   inviterByCode = new Map<string, { userId: string; inviteCode: string }>();
   invitees = new Map<string, { invitedByUserId: string | null; createdAt: Date }>();
   signupRewardInvitees = new Set<string>();
+  signupRewardCountByInviter = new Map<string, number>();
   grantedCreditTotals = new Map<string, number>();
   referralInviteCreations: Array<{ inviterUserId: string; inviteeUserId: string; inviteCode: string }> = [];
   calls: string[] = [];
@@ -28,7 +31,7 @@ class FakeReferralRegistrationStore implements ReferralRegistrationStore {
     return (
       this.invitees.get(inviteeUserId) ?? {
         invitedByUserId: null,
-        createdAt: new Date("2026-03-07T00:00:00.000Z"),
+        createdAt: recentInviteeCreatedAt(),
       }
     );
   }
@@ -36,6 +39,17 @@ class FakeReferralRegistrationStore implements ReferralRegistrationStore {
   async hasSignupRewardForInvitee(inviteeUserId: string): Promise<boolean> {
     this.calls.push(`hasSignupRewardForInvitee:${inviteeUserId}`);
     return this.signupRewardInvitees.has(inviteeUserId);
+  }
+
+  async countSignupRewardsForInviterOnDay({
+    inviterUserId,
+  }: {
+    inviterUserId: string;
+    dayStart: Date;
+    dayEnd: Date;
+  }): Promise<number> {
+    this.calls.push(`countSignupRewardsForInviterOnDay:${inviterUserId}`);
+    return this.signupRewardCountByInviter.get(inviterUserId) ?? 0;
   }
 
   async bindInviteeToInviter({
@@ -50,7 +64,7 @@ class FakeReferralRegistrationStore implements ReferralRegistrationStore {
     this.calls.push(`bindInviteeToInviter:${inviterUserId}:${inviteeUserId}:${inviteCode}`);
     const invitee = this.invitees.get(inviteeUserId) ?? {
       invitedByUserId: null,
-      createdAt: new Date("2026-03-07T00:00:00.000Z"),
+      createdAt: recentInviteeCreatedAt(),
     };
     this.invitees.set(inviteeUserId, {
       ...invitee,
@@ -78,6 +92,10 @@ class FakeReferralRegistrationStore implements ReferralRegistrationStore {
   }): Promise<void> {
     this.calls.push(`createSignupReward:${inviterUserId}:${inviteeUserId}:${creditAmount}`);
     this.signupRewardInvitees.add(inviteeUserId);
+    this.signupRewardCountByInviter.set(
+      inviterUserId,
+      (this.signupRewardCountByInviter.get(inviterUserId) ?? 0) + 1
+    );
   }
 }
 
@@ -86,7 +104,7 @@ test("binds a valid invite code and grants inviter signup credits", async () => 
   store.inviterByCode.set("INV123", { userId: "inviter-1", inviteCode: "INV123" });
   store.invitees.set("invitee-1", {
     invitedByUserId: null,
-    createdAt: new Date("2026-03-07T00:00:00.000Z"),
+    createdAt: recentInviteeCreatedAt(),
   });
 
   const result = await bindReferralOnRegistration({
@@ -112,7 +130,7 @@ test("skips registration binding when the invite code does not exist", async () 
   const store = new FakeReferralRegistrationStore();
   store.invitees.set("invitee-1", {
     invitedByUserId: null,
-    createdAt: new Date("2026-03-07T00:00:00.000Z"),
+    createdAt: recentInviteeCreatedAt(),
   });
 
   const result = await bindReferralOnRegistration({
@@ -132,7 +150,7 @@ test("rejects self-invite attempts", async () => {
   store.inviterByCode.set("SELF123", { userId: "invitee-1", inviteCode: "SELF123" });
   store.invitees.set("invitee-1", {
     invitedByUserId: null,
-    createdAt: new Date("2026-03-07T00:00:00.000Z"),
+    createdAt: recentInviteeCreatedAt(),
   });
 
   const result = await bindReferralOnRegistration({
@@ -152,7 +170,7 @@ test("does not duplicate binding or credits when auth hook runs twice", async ()
   store.inviterByCode.set("INV123", { userId: "inviter-1", inviteCode: "INV123" });
   store.invitees.set("invitee-1", {
     invitedByUserId: null,
-    createdAt: new Date("2026-03-07T00:00:00.000Z"),
+    createdAt: recentInviteeCreatedAt(),
   });
 
   const first = await bindReferralOnRegistration({
@@ -171,6 +189,31 @@ test("does not duplicate binding or credits when auth hook runs twice", async ()
   assert.equal(first.status, "bound");
   assert.equal(second.status, "already_bound");
   assert.equal(store.grantedCreditTotals.get("inviter-1"), 100);
+  assert.equal(store.referralInviteCreations.length, 1);
+});
+
+test("binds invitee without credits after inviter reaches daily signup reward limit", async () => {
+  const store = new FakeReferralRegistrationStore();
+  store.inviterByCode.set("INV123", { userId: "inviter-1", inviteCode: "INV123" });
+  store.invitees.set("invitee-4", {
+    invitedByUserId: null,
+    createdAt: recentInviteeCreatedAt(),
+  });
+  store.signupRewardCountByInviter.set("inviter-1", 3);
+
+  const result = await bindReferralOnRegistration({
+    store,
+    inviteeUserId: "invitee-4",
+    inviteCode: "INV123",
+    signupCreditAmount: 100,
+    dailyRewardLimit: 3,
+    now: new Date(),
+  });
+
+  assert.equal(result.status, "bound");
+  assert.equal(store.invitees.get("invitee-4")?.invitedByUserId, "inviter-1");
+  assert.equal(store.grantedCreditTotals.size, 0);
+  assert.equal(store.signupRewardInvitees.has("invitee-4"), false);
   assert.equal(store.referralInviteCreations.length, 1);
 });
 

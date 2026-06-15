@@ -4,6 +4,7 @@ import { siteConfig } from "@/config/site";
 import MagicLinkEmail from '@/emails/magic-link-email';
 import OTPCodeEmail from '@/emails/otp-code-email';
 import { UserWelcomeEmail } from "@/emails/user-welcome";
+import { assertAllowedSignupEmail } from "@/lib/auth/email-domain";
 import { getDb } from '@/lib/db';
 import { account, session, user, verification } from "@/lib/db/schema";
 import { resolveSocialProviders } from "@/lib/auth/social-providers";
@@ -19,7 +20,7 @@ import { betterAuth, BetterAuthOptions } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { admin, anonymous, captcha, emailOTP, lastLoginMethod, magicLink, oneTap } from "better-auth/plugins";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { cache } from "react";
 
 /**
@@ -81,6 +82,9 @@ function createAuthConfig(databaseInstance: ReturnType<typeof getDb>): BetterAut
     databaseHooks: {
       user: {
         create: {
+          before: async (newUser) => {
+            assertAllowedSignupEmail(newUser.email);
+          },
           after: async (createdUser) => {
             const cookieStore = await cookies();
             const isTrackingEnabledValue = await isTrackingEnabled()
@@ -96,7 +100,11 @@ function createAuthConfig(databaseInstance: ReturnType<typeof getDb>): BetterAut
               }
             }
             try {
-              await grantConfiguredSignupBonusCredits(createdUser.id);
+              const headerStore = await headers();
+              await grantConfiguredSignupBonusCredits(
+                createdUser.id,
+                headerStore.get("cf-ipcountry")
+              );
             } catch (error) {
               console.error('Failed to grant signup bonus credits:', error);
             }
@@ -116,6 +124,20 @@ function createAuthConfig(databaseInstance: ReturnType<typeof getDb>): BetterAut
                 console.error('Failed to send welcome email:', error);
               }
             }
+          },
+        },
+      },
+      session: {
+        create: {
+          before: async (newSession, ctx) => {
+            if (!ctx) {
+              return;
+            }
+
+            const sessionUser = await ctx.context.internalAdapter.findUserById(
+              newSession.userId,
+            );
+            assertAllowedSignupEmail(sessionUser?.email);
           },
         },
       },

@@ -212,8 +212,8 @@ function getDefaultSelection(initialModelId?: string | null) {
   }
 
   return {
-    familyKey: "sora2" as AiVideoStudioFamilyKey,
-    versionKey: "sora-2" as AiVideoStudioVersionKey,
+    familyKey: "grok-imagine" as AiVideoStudioFamilyKey,
+    versionKey: "grok-imagine-text-to-video" as AiVideoStudioVersionKey,
   };
 }
 
