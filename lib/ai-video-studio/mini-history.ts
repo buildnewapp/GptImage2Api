@@ -15,6 +15,7 @@ export type AiVideoMiniStudioGenerationTask = {
   taskId?: string;
   state: AiVideoMiniStudioGenerationTaskState;
   mediaUrls: string[];
+  failureReason?: string | null;
   familyKey: AiVideoStudioFamilyKey;
   versionKey: AiVideoStudioVersionKey;
   modelId: string;

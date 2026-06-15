@@ -46,6 +46,10 @@ export async function GET(
     if (generation.status === "succeeded" || generation.status === "failed") {
       const detail = await getCachedAiStudioCatalogDetail(generation.catalogModelId);
       const raw = generation.callbackPayload ?? generation.responsePayload ?? {};
+      const reason =
+        generation.status === "failed"
+          ? generation.statusReason || extractProviderFailureReason(raw)
+          : null;
 
       return apiResponse.success({
         generationId: generation.id,
@@ -57,12 +61,19 @@ export async function GET(
           : [],
         artifacts: detail ? extractResultArtifacts(raw, detail) : [],
         raw: sanitizeAiStudioDebugValue(raw),
+        reason,
         reservedCredits: generation.creditsReserved,
         refundedCredits: generation.creditsRefunded,
       });
     }
 
     const result = await queryAiStudioTask(generation.catalogModelId, taskId);
+    const failureReason =
+      result.state === "failed"
+        ? extractProviderFailureReason(result.raw) ||
+          (typeof result.raw === "string" ? result.raw : null) ||
+          "Provider task failed"
+        : null;
 
     if (result.state === "succeeded") {
       const settled = await settleAiStudioGenerationSuccessWithMediaArchive(
@@ -80,10 +91,7 @@ export async function GET(
     } else if (result.state === "failed") {
       await settleAiStudioGenerationFailure(generation.id, {
         raw: result.raw,
-        reason:
-          extractProviderFailureReason(result.raw) ||
-          (typeof result.raw === "string" ? result.raw : null) ||
-          "Provider task failed",
+        reason: failureReason,
         providerState: result.state,
       });
     } else if (result.state === "queued" || result.state === "running") {
@@ -102,6 +110,7 @@ export async function GET(
       mediaUrls: result.mediaUrls,
       artifacts: result.artifacts,
       raw: sanitizeAiStudioDebugValue(result.raw),
+      reason: failureReason,
       reservedCredits: generation.creditsReserved,
       refundedCredits:
         result.state === "failed"

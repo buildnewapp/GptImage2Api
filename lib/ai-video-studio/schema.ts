@@ -120,6 +120,22 @@ function isFieldValueSupported(
   return options.some((option) => option === value);
 }
 
+function normalizeFieldValue(
+  field: AiVideoStudioFieldDescriptor,
+  value: unknown,
+) {
+  if (
+    field.kind === "array" &&
+    field.schema.items?.type === "string" &&
+    typeof value === "string" &&
+    value.trim().length > 0
+  ) {
+    return [value.trim()];
+  }
+
+  return value;
+}
+
 function getPathTokens(path: string[]) {
   return path
     .flatMap((segment) =>
@@ -359,11 +375,14 @@ export function mergeAiVideoStudioFormValues(input: {
   for (const field of input.fields) {
     const previousValue = getValueAtPath(input.previousValues, field.path);
     const defaultValue = getValueAtPath(input.defaults, field.path);
+    const normalizedPreviousValue = normalizeFieldValue(field, previousValue);
 
     setValueAtPath(
       next,
       field.path,
-      isFieldValueSupported(field, previousValue) ? previousValue : defaultValue,
+      isFieldValueSupported(field, normalizedPreviousValue)
+        ? normalizedPreviousValue
+        : defaultValue,
     );
   }
 
