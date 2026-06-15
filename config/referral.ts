@@ -8,7 +8,7 @@ export const referralConfig = {
   // 是否启用邀请奖励与邀请页面展示，不影响邀请 cookie 捕获和邀请关系绑定
   enabled: true,
   // 每成功邀请 1 个新用户注册，邀请人立即获得的积分
-  signupInviteCredit: 20,
+  signupInviteCredit: 10,
   // 新用户注册后，最多允许在多少天内接受邀请绑定
   inviteAcceptanceWindowDays: 1,
   // 邀请码最少字符数
