@@ -8,7 +8,7 @@ import {
   user as userSchema,
 } from "@/lib/db/schema";
 import { normalizeInviteCode } from "@/lib/referrals/invite-codes";
-import { and, eq, sql } from "drizzle-orm";
+import { and, count, eq, gte, lt, sql } from "drizzle-orm";
 
 export const REFERRAL_SIGNUP_CREDIT_LOG_TYPE = "referral_signup_bonus";
 
@@ -22,6 +22,11 @@ export interface ReferralRegistrationStore {
     createdAt: Date;
   } | null>;
   hasSignupRewardForInvitee(inviteeUserId: string): Promise<boolean>;
+  countSignupRewardsForInviterOnDay(input: {
+    inviterUserId: string;
+    dayStart: Date;
+    dayEnd: Date;
+  }): Promise<number>;
   bindInviteeToInviter(input: {
     inviterUserId: string;
     inviteeUserId: string;
@@ -44,6 +49,8 @@ interface BindReferralOnRegistrationParams {
   inviteeUserId: string;
   inviteCode: string | null | undefined;
   signupCreditAmount: number;
+  dailyRewardLimit?: number;
+  now?: Date;
 }
 
 export type ReferralBindingStatus =
@@ -60,9 +67,10 @@ export async function bindReferralOnRegistration({
   inviteeUserId,
   inviteCode,
   signupCreditAmount,
+  dailyRewardLimit,
+  now = new Date(),
 }: BindReferralOnRegistrationParams): Promise<{ status: ReferralBindingStatus }> {
   const normalizedInviteCode = normalizeInviteCode(inviteCode ?? "");
-  const now = new Date();
 
   if (!normalizedInviteCode) {
     return { status: "no_code" };
@@ -107,7 +115,28 @@ export async function bindReferralOnRegistration({
     inviteCode: inviter.inviteCode,
   });
 
-  if (signupCreditAmount > 0) {
+  const normalizedDailyRewardLimit =
+    dailyRewardLimit === undefined
+      ? Number.POSITIVE_INFINITY
+      : Math.max(0, Math.trunc(dailyRewardLimit));
+
+  if (signupCreditAmount > 0 && normalizedDailyRewardLimit > 0) {
+    const dayStart = new Date(now);
+    dayStart.setUTCHours(0, 0, 0, 0);
+    const dayEnd = new Date(dayStart);
+    dayEnd.setUTCDate(dayEnd.getUTCDate() + 1);
+    const signupRewardsToday = Number.isFinite(normalizedDailyRewardLimit)
+      ? await store.countSignupRewardsForInviterOnDay({
+          inviterUserId: inviter.userId,
+          dayStart,
+          dayEnd,
+        })
+      : 0;
+
+    if (signupRewardsToday >= normalizedDailyRewardLimit) {
+      return { status: "bound" };
+    }
+
     await store.grantInviterCredits(inviter.userId, signupCreditAmount);
     await store.createSignupReward({
       inviterUserId: inviter.userId,
@@ -133,6 +162,7 @@ export async function acceptConfiguredReferralInvite(
       inviteeUserId,
       inviteCode,
       signupCreditAmount: resolveReferralSignupCreditAmount(referralConfig),
+      dailyRewardLimit: referralConfig.signupInviteDailyRewardLimit,
     });
   });
 }
@@ -204,6 +234,22 @@ function createDrizzleReferralRegistrationStore(
         .limit(1);
 
       return rewards.length > 0;
+    },
+
+    async countSignupRewardsForInviterOnDay({ inviterUserId, dayStart, dayEnd }) {
+      const result = await tx
+        .select({ value: count() })
+        .from(referralRewardsSchema)
+        .where(
+          and(
+            eq(referralRewardsSchema.inviterUserId, inviterUserId),
+            eq(referralRewardsSchema.rewardType, "signup_credit"),
+            gte(referralRewardsSchema.createdAt, dayStart),
+            lt(referralRewardsSchema.createdAt, dayEnd)
+          )
+        );
+
+      return result[0]?.value ?? 0;
     },
 
     async bindInviteeToInviter({ inviterUserId, inviteeUserId, inviteCode }) {

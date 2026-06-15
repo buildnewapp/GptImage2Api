@@ -2,6 +2,7 @@ export type ReferralRewardMode = "fixed" | "percentage";
 export interface ReferralRuntimeConfig {
   enabled: boolean;
   signupInviteCredit: number;
+  signupInviteDailyRewardLimit: number;
 }
 
 export const referralConfig = {
@@ -9,6 +10,8 @@ export const referralConfig = {
   enabled: true,
   // 每成功邀请 1 个新用户注册，邀请人立即获得的积分
   signupInviteCredit: 10,
+  // 每个邀请人每天最多多少个新注册用户可以获得注册邀请积分
+  signupInviteDailyRewardLimit: 3,
   // 新用户注册后，最多允许在多少天内接受邀请绑定
   inviteAcceptanceWindowDays: 1,
   // 邀请码最少字符数

@@ -35,6 +35,7 @@ test("exposes qualification and lock periods from referral config", () => {
   assert.equal(referralConfig.cashRewardLockDays, 30);
   assert.equal(referralConfig.inviteCodeMinLength, 4);
   assert.equal(referralConfig.inviteCodePostCreationChangeLimit, 1);
+  assert.equal(referralConfig.signupInviteDailyRewardLimit, 3);
 });
 
 test("disables referral rewards when enabled is false", () => {
@@ -43,6 +44,7 @@ test("disables referral rewards when enabled is false", () => {
     resolveReferralSignupCreditAmount({
       enabled: false,
       signupInviteCredit: 100,
+      signupInviteDailyRewardLimit: 3,
     }),
     0
   );
@@ -54,6 +56,7 @@ test("keeps configured signup credits when referral rewards are enabled", () => 
     resolveReferralSignupCreditAmount({
       enabled: true,
       signupInviteCredit: 100,
+      signupInviteDailyRewardLimit: 3,
     }),
     100
   );
