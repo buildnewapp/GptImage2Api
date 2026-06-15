@@ -7,55 +7,22 @@ import test from "node:test";
 import { promisify } from "node:util";
 import { pathToFileURL } from "node:url";
 
-import type {
-  AiStudioDocDetail,
-  AiStudioPricingRow,
-} from "@/lib/ai-studio/catalog";
-import type { AiStudioStructuredKiePriceRow } from "@/lib/ai-studio/kie-pricing";
+import type { AiStudioDocDetail } from "@/lib/ai-studio/catalog";
 import {
   buildAiStudioUpstreamCatalog,
-  buildAiStudioKiePricesFile,
   compileAiStudioRuntimeCatalog,
   getAiStudioCatalogPaths,
   getCachedAiStudioCatalogEntry,
   loadAiStudioMergedUpstreamCatalogFiles,
+  loadAiStudioPricingOverridesFile,
   loadAiStudioRuntimeCatalogFile,
+  loadAiStudioSchemaOverridesFile,
   toAiStudioCatalogEntries,
   validateAiStudioRuntimeBuildInput,
 } from "@/lib/ai-studio/catalog";
+import { resolveDynamicPricing } from "@/lib/ai-studio/runtime";
 
 const execFile = promisify(execFileCallback);
-
-function createPricingRow(
-  overrides: Partial<AiStudioPricingRow> = {},
-): AiStudioPricingRow {
-  return {
-    modelDescription: "Open AI sora 2, text-to-video, Standard-10.0s",
-    interfaceType: "video",
-    provider: "OpenAI",
-    creditPrice: "30",
-    creditUnit: "per video",
-    usdPrice: "0.15",
-    falPrice: "1",
-    discountRate: 85,
-    anchor: "https://kie.ai/sora-2?model=sora-2-text-to-video",
-    discountPrice: false,
-    ...overrides,
-  };
-}
-
-function createKiePricingRow(
-  overrides: Partial<AiStudioStructuredKiePriceRow> & Pick<AiStudioStructuredKiePriceRow, "pricingKey">,
-): AiStudioStructuredKiePriceRow {
-  const { pricingKey, ...rest } = overrides;
-
-  return {
-    ...createPricingRow(),
-    pricingKey,
-    source: "kie",
-    ...rest,
-  };
-}
 
 function createDetail(
   overrides: Partial<AiStudioDocDetail> = {},
@@ -81,20 +48,33 @@ function createDetail(
     examplePayload: {
       model: "sora-2-text-to-video",
     },
-    pricingRows: [],
     ...overrides,
   };
 }
 
 test("builds upstream catalog without embedding pricing rows", async () => {
   const originalFetch = globalThis.fetch;
+  const originalLog = console.log;
+  const originalWarn = console.warn;
+  const logs: unknown[][] = [];
+  const warnings: unknown[][] = [];
+  console.log = (...args: unknown[]) => {
+    logs.push(args);
+  };
+  console.warn = (...args: unknown[]) => {
+    warnings.push(args);
+  };
 
   globalThis.fetch = (async (input: string | URL | Request) => {
     const url = String(input);
 
     if (url === "https://docs.kie.ai/llms.txt") {
       return new Response(
-        "- Video Models > Sora2 [Sora2 - Text to Video](https://docs.kie.ai/market/sora2/sora-2-text-to-video.md): sample\n",
+        [
+          "- Video Models > Sora2 [Sora2 - Text to Video](https://docs.kie.ai/market/sora2/sora-2-text-to-video.md): sample",
+          "- Image Models > Google [Google - Broken HTML](https://docs.kie.ai/market/google/broken-html.md): sample",
+          "",
+        ].join("\n"),
         { status: 200 },
       );
     }
@@ -125,23 +105,10 @@ test("builds upstream catalog without embedding pricing rows", async () => {
       );
     }
 
-    if (url === "https://api.kie.ai/client/v1/model-pricing/count") {
-      return Response.json({ data: { all: 1 } }, { status: 200 });
-    }
-
-    if (url === "https://api.kie.ai/client/v1/model-pricing/page") {
-      return Response.json(
-        {
-          data: {
-            records: [
-              createPricingRow({
-                runtimeModel: "sora-2-text-to-video",
-                pricingKey: "Market_SORA2-VIDEO_NO-WATERMARK_10",
-              }),
-            ],
-          },
-        },
-        { status: 200 },
+    if (url === "https://docs.kie.ai/market/google/broken-html.md") {
+      return new Response(
+        "<!DOCTYPE html><title>API Documentation</title><body>Unexpected token 'o'</body>",
+        { headers: { "content-type": "text/html; charset=utf-8" }, status: 200 },
       );
     }
 
@@ -151,105 +118,27 @@ test("builds upstream catalog without embedding pricing rows", async () => {
   try {
     const upstream = await buildAiStudioUpstreamCatalog();
     assert.equal(upstream.items.length, 1);
-    assert.deepEqual(upstream.items[0]?.pricingRows, []);
+    assert.equal("pricingRows" in (upstream.items[0] ?? {}), false);
+    assert.ok(
+      logs.some((entry) =>
+        String(entry[0] ?? "").includes("[AI Studio kie] 连接: https://docs.kie.ai/llms.txt 成功: 200"),
+      ),
+    );
+    assert.ok(
+      logs.some((entry) =>
+        String(entry[0] ?? "").includes("https://docs.kie.ai/market/google/broken-html.md 成功: 200"),
+      ),
+    );
+    assert.match(String(warnings[0]?.[0] ?? ""), /Skipped 1 AI Studio catalog docs/);
+    assert.match(String(warnings[1]?.[0] ?? ""), /Google - Broken HTML/);
   } finally {
     globalThis.fetch = originalFetch;
+    console.log = originalLog;
+    console.warn = originalWarn;
   }
 });
 
-test("does not hydrate runtime pricing rows from kie data", () => {
-  const compiled = compileAiStudioRuntimeCatalog({
-    upstream: {
-      version: 1,
-      generatedAt: "2026-03-08T00:00:00.000Z",
-      items: [createDetail()],
-    },
-    kiePrices: {
-      version: 1,
-      generatedAt: "2026-03-08T00:00:00.000Z",
-      rows: [
-        {
-          ...createPricingRow({
-            pricingKey: "Market_SORA2-VIDEO_NO-WATERMARK_10",
-            runtimeModel: "sora-2-text-to-video",
-            duration: 10,
-            source: "kie",
-          }),
-          pricingKey: "Market_SORA2-VIDEO_NO-WATERMARK_10",
-          source: "kie",
-        },
-      ],
-    },
-    modelOverrides: {
-      models: {
-        "video:sora2-text-to-video": {
-          alias: "Sora 2",
-          provider: "OpenAI",
-        },
-      },
-    },
-    pricingOverrides: {
-      models: {},
-    },
-    formUiOverrides: {
-      models: {
-        "video:sora2-text-to-video": {
-          fieldOrder: ["prompt", "duration"],
-          advancedFields: ["duration"],
-        },
-      },
-    },
-  });
-
-  assert.equal(compiled.items[0]?.alias, "Sora 2");
-  assert.equal(compiled.items[0]?.provider, "OpenAI");
-  assert.deepEqual(compiled.items[0]?.pricingRows, []);
-  assert.deepEqual(compiled.items[0]?.formUi, {
-    fieldOrder: ["prompt", "duration"],
-    advancedFields: ["duration"],
-  });
-});
-
-test("normalizes sora image pricing from kie raw prices to the current display pricing system", async () => {
-  const { kieRawPricePath } = getAiStudioCatalogPaths();
-  const kiePrices = await buildAiStudioKiePricesFile(kieRawPricePath);
-
-  const soraImage = kiePrices.rows.filter(
-    (row) => row.catalogModelId === "video:sora2-image-to-video-standard",
-  );
-  const soraImageStable = kiePrices.rows.filter(
-    (row) => row.catalogModelId === "video:sora2-image-to-video-stable",
-  );
-  const soraProImage = kiePrices.rows.filter(
-    (row) => row.catalogModelId === "video:sora2-pro-image-to-video",
-  );
-
-  assert.deepEqual(
-    soraImage.map((row) => [row.pricingKey, row.creditPrice]).sort(),
-    [
-      ["Market_sora2-remix_NO-WATERMARK_sora2_10", "3"],
-      ["Market_sora2-remix_NO-WATERMARK_sora2_15", "5"],
-    ],
-  );
-  assert.deepEqual(
-    soraImageStable.map((row) => [row.pricingKey, row.creditPrice]).sort(),
-    [
-      ["Market_sora2-remix_WATERMARK_sora2_10", "20"],
-      ["Market_sora2-remix_WATERMARK_sora2_15", "30"],
-    ],
-  );
-  assert.deepEqual(
-    soraProImage.map((row) => [row.pricingKey, row.creditPrice]).sort(),
-    [
-      ["Market_sora2-remix_sora2pro_high_10", "165"],
-      ["Market_sora2-remix_sora2pro_high_15", "315"],
-      ["Market_sora2-remix_sora2pro_standard_10", "75"],
-      ["Market_sora2-remix_sora2pro_standard_15", "135"],
-    ],
-  );
-});
-
-test("generates pricing selectors from pricing override rows", () => {
+test("applies dynamic pricing override config to runtime models", () => {
   const compiled = compileAiStudioRuntimeCatalog({
     upstream: {
       version: 1,
@@ -299,7 +188,6 @@ test("generates pricing selectors from pricing override rows", () => {
               size: "standard",
             },
           },
-          pricingRows: [],
         }),
       ],
     },
@@ -309,37 +197,30 @@ test("generates pricing selectors from pricing override rows", () => {
     pricingOverrides: {
       models: {
         "video:sora2-pro-text-to-video": {
-          addRows: [
-            createPricingRow({
-              modelDescription: "sora-2-pro-text-to-video, high, 10s",
-              pricingKey: "Market_sora2_pro_high_10",
-              runtimeModel: "sora-2-pro-text-to-video",
-              resolution: "high",
-              duration: 10,
-              aspectRatio: "16:9",
-            }),
-            createPricingRow({
-              modelDescription: "sora-2-pro-text-to-video, standard, 15s",
-              pricingKey: "Market_sora2_pro_standard_15",
-              runtimeModel: "sora-2-pro-text-to-video",
-              resolution: "standard",
-              duration: 15,
-              aspectRatio: "9:16",
-            }),
-          ],
+          docUrl: "https://docs.kie.ai/market/sora2/sora-2-pro-text-to-video.md",
+          price_txt: "high 10s: 165 credits | standard 15s: 135 credits",
+          price_key: "{$input.size}|{$input.n_frames}",
+          price_map: {
+            "high|10": 165,
+            "standard|15": 135,
+          },
+          price_final: "{$price}",
         },
       },
     },
   });
 
   assert.deepEqual(compiled.items[0]?.pricing, {
-    strategy: "exact",
-    selectors: {
-      resolution: ["input.size"],
-      duration: ["input.n_frames"],
-      aspectRatio: ["input.aspect_ratio"],
+    docUrl: "https://docs.kie.ai/market/sora2/sora-2-pro-text-to-video.md",
+    price_txt: "high 10s: 165 credits | standard 15s: 135 credits",
+    price_key: "{$input.size}|{$input.n_frames}",
+    price_map: {
+      "high|10": 165,
+      "standard|15": 135,
     },
+    price_final: "{$price}",
   });
+  assert.equal("pricingRows" in (compiled.items[0] ?? {}), false);
 });
 
 test("applies request schema overrides to runtime models", () => {
@@ -396,6 +277,147 @@ test("applies request schema overrides to runtime models", () => {
   );
 });
 
+test("keeps fal GPT Image 2 models on billable image size controls", async () => {
+  const [pricingOverrides, schemaOverrides] = await Promise.all([
+    loadAiStudioPricingOverridesFile(),
+    loadAiStudioSchemaOverridesFile(),
+  ]);
+
+  const compiled = compileAiStudioRuntimeCatalog({
+    upstream: {
+      version: 1,
+      generatedAt: "2026-06-23T00:00:00.000Z",
+      items: [
+        ...["image:fal-openai-gpt-image-2", "image:fal-openai-gpt-image-2-edit"].map((id) =>
+          createDetail({
+            id,
+            category: "image",
+            title: id.endsWith("-edit")
+              ? "OpenAI GPT Image 2 Edit"
+              : "OpenAI GPT Image 2",
+            docUrl: id.endsWith("-edit")
+              ? "https://fal.ai/models/openai/gpt-image-2/edit/api"
+              : "https://fal.ai/models/openai/gpt-image-2/api",
+            provider: "fal.ai",
+            endpoint: id.endsWith("-edit")
+              ? "/fal-ai/gpt-image-2/edit"
+              : "/fal-ai/gpt-image-2",
+            modelKeys: [
+              id.endsWith("-edit")
+                ? "openai/gpt-image-2/edit"
+                : "openai/gpt-image-2",
+            ],
+            requestSchema: {
+              type: "object",
+              properties: {
+                prompt: {
+                  type: "string",
+                },
+                image_size: {
+                  default: id.endsWith("-edit") ? "auto" : "landscape_4_3",
+                  anyOf: [
+                    {
+                      type: "object",
+                      properties: {
+                        width: {
+                          type: "integer",
+                          default: 512,
+                        },
+                        height: {
+                          type: "integer",
+                          default: 512,
+                        },
+                      },
+                    },
+                    {
+                      type: "string",
+                      enum: [
+                        "square_hd",
+                        "square",
+                        "portrait_4_3",
+                        "portrait_16_9",
+                        "landscape_4_3",
+                        "landscape_16_9",
+                        "auto",
+                      ],
+                    },
+                  ],
+                },
+                quality: {
+                  type: "string",
+                  enum: ["auto", "low", "medium", "high"],
+                  default: "high",
+                },
+                num_images: {
+                  type: "integer",
+                  default: 1,
+                },
+              },
+              required: ["prompt"],
+            },
+            examplePayload: {
+              prompt: "A studio product photo",
+              image_size: id.endsWith("-edit") ? "auto" : "landscape_4_3",
+              quality: "high",
+              num_images: 1,
+            },
+          }),
+        ),
+      ],
+    },
+    modelOverrides: {
+      models: {},
+    },
+    pricingOverrides,
+    schemaOverrides,
+  });
+
+  for (const detail of compiled.items) {
+    const imageSizeSchema = detail.requestSchema?.properties?.image_size;
+    const qualitySchema = detail.requestSchema?.properties?.quality;
+    const pricingModel = {
+      modelId: detail.id,
+      title: detail.title,
+      provider: detail.provider,
+      category: detail.category,
+    };
+
+    assert.equal(imageSizeSchema?.type, "object");
+    assert.equal(imageSizeSchema?.["x-ui-control"], "image-size");
+    assert.deepEqual(imageSizeSchema?.default, {
+      width: 1024,
+      height: 768,
+    });
+    assert.deepEqual(qualitySchema?.enum, ["low", "medium", "high"]);
+    assert.equal(qualitySchema?.default, "high");
+    assert.deepEqual(detail.examplePayload.image_size, {
+      width: 1024,
+      height: 768,
+    });
+
+    assert.equal(
+      resolveDynamicPricing(
+        detail.pricing,
+        {
+          image_size: {
+            width: 1024,
+            height: 768,
+          },
+          quality: "high",
+          num_images: 1,
+        },
+        pricingModel,
+      )?.creditPrice,
+      "29",
+    );
+    assert.equal(
+      resolveDynamicPricing(detail.pricing, detail.examplePayload, pricingModel)
+        ?.creditPrice,
+      "29",
+    );
+  }
+});
+
 test("hydrates missing request schema for direct models via overrides", () => {
   const compiled = compileAiStudioRuntimeCatalog({
     upstream: {
@@ -410,12 +432,6 @@ test("hydrates missing request schema for direct models via overrides", () => {
           modelKeys: ["api"],
           requestSchema: null,
           examplePayload: {},
-          pricingRows: [
-            createPricingRow({
-              modelDescription: "Kling 3.0, video, with audio-1080P",
-              provider: "Kling",
-            }),
-          ],
         }),
       ],
     },
@@ -466,7 +482,7 @@ test("hydrates missing request schema for direct models via overrides", () => {
   );
 });
 
-test("infers enable_pro as a boolean pricing selector for grok imagine image pricing", () => {
+test("uses explicit dynamic pricing for grok imagine image pricing", () => {
   const compiled = compileAiStudioRuntimeCatalog({
     upstream: {
       version: 1,
@@ -511,37 +527,26 @@ test("infers enable_pro as a boolean pricing selector for grok imagine image pri
     pricingOverrides: {
       models: {
         "image:grok-imagine-text-to-image": {
-          addRows: [
-            createPricingRow({
-              interfaceType: "image",
-              provider: "Grok Imagine",
-              runtimeModel: "grok-imagine/text-to-image",
-              modelDescription: "grok-imagine/text-to-image, standard",
-              creditPrice: "4",
-              creditUnit: "per generation",
-              audio: false,
-            }),
-            createPricingRow({
-              interfaceType: "image",
-              provider: "Grok Imagine",
-              runtimeModel: "grok-imagine/text-to-image",
-              modelDescription: "grok-imagine/text-to-image, quality",
-              creditPrice: "5",
-              creditUnit: "per generation",
-              audio: true,
-            }),
-          ],
+          price_key: "{$input.enable_pro ? 'quality':'standard'}",
+          price_map: {
+            standard: 4,
+            quality: 5,
+          },
+          price_final: "{$price}",
         },
       },
     },
   });
 
   assert.deepEqual(compiled.items[0]?.pricing, {
-    strategy: "exact",
-    selectors: {
-      audio: ["input.enable_pro"],
+    price_key: "{$input.enable_pro ? 'quality':'standard'}",
+    price_map: {
+      standard: 4,
+      quality: 5,
     },
+    price_final: "{$price}",
   });
+  assert.equal("pricingRows" in (compiled.items[0] ?? {}), false);
 });
 
 test("drops disabled models from the compiled runtime catalog", () => {
@@ -622,7 +627,7 @@ test("merges multiple upstream catalog files from the same directory", async () 
         generatedAt: "2026-03-08T00:00:00.000Z",
         items: [
           createDetail({
-            id: "video:fal-seedance-2-0",
+            id: "video:ama-seedance-2-0",
             vendor: "apimart",
             title: "Seedance 2.0",
             docUrl: "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
@@ -643,7 +648,7 @@ test("merges multiple upstream catalog files from the same directory", async () 
 
     assert.deepEqual(
       loaded.items.map((item) => item.id),
-      ["video:sora2-text-to-video", "video:fal-seedance-2-0"],
+      ["video:sora2-text-to-video", "video:ama-seedance-2-0"],
     );
     assert.equal(loaded.items[1]?.vendor, "apimart");
   } finally {
@@ -655,14 +660,14 @@ test("loads apimart sora 2 models from the real upstream catalog", async () => {
   const { upstreamCatalogPath } = getAiStudioCatalogPaths();
   const loaded = await loadAiStudioMergedUpstreamCatalogFiles(upstreamCatalogPath);
 
-  const sora2 = loaded.items.find((item) => item.id === "video:fal-sora-2");
-  const sora2Pro = loaded.items.find((item) => item.id === "video:fal-sora-2-pro");
-  const sora2Vip = loaded.items.find((item) => item.id === "video:fal-sora-2-vip");
+  const sora2 = loaded.items.find((item) => item.id === "video:ama-sora-2");
+  const sora2Pro = loaded.items.find((item) => item.id === "video:ama-sora-2-pro");
+  const sora2Vip = loaded.items.find((item) => item.id === "video:ama-sora-2-vip");
   const sora2Preview = loaded.items.find(
-    (item) => item.id === "video:fal-sora-2-preview",
+    (item) => item.id === "video:ama-sora-2-preview",
   );
   const sora2ProPreview = loaded.items.find(
-    (item) => item.id === "video:fal-sora-2-pro-preview",
+    (item) => item.id === "video:ama-sora-2-pro-preview",
   );
 
   assert.ok(sora2);
@@ -752,7 +757,7 @@ test("uses the bundled runtime catalog by default in a Cloudflare worker cwd", a
       `process.chdir(${JSON.stringify(bundleDir)});`,
       "process.env.DEPLOYMENT_PLATFORM = 'cloudflare';",
       `const mod = await import(${JSON.stringify(moduleUrl)});`,
-      "const entry = await mod.default.getCachedAiStudioCatalogEntry('video:fal-sora-2');",
+      "const entry = await mod.default.getCachedAiStudioCatalogEntry('video:ama-sora-2');",
       "process.stdout.write(JSON.stringify({ found: Boolean(entry), id: entry?.id ?? null }));",
     ].join("\n");
     const { stdout } = await execFile(
@@ -768,7 +773,7 @@ test("uses the bundled runtime catalog by default in a Cloudflare worker cwd", a
     };
 
     assert.equal(result.found, true);
-    assert.equal(result.id, "video:fal-sora-2");
+    assert.equal(result.id, "video:ama-sora-2");
   } finally {
     if (originalPlatform === undefined) {
       delete process.env.DEPLOYMENT_PLATFORM;
@@ -783,7 +788,7 @@ test("resolves the public Seedance 2.0 alias from the bundled runtime catalog", 
   const entry = await getCachedAiStudioCatalogEntry("video:seedance-2-0");
 
   assert.ok(entry);
-  assert.equal(entry.id, "video:fal-seedance-2-0");
+  assert.equal(entry.id, "video:ama-seedance-2-0");
   assert.equal(entry.alias, "seedance-2-0");
 });
 
@@ -802,7 +807,7 @@ test("exposes Seedance 2.0 VIP variants from the bundled runtime catalog", async
   assert.equal(fastVip.provider, "ByteDance");
 });
 
-test("exposes pricing rows only for models backed by pricing overrides", async () => {
+test("exposes dynamic pricing only for models backed by pricing overrides", async () => {
   const pricedIds = [
     "video:seedance-2-0-vip",
     "video:seedance-2-0-fast-vip",
@@ -812,8 +817,8 @@ test("exposes pricing rows only for models backed by pricing overrides", async (
     "video:extend-veo3-1-video",
     "video:get-veo3-1-1080p-video",
     "video:get-veo3-1-4k-video",
-    "video:fal-seedance-2-0",
-    "video:fal-seedance-2-0-fast",
+    "video:ama-seedance-2-0",
+    "video:ama-seedance-2-0-fast",
     "video:wan-2-7-text-to-video",
     "video:hailuo-standard-text-to-video",
     "video:generate-ai-video",
@@ -823,10 +828,8 @@ test("exposes pricing rows only for models backed by pricing overrides", async (
   for (const id of pricedIds) {
     const entry = await getCachedAiStudioCatalogEntry(id);
     assert.ok(entry, `${id} should exist in bundled runtime catalog`);
-    assert.ok(
-      (entry.pricingRows?.length ?? 0) > 0,
-      `${id} should expose at least one pricing row`,
-    );
+    assert.ok(entry.pricing, `${id} should expose dynamic pricing`);
+    assert.equal("pricingRows" in entry, false, `${id} should not expose legacy pricing rows`);
   }
 
   for (const id of [
@@ -834,13 +837,14 @@ test("exposes pricing rows only for models backed by pricing overrides", async (
   ]) {
     const entry = await getCachedAiStudioCatalogEntry(id);
     assert.ok(entry, `${id} should exist in bundled runtime catalog`);
-    assert.equal(entry.pricingRows.length, 0, `${id} should not expose fallback pricing`);
+    assert.equal("pricingRows" in entry, false, `${id} should not expose fallback pricing`);
+    assert.equal(entry.pricing, undefined, `${id} should not expose fallback pricing`);
   }
 });
 
-test("keeps exposed override pricing rows isolated to the correct model family", async () => {
-  const apimart = await getCachedAiStudioCatalogEntry("video:fal-seedance-2-0");
-  const apimartFast = await getCachedAiStudioCatalogEntry("video:fal-seedance-2-0-fast");
+test("keeps exposed dynamic pricing isolated to the correct model family", async () => {
+  const apimart = await getCachedAiStudioCatalogEntry("video:ama-seedance-2-0");
+  const apimartFast = await getCachedAiStudioCatalogEntry("video:ama-seedance-2-0-fast");
   const veoLite = await getCachedAiStudioCatalogEntry("video:veo-3.1-lite");
   const veoFast = await getCachedAiStudioCatalogEntry("video:veo-3.1-fast");
   const veoQuality = await getCachedAiStudioCatalogEntry("video:veo-3.1-quality");
@@ -849,74 +853,52 @@ test("keeps exposed override pricing rows isolated to the correct model family",
   const veoGet4k = await getCachedAiStudioCatalogEntry("video:get-veo3-1-4k-video");
 
   assert.ok(apimart);
-  assert.deepEqual(
-    apimart.pricingRows.map((row) => row.creditPrice),
-    ["41"],
-  );
+  assert.deepEqual(apimart.pricing?.price_map, { default: 41 });
 
   assert.ok(apimartFast);
-  assert.deepEqual(
-    apimartFast.pricingRows.map((row) => row.creditPrice),
-    ["33"],
-  );
+  assert.deepEqual(apimartFast.pricing?.price_map, { default: 33 });
 
   assert.ok(veoLite);
-  assert.deepEqual(
-    [...new Set(veoLite.pricingRows.map((row) => row.creditPrice))].sort(),
-    ["10", "15", "50"],
-  );
-  assert.deepEqual(veoLite.pricing?.selectors, {
-    resolution: ["resolution"],
-    aspectRatio: ["aspect_ratio"],
+  assert.deepEqual(veoLite.pricing?.price_map, {
+    "720p": 10,
+    "1080p": 15,
+    "4k": 50,
   });
 
   assert.ok(veoFast);
-  assert.deepEqual(
-    [...new Set(veoFast.pricingRows.map((row) => row.creditPrice))].sort(),
-    ["20", "25", "60"],
-  );
-  assert.deepEqual(veoFast.pricing?.selectors, {
-    resolution: ["resolution"],
-    aspectRatio: ["aspect_ratio"],
+  assert.deepEqual(veoFast.pricing?.price_map, {
+    "720p": 20,
+    "1080p": 25,
+    "4k": 60,
   });
   assert.ok(veoQuality);
-  assert.deepEqual(
-    [...new Set(veoQuality.pricingRows.map((row) => row.creditPrice))].sort(),
-    ["150", "155", "190"],
-  );
-  assert.deepEqual(veoQuality.pricing?.selectors, {
-    resolution: ["resolution"],
-    aspectRatio: ["aspect_ratio"],
+  assert.deepEqual(veoQuality.pricing?.price_map, {
+    "720p": 150,
+    "1080p": 155,
+    "4k": 190,
   });
 
   assert.ok(veoExtend);
-  assert.deepEqual(
-    [...new Set(veoExtend.pricingRows.map((row) => row.creditPrice))].sort(),
-    ["20", "250", "30"],
-  );
-  assert.deepEqual(
-    [...new Set(veoExtend.pricingRows.map((row) => row.runtimeModel))].sort(),
-    ["fast", "lite", "quality"],
-  );
+  assert.deepEqual(veoExtend.pricing?.price_map, {
+    fast: 20,
+    lite: 30,
+    quality: 250,
+  });
+  assert.equal(veoExtend.pricing?.price_key, "{$model}");
 
   assert.ok(veoGet1080p);
-  assert.deepEqual(
-    [...new Set(veoGet1080p.pricingRows.map((row) => row.creditPrice))].sort(),
-    ["5"],
-  );
+  assert.deepEqual(veoGet1080p.pricing?.price_map, { default: 5 });
 
   assert.ok(veoGet4k);
-  assert.deepEqual(
-    [...new Set(veoGet4k.pricingRows.map((row) => row.creditPrice))].sort(),
-    ["40"],
-  );
+  assert.deepEqual(veoGet4k.pricing?.price_map, { default: 40 });
 
   const runwayGenerate = await getCachedAiStudioCatalogEntry("video:generate-ai-video");
   assert.ok(runwayGenerate);
-  assert.deepEqual(
-    [...new Set(runwayGenerate.pricingRows.map((row) => row.creditPrice))].sort(),
-    ["12", "30"],
-  );
+  assert.deepEqual(runwayGenerate.pricing?.price_map, {
+    "runway-duration-5-generate|720p|5": 12,
+    "runway-duration-5-generate|1080p|5": 30,
+    "runway-duration-10-generate|720p|10": 30,
+  });
 });
 
 test("splits one upstream model into separate runtime variants", () => {
@@ -934,17 +916,11 @@ test("splits one upstream model into separate runtime variants", () => {
               id: "video:sora2-text-to-video-standard",
               title: "Sora2 - Text to Video",
               schemaModel: "sora-2-text-to-video",
-              pricingMatch: {
-                runtimeModel: "sora-2-text-to-video",
-              },
             },
             {
               id: "video:sora2-text-to-video-stable",
               title: "Sora2 - Text to Video Stable",
               schemaModel: "sora-2-text-to-video-stable",
-              pricingMatch: {
-                runtimeModel: "sora-2-text-to-video-stable",
-              },
             },
           ],
         },
@@ -953,24 +929,18 @@ test("splits one upstream model into separate runtime variants", () => {
     pricingOverrides: {
       models: {
         "video:sora2-text-to-video-standard": {
-          addRows: [
-            createPricingRow({
-              modelDescription: "Open AI sora 2, text-to-video, Standard-10.0s",
-              creditPrice: "30",
-              runtimeModel: "sora-2-text-to-video",
-              pricingKey: "Market_sora2_standard_10",
-            }),
-          ],
+          price_key: "default",
+          price_map: {
+            default: 30,
+          },
+          price_final: "{$price}",
         },
         "video:sora2-text-to-video-stable": {
-          addRows: [
-            createPricingRow({
-              modelDescription: "Open AI sora 2, text-to-video, stable-10.0s",
-              creditPrice: "35",
-              runtimeModel: "sora-2-text-to-video-stable",
-              pricingKey: "Market_sora2_stable_10",
-            }),
-          ],
+          price_key: "default",
+          price_map: {
+            default: 35,
+          },
+          price_final: "{$price}",
         },
       },
     },
@@ -993,8 +963,8 @@ test("splits one upstream model into separate runtime variants", () => {
     (standard?.requestSchema as Record<string, any>).properties.model.default,
     "sora-2-text-to-video",
   );
-  assert.equal(standard?.pricingRows.length, 1);
-  assert.match(standard?.pricingRows[0]?.modelDescription ?? "", /standard/i);
+  assert.equal("pricingRows" in (standard ?? {}), false);
+  assert.deepEqual(standard?.pricing?.price_map, { default: 30 });
 
   assert.equal(stable?.alias ?? null, null);
   assert.equal(stable?.title, "Sora2 - Text to Video Stable");
@@ -1004,34 +974,16 @@ test("splits one upstream model into separate runtime variants", () => {
     (stable?.requestSchema as Record<string, any>).properties.model.default,
     "sora-2-text-to-video-stable",
   );
-  assert.equal(stable?.pricingRows.length, 1);
-  assert.match(stable?.pricingRows[0]?.modelDescription ?? "", /stable/i);
+  assert.equal("pricingRows" in (stable ?? {}), false);
+  assert.deepEqual(stable?.pricing?.price_map, { default: 35 });
 });
 
-test("validates split model build inputs without requiring pricing row overrides", () => {
+test("validates split model build inputs without pricing overrides", () => {
   const errors = validateAiStudioRuntimeBuildInput({
     upstream: {
       version: 1,
       generatedAt: "2026-03-08T00:00:00.000Z",
       items: [createDetail()],
-    },
-    kiePrices: {
-      version: 1,
-      generatedAt: "2026-03-08T00:00:00.000Z",
-      rows: [
-        createKiePricingRow({
-          modelDescription: "Open AI sora 2, text-to-video, Standard-10.0s",
-          creditPrice: "30",
-          runtimeModel: "sora-2-text-to-video",
-          pricingKey: "Market_sora2_standard_10",
-        }),
-        createKiePricingRow({
-          modelDescription: "Open AI sora 2, text-to-video, stable-10.0s",
-          creditPrice: "35",
-          runtimeModel: "sora-2-text-to-video-stable",
-          pricingKey: "Market_sora2_stable_10",
-        }),
-      ],
     },
     modelOverrides: {
       models: {
@@ -1041,17 +993,11 @@ test("validates split model build inputs without requiring pricing row overrides
               id: "video:sora2-text-to-video-standard",
               title: "Sora2 - Text to Video",
               schemaModel: "sora-2-text-to-video",
-              pricingMatch: {
-                runtimeModel: "sora-2-text-to-video",
-              },
             },
             {
               id: "video:sora2-text-to-video-stable",
               title: "Sora2 - Text to Video Stable",
               schemaModel: "sora-2-text-to-video-stable",
-              pricingMatch: {
-                runtimeModel: "sora-2-text-to-video-stable",
-              },
             },
           ],
         },
@@ -1065,14 +1011,47 @@ test("validates split model build inputs without requiring pricing row overrides
   assert.deepEqual(errors, []);
 });
 
-test("hydrates runtime pricing rows only from pricing overrides", () => {
+test("rejects unknown billing adapters in pricing overrides", () => {
+  const input = {
+    upstream: {
+      version: 1,
+      generatedAt: "2026-03-08T00:00:00.000Z",
+      items: [createDetail()],
+    },
+    modelOverrides: {
+      models: {},
+    },
+    pricingOverrides: {
+      models: {
+        "video:sora2-text-to-video": {
+          billing_adapter: "unknown_adapter",
+          price_key: "{$duration}",
+          price_map: {
+            "5": 30,
+          },
+          price_final: "{$price}",
+        },
+      },
+    },
+  } satisfies Parameters<typeof compileAiStudioRuntimeCatalog>[0];
+
+  assert.deepEqual(validateAiStudioRuntimeBuildInput(input), [
+    "Unknown billing_adapter for pricing override: video:sora2-text-to-video -> unknown_adapter",
+  ]);
+  assert.throws(
+    () => compileAiStudioRuntimeCatalog(input),
+    /Unknown billing_adapter/,
+  );
+});
+
+test("hydrates runtime dynamic pricing only from pricing overrides", () => {
   const input = {
     upstream: {
       version: 1,
       generatedAt: "2026-03-10T00:00:00.000Z",
       items: [
         createDetail({
-          id: "video:fal-seedance-2-0",
+          id: "video:ama-seedance-2-0",
           title: "Seedance 2.0",
           docUrl: "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
           provider: "ByteDance",
@@ -1089,18 +1068,6 @@ test("hydrates runtime pricing rows only from pricing overrides", () => {
           examplePayload: {
             model: "seedance-2.0",
           },
-          pricingRows: [],
-        }),
-      ],
-    },
-    kiePrices: {
-      version: 1,
-      generatedAt: "2026-03-10T00:00:00.000Z",
-      rows: [
-        createKiePricingRow({
-          pricingKey: "Market_seedance_kie_720",
-          runtimeModel: "seedance-2.0",
-          creditPrice: "999",
         }),
       ],
     },
@@ -1109,21 +1076,14 @@ test("hydrates runtime pricing rows only from pricing overrides", () => {
     },
     pricingOverrides: {
       models: {
-        "video:fal-seedance-2-0": {
-          addRows: [
-            {
-              modelDescription: "Seedance 2.0, 720p no video input",
-              interfaceType: "video",
-              provider: "ByteDance",
-              creditPrice: "41",
-              creditUnit: "per second",
-              usdPrice: "",
-              falPrice: "",
-              discountRate: 0,
-              anchor: "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
-              discountPrice: false,
-            },
-          ],
+        "video:ama-seedance-2-0": {
+          docUrl: "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
+          price_txt: "Seedance 2.0, 720p no video input: 41 per second",
+          price_key: "default",
+          price_map: {
+            default: 41,
+          },
+          price_final: "{$price}*{$input.duration}",
         },
       },
     },
@@ -1132,8 +1092,14 @@ test("hydrates runtime pricing rows only from pricing overrides", () => {
   assert.deepEqual(validateAiStudioRuntimeBuildInput(input), []);
 
   const compiled = compileAiStudioRuntimeCatalog(input);
-  assert.equal(compiled.items[0]?.pricingRows.length, 1);
-  assert.equal(compiled.items[0]?.pricingRows[0]?.creditPrice, "41");
-  assert.equal(compiled.items[0]?.pricingRows[0]?.provider, "ByteDance");
-  assert.equal(compiled.items[0]?.pricingRows[0]?.pricingKey, undefined);
+  assert.equal("pricingRows" in (compiled.items[0] ?? {}), false);
+  assert.deepEqual(compiled.items[0]?.pricing, {
+    docUrl: "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
+    price_txt: "Seedance 2.0, 720p no video input: 41 per second",
+    price_key: "default",
+    price_map: {
+      default: 41,
+    },
+    price_final: "{$price}*{$input.duration}",
+  });
 });

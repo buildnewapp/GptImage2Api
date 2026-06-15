@@ -161,6 +161,77 @@ function titleCase(input: string) {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
+function getAnyOfVariants(schema: JsonSchema) {
+  const variants = Array.isArray(schema.anyOf)
+    ? schema.anyOf
+    : Array.isArray(schema.oneOf)
+      ? schema.oneOf
+      : [];
+
+  return variants.filter(
+    (item): item is JsonSchema =>
+      item && typeof item === "object" && !Array.isArray(item),
+  );
+}
+
+function isWidthHeightObjectSchema(schema: JsonSchema) {
+  return (
+    schema.type === "object" &&
+    schema.properties &&
+    typeof schema.properties === "object" &&
+    "width" in schema.properties &&
+    "height" in schema.properties
+  );
+}
+
+function buildImageSizeFieldSchema(key: string, schema: JsonSchema) {
+  if (key !== "image_size" || schema["x-ui-control"] === "image-size") {
+    return schema;
+  }
+
+  const variants = getAnyOfVariants(schema);
+  const hasObjectSize = variants.some(isWidthHeightObjectSchema);
+  const enumVariant = variants.find(
+    (variant) => Array.isArray(variant.enum) && variant.enum.length > 0,
+  );
+  const options = Array.isArray(enumVariant?.enum)
+    ? enumVariant.enum.filter((item): item is string => typeof item === "string")
+    : [];
+
+  if (!hasObjectSize || options.length === 0) {
+    return schema;
+  }
+
+  function formatImageSizeOptionLabel(value: string) {
+    const ratioMatch = value.match(/^(landscape|portrait)_(\d+)_(\d+)$/i);
+    if (ratioMatch?.[1] && ratioMatch[2] && ratioMatch[3]) {
+      return `${titleCase(ratioMatch[1])} ${ratioMatch[2]}:${ratioMatch[3]}`;
+    }
+
+    return value
+      .split("_")
+      .filter(Boolean)
+      .map((part) => (/^hd$/i.test(part) ? "HD" : titleCase(part)))
+      .join(" ");
+  }
+
+  return {
+    ...schema,
+    "x-ui-control": "image-size",
+    "x-ui-image-size-options": [
+      ...options.map((value) => ({
+        label: formatImageSizeOptionLabel(value),
+        value,
+      })),
+      {
+        label: "Custom",
+        value: "__custom",
+        custom: true,
+      },
+    ],
+  };
+}
+
 function getFieldKind(schema: JsonSchema): AiVideoStudioFieldKind {
   if (Array.isArray(schema.enum) && schema.enum.length > 0) {
     return "enum";
@@ -322,15 +393,16 @@ export function normalizeAiVideoStudioSchema(detail: {
         continue;
       }
 
+      const fieldSchema = buildImageSizeFieldSchema(key, childSchema);
       const defaultValue = childSchema.default;
       setValueAtPath(defaults, nextPath, defaultValue);
       fields.push({
         key,
         path: nextPath,
         label: titleCase(nextPath.join(" / ")),
-        kind: getFieldKind(childSchema),
+        kind: getFieldKind(fieldSchema),
         required: required.has(key) || isPromptField(key),
-        schema: childSchema,
+        schema: fieldSchema,
         defaultValue,
       });
     }

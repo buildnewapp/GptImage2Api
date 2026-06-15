@@ -1,8 +1,6 @@
 import {
   type AiStudioCatalogEntry,
   type AiStudioDocDetail,
-  type AiStudioPricingRow,
-  extractPricingAnchorModel,
   findAiStudioCatalogEntryById,
   getAiStudioPublicModelId,
   getCachedAiStudioCatalog,
@@ -15,7 +13,7 @@ import {
   resolveStatusEndpoint,
   resolveTaskMode,
 } from "@/lib/ai-studio/provider-metadata";
-import { resolveExactPricingRow, resolveSelectedPricing } from "@/lib/ai-studio/runtime";
+import { resolveSelectedPricing } from "@/lib/ai-studio/runtime";
 import { stripLocalReferenceMetadata } from "@/lib/ai-studio/seedance-pricing";
 import { fetchWithTimeout } from "@/lib/fetch/with-timeout";
 
@@ -92,6 +90,14 @@ export function getAiStudioApiKey(vendor = "kie") {
     return apiKey;
   }
 
+  if (vendor === "fal") {
+    const apiKey = process.env.FAL_API_KEY || process.env.FAL_KEY;
+    if (!apiKey) {
+      throw new Error("FAL_API_KEY is not configured");
+    }
+    return apiKey;
+  }
+
   throw new Error(`Unsupported AI Studio vendor: ${vendor}`);
 }
 
@@ -108,7 +114,16 @@ export function getAiStudioApiBaseUrl(vendor = "kie") {
     return "https://openrouter.ai";
   }
 
+  if (vendor === "fal") {
+    return "https://queue.fal.run";
+  }
+
   throw new Error(`Unsupported AI Studio vendor: ${vendor}`);
+}
+
+function getAiStudioAuthorizationHeader(vendor = "kie") {
+  const apiKey = getAiStudioApiKey(vendor);
+  return vendor === "fal" ? `Key ${apiKey}` : `Bearer ${apiKey}`;
 }
 
 export function getAiStudioCallbackUrl() {
@@ -140,7 +155,7 @@ export function extractTaskId(raw: unknown): string | null {
   }
 
   const record = raw as Record<string, unknown>;
-  for (const key of ["taskId", "task_id", "recordId", "id"]) {
+  for (const key of ["taskId", "task_id", "request_id", "recordId", "id"]) {
     if (typeof record[key] === "string" && record[key]) {
       return record[key] as string;
     }
@@ -325,12 +340,18 @@ export function extractProviderFailureReason(raw: unknown): string | null {
 
   const record = raw as Record<string, unknown>;
   const taskId = extractTaskId(raw);
+  const firstDetail = Array.isArray(record.detail) ? record.detail[0] : null;
+  const detailMessage =
+    firstDetail && typeof firstDetail === "object"
+      ? (firstDetail as Record<string, unknown>).msg
+      : null;
   const taskFailureMessages = [
     getNestedValue(record, ["data", "failMsg"]),
     getNestedValue(record, ["data", "errorMessage"]),
     getNestedValue(record, ["data", "message"]),
     getNestedValue(record, ["data", "error", "message"]),
     getNestedValue(record, ["error", "message"]),
+    detailMessage,
     record.error,
     record.message,
     record.msg,
@@ -345,6 +366,7 @@ export function extractProviderFailureReason(raw: unknown): string | null {
     getNestedValue(record, ["data", "message"]),
     getNestedValue(record, ["data", "error", "message"]),
     getNestedValue(record, ["error", "message"]),
+    detailMessage,
   ].filter((value): value is string => typeof value === "string" && value.trim().length > 0);
 
   const numericCodes = [
@@ -366,6 +388,7 @@ export function extractProviderFailureReason(raw: unknown): string | null {
     typeof getNestedValue(record, ["data", "failMsg"]) === "string" ||
     typeof getNestedValue(record, ["data", "errorMessage"]) === "string" ||
     typeof getNestedValue(record, ["data", "error", "message"]) === "string" ||
+    typeof detailMessage === "string" ||
     (typeof taskFailCode === "string" && taskFailCode.trim().length > 0) ||
     successFlag === 2 ||
     successFlag === 3;
@@ -426,6 +449,7 @@ export function normalizeTaskState(raw: unknown): AiStudioNormalizedState {
   if (
     candidate.includes('"state":"waiting"') ||
     candidate.includes('"state":"queuing"') ||
+    candidate.includes('"status":"in_queue"') ||
     candidate.includes('"status":"submitted"') ||
     candidate.includes('"status":"pending"') ||
     candidate.includes('"status":"queued"')
@@ -445,19 +469,6 @@ export function normalizeTaskState(raw: unknown): AiStudioNormalizedState {
   return "unknown";
 }
 
-export function estimatePricingRow(
-  pricingRows: AiStudioPricingRow[],
-  payload: Record<string, any>,
-) {
-  return resolveExactPricingRow(
-    pricingRows.map((row) => ({
-      ...row,
-      runtimeModel: row.runtimeModel ?? extractPricingAnchorModel(row.anchor),
-    })),
-    payload,
-  );
-}
-
 function buildAiStudioTaskStatusUrl(
   detail: Pick<AiStudioDocDetail, "vendor" | "docUrl" | "endpoint" | "statusEndpoint">,
   taskId: string,
@@ -470,13 +481,34 @@ function buildAiStudioTaskStatusUrl(
     throw new Error("This model does not expose a task status endpoint");
   }
 
-  if (/\{task(?:_|-)?id\}/i.test(statusEndpoint)) {
-    return `${baseUrl}${statusEndpoint.replace(/\{task(?:_|-)?id\}/gi, encodeURIComponent(taskId))}`;
+  if (/\{(?:task(?:_|-)?id|request(?:_|-)?id)\}/i.test(statusEndpoint)) {
+    return `${baseUrl}${statusEndpoint.replace(
+      /\{(?:task(?:_|-)?id|request(?:_|-)?id)\}/gi,
+      encodeURIComponent(taskId),
+    )}`;
   }
 
   const url = new URL(`${baseUrl}${statusEndpoint}`);
   url.searchParams.set("taskId", taskId);
   return url.toString();
+}
+
+function buildFalTaskResultUrl(
+  detail: Pick<AiStudioDocDetail, "vendor" | "docUrl" | "endpoint" | "statusEndpoint">,
+  taskId: string,
+) {
+  const statusEndpoint = resolveStatusEndpoint(detail);
+  if (!statusEndpoint || !/\/status$/i.test(statusEndpoint)) {
+    return null;
+  }
+
+  return buildAiStudioTaskStatusUrl(
+    {
+      ...detail,
+      statusEndpoint: statusEndpoint.replace(/\/status$/i, ""),
+    },
+    taskId,
+  );
 }
 
 export function mapPublicModelAliasToProviderModel(
@@ -526,10 +558,13 @@ export async function prepareAiStudioExecution(
     detail,
     body: providerBody,
     pricingPayload: preparedBody,
-    selectedPricing: resolveSelectedPricing(detail.pricingRows, {
+    selectedPricing: resolveSelectedPricing({
       modelId,
       payload: preparedBody,
       pricing: detail.pricing,
+      title: detail.title,
+      provider: detail.provider,
+      category: detail.category,
     }),
   };
 }
@@ -560,7 +595,7 @@ export async function submitAiStudioExecution(
   const response = await fetchWithTimeout(requestUrl.toString(), {
     method: detail.method,
     headers: {
-      Authorization: `Bearer ${getAiStudioApiKey(vendor)}`,
+      Authorization: getAiStudioAuthorizationHeader(vendor),
       "Content-Type": "application/json",
     },
     body: detail.method === "GET" ? undefined : JSON.stringify(body),
@@ -623,7 +658,7 @@ async function queryAiStudioTaskUncached(
   const vendor = getAiStudioVendor(detail);
   const response = await fetchWithTimeout(buildAiStudioTaskStatusUrl(detail, taskId), {
     headers: {
-      Authorization: `Bearer ${getAiStudioApiKey(vendor)}`,
+      Authorization: getAiStudioAuthorizationHeader(vendor),
     },
     timeoutMs: 15000,
   });
@@ -641,10 +676,56 @@ async function queryAiStudioTaskUncached(
     );
   }
 
+  const state = normalizeTaskState(raw);
+
+  if (vendor === "fal" && state === "succeeded") {
+    const resultUrl = buildFalTaskResultUrl(detail, taskId);
+    if (resultUrl) {
+      const resultResponse = await fetchWithTimeout(resultUrl, {
+        headers: {
+          Authorization: getAiStudioAuthorizationHeader(vendor),
+        },
+        timeoutMs: 15000,
+      });
+      const resultContentType = resultResponse.headers.get("content-type") ?? "";
+      const resultRaw = resultContentType.includes("application/json")
+        ? await resultResponse.json()
+        : await resultResponse.text();
+
+      if (!resultResponse.ok) {
+        if (extractProviderFailureReason(resultRaw)) {
+          return {
+            detail,
+            raw: resultRaw,
+            state: "failed",
+            mediaUrls: extractMediaUrls(resultRaw),
+            artifacts: extractResultArtifacts(resultRaw, detail),
+          };
+        }
+
+        throw new Error(
+          typeof resultRaw === "string"
+            ? resultRaw
+            : resultRaw?.msg ||
+                resultRaw?.message ||
+                `Task result query failed with ${resultResponse.status}`,
+        );
+      }
+
+      return {
+        detail,
+        raw: resultRaw,
+        state,
+        mediaUrls: extractMediaUrls(resultRaw),
+        artifacts: extractResultArtifacts(resultRaw, detail),
+      };
+    }
+  }
+
   return {
     detail,
     raw,
-    state: normalizeTaskState(raw),
+    state,
     mediaUrls: extractMediaUrls(raw),
     artifacts: extractResultArtifacts(raw, detail),
   };

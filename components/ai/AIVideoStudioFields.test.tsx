@@ -165,6 +165,174 @@ test("maps size field with aspect ratio semantics to the aspect ratio label", ()
   assert.doesNotMatch(html, />画质</);
 });
 
+test("renders custom image size fields as preset plus dimensions", () => {
+  const html = renderToStaticMarkup(
+    <AIVideoStudioFields
+      primaryFields={[
+        {
+          key: "image_size",
+          path: ["image_size"],
+          label: "image_size",
+          kind: "text",
+          required: false,
+          schema: {
+            type: "object",
+            title: "Image Size",
+            "x-ui-control": "image-size",
+            "x-ui-image-size-options": [
+              {
+                label: "Square HD",
+                value: "square_hd",
+                width: 1024,
+                height: 1024,
+              },
+              {
+                label: "Landscape 4:3",
+                value: "landscape_4_3",
+                width: 1024,
+                height: 768,
+              },
+            ],
+            default: {
+              width: 1024,
+              height: 768,
+            },
+          },
+          defaultValue: {
+            width: 1024,
+            height: 768,
+          },
+        },
+      ]}
+      advancedFields={[]}
+      values={{
+        image_size: {
+          width: 1024,
+          height: 1024,
+        },
+      }}
+      isPublic
+      localizedFieldLabels={{
+        imageSize: "Image Size",
+      }}
+      onChange={() => {}}
+      onPublicChange={() => {}}
+    />,
+  );
+
+  assert.match(html, /data-ai-video-studio-image-size-field="image_size"/);
+  assert.match(html, /data-slot="select-trigger"/);
+  assert.match(html, /data-selected-value="square_hd"/);
+  assert.match(html, /value="1024"/);
+  assert.match(html, /aria-label="Image Size width"/);
+  assert.match(html, /aria-label="Image Size height"/);
+});
+
+test("maps image size and quality fields to distinct labels", () => {
+  const html = renderToStaticMarkup(
+    <AIVideoStudioFields
+      primaryFields={[
+        {
+          key: "image_size",
+          path: ["image_size"],
+          label: "image_size",
+          kind: "text",
+          required: false,
+          schema: {
+            type: "object",
+            "x-ui-control": "image-size",
+            "x-ui-image-size-options": [],
+          },
+          defaultValue: {},
+        },
+        {
+          key: "quality",
+          path: ["quality"],
+          label: "quality",
+          kind: "enum",
+          required: false,
+          schema: {
+            type: "string",
+            enum: ["low", "medium", "high"],
+          },
+          defaultValue: "high",
+        },
+      ]}
+      advancedFields={[]}
+      values={{
+        image_size: {
+          width: 1024,
+          height: 768,
+        },
+        quality: "high",
+      }}
+      isPublic
+      localizedFieldLabels={{
+        imageSize: "Image Size",
+        quality: "Quality",
+        size: "Size",
+      }}
+      onChange={() => {}}
+      onPublicChange={() => {}}
+    />,
+  );
+
+  assert.match(html, />Image Size</);
+  assert.match(html, />Quality</);
+  assert.doesNotMatch(html, />Size</);
+});
+
+test("keeps fal image size string presets selected in image size controls", () => {
+  const html = renderToStaticMarkup(
+    <AIVideoStudioFields
+      primaryFields={[
+        {
+          key: "image_size",
+          path: ["image_size"],
+          label: "image_size",
+          kind: "text",
+          required: false,
+          schema: {
+            title: "Image Size",
+            default: "auto_2K",
+            "x-ui-control": "image-size",
+            "x-ui-image-size-options": [
+              {
+                label: "Square HD",
+                value: "square_hd",
+              },
+              {
+                label: "Auto 2K",
+                value: "auto_2K",
+              },
+              {
+                label: "Custom",
+                value: "__custom",
+                custom: true,
+              },
+            ],
+          },
+          defaultValue: "auto_2K",
+        },
+      ]}
+      advancedFields={[]}
+      values={{
+        image_size: "auto_2K",
+      }}
+      isPublic
+      localizedFieldLabels={{
+        imageSize: "Image Size",
+      }}
+      onChange={() => {}}
+      onPublicChange={() => {}}
+    />,
+  );
+
+  assert.match(html, /data-slot="select-trigger"/);
+  assert.match(html, /data-selected-value="auto_2K"/);
+  assert.doesNotMatch(html, /data-selected-value="__custom"/);
+});
+
 test("uses a fallback prompt counter when the schema omits maxLength", () => {
   const html = renderToStaticMarkup(
     <AIVideoStudioFields

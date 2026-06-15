@@ -1,6 +1,9 @@
 "use client";
 
 import ImageWithRolesField from "@/components/ai/fields/ImageWithRolesField";
+import ImageSizeField, {
+  isImageSizeFieldDescriptor,
+} from "@/components/ai/fields/ImageSizeField";
 import PromptField, {
   isPromptFieldDescriptor,
 } from "@/components/ai/fields/PromptField";
@@ -453,6 +456,22 @@ export default function AIVideoStudioFieldControl({
         value={value}
         disabled={disabled}
         compact={compact}
+        labelTitle={labelTitle}
+        onChange={onChange}
+      />
+    );
+  }
+
+  if (isImageSizeFieldDescriptor(field)) {
+    return (
+      <ImageSizeField
+        field={field}
+        inputId={inputId}
+        label={label}
+        value={value}
+        disabled={disabled}
+        compact={compact}
+        labelIcon={labelIcon}
         labelTitle={labelTitle}
         onChange={onChange}
       />

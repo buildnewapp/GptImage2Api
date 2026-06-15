@@ -562,3 +562,77 @@ test("wraps cached scalar string values for string array fields", () => {
     },
   );
 });
+
+test("maps fal image_size anyOf schemas to image size controls", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    requestSchema: {
+      type: "object",
+      properties: {
+        prompt: {
+          type: "string",
+        },
+        image_size: {
+          anyOf: [
+            {
+              title: "ImageSize",
+              type: "object",
+              properties: {
+                width: {
+                  type: "integer",
+                  default: 512,
+                },
+                height: {
+                  type: "integer",
+                  default: 512,
+                },
+              },
+              "x-fal-order-properties": ["width", "height"],
+            },
+            {
+              type: "string",
+              enum: [
+                "square_hd",
+                "landscape_4_3",
+                "auto_2K",
+              ],
+            },
+          ],
+          default: "auto_2K",
+          title: "Image Size",
+        },
+      },
+      "x-apidog-orders": ["prompt", "image_size"],
+    },
+    examplePayload: {
+      prompt: "Edit the image.",
+      image_size: "auto_2K",
+    },
+  });
+
+  const imageSizeField = normalized.fields.find(
+    (field) => field.key === "image_size",
+  );
+
+  assert.equal(imageSizeField?.kind, "text");
+  assert.equal(imageSizeField?.schema["x-ui-control"], "image-size");
+  assert.deepEqual(imageSizeField?.schema["x-ui-image-size-options"], [
+    {
+      label: "Square HD",
+      value: "square_hd",
+    },
+    {
+      label: "Landscape 4:3",
+      value: "landscape_4_3",
+    },
+    {
+      label: "Auto 2K",
+      value: "auto_2K",
+    },
+    {
+      label: "Custom",
+      value: "__custom",
+      custom: true,
+    },
+  ]);
+  assert.equal(normalized.defaults.image_size, "auto_2K");
+});

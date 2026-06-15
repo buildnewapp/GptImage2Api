@@ -1,6 +1,15 @@
 "use client";
 
 import AIVideoMiniStudioTaskHistory from "@/components/ai/AIVideoMiniStudioTaskHistory";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { authClient } from "@/lib/auth/auth-client";
 import {
   AI_VIDEO_STUDIO_FAMILIES,
@@ -37,8 +46,8 @@ import {
 } from "@/lib/ai-video-studio/schema";
 import type {
   AiStudioPublicDocDetail,
-  AiStudioPublicPricingRow,
 } from "@/lib/ai-studio/public";
+import type { AiStudioResolvedPricing } from "@/lib/ai-studio/runtime";
 import { fetchWithTimeout } from "@/lib/fetch/with-timeout";
 import { cn } from "@/lib/utils";
 import { useRouter } from "@/i18n/routing";
@@ -67,7 +76,7 @@ type ExecuteResponse = {
     reservedCredits?: number;
     state?: string;
     taskId?: string | null;
-    selectedPricing?: AiStudioPublicPricingRow | null;
+    selectedPricing?: AiStudioResolvedPricing | null;
   };
   error?: string;
 };
@@ -398,23 +407,15 @@ export default function AIVideoMiniStudio({
     () =>
       estimateAiVideoMiniStudioCredits({
         modelId: detail?.id ?? null,
-        pricingRows: detail?.pricingRows ?? [],
         payload: basePayload,
         pricing: detail?.pricing,
+        title: detail?.title,
+        provider: detail?.provider,
+        category: detail?.category,
       }),
     [basePayload, detail],
   );
-  const inputPayload = useMemo(
-    () =>
-      detail && basePayload
-        ? buildAiVideoStudioPayload({
-            detail,
-            formValues,
-            selectedPricing,
-          })
-        : null,
-    [basePayload, detail, formValues, selectedPricing],
-  );
+  const inputPayload = basePayload;
   const requiredFieldValues = useMemo(
     () =>
       normalizedSchema?.fields
@@ -782,114 +783,151 @@ export default function AIVideoMiniStudio({
       </div>
 
       <div className="flex flex-wrap items-center gap-2.5 border-t border-white/8 px-5 py-3.5 sm:px-7">
-        <label data-ai-video-mini-studio-model className="min-w-0">
-          <select
-            aria-label={t("form.aiModel")}
+        <div data-ai-video-mini-studio-model className="min-w-0">
+          <Select
             value={selectedModelValue}
-            onChange={(event) => {
-              const [familyKey, versionKey] = event.target.value.split("::");
-              setSelectedFamilyKey(familyKey);
-              setSelectedVersionKey(versionKey);
+            onValueChange={(value) => {
+              const [familyKey, versionKey] = value.split("::");
+              setSelectedFamilyKey(familyKey as AiVideoStudioFamilyKey);
+              setSelectedVersionKey(versionKey as AiVideoStudioVersionKey);
             }}
-            className="flex h-9 w-[120px] items-center rounded-full border border-white/12 bg-white/6 px-2 py-2 text-[12px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] outline-none transition hover:border-white/20"
           >
-            {modelOptionGroups.map(({ family, options }) => (
-              <optgroup key={family.key} label={family.label}>
-                {options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </select>
-        </label>
+            <SelectTrigger
+              aria-label={t("form.aiModel")}
+              className="h-9 w-[120px] rounded-full border-white/12 bg-white/6 px-2 py-2 text-[12px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] hover:border-white/20"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent
+              align="start"
+              className="max-h-[400px] border-white/12 bg-slate-950 text-white"
+            >
+              {modelOptionGroups.map(({ family, options }) => (
+                <SelectGroup key={family.key}>
+                  <SelectLabel>{family.label}</SelectLabel>
+                  {options.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
         {displayedAspectRatioOptions.length > 0 ? (
-          <label data-ai-video-mini-studio-aspect-ratio className="min-w-0">
-            <select
-              aria-label={t("form.aspectRatio")}
+          <div data-ai-video-mini-studio-aspect-ratio className="min-w-0">
+            <Select
               value={String(
                 formValues[primaryFields.aspectRatioField?.key ?? "aspect_ratio"] ??
                   displayedAspectRatioOptions[0],
               )}
-              onChange={(event) =>
+              onValueChange={(value) =>
                 updateFormValue(
                   primaryFields.aspectRatioField?.key ?? "aspect_ratio",
                   coerceAiVideoMiniStudioFieldValue(
                     primaryFields.aspectRatioField,
-                    event.target.value,
+                    value,
                   ),
                 )
               }
-              className="flex h-9 w-[65px] items-center rounded-full border border-white/12 bg-white/6 px-2 py-2 text-[12px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] outline-none transition hover:border-white/20"
             >
-              {displayedAspectRatioOptions.map((option) => (
-                <option key={String(option)} value={String(option)}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </label>
+              <SelectTrigger
+                aria-label={t("form.aspectRatio")}
+                className="h-9 w-[65px] rounded-full border-white/12 bg-white/6 px-2 py-2 text-[12px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] hover:border-white/20"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent
+                align="start"
+                className="border-white/12 bg-slate-950 text-white"
+              >
+                {displayedAspectRatioOptions.map((option) => (
+                  <SelectItem key={String(option)} value={String(option)}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         ) : null}
 
         {displayedDurationOptions.length > 0 ? (
-          <label data-ai-video-mini-studio-duration className="min-w-0">
-            <select
-              aria-label={t("form.duration")}
+          <div data-ai-video-mini-studio-duration className="min-w-0">
+            <Select
               value={String(
                 formValues[primaryFields.durationField?.key ?? "duration"] ??
                   displayedDurationOptions[0],
               )}
-              onChange={(event) =>
+              onValueChange={(value) =>
                 updateFormValue(
                   primaryFields.durationField?.key ?? "duration",
                   coerceAiVideoMiniStudioFieldValue(
                     primaryFields.durationField,
-                    event.target.value,
+                    value,
                   ),
                 )
               }
-              className="flex h-9 w-[60px] items-center rounded-full border border-white/12 bg-white/6 px-2 py-2 text-[12px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] outline-none transition hover:border-white/20"
             >
-              {displayedDurationOptions.map((option) => (
-                <option key={String(option)} value={String(option)}>
-                  {formatDurationOptionLabel(
-                    primaryFields.durationField?.key ?? "duration",
-                    option,
-                  )}
-                </option>
-              ))}
-            </select>
-          </label>
+              <SelectTrigger
+                aria-label={t("form.duration")}
+                className="h-9 w-[60px] rounded-full border-white/12 bg-white/6 px-2 py-2 text-[12px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] hover:border-white/20"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent
+                align="start"
+                className="border-white/12 bg-slate-950 text-white"
+              >
+                {displayedDurationOptions.map((option) => (
+                  <SelectItem key={String(option)} value={String(option)}>
+                    {formatDurationOptionLabel(
+                      primaryFields.durationField?.key ?? "duration",
+                      option,
+                    )}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         ) : null}
 
         {displayedResolutionOptions.length > 0 ? (
-          <label data-ai-video-mini-studio-resolution className="min-w-0">
-            <select
-              aria-label={t("form.resolution")}
+          <div data-ai-video-mini-studio-resolution className="min-w-0">
+            <Select
               value={String(
                 formValues[primaryFields.resolutionField?.key ?? "resolution"] ??
                   displayedResolutionOptions[0],
               )}
-              onChange={(event) =>
+              onValueChange={(value) =>
                 updateFormValue(
                   primaryFields.resolutionField?.key ?? "resolution",
                   coerceAiVideoMiniStudioFieldValue(
                     primaryFields.resolutionField,
-                    event.target.value,
+                    value,
                   ),
                 )
               }
-              className="flex h-9 w-[70px] items-center rounded-full border border-white/12 bg-white/6 px-2 py-2 text-[12px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] outline-none transition hover:border-white/20"
             >
-              {displayedResolutionOptions.map((option) => (
-                <option key={String(option)} value={String(option)}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </label>
+              <SelectTrigger
+                aria-label={t("form.resolution")}
+                className="h-9 w-[70px] rounded-full border-white/12 bg-white/6 px-2 py-2 text-[12px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] hover:border-white/20"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent
+                align="start"
+                className="border-white/12 bg-slate-950 text-white"
+              >
+                {displayedResolutionOptions.map((option) => (
+                  <SelectItem key={String(option)} value={String(option)}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         ) : null}
 
         <div className="ml-auto flex items-center gap-2">

@@ -60,7 +60,7 @@ function matchesModelReference(
 }
 
 export function canAccessAiStudioModel(
-  entry: Pick<AiStudioCatalogEntry, "id" | "category" | "alias" | "pricingRows">,
+  entry: Pick<AiStudioCatalogEntry, "id" | "category" | "alias" | "pricing">,
   options: {
     role?: string | null;
     config: AiStudioPolicyConfig;
@@ -83,7 +83,7 @@ export function canAccessAiStudioModel(
   }
 
   if (
-    (entry.pricingRows?.length ?? 0) === 0 &&
+    !entry.pricing &&
     options.role !== "admin" &&
     !isExplicitlyAllowed
   ) {

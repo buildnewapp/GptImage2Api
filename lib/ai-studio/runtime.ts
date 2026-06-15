@@ -1,198 +1,23 @@
-import type { AiStudioPricingSelectors } from "@/lib/ai-studio/catalog";
-import type { AiStudioPublicPricingRow } from "@/lib/ai-studio/public";
-import {
-  buildSeedanceDynamicPricingFields,
-  LOCAL_REFERENCE_METADATA_KEY,
-} from "@/lib/ai-studio/seedance-pricing";
+import { LOCAL_REFERENCE_METADATA_KEY } from "@/lib/ai-studio/seedance-pricing";
 
-export function collectRuntimeModels(pricingRows: AiStudioPublicPricingRow[]) {
-  const models = new Set<string>();
-
-  for (const row of pricingRows) {
-    if (row.runtimeModel) {
-      models.add(row.runtimeModel);
-    }
-  }
-
-  return [...models];
-}
-
-export function applyPricingRowToPayload(
-  payload: Record<string, any>,
-  pricingRow: Pick<
-    AiStudioPublicPricingRow,
-    "runtimeModel" | "duration" | "resolution"
-  > & {
-    modelDescription?: string | null;
-  },
-) {
-  const next = structuredClone(payload);
-
-  if (pricingRow.runtimeModel) {
-    next.model = pricingRow.runtimeModel;
-  }
-
-  const duration =
-    typeof pricingRow.duration === "number" && Number.isFinite(pricingRow.duration)
-      ? Math.round(pricingRow.duration)
-      : (() => {
-          const durationMatch =
-            typeof pricingRow.modelDescription === "string"
-              ? pricingRow.modelDescription.match(/(\d+(?:\.\d+)?)s/i)
-              : null;
-          return durationMatch?.[1] ? Math.round(Number.parseFloat(durationMatch[1])) : null;
-        })();
-
-  if (duration) {
-    if (typeof next.duration === "number") {
-      next.duration = duration;
-    } else if (typeof next.duration === "string") {
-      next.duration = String(duration);
-    }
-
-    if (next.input && typeof next.input === "object") {
-      if (typeof next.input.n_frames === "string") {
-        next.input.n_frames = String(duration);
-      } else if (typeof next.input.n_frames === "number") {
-        next.input.n_frames = duration;
-      }
-    }
-  }
-
-  if (typeof pricingRow.resolution === "string" && pricingRow.resolution.length > 0) {
-    if (next.input && typeof next.input === "object") {
-      next.input.resolution = pricingRow.resolution;
-    } else {
-      next.resolution = pricingRow.resolution;
-    }
-  }
-
-  return next;
-}
-
-type PricingSelectionRow = {
-  modelDescription: string;
-  runtimeModel?: string | null;
-  resolution?: string | null;
-  duration?: number | null;
-  audio?: boolean | null;
-  aspectRatio?: string | null;
-  source?: string | null;
+export type AiStudioDynamicPricingConfig = {
+  docUrl?: string;
+  price_txt?: string;
+  billing_adapter?: AiStudioBillingAdapter | string;
+  price_key?: string;
+  price_map?: Record<string, number>;
+  price_final?: string;
+  notes?: string;
 };
 
-type PricingSelectionConfig = {
-  selectors?: AiStudioPricingSelectors;
-};
+export const AI_STUDIO_BILLING_ADAPTERS = [
+  "kie_seedance_2",
+] as const;
 
-function getPricingSpecificity(row: PricingSelectionRow) {
-  let score = 0;
+export type AiStudioBillingAdapter = (typeof AI_STUDIO_BILLING_ADAPTERS)[number];
 
-  if (row.runtimeModel) {
-    score += 1;
-  }
-  if (row.resolution !== undefined && row.resolution !== null) {
-    score += 1;
-  }
-  if (row.duration !== undefined && row.duration !== null) {
-    score += 1;
-  }
-  if (row.audio !== undefined && row.audio !== null) {
-    score += 1;
-  }
-  if (row.aspectRatio !== undefined && row.aspectRatio !== null) {
-    score += 1;
-  }
-  if (row.source !== undefined && row.source !== null) {
-    score += 1;
-  }
-
-  return score;
-}
-
-function countDistinctDefinedValues<T>(
-  rows: PricingSelectionRow[],
-  getValue: (row: PricingSelectionRow) => T | null | undefined,
-) {
-  const values = new Set<T>();
-
-  for (const row of rows) {
-    const value = getValue(row);
-    if (value !== undefined && value !== null) {
-      values.add(value);
-    }
-  }
-
-  return values.size;
-}
-
-function normalizeRuntimeModel(input: string) {
-  return input.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-}
-
-function parseDurationHint(value: unknown): number | null {
-  if (typeof value === "number" && Number.isFinite(value) && value > 0) {
-    return Math.round(value);
-  }
-
-  if (typeof value === "string") {
-    const parsed = Number.parseFloat(value);
-    if (Number.isFinite(parsed) && parsed > 0) {
-      return Math.round(parsed);
-    }
-  }
-
-  return null;
-}
-
-function getValueAtSelectorPath(payload: Record<string, any>, path: string) {
-  const segments = path.split(".").filter(Boolean);
-  let current: any = payload;
-
-  for (const segment of segments) {
-    if (!current || typeof current !== "object") {
-      return undefined;
-    }
-    current = current[segment];
-  }
-
-  return current;
-}
-
-function extractStringBySelectors(
-  payload: Record<string, any>,
-  selectors: string[] | undefined,
-) {
-  if (!Array.isArray(selectors) || selectors.length === 0) {
-    return null;
-  }
-
-  for (const selector of selectors) {
-    const value = getValueAtSelectorPath(payload, selector);
-    if (typeof value === "string" && value.trim()) {
-      return value.trim().toLowerCase();
-    }
-  }
-
-  return null;
-}
-
-function extractDurationBySelectors(
-  payload: Record<string, any>,
-  selectors: string[] | undefined,
-) {
-  if (!Array.isArray(selectors) || selectors.length === 0) {
-    return null;
-  }
-
-  for (const selector of selectors) {
-    const value = getValueAtSelectorPath(payload, selector);
-    const parsed = parseDurationHint(value);
-    if (parsed !== null) {
-      return parsed;
-    }
-  }
-
-  return null;
+export function isAiStudioBillingAdapter(value: string): value is AiStudioBillingAdapter {
+  return (AI_STUDIO_BILLING_ADAPTERS as readonly string[]).includes(value);
 }
 
 function getLocalReferenceMetadata(payload: Record<string, any>) {
@@ -209,146 +34,28 @@ function getLocalReferenceMetadata(payload: Record<string, any>) {
   return null;
 }
 
-function collectReferenceUrls(payload: Record<string, any>, keys: string[]) {
-  const values: string[] = [];
+type CommonPricingRow = {
+  modelDescription: string;
+  interfaceType: string;
+  provider: string;
+  creditPrice: string;
+  creditUnit: string;
+};
 
-  for (const key of keys) {
-    const direct = payload[key];
-    const nested = payload.input?.[key];
+export type AiStudioResolvedPricing = CommonPricingRow & {
+  pricingKey: string;
+  catalogModelId: string;
+};
 
-    for (const candidate of [direct, nested]) {
-      if (typeof candidate === "string" && candidate.length > 0) {
-        values.push(candidate);
-        continue;
-      }
-
-      if (Array.isArray(candidate)) {
-        values.push(
-          ...candidate.filter(
-            (item): item is string => typeof item === "string" && item.length > 0,
-          ),
-        );
-      }
-    }
+function formatCreditPrice(value: number) {
+  if (Number.isInteger(value)) {
+    return String(value);
   }
 
-  return values;
+  return value.toFixed(3).replace(/\.?0+$/, "");
 }
 
-function extractDurationFromReferenceMetadata(
-  payload: Record<string, any>,
-  input: {
-    metadataKey: "videoDurationsByUrl" | "audioDurationsByUrl";
-    payloadKeys: string[];
-  },
-) {
-  const metadata = getLocalReferenceMetadata(payload);
-  const durationsByUrl =
-    metadata?.[input.metadataKey] &&
-    typeof metadata[input.metadataKey] === "object" &&
-    !Array.isArray(metadata[input.metadataKey])
-      ? (metadata[input.metadataKey] as Record<string, unknown>)
-      : null;
-
-  if (!durationsByUrl) {
-    return null;
-  }
-
-  const durations = collectReferenceUrls(payload, input.payloadKeys)
-    .map((url) => parseDurationHint(durationsByUrl[url]))
-    .filter((value): value is number => value !== null);
-
-  if (durations.length === 0) {
-    return null;
-  }
-
-  return durations.reduce((sum, value) => sum + value, 0);
-}
-
-function extractDurationHint(
-  payload: Record<string, any>,
-  selectors?: AiStudioPricingSelectors,
-) {
-  const selected = extractDurationBySelectors(payload, selectors?.duration);
-  if (selected !== null) {
-    return selected;
-  }
-
-  return (
-    parseDurationHint(payload.duration) ??
-    parseDurationHint(payload.input?.duration) ??
-    parseDurationHint(payload.input?.extend_times) ??
-    parseDurationHint(payload.video_duration) ??
-    parseDurationHint(payload.input?.video_duration) ??
-    parseDurationHint(payload.audio_duration) ??
-    parseDurationHint(payload.input?.audio_duration) ??
-    parseDurationHint(payload.input?.n_frames) ??
-    extractDurationFromReferenceMetadata(payload, {
-      metadataKey: "videoDurationsByUrl",
-      payloadKeys: ["video_url", "video_urls", "reference_video_urls", "video_input"],
-    }) ??
-    extractDurationFromReferenceMetadata(payload, {
-      metadataKey: "audioDurationsByUrl",
-      payloadKeys: ["audio_url", "audio_urls"],
-    }) ??
-    null
-  );
-}
-
-function extractResolutionHint(
-  payload: Record<string, any>,
-  selectors?: AiStudioPricingSelectors,
-) {
-  const selected = extractStringBySelectors(payload, selectors?.resolution);
-  if (selected !== null) {
-    return selected;
-  }
-
-  const values = [
-    payload.resolution,
-    payload.input?.resolution,
-    payload.quality,
-    payload.input?.quality,
-    payload.input?.image_resolution,
-    payload.size,
-    payload.input?.size,
-    payload.mode,
-    payload.input?.mode,
-  ];
-
-  for (const value of values) {
-    if (typeof value === "string" && value.trim()) {
-      return value.trim().toLowerCase();
-    }
-  }
-
-  return null;
-}
-
-function extractAspectRatioHint(
-  payload: Record<string, any>,
-  selectors?: AiStudioPricingSelectors,
-) {
-  const selected = extractStringBySelectors(payload, selectors?.aspectRatio);
-  if (selected !== null) {
-    return selected;
-  }
-
-  const values = [
-    payload.aspect_ratio,
-    payload.input?.aspect_ratio,
-  ];
-
-  for (const value of values) {
-    if (typeof value === "string" && value.trim()) {
-      return value.trim().toLowerCase();
-    }
-  }
-
-  return null;
-}
-
-function hasNonEmptyValue(value: unknown): boolean {
+function hasNonEmptyBillingValue(value: unknown) {
   if (typeof value === "string") {
     return value.trim().length > 0;
   }
@@ -360,25 +67,35 @@ function hasNonEmptyValue(value: unknown): boolean {
   return Boolean(value);
 }
 
-function extractSourceHint(payload: Record<string, any>) {
-  const videoInputs = [
-    payload.video_list,
-    payload.input?.video_list,
-    payload.video_url,
-    payload.input?.video_url,
-    payload.video_urls,
-    payload.input?.video_urls,
-    payload.reference_video_urls,
-    payload.input?.reference_video_urls,
-    payload.video_input,
-    payload.input?.video_input,
-  ];
+function getNestedValue(record: Record<string, any>, path: string[]) {
+  let current: unknown = record;
 
-  return videoInputs.some(hasNonEmptyValue) ? "video-input" : "no-video-input";
+  for (const segment of path) {
+    if (!current || typeof current !== "object" || Array.isArray(current)) {
+      return undefined;
+    }
+
+    current = (current as Record<string, unknown>)[segment];
+  }
+
+  return current;
 }
 
-function parseAudioHint(value: unknown) {
-  if (typeof value === "boolean") {
+function findPositiveScalarNumber(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value) && value > 0) {
+    return value;
+  }
+
+  if (typeof value === "string" && value.trim()) {
+    const parsed = Number.parseFloat(value);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+  }
+
+  return null;
+}
+
+function parseDurationSeconds(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value) && value > 0) {
     return value;
   }
 
@@ -387,195 +104,296 @@ function parseAudioHint(value: unknown) {
   }
 
   const normalized = value.trim().toLowerCase();
-  if (["true", "1", "yes", "with-audio", "with audio"].includes(normalized)) {
-    return true;
+  if (!normalized || normalized === "auto") {
+    return null;
   }
-  if (["false", "0", "no", "without-audio", "without audio"].includes(normalized)) {
-    return false;
+
+  const match = normalized.match(/^(\d+(?:\.\d+)?)\s*s?$/);
+  if (!match?.[1]) {
+    return null;
+  }
+
+  const parsed = Number.parseFloat(match[1]);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+}
+
+function collectBillingReferenceUrls(payload: Record<string, any>) {
+  return [
+    ...(Array.isArray(payload.video_urls) ? payload.video_urls : []),
+    ...(Array.isArray(getNestedValue(payload, ["input", "video_urls"]))
+      ? (getNestedValue(payload, ["input", "video_urls"]) as unknown[])
+      : []),
+    ...(Array.isArray(payload.reference_video_urls) ? payload.reference_video_urls : []),
+    ...(Array.isArray(getNestedValue(payload, ["input", "reference_video_urls"]))
+      ? (getNestedValue(payload, ["input", "reference_video_urls"]) as unknown[])
+      : []),
+    ...(Array.isArray(payload["reference_video_urls "]) ? payload["reference_video_urls "] : []),
+    ...(Array.isArray(getNestedValue(payload, ["input", "reference_video_urls "]))
+      ? (getNestedValue(payload, ["input", "reference_video_urls "]) as unknown[])
+      : []),
+    payload.video_url,
+    getNestedValue(payload, ["input", "video_url"]),
+  ].filter((value): value is string => typeof value === "string" && value.length > 0);
+}
+
+function buildKieSeedance2Billing(payload: Record<string, any>) {
+  const videoInputCandidates = [
+    payload.video_urls,
+    getNestedValue(payload, ["input", "video_urls"]),
+    payload.reference_video_urls,
+    getNestedValue(payload, ["input", "reference_video_urls"]),
+    payload["reference_video_urls "],
+    getNestedValue(payload, ["input", "reference_video_urls "]),
+    payload.video_url,
+    getNestedValue(payload, ["input", "video_url"]),
+    payload.video_input,
+    getNestedValue(payload, ["input", "video_input"]),
+  ];
+  const hasVideoInput = videoInputCandidates.some(hasNonEmptyBillingValue);
+
+  const directDuration = [
+    payload.video_duration,
+    getNestedValue(payload, ["input", "video_duration"]),
+  ]
+    .map(findPositiveScalarNumber)
+    .find((value): value is number => value !== null);
+
+  if (directDuration !== undefined) {
+    return {
+      has_video_input: hasVideoInput,
+      input_video_duration: Math.ceil(directDuration),
+    };
+  }
+
+  const metadata = getLocalReferenceMetadata(payload);
+  const durationsByUrl =
+    metadata?.videoDurationsByUrl &&
+    typeof metadata.videoDurationsByUrl === "object" &&
+    !Array.isArray(metadata.videoDurationsByUrl)
+      ? (metadata.videoDurationsByUrl as Record<string, unknown>)
+      : null;
+
+  if (durationsByUrl) {
+    const durations = collectBillingReferenceUrls(payload)
+      .map((url) => findPositiveScalarNumber(durationsByUrl[url]))
+      .filter((value): value is number => value !== null)
+      .map((value) => Math.ceil(value));
+
+    if (durations.length > 0) {
+      return {
+        has_video_input: hasVideoInput,
+        input_video_duration: durations.reduce((sum, value) => sum + value, 0),
+      };
+    }
+  }
+
+  if (hasVideoInput) {
+    return null;
+  }
+
+  return {
+    has_video_input: false,
+    input_video_duration: 0,
+  };
+}
+
+function normalizeImageSizePx(value: unknown): string | null {
+  if (typeof value === "string" && value.trim()) {
+    const normalized = value.trim().toLowerCase().replace(/\s+/g, "");
+    const match = normalized.match(/^(\d+)x(\d+)$/);
+    return match ? `${match[1]}x${match[2]}` : null;
+  }
+
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    const width = Number((value as Record<string, unknown>).width);
+    const height = Number((value as Record<string, unknown>).height);
+    if (Number.isFinite(width) && Number.isFinite(height) && width > 0 && height > 0) {
+      return `${Math.round(width)}x${Math.round(height)}`;
+    }
   }
 
   return null;
 }
 
-function extractAudioHint(
-  payload: Record<string, any>,
-  selectors?: AiStudioPricingSelectors,
-) {
-  if (Array.isArray(selectors?.audio) && selectors.audio.length > 0) {
-    for (const selector of selectors.audio) {
-      const parsed = parseAudioHint(getValueAtSelectorPath(payload, selector));
-      if (parsed !== null) {
-        return parsed;
-      }
-    }
-  }
-
-  return (
-    parseAudioHint(payload.sound) ??
-    parseAudioHint(payload.input?.sound) ??
-    parseAudioHint(payload.audio) ??
-    parseAudioHint(payload.input?.audio) ??
-    parseAudioHint(payload.with_audio) ??
-    parseAudioHint(payload.input?.with_audio) ??
-    parseAudioHint(payload.generate_audio) ??
-    parseAudioHint(payload.input?.generate_audio) ??
-    null
-  );
+function normalizePricingValue(value: unknown) {
+  return parseDurationSeconds(value) ?? normalizeImageSizePx(value) ?? value;
 }
 
-export function resolveExactPricingRow<Row extends PricingSelectionRow>(
-  pricingRows: Row[],
-  payload: Record<string, any>,
-  config?: PricingSelectionConfig | null,
-) {
-  if (pricingRows.length <= 1) {
-    return pricingRows[0] ?? null;
-  }
-
-  const payloadModel =
-    typeof payload.model === "string" ? normalizeRuntimeModel(payload.model) : "";
-  const durationHint = extractDurationHint(payload, config?.selectors);
-  const resolutionHint = extractResolutionHint(payload, config?.selectors);
-  const audioHint = extractAudioHint(payload, config?.selectors);
-  const aspectRatioHint = extractAspectRatioHint(payload, config?.selectors);
-  const sourceHint = extractSourceHint(payload);
-  const scopedRows = payloadModel
-    ? pricingRows.filter((row) => {
-        const runtimeModel = row.runtimeModel
-          ? normalizeRuntimeModel(row.runtimeModel)
-          : "";
-
-        return !runtimeModel || runtimeModel === payloadModel;
-      })
-    : pricingRows;
-  const requiresDurationHint =
-    countDistinctDefinedValues(scopedRows, (row) => row.duration) > 1;
-  const requiresResolutionHint =
-    countDistinctDefinedValues(scopedRows, (row) => row.resolution) > 1;
-  const requiresAudioHint =
-    countDistinctDefinedValues(scopedRows, (row) => row.audio) > 1;
-  const requiresAspectRatioHint =
-    countDistinctDefinedValues(scopedRows, (row) => row.aspectRatio) > 1;
-  const requiresSourceHint =
-    countDistinctDefinedValues(scopedRows, (row) => row.source) > 1;
-  const candidates = pricingRows.filter((row) => {
-    const runtimeModel = row.runtimeModel ? normalizeRuntimeModel(row.runtimeModel) : "";
-
-    if (payloadModel && runtimeModel && runtimeModel !== payloadModel) {
-      return false;
-    }
-
-    if (row.duration !== undefined && row.duration !== null) {
-      if (
-        (durationHint === null && requiresDurationHint) ||
-        (durationHint !== null && row.duration !== durationHint)
-      ) {
-        return false;
+function buildPricingObjectProxy(record: Record<string, unknown>) {
+  return new Proxy(record, {
+    get(target, property) {
+      if (property === Symbol.unscopables) {
+        return undefined;
       }
-    }
 
-    if (row.resolution !== undefined && row.resolution !== null) {
-      if (
-        (resolutionHint === null && requiresResolutionHint) ||
-        (resolutionHint !== null && row.resolution.toLowerCase() !== resolutionHint)
-      ) {
-        return false;
-      }
-    }
-
-    if (row.audio !== undefined && row.audio !== null) {
-      if (
-        (audioHint === null && requiresAudioHint) ||
-        (audioHint !== null && row.audio !== audioHint)
-      ) {
-        return false;
-      }
-    }
-
-    if (row.aspectRatio !== undefined && row.aspectRatio !== null) {
-      if (
-        (aspectRatioHint === null && requiresAspectRatioHint) ||
-        (aspectRatioHint !== null &&
-          row.aspectRatio.toLowerCase() !== aspectRatioHint)
-      ) {
-        return false;
-      }
-    }
-
-    if (row.source !== undefined && row.source !== null) {
-      if (
-        (sourceHint === null && requiresSourceHint) ||
-        (sourceHint !== null && row.source.toLowerCase() !== sourceHint)
-      ) {
-        return false;
-      }
-    }
-
-    return true;
+      return normalizePricingValue(Reflect.get(target, property));
+    },
   });
+}
 
-  if (candidates.length === 1) {
-    return candidates[0] ?? null;
+function buildBillingContext(
+  config: AiStudioDynamicPricingConfig,
+  payload: Record<string, any>,
+) {
+  if (config.billing_adapter === "kie_seedance_2") {
+    return buildKieSeedance2Billing(payload);
   }
 
-  if (candidates.length === 0) {
+  if (config.billing_adapter) {
     return null;
   }
 
-  const exactRuntimeCandidates =
-    payloadModel
-      ? candidates.filter((row) => normalizeRuntimeModel(row.runtimeModel ?? "") === payloadModel)
-      : candidates;
-  const scopedCandidates =
-    exactRuntimeCandidates.length > 0 ? exactRuntimeCandidates : candidates;
-  const bestSpecificity = Math.max(
-    ...scopedCandidates.map((row) => getPricingSpecificity(row)),
-  );
-  const mostSpecificRows = scopedCandidates.filter(
-    (row) => getPricingSpecificity(row) === bestSpecificity,
-  );
-
-  return mostSpecificRows.length === 1 ? (mostSpecificRows[0] ?? null) : null;
+  return {};
 }
 
-type CommonPricingRow = {
-  modelDescription: string;
-  interfaceType: string;
-  provider: string;
-  creditPrice: string;
-  creditUnit: string;
-  usdPrice: string;
-  falPrice: string;
-  discountRate: number;
-  discountPrice: boolean;
-};
+function assertSafePricingExpression(expression: string) {
+  if (!/^[\w\s.$?:'"|&=!<>+\-*/()%[\],]+$/.test(expression)) {
+    throw new Error("Unsupported pricing expression");
+  }
 
-export function resolveSelectedPricing<Row extends PricingSelectionRow & Partial<CommonPricingRow>>(
-  pricingRows: Row[],
+  if (/(?:constructor|__proto__|prototype|global|process|require|Function|eval|import)/.test(expression)) {
+    throw new Error("Unsupported pricing expression");
+  }
+}
+
+function buildPricingScope(
+  payload: Record<string, any>,
+  billing: Record<string, unknown>,
+  price?: number,
+) {
+  const input =
+    payload.input && typeof payload.input === "object" && !Array.isArray(payload.input)
+      ? buildPricingObjectProxy(payload.input)
+      : {};
+  const scope = {
+    ...payload,
+    input,
+    billing,
+    price,
+  };
+
+  return new Proxy(scope, {
+    has() {
+      return true;
+    },
+    get(target, property) {
+      if (property === Symbol.unscopables) {
+        return undefined;
+      }
+      return normalizePricingValue(Reflect.get(target, property));
+    },
+  });
+}
+
+function evaluatePricingExpression(
+  expression: string,
+  scope: Record<string, unknown>,
+) {
+  const normalizedExpression = expression.replace(/\$([a-zA-Z_]\w*)/g, "$1");
+  assertSafePricingExpression(normalizedExpression);
+  return Function(
+    "scope",
+    `with (scope) { return (${normalizedExpression}); }`,
+  )(scope);
+}
+
+function renderPricingTemplate(
+  template: string,
+  scope: Record<string, unknown>,
+) {
+  const exact = template.match(/^\{\$([^{}]+)\}$/);
+  if (exact?.[1]) {
+    return evaluatePricingExpression(exact[1], scope);
+  }
+
+  return template.replace(/\{\$([^{}]+)\}/g, (_match, expression: string) => {
+    const value = evaluatePricingExpression(expression, scope);
+    return value === undefined || value === null ? "" : String(value);
+  });
+}
+
+function evaluatePriceFinal(template: string, scope: Record<string, unknown>) {
+  const rendered = renderPricingTemplate(template, scope);
+  if (typeof rendered === "number") {
+    return rendered;
+  }
+
+  const expression = String(rendered);
+  assertSafePricingExpression(expression);
+  const value = Function(
+    `"use strict"; return (${expression});`,
+  )();
+
+  return typeof value === "number" ? value : Number(value);
+}
+
+export function resolveDynamicPricing(
+  config: AiStudioDynamicPricingConfig | null | undefined,
+  payload: Record<string, any>,
+  model: {
+    modelId: string;
+    title: string;
+    provider: string;
+    category: string;
+  },
+): AiStudioResolvedPricing | null {
+  if (!config?.price_key || !config.price_map || !config.price_final) {
+    return null;
+  }
+
+  try {
+    const billing = buildBillingContext(config, payload);
+    if (!billing) {
+      return null;
+    }
+
+    const keyScope = buildPricingScope(payload, billing);
+    const pricingKey = String(renderPricingTemplate(config.price_key, keyScope));
+    if (!pricingKey || !(pricingKey in config.price_map)) {
+      return null;
+    }
+
+    const price = Number(config.price_map[pricingKey]);
+    if (!Number.isFinite(price) || price <= 0) {
+      return null;
+    }
+
+    const finalScope = buildPricingScope(payload, billing, price);
+    const finalPrice = evaluatePriceFinal(config.price_final, finalScope);
+    if (!Number.isFinite(finalPrice) || finalPrice <= 0) {
+      return null;
+    }
+
+    return {
+      modelDescription: `${model.title}, ${pricingKey}`,
+      interfaceType: model.category,
+      provider: model.provider,
+      creditPrice: formatCreditPrice(finalPrice),
+      creditUnit: "credits",
+      pricingKey,
+      catalogModelId: model.modelId,
+    };
+  } catch {
+    return null;
+  }
+}
+
+export function resolveSelectedPricing(
   input: {
     modelId: string;
     payload: Record<string, any>;
-    pricing?: PricingSelectionConfig | null;
+    pricing?: AiStudioDynamicPricingConfig | null;
+    title?: string;
+    provider?: string;
+    category?: string;
   },
 ) {
-  const estimated = resolveExactPricingRow(pricingRows, input.payload, input.pricing);
-  const dynamicFields = buildSeedanceDynamicPricingFields(
-    input.modelId,
-    input.payload,
-  );
-
-  if (!dynamicFields) {
-    return estimated;
-  }
-
-  return {
-    ...estimated,
-    ...dynamicFields,
-    creditUnit: dynamicFields.creditUnit ?? estimated?.creditUnit ?? "per video",
-    falPrice: estimated?.falPrice ?? "",
-    discountRate: estimated?.discountRate ?? 0,
-    discountPrice: estimated?.discountPrice ?? false,
-  } as Row & CommonPricingRow;
+  return resolveDynamicPricing(input.pricing, input.payload, {
+    modelId: input.modelId,
+    title: input.title ?? input.modelId,
+    provider: input.provider ?? "",
+    category: input.category ?? "video",
+  });
 }
 
 export function getDisplayModelLabel(
@@ -632,26 +450,10 @@ export function getEstimatedCreditsForPricing(
     | Pick<CommonPricingRow, "creditPrice" | "creditUnit">
     | null
     | undefined,
-  payload: Record<string, any> | null | undefined,
 ) {
   if (!pricingRow) {
     return 0;
   }
 
-  const rate = Number.parseFloat(pricingRow.creditPrice ?? "0");
-  if (!Number.isFinite(rate) || rate <= 0) {
-    return 0;
-  }
-
-  const creditUnit = pricingRow.creditUnit.trim().toLowerCase();
-  if (creditUnit.includes("per second")) {
-    const durationHint =
-      payload && typeof payload === "object" ? extractDurationHint(payload) : null;
-
-    if (durationHint !== null) {
-      return toBillableCredits(rate * durationHint);
-    }
-  }
-
-  return toBillableCredits(rate);
+  return toBillableCredits(pricingRow.creditPrice);
 }

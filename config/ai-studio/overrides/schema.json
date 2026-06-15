@@ -1,5 +1,201 @@
 {
   "models": {
+    "image:fal-openai-gpt-image-2": {
+      "set": {
+        "properties.image_size": {
+          "type": "object",
+          "title": "Image Size",
+          "x-ui-control": "image-size",
+          "x-ui-image-size-options": [
+            {
+              "label": "Default",
+              "value": "default",
+              "width": 1024,
+              "height": 768
+            },
+            {
+              "label": "Square HD",
+              "value": "square_hd",
+              "width": 1024,
+              "height": 1024
+            },
+            {
+              "label": "Landscape 4:3",
+              "value": "landscape_4_3",
+              "width": 1024,
+              "height": 768
+            },
+            {
+              "label": "Portrait 3:4",
+              "value": "portrait_3_4",
+              "width": 768,
+              "height": 1024
+            },
+            {
+              "label": "Portrait 2:3",
+              "value": "portrait_2_3",
+              "width": 1024,
+              "height": 1536
+            },
+            {
+              "label": "Landscape 3:2",
+              "value": "landscape_3_2",
+              "width": 1536,
+              "height": 1024
+            },
+            {
+              "label": "Landscape 1080p",
+              "value": "landscape_1080p",
+              "width": 1920,
+              "height": 1080
+            },
+            {
+              "label": "Portrait 1080p",
+              "value": "portrait_1080p",
+              "width": 1080,
+              "height": 1920
+            },
+            {
+              "label": "Landscape 2K",
+              "value": "landscape_2k",
+              "width": 2560,
+              "height": 1440
+            },
+            {
+              "label": "Portrait 2K",
+              "value": "portrait_2k",
+              "width": 1440,
+              "height": 2560
+            },
+            {
+              "label": "Landscape 4K",
+              "value": "landscape_4k",
+              "width": 3840,
+              "height": 2160
+            },
+            {
+              "label": "Portrait 4K",
+              "value": "portrait_4k",
+              "width": 2160,
+              "height": 3840
+            }
+          ],
+          "default": {
+            "width": 1024,
+            "height": 768
+          },
+          "description": "Concrete output size for GPT Image 2 billing. The submitted value is sent as { width, height }."
+        },
+        "properties.quality": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "default": "high",
+          "description": "Quality for the generated image. Auto is disabled because it cannot be priced before submission."
+        }
+      }
+    },
+    "image:fal-openai-gpt-image-2-edit": {
+      "set": {
+        "properties.image_size": {
+          "type": "object",
+          "title": "Image Size",
+          "x-ui-control": "image-size",
+          "x-ui-image-size-options": [
+            {
+              "label": "Default",
+              "value": "default",
+              "width": 1024,
+              "height": 768
+            },
+            {
+              "label": "Square HD",
+              "value": "square_hd",
+              "width": 1024,
+              "height": 1024
+            },
+            {
+              "label": "Landscape 4:3",
+              "value": "landscape_4_3",
+              "width": 1024,
+              "height": 768
+            },
+            {
+              "label": "Portrait 3:4",
+              "value": "portrait_3_4",
+              "width": 768,
+              "height": 1024
+            },
+            {
+              "label": "Portrait 2:3",
+              "value": "portrait_2_3",
+              "width": 1024,
+              "height": 1536
+            },
+            {
+              "label": "Landscape 3:2",
+              "value": "landscape_3_2",
+              "width": 1536,
+              "height": 1024
+            },
+            {
+              "label": "Landscape 1080p",
+              "value": "landscape_1080p",
+              "width": 1920,
+              "height": 1080
+            },
+            {
+              "label": "Portrait 1080p",
+              "value": "portrait_1080p",
+              "width": 1080,
+              "height": 1920
+            },
+            {
+              "label": "Landscape 2K",
+              "value": "landscape_2k",
+              "width": 2560,
+              "height": 1440
+            },
+            {
+              "label": "Portrait 2K",
+              "value": "portrait_2k",
+              "width": 1440,
+              "height": 2560
+            },
+            {
+              "label": "Landscape 4K",
+              "value": "landscape_4k",
+              "width": 3840,
+              "height": 2160
+            },
+            {
+              "label": "Portrait 4K",
+              "value": "portrait_4k",
+              "width": 2160,
+              "height": 3840
+            }
+          ],
+          "default": {
+            "width": 1024,
+            "height": 768
+          },
+          "description": "Concrete output size for GPT Image 2 billing. The submitted value is sent as { width, height }."
+        },
+        "properties.quality": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "default": "high",
+          "description": "Quality for the generated image. Auto is disabled because it cannot be priced before submission."
+        }
+      }
+    },
     "video:bytedance-seedance-2": {
       "set": {
         "properties.input.properties.duration.minimum": 4,

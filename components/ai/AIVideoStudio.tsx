@@ -44,14 +44,10 @@ import {
 } from "@/lib/ai-video-studio/schema";
 import type {
   AiStudioPublicDocDetail,
-  AiStudioPublicPricingRow,
 } from "@/lib/ai-studio/public";
+import { LOCAL_REFERENCE_METADATA_KEY } from "@/lib/ai-studio/seedance-pricing";
 import {
-  getSeedancePricingExplanation,
-  LOCAL_REFERENCE_METADATA_KEY,
-} from "@/lib/ai-studio/seedance-pricing";
-import {
-  applyPricingRowToPayload,
+  type AiStudioResolvedPricing,
   getEstimatedCreditsForPricing,
   resolveSelectedPricing,
 } from "@/lib/ai-studio/runtime";
@@ -65,6 +61,7 @@ import {
   Loader2,
   Play,
   Sparkles,
+  Trash2,
   WandSparkles,
   X,
 } from "lucide-react";
@@ -93,7 +90,7 @@ type ExecuteResponse = {
     reservedCredits?: number;
     state?: string;
     taskId?: string | null;
-    selectedPricing?: AiStudioPublicPricingRow | null;
+    selectedPricing?: AiStudioResolvedPricing | null;
   };
   error?: string;
 };
@@ -118,6 +115,7 @@ type HistoryResponse = {
       catalogModelId: string;
       category: string;
       status: string;
+      statusReason: string | null;
       providerTaskId: string | null;
       isPublic: boolean;
       reservedCredits: number;
@@ -143,6 +141,7 @@ type GenerationTaskState = "queued" | "running" | "succeeded" | "failed";
 
 type GenerationTask = {
   localId: string;
+  generationId?: string;
   taskId?: string;
   state: GenerationTaskState;
   mediaUrls: string[];
@@ -156,7 +155,7 @@ type GenerationTask = {
   formValues: AiVideoStudioFormValues;
   payload: Record<string, any>;
   creditsRequired: number;
-  selectedPricing: AiStudioPublicPricingRow | null;
+  selectedPricing: AiStudioResolvedPricing | null;
   progress: number;
   createdAt: number;
 };
@@ -518,7 +517,6 @@ function buildApiModePayload(input: {
     requestSchema?: Record<string, any> | null;
   };
   formValues: AiVideoStudioFormValues;
-  selectedPricing?: AiStudioPublicPricingRow | null;
 }) {
   const basePayload = input.detail.examplePayload ?? {};
   const nextPayload = materializeApiPayloadFormValues(
@@ -541,10 +539,6 @@ function buildApiModePayload(input: {
           ...nextPayload,
         }
   ) as Record<string, any>;
-
-  if (input.selectedPricing) {
-    return applyPricingRowToPayload(payload, input.selectedPricing);
-  }
 
   return payload;
 }
@@ -594,10 +588,12 @@ function mapHistoryItemToGenerationTask(
 
   return {
     localId: item.id,
+    generationId: item.id,
     taskId: item.providerTaskId ?? undefined,
     state: resolveGenerationTaskState(item.status),
     mediaUrls: item.resultUrls,
     artifacts: [],
+    failureReason: item.status === "failed" ? item.statusReason : null,
     familyKey: selection.familyKey,
     versionKey: selection.versionKey,
     modelId: item.catalogModelId,
@@ -654,6 +650,9 @@ export default function AIVideoStudio({
   const [apiPayloadText, setApiPayloadText] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deletingTaskLocalId, setDeletingTaskLocalId] = useState<string | null>(
+    null,
+  );
   const [generationTasks, setGenerationTasks] = useState<GenerationTask[]>([]);
   const [activeTaskLocalId, setActiveTaskLocalId] = useState<string | null>(
     null,
@@ -876,47 +875,26 @@ export default function AIVideoStudio({
   const formSelectedPricing = useMemo(
     () =>
       detail && formBasePayload
-        ? resolveSelectedPricing(detail.pricingRows, {
+        ? resolveSelectedPricing({
             modelId: detail.id,
             payload: formBasePayload,
             pricing: detail.pricing,
+            title: detail.title,
+            provider: detail.provider,
+            category: detail.category,
           })
         : null,
     [detail, formBasePayload],
   );
-  const formPricingExplanation = useMemo(
-    () =>
-      detail && formBasePayload
-        ? getSeedancePricingExplanation({
-            model: detail.id,
-            payload: formBasePayload,
-          })
-        : null,
-    [detail, formBasePayload],
-  );
-
-  const formInputPayload = useMemo(
-    () =>
-      detail && formBasePayload
-        ? buildAiVideoStudioPayload({
-            detail,
-            formValues,
-            selectedPricing: formSelectedPricing,
-          })
-        : null,
-    [detail, formBasePayload, formSelectedPricing, formValues],
-  );
-
   const defaultApiPayload = useMemo(
     () =>
       detail
         ? buildApiModePayload({
             detail,
             formValues,
-            selectedPricing: formSelectedPricing,
           })
         : null,
-    [detail, formSelectedPricing, formValues],
+    [detail, formValues],
   );
 
   useEffect(() => {
@@ -968,41 +946,21 @@ export default function AIVideoStudio({
   const apiSelectedPricing = useMemo(
     () =>
       detail && apiBasePayload
-        ? resolveSelectedPricing(detail.pricingRows, {
+        ? resolveSelectedPricing({
             modelId: detail.id,
             payload: apiBasePayload,
             pricing: detail.pricing,
+            title: detail.title,
+            provider: detail.provider,
+            category: detail.category,
           })
         : null,
     [apiBasePayload, detail],
   );
-  const apiPricingExplanation = useMemo(
-    () =>
-      detail && apiBasePayload
-        ? getSeedancePricingExplanation({
-            model: detail.id,
-            payload: apiBasePayload,
-          })
-        : null,
-    [apiBasePayload, detail],
-  );
-  const apiInputPayload = useMemo(
-    () =>
-      apiBasePayload
-        ? apiSelectedPricing
-          ? applyPricingRowToPayload(apiBasePayload, apiSelectedPricing)
-          : apiBasePayload
-        : null,
-    [apiBasePayload, apiSelectedPricing],
-  );
-
   const basePayload = submitMode === "api" ? apiBasePayload : formBasePayload;
   const selectedPricing =
     submitMode === "api" ? apiSelectedPricing : formSelectedPricing;
-  const pricingExplanation =
-    submitMode === "api" ? apiPricingExplanation : formPricingExplanation;
-  const inputPayload =
-    submitMode === "api" ? apiInputPayload : formInputPayload;
+  const inputPayload = basePayload;
   const apiFieldDocs = useMemo(
     () =>
       detail
@@ -1022,8 +980,8 @@ export default function AIVideoStudio({
   );
 
   const estimatedCredits = useMemo(
-    () => getEstimatedCreditsForPricing(selectedPricing, basePayload),
-    [basePayload, selectedPricing],
+    () => getEstimatedCreditsForPricing(selectedPricing),
+    [selectedPricing],
   );
   const shouldShowPublicInAdvanced =
     normalizedSchema?.usesDefaultAdvancedGrouping === true ||
@@ -1406,6 +1364,7 @@ export default function AIVideoStudio({
       }
 
       updateGenerationTask(localTaskId, {
+        generationId: json.data.generationId ?? undefined,
         taskId: json.data.taskId,
         state: "queued",
         selectedPricing: json.data.selectedPricing ?? selectedPricing,
@@ -1495,6 +1454,48 @@ export default function AIVideoStudio({
       link.remove();
     },
     [],
+  );
+
+  const handleDeleteTask = useCallback(
+    async (task: GenerationTask) => {
+      if (deletingTaskLocalId) {
+        return;
+      }
+
+      setDeletingTaskLocalId(task.localId);
+
+      try {
+        if (task.generationId) {
+          const response = await fetch(
+            `/api/ai-studio/video-history?id=${encodeURIComponent(task.generationId)}`,
+            {
+              method: "DELETE",
+            },
+          );
+          const json = await response.json();
+
+          if (!response.ok || !json?.success) {
+            throw new Error(json?.error || "Failed to delete task");
+          }
+        }
+
+        setGenerationTasks((current) => {
+          const next = current.filter((item) => item.localId !== task.localId);
+
+          if (activeTaskLocalId === task.localId) {
+            setActiveTaskLocalId(next[0]?.localId ?? null);
+          }
+
+          return next;
+        });
+        toast.success(t("form.deleteSuccess"));
+      } catch {
+        toast.error(t("form.deleteFailed"));
+      } finally {
+        setDeletingTaskLocalId(null);
+      }
+    },
+    [activeTaskLocalId, deletingTaskLocalId, t],
   );
 
   const handleOpenImagePreview = useCallback(
@@ -1648,6 +1649,8 @@ export default function AIVideoStudio({
                 localizedFieldLabels={{
                   prompt: t("form.prompt"),
                   size: t("form.size"),
+                  imageSize: t("form.imageSize"),
+                  quality: t("form.quality"),
                   resolution: t("form.resolution"),
                   aspectRatio: t("form.aspectRatio"),
                   duration: t("form.duration"),
@@ -1820,32 +1823,6 @@ export default function AIVideoStudio({
             ) : null}
 
             <div className="mt-auto">
-              {pricingExplanation ? (
-                <div className="mb-3 rounded-xl border border-border/60 bg-background/35 px-4 py-3">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                    {t("form.pricingLogicTitle")}
-                  </div>
-                  <div className="mt-1 text-xs text-muted-foreground">
-                    {pricingExplanation.hasVideoInput
-                      ? t("form.pricingLogicWithVideoSummary")
-                      : t("form.pricingLogicWithoutVideoSummary")}
-                  </div>
-                  <div className="mt-1.5 text-sm font-medium text-foreground">
-                    {pricingExplanation.hasVideoInput
-                      ? t("form.pricingLogicWithVideoFormula", {
-                          input: pricingExplanation.inputVideoDurationSeconds,
-                          output: pricingExplanation.outputDurationSeconds,
-                          rate: pricingExplanation.rate,
-                          credits: pricingExplanation.creditPrice,
-                        })
-                      : t("form.pricingLogicWithoutVideoFormula", {
-                          output: pricingExplanation.outputDurationSeconds,
-                          rate: pricingExplanation.rate,
-                          credits: pricingExplanation.creditPrice,
-                        })}
-                  </div>
-                </div>
-              ) : null}
               <Button
                 type="button"
                 onClick={() => void handleGenerate()}
@@ -1929,7 +1906,6 @@ export default function AIVideoStudio({
                           src={activeResultMediaUrl}
                           playsInline
                           controls
-                          autoPlay
                           className="w-full h-full object-contain"
                         />
                       )
@@ -2141,58 +2117,88 @@ export default function AIVideoStudio({
                             ) : null}
 
                             <div className="mt-2 flex flex-wrap gap-1.5">
-                              <Button
-                                type="button"
-                                onClick={(event) => {
-                                  event.stopPropagation();
-                                  if (task.mediaUrls[0]) {
-                                    if (
-                                      resolveGeneratedMediaKind(
-                                        task.modelId,
-                                      ) === "image"
-                                    ) {
-                                      handleOpenImagePreview(task.mediaUrls, 0);
-                                    } else {
-                                      setSelectedPreview({
-                                        kind: "video",
-                                        url: task.mediaUrls[0],
-                                      });
-                                    }
+                              {task.state === "failed" ? (
+                                <Button
+                                  type="button"
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    void handleDeleteTask(task);
+                                  }}
+                                  disabled={
+                                    deletingTaskLocalId === task.localId
                                   }
-                                }}
-                                disabled={!task.mediaUrls[0]}
-                                variant="link"
-                                size="xs"
-                                className="h-auto gap-1 px-0 text-[11px]"
-                              >
-                                {resolveGeneratedMediaKind(task.modelId) ===
-                                "image" ? (
-                                  <ImageIcon className="w-3 h-3" />
-                                ) : (
-                                  <Play className="w-3 h-3" />
-                                )}
-                                {t("form.open")}
-                              </Button>
-                              <Button
-                                type="button"
-                                onClick={(event) => {
-                                  event.stopPropagation();
-                                  if (task.mediaUrls[0]) {
-                                    handleDownloadMedia(
-                                      task.mediaUrls[0],
-                                      task.taskId,
-                                      resolveGeneratedMediaKind(task.modelId),
-                                    );
-                                  }
-                                }}
-                                disabled={!task.mediaUrls[0]}
-                                variant="link"
-                                size="xs"
-                                className="h-auto gap-1 px-0 text-[11px]"
-                              >
-                                <Download className="w-3 h-3" />
-                                {t("form.download")}
-                              </Button>
+                                  variant="link"
+                                  size="xs"
+                                  className="h-auto gap-1 px-0 text-[11px] text-red-500 hover:text-red-600"
+                                >
+                                  {deletingTaskLocalId === task.localId ? (
+                                    <Loader2 className="w-3 h-3 animate-spin" />
+                                  ) : (
+                                    <Trash2 className="w-3 h-3" />
+                                  )}
+                                  {t("form.delete")}
+                                </Button>
+                              ) : (
+                                <>
+                                  <Button
+                                    type="button"
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      if (task.mediaUrls[0]) {
+                                        if (
+                                          resolveGeneratedMediaKind(
+                                            task.modelId,
+                                          ) === "image"
+                                        ) {
+                                          handleOpenImagePreview(
+                                            task.mediaUrls,
+                                            0,
+                                          );
+                                        } else {
+                                          setSelectedPreview({
+                                            kind: "video",
+                                            url: task.mediaUrls[0],
+                                          });
+                                        }
+                                      }
+                                    }}
+                                    disabled={!task.mediaUrls[0]}
+                                    variant="link"
+                                    size="xs"
+                                    className="h-auto gap-1 px-0 text-[11px]"
+                                  >
+                                    {resolveGeneratedMediaKind(task.modelId) ===
+                                    "image" ? (
+                                      <ImageIcon className="w-3 h-3" />
+                                    ) : (
+                                      <Play className="w-3 h-3" />
+                                    )}
+                                    {t("form.open")}
+                                  </Button>
+                                  <Button
+                                    type="button"
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      if (task.mediaUrls[0]) {
+                                        handleDownloadMedia(
+                                          task.mediaUrls[0],
+                                          task.taskId,
+                                          resolveGeneratedMediaKind(
+                                            task.modelId,
+                                          ),
+                                        );
+                                      }
+                                    }}
+                                    disabled={!task.mediaUrls[0]}
+                                    variant="link"
+                                    size="xs"
+                                    className="h-auto gap-1 px-0 text-[11px]"
+                                  >
+                                    <Download className="w-3 h-3" />
+                                    {t("form.download")}
+                                  </Button>
+                                </>
+                              )}
                               <Button
                                 type="button"
                                 onClick={(event) => {

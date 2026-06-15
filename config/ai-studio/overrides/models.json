@@ -1,9 +1,9 @@
 {
   "models": {
-    "video:fal-seedance-2-0": {
+    "video:ama-seedance-2-0": {
       "alias": "seedance-2-0"
     },
-    "video:fal-seedance-2-0-fast": {
+    "video:ama-seedance-2-0-fast": {
       "alias": "seedance-2-0-fast"
     },
     "video:bytedance-seedance-2": {
@@ -15,12 +15,6 @@
       "alias": "seedance-2-0-fast-vip",
       "title": "Seedance 2.0 Fast VIP",
       "provider": "ByteDance"
-    },
-    "video:gemini-omni-text-to-video": {
-      "alias": "gemini-omni/text-to-video"
-    },
-    "video:gemini-omni-image-to-video": {
-      "alias": "gemini-omni/image-to-video"
     },
     "video:gemini-omni-audio": {
       "resultArtifacts": [
@@ -47,26 +41,17 @@
         {
           "id": "video:veo-3.1-lite",
           "title": "Veo 3.1 Lite",
-          "schemaModel": "veo3_lite",
-          "pricingMatch": {
-            "runtimeModel": "veo3_lite_custom"
-          }
+          "schemaModel": "veo3_lite"
         },
         {
           "id": "video:veo-3.1-fast",
           "title": "Veo 3.1 Fast",
-          "schemaModel": "veo3_fast",
-          "pricingMatch": {
-            "runtimeModel": "veo3_fast_custom"
-          }
+          "schemaModel": "veo3_fast"
         },
         {
           "id": "video:veo-3.1-quality",
           "title": "Veo 3.1 Quality",
-          "schemaModel": "veo3",
-          "pricingMatch": {
-            "runtimeModel": "veo3_quality_custom"
-          }
+          "schemaModel": "veo3"
         }
       ]
     },

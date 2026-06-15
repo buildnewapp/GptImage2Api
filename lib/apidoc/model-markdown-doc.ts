@@ -298,7 +298,6 @@ async function resolveDoc(slug: string) {
           version.key,
           version.modelId,
           publicHandle,
-          ...(version.aliases ?? []),
         ].some((candidate) => normalizeLoose(candidate) === looseSlug);
       });
   const family = familyMatch ?? versionMatch?.family;

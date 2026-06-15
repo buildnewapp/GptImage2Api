@@ -36,7 +36,6 @@ export type AiVideoStudioVersion = {
   label: string;
   familyKey: AiVideoStudioFamilyKey;
   modelId: string;
-  aliases?: string[];
   levelLimit?: AiVideoStudioLevelLimit;
 };
 
@@ -67,22 +66,10 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     selectable: true,
     versions: [
       {
-        key: "gemini-omni-text-to-video",
-        label: "Omni Text to Video",
-        familyKey: "gemini-omni",
-        modelId: "video:gemini-omni-text-to-video",
-      },
-      {
-        key: "gemini-omni-image-to-video",
-        label: "Omni Image to Video",
-        familyKey: "gemini-omni",
-        modelId: "video:gemini-omni-image-to-video",
-      },
-      {
         key: "omni-flash-ext",
         label: "Omni Flash Pro",
         familyKey: "gemini-omni",
-        modelId: "video:fal-omni-flash-ext",
+        modelId: "video:am-omni-flash-ext",
       },
       {
         key: "gemini-omni-video",
@@ -119,14 +106,48 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "Seedance 2.0",
         familyKey: "seedance-2.0",
         modelId: "video:bytedance-seedance-2",
-        aliases: ["video:seedance-2-0-vip"],
       },
       {
         key: "seedance-2.0-fast-vip",
         label: "Seedance 2.0 Fast",
         familyKey: "seedance-2.0",
         modelId: "video:bytedance-seedance-2-0-fast",
-        aliases: ["video:seedance-2-0-fast-vip"],
+      },
+      {
+        key: "fal-seedance-2.0-text-to-video",
+        label: "Seedance 2.0 Text to Video",
+        familyKey: "seedance-2.0",
+        modelId: "video:fal-bytedance-seedance-2-0-text-to-video",
+      },
+      {
+        key: "fal-seedance-2.0-fast-text-to-video",
+        label: "Seedance 2.0 Fast Text to Video",
+        familyKey: "seedance-2.0",
+        modelId: "video:fal-bytedance-seedance-2-0-fast-text-to-video",
+      },
+      {
+        key: "fal-seedance-2.0-image-to-video",
+        label: "Seedance 2.0 Image to Video",
+        familyKey: "seedance-2.0",
+        modelId: "video:fal-bytedance-seedance-2-0-image-to-video",
+      },
+      {
+        key: "fal-seedance-2.0-fast-image-to-video",
+        label: "Seedance 2.0 Fast Image to Video",
+        familyKey: "seedance-2.0",
+        modelId: "video:fal-bytedance-seedance-2-0-fast-image-to-video",
+      },
+      {
+        key: "fal-seedance-2.0-reference-to-video",
+        label: "Seedance 2.0 Reference to Video",
+        familyKey: "seedance-2.0",
+        modelId: "video:fal-bytedance-seedance-2-0-reference-to-video",
+      },
+      {
+        key: "fal-seedance-2.0-fast-reference-to-video",
+        label: "Seedance 2.0 Fast Reference to Video",
+        familyKey: "seedance-2.0",
+        modelId: "video:fal-bytedance-seedance-2-0-fast-reference-to-video",
       },
     ],
   },
@@ -229,6 +250,42 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         familyKey: "veo-3.1",
         modelId: "video:get-veo3-1-4k-video",
       },
+      {
+        key: "fal-veo-3.1",
+        label: "Veo 3.1",
+        familyKey: "veo-3.1",
+        modelId: "video:fal-fal-ai-veo3-1",
+      },
+      {
+        key: "fal-veo-3.1-fast",
+        label: "Veo 3.1 Fast",
+        familyKey: "veo-3.1",
+        modelId: "video:fal-fal-ai-veo3-1-fast",
+      },
+      {
+        key: "fal-veo-3.1-image-to-video",
+        label: "Veo 3.1 Image to Video",
+        familyKey: "veo-3.1",
+        modelId: "video:fal-fal-ai-veo3-1-image-to-video",
+      },
+      {
+        key: "fal-veo-3.1-fast-image-to-video",
+        label: "Veo 3.1 Fast Image to Video",
+        familyKey: "veo-3.1",
+        modelId: "video:fal-fal-ai-veo3-1-fast-image-to-video",
+      },
+      {
+        key: "fal-veo-3",
+        label: "Veo 3",
+        familyKey: "veo-3.1",
+        modelId: "video:fal-fal-ai-veo3",
+      },
+      {
+        key: "fal-veo-3-fast",
+        label: "Veo 3 Fast",
+        familyKey: "veo-3.1",
+        modelId: "video:fal-fal-ai-veo3-fast",
+      },
     ],
   },
   {
@@ -262,6 +319,36 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         familyKey: "grok-imagine",
         modelId: "video:grok-imagine-video-extend",
       },
+      {
+        key: "fal-grok-imagine-text-to-video",
+        label: "Grok Imagine Text to Video",
+        familyKey: "grok-imagine",
+        modelId: "video:fal-xai-grok-imagine-video-text-to-video",
+      },
+      {
+        key: "fal-grok-imagine-image-to-video",
+        label: "Grok Imagine Image to Video",
+        familyKey: "grok-imagine",
+        modelId: "video:fal-xai-grok-imagine-video-image-to-video",
+      },
+      {
+        key: "fal-grok-imagine-1.5-image-to-video",
+        label: "Grok Imagine 1.5 Image to Video",
+        familyKey: "grok-imagine",
+        modelId: "video:fal-xai-grok-imagine-video-v1-5-image-to-video",
+      },
+      {
+        key: "fal-grok-imagine-reference-to-video",
+        label: "Grok Imagine Reference to Video",
+        familyKey: "grok-imagine",
+        modelId: "video:fal-xai-grok-imagine-video-reference-to-video",
+      },
+      {
+        key: "fal-grok-imagine-video-edit",
+        label: "Grok Imagine Video Edit",
+        familyKey: "grok-imagine",
+        modelId: "video:fal-xai-grok-imagine-video-edit-video",
+      },
     ],
   },
   {
@@ -276,7 +363,6 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "Sora 2 Text to Video",
         familyKey: "sora2",
         modelId: "video:sora2-text-to-video-standard",
-        aliases: ["video:fal-sora-2"],
       },
       {
         key: "sora-2-image-to-video",
@@ -289,7 +375,6 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "Sora 2 Pro Text to Video",
         familyKey: "sora2",
         modelId: "video:sora2-pro-text-to-video",
-        aliases: ["video:fal-sora-2-pro"],
       },
       {
         key: "sora-2-pro-image-to-video",
@@ -310,6 +395,24 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         familyKey: "sora2",
         modelId: "video:sora2-official",
         levelLimit: "pro",
+      },
+      {
+        key: "fal-sora-2-text-to-video",
+        label: "Sora 2 Text to Video",
+        familyKey: "sora2",
+        modelId: "video:fal-fal-ai-sora-2-text-to-video",
+      },
+      {
+        key: "fal-sora-2-image-to-video",
+        label: "Sora 2 Image to Video",
+        familyKey: "sora2",
+        modelId: "video:fal-fal-ai-sora-2-image-to-video",
+      },
+      {
+        key: "fal-sora-2-video-remix",
+        label: "Sora 2 Video Remix",
+        familyKey: "sora2",
+        modelId: "video:fal-fal-ai-sora-2-video-to-video-remix",
       },
     ],
   },
@@ -397,6 +500,60 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "Kling AI Avatar Pro",
         familyKey: "kling",
         modelId: "video:kling-ai-avatar-pro",
+      },
+      {
+        key: "fal-kling-v3-pro-text-to-video",
+        label: "Kling v3 Pro Text to Video",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-v3-pro-text-to-video",
+      },
+      {
+        key: "fal-kling-v3-standard-text-to-video",
+        label: "Kling v3 Standard Text to Video",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-v3-standard-text-to-video",
+      },
+      {
+        key: "fal-kling-v3-pro-image-to-video",
+        label: "Kling v3 Pro Image to Video",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-v3-pro-image-to-video",
+      },
+      {
+        key: "fal-kling-v3-standard-image-to-video",
+        label: "Kling v3 Standard Image to Video",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-v3-standard-image-to-video",
+      },
+      {
+        key: "fal-kling-v3-4k-image-to-video",
+        label: "Kling v3 4K Image to Video",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-v3-4k-image-to-video",
+      },
+      {
+        key: "fal-kling-o1-image-to-video",
+        label: "Kling O1 Image to Video",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-o1-image-to-video",
+      },
+      {
+        key: "fal-kling-v2.6-pro-text-to-video",
+        label: "Kling v2.6 Pro Text to Video",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-v2-6-pro-text-to-video",
+      },
+      {
+        key: "fal-kling-v2.6-pro-image-to-video",
+        label: "Kling v2.6 Pro Image to Video",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-v2-6-pro-image-to-video",
+      },
+      {
+        key: "fal-kling-v2.6-motion-control",
+        label: "Kling v2.6 Motion Control",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-v2-6-standard-motion-control",
       },
     ],
   },
@@ -491,6 +648,24 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         familyKey: "wan",
         modelId: "video:wan-animate-replace",
       },
+      {
+        key: "fal-wan-2.7-text-to-video",
+        label: "Wan 2.7 Text to Video",
+        familyKey: "wan",
+        modelId: "video:fal-fal-ai-wan-v2-7-text-to-video",
+      },
+      {
+        key: "fal-wan-2.7-image-to-video",
+        label: "Wan 2.7 Image to Video",
+        familyKey: "wan",
+        modelId: "video:fal-fal-ai-wan-v2-7-image-to-video",
+      },
+      {
+        key: "fal-wan-2.7-reference-to-video",
+        label: "Wan 2.7 Reference to Video",
+        familyKey: "wan",
+        modelId: "video:fal-fal-ai-wan-v2-7-reference-to-video",
+      },
     ],
   },
   {
@@ -517,6 +692,24 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "HappyHorse Reference to Video",
         familyKey: "happyhorse",
         modelId: "video:happyhorse-reference-to-video",
+      },
+      {
+        key: "fal-happy-horse-text-to-video",
+        label: "Happy Horse Text to Video",
+        familyKey: "happyhorse",
+        modelId: "video:fal-alibaba-happy-horse-text-to-video",
+      },
+      {
+        key: "fal-happy-horse-image-to-video",
+        label: "Happy Horse Image to Video",
+        familyKey: "happyhorse",
+        modelId: "video:fal-alibaba-happy-horse-image-to-video",
+      },
+      {
+        key: "fal-happy-horse-reference-to-video",
+        label: "Happy Horse Reference to Video",
+        familyKey: "happyhorse",
+        modelId: "video:fal-alibaba-happy-horse-reference-to-video",
       },
     ],
   },
@@ -627,10 +820,22 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         modelId: "image:gpt-image-2-image-to-image",
       },
       {
-        key: "fal-gpt-image-2",
+        key: "ama-gpt-image-2",
         label: "Gpt image 2 Special offer",
         familyKey: "gpt-image-2",
-        modelId: "image:fal-gpt-image-2",
+        modelId: "image:ama-gpt-image-2",
+      },
+      {
+        key: "fal-openai-gpt-image-2",
+        label: "Gpt image 2 FAL",
+        familyKey: "gpt-image-2",
+        modelId: "image:fal-openai-gpt-image-2",
+      },
+      {
+        key: "fal-openai-gpt-image-2-edit",
+        label: "Gpt image 2 edit FAL",
+        familyKey: "gpt-image-2",
+        modelId: "image:fal-openai-gpt-image-2-edit",
       }
     ],
   },
@@ -664,6 +869,31 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "Seedream4.5 - Edit",
         familyKey: "seedream-image",
         modelId: "image:seedream4-5-edit",
+      },
+
+      {
+        key: "seedream-5-fal",
+        label: "Seedream 5 - FAL",
+        familyKey: "seedream-image",
+        modelId: "image:fal-fal-ai-bytedance-seedream-v5-lite-text-to-image",
+      },
+      {
+        key: "seedream-5-edit-fal",
+        label: "Seedream 5 Edit - FAL",
+        familyKey: "seedream-image",
+        modelId: "image:fal-fal-ai-bytedance-seedream-v5-lite-edit",
+      },
+      {
+        key: "seedream-4.5-fal",
+        label: "Seedream4.5 - FAL",
+        familyKey: "seedream-image",
+        modelId: "image:fal-fal-ai-bytedance-seedream-v4-5-text-to-image",
+      },
+      {
+        key: "seedream-4.5-edit-fal",
+        label: "Seedream4.5 Edit- FAL",
+        familyKey: "seedream-image",
+        modelId: "image:fal-fal-ai-bytedance-seedream-v4-5-edit",
       },
     ],
   },
@@ -736,10 +966,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
 export function getAiVideoStudioSelectionFromModelId(modelId: string) {
   for (const family of AI_VIDEO_STUDIO_FAMILIES) {
     for (const version of family.versions) {
-      if (
-        version.modelId === modelId ||
-        version.aliases?.includes(modelId)
-      ) {
+      if (version.modelId === modelId) {
         return {
           familyKey: version.familyKey,
           versionKey: version.key,

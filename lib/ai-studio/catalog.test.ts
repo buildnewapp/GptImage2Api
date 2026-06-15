@@ -2,12 +2,20 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  assertAiStudioCatalogCanReplaceExisting,
+  buildAiStudioFalCatalog,
+  buildAiStudioUpstreamCatalog,
+  extractFalPricingTextFromLlms,
   findAiStudioCatalogEntryById,
+  parseFalCatalogModels,
+  parseFalOpenApiModel,
   parseApimartDocMarkdown,
   parseApimartLlmsFull,
   parseApimartLlmsIndex,
   parseApiDocMarkdown,
   parseLlmsIndex,
+  sortAiStudioCatalogItems,
+  syncAiStudioFalModelPrices,
 } from "@/lib/ai-studio/catalog";
 
 const llmsSample = `
@@ -18,6 +26,7 @@ const llmsSample = `
 - Chat  Models > GPT [GPT-5-2](https://docs.kie.ai/market/chat/gpt-5-2.md): > GPT-5-2 API
 - Veo3.1 API [Generate Veo3.1 Video](https://docs.kie.ai/veo3-api/generate-veo-3-video.md): ::: info[]
 - Suno API > Music Generation [Generate Music](https://docs.kie.ai/suno-api/generate-music.md): Generate music with or without lyrics using AI models.
+- Video Models > HappyHorse [HappyHorse 1.1 图生视频](https://docs.kie.ai/38308980e0.md): Old localized generated doc
 - [Get Task Details](https://docs.kie.ai/market/common/get-task-detail.md): Query the status and results
 - [Claude Code + kie.ai Integration Guide](https://docs.kie.ai/2152008m0.md): Integration setup
 - [Claude Code 对接 kie.ai 使用指南](https://docs.kie.ai/2151374m0.md): Integration setup
@@ -96,6 +105,106 @@ paths:
               instrumental: false
               prompt: A dreamy city pop song
 \`\`\`
+`;
+
+const falOpenApiModelSample = {
+  endpoint_id: "bytedance/seedance-2.0/text-to-video",
+  metadata: {
+    display_name: "Seedance 2.0 Text to Video API",
+    category: "text-to-video",
+    group: "bytedance",
+  },
+  pricing: {
+    unit_price: 0.1,
+    unit: "video",
+    currency: "USD",
+  },
+  openapi: {
+    openapi: "3.0.4",
+    components: {
+      schemas: {
+        QueueStatus: {
+          type: "object",
+          properties: {
+            status: {
+              type: "string",
+              enum: ["IN_QUEUE", "IN_PROGRESS", "COMPLETED"],
+            },
+            request_id: {
+              type: "string",
+            },
+          },
+        },
+        SeedanceInput: {
+          type: "object",
+          required: ["prompt"],
+          "x-fal-order-properties": ["prompt", "aspect_ratio"],
+          properties: {
+            prompt: {
+              type: "string",
+              examples: ["A cinematic product video"],
+            },
+            aspect_ratio: {
+              type: "string",
+              enum: ["16:9", "9:16"],
+              default: "16:9",
+            },
+          },
+        },
+      },
+    },
+    paths: {
+      "/fal-ai/seedance-2/text-to-video/requests/{request_id}/status": {
+        get: {},
+      },
+      "/fal-ai/seedance-2/text-to-video/requests/{request_id}/cancel": {
+        put: {},
+      },
+      "/fal-ai/seedance-2/text-to-video": {
+        post: {
+          requestBody: {
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/SeedanceInput",
+                },
+              },
+            },
+          },
+        },
+      },
+      "/fal-ai/seedance-2/text-to-video/requests/{request_id}": {
+        get: {},
+      },
+    },
+    servers: [{ url: "https://queue.fal.run" }],
+  },
+};
+
+const falLlmsSample = `
+# Wan 2.7 Text to Video
+
+## Pricing
+
+Your request will cost **$0.1** per second for 720p resolution. For 1080p your request will cost **$0.15** per second.
+
+For more details, see [fal.ai pricing](https://fal.ai/pricing).
+
+## API Information
+
+This model can be used via our HTTP API.
+`;
+
+const falMultiLinePricingLlmsSample = `
+# GPT Image 2
+
+## Pricing
+
+Text tokens (per 1M): **$5.00** input, **$1.25** cached, **$10.00** output.
+Image tokens (per 1M): **$8.00** input, **$2.00** cached, **$30.00** output. Changing the **quality** parameter significantly affects cost; by default we use **high**. Adjust it to your preference.
+See the description at the bottom of this page for more details on how much canonical image sizes cost. Total cost is rounded up to the closest hundredth of a cent ($0.0001.)
+
+For more details, see [fal.ai pricing](https://fal.ai/pricing).
 `;
 
 const apimartFullSample = `
@@ -201,6 +310,127 @@ test("parses the official llms index into supported catalog entries", () => {
   assert.equal(entries[4]?.id, "video:generate-veo3-1-video");
 });
 
+test("sorts ai studio catalog items by stable model id", () => {
+  const items = [
+    { id: "video:zeta" },
+    { id: "image:alpha" },
+    { id: "chat:beta" },
+  ] as any[];
+
+  const sorted = sortAiStudioCatalogItems(items);
+
+  assert.deepEqual(sorted.map((item) => item.id), [
+    "chat:beta",
+    "image:alpha",
+    "video:zeta",
+  ]);
+  assert.deepEqual(items.map((item) => item.id), [
+    "video:zeta",
+    "image:alpha",
+    "chat:beta",
+  ]);
+});
+
+test("rejects suspicious ai studio catalog shrink before overwrite", () => {
+  const existing = {
+    version: 1,
+    generatedAt: "2026-06-22T13:01:37.753Z",
+    items: Array.from({ length: 160 }, (_, index) => ({ id: `video:old-${index}` })),
+  } as any;
+  const next = {
+    version: 1,
+    generatedAt: "2026-06-23T05:15:13.830Z",
+    items: Array.from({ length: 20 }, (_, index) => ({ id: `video:new-${index}` })),
+  } as any;
+
+  assert.throws(
+    () => assertAiStudioCatalogCanReplaceExisting(next, existing, "catalog.json"),
+    /refusing to overwrite catalog\.json: new AI Studio catalog has 20 items, existing has 160/i,
+  );
+});
+
+test("limits concurrent kie catalog doc fetches", async () => {
+  const originalFetch = globalThis.fetch;
+  const originalLog = console.log;
+  const originalConcurrency = process.env.AI_STUDIO_FETCH_CONCURRENCY;
+  const originalInterval = process.env.AI_STUDIO_FETCH_INTERVAL_MS;
+  let activeDocFetches = 0;
+  let maxActiveDocFetches = 0;
+
+  process.env.AI_STUDIO_FETCH_CONCURRENCY = "1";
+  process.env.AI_STUDIO_FETCH_INTERVAL_MS = "1";
+  console.log = () => {};
+  globalThis.fetch = (async (input: string | URL | Request) => {
+    const url = String(input);
+
+    if (url === "https://docs.kie.ai/llms.txt") {
+      return new Response(
+        [
+          "- Image Models > Google [Google - Model A](https://docs.kie.ai/market/google/model-a.md): sample",
+          "- Image Models > Google [Google - Model B](https://docs.kie.ai/market/google/model-b.md): sample",
+          "- Image Models > Google [Google - Model C](https://docs.kie.ai/market/google/model-c.md): sample",
+          "- Image Models > Google [Google - Model D](https://docs.kie.ai/market/google/model-d.md): sample",
+        ].join("\n"),
+        { status: 200 },
+      );
+    }
+
+    if (url.startsWith("https://docs.kie.ai/market/google/model-")) {
+      activeDocFetches += 1;
+      maxActiveDocFetches = Math.max(maxActiveDocFetches, activeDocFetches);
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      activeDocFetches -= 1;
+
+      const model = url.split("/").at(-1)?.replace(".md", "") ?? "model";
+      return new Response(
+        [
+          "# Google Model",
+          "",
+          "```yaml",
+          "openapi: 3.0.0",
+          "paths:",
+          "  /api/v1/jobs/createTask:",
+          "    post:",
+          "      requestBody:",
+          "        content:",
+          "          application/json:",
+          "            schema:",
+          "              type: object",
+          "              properties:",
+          "                model:",
+          "                  type: string",
+          `                  default: google/${model}`,
+          "```",
+          "",
+        ].join("\n"),
+        { status: 200 },
+      );
+    }
+
+    throw new Error(`Unexpected fetch url: ${url}`);
+  }) as typeof globalThis.fetch;
+
+  try {
+    const upstream = await buildAiStudioUpstreamCatalog();
+
+    assert.equal(upstream.items.length, 4);
+    assert.equal(maxActiveDocFetches, 1);
+  } finally {
+    globalThis.fetch = originalFetch;
+    console.log = originalLog;
+    if (originalConcurrency === undefined) {
+      delete process.env.AI_STUDIO_FETCH_CONCURRENCY;
+    } else {
+      process.env.AI_STUDIO_FETCH_CONCURRENCY = originalConcurrency;
+    }
+    if (originalInterval === undefined) {
+      delete process.env.AI_STUDIO_FETCH_INTERVAL_MS;
+    } else {
+      process.env.AI_STUDIO_FETCH_INTERVAL_MS = originalInterval;
+    }
+  }
+});
+
 test("parses endpoint, method, model keys, and example payload from an image doc", () => {
   const detail = parseApiDocMarkdown({
     category: "image",
@@ -213,6 +443,443 @@ test("parses endpoint, method, model keys, and example payload from an image doc
   assert.deepEqual(detail.modelKeys, ["google/nano-banana-2"]);
   assert.equal(detail.examplePayload.model, "google/nano-banana-2");
   assert.equal(detail.examplePayload.input?.resolution, "4K");
+});
+
+test("parses fal model openapi with resolved request schema and queue endpoints without pricing rows", () => {
+  const detail = parseFalOpenApiModel(
+    {
+      id: "bytedance/seedance-2.0/text-to-video",
+    },
+    falOpenApiModelSample,
+  );
+
+  assert.equal(detail.vendor, "fal");
+  assert.equal(detail.id, "video:fal-bytedance-seedance-2-0-text-to-video");
+  assert.equal(detail.endpoint, "/fal-ai/seedance-2/text-to-video");
+  assert.equal(detail.method, "POST");
+  assert.equal(
+    detail.statusEndpoint,
+    "/fal-ai/seedance-2/requests/{request_id}/status",
+  );
+  assert.deepEqual(detail.modelKeys, ["bytedance/seedance-2.0/text-to-video"]);
+  assert.equal(detail.requestSchema?.properties?.prompt?.type, "string");
+  assert.deepEqual(detail.requestSchema?.["x-apidog-orders"], [
+    "prompt",
+    "aspect_ratio",
+  ]);
+  assert.equal(detail.examplePayload.prompt, "A cinematic product video");
+  assert.equal(detail.examplePayload.aspect_ratio, "16:9");
+  assert.equal("pricingRows" in detail, false);
+});
+
+test("parses fal queue status endpoints using sdk app id rules for nested model paths", () => {
+  const detail = parseFalOpenApiModel(
+    "fal-ai/bytedance/seedream/v5/lite/text-to-image",
+    {
+      ...falOpenApiModelSample,
+      endpoint_id: "fal-ai/bytedance/seedream/v5/lite/text-to-image",
+      openapi: {
+        ...falOpenApiModelSample.openapi,
+        paths: {
+          "/fal-ai/bytedance/seedream/v5/lite/text-to-image/requests/{request_id}/status": {
+            get: {},
+          },
+          "/fal-ai/bytedance/seedream/v5/lite/text-to-image": {
+            post: {
+              requestBody: {
+                content: {
+                  "application/json": {
+                    schema: {
+                      $ref: "#/components/schemas/SeedanceInput",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  );
+
+  assert.equal(
+    detail.endpoint,
+    "/fal-ai/bytedance/seedream/v5/lite/text-to-image",
+  );
+  assert.equal(
+    detail.statusEndpoint,
+    "/fal-ai/bytedance/requests/{request_id}/status",
+  );
+});
+
+test("builds a fal catalog from endpoint id allowlist models in config order", () => {
+  const catalog = parseFalCatalogModels({
+    version: 1,
+    models: [
+      "bytedance/seedance-2.0/text-to-video",
+    ],
+  }, [falOpenApiModelSample]);
+
+  assert.equal(catalog.version, 1);
+  assert.equal(catalog.items.length, 1);
+  assert.equal(catalog.items[0]?.id, "video:fal-bytedance-seedance-2-0-text-to-video");
+  assert.equal(catalog.items[0]?.endpoint, "/fal-ai/seedance-2/text-to-video");
+});
+
+test("extracts fal pricing text from the llms pricing section", () => {
+  assert.equal(
+    extractFalPricingTextFromLlms(falLlmsSample),
+    "Your request will cost **$0.1** per second for 720p resolution. For 1080p your request will cost **$0.15** per second.",
+  );
+});
+
+test("extracts multi-line fal pricing text from the llms pricing section", () => {
+  assert.equal(
+    extractFalPricingTextFromLlms(falMultiLinePricingLlmsSample),
+    [
+      "Text tokens (per 1M): **$5.00** input, **$1.25** cached, **$10.00** output.",
+      "Image tokens (per 1M): **$8.00** input, **$2.00** cached, **$30.00** output. Changing the **quality** parameter significantly affects cost; by default we use **high**. Adjust it to your preference.",
+      "See the description at the bottom of this page for more details on how much canonical image sizes cost. Total cost is rounded up to the closest hundredth of a cent ($0.0001.)",
+    ].join("\n"),
+  );
+});
+
+test("syncs fal llms pricing text into fal model prices", async () => {
+  const originalFetch = globalThis.fetch;
+  const requestedUrls: string[] = [];
+
+  globalThis.fetch = (async (input: string | URL | Request) => {
+    const url = String(input);
+    requestedUrls.push(url);
+
+    if (url.includes("/v1/models/pricing")) {
+      throw new Error(`Unexpected pricing API fetch: ${url}`);
+    }
+
+    if (url === "https://fal.ai/models/bytedance/seedance-2.0/text-to-video/llms.txt") {
+      return new Response(falLlmsSample, { status: 200 });
+    }
+
+    throw new Error(`Unexpected fetch url: ${url}`);
+  }) as typeof globalThis.fetch;
+
+  try {
+    const synced = await syncAiStudioFalModelPrices({
+      version: 1,
+      models: [
+        "bytedance/seedance-2.0/text-to-video",
+        {
+          id: "disabled/model",
+          enabled: false,
+        },
+      ],
+      prices: {
+        "disabled/model": "stale disabled price",
+      },
+    });
+
+    assert.deepEqual(synced.prices, {
+      "bytedance/seedance-2.0/text-to-video":
+        "Your request will cost **$0.1** per second for 720p resolution. For 1080p your request will cost **$0.15** per second.",
+    });
+    assert.deepEqual(requestedUrls, [
+      "https://fal.ai/models/bytedance/seedance-2.0/text-to-video/llms.txt",
+    ]);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("syncs fal catalog without fetching fal pricing", async () => {
+  const originalFetch = globalThis.fetch;
+  const originalLog = console.log;
+  const originalFalApiKey = process.env.FAL_API_KEY;
+  const originalFalKey = process.env.FAL_KEY;
+  const requestedUrls: string[] = [];
+  const requestedAuth: unknown[] = [];
+  const logs: unknown[][] = [];
+
+  process.env.FAL_API_KEY = "fal-test-key";
+  delete process.env.FAL_KEY;
+  console.log = (...args: unknown[]) => {
+    logs.push(args);
+  };
+  globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
+    const url = String(input);
+    requestedUrls.push(url);
+    requestedAuth.push((init?.headers as Record<string, unknown> | undefined)?.Authorization);
+
+    if (url.includes("/v1/models/pricing")) {
+      throw new Error(`Unexpected pricing fetch: ${url}`);
+    }
+
+    if (url.startsWith("https://api.fal.ai/v1/models?")) {
+      return Response.json({
+        models: [falOpenApiModelSample],
+      });
+    }
+
+    throw new Error(`Unexpected fetch url: ${url}`);
+  }) as typeof globalThis.fetch;
+
+  try {
+    const catalog = await buildAiStudioFalCatalog({
+      version: 1,
+      models: ["bytedance/seedance-2.0/text-to-video"],
+    });
+
+    assert.equal(catalog.items.length, 1);
+    assert.equal("pricingRows" in (catalog.items[0] ?? {}), false);
+    assert.equal(requestedUrls.length, 1);
+    assert.match(requestedUrls[0] ?? "", /^https:\/\/api\.fal\.ai\/v1\/models\?/);
+    assert.deepEqual(requestedAuth, ["Key fal-test-key"]);
+    assert.ok(
+      logs.some((entry) =>
+        String(entry[0] ?? "").includes("认证: 已带 FAL API Key") &&
+        String(entry[0] ?? "").includes("成功: 200"),
+      ),
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+    console.log = originalLog;
+    if (originalFalApiKey === undefined) {
+      delete process.env.FAL_API_KEY;
+    } else {
+      process.env.FAL_API_KEY = originalFalApiKey;
+    }
+    if (originalFalKey === undefined) {
+      delete process.env.FAL_KEY;
+    } else {
+      process.env.FAL_KEY = originalFalKey;
+    }
+  }
+});
+
+test("spaces fal catalog fetch requests by the configured interval", async () => {
+  const originalFetch = globalThis.fetch;
+  const originalLog = console.log;
+  const originalFalApiKey = process.env.FAL_API_KEY;
+  const originalFalKey = process.env.FAL_KEY;
+  const originalInterval = process.env.AI_STUDIO_FETCH_INTERVAL_MS;
+  const originalConcurrency = process.env.AI_STUDIO_FETCH_CONCURRENCY;
+  const requestedAt: number[] = [];
+
+  delete process.env.FAL_API_KEY;
+  delete process.env.FAL_KEY;
+  process.env.AI_STUDIO_FETCH_INTERVAL_MS = "25";
+  process.env.AI_STUDIO_FETCH_CONCURRENCY = "2";
+  console.log = () => {};
+  globalThis.fetch = (async (input: string | URL | Request) => {
+    const url = String(input);
+    requestedAt.push(Date.now());
+
+    if (url.includes("endpoint_id=bytedance%2Fseedance-2.0%2Ftext-to-video")) {
+      return Response.json({
+        models: [falOpenApiModelSample],
+      });
+    }
+
+    if (url.includes("endpoint_id=bytedance%2Fseedance-2.0%2Fimage-to-video")) {
+      return Response.json({
+        models: [
+          {
+            ...falOpenApiModelSample,
+            endpoint_id: "bytedance/seedance-2.0/image-to-video",
+          },
+        ],
+      });
+    }
+
+    throw new Error(`Unexpected fetch url: ${url}`);
+  }) as typeof globalThis.fetch;
+
+  try {
+    const catalog = await buildAiStudioFalCatalog({
+      version: 1,
+      models: [
+        "bytedance/seedance-2.0/text-to-video",
+        "bytedance/seedance-2.0/image-to-video",
+      ],
+    });
+
+    assert.equal(catalog.items.length, 2);
+    assert.equal(requestedAt.length, 2);
+    assert.ok(
+      (requestedAt[1] ?? 0) - (requestedAt[0] ?? 0) >= 20,
+      `expected second request to wait, got ${requestedAt[1]! - requestedAt[0]!}ms`,
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+    console.log = originalLog;
+    if (originalFalApiKey === undefined) {
+      delete process.env.FAL_API_KEY;
+    } else {
+      process.env.FAL_API_KEY = originalFalApiKey;
+    }
+    if (originalFalKey === undefined) {
+      delete process.env.FAL_KEY;
+    } else {
+      process.env.FAL_KEY = originalFalKey;
+    }
+    if (originalInterval === undefined) {
+      delete process.env.AI_STUDIO_FETCH_INTERVAL_MS;
+    } else {
+      process.env.AI_STUDIO_FETCH_INTERVAL_MS = originalInterval;
+    }
+    if (originalConcurrency === undefined) {
+      delete process.env.AI_STUDIO_FETCH_CONCURRENCY;
+    } else {
+      process.env.AI_STUDIO_FETCH_CONCURRENCY = originalConcurrency;
+    }
+  }
+});
+
+test("skips fal catalog models that fail to fetch", async () => {
+  const originalFetch = globalThis.fetch;
+  const originalLog = console.log;
+  const originalWarn = console.warn;
+  const originalFalApiKey = process.env.FAL_API_KEY;
+  const originalFalKey = process.env.FAL_KEY;
+  const originalInterval = process.env.AI_STUDIO_FETCH_INTERVAL_MS;
+  const requestedUrls: string[] = [];
+  const logs: unknown[][] = [];
+  const warnings: unknown[][] = [];
+
+  delete process.env.FAL_API_KEY;
+  delete process.env.FAL_KEY;
+  process.env.AI_STUDIO_FETCH_INTERVAL_MS = "1";
+  console.log = (...args: unknown[]) => {
+    logs.push(args);
+  };
+  console.warn = (...args: unknown[]) => {
+    warnings.push(args);
+  };
+  globalThis.fetch = (async (input: string | URL | Request) => {
+    const url = String(input);
+    requestedUrls.push(url);
+
+    if (url.includes("endpoint_id=bytedance%2Fseedance-2.0%2Ftext-to-video")) {
+      return Response.json({
+        models: [falOpenApiModelSample],
+      });
+    }
+
+    if (url.includes("endpoint_id=missing%2Fmodel")) {
+      return new Response("upstream unavailable", { status: 503 });
+    }
+
+    throw new Error(`Unexpected fetch url: ${url}`);
+  }) as typeof globalThis.fetch;
+
+  try {
+    const catalog = await buildAiStudioFalCatalog({
+      version: 1,
+      models: [
+        "bytedance/seedance-2.0/text-to-video",
+        "missing/model",
+      ],
+    });
+
+    assert.equal(catalog.items.length, 1);
+    assert.equal(catalog.items[0]?.id, "video:fal-bytedance-seedance-2-0-text-to-video");
+    assert.equal(requestedUrls.length, 2);
+    assert.ok(
+      logs.some((entry) =>
+        String(entry[0] ?? "").includes("连接: https://api.fal.ai/v1/models?") &&
+        String(entry[0] ?? "").includes("成功: 200"),
+      ),
+    );
+    assert.ok(
+      logs.some((entry) =>
+        String(entry[0] ?? "").includes("endpoint_id=missing%2Fmodel") &&
+        String(entry[0] ?? "").includes("失败: 503 upstream unavailable"),
+      ),
+    );
+    assert.match(String(warnings[0]?.[0] ?? ""), /Skipped 1 AI Studio fal catalog models/);
+    assert.match(String(warnings[1]?.[0] ?? ""), /missing\/model/);
+  } finally {
+    globalThis.fetch = originalFetch;
+    console.log = originalLog;
+    console.warn = originalWarn;
+    if (originalFalApiKey === undefined) {
+      delete process.env.FAL_API_KEY;
+    } else {
+      process.env.FAL_API_KEY = originalFalApiKey;
+    }
+    if (originalFalKey === undefined) {
+      delete process.env.FAL_KEY;
+    } else {
+      process.env.FAL_KEY = originalFalKey;
+    }
+    if (originalInterval === undefined) {
+      delete process.env.AI_STUDIO_FETCH_INTERVAL_MS;
+    } else {
+      process.env.AI_STUDIO_FETCH_INTERVAL_MS = originalInterval;
+    }
+  }
+});
+
+test("rejects fal catalog sync when most models fail to fetch", async () => {
+  const originalFetch = globalThis.fetch;
+  const originalWarn = console.warn;
+  const originalFalApiKey = process.env.FAL_API_KEY;
+  const originalFalKey = process.env.FAL_KEY;
+  const originalInterval = process.env.AI_STUDIO_FETCH_INTERVAL_MS;
+
+  delete process.env.FAL_API_KEY;
+  delete process.env.FAL_KEY;
+  process.env.AI_STUDIO_FETCH_INTERVAL_MS = "1";
+  console.warn = () => {};
+  globalThis.fetch = (async (input: string | URL | Request) => {
+    const url = String(input);
+
+    if (url.includes("endpoint_id=bytedance%2Fseedance-2.0%2Ftext-to-video")) {
+      return Response.json({
+        models: [falOpenApiModelSample],
+      });
+    }
+
+    if (
+      url.includes("endpoint_id=missing%2Fmodel-a") ||
+      url.includes("endpoint_id=missing%2Fmodel-b")
+    ) {
+      return new Response("rate limited", { status: 429 });
+    }
+
+    throw new Error(`Unexpected fetch url: ${url}`);
+  }) as typeof globalThis.fetch;
+
+  try {
+    await assert.rejects(
+      () => buildAiStudioFalCatalog({
+        version: 1,
+        models: [
+          "bytedance/seedance-2.0/text-to-video",
+          "missing/model-a",
+          "missing/model-b",
+        ],
+      }),
+      /2\/3 models failed to fetch/,
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+    console.warn = originalWarn;
+    if (originalFalApiKey === undefined) {
+      delete process.env.FAL_API_KEY;
+    } else {
+      process.env.FAL_API_KEY = originalFalApiKey;
+    }
+    if (originalFalKey === undefined) {
+      delete process.env.FAL_KEY;
+    } else {
+      process.env.FAL_KEY = originalFalKey;
+    }
+    if (originalInterval === undefined) {
+      delete process.env.AI_STUDIO_FETCH_INTERVAL_MS;
+    } else {
+      process.env.AI_STUDIO_FETCH_INTERVAL_MS = originalInterval;
+    }
+  }
 });
 
 test("parses enum-backed model options from a music doc", () => {
@@ -233,7 +900,7 @@ test("parses apimart llms-full sections into model catalog details", () => {
   assert.equal(catalog.items.length, 2);
   assert.deepEqual(
     catalog.items.map((item) => item.id),
-    ["video:fal-sora-2", "video:fal-sora-2-pro"],
+    ["video:ama-sora-2", "video:ama-sora-2-pro"],
   );
   assert.equal(catalog.items[0]?.vendor, "apimart");
   assert.equal(catalog.items[0]?.endpoint, "/v1/videos/generations");
@@ -262,7 +929,7 @@ test("parses apimart llms index and markdown docs with body fields", () => {
   );
 
   assert.equal(details.length, 1);
-  assert.equal(details[0]?.id, "image:fal-gpt-image-2");
+  assert.equal(details[0]?.id, "image:ama-gpt-image-2");
   assert.equal(
     details[0]?.docUrl,
     "https://docs.apimart.ai/en/api-reference/images/gpt-image-2/generation",
@@ -470,7 +1137,6 @@ test("finds canonical bytedance entries from legacy slash-style public ids", () 
         title: "Bytedance - V1 Pro Text to Video",
         provider: "Bytedance",
         docUrl: "https://docs.kie.ai/market/bytedance/v1-pro-text-to-video.md",
-        pricingRows: [],
       },
     ],
     "video:bytedance/v1-pro-text-to-video",

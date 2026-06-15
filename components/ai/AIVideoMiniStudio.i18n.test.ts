@@ -16,8 +16,6 @@ test("mini studio reads shared AI Studio form copy through common translations",
   assert.match(source, /t\("form\.generationCompleted"\)/);
   assert.match(source, /t\("form\.replace"\)/);
   assert.match(source, /t\("form\.reference"\)/);
-  assert.doesNotMatch(source, /getSeedancePricingExplanation/);
-  assert.doesNotMatch(source, /pricingExplanation/);
 });
 
 test("mini studio groups model versions under non-selectable family labels", () => {

@@ -7,11 +7,12 @@ import test from "node:test";
 import {
   applyAiStudioSystemFields,
   clearAiStudioTaskStatusCacheForTests,
-  estimatePricingRow,
   extractResultArtifacts,
   extractMediaUrls,
   extractProviderFailureReason,
   extractTaskId,
+  getAiStudioApiBaseUrl,
+  getAiStudioApiKey,
   getCanonicalAiStudioModelId,
   mapPublicModelAliasToProviderModel,
   normalizeTaskState,
@@ -21,6 +22,277 @@ import {
   resolveStatusEndpoint,
   submitAiStudioExecution,
 } from "@/lib/ai-studio/execute";
+
+test("resolves fal vendor api key and base url", () => {
+  const originalFalApiKey = process.env.FAL_API_KEY;
+  process.env.FAL_API_KEY = "fal-test-key";
+
+  try {
+    assert.equal(getAiStudioApiKey("fal"), "fal-test-key");
+    assert.equal(getAiStudioApiBaseUrl("fal"), "https://queue.fal.run");
+  } finally {
+    if (originalFalApiKey === undefined) {
+      delete process.env.FAL_API_KEY;
+    } else {
+      process.env.FAL_API_KEY = originalFalApiKey;
+    }
+  }
+});
+
+test("submits fal executions with queue key auth and extracts request ids", async () => {
+  const originalFetch = global.fetch;
+  const originalFalApiKey = process.env.FAL_API_KEY;
+  process.env.FAL_API_KEY = "fal-test-key";
+
+  let requestUrl = "";
+  let authHeader = "";
+  global.fetch = async (input, init) => {
+    requestUrl = String(input);
+    authHeader = String(new Headers(init?.headers).get("authorization"));
+
+    return new Response(
+      JSON.stringify({
+        request_id: "fal_request_123",
+        status: "IN_QUEUE",
+      }),
+      {
+        status: 200,
+        headers: {
+          "content-type": "application/json",
+        },
+      },
+    ) as Response;
+  };
+
+  const result = await submitAiStudioExecution(
+    {
+      id: "video:fal-seedance-2-text-to-video",
+      vendor: "fal",
+      category: "video",
+      title: "Seedance 2.0 Text to Video",
+      docUrl: "https://fal.ai/models/bytedance/seedance-2.0/text-to-video/api",
+      provider: "ByteDance",
+      endpoint: "/fal-ai/seedance-2/text-to-video",
+      statusEndpoint: "/fal-ai/seedance-2/text-to-video/requests/{request_id}/status",
+      method: "POST",
+      modelKeys: ["bytedance/seedance-2.0/text-to-video"],
+      requestSchema: null,
+      examplePayload: {},
+    },
+    {
+      prompt: "hello",
+    },
+  );
+
+  assert.equal(requestUrl, "https://queue.fal.run/fal-ai/seedance-2/text-to-video");
+  assert.equal(authHeader, "Key fal-test-key");
+  assert.equal(result.taskId, "fal_request_123");
+  assert.equal(result.statusMode, "poll");
+
+  global.fetch = originalFetch;
+  if (originalFalApiKey === undefined) {
+    delete process.env.FAL_API_KEY;
+  } else {
+    process.env.FAL_API_KEY = originalFalApiKey;
+  }
+});
+
+test("queries fal task status using request_id path templates", async () => {
+  clearAiStudioTaskStatusCacheForTests();
+  const originalFetch = global.fetch;
+  const originalFalApiKey = process.env.FAL_API_KEY;
+  const originalRuntimeCatalogPath = process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
+  process.env.FAL_API_KEY = "fal-test-key";
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), "ai-studio-fal-runtime-"));
+  const runtimePath = path.join(tempDir, "catalog.json");
+
+  await writeFile(
+    runtimePath,
+    JSON.stringify({
+      version: 1,
+      generatedAt: "2026-06-15T00:00:00.000Z",
+      items: [
+        {
+          id: "video:fal-seedance-2-text-to-video",
+          vendor: "fal",
+          category: "video",
+          title: "Seedance 2.0 Text to Video",
+          docUrl: "https://fal.ai/models/bytedance/seedance-2.0/text-to-video/api",
+          provider: "ByteDance",
+          endpoint: "/fal-ai/seedance-2/text-to-video",
+          statusEndpoint: "/fal-ai/seedance-2/text-to-video/requests/{request_id}/status",
+          method: "POST",
+          modelKeys: ["bytedance/seedance-2.0/text-to-video"],
+          requestSchema: null,
+          examplePayload: {},
+        },
+      ],
+    }),
+    "utf8",
+  );
+  process.env.AI_STUDIO_RUNTIME_CATALOG_PATH = runtimePath;
+
+  const requestUrls: string[] = [];
+  const authHeaders: string[] = [];
+  global.fetch = async (input, init) => {
+    const requestUrl = String(input);
+    requestUrls.push(requestUrl);
+    authHeaders.push(String(new Headers(init?.headers).get("authorization")));
+
+    if (requestUrl.endsWith("/status")) {
+      return new Response(
+        JSON.stringify({
+          request_id: "fal_request_123",
+          status: "COMPLETED",
+        }),
+        {
+          status: 200,
+          headers: {
+            "content-type": "application/json",
+          },
+        },
+      ) as Response;
+    }
+
+    return new Response(
+      JSON.stringify({
+        video: {
+          url: "https://v3.fal.media/files/final.mp4",
+        },
+      }),
+      {
+        status: 200,
+        headers: {
+          "content-type": "application/json",
+        },
+      },
+    ) as Response;
+  };
+
+  const result = await queryAiStudioTask(
+    "video:fal-seedance-2-text-to-video",
+    "fal_request_123",
+  );
+
+  assert.deepEqual(requestUrls, [
+    "https://queue.fal.run/fal-ai/seedance-2/text-to-video/requests/fal_request_123/status",
+    "https://queue.fal.run/fal-ai/seedance-2/text-to-video/requests/fal_request_123",
+  ]);
+  assert.deepEqual(authHeaders, ["Key fal-test-key", "Key fal-test-key"]);
+  assert.equal(result.state, "succeeded");
+  assert.deepEqual(result.mediaUrls, ["https://v3.fal.media/files/final.mp4"]);
+
+  global.fetch = originalFetch;
+  clearAiStudioTaskStatusCacheForTests();
+  if (originalFalApiKey === undefined) {
+    delete process.env.FAL_API_KEY;
+  } else {
+    process.env.FAL_API_KEY = originalFalApiKey;
+  }
+  if (originalRuntimeCatalogPath === undefined) {
+    delete process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
+  } else {
+    process.env.AI_STUDIO_RUNTIME_CATALOG_PATH = originalRuntimeCatalogPath;
+  }
+  await rm(tempDir, { recursive: true, force: true });
+});
+
+test("returns failed state when fal result query returns provider validation detail", async () => {
+  clearAiStudioTaskStatusCacheForTests();
+  const originalFetch = global.fetch;
+  const originalFalApiKey = process.env.FAL_API_KEY;
+  const originalRuntimeCatalogPath = process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
+  process.env.FAL_API_KEY = "fal-test-key";
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), "ai-studio-fal-failed-result-"));
+  const runtimePath = path.join(tempDir, "catalog.json");
+
+  await writeFile(
+    runtimePath,
+    JSON.stringify({
+      version: 1,
+      generatedAt: "2026-06-23T00:00:00.000Z",
+      items: [
+        {
+          id: "image:fal-openai-gpt-image-2",
+          vendor: "fal",
+          category: "image",
+          title: "GPT Image 2",
+          docUrl: "https://fal.ai/models/fal-ai/gpt-image-2/api",
+          provider: "OpenAI",
+          endpoint: "/fal-ai/gpt-image-2",
+          statusEndpoint: "/fal-ai/gpt-image-2/requests/{request_id}/status",
+          method: "POST",
+          modelKeys: ["fal-ai/gpt-image-2"],
+          requestSchema: null,
+          examplePayload: {},
+        },
+      ],
+    }),
+    "utf8",
+  );
+  process.env.AI_STUDIO_RUNTIME_CATALOG_PATH = runtimePath;
+
+  global.fetch = async (input) => {
+    const requestUrl = String(input);
+    if (requestUrl.endsWith("/status")) {
+      return new Response(
+        JSON.stringify({
+          request_id: "fal_request_failed",
+          status: "COMPLETED",
+        }),
+        {
+          status: 200,
+          headers: {
+            "content-type": "application/json",
+          },
+        },
+      ) as Response;
+    }
+
+    return new Response(
+      JSON.stringify({
+        detail: [
+          {
+            loc: ["body", "prompt"],
+            msg: "The content could not be processed because it contained material flagged by a content checker.",
+            type: "content_policy_violation",
+          },
+        ],
+      }),
+      {
+        status: 422,
+        headers: {
+          "content-type": "application/json",
+        },
+      },
+    ) as Response;
+  };
+
+  const result = await queryAiStudioTask(
+    "image:fal-openai-gpt-image-2",
+    "fal_request_failed",
+  );
+
+  assert.equal(result.state, "failed");
+  assert.equal(
+    extractProviderFailureReason(result.raw),
+    "The content could not be processed because it contained material flagged by a content checker.",
+  );
+
+  global.fetch = originalFetch;
+  clearAiStudioTaskStatusCacheForTests();
+  if (originalFalApiKey === undefined) {
+    delete process.env.FAL_API_KEY;
+  } else {
+    process.env.FAL_API_KEY = originalFalApiKey;
+  }
+  if (originalRuntimeCatalogPath === undefined) {
+    delete process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
+  } else {
+    process.env.AI_STUDIO_RUNTIME_CATALOG_PATH = originalRuntimeCatalogPath;
+  }
+  await rm(tempDir, { recursive: true, force: true });
+});
 
 test("maps official doc urls to the expected status endpoints", () => {
   assert.equal(
@@ -35,7 +307,6 @@ test("maps official doc urls to the expected status endpoints", () => {
       modelKeys: ["google/nano-banana-2"],
       requestSchema: null,
       examplePayload: {},
-      pricingRows: [],
     }),
     "/api/v1/jobs/recordInfo",
   );
@@ -52,7 +323,6 @@ test("maps official doc urls to the expected status endpoints", () => {
       modelKeys: ["V5"],
       requestSchema: null,
       examplePayload: {},
-      pricingRows: [],
     }),
     "/api/v1/generate/record-info",
   );
@@ -80,6 +350,44 @@ test("extracts media urls from nested JSON strings like resultJson", () => {
     }),
     [
       "https://tempfile.aiquickdraw.com/r/097ff77ea1f25d348da62d0de2c453ab_1773029425_n07jf415.mp4",
+    ],
+  );
+});
+
+test("excludes fal queue control urls from extracted media urls", () => {
+  assert.deepEqual(
+    extractMediaUrls({
+      status: "IN_PROGRESS",
+      request_id: "019ef3ca-bf2e-71b2-b3b6-79a8bca90752",
+      response_url:
+        "https://queue.fal.run/fal-ai/gpt-image-2/requests/019ef3ca-bf2e-71b2-b3b6-79a8bca90752",
+      status_url:
+        "https://queue.fal.run/fal-ai/gpt-image-2/requests/019ef3ca-bf2e-71b2-b3b6-79a8bca90752/status",
+      cancel_url:
+        "https://queue.fal.run/fal-ai/gpt-image-2/requests/019ef3ca-bf2e-71b2-b3b6-79a8bca90752/cancel",
+      logs: null,
+      metrics: {},
+    }),
+    [],
+  );
+});
+
+test("extracts only common media file urls from result containers", () => {
+  assert.deepEqual(
+    extractMediaUrls({
+      result: {
+        documentation: "https://docs.fal.ai/errors#content_policy_violation",
+        page: "https://example.com/generated/result",
+        text: "https://cdn.example.com/generated/readme.txt",
+        image: "https://cdn.example.com/generated/final.PNG?download=1",
+        video: "https://cdn.example.com/generated/final.mp4#preview",
+        audio: "https://cdn.example.com/generated/final.MP3",
+      },
+    }),
+    [
+      "https://cdn.example.com/generated/final.PNG?download=1",
+      "https://cdn.example.com/generated/final.mp4#preview",
+      "https://cdn.example.com/generated/final.MP3",
     ],
   );
 });
@@ -153,6 +461,25 @@ test("prefers nested failMsg over top-level success messages for failed tasks", 
   assert.equal(normalizeTaskState(raw), "failed");
 });
 
+test("extracts fal validation detail messages as provider failure reasons", () => {
+  const raw = {
+    detail: [
+      {
+        loc: ["body", "prompt"],
+        msg: "The content could not be processed because it contained material flagged by a content checker.",
+        type: "content_policy_violation",
+        url: "https://docs.fal.ai/errors#content_policy_violation",
+      },
+    ],
+  };
+
+  assert.equal(
+    extractProviderFailureReason(raw),
+    "The content could not be processed because it contained material flagged by a content checker.",
+  );
+  assert.equal(normalizeTaskState(raw), "failed");
+});
+
 test("treats provider business errors in 200 responses as execution failures", async () => {
   const originalFetch = global.fetch;
   process.env.KIE_API_KEY = "test-key";
@@ -185,7 +512,6 @@ test("treats provider business errors in 200 responses as execution failures", a
         modelKeys: ["sora-2-text-to-video"],
         requestSchema: null,
         examplePayload: {},
-        pricingRows: [],
       },
       {
         model: "sora-2-text-to-video",
@@ -246,7 +572,6 @@ test("serializes GET execution payloads into query params", async () => {
         },
       },
       examplePayload: {},
-      pricingRows: [],
     },
     {
       taskId: "veo_task_abcdef123456",
@@ -287,7 +612,6 @@ test("injects configured callback fields into request payloads", () => {
         },
       },
       examplePayload: {},
-      pricingRows: [],
     },
     {
       prompt: "hello",
@@ -338,7 +662,6 @@ test("returns a normalized status mode for async kie executions", async () => {
         },
       },
       examplePayload: {},
-      pricingRows: [],
     },
     {
       model: "google/nano-banana-2",
@@ -365,7 +688,6 @@ test("returns a normalized status mode for async kie executions", async () => {
         },
       },
       examplePayload: {},
-      pricingRows: [],
     }),
     "poll",
   );
@@ -393,7 +715,6 @@ test("does not advertise callback capability when schema has no callback field",
         },
       },
       examplePayload: {},
-      pricingRows: [],
     }),
     "poll",
   );
@@ -417,7 +738,6 @@ test("does not advertise callback capability when schema has no callback field",
         },
       },
       examplePayload: {},
-      pricingRows: [],
     },
     {
       prompt: "hello",
@@ -431,7 +751,7 @@ test("does not advertise callback capability when schema has no callback field",
 test("does not inject legacy kie callback fallback for apimart models", () => {
   const body = applyAiStudioSystemFields(
     {
-      id: "video:fal-seedance-2-0",
+      id: "video:ama-seedance-2-0",
       vendor: "apimart",
       category: "video",
       title: "Seedance 2.0",
@@ -450,7 +770,6 @@ test("does not inject legacy kie callback fallback for apimart models", () => {
         },
       },
       examplePayload: {},
-      pricingRows: [],
     },
     {
       prompt: "hello",
@@ -492,7 +811,7 @@ test("submits apimart executions against the apimart base url and extracts task 
 
   const result = await submitAiStudioExecution(
     {
-      id: "video:fal-seedance-2-0",
+      id: "video:ama-seedance-2-0",
       vendor: "apimart",
       category: "video",
       title: "Seedance 2.0",
@@ -511,7 +830,6 @@ test("submits apimart executions against the apimart base url and extracts task 
         },
       },
       examplePayload: {},
-      pricingRows: [],
     },
     {
       model: "doubao-seedance-2.0",
@@ -541,7 +859,7 @@ test("queries apimart task status using the task path template", async () => {
       generatedAt: "2026-03-08T00:00:00.000Z",
       items: [
         {
-          id: "video:fal-seedance-2-0",
+          id: "video:ama-seedance-2-0",
           vendor: "apimart",
           category: "video",
           title: "Seedance 2.0",
@@ -553,7 +871,6 @@ test("queries apimart task status using the task path template", async () => {
           modelKeys: ["doubao-seedance-2.0"],
           requestSchema: null,
           examplePayload: {},
-          pricingRows: [],
         },
       ],
     }),
@@ -593,7 +910,7 @@ test("queries apimart task status using the task path template", async () => {
   };
 
   const result = await queryAiStudioTask(
-    "video:fal-seedance-2-0",
+    "video:ama-seedance-2-0",
     "task_apimart_123",
   );
 
@@ -632,7 +949,7 @@ test("deduplicates concurrent task status queries for the same task", async () =
       generatedAt: "2026-04-29T00:00:00.000Z",
       items: [
         {
-          id: "video:fal-seedance-2-0",
+          id: "video:ama-seedance-2-0",
           vendor: "apimart",
           category: "video",
           title: "Seedance 2.0",
@@ -644,7 +961,6 @@ test("deduplicates concurrent task status queries for the same task", async () =
           modelKeys: ["doubao-seedance-2.0"],
           requestSchema: null,
           examplePayload: {},
-          pricingRows: [],
         },
       ],
     }),
@@ -675,8 +991,8 @@ test("deduplicates concurrent task status queries for the same task", async () =
   };
 
   const [first, second] = await Promise.all([
-    queryAiStudioTask("video:fal-seedance-2-0", "task_apimart_123"),
-    queryAiStudioTask("video:fal-seedance-2-0", "task_apimart_123"),
+    queryAiStudioTask("video:ama-seedance-2-0", "task_apimart_123"),
+    queryAiStudioTask("video:ama-seedance-2-0", "task_apimart_123"),
   ]);
 
   assert.equal(fetchCount, 1);
@@ -705,7 +1021,7 @@ test("prepareAiStudioExecution applies dynamic official pricing for seedance 2.0
       generatedAt: "2026-04-12T00:00:00.000Z",
       items: [
         {
-          id: "video:fal-seedance-2-0",
+          id: "video:ama-seedance-2-0",
           alias: "seedance-2-0",
           vendor: "apimart",
           category: "video",
@@ -727,7 +1043,18 @@ test("prepareAiStudioExecution applies dynamic official pricing for seedance 2.0
           examplePayload: {
             model: "doubao-seedance-2.0",
           },
-          pricingRows: [],
+          pricing: {
+            docUrl: "https://docs.apimart.ai/en/api-reference/videos/doubao-seedance-2-0/generation",
+            price_txt: "720p with video costs 25 credits/s; 720p no video costs 41 credits/s.",
+            billing_adapter: "kie_seedance_2",
+            price_key: "{$resolution}|{$billing.has_video_input ? 'with_video':'no_video'}",
+            price_map: {
+              "720p|with_video": 25,
+              "720p|no_video": 41,
+            },
+            price_final:
+              "{$price}*({$billing.has_video_input ? ($billing.input_video_duration + $duration) : $duration})",
+          },
         },
       ],
     }),
@@ -747,14 +1074,13 @@ test("prepareAiStudioExecution applies dynamic official pricing for seedance 2.0
     },
   });
 
-  assert.equal(prepared.detail.id, "video:fal-seedance-2-0");
+  assert.equal(prepared.detail.id, "video:ama-seedance-2-0");
   assert.equal(prepared.body.model, "doubao-seedance-2.0");
   assert.equal("__local_reference_metadata" in prepared.body, false);
   assert.equal(prepared.selectedPricing?.creditPrice, "325");
-  assert.equal(prepared.selectedPricing?.usdPrice, "");
   assert.equal(
     prepared.selectedPricing?.modelDescription,
-    "Seedance 2.0, video-to-video, 720p, input 8s + output 5s",
+    "Seedance 2.0, 720p|with_video",
   );
 
   if (originalRuntimeCatalogPath === undefined) {
@@ -808,7 +1134,18 @@ test("prepareAiStudioExecution applies dynamic official pricing for kie seedance
             model: "bytedance/seedance-2",
             input: {},
           },
-          pricingRows: [],
+          pricing: {
+            docUrl: "https://docs.kie.ai/market/bytedance/seedance-2.md",
+            price_txt: "720p with video costs 25 credits/s; 720p no video costs 41 credits/s.",
+            billing_adapter: "kie_seedance_2",
+            price_key: "{$input.resolution}|{$billing.has_video_input ? 'with_video':'no_video'}",
+            price_map: {
+              "720p|with_video": 25,
+              "720p|no_video": 41,
+            },
+            price_final:
+              "{$price}*({$billing.has_video_input ? ($billing.input_video_duration + $input.duration) : $input.duration})",
+          },
         },
       ],
     }),
@@ -836,7 +1173,7 @@ test("prepareAiStudioExecution applies dynamic official pricing for kie seedance
   assert.equal(prepared.selectedPricing?.creditPrice, "325");
   assert.equal(
     prepared.selectedPricing?.modelDescription,
-    "Seedance 2.0 VIP, video-to-video, 720p, input 8s + output 5s",
+    "Seedance 2.0 VIP, 720p|with_video",
   );
 
   if (originalRuntimeCatalogPath === undefined) {
@@ -845,133 +1182,6 @@ test("prepareAiStudioExecution applies dynamic official pricing for kie seedance
     process.env.AI_STUDIO_RUNTIME_CATALOG_PATH = originalRuntimeCatalogPath;
   }
   await rm(tempDir, { recursive: true, force: true });
-});
-
-test("estimates the best pricing row from the active payload", () => {
-  const row = estimatePricingRow(
-    [
-      {
-        modelDescription: "Google nano banana 2, 1K",
-        interfaceType: "image",
-        provider: "Google",
-        creditPrice: "8",
-        creditUnit: "per image",
-        usdPrice: "0.04",
-        falPrice: "0.08",
-        discountRate: 50,
-        anchor: "https://kie.ai/nano-banana-2",
-        discountPrice: false,
-        resolution: "1k",
-      },
-      {
-        modelDescription: "Google nano banana 2, 4K",
-        interfaceType: "image",
-        provider: "Google",
-        creditPrice: "18",
-        creditUnit: "per image",
-        usdPrice: "0.09",
-        falPrice: "0.16",
-        discountRate: 43.75,
-        anchor: "https://kie.ai/nano-banana-2",
-        discountPrice: false,
-        resolution: "4k",
-      },
-    ],
-    {
-      model: "google/nano-banana-2",
-      input: {
-        prompt: "A cinematic portrait",
-        resolution: "4K",
-      },
-    },
-  );
-
-  assert.equal(row?.creditPrice, "18");
-});
-
-test("prefers the exact anchor model when multiple pricing rows share similar tokens", () => {
-  const row = estimatePricingRow(
-    [
-      {
-        modelDescription: "Open AI sora 2, text-to-video, stable-10.0s",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "35",
-        creditUnit: "per video",
-        usdPrice: "0.175",
-        falPrice: "1.0",
-        discountRate: 82.5,
-        anchor: "https://kie.ai/sora-2?model=sora-2-text-to-video-stable",
-        discountPrice: false,
-        duration: 10,
-      },
-      {
-        modelDescription: "Open AI sora 2, text-to-video, Standard-10.0s",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "30",
-        creditUnit: "per video",
-        usdPrice: "0.15",
-        falPrice: "1.0",
-        discountRate: 85,
-        anchor: "https://kie.ai/sora-2?model=sora-2-text-to-video",
-        discountPrice: false,
-        duration: 10,
-      },
-    ],
-    {
-      model: "sora-2-text-to-video",
-      input: {
-        n_frames: "10",
-      },
-    },
-  );
-
-  assert.equal(row?.creditPrice, "30");
-});
-
-test("prefers the row matching input n_frames over unrelated digits in payload urls", () => {
-  const row = estimatePricingRow(
-    [
-      {
-        modelDescription: "Open AI sora 2, image-to-video, Standard-15.0s",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "35",
-        creditUnit: "per video",
-        usdPrice: "0.175",
-        falPrice: "1.5",
-        discountRate: 88.33,
-        anchor: "https://kie.ai/sora-2?model=sora-2-image-to-video",
-        discountPrice: false,
-        duration: 15,
-      },
-      {
-        modelDescription: "Open AI sora 2, image-to-video, Standard-10.0s",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "30",
-        creditUnit: "per video",
-        usdPrice: "0.15",
-        falPrice: "1.0",
-        discountRate: 85,
-        anchor: "https://kie.ai/sora-2?model=sora-2-image-to-video",
-        discountPrice: false,
-        duration: 10,
-      },
-    ],
-    {
-      model: "sora-2-image-to-video",
-      input: {
-        n_frames: "10",
-        image_urls: [
-          "https://example.com/uploads/frame_15_reference.png",
-        ],
-      },
-    },
-  );
-
-  assert.equal(row?.creditPrice, "30");
 });
 
 test("maps public model aliases back to provider model names before execution", () => {

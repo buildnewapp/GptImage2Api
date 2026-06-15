@@ -16,7 +16,6 @@ import {
 import {
   getPublicAiStudioModelId,
   sanitizeAiStudioDebugValue,
-  toPublicPricingRow,
 } from "@/lib/ai-studio/public";
 import {
   canAccessAiStudioModel,
@@ -161,9 +160,7 @@ export async function POST(request: Request) {
       taskId: result.taskId,
       state: "queued",
       raw: sanitizeAiStudioDebugValue(result.raw),
-      selectedPricing: prepared.selectedPricing
-        ? toPublicPricingRow(prepared.selectedPricing, prepared.detail)
-        : null,
+      selectedPricing: prepared.selectedPricing,
     });
   } catch (error: any) {
     const status = typeof error?.status === "number" ? error.status : 500;

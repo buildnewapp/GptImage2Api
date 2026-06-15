@@ -55,6 +55,8 @@ type AIVideoStudioFieldsProps = {
 type AiVideoStudioSpecialFieldKey =
   | "prompt"
   | "size"
+  | "imageSize"
+  | "quality"
   | "resolution"
   | "aspectRatio"
   | "duration"
@@ -169,11 +171,17 @@ function resolveSpecialFieldKey(
       return "resolution";
     }
 
+    if (token === "imagesize") {
+      return "imageSize";
+    }
+
+    if (token === "quality") {
+      return "quality";
+    }
+
     if (
       token === "size" ||
-      token === "imagesize" ||
-      token === "videosize" ||
-      token === "quality"
+      token === "videosize"
     ) {
       return resolveSizeFieldMeaning(field.schema);
     }
@@ -229,7 +237,7 @@ function renderSpecialFieldIcon(
     return <Link2 className="size-4" />;
   }
 
-  if (key === "size") {
+  if (key === "size" || key === "imageSize" || key === "quality") {
     return <SlidersHorizontal className="size-4" />;
   }
 

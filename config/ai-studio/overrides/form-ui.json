@@ -1,6 +1,6 @@
 {
   "models": {
-    "video:fal-seedance-2-0": {
+    "video:ama-seedance-2-0": {
       "advancedFields": [
         "audio_urls",
         "image_with_roles",
@@ -10,7 +10,7 @@
         "generate_audio"
       ]
     },
-    "video:fal-seedance-2-0-fast": {
+    "video:ama-seedance-2-0-fast": {
       "advancedFields": [
         "audio_urls",
         "image_with_roles",

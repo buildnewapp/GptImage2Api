@@ -91,7 +91,7 @@
 ```json
 {
   "models": {
-    "video:fal-seedance-2-0": {
+    "video:ama-seedance-2-0": {
       "alias": "seedance-2-0"
     }
   }
@@ -453,26 +453,6 @@ tags: [{ text: "HOT", type: "hot" }]
 
 保持一致。
 
-#### `versions[].aliases`
-
-- 可选
-- 用于兼容旧 id 或第三方别名
-- 在“通过已有任务反查选中项”时会参与匹配
-
-比如当前 `Seedance 2.0`：
-
-```ts
-{
-  key: "seedance-2.0",
-  label: "Seedance 2.0",
-  familyKey: "seedance-2.0",
-  modelId: "video:seedance-2-0",
-  aliases: ["video:fal-seedance-2-0"],
-}
-```
-
-这样历史数据里如果存的是 `video:fal-seedance-2-0`，前台仍然能正确恢复到 `seedance-2.0` 这个版本。
-
 ### 2.6 这些配置在代码里怎么用
 
 #### `listAiVideoStudioModelOptions()`
@@ -491,8 +471,8 @@ tags: [{ text: "HOT", type: "hot" }]
 #### `getAiVideoStudioSelectionFromModelId()`
 
 - 反向把 `modelId` 解析成 `familyKey + versionKey`
-- 会同时匹配 `modelId` 和 `aliases`
-- 主要用于历史任务回填、编辑已有任务、兼容旧数据
+- 只匹配当前配置里的 `modelId`
+- 主要用于历史任务回填、编辑已有任务
 
 #### `getAiVideoStudioVersions()`
 
@@ -506,7 +486,6 @@ tags: [{ text: "HOT", type: "hot" }]
 2. 如果上游是一个接口对应多个变体，用 `splitModels`
 3. 再到 `config/ai-video-studio.ts` 里把它挂到某个 family，或者新增一个 family
 4. `versions[].modelId` 指向上一步产出的模型 id
-5. 如果要兼容旧 id，再补 `aliases`
 
 ### 2.8 什么时候只改 `models.json`，什么时候两个文件都改
 

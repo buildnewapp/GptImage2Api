@@ -1,5 +1,5 @@
-import type { AiStudioPublicPricingRow } from "@/lib/ai-studio/public";
 import {
+  type AiStudioDynamicPricingConfig,
   getEstimatedCreditsForPricing,
   resolveSelectedPricing,
 } from "@/lib/ai-studio/runtime";
@@ -188,29 +188,27 @@ export function coerceAiVideoMiniStudioFieldValue(
 
 export function estimateAiVideoMiniStudioCredits(input: {
   modelId: string | null;
-  pricingRows: AiStudioPublicPricingRow[];
   payload: Record<string, any> | null;
-  pricing?: {
-    selectors?: {
-      resolution?: string[];
-      duration?: string[];
-      audio?: string[];
-      aspectRatio?: string[];
-    };
-  } | null;
+  pricing?: AiStudioDynamicPricingConfig | null;
+  title?: string | null;
+  provider?: string | null;
+  category?: string | null;
 }) {
   const selectedPricing =
     input.payload && input.modelId
-      ? resolveSelectedPricing(input.pricingRows, {
+      ? resolveSelectedPricing({
           modelId: input.modelId,
           payload: input.payload,
           pricing: input.pricing,
+          title: input.title ?? undefined,
+          provider: input.provider ?? undefined,
+          category: input.category ?? undefined,
         })
       : null;
 
   return {
     selectedPricing,
-    estimatedCredits: getEstimatedCreditsForPricing(selectedPricing, input.payload),
+    estimatedCredits: getEstimatedCreditsForPricing(selectedPricing),
   };
 }
 

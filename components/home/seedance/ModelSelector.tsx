@@ -124,7 +124,7 @@ export function ModelSelector({
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.98 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
-                className="absolute top-full left-0 right-0 mt-2 z-50 bg-white backdrop-blur-md rounded-2xl border border-border/50 shadow-xl overflow-hidden max-h-[400px] flex flex-col"
+                className="absolute top-full left-0 right-0 mt-2 z-50 flex max-h-[400px] flex-col overflow-hidden rounded-2xl border border-border/50 bg-popover/95 text-popover-foreground shadow-xl backdrop-blur-md"
               >
                 <div className="overflow-y-auto p-2 scrollbar-hide">
                   {models.map((model) => (
