@@ -26,7 +26,7 @@ function getTaskStatusLabel(
   texts: AIVideoMiniStudioTaskHistoryTexts,
 ) {
   if (task.state === "failed") {
-    return texts.failed;
+    return task.failureReason || texts.failed;
   }
 
   if (task.state === "succeeded") {
@@ -42,6 +42,10 @@ function getVersionLabel(task: AiVideoMiniStudioGenerationTask) {
       (version) => version.key === task.versionKey,
     )?.label ?? task.versionKey
   );
+}
+
+function isImageResource(url: string) {
+  return /\.(?:apng|avif|gif|jpe?g|png|webp)(?:[?#]|$)/i.test(url);
 }
 
 export default function AIVideoMiniStudioTaskHistory({
@@ -73,25 +77,23 @@ export default function AIVideoMiniStudioTaskHistory({
         {tasks.map((task, index) => {
           const previewUrl = task.mediaUrls[0] ?? null;
           const isActive = task.localId === activeTaskLocalId;
+          const cardClassName = cn(
+            "flex w-full flex-col items-start gap-3 rounded-[1.15rem] border p-3 text-left transition sm:flex-row",
+            isActive
+              ? "border-white/20 bg-white/10"
+              : "border-white/10 bg-black/10 hover:border-white/15 hover:bg-white/[0.08]",
+          );
 
-          return (
-            <button
-              key={task.localId}
-              data-ai-video-mini-studio-task={task.localId}
-              data-ai-video-mini-studio-open-videos={task.localId}
-              type="button"
-              title={texts.openVideos}
-              aria-label={texts.openVideos}
-              onClick={onOpenVideos}
-              className={cn(
-                "flex w-full flex-col items-start gap-3 rounded-[1.15rem] border p-3 text-left transition sm:flex-row",
-                isActive
-                  ? "border-white/20 bg-white/10"
-                  : "border-white/10 bg-black/10 hover:border-white/15 hover:bg-white/[0.08]",
-              )}
-            >
+          const content = (
+            <>
               <div className="flex h-16 w-full shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-black/35 sm:w-24">
-                {previewUrl ? (
+                {previewUrl && isImageResource(previewUrl) ? (
+                  <img
+                    src={previewUrl}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                ) : previewUrl ? (
                   <video
                     src={previewUrl}
                     className="h-full w-full object-cover"
@@ -164,6 +166,39 @@ export default function AIVideoMiniStudioTaskHistory({
                   </div>
                 ) : null}
               </div>
+            </>
+          );
+
+          if (previewUrl) {
+            return (
+              <a
+                key={task.localId}
+                href={previewUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-ai-video-mini-studio-task={task.localId}
+                data-ai-video-mini-studio-open-resource={task.localId}
+                title={texts.openVideos}
+                aria-label={texts.openVideos}
+                className={cardClassName}
+              >
+                {content}
+              </a>
+            );
+          }
+
+          return (
+            <button
+              key={task.localId}
+              data-ai-video-mini-studio-task={task.localId}
+              data-ai-video-mini-studio-open-videos={task.localId}
+              type="button"
+              title={texts.openVideos}
+              aria-label={texts.openVideos}
+              onClick={onOpenVideos}
+              className={cardClassName}
+            >
+              {content}
             </button>
           );
         })}

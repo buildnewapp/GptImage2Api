@@ -18,6 +18,7 @@ import {
   serializeAiVideoStudioStoredState,
   type AiVideoStudioFormValues,
 } from "@/lib/ai-video-studio/adapter";
+import { uploadReferenceFile } from "@/lib/ai-video-studio/reference-upload";
 import {
   coerceAiVideoMiniStudioFieldValue,
   getAiVideoMiniStudioFieldOptions,
@@ -30,7 +31,10 @@ import {
   resolveAiVideoMiniStudioTaskState,
   type AiVideoMiniStudioGenerationTask,
 } from "@/lib/ai-video-studio/mini-history";
-import { normalizeAiVideoStudioSchema } from "@/lib/ai-video-studio/schema";
+import {
+  mergeAiVideoStudioFormValues,
+  normalizeAiVideoStudioSchema,
+} from "@/lib/ai-video-studio/schema";
 import type {
   AiStudioPublicDocDetail,
   AiStudioPublicPricingRow,
@@ -73,6 +77,8 @@ type TaskResponse = {
   data: {
     state: string;
     mediaUrls: string[];
+    raw?: unknown;
+    reason?: string | null;
   };
   error?: string;
 };
@@ -127,52 +133,32 @@ function getImageValue(value: unknown) {
   return typeof value === "string" && value.length > 0 ? value : null;
 }
 
-function getEmptyFieldValue(fieldKey: string, schema: Record<string, any>) {
-  if (schema.type === "array") {
-    return [];
+function extractFailureReason(raw: unknown) {
+  if (!raw || typeof raw !== "object") {
+    return null;
   }
 
-  if (fieldKey === "prompt") {
-    return "";
-  }
+  const record = raw as Record<string, unknown>;
+  const data =
+    record.data && typeof record.data === "object"
+      ? (record.data as Record<string, unknown>)
+      : null;
 
-  return "";
-}
+  const candidates = [
+    data?.failMsg,
+    data?.errorMessage,
+    data?.message,
+    record.reason,
+    record.error,
+    record.message,
+  ];
 
-function getNormalizedFieldValue(
-  fieldKey: string,
-  previousValue: unknown,
-  schema: Record<string, any>,
-  defaultValue: unknown,
-) {
-  const enumOptions = Array.isArray(schema.enum)
-    ? schema.enum.filter((item: unknown): item is string => typeof item === "string")
-    : [];
-  const hasPreviousArray = Array.isArray(previousValue) && previousValue.length > 0;
-  const hasPreviousScalar =
-    previousValue !== undefined && previousValue !== null && previousValue !== "";
+  const match = candidates.find(
+    (value): value is string =>
+      typeof value === "string" && value.trim().length > 0,
+  );
 
-  if (enumOptions.length > 0) {
-    if (typeof previousValue === "string" && enumOptions.includes(previousValue)) {
-      return previousValue;
-    }
-
-    if (typeof defaultValue === "string" && enumOptions.includes(defaultValue)) {
-      return defaultValue;
-    }
-
-    return enumOptions[0] ?? getEmptyFieldValue(fieldKey, schema);
-  }
-
-  if (hasPreviousArray || hasPreviousScalar) {
-    return previousValue;
-  }
-
-  if (defaultValue !== undefined) {
-    return defaultValue;
-  }
-
-  return getEmptyFieldValue(fieldKey, schema);
+  return match?.trim() ?? null;
 }
 
 function formatDurationOptionLabel(fieldKey: string, value: string | number) {
@@ -181,15 +167,6 @@ function formatDurationOptionLabel(fieldKey: string, value: string | number) {
   }
 
   return value;
-}
-
-function readFileAsDataUrl(file: File) {
-  return new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as string);
-    reader.onerror = () => reject(new Error("Failed to read file"));
-    reader.readAsDataURL(file);
-  });
 }
 
 interface AIVideoMiniStudioProps {
@@ -332,20 +309,13 @@ export default function AIVideoMiniStudio({
       return;
     }
 
-    setFormValues((previous) => {
-      const next: AiVideoStudioFormValues = {};
-
-      for (const field of normalizedSchema.fields) {
-        next[field.key] = getNormalizedFieldValue(
-          field.key,
-          previous[field.key],
-          field.schema,
-          field.defaultValue,
-        );
-      }
-
-      return next;
-    });
+    setFormValues((previous) =>
+      mergeAiVideoStudioFormValues({
+        fields: normalizedSchema.fields,
+        defaults: normalizedSchema.defaults,
+        previousValues: previous,
+      }),
+    );
   }, [normalizedSchema]);
 
   useEffect(() => {
@@ -567,6 +537,7 @@ export default function AIVideoMiniStudio({
             updateGenerationTask(localId, {
               state: "succeeded",
               mediaUrls: json.data.mediaUrls,
+              failureReason: null,
               progress: 100,
             });
             setActiveTaskLocalId(localId);
@@ -577,12 +548,17 @@ export default function AIVideoMiniStudio({
           if (nextState === "failed") {
             shouldContinue = false;
             clearTaskPolling(localId);
+            const failureReason =
+              json.data.reason ||
+              extractFailureReason(json.data.raw) ||
+              t("form.generationFailed");
             updateGenerationTask(localId, {
               state: "failed",
               mediaUrls: json.data.mediaUrls,
+              failureReason,
               progress: 100,
             });
-            toast.error(t("form.generationFailed"));
+            toast.error(failureReason);
             return;
           }
 
@@ -627,20 +603,27 @@ export default function AIVideoMiniStudio({
         return;
       }
 
+      if (!session?.user) {
+        setIsLoginDialogOpen(true);
+        toast.error(t("form.loginRequired"));
+        event.target.value = "";
+        return;
+      }
+
       try {
         setIsUploadingImage(true);
-        const dataUrl = await readFileAsDataUrl(file);
+        const imageUrl = await uploadReferenceFile({ kind: "image", file });
         const nextValue =
-          primaryFields.imageField?.schema.type === "array" ? [dataUrl] : dataUrl;
+          primaryFields.imageField?.schema.type === "array" ? [imageUrl] : imageUrl;
         updateFormValue(primaryFields.imageField?.key ?? "image_urls", nextValue);
-      } catch {
-        toast.error(t("form.uploadFailed"));
+      } catch (error: any) {
+        toast.error(error?.message || t("form.uploadFailed"));
       } finally {
         setIsUploadingImage(false);
         event.target.value = "";
       }
     },
-    [primaryFields.imageField, t, updateFormValue],
+    [primaryFields.imageField, session?.user, t, updateFormValue],
   );
 
   const handleGenerate = useCallback(async () => {
@@ -707,11 +690,13 @@ export default function AIVideoMiniStudio({
       toast.success(t("form.generationQueued"));
       pollStatus(localTask.localId, json.data.taskId);
     } catch (error: any) {
+      const failureReason = error?.message || t("form.generationFailed");
       updateGenerationTask(localTask.localId, {
         state: "failed",
+        failureReason,
         progress: 100,
       });
-      toast.error(error?.message || t("form.generationFailed"));
+      toast.error(failureReason);
     } finally {
       setIsSubmitting(false);
     }
@@ -741,8 +726,9 @@ export default function AIVideoMiniStudio({
             <button
               data-ai-video-mini-studio-upload
               type="button"
+              disabled={isUploadingImage}
               onClick={() => fileInputRef.current?.click()}
-              className="group relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-[1.35rem] border border-white/12 bg-white/[0.05] text-white/70 transition hover:border-white/20 hover:bg-white/[0.08] sm:h-28 sm:w-28"
+              className="group relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-[1.35rem] border border-white/12 bg-white/[0.05] text-white/70 transition hover:border-white/20 hover:bg-white/[0.08] disabled:pointer-events-none disabled:opacity-70 sm:h-28 sm:w-28"
             >
               {currentImagePreview ? (
                 <>

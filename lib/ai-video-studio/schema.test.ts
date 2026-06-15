@@ -524,3 +524,41 @@ test("drops stale number values outside the supported range", () => {
     },
   );
 });
+
+test("wraps cached scalar string values for string array fields", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    requestSchema: {
+      type: "object",
+      properties: {
+        input: {
+          type: "object",
+          properties: {
+            image_urls: {
+              type: "array",
+              items: {
+                type: "string",
+              },
+            },
+          },
+          "x-apidog-orders": ["image_urls"],
+        },
+      },
+    },
+    examplePayload: {
+      input: {},
+    },
+  });
+
+  assert.deepEqual(
+    mergeAiVideoStudioFormValues({
+      fields: normalized.fields,
+      defaults: normalized.defaults,
+      previousValues: {
+        image_urls: "https://example.com/reference.png",
+      },
+    }),
+    {
+      image_urls: ["https://example.com/reference.png"],
+    },
+  );
+});
