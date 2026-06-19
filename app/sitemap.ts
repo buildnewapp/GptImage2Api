@@ -208,53 +208,58 @@ async function getServerEntries(): Promise<SitemapEntry[]> {
     return [];
   }
 
-  const db = getDb();
-  const serverPosts = await db
-    .select({
-      language: posts.language,
-      postType: posts.postType,
-      slug: posts.slug,
-      publishedAt: posts.publishedAt,
-      updatedAt: posts.updatedAt,
-      status: posts.status,
-      visibility: posts.visibility,
-    })
-    .from(posts)
-    .where(
-      and(
-        eq(posts.status, "published"),
-        eq(posts.visibility, "public"),
-        inArray(posts.postType, postTypes),
-        inArray(posts.language, LOCALES),
-      ),
-    );
-
-  return serverPosts
-    .filter((post) =>
-      shouldIncludeInSitemap({
-        status: post.status,
-        visibility: post.visibility,
-      }),
-    )
-    .map((post) => {
-      const config = post.postType
-        ? configByPostType.get(post.postType)
-        : undefined;
-      if (!config) return null;
-
-      const slugPart = normalizeSlug(post.slug, config.slugPrefixToTrim);
-      if (!slugPart) return null;
-
-      return createEntry(
-        buildLocalizedUrl(post.language, `${config.routeBase}/${slugPart}`),
-        {
-          lastModified: post.updatedAt || post.publishedAt || new Date(),
-          changeFrequency: config.changeFrequency,
-          priority: config.priority,
-        },
+  try {
+    const db = getDb();
+    const serverPosts = await db
+      .select({
+        language: posts.language,
+        postType: posts.postType,
+        slug: posts.slug,
+        publishedAt: posts.publishedAt,
+        updatedAt: posts.updatedAt,
+        status: posts.status,
+        visibility: posts.visibility,
+      })
+      .from(posts)
+      .where(
+        and(
+          eq(posts.status, "published"),
+          eq(posts.visibility, "public"),
+          inArray(posts.postType, postTypes),
+          inArray(posts.language, LOCALES),
+        ),
       );
-    })
-    .filter((entry): entry is SitemapEntry => Boolean(entry));
+
+    return serverPosts
+      .filter((post) =>
+        shouldIncludeInSitemap({
+          status: post.status,
+          visibility: post.visibility,
+        }),
+      )
+      .map((post) => {
+        const config = post.postType
+          ? configByPostType.get(post.postType)
+          : undefined;
+        if (!config) return null;
+
+        const slugPart = normalizeSlug(post.slug, config.slugPrefixToTrim);
+        if (!slugPart) return null;
+
+        return createEntry(
+          buildLocalizedUrl(post.language, `${config.routeBase}/${slugPart}`),
+          {
+            lastModified: post.updatedAt || post.publishedAt || new Date(),
+            changeFrequency: config.changeFrequency,
+            priority: config.priority,
+          },
+        );
+      })
+      .filter((entry): entry is SitemapEntry => Boolean(entry));
+  } catch (error) {
+    console.error("Failed to load server sitemap entries:", error);
+    return [];
+  }
 }
 
 async function getLocalEntries(): Promise<SitemapEntry[]> {
