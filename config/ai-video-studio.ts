@@ -916,6 +916,18 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         familyKey: "qwen2-image",
         modelId: "image:qwen2-image-edit",
       },
+      {
+        key: "qwen2-text-to-image-fal",
+        label: "Qwen2 - Text To Image FAL",
+        familyKey: "qwen2-image",
+        modelId: "image:fal-fal-ai-qwen-image-2-text-to-image",
+      },
+      {
+        key: "qwen2-image-edit-fal",
+        label: "Qwen2 - Image Edit FAL",
+        familyKey: "qwen2-image",
+        modelId: "image:fal-fal-ai-qwen-image-2-edit",
+      },
     ],
   },
   {

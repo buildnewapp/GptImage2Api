@@ -58,7 +58,7 @@ test("renders raw field labels without icon markup", () => {
   assert.doesNotMatch(html, /lucide-/);
 });
 
-test("renders schema descriptions as title attributes for regular field labels", () => {
+test("renders schema descriptions with shadcn tooltip triggers for regular field labels", () => {
   const html = renderToStaticMarkup(
     <AIVideoStudioFieldControl
       field={{
@@ -76,8 +76,9 @@ test("renders schema descriptions as title attributes for regular field labels",
     />,
   );
 
-  assert.match(html, /title="Whether to generate audio for the video\."/);
+  assert.match(html, /data-slot="tooltip-trigger"/);
   assert.match(html, /data-ai-video-studio-field-description-trigger="true"/);
+  assert.doesNotMatch(html, /title="Whether to generate audio for the video\."/);
 });
 
 test("renders string arrays as array editors driven by the items schema", () => {
@@ -144,8 +145,8 @@ test("renders object arrays with compact child fields based on item properties",
 
   assert.match(html, /data-ai-video-studio-array-field="shots"/);
   assert.match(html, /data-ai-video-studio-array-object="0"/);
-  assert.match(html, />prompt</);
-  assert.match(html, />duration</);
+  assert.match(html, />Prompt</);
+  assert.match(html, />Duration</);
   assert.match(html, /bg-foreground text-background/);
   assert.match(html, /text-\[13px\]/);
 });
@@ -203,8 +204,9 @@ test("renders multiline prompt counters when a max length is provided", () => {
 
   assert.match(html, /data-ai-video-studio-prompt-field/);
   assert.match(html, /<textarea/);
-  assert.match(html, /title="Describe the video scene\."/);
+  assert.match(html, /data-slot="tooltip-trigger"/);
   assert.match(html, /data-ai-video-studio-field-description-trigger="true"/);
+  assert.doesNotMatch(html, /title="Describe the video scene\."/);
   assert.match(html, /5\/1000/);
   assert.match(html, /h-\[120px\]/);
 });
@@ -234,8 +236,9 @@ test("renders image url arrays with the specialized reference field UI", () => {
 
   assert.match(html, /data-ai-video-studio-reference-field="image"/);
   assert.match(html, /data-ai-video-studio-reference-multiple="true"/);
-  assert.match(html, /title="Reference images for style guidance\."/);
+  assert.match(html, /data-slot="tooltip-trigger"/);
   assert.match(html, /data-ai-video-studio-field-description-trigger="true"/);
+  assert.doesNotMatch(html, /title="Reference images for style guidance\."/);
   assert.doesNotMatch(html, /0\/9/);
   assert.doesNotMatch(html, /Upload reference images, up to 9\./);
   assert.doesNotMatch(html, /text-2xl/);

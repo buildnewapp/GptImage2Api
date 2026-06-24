@@ -333,6 +333,164 @@ test("keeps fal image size string presets selected in image size controls", () =
   assert.doesNotMatch(html, /data-selected-value="__custom"/);
 });
 
+test("renders common image generation fields with custom controls", () => {
+  const html = renderToStaticMarkup(
+    <AIVideoStudioFields
+      primaryFields={[
+        {
+          key: "negative_prompt",
+          path: ["negative_prompt"],
+          label: "negative_prompt",
+          kind: "text",
+          required: false,
+          schema: {
+            type: "string",
+          },
+          defaultValue: "",
+        },
+        {
+          key: "num_images",
+          path: ["num_images"],
+          label: "num_images",
+          kind: "number",
+          required: false,
+          schema: {
+            type: "integer",
+            minimum: 1,
+            maximum: 4,
+          },
+          defaultValue: 1,
+        },
+        {
+          key: "output_format",
+          path: ["output_format"],
+          label: "output_format",
+          kind: "enum",
+          required: false,
+          schema: {
+            type: "string",
+            enum: ["png", "jpeg", "webp"],
+          },
+          defaultValue: "png",
+        },
+      ]}
+      advancedFields={[]}
+      values={{
+        negative_prompt: "blurry",
+        num_images: 2,
+        output_format: "webp",
+      }}
+      isPublic
+      localizedFieldLabels={{
+        negativePrompt: "Negative Prompt",
+        numImages: "Num Images",
+        outputFormat: "Output Format",
+      }}
+      onChange={() => {}}
+      onPublicChange={() => {}}
+    />,
+  );
+
+  assert.match(html, /data-ai-video-studio-negative-prompt-field="negative_prompt"/);
+  assert.match(html, /data-ai-video-studio-num-images-field="num_images"/);
+  assert.match(html, /data-ai-video-studio-output-format-field="output_format"/);
+  assert.match(html, />Negative Prompt</);
+  assert.match(html, />Num Images</);
+  assert.match(html, />Output Format</);
+  assert.match(html, /aria-pressed="false"[^>]*>1</);
+  assert.match(html, /aria-pressed="true"[^>]*>2</);
+  assert.match(html, /aria-pressed="false"[^>]*>3</);
+  assert.match(html, /aria-pressed="false"[^>]*>4</);
+  assert.match(html, /aria-pressed="true"[^>]*>webp</);
+});
+
+test("renders max images with a dedicated numeric option control", () => {
+  const html = renderToStaticMarkup(
+    <AIVideoStudioFields
+      primaryFields={[
+        {
+          key: "max_images",
+          path: ["max_images"],
+          label: "max_images",
+          kind: "number",
+          required: false,
+          schema: {
+            type: "integer",
+            minimum: 1,
+            maximum: 4,
+          },
+          defaultValue: 1,
+        },
+      ]}
+      advancedFields={[]}
+      values={{
+        max_images: 3,
+      }}
+      isPublic
+      localizedFieldLabels={{
+        maxImages: "Max Images",
+      }}
+      onChange={() => {}}
+      onPublicChange={() => {}}
+    />,
+  );
+
+  assert.match(html, /data-ai-video-studio-max-images-field="max_images"/);
+  assert.match(html, />Max Images</);
+  assert.match(html, /aria-pressed="false"[^>]*>1</);
+  assert.match(html, /aria-pressed="false"[^>]*>2</);
+  assert.match(html, /aria-pressed="true"[^>]*>3</);
+  assert.match(html, /aria-pressed="false"[^>]*>4</);
+});
+
+test("formats raw schema field names as readable labels", () => {
+  const html = renderToStaticMarkup(
+    <AIVideoStudioFields
+      primaryFields={[
+        {
+          key: "enable_safety_checker",
+          path: ["enable_safety_checker"],
+          label: "enable_safety_checker",
+          kind: "boolean",
+          required: false,
+          schema: {
+            type: "boolean",
+          },
+          defaultValue: true,
+        },
+        {
+          key: "cfg_scale",
+          path: ["input", "cfg_scale"],
+          label: "cfg_scale",
+          kind: "number",
+          required: false,
+          schema: {
+            type: "number",
+            minimum: 1,
+            maximum: 20,
+          },
+          defaultValue: 7,
+        },
+      ]}
+      advancedFields={[]}
+      values={{
+        enable_safety_checker: true,
+        input: {
+          cfg_scale: 7,
+        },
+      }}
+      isPublic
+      onChange={() => {}}
+      onPublicChange={() => {}}
+    />,
+  );
+
+  assert.match(html, />Enable Safety Checker</);
+  assert.match(html, />Cfg Scale</);
+  assert.doesNotMatch(html, />enable_safety_checker</);
+  assert.doesNotMatch(html, />input.cfg_scale</);
+});
+
 test("uses a fallback prompt counter when the schema omits maxLength", () => {
   const html = renderToStaticMarkup(
     <AIVideoStudioFields
@@ -471,6 +629,6 @@ test("renders a default parameter icon for regular schema fields", () => {
     />,
   );
 
-  assert.match(html, />cfg_scale</);
+  assert.match(html, />Cfg Scale</);
   assert.match(html, /lucide-sliders-horizontal/);
 });

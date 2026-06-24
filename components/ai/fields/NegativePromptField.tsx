@@ -7,40 +7,39 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 import type { AiVideoStudioFieldDescriptor } from "@/lib/ai-video-studio/schema";
+import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 import { toast } from "sonner";
 
-type PromptFieldProps = {
+type JsonSchema = Record<string, any>;
+
+type NegativePromptFieldProps = {
   field: AiVideoStudioFieldDescriptor;
   inputId: string;
   label: string;
   value: unknown;
   disabled?: boolean;
+  compact?: boolean;
   labelIcon?: ReactNode;
   labelTitle?: string;
   placeholder?: string;
   onChange: (value: unknown) => void;
 };
 
-function normalizeFieldToken(input: string) {
-  return input.toLowerCase().replace(/[^a-z0-9]+/g, "");
+export function isNegativePromptFieldDescriptor(
+  field: AiVideoStudioFieldDescriptor,
+) {
+  return field.key === "negative_prompt";
 }
 
-export function isPromptFieldDescriptor(field: AiVideoStudioFieldDescriptor) {
-  return field.path.some((segment) => normalizeFieldToken(segment) === "prompt");
-}
-
-function resolvePromptMaxLength(field: AiVideoStudioFieldDescriptor) {
-  if (typeof field.schema.maxLength === "number" && Number.isFinite(field.schema.maxLength)) {
-    return field.schema.maxLength;
+function resolveTextMaxLength(schema: JsonSchema) {
+  if (typeof schema.maxLength === "number" && Number.isFinite(schema.maxLength)) {
+    return schema.maxLength;
   }
 
-  const description =
-    typeof field.schema.description === "string" ? field.schema.description : "";
+  const description = typeof schema.description === "string" ? schema.description : "";
   const matched = description.match(/max length:\s*(\d+)/i);
-
   if (matched) {
     const parsed = Number(matched[1]);
     if (Number.isFinite(parsed) && parsed > 0) {
@@ -51,19 +50,24 @@ function resolvePromptMaxLength(field: AiVideoStudioFieldDescriptor) {
   return 1000;
 }
 
-export default function PromptField({
+function getFieldRootClassName(compact = false) {
+  return compact ? "space-y-1 flex flex-row justify-between" : "space-y-2";
+}
+
+export default function NegativePromptField({
   field,
   inputId,
   label,
   value,
   disabled,
+  compact = false,
   labelIcon,
   labelTitle,
   placeholder,
   onChange,
-}: PromptFieldProps) {
+}: NegativePromptFieldProps) {
   const textValue = typeof value === "string" ? value : "";
-  const maxLength = resolvePromptMaxLength(field);
+  const maxLength = resolveTextMaxLength(field.schema);
   const labelElement = (
     <Label
       htmlFor={inputId}
@@ -78,19 +82,25 @@ export default function PromptField({
           : undefined
       }
       className={cn(
-        "inline-flex items-center gap-2 font-medium text-muted-foreground text-sm",
+        "inline-flex items-center gap-2 font-medium text-muted-foreground",
         labelTitle && "cursor-pointer transition hover:text-foreground active:opacity-80",
+        compact ? "text-[13px]" : "text-sm",
       )}
     >
       {labelIcon ? (
-        <span className="size-4 text-muted-foreground">{labelIcon}</span>
+        <span className={cn("text-muted-foreground", compact ? "size-3.5" : "size-4")}>
+          {labelIcon}
+        </span>
       ) : null}
       {label}
     </Label>
   );
 
   return (
-    <div data-ai-video-studio-prompt-field className="space-y-2">
+    <div
+      data-ai-video-studio-negative-prompt-field={field.key}
+      className={getFieldRootClassName(compact)}
+    >
       {labelTitle ? (
         <Tooltip>
           <TooltipTrigger asChild>{labelElement}</TooltipTrigger>
@@ -110,8 +120,8 @@ export default function PromptField({
           maxLength={maxLength}
           placeholder={placeholder}
           className={cn(
-            "rounded-xl bg-background/60",
-            "h-[120px] pr-20 pb-10 text-base leading-relaxed",
+            "rounded-xl bg-background/60 pr-20 pb-10 text-sm leading-relaxed",
+            compact ? "min-h-20" : "h-24",
           )}
         />
         <span className="pointer-events-none absolute bottom-2 right-2 rounded-full border border-border/60 bg-background/85 px-2 py-1 text-xs font-medium text-muted-foreground">

@@ -3,6 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { getErrorMessage } from "@/lib/error-utils";
 import { uploadReferenceFile } from "@/lib/ai-video-studio/reference-upload";
 import { cn } from "@/lib/utils";
@@ -831,6 +836,32 @@ export default function ReferenceField({
       }
     }
   };
+  const labelElement = (
+    <div
+      data-ai-video-studio-field-description-trigger={labelTitle ? "true" : undefined}
+      onClick={
+        labelTitle
+          ? (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              toast.info(labelTitle, { position: "bottom-center" });
+            }
+          : undefined
+      }
+      className={cn(
+        "inline-flex items-center gap-2 font-medium text-muted-foreground text-sm",
+        labelTitle && "cursor-pointer transition hover:text-foreground active:opacity-80",
+      )}
+    >
+      {labelIcon ? <span className="size-4 text-muted-foreground">{labelIcon}</span> : null}
+      <span>{label}</span>
+      {countText ? (
+        <span className="text-xs font-medium text-muted-foreground">
+          {countText}
+        </span>
+      ) : null}
+    </div>
+  );
 
   return (
     <div
@@ -841,25 +872,18 @@ export default function ReferenceField({
       <ReferenceUploadShell
         kind={fieldKind}
         inputId={inputId}
-        label={(
-          <div
-            title={labelTitle}
-            data-ai-video-studio-field-description-trigger={labelTitle ? "true" : undefined}
-            onClick={labelTitle ? () => toast.info(labelTitle) : undefined}
-            className={cn(
-              "inline-flex items-center gap-2 font-medium text-muted-foreground text-sm",
-              labelTitle && "cursor-pointer transition hover:text-foreground active:opacity-80",
-            )}
-          >
-            {labelIcon ? <span className="size-4 text-muted-foreground">{labelIcon}</span> : null}
-            <span>{label}</span>
-            {countText ? (
-              <span className="text-xs font-medium text-muted-foreground">
-                {countText}
-              </span>
-            ) : null}
-          </div>
-        )}
+        label={
+          labelTitle ? (
+            <Tooltip>
+              <TooltipTrigger asChild>{labelElement}</TooltipTrigger>
+              <TooltipContent side="right" align="center" className="max-w-xs text-left">
+                {labelTitle}
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            labelElement
+          )
+        }
         disabled={disabled}
         supportsUpload={supportsUpload}
         isUrlMode={isUrlMode}

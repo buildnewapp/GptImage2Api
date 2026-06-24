@@ -9,6 +9,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { AiVideoStudioFieldDescriptor } from "@/lib/ai-video-studio/schema";
 import { cn } from "@/lib/utils";
 import { useState, type ReactNode } from "react";
@@ -155,14 +160,21 @@ function renderFieldLabel(
   icon?: ReactNode,
   title?: string,
 ) {
-  return (
+  const labelElement = (
     <Label
       htmlFor={htmlFor}
-      title={title}
       data-ai-video-studio-field-description-trigger={
         title ? "true" : undefined
       }
-      onClick={title ? () => toast.info(title) : undefined}
+      onClick={
+        title
+          ? (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              toast.info(title, { position: "bottom-center" });
+            }
+          : undefined
+      }
       className={cn(
         "inline-flex items-center gap-2 font-medium text-muted-foreground",
         title &&
@@ -182,6 +194,19 @@ function renderFieldLabel(
       ) : null}
       {label}
     </Label>
+  );
+
+  if (!title) {
+    return labelElement;
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{labelElement}</TooltipTrigger>
+      <TooltipContent side="right" align="center" className="max-w-xs text-left">
+        {title}
+      </TooltipContent>
+    </Tooltip>
   );
 }
 

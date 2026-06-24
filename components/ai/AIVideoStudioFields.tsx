@@ -4,6 +4,7 @@ import {
   resolveReferenceFieldKind,
   type ReferenceFieldTexts,
 } from "@/components/ai/fields/ReferenceField";
+import { formatAiVideoStudioFieldLabel } from "@/components/ai/fields/format-field-label";
 import { useState } from "react";
 
 import AIVideoStudioFieldControl from "@/components/ai/AIVideoStudioFieldControl";
@@ -14,10 +15,13 @@ import { Switch } from "@/components/ui/switch";
 import type { AiVideoStudioFieldDescriptor } from "@/lib/ai-video-studio/schema";
 import {
   AudioLines,
+  Ban,
   ChevronDown,
   Clock3,
   Crop,
+  FileImage,
   FileText,
+  Hash,
   Images,
   Link2,
   Monitor,
@@ -56,6 +60,10 @@ type AiVideoStudioSpecialFieldKey =
   | "prompt"
   | "size"
   | "imageSize"
+  | "negativePrompt"
+  | "numImages"
+  | "maxImages"
+  | "outputFormat"
   | "quality"
   | "resolution"
   | "aspectRatio"
@@ -163,6 +171,22 @@ function resolveSpecialFieldKey(
       return "prompt";
     }
 
+    if (token === "negativeprompt") {
+      return "negativePrompt";
+    }
+
+    if (token === "numimages" || token === "imagecount" || token === "n") {
+      return "numImages";
+    }
+
+    if (token === "maximages") {
+      return "maxImages";
+    }
+
+    if (token === "outputformat") {
+      return "outputFormat";
+    }
+
     if (
       token === "resolution" ||
       token === "imageresolution" ||
@@ -211,6 +235,22 @@ function renderSpecialFieldIcon(
 ) {
   if (key === "prompt") {
     return <FileText className="size-4" />;
+  }
+
+  if (key === "negativePrompt") {
+    return <Ban className="size-4" />;
+  }
+
+  if (key === "numImages") {
+    return <Hash className="size-4" />;
+  }
+
+  if (key === "maxImages") {
+    return <Hash className="size-4" />;
+  }
+
+  if (key === "outputFormat") {
+    return <FileImage className="size-4" />;
   }
 
   if (key === "resolution") {
@@ -348,7 +388,7 @@ export default function AIVideoStudioFields({
           ? "First Frame"
           : specialFieldKey === "lastFrameImage"
             ? "Last Frame"
-            : field.path.join("."));
+            : formatAiVideoStudioFieldLabel(field.path));
     const isPromptField = specialFieldKey === "prompt";
     const compact = options?.compact ?? false;
 

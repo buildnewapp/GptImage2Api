@@ -114,7 +114,7 @@ export default async function LocaleLayout({
           </ThemeProvider>
         </NextIntlClientProvider>
         <GoogleOneTap />
-        <Toaster richColors />
+        <Toaster richColors closeButton offset={{ bottom: '80px'}} mobileOffset={{ bottom: '80px' }}  />
         <TailwindIndicator />
         <LayoutIntegrationScripts />
       </body>
