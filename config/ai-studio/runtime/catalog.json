@@ -26774,6 +26774,86 @@
       }
     },
     {
+      "id": "video:ama-grok-imagine-1-5-video",
+      "vendor": "apimart",
+      "category": "video",
+      "title": "Grok Imagine 1.5 Video Generation",
+      "docUrl": "https://docs.apimart.ai/en/api-reference/videos/grok-imagine/generation",
+      "provider": "Grok Imagine 1.5",
+      "endpoint": "/v1/videos/generations",
+      "method": "POST",
+      "statusEndpoint": "/v1/tasks/{taskId}?language=en",
+      "modelKeys": [
+        "grok-imagine-1.5-video-apimart"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Video generation model name. Supported model: grok-imagine-1.5-video-apimart - Grok Video Generation.",
+            "default": "grok-imagine-1.5-video-apimart",
+            "enum": [
+              "grok-imagine-1.5-video-apimart"
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Video content description, supports multiple languages."
+          },
+          "size": {
+            "type": "string",
+            "description": "Video size. Options: 16:9 landscape, 9:16 portrait, 1:1 square, 3:2 landscape, 2:3 portrait.",
+            "default": "16:9",
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1",
+              "3:2",
+              "2:3"
+            ]
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Video duration in seconds. Range: 6-30. Must be a plain number, not a string.",
+            "default": 6,
+            "minimum": 6,
+            "maximum": 30,
+            "multipleOf": 1
+          },
+          "quality": {
+            "type": "string",
+            "description": "Video quality. Options: 480p standard definition, 720p high definition.",
+            "default": "480p",
+            "enum": [
+              "480p",
+              "720p"
+            ]
+          },
+          "image_urls": {
+            "type": "array",
+            "description": "List of reference image URLs. Maximum 7 publicly accessible URLs. Base64 format is not supported.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "maxItems": 7
+          }
+        }
+      },
+      "examplePayload": {
+        "model": "grok-imagine-1.5-video-apimart",
+        "prompt": "A dog running on the beach, sunny weather, slow motion",
+        "size": "16:9",
+        "duration": 6,
+        "quality": "720p"
+      }
+    },
+    {
       "id": "video:ama-happyhorse-1-0",
       "vendor": "apimart",
       "category": "video",
@@ -39490,7 +39570,7 @@
       "id": "video:am-omni-flash-ext",
       "category": "video",
       "title": "Omni-Flash-Ext Video Generation",
-      "docUrl": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+      "docUrl": "https://docs.apimart.ai/en/api-reference/videos/omni-flash-ext/generation",
       "provider": "Omni-Flash-Ext",
       "vendor": "apimart",
       "endpoint": "/v1/videos/generations",
@@ -39508,7 +39588,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "Video generation model name, fixed value: Omni-Flash-Ext.",
+            "description": "Video generation model name. Must be Omni-Flash-Ext.",
             "enum": [
               "Omni-Flash-Ext"
             ],
@@ -39519,14 +39599,14 @@
           },
           "prompt": {
             "type": "string",
-            "description": "Video content description. Describe the scene, subject, action, environment, camera movement, visual style, and audio hints in detail.",
+            "description": "Video content description. Describe the scene, subject, action, environment, camera movement, visual style, and audio cues in detail.",
             "examples": [
               "a girl is dancing happily in a sunny garden"
             ]
           },
           "duration": {
             "type": "integer",
-            "description": "Video duration in seconds. Only 4, 6, 8, and 10 are supported.",
+            "description": "Video duration in seconds. Supported values are 4, 6, 8, and 10. Do not pass duration together with video_urls.",
             "enum": [
               4,
               6,
@@ -39540,7 +39620,7 @@
           },
           "resolution": {
             "type": "string",
-            "description": "Video resolution. Values are case-insensitive.",
+            "description": "Video resolution. Values are case-insensitive. Supported values are 720p, 1080p, and 4k.",
             "enum": [
               "720p",
               "1080p",
@@ -39553,7 +39633,7 @@
           },
           "aspect_ratio": {
             "type": "string",
-            "description": "Video aspect ratio. Use 16:9 for landscape or 9:16 for portrait.",
+            "description": "Video aspect ratio. Common values are 16:9 for landscape and 9:16 for portrait.",
             "enum": [
               "16:9",
               "9:16"
@@ -39561,6 +39641,28 @@
             "default": "16:9",
             "examples": [
               "9:16"
+            ]
+          },
+          "size": {
+            "type": "string",
+            "description": "Compatibility field with the same meaning as aspect_ratio. If both are provided, keep them consistent.",
+            "enum": [
+              "16:9",
+              "9:16"
+            ],
+            "examples": [
+              "16:9"
+            ]
+          },
+          "generation_type": {
+            "type": "string",
+            "description": "Generation type for image inputs. Use frame for first-frame mode with one image, or reference for one or three reference images.",
+            "enum": [
+              "frame",
+              "reference"
+            ],
+            "examples": [
+              "reference"
             ]
           },
           "image_urls": {
@@ -39576,6 +39678,20 @@
                 "https://example.com/character.jpg"
               ]
             ]
+          },
+          "video_urls": {
+            "type": "array",
+            "description": "Reference video URL array. Omit it or provide one publicly accessible HTTP/HTTPS video URL. Do not pass video_urls together with duration.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "maxItems": 1,
+            "examples": [
+              [
+                "https://example.com/reference.mp4"
+              ]
+            ]
           }
         },
         "x-apidog-orders": [
@@ -39585,7 +39701,9 @@
           "resolution",
           "aspect_ratio",
           "size",
-          "image_urls"
+          "generation_type",
+          "image_urls",
+          "video_urls"
         ],
         "examples": [
           {
@@ -39594,6 +39712,15 @@
             "duration": 10,
             "resolution": "1080p",
             "aspect_ratio": "9:16"
+          },
+          {
+            "model": "Omni-Flash-Ext",
+            "prompt": "the same scene but at night with neon lights",
+            "resolution": "720p",
+            "aspect_ratio": "16:9",
+            "video_urls": [
+              "https://example.com/reference.mp4"
+            ]
           }
         ],
         "x-apidog-ignore-properties": []

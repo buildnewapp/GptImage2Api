@@ -110,7 +110,7 @@
       "id": "video:am-omni-flash-ext",
       "category": "video",
       "title": "Omni-Flash-Ext Video Generation",
-      "docUrl": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+      "docUrl": "https://docs.apimart.ai/en/api-reference/videos/omni-flash-ext/generation",
       "provider": "Omni-Flash-Ext",
       "vendor": "apimart",
       "endpoint": "/v1/videos/generations",
@@ -128,7 +128,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "Video generation model name, fixed value: Omni-Flash-Ext.",
+            "description": "Video generation model name. Must be Omni-Flash-Ext.",
             "enum": [
               "Omni-Flash-Ext"
             ],
@@ -139,14 +139,14 @@
           },
           "prompt": {
             "type": "string",
-            "description": "Video content description. Describe the scene, subject, action, environment, camera movement, visual style, and audio hints in detail.",
+            "description": "Video content description. Describe the scene, subject, action, environment, camera movement, visual style, and audio cues in detail.",
             "examples": [
               "a girl is dancing happily in a sunny garden"
             ]
           },
           "duration": {
             "type": "integer",
-            "description": "Video duration in seconds. Only 4, 6, 8, and 10 are supported.",
+            "description": "Video duration in seconds. Supported values are 4, 6, 8, and 10. Do not pass duration together with video_urls.",
             "enum": [
               4,
               6,
@@ -160,7 +160,7 @@
           },
           "resolution": {
             "type": "string",
-            "description": "Video resolution. Values are case-insensitive.",
+            "description": "Video resolution. Values are case-insensitive. Supported values are 720p, 1080p, and 4k.",
             "enum": [
               "720p",
               "1080p",
@@ -173,7 +173,7 @@
           },
           "aspect_ratio": {
             "type": "string",
-            "description": "Video aspect ratio. Use 16:9 for landscape or 9:16 for portrait.",
+            "description": "Video aspect ratio. Common values are 16:9 for landscape and 9:16 for portrait.",
             "enum": [
               "16:9",
               "9:16"
@@ -181,6 +181,17 @@
             "default": "16:9",
             "examples": [
               "9:16"
+            ]
+          },
+          "generation_type": {
+            "type": "string",
+            "description": "Generation type for image inputs. Use frame for first-frame mode with one image, or reference for one or three reference images.",
+            "enum": [
+              "frame",
+              "reference"
+            ],
+            "examples": [
+              "reference"
             ]
           },
           "image_urls": {
@@ -196,6 +207,20 @@
                 "https://example.com/character.jpg"
               ]
             ]
+          },
+          "video_urls": {
+            "type": "array",
+            "description": "Reference video URL array. Omit it or provide one publicly accessible HTTP/HTTPS video URL. Do not pass video_urls together with duration.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "maxItems": 1,
+            "examples": [
+              [
+                "https://example.com/reference.mp4"
+              ]
+            ]
           }
         },
         "x-apidog-orders": [
@@ -204,8 +229,9 @@
           "duration",
           "resolution",
           "aspect_ratio",
-          "size",
-          "image_urls"
+          "generation_type",
+          "image_urls",
+          "video_urls"
         ],
         "examples": [
           {
@@ -214,6 +240,15 @@
             "duration": 10,
             "resolution": "1080p",
             "aspect_ratio": "9:16"
+          },
+          {
+            "model": "Omni-Flash-Ext",
+            "prompt": "the same scene but at night with neon lights",
+            "resolution": "720p",
+            "aspect_ratio": "16:9",
+            "video_urls": [
+              "https://example.com/reference.mp4"
+            ]
           }
         ],
         "x-apidog-ignore-properties": []

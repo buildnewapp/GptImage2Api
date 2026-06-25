@@ -67,7 +67,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     versions: [
       {
         key: "omni-flash-ext",
-        label: "Omni Flash Pro",
+        label: "Gemini Omni Flash Lite",
         familyKey: "gemini-omni",
         modelId: "video:am-omni-flash-ext",
       },
