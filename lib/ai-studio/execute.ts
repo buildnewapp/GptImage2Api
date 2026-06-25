@@ -13,6 +13,12 @@ import {
   resolveStatusEndpoint,
   resolveTaskMode,
 } from "@/lib/ai-studio/provider-metadata";
+import {
+  getMockAiStudioProviderSubmission,
+  getMockAiStudioTaskResult,
+  isAiStudioProviderMockEnabled,
+  isMockAiStudioTaskId,
+} from "@/lib/ai-studio/mock-provider";
 import { resolveSelectedPricing } from "@/lib/ai-studio/runtime";
 import { stripLocalReferenceMetadata } from "@/lib/ai-studio/seedance-pricing";
 import { fetchWithTimeout } from "@/lib/fetch/with-timeout";
@@ -573,6 +579,10 @@ export async function submitAiStudioExecution(
   detail: AiStudioDocDetail,
   body: Record<string, any>,
 ) {
+  if (isAiStudioProviderMockEnabled()) {
+    return getMockAiStudioProviderSubmission(detail, body);
+  }
+
   const vendor = getAiStudioVendor(detail);
   const requestUrl = new URL(`${getAiStudioApiBaseUrl(vendor)}${detail.endpoint}`);
   if (detail.method === "GET") {
@@ -653,6 +663,10 @@ async function queryAiStudioTaskUncached(
   const detail = await getCachedAiStudioCatalogDetail(canonicalModelId);
   if (!detail) {
     throw new Error("Unknown model");
+  }
+
+  if (isAiStudioProviderMockEnabled() || isMockAiStudioTaskId(taskId)) {
+    return getMockAiStudioTaskResult(detail, taskId);
   }
 
   const vendor = getAiStudioVendor(detail);

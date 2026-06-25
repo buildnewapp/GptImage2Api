@@ -22,6 +22,14 @@ import {
   resolveStatusEndpoint,
   submitAiStudioExecution,
 } from "@/lib/ai-studio/execute";
+import {
+  AI_STUDIO_MOCK_IMAGE_URLS,
+  AI_STUDIO_MOCK_VIDEO_URLS,
+  getMockAiStudioProviderSubmission,
+  getMockAiStudioTaskResult,
+  isAiStudioProviderMockEnabled,
+  isMockAiStudioTaskId,
+} from "@/lib/ai-studio/mock-provider";
 
 test("resolves fal vendor api key and base url", () => {
   const originalFalApiKey = process.env.FAL_API_KEY;
@@ -95,6 +103,102 @@ test("submits fal executions with queue key auth and extracts request ids", asyn
   } else {
     process.env.FAL_API_KEY = originalFalApiKey;
   }
+});
+
+test("reads the mock provider switch from AI_STUDIO_PROVIDER_MOCK_ENABLED", () => {
+  const originalMockEnabled = process.env.AI_STUDIO_PROVIDER_MOCK_ENABLED;
+
+  try {
+    process.env.AI_STUDIO_PROVIDER_MOCK_ENABLED = "true";
+    assert.equal(isAiStudioProviderMockEnabled(), true);
+
+    process.env.AI_STUDIO_PROVIDER_MOCK_ENABLED = "false";
+    assert.equal(isAiStudioProviderMockEnabled(), false);
+  } finally {
+    if (originalMockEnabled === undefined) {
+      delete process.env.AI_STUDIO_PROVIDER_MOCK_ENABLED;
+    } else {
+      process.env.AI_STUDIO_PROVIDER_MOCK_ENABLED = originalMockEnabled;
+    }
+  }
+});
+
+test("builds mock provider submissions without calling third-party APIs", () => {
+  const result = getMockAiStudioProviderSubmission(
+    {
+      id: "video:fal-seedance-2-text-to-video",
+      vendor: "fal",
+      category: "video",
+      title: "Seedance 2.0 Text to Video",
+      docUrl: "https://fal.ai/models/bytedance/seedance-2.0/text-to-video/api",
+      provider: "ByteDance",
+      endpoint: "/fal-ai/seedance-2/text-to-video",
+      statusEndpoint: "/fal-ai/seedance-2/text-to-video/requests/{request_id}/status",
+      method: "POST",
+      modelKeys: ["bytedance/seedance-2.0/text-to-video"],
+      requestSchema: null,
+      examplePayload: {},
+    },
+    {
+      prompt: "hello",
+    },
+  );
+
+  assert.equal(isMockAiStudioTaskId(result.taskId), true);
+  assert.match(
+    result.taskId ?? "",
+    /^mock_video_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+  );
+  assert.equal(result.statusMode, "poll");
+  assert.equal(result.statusEndpoint, "/mock/ai-studio/tasks/{taskId}");
+  assert.deepEqual(result.mediaUrls, []);
+  assert.deepEqual(result.raw, {
+    mocked: true,
+    taskId: result.taskId,
+    state: "queued",
+    category: "video",
+    vendor: "fal",
+    modelId: "video:fal-seedance-2-text-to-video",
+    payload: {
+      prompt: "hello",
+    },
+  });
+});
+
+test("returns configurable mock provider success media by category", () => {
+  const video = getMockAiStudioTaskResult({
+    id: "video:fal-seedance-2-text-to-video",
+    vendor: "fal",
+    category: "video",
+    title: "Seedance 2.0 Text to Video",
+    docUrl: "https://fal.ai/models/bytedance/seedance-2.0/text-to-video/api",
+    provider: "ByteDance",
+    endpoint: "/fal-ai/seedance-2/text-to-video",
+    method: "POST",
+    modelKeys: ["bytedance/seedance-2.0/text-to-video"],
+    requestSchema: null,
+    examplePayload: {},
+  });
+  const image = getMockAiStudioTaskResult({
+    id: "image:nano-banana",
+    category: "image",
+    title: "Google - Nano Banana 2",
+    docUrl: "https://docs.kie.ai/market/google/nanobanana2.md",
+    provider: "Google",
+    endpoint: "/api/v1/jobs/createTask",
+    method: "POST",
+    modelKeys: ["google/nano-banana-2"],
+    requestSchema: null,
+    examplePayload: {},
+  });
+
+  assert.equal(video.state, "succeeded");
+  assert.equal(image.state, "succeeded");
+  assert.equal(video.mediaUrls.length, 1);
+  assert.equal(image.mediaUrls.length, 1);
+  assert.equal(AI_STUDIO_MOCK_VIDEO_URLS.includes(video.mediaUrls[0]!), true);
+  assert.equal(AI_STUDIO_MOCK_IMAGE_URLS.includes(image.mediaUrls[0]!), true);
+  assert.equal((video.raw as Record<string, unknown>).mocked, true);
 });
 
 test("queries fal task status using request_id path templates", async () => {
