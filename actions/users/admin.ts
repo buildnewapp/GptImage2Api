@@ -5,6 +5,7 @@ import { actionResponse } from "@/lib/action-response";
 import { getSession, isAdmin } from "@/lib/auth/server";
 import { getDb } from "@/lib/db";
 import {
+  buildArchivedDeletedUserEmail,
   getManualOrderTypeForPlan,
   isRecurringManualBenefitPlan,
 } from "@/lib/admin/dashboard-users";
@@ -119,6 +120,10 @@ const SetUserPasswordSchema = z.object({
 const UpdateUserRoleSchema = z.object({
   userId: z.string().uuid(),
   role: z.enum(["user", "admin"]),
+});
+
+const ArchiveDeletedUserSchema = z.object({
+  userId: z.string().uuid(),
 });
 
 export async function getUsers({
@@ -515,6 +520,86 @@ export async function unbanUser({
       .where(eq(userSchema.id, userId));
 
     return actionResponse.success();
+  } catch (error: any) {
+    return actionResponse.error(getErrorMessage(error));
+  }
+}
+
+export async function archiveDeletedUser({
+  userId,
+}: z.infer<typeof ArchiveDeletedUserSchema>): Promise<
+  ActionResult<{ archivedEmail: string }>
+> {
+  const session = await getSession();
+  if (!session?.user) {
+    return actionResponse.unauthorized("User not authenticated.");
+  }
+
+  if (!(await isAdmin())) {
+    return actionResponse.forbidden("Admin privileges required.");
+  }
+
+  const parsed = ArchiveDeletedUserSchema.safeParse({ userId });
+  if (!parsed.success) {
+    return actionResponse.badRequest(
+      parsed.error.issues[0]?.message || "Invalid input.",
+    );
+  }
+
+  if (session.user.id === parsed.data.userId) {
+    return actionResponse.forbidden("Cannot delete your own user.");
+  }
+
+  const db = getDb();
+
+  try {
+    const target = await db
+      .select({
+        id: userSchema.id,
+        email: userSchema.email,
+        role: userSchema.role,
+      })
+      .from(userSchema)
+      .where(eq(userSchema.id, parsed.data.userId))
+      .limit(1);
+
+    if (target.length === 0) {
+      return actionResponse.notFound("User not found.");
+    }
+
+    if (target[0].role === "admin") {
+      return actionResponse.forbidden("Cannot delete admin users.");
+    }
+
+    const now = new Date();
+    const candidateEmails = Array.from({ length: 60 }, (_, index) =>
+      buildArchivedDeletedUserEmail(new Date(now.getTime() + index * 1000)),
+    );
+    const existingEmailRows = await db
+      .select({ email: userSchema.email })
+      .from(userSchema)
+      .where(inArray(userSchema.email, candidateEmails));
+    const existingEmails = new Set(existingEmailRows.map((row) => row.email));
+    const archivedEmail = buildArchivedDeletedUserEmail(now, existingEmails);
+
+    await db.transaction(async (tx) => {
+      await tx
+        .update(userSchema)
+        .set({
+          email: archivedEmail,
+          banned: true,
+          banReason: `Deleted by admin, original email: ${target[0].email}`,
+          banExpires: null,
+          updatedAt: now,
+        })
+        .where(eq(userSchema.id, parsed.data.userId));
+
+      await tx
+        .delete(sessionSchema)
+        .where(eq(sessionSchema.userId, parsed.data.userId));
+    });
+
+    return actionResponse.success({ archivedEmail });
   } catch (error: any) {
     return actionResponse.error(getErrorMessage(error));
   }

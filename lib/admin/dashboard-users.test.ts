@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   buildAdminUserQuickActionLinks,
   buildAdminUserScopeLabel,
+  buildArchivedDeletedUserEmail,
   getManualBenefitPeriodEnd,
   getManualCreditDefaultsFromPlan,
   getManualOrderTypeForPlan,
@@ -69,6 +70,26 @@ test("prefers name and email when rendering the current user scope label", () =>
       email: null,
     }),
     "user-3",
+  );
+});
+
+test("builds archived deleted user email from timestamp", () => {
+  assert.equal(
+    buildArchivedDeletedUserEmail(new Date("2026-06-25T08:09:10.000Z")),
+    "del_20260625080910@gmail.com",
+  );
+});
+
+test("increments archived deleted user email timestamp on conflicts", () => {
+  assert.equal(
+    buildArchivedDeletedUserEmail(
+      new Date("2026-06-25T08:09:10.000Z"),
+      new Set([
+        "del_20260625080910@gmail.com",
+        "del_20260625080911@gmail.com",
+      ]),
+    ),
+    "del_20260625080912@gmail.com",
   );
 });
 

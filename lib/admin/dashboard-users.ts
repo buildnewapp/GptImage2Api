@@ -31,6 +31,36 @@ export function buildAdminUserScopeLabel(input: {
   return input.name || input.email || input.id;
 }
 
+function padDatePart(value: number) {
+  return value.toString().padStart(2, "0");
+}
+
+function formatArchivedDeletedEmailTimestamp(date: Date) {
+  return [
+    date.getUTCFullYear(),
+    padDatePart(date.getUTCMonth() + 1),
+    padDatePart(date.getUTCDate()),
+    padDatePart(date.getUTCHours()),
+    padDatePart(date.getUTCMinutes()),
+    padDatePart(date.getUTCSeconds()),
+  ].join("");
+}
+
+export function buildArchivedDeletedUserEmail(
+  date = new Date(),
+  existingEmails: ReadonlySet<string> = new Set(),
+) {
+  const candidateDate = new Date(date);
+
+  while (true) {
+    const candidate = `del_${formatArchivedDeletedEmailTimestamp(candidateDate)}@gmail.com`;
+    if (!existingEmails.has(candidate)) {
+      return candidate;
+    }
+    candidateDate.setUTCSeconds(candidateDate.getUTCSeconds() + 1);
+  }
+}
+
 type ManualBenefitPlanInput = {
   paymentType?: string | null;
   recurringInterval?: string | null;
