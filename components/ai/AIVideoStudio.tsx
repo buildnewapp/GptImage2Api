@@ -1658,10 +1658,6 @@ export default function AIVideoStudio({
                   resolution: t("form.resolution"),
                   aspectRatio: t("form.aspectRatio"),
                   duration: t("form.duration"),
-                  referenceAudios: t("form.referenceAudios"),
-                  referenceImages: t("form.referenceImages"),
-                  referenceVideos: t("form.referenceVideos"),
-                  referenceUrls: t("form.referenceUrls"),
                 }}
                 publicVisibilityLabel={t("form.isPublic")}
                 publicToggleLabel={t("form.public")}

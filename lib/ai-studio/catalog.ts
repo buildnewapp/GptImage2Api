@@ -96,6 +96,7 @@ export interface AiStudioPricingOverridesFile {
 export interface AiStudioFormUiModelOverride {
   fieldOrder?: string[];
   advancedFields?: string[];
+  hiddenFields?: string[];
 }
 
 export interface AiStudioFormUiOverridesFile {
@@ -1804,6 +1805,9 @@ function cloneFormUiOverride(
       : {}),
     ...(Array.isArray(value.advancedFields)
       ? { advancedFields: [...value.advancedFields] }
+      : {}),
+    ...(Array.isArray(value.hiddenFields)
+      ? { hiddenFields: [...value.hiddenFields] }
       : {}),
   };
 }

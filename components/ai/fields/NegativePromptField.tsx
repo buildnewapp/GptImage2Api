@@ -121,7 +121,7 @@ export default function NegativePromptField({
           placeholder={placeholder}
           className={cn(
             "rounded-xl bg-background/60 pr-20 pb-10 text-sm leading-relaxed",
-            compact ? "min-h-20" : "h-24",
+            compact ? "min-h-10" : "h-16",
           )}
         />
         <span className="pointer-events-none absolute bottom-2 right-2 rounded-full border border-border/60 bg-background/85 px-2 py-1 text-xs font-medium text-muted-foreground">

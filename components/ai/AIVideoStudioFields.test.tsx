@@ -67,6 +67,72 @@ test("collects api field docs from requestSchema.properties.input", () => {
   });
 });
 
+test("collects api field docs from root object requestSchema", () => {
+  const docs = collectApiFieldDocs({
+    copy: {
+      required: "必填",
+      type: "类型",
+      enum: "可选值",
+      range: "范围",
+      minimum: "最小值",
+      maximum: "最大值",
+    },
+    requestSchema: {
+      type: "object",
+      required: ["prompt"],
+      properties: {
+        max_images: {
+          type: "integer",
+          description: "Maximum number of images to return.",
+          minimum: 1,
+          maximum: 6,
+        },
+        image_size: {
+          title: "Image Size",
+          description: "The size of the generated image.",
+          anyOf: [
+            {
+              type: "object",
+            },
+            {
+              type: "string",
+              enum: ["square_hd", "auto_2K"],
+            },
+          ],
+        },
+        prompt: {
+          type: "string",
+          description: "The text prompt used to generate the image.",
+        },
+      },
+      "x-apidog-orders": ["prompt", "image_size", "max_images"],
+    },
+  });
+
+  assert.deepEqual(
+    docs.map((item) => item.key),
+    ["prompt", "image_size", "max_images"],
+  );
+  assert.deepEqual(docs[0], {
+    key: "prompt",
+    title: "prompt",
+    description: "The text prompt used to generate the image.",
+    meta: "必填 · 类型: string",
+  });
+  assert.deepEqual(docs[1], {
+    key: "image_size",
+    title: "image_size",
+    description: "The size of the generated image.",
+    meta: "",
+  });
+  assert.deepEqual(docs[2], {
+    key: "max_images",
+    title: "max_images",
+    description: "Maximum number of images to return.",
+    meta: "类型: integer · 范围: 1 - 6",
+  });
+});
+
 test("renders advanced fields inside a collapsible trigger section", () => {
   const html = renderToStaticMarkup(
     <AIVideoStudioFields
@@ -404,6 +470,70 @@ test("renders common image generation fields with custom controls", () => {
   assert.match(html, /aria-pressed="true"[^>]*>webp</);
 });
 
+test("uses formatted field names for image reference field labels", () => {
+  const html = renderToStaticMarkup(
+    <AIVideoStudioFields
+      primaryFields={[
+        {
+          key: "image_urls",
+          path: ["image_urls"],
+          label: "image_urls",
+          kind: "array",
+          required: false,
+          schema: {
+            type: "array",
+            items: {
+              type: "string",
+              format: "uri",
+            },
+          },
+          defaultValue: [],
+        },
+        {
+          key: "mask_url",
+          path: ["mask_url"],
+          label: "mask_url",
+          kind: "text",
+          required: false,
+          schema: {
+            title: "Mask URL",
+            description:
+              "The URL of the mask image to use for the generation. This indicates what part of the image to edit.",
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          defaultValue: "",
+        },
+      ]}
+      advancedFields={[]}
+      values={{
+        image_urls: [],
+        mask_url: "",
+      }}
+      isPublic
+      localizedFieldLabels={{
+        referenceImages: "Reference Images",
+      } as any}
+      onChange={() => {}}
+      onPublicChange={() => {}}
+    />,
+  );
+
+  assert.match(html, />Image Urls</);
+  assert.match(html, />Mask URL</);
+  assert.doesNotMatch(html, />Reference Images</);
+  assert.equal(
+    html.match(/data-ai-video-studio-reference-field="image"/g)?.length,
+    2,
+  );
+});
+
 test("renders max images with a dedicated numeric option control", () => {
   const html = renderToStaticMarkup(
     <AIVideoStudioFields
@@ -523,7 +653,7 @@ test("uses a fallback prompt counter when the schema omits maxLength", () => {
   assert.match(html, /5\/1000/);
 });
 
-test("maps audio reference fields to the reference audio label", () => {
+test("uses formatted field names for audio reference field labels", () => {
   const html = renderToStaticMarkup(
     <AIVideoStudioFields
       primaryFields={[
@@ -554,7 +684,8 @@ test("maps audio reference fields to the reference audio label", () => {
     />,
   );
 
-  assert.match(html, />参考音频</);
+  assert.match(html, />Audio Urls</);
+  assert.doesNotMatch(html, />参考音频</);
   assert.match(html, /data-ai-video-studio-reference-field="audio"/);
 });
 
@@ -597,8 +728,8 @@ test("treats first and last frame urls as dedicated single image upload fields",
     />,
   );
 
-  assert.match(html, />First Frame</);
-  assert.match(html, />Last Frame</);
+  assert.match(html, />First Frame URL</);
+  assert.match(html, />Last Frame URL</);
   assert.equal((html.match(/data-ai-video-studio-reference-field="image"/g) ?? []).length, 2);
   assert.equal((html.match(/data-ai-video-studio-reference-multiple="false"/g) ?? []).length, 2);
 });

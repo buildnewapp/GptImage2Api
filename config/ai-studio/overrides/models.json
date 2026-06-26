@@ -63,6 +63,10 @@
     },
     "video:kling-v2-5-turbo-image-to-video-pro": {
       "schemaModel": "kling/v2-5-turbo-image-to-video-pro"
+    },
+    "video:fal-fal-ai-minimax-hailuo-02-fast-image-to-video": {
+      "title": "MiniMax Hailuo 02 Fast Image to Video",
+      "provider": "minimax"
     }
   }
 }

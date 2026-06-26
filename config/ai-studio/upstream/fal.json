@@ -1053,6 +1053,309 @@
       }
     },
     {
+      "id": "video:fal-fal-ai-bytedance-seedance-v1-5-pro-text-to-video",
+      "vendor": "fal",
+      "category": "video",
+      "title": "Bytedance Seedance V1.5 Pro Text To Video",
+      "docUrl": "https://fal.ai/models/fal-ai/bytedance/seedance/v1.5/pro/text-to-video/api",
+      "provider": "ByteDance",
+      "alias": null,
+      "endpoint": "/fal-ai/bytedance/seedance/v1.5/pro/text-to-video",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/bytedance/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/bytedance/seedance/v1.5/pro/text-to-video"
+      ],
+      "requestSchema": {
+        "title": "SeedanceProv15TextToVideoInput",
+        "required": [
+          "prompt"
+        ],
+        "properties": {
+          "generate_audio": {
+            "title": "Generate Audio",
+            "default": true,
+            "type": "boolean",
+            "description": "Whether to generate audio for the video"
+          },
+          "seed": {
+            "title": "Seed",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Random seed to control video generation. Use -1 for random."
+          },
+          "prompt": {
+            "title": "Prompt",
+            "examples": [
+              "Defense attorney declaring \"Ladies and gentlemen, reasonable doubt isn't just a phrase, it's the foundation of justice itself\", footsteps on marble, jury shifting, courtroom drama, closing argument power."
+            ],
+            "type": "string",
+            "description": "The text prompt used to generate the video"
+          },
+          "camera_fixed": {
+            "title": "Camera Fixed",
+            "default": false,
+            "type": "boolean",
+            "description": "Whether to fix the camera position"
+          },
+          "duration": {
+            "description": "Duration of the video in seconds",
+            "title": "Duration",
+            "default": "5",
+            "type": "string",
+            "enum": [
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12"
+            ]
+          },
+          "aspect_ratio": {
+            "description": "The aspect ratio of the generated video",
+            "title": "Aspect Ratio",
+            "default": "16:9",
+            "type": "string",
+            "enum": [
+              "21:9",
+              "16:9",
+              "4:3",
+              "1:1",
+              "3:4",
+              "9:16",
+              "auto"
+            ]
+          },
+          "enable_safety_checker": {
+            "title": "Enable Safety Checker",
+            "examples": [
+              true
+            ],
+            "default": true,
+            "type": "boolean",
+            "description": "If set to true, the safety checker will be enabled."
+          },
+          "resolution": {
+            "description": "Video resolution - 480p for faster generation, 720p for balance, 1080p for higher quality",
+            "title": "Resolution",
+            "default": "720p",
+            "type": "string",
+            "enum": [
+              "480p",
+              "720p",
+              "1080p"
+            ]
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "aspect_ratio",
+          "resolution",
+          "duration",
+          "camera_fixed",
+          "seed",
+          "enable_safety_checker",
+          "generate_audio"
+        ],
+        "type": "object",
+        "x-apidog-orders": [
+          "prompt",
+          "aspect_ratio",
+          "resolution",
+          "duration",
+          "camera_fixed",
+          "seed",
+          "enable_safety_checker",
+          "generate_audio"
+        ]
+      },
+      "examplePayload": {
+        "generate_audio": true,
+        "seed": 0,
+        "prompt": "Defense attorney declaring \"Ladies and gentlemen, reasonable doubt isn't just a phrase, it's the foundation of justice itself\", footsteps on marble, jury shifting, courtroom drama, closing argument power.",
+        "camera_fixed": false,
+        "duration": "5",
+        "aspect_ratio": "16:9",
+        "enable_safety_checker": true,
+        "resolution": "720p"
+      }
+    },
+    {
+      "id": "video:fal-fal-ai-bytedance-seedance-v1-5-pro-image-to-video",
+      "vendor": "fal",
+      "category": "video",
+      "title": "Bytedance Seedance V1.5 Pro Image To Video",
+      "docUrl": "https://fal.ai/models/fal-ai/bytedance/seedance/v1.5/pro/image-to-video/api",
+      "provider": "ByteDance",
+      "alias": null,
+      "endpoint": "/fal-ai/bytedance/seedance/v1.5/pro/image-to-video",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/bytedance/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/bytedance/seedance/v1.5/pro/image-to-video"
+      ],
+      "requestSchema": {
+        "title": "SeedanceProv15ImageToVideoInput",
+        "required": [
+          "prompt",
+          "image_url"
+        ],
+        "properties": {
+          "generate_audio": {
+            "title": "Generate Audio",
+            "default": true,
+            "type": "boolean",
+            "description": "Whether to generate audio for the video"
+          },
+          "seed": {
+            "title": "Seed",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Random seed to control video generation. Use -1 for random."
+          },
+          "prompt": {
+            "title": "Prompt",
+            "examples": [
+              "A man is crying and he says \"I shouldn't have done it. I regret everything\""
+            ],
+            "type": "string",
+            "description": "The text prompt used to generate the video"
+          },
+          "camera_fixed": {
+            "title": "Camera Fixed",
+            "default": false,
+            "type": "boolean",
+            "description": "Whether to fix the camera position"
+          },
+          "duration": {
+            "description": "Duration of the video in seconds",
+            "title": "Duration",
+            "default": "5",
+            "type": "string",
+            "enum": [
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12"
+            ]
+          },
+          "aspect_ratio": {
+            "description": "The aspect ratio of the generated video",
+            "title": "Aspect Ratio",
+            "default": "16:9",
+            "type": "string",
+            "enum": [
+              "21:9",
+              "16:9",
+              "4:3",
+              "1:1",
+              "3:4",
+              "9:16",
+              "auto"
+            ]
+          },
+          "end_image_url": {
+            "title": "End Image Url",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The URL of the image the video ends with. Defaults to None."
+          },
+          "enable_safety_checker": {
+            "title": "Enable Safety Checker",
+            "examples": [
+              true
+            ],
+            "default": true,
+            "type": "boolean",
+            "description": "If set to true, the safety checker will be enabled."
+          },
+          "resolution": {
+            "description": "Video resolution - 480p for faster generation, 720p for balance, 1080p for higher quality",
+            "title": "Resolution",
+            "default": "720p",
+            "type": "string",
+            "enum": [
+              "480p",
+              "720p",
+              "1080p"
+            ]
+          },
+          "image_url": {
+            "title": "Image Url",
+            "examples": [
+              "https://v3b.fal.media/files/b/0a8773cd/REzCWn1BKUVuMFTxR-R3W_image_317.png"
+            ],
+            "type": "string",
+            "description": "The URL of the image used to generate video"
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "aspect_ratio",
+          "resolution",
+          "duration",
+          "camera_fixed",
+          "seed",
+          "enable_safety_checker",
+          "generate_audio",
+          "image_url",
+          "end_image_url"
+        ],
+        "type": "object",
+        "x-apidog-orders": [
+          "prompt",
+          "aspect_ratio",
+          "resolution",
+          "duration",
+          "camera_fixed",
+          "seed",
+          "enable_safety_checker",
+          "generate_audio",
+          "image_url",
+          "end_image_url"
+        ]
+      },
+      "examplePayload": {
+        "generate_audio": true,
+        "seed": 0,
+        "prompt": "A man is crying and he says \"I shouldn't have done it. I regret everything\"",
+        "camera_fixed": false,
+        "duration": "5",
+        "aspect_ratio": "16:9",
+        "end_image_url": "",
+        "enable_safety_checker": true,
+        "resolution": "720p",
+        "image_url": "https://v3b.fal.media/files/b/0a8773cd/REzCWn1BKUVuMFTxR-R3W_image_317.png"
+      }
+    },
+    {
       "id": "video:fal-fal-ai-kling-video-v3-pro-text-to-video",
       "vendor": "fal",
       "category": "video",
@@ -4184,6 +4487,268 @@
       }
     },
     {
+      "id": "video:fal-fal-ai-sora-2-text-to-video-pro",
+      "vendor": "fal",
+      "category": "video",
+      "title": "Sora 2",
+      "docUrl": "https://fal.ai/models/fal-ai/sora-2/text-to-video/pro/api",
+      "provider": "sora-2",
+      "alias": null,
+      "endpoint": "/fal-ai/sora-2/text-to-video/pro",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/sora-2/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/sora-2/text-to-video/pro"
+      ],
+      "requestSchema": {
+        "x-fal-order-properties": [
+          "prompt",
+          "resolution",
+          "aspect_ratio",
+          "duration",
+          "delete_video",
+          "model",
+          "detect_and_block_ip",
+          "character_ids"
+        ],
+        "properties": {
+          "character_ids": {
+            "title": "Character IDs",
+            "anyOf": [
+              {
+                "maxItems": 2,
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Up to two character IDs (from create-character) to use in the video. Refer to characters by name in the prompt. When set, only the OpenAI provider is used."
+          },
+          "prompt": {
+            "examples": [
+              "A dramatic Hollywood breakup scene at dusk on a quiet suburban street. A man and a woman in their 30s face each other, speaking softly but emotionally, lips syncing to breakup dialogue. Cinematic lighting, warm sunset tones, shallow depth of field, gentle breeze moving autumn leaves, realistic natural sound, no background music"
+            ],
+            "title": "Prompt",
+            "minLength": 1,
+            "type": "string",
+            "maxLength": 5000,
+            "description": "The text prompt describing the video you want to generate"
+          },
+          "duration": {
+            "description": "Duration of the generated video in seconds",
+            "enum": [
+              4,
+              8,
+              12,
+              16,
+              20
+            ],
+            "title": "Duration",
+            "type": "integer",
+            "default": 4
+          },
+          "aspect_ratio": {
+            "description": "The aspect ratio of the generated video",
+            "enum": [
+              "9:16",
+              "16:9"
+            ],
+            "title": "Aspect Ratio",
+            "type": "string",
+            "default": "16:9"
+          },
+          "resolution": {
+            "description": "The resolution of the generated video",
+            "enum": [
+              "720p",
+              "1080p",
+              "true_1080p"
+            ],
+            "title": "Resolution",
+            "type": "string",
+            "default": "1080p"
+          },
+          "delete_video": {
+            "description": "Whether to delete the video after generation for privacy reasons. If True, the video cannot be used for remixing and will be permanently deleted.",
+            "title": "Delete Video",
+            "type": "boolean",
+            "default": true
+          },
+          "detect_and_block_ip": {
+            "title": "Detect And Block Ip",
+            "type": "boolean",
+            "default": false,
+            "description": "If enabled, the prompt (and image for image-to-video) will be checked for known intellectual property references and the request will be blocked if any are detected."
+          }
+        },
+        "required": [
+          "prompt"
+        ],
+        "title": "ProTextToVideoInput",
+        "type": "object",
+        "x-apidog-orders": [
+          "prompt",
+          "resolution",
+          "aspect_ratio",
+          "duration",
+          "delete_video",
+          "detect_and_block_ip",
+          "character_ids"
+        ]
+      },
+      "examplePayload": {
+        "character_ids": [],
+        "prompt": "A dramatic Hollywood breakup scene at dusk on a quiet suburban street. A man and a woman in their 30s face each other, speaking softly but emotionally, lips syncing to breakup dialogue. Cinematic lighting, warm sunset tones, shallow depth of field, gentle breeze moving autumn leaves, realistic natural sound, no background music",
+        "duration": 4,
+        "aspect_ratio": "16:9",
+        "resolution": "1080p",
+        "delete_video": true,
+        "detect_and_block_ip": false
+      }
+    },
+    {
+      "id": "video:fal-fal-ai-sora-2-image-to-video-pro",
+      "vendor": "fal",
+      "category": "video",
+      "title": "Sora 2",
+      "docUrl": "https://fal.ai/models/fal-ai/sora-2/image-to-video/pro/api",
+      "provider": "sora-2",
+      "alias": null,
+      "endpoint": "/fal-ai/sora-2/image-to-video/pro",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/sora-2/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/sora-2/image-to-video/pro"
+      ],
+      "requestSchema": {
+        "x-fal-order-properties": [
+          "prompt",
+          "resolution",
+          "aspect_ratio",
+          "duration",
+          "delete_video",
+          "model",
+          "detect_and_block_ip",
+          "character_ids",
+          "image_url"
+        ],
+        "properties": {
+          "character_ids": {
+            "title": "Character IDs",
+            "anyOf": [
+              {
+                "maxItems": 2,
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Up to two character IDs (from create-character) to use in the video. Refer to characters by name in the prompt. When set, only the OpenAI provider is used."
+          },
+          "prompt": {
+            "examples": [
+              "Front-facing 'invisible' action-cam on a skydiver in freefall above bright clouds; camera locked on his face. He speaks over the wind with clear lipsync: 'This is insanely fun! You've got to try it—book a tandem and go!' Natural wind roar, voice close-mic'd and slightly compressed so it's intelligible. Midday sun, goggles and jumpsuit flutter, altimeter visible, parachute rig on shoulders. Energetic but stable framing with subtle shake; brief horizon roll. End on first tug of canopy and wind noise dropping."
+            ],
+            "title": "Prompt",
+            "minLength": 1,
+            "type": "string",
+            "maxLength": 5000,
+            "description": "The text prompt describing the video you want to generate"
+          },
+          "detect_and_block_ip": {
+            "title": "Detect And Block Ip",
+            "type": "boolean",
+            "default": false,
+            "description": "If enabled, the prompt (and image for image-to-video) will be checked for known intellectual property references and the request will be blocked if any are detected."
+          },
+          "duration": {
+            "description": "Duration of the generated video in seconds",
+            "enum": [
+              4,
+              8,
+              12,
+              16,
+              20
+            ],
+            "title": "Duration",
+            "type": "integer",
+            "default": 4
+          },
+          "aspect_ratio": {
+            "description": "The aspect ratio of the generated video",
+            "enum": [
+              "auto",
+              "9:16",
+              "16:9"
+            ],
+            "title": "Aspect Ratio",
+            "type": "string",
+            "default": "auto"
+          },
+          "resolution": {
+            "description": "The resolution of the generated video",
+            "enum": [
+              "auto",
+              "720p",
+              "1080p",
+              "true_1080p"
+            ],
+            "title": "Resolution",
+            "type": "string",
+            "default": "auto"
+          },
+          "delete_video": {
+            "description": "Whether to delete the video after generation for privacy reasons. If True, the video cannot be used for remixing and will be permanently deleted.",
+            "title": "Delete Video",
+            "type": "boolean",
+            "default": true
+          },
+          "image_url": {
+            "examples": [
+              "https://storage.googleapis.com/falserverless/example_inputs/sora-2-i2v-input.png"
+            ],
+            "title": "Image URL",
+            "type": "string",
+            "description": "The URL of the image to use as the first frame"
+          }
+        },
+        "required": [
+          "prompt",
+          "image_url"
+        ],
+        "title": "ProImageToVideoInput",
+        "type": "object",
+        "x-apidog-orders": [
+          "prompt",
+          "resolution",
+          "aspect_ratio",
+          "duration",
+          "delete_video",
+          "detect_and_block_ip",
+          "character_ids",
+          "image_url"
+        ]
+      },
+      "examplePayload": {
+        "character_ids": [],
+        "prompt": "Front-facing 'invisible' action-cam on a skydiver in freefall above bright clouds; camera locked on his face. He speaks over the wind with clear lipsync: 'This is insanely fun! You've got to try it—book a tandem and go!' Natural wind roar, voice close-mic'd and slightly compressed so it's intelligible. Midday sun, goggles and jumpsuit flutter, altimeter visible, parachute rig on shoulders. Energetic but stable framing with subtle shake; brief horizon roll. End on first tug of canopy and wind noise dropping.",
+        "detect_and_block_ip": false,
+        "duration": 4,
+        "aspect_ratio": "auto",
+        "resolution": "auto",
+        "delete_video": true,
+        "image_url": "https://storage.googleapis.com/falserverless/example_inputs/sora-2-i2v-input.png"
+      }
+    },
+    {
       "id": "video:fal-fal-ai-sora-2-video-to-video-remix",
       "vendor": "fal",
       "category": "video",
@@ -4835,6 +5400,686 @@
         "duration": 5,
         "enable_safety_checker": true,
         "reference_image_urls": []
+      }
+    },
+    {
+      "id": "image:fal-fal-ai-wan-v2-7-edit",
+      "vendor": "fal",
+      "category": "image",
+      "title": "Wan",
+      "docUrl": "https://fal.ai/models/fal-ai/wan/v2.7/edit/api",
+      "provider": "wan",
+      "alias": null,
+      "endpoint": "/fal-ai/wan-27-image/edit",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/wan-27-image/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/wan/v2.7/edit"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "title": "Wan27ImageEditInput",
+        "required": [
+          "prompt",
+          "image_urls"
+        ],
+        "properties": {
+          "image_urls": {
+            "items": {
+              "type": "string"
+            },
+            "description": "Reference images for editing (1-4 images required). Order matters: reference them as image 1, image 2, image 3, image 4 in the prompt.",
+            "title": "Image Urls",
+            "type": "array",
+            "examples": [
+              [
+                "https://storage.googleapis.com/falserverless/model_tests/wan/dragon-warrior.jpg"
+              ]
+            ]
+          },
+          "output_format": {
+            "enum": [
+              "jpeg",
+              "png",
+              "webp"
+            ],
+            "type": "string",
+            "title": "Output Format",
+            "description": "The format of the generated images.",
+            "default": "jpeg"
+          },
+          "negative_prompt": {
+            "description": "Content to avoid in the generated image. Max 500 characters.",
+            "title": "Negative Prompt",
+            "default": "",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "enable_prompt_expansion": {
+            "type": "boolean",
+            "title": "Enable Prompt Expansion",
+            "description": "Enable DashScope prompt expansion. Supported only for image edit mode.",
+            "default": true
+          },
+          "enable_safety_checker": {
+            "type": "boolean",
+            "title": "Enable Safety Checker",
+            "description": "Enable content moderation for input and output.",
+            "default": true
+          },
+          "seed": {
+            "description": "Random seed for reproducibility (0-2147483647).",
+            "title": "Seed",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Prompt",
+            "description": "Text prompt describing the desired image edit. Supports Chinese and English.",
+            "minLength": 1,
+            "examples": [
+              "Turn image 1 into a watercolor painting."
+            ]
+          },
+          "image_size": {
+            "description": "Output image size. Uses fal image size presets or explicit dimensions and is converted to DashScope size format.",
+            "title": "Image Size",
+            "default": "square_hd",
+            "anyOf": [
+              {
+                "type": "object",
+                "title": "ImageSize",
+                "properties": {
+                  "height": {
+                    "type": "integer",
+                    "title": "Height",
+                    "description": "The height of the generated image.",
+                    "maximum": 14142,
+                    "default": 512,
+                    "exclusiveMinimum": 0
+                  },
+                  "width": {
+                    "type": "integer",
+                    "title": "Width",
+                    "description": "The width of the generated image.",
+                    "maximum": 14142,
+                    "default": 512,
+                    "exclusiveMinimum": 0
+                  }
+                },
+                "x-fal-order-properties": [
+                  "width",
+                  "height"
+                ]
+              },
+              {
+                "enum": [
+                  "square_hd",
+                  "square",
+                  "portrait_4_3",
+                  "portrait_16_9",
+                  "landscape_4_3",
+                  "landscape_16_9"
+                ],
+                "type": "string"
+              }
+            ]
+          },
+          "num_images": {
+            "type": "integer",
+            "title": "Num Images",
+            "minimum": 1,
+            "maximum": 4,
+            "default": 1,
+            "description": "Number of images to generate (1-4)."
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "image_urls",
+          "negative_prompt",
+          "image_size",
+          "num_images",
+          "enable_prompt_expansion",
+          "seed",
+          "enable_safety_checker",
+          "output_format"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "image_urls",
+          "negative_prompt",
+          "image_size",
+          "num_images",
+          "enable_prompt_expansion",
+          "seed",
+          "enable_safety_checker",
+          "output_format"
+        ]
+      },
+      "examplePayload": {
+        "image_urls": [
+          "https://storage.googleapis.com/falserverless/model_tests/wan/dragon-warrior.jpg"
+        ],
+        "output_format": "jpeg",
+        "negative_prompt": "",
+        "enable_prompt_expansion": true,
+        "enable_safety_checker": true,
+        "seed": 0,
+        "prompt": "Turn image 1 into a watercolor painting.",
+        "image_size": "square_hd",
+        "num_images": 1
+      }
+    },
+    {
+      "id": "image:fal-fal-ai-wan-v2-7-pro-edit",
+      "vendor": "fal",
+      "category": "image",
+      "title": "Wan",
+      "docUrl": "https://fal.ai/models/fal-ai/wan/v2.7/pro/edit/api",
+      "provider": "wan",
+      "alias": null,
+      "endpoint": "/fal-ai/wan-27-image/pro/edit",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/wan-27-image/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/wan/v2.7/pro/edit"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "title": "Wan27ImageEditInput",
+        "required": [
+          "prompt",
+          "image_urls"
+        ],
+        "properties": {
+          "image_urls": {
+            "items": {
+              "type": "string"
+            },
+            "description": "Reference images for editing (1-4 images required). Order matters: reference them as image 1, image 2, image 3, image 4 in the prompt.",
+            "title": "Image Urls",
+            "type": "array",
+            "examples": [
+              [
+                "https://storage.googleapis.com/falserverless/model_tests/wan/dragon-warrior.jpg"
+              ]
+            ]
+          },
+          "output_format": {
+            "enum": [
+              "jpeg",
+              "png",
+              "webp"
+            ],
+            "type": "string",
+            "title": "Output Format",
+            "description": "The format of the generated images.",
+            "default": "jpeg"
+          },
+          "negative_prompt": {
+            "description": "Content to avoid in the generated image. Max 500 characters.",
+            "title": "Negative Prompt",
+            "default": "",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "enable_prompt_expansion": {
+            "type": "boolean",
+            "title": "Enable Prompt Expansion",
+            "description": "Enable DashScope prompt expansion. Supported only for image edit mode.",
+            "default": true
+          },
+          "enable_safety_checker": {
+            "type": "boolean",
+            "title": "Enable Safety Checker",
+            "description": "Enable content moderation for input and output.",
+            "default": true
+          },
+          "seed": {
+            "description": "Random seed for reproducibility (0-2147483647).",
+            "title": "Seed",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Prompt",
+            "description": "Text prompt describing the desired image edit. Supports Chinese and English.",
+            "minLength": 1,
+            "examples": [
+              "Turn image 1 into a watercolor painting."
+            ]
+          },
+          "image_size": {
+            "description": "Output image size. Uses fal image size presets or explicit dimensions and is converted to DashScope size format.",
+            "title": "Image Size",
+            "default": "square_hd",
+            "anyOf": [
+              {
+                "type": "object",
+                "title": "ImageSize",
+                "properties": {
+                  "height": {
+                    "type": "integer",
+                    "title": "Height",
+                    "description": "The height of the generated image.",
+                    "maximum": 14142,
+                    "default": 512,
+                    "exclusiveMinimum": 0
+                  },
+                  "width": {
+                    "type": "integer",
+                    "title": "Width",
+                    "description": "The width of the generated image.",
+                    "maximum": 14142,
+                    "default": 512,
+                    "exclusiveMinimum": 0
+                  }
+                },
+                "x-fal-order-properties": [
+                  "width",
+                  "height"
+                ]
+              },
+              {
+                "enum": [
+                  "square_hd",
+                  "square",
+                  "portrait_4_3",
+                  "portrait_16_9",
+                  "landscape_4_3",
+                  "landscape_16_9"
+                ],
+                "type": "string"
+              }
+            ]
+          },
+          "num_images": {
+            "type": "integer",
+            "title": "Num Images",
+            "minimum": 1,
+            "maximum": 4,
+            "default": 1,
+            "description": "Number of images to generate (1-4)."
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "image_urls",
+          "negative_prompt",
+          "image_size",
+          "num_images",
+          "enable_prompt_expansion",
+          "seed",
+          "enable_safety_checker",
+          "output_format"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "image_urls",
+          "negative_prompt",
+          "image_size",
+          "num_images",
+          "enable_prompt_expansion",
+          "seed",
+          "enable_safety_checker",
+          "output_format"
+        ]
+      },
+      "examplePayload": {
+        "image_urls": [
+          "https://storage.googleapis.com/falserverless/model_tests/wan/dragon-warrior.jpg"
+        ],
+        "output_format": "jpeg",
+        "negative_prompt": "",
+        "enable_prompt_expansion": true,
+        "enable_safety_checker": true,
+        "seed": 0,
+        "prompt": "Turn image 1 into a watercolor painting.",
+        "image_size": "square_hd",
+        "num_images": 1
+      }
+    },
+    {
+      "id": "image:fal-fal-ai-wan-v2-7-pro-text-to-image",
+      "vendor": "fal",
+      "category": "image",
+      "title": "Wan",
+      "docUrl": "https://fal.ai/models/fal-ai/wan/v2.7/pro/text-to-image/api",
+      "provider": "wan",
+      "alias": null,
+      "endpoint": "/fal-ai/wan-27-image/pro/text-to-image",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/wan-27-image/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/wan/v2.7/pro/text-to-image"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "title": "Wan27TextToImageInput",
+        "required": [
+          "prompt"
+        ],
+        "properties": {
+          "output_format": {
+            "enum": [
+              "jpeg",
+              "png",
+              "webp"
+            ],
+            "type": "string",
+            "title": "Output Format",
+            "description": "The format of the generated images.",
+            "default": "jpeg"
+          },
+          "negative_prompt": {
+            "description": "Content to avoid in the generated image. Max 500 characters.",
+            "title": "Negative Prompt",
+            "default": "",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Prompt",
+            "description": "Text prompt describing the desired output. Supports Chinese and English.",
+            "minLength": 1,
+            "examples": [
+              "An astronaut riding a horse in a photorealistic style."
+            ]
+          },
+          "num_images": {
+            "type": "integer",
+            "title": "Num Images",
+            "minimum": 1,
+            "maximum": 5,
+            "default": 1,
+            "description": "Number of images to generate (1-5)."
+          },
+          "seed": {
+            "description": "Random seed for reproducibility (0-2147483647).",
+            "title": "Seed",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "enable_safety_checker": {
+            "type": "boolean",
+            "title": "Enable Safety Checker",
+            "description": "Enable content moderation for input and output.",
+            "default": true
+          },
+          "image_size": {
+            "description": "Output image size.",
+            "title": "Image Size",
+            "default": "square_hd",
+            "anyOf": [
+              {
+                "type": "object",
+                "title": "ImageSize",
+                "properties": {
+                  "height": {
+                    "type": "integer",
+                    "title": "Height",
+                    "description": "The height of the generated image.",
+                    "maximum": 14142,
+                    "default": 512,
+                    "exclusiveMinimum": 0
+                  },
+                  "width": {
+                    "type": "integer",
+                    "title": "Width",
+                    "description": "The width of the generated image.",
+                    "maximum": 14142,
+                    "default": 512,
+                    "exclusiveMinimum": 0
+                  }
+                },
+                "x-fal-order-properties": [
+                  "width",
+                  "height"
+                ]
+              },
+              {
+                "enum": [
+                  "square_hd",
+                  "square",
+                  "portrait_4_3",
+                  "portrait_16_9",
+                  "landscape_4_3",
+                  "landscape_16_9"
+                ],
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "negative_prompt",
+          "image_size",
+          "num_images",
+          "seed",
+          "enable_safety_checker",
+          "output_format"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "negative_prompt",
+          "image_size",
+          "num_images",
+          "seed",
+          "enable_safety_checker",
+          "output_format"
+        ]
+      },
+      "examplePayload": {
+        "output_format": "jpeg",
+        "negative_prompt": "",
+        "prompt": "An astronaut riding a horse in a photorealistic style.",
+        "num_images": 1,
+        "seed": 0,
+        "enable_safety_checker": true,
+        "image_size": "square_hd"
+      }
+    },
+    {
+      "id": "image:fal-fal-ai-wan-v2-7-text-to-image",
+      "vendor": "fal",
+      "category": "image",
+      "title": "Wan",
+      "docUrl": "https://fal.ai/models/fal-ai/wan/v2.7/text-to-image/api",
+      "provider": "wan",
+      "alias": null,
+      "endpoint": "/fal-ai/wan-27-image/text-to-image",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/wan-27-image/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/wan/v2.7/text-to-image"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "title": "Wan27TextToImageInput",
+        "required": [
+          "prompt"
+        ],
+        "properties": {
+          "output_format": {
+            "enum": [
+              "jpeg",
+              "png",
+              "webp"
+            ],
+            "type": "string",
+            "title": "Output Format",
+            "description": "The format of the generated images.",
+            "default": "jpeg"
+          },
+          "negative_prompt": {
+            "description": "Content to avoid in the generated image. Max 500 characters.",
+            "title": "Negative Prompt",
+            "default": "",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Prompt",
+            "description": "Text prompt describing the desired output. Supports Chinese and English.",
+            "minLength": 1,
+            "examples": [
+              "An astronaut riding a horse in a photorealistic style."
+            ]
+          },
+          "num_images": {
+            "type": "integer",
+            "title": "Num Images",
+            "minimum": 1,
+            "maximum": 5,
+            "default": 1,
+            "description": "Number of images to generate (1-5)."
+          },
+          "seed": {
+            "description": "Random seed for reproducibility (0-2147483647).",
+            "title": "Seed",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "enable_safety_checker": {
+            "type": "boolean",
+            "title": "Enable Safety Checker",
+            "description": "Enable content moderation for input and output.",
+            "default": true
+          },
+          "image_size": {
+            "description": "Output image size.",
+            "title": "Image Size",
+            "default": "square_hd",
+            "anyOf": [
+              {
+                "type": "object",
+                "title": "ImageSize",
+                "properties": {
+                  "height": {
+                    "type": "integer",
+                    "title": "Height",
+                    "description": "The height of the generated image.",
+                    "maximum": 14142,
+                    "default": 512,
+                    "exclusiveMinimum": 0
+                  },
+                  "width": {
+                    "type": "integer",
+                    "title": "Width",
+                    "description": "The width of the generated image.",
+                    "maximum": 14142,
+                    "default": 512,
+                    "exclusiveMinimum": 0
+                  }
+                },
+                "x-fal-order-properties": [
+                  "width",
+                  "height"
+                ]
+              },
+              {
+                "enum": [
+                  "square_hd",
+                  "square",
+                  "portrait_4_3",
+                  "portrait_16_9",
+                  "landscape_4_3",
+                  "landscape_16_9"
+                ],
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "negative_prompt",
+          "image_size",
+          "num_images",
+          "seed",
+          "enable_safety_checker",
+          "output_format"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "negative_prompt",
+          "image_size",
+          "num_images",
+          "seed",
+          "enable_safety_checker",
+          "output_format"
+        ]
+      },
+      "examplePayload": {
+        "output_format": "jpeg",
+        "negative_prompt": "",
+        "prompt": "An astronaut riding a horse in a photorealistic style.",
+        "num_images": 1,
+        "seed": 0,
+        "enable_safety_checker": true,
+        "image_size": "square_hd"
       }
     },
     {
@@ -5672,6 +6917,781 @@
         "aspect_ratio": "16:9",
         "enable_safety_checker": true,
         "prompt": "A dance battle between character1 and character2, cinematic lighting, smooth camera movement."
+      }
+    },
+    {
+      "id": "video:fal-fal-ai-minimax-hailuo-02-standard-text-to-video",
+      "vendor": "fal",
+      "category": "video",
+      "title": "MiniMax Hailuo 02 [Standard] (Text to Video)",
+      "docUrl": "https://fal.ai/models/fal-ai/minimax/hailuo-02/standard/text-to-video/api",
+      "provider": "minimax",
+      "alias": null,
+      "endpoint": "/fal-ai/minimax/hailuo-02/standard/text-to-video",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/minimax/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/minimax/hailuo-02/standard/text-to-video"
+      ],
+      "requestSchema": {
+        "title": "StandardTextToVideoHailuo02Input",
+        "properties": {
+          "prompt_optimizer": {
+            "title": "Prompt Optimizer",
+            "description": "Whether to use the model's prompt optimizer",
+            "type": "boolean",
+            "default": true
+          },
+          "duration": {
+            "title": "Duration",
+            "default": "6",
+            "description": "The duration of the video in seconds. 10 seconds videos are not supported for 1080p resolution.",
+            "type": "string",
+            "enum": [
+              "6",
+              "10"
+            ]
+          },
+          "prompt": {
+            "title": "Prompt",
+            "examples": [
+              "A Galactic Smuggler is a rogue figure with a cybernetic arm and a well-worn coat that hints at many dangerous escapades across the galaxy. Their ship is filled with rare and exotic treasures from distant planets, concealed in hidden compartments, showing their expertise in illicit trade. Their belt is adorned with energy-based weapons, ready to be drawn at any moment to protect themselves or escape from tight situations. This character thrives in the shadows of space, navigating between the law and chaos with stealth and wit, always seeking the next big score while evading bounty hunters and law enforcement. The rogue's ship, rugged yet efficient, serves as both a home and a tool for their dangerous lifestyle. The treasures they collect reflect the diverse and intriguing worlds they've encountered—alien artifacts, rare minerals, and artifacts of unknown origin. Their reputation precedes them, with whispers of their dealings and the deadly encounters that often follow. A master of negotiation and deception, the Galactic Smuggler navigates the cosmos with an eye on the horizon, always one step ahead of those who pursue them."
+            ],
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "duration",
+          "prompt_optimizer"
+        ],
+        "type": "object",
+        "required": [
+          "prompt"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "duration",
+          "prompt_optimizer"
+        ]
+      },
+      "examplePayload": {
+        "prompt_optimizer": true,
+        "duration": "6",
+        "prompt": "A Galactic Smuggler is a rogue figure with a cybernetic arm and a well-worn coat that hints at many dangerous escapades across the galaxy. Their ship is filled with rare and exotic treasures from distant planets, concealed in hidden compartments, showing their expertise in illicit trade. Their belt is adorned with energy-based weapons, ready to be drawn at any moment to protect themselves or escape from tight situations. This character thrives in the shadows of space, navigating between the law and chaos with stealth and wit, always seeking the next big score while evading bounty hunters and law enforcement. The rogue's ship, rugged yet efficient, serves as both a home and a tool for their dangerous lifestyle. The treasures they collect reflect the diverse and intriguing worlds they've encountered—alien artifacts, rare minerals, and artifacts of unknown origin. Their reputation precedes them, with whispers of their dealings and the deadly encounters that often follow. A master of negotiation and deception, the Galactic Smuggler navigates the cosmos with an eye on the horizon, always one step ahead of those who pursue them."
+      }
+    },
+    {
+      "id": "video:fal-fal-ai-minimax-hailuo-02-standard-image-to-video",
+      "vendor": "fal",
+      "category": "video",
+      "title": "MiniMax Hailuo 02 [Standard] (Image to Video)",
+      "docUrl": "https://fal.ai/models/fal-ai/minimax/hailuo-02/standard/image-to-video/api",
+      "provider": "minimax",
+      "alias": null,
+      "endpoint": "/fal-ai/minimax/hailuo-02/standard/image-to-video",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/minimax/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/minimax/hailuo-02/standard/image-to-video"
+      ],
+      "requestSchema": {
+        "title": "StandardImageToVideoHailuo02Input",
+        "properties": {
+          "duration": {
+            "title": "Duration",
+            "default": "6",
+            "description": "The duration of the video in seconds. 10 seconds videos are not supported for 1080p resolution.",
+            "type": "string",
+            "enum": [
+              "6",
+              "10"
+            ]
+          },
+          "prompt_optimizer": {
+            "title": "Prompt Optimizer",
+            "description": "Whether to use the model's prompt optimizer",
+            "type": "boolean",
+            "default": true
+          },
+          "end_image_url": {
+            "title": "End Image Url",
+            "description": "Optional URL of the image to use as the last frame of the video",
+            "anyOf": [
+              {
+                "type": "string",
+                "ui": {
+                  "field": "image"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "image_url": {
+            "title": "Image Url",
+            "examples": [
+              "https://storage.googleapis.com/falserverless/model_tests/minimax/1749891352437225630-389852416840474630_1749891352.png"
+            ],
+            "type": "string"
+          },
+          "resolution": {
+            "title": "Resolution",
+            "default": "768P",
+            "description": "The resolution of the generated video.",
+            "type": "string",
+            "enum": [
+              "512P",
+              "768P"
+            ]
+          },
+          "prompt": {
+            "title": "Prompt",
+            "examples": [
+              "Man walked into winter cave with polar bear"
+            ],
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "image_url",
+          "duration",
+          "prompt_optimizer",
+          "resolution",
+          "end_image_url"
+        ],
+        "type": "object",
+        "required": [
+          "prompt",
+          "image_url"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "image_url",
+          "duration",
+          "prompt_optimizer",
+          "resolution",
+          "end_image_url"
+        ]
+      },
+      "examplePayload": {
+        "duration": "6",
+        "prompt_optimizer": true,
+        "end_image_url": "",
+        "image_url": "https://storage.googleapis.com/falserverless/model_tests/minimax/1749891352437225630-389852416840474630_1749891352.png",
+        "resolution": "768P",
+        "prompt": "Man walked into winter cave with polar bear"
+      }
+    },
+    {
+      "id": "video:fal-fal-ai-minimax-hailuo-02-pro-text-to-video",
+      "vendor": "fal",
+      "category": "video",
+      "title": "MiniMax Hailuo 02 [Pro] (Text to Video)",
+      "docUrl": "https://fal.ai/models/fal-ai/minimax/hailuo-02/pro/text-to-video/api",
+      "provider": "minimax",
+      "alias": null,
+      "endpoint": "/fal-ai/minimax/hailuo-02/pro/text-to-video",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/minimax/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/minimax/hailuo-02/pro/text-to-video"
+      ],
+      "requestSchema": {
+        "title": "ProTextToVideoHailuo02Input",
+        "properties": {
+          "prompt_optimizer": {
+            "title": "Prompt Optimizer",
+            "description": "Whether to use the model's prompt optimizer",
+            "type": "boolean",
+            "default": true
+          },
+          "prompt": {
+            "title": "Prompt",
+            "examples": [
+              "A Galactic Smuggler is a rogue figure with a cybernetic arm and a well-worn coat that hints at many dangerous escapades across the galaxy. Their ship is filled with rare and exotic treasures from distant planets, concealed in hidden compartments, showing their expertise in illicit trade. Their belt is adorned with energy-based weapons, ready to be drawn at any moment to protect themselves or escape from tight situations. This character thrives in the shadows of space, navigating between the law and chaos with stealth and wit, always seeking the next big score while evading bounty hunters and law enforcement. The rogue's ship, rugged yet efficient, serves as both a home and a tool for their dangerous lifestyle. The treasures they collect reflect the diverse and intriguing worlds they've encountered—alien artifacts, rare minerals, and artifacts of unknown origin. Their reputation precedes them, with whispers of their dealings and the deadly encounters that often follow. A master of negotiation and deception, the Galactic Smuggler navigates the cosmos with an eye on the horizon, always one step ahead of those who pursue them."
+            ],
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "prompt_optimizer"
+        ],
+        "type": "object",
+        "required": [
+          "prompt"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "prompt_optimizer"
+        ]
+      },
+      "examplePayload": {
+        "prompt_optimizer": true,
+        "prompt": "A Galactic Smuggler is a rogue figure with a cybernetic arm and a well-worn coat that hints at many dangerous escapades across the galaxy. Their ship is filled with rare and exotic treasures from distant planets, concealed in hidden compartments, showing their expertise in illicit trade. Their belt is adorned with energy-based weapons, ready to be drawn at any moment to protect themselves or escape from tight situations. This character thrives in the shadows of space, navigating between the law and chaos with stealth and wit, always seeking the next big score while evading bounty hunters and law enforcement. The rogue's ship, rugged yet efficient, serves as both a home and a tool for their dangerous lifestyle. The treasures they collect reflect the diverse and intriguing worlds they've encountered—alien artifacts, rare minerals, and artifacts of unknown origin. Their reputation precedes them, with whispers of their dealings and the deadly encounters that often follow. A master of negotiation and deception, the Galactic Smuggler navigates the cosmos with an eye on the horizon, always one step ahead of those who pursue them."
+      }
+    },
+    {
+      "id": "video:fal-fal-ai-minimax-hailuo-02-pro-image-to-video",
+      "vendor": "fal",
+      "category": "video",
+      "title": "MiniMax Hailuo 02 [Pro] (Image to Video)",
+      "docUrl": "https://fal.ai/models/fal-ai/minimax/hailuo-02/pro/image-to-video/api",
+      "provider": "minimax",
+      "alias": null,
+      "endpoint": "/fal-ai/minimax/hailuo-02/pro/image-to-video",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/minimax/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/minimax/hailuo-02/pro/image-to-video"
+      ],
+      "requestSchema": {
+        "title": "ProImageToVideoHailuo02Input",
+        "properties": {
+          "end_image_url": {
+            "title": "End Image Url",
+            "description": "Optional URL of the image to use as the last frame of the video",
+            "anyOf": [
+              {
+                "type": "string",
+                "ui": {
+                  "field": "image"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "image_url": {
+            "title": "Image Url",
+            "examples": [
+              "https://storage.googleapis.com/falserverless/model_tests/minimax/1749891352437225630-389852416840474630_1749891352.png"
+            ],
+            "type": "string"
+          },
+          "prompt_optimizer": {
+            "title": "Prompt Optimizer",
+            "description": "Whether to use the model's prompt optimizer",
+            "type": "boolean",
+            "default": true
+          },
+          "prompt": {
+            "title": "Prompt",
+            "examples": [
+              "Man walked into winter cave with polar bear"
+            ],
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "image_url",
+          "prompt_optimizer",
+          "end_image_url"
+        ],
+        "type": "object",
+        "required": [
+          "prompt",
+          "image_url"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "image_url",
+          "prompt_optimizer",
+          "end_image_url"
+        ]
+      },
+      "examplePayload": {
+        "end_image_url": "",
+        "image_url": "https://storage.googleapis.com/falserverless/model_tests/minimax/1749891352437225630-389852416840474630_1749891352.png",
+        "prompt_optimizer": true,
+        "prompt": "Man walked into winter cave with polar bear"
+      }
+    },
+    {
+      "id": "video:fal-fal-ai-minimax-hailuo-02-fast-image-to-video",
+      "vendor": "fal",
+      "category": "video",
+      "title": "Minimax",
+      "docUrl": "https://fal.ai/models/fal-ai/minimax/hailuo-02-fast/image-to-video/api",
+      "provider": "minimax",
+      "alias": null,
+      "endpoint": "/fal-ai/minimax/hailuo-02-fast/image-to-video",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/minimax/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/minimax/hailuo-02-fast/image-to-video"
+      ],
+      "requestSchema": {
+        "title": "FastImageToVideoHailuo02Input",
+        "properties": {
+          "prompt_optimizer": {
+            "title": "Prompt Optimizer",
+            "description": "Whether to use the model's prompt optimizer",
+            "type": "boolean",
+            "default": true
+          },
+          "image_url": {
+            "title": "Image Url",
+            "examples": [
+              "https://v3.fal.media/files/tiger/U9HN_tm5-3Ls52SbD6CrW_image.webp"
+            ],
+            "type": "string"
+          },
+          "duration": {
+            "title": "Duration",
+            "default": "6",
+            "description": "The duration of the video in seconds. 10 seconds videos are not supported for 1080p resolution.",
+            "type": "string",
+            "enum": [
+              "6",
+              "10"
+            ]
+          },
+          "prompt": {
+            "title": "Prompt",
+            "examples": [
+              "Extremely realistic movement An old samurai is breaking a stone in half"
+            ],
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "image_url",
+          "duration",
+          "prompt_optimizer"
+        ],
+        "type": "object",
+        "required": [
+          "prompt",
+          "image_url"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "image_url",
+          "duration",
+          "prompt_optimizer"
+        ]
+      },
+      "examplePayload": {
+        "prompt_optimizer": true,
+        "image_url": "https://v3.fal.media/files/tiger/U9HN_tm5-3Ls52SbD6CrW_image.webp",
+        "duration": "6",
+        "prompt": "Extremely realistic movement An old samurai is breaking a stone in half"
+      }
+    },
+    {
+      "id": "video:fal-fal-ai-minimax-hailuo-2-3-standard-text-to-video",
+      "vendor": "fal",
+      "category": "video",
+      "title": "MiniMax Hailuo 2.3 [Standard] (Text to Video)",
+      "docUrl": "https://fal.ai/models/fal-ai/minimax/hailuo-2.3/standard/text-to-video/api",
+      "provider": "minimax",
+      "alias": null,
+      "endpoint": "/fal-ai/minimax/hailuo-2.3/standard/text-to-video",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/minimax/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/minimax/hailuo-2.3/standard/text-to-video"
+      ],
+      "requestSchema": {
+        "title": "StandardTextToVideoHailuo23Input",
+        "properties": {
+          "prompt_optimizer": {
+            "title": "Prompt Optimizer",
+            "description": "Whether to use the model's prompt optimizer",
+            "type": "boolean",
+            "default": true
+          },
+          "duration": {
+            "title": "Duration",
+            "default": "6",
+            "description": "The duration of the video in seconds.",
+            "type": "string",
+            "enum": [
+              "6",
+              "10"
+            ]
+          },
+          "prompt": {
+            "title": "Prompt",
+            "examples": [
+              "An intense electrical storm rages over a modern city skyline at night. Multiple lightning bolts strike simultaneously, illuminating the towering skyscrapers in brilliant white flashes. Thunder clouds roil and churn overhead while constant lightning creates a strobe effect. Rain pours in heavy sheets, visible in the glow of city lights. The camera captures the drama from across a river as lightning reflects in the water. Lightning branches across the sky in intricate patterns. Atmosphere: dramatic, powerful, electrifying urban storm."
+            ],
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "prompt_optimizer",
+          "duration"
+        ],
+        "type": "object",
+        "required": [
+          "prompt"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "prompt_optimizer",
+          "duration"
+        ]
+      },
+      "examplePayload": {
+        "prompt_optimizer": true,
+        "duration": "6",
+        "prompt": "An intense electrical storm rages over a modern city skyline at night. Multiple lightning bolts strike simultaneously, illuminating the towering skyscrapers in brilliant white flashes. Thunder clouds roil and churn overhead while constant lightning creates a strobe effect. Rain pours in heavy sheets, visible in the glow of city lights. The camera captures the drama from across a river as lightning reflects in the water. Lightning branches across the sky in intricate patterns. Atmosphere: dramatic, powerful, electrifying urban storm."
+      }
+    },
+    {
+      "id": "video:fal-fal-ai-minimax-hailuo-2-3-standard-image-to-video",
+      "vendor": "fal",
+      "category": "video",
+      "title": "MiniMax Hailuo 2.3 [Standard] (Image to Video)",
+      "docUrl": "https://fal.ai/models/fal-ai/minimax/hailuo-2.3/standard/image-to-video/api",
+      "provider": "minimax",
+      "alias": null,
+      "endpoint": "/fal-ai/minimax/hailuo-2.3/standard/image-to-video",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/minimax/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/minimax/hailuo-2.3/standard/image-to-video"
+      ],
+      "requestSchema": {
+        "title": "StandardImageToVideoHailuo23Input",
+        "properties": {
+          "prompt_optimizer": {
+            "title": "Prompt Optimizer",
+            "description": "Whether to use the model's prompt optimizer",
+            "type": "boolean",
+            "default": true
+          },
+          "image_url": {
+            "title": "Image Url",
+            "examples": [
+              "https://storage.googleapis.com/falserverless/example_inputs/hailuo23/standard_i2v_in.jpg"
+            ],
+            "_fal_ui_field": "image",
+            "type": "string",
+            "description": "URL of the image to use as the first frame"
+          },
+          "duration": {
+            "title": "Duration",
+            "default": "6",
+            "description": "The duration of the video in seconds.",
+            "type": "string",
+            "enum": [
+              "6",
+              "10"
+            ]
+          },
+          "prompt": {
+            "title": "Prompt",
+            "examples": [
+              "The space station slowly rotates in orbit, its solar panels tracking the sun. Earth rotates majestically in the background with weather patterns and landmasses drifting by. The station's communication arrays adjust position. A small spacecraft approaches one of the docking ports. The scene captures the silent majesty of space and human engineering."
+            ],
+            "description": "Text prompt for video generation",
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "prompt_optimizer",
+          "duration",
+          "image_url"
+        ],
+        "type": "object",
+        "required": [
+          "prompt",
+          "image_url"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "prompt_optimizer",
+          "duration",
+          "image_url"
+        ]
+      },
+      "examplePayload": {
+        "prompt_optimizer": true,
+        "image_url": "https://storage.googleapis.com/falserverless/example_inputs/hailuo23/standard_i2v_in.jpg",
+        "duration": "6",
+        "prompt": "The space station slowly rotates in orbit, its solar panels tracking the sun. Earth rotates majestically in the background with weather patterns and landmasses drifting by. The station's communication arrays adjust position. A small spacecraft approaches one of the docking ports. The scene captures the silent majesty of space and human engineering."
+      }
+    },
+    {
+      "id": "video:fal-fal-ai-minimax-hailuo-2-3-pro-text-to-video",
+      "vendor": "fal",
+      "category": "video",
+      "title": "MiniMax Hailuo 2.3 [Pro] (Text to Video)",
+      "docUrl": "https://fal.ai/models/fal-ai/minimax/hailuo-2.3/pro/text-to-video/api",
+      "provider": "minimax",
+      "alias": null,
+      "endpoint": "/fal-ai/minimax/hailuo-2.3/pro/text-to-video",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/minimax/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/minimax/hailuo-2.3/pro/text-to-video"
+      ],
+      "requestSchema": {
+        "title": "ProTextToVideoHailuo23Input",
+        "properties": {
+          "prompt_optimizer": {
+            "title": "Prompt Optimizer",
+            "description": "Whether to use the model's prompt optimizer",
+            "type": "boolean",
+            "default": true
+          },
+          "prompt": {
+            "title": "Prompt",
+            "examples": [
+              "The camera follows the snowboarder as they carve down the mountain through deep powder, each turn sending up huge rooster tails of snow. They navigate between trees, floating through the powder with smooth, flowing movements. The rider launches off a natural jump, grabbing the board mid-air before landing softly in deep snow and continuing down. Powder sprays continuously as they link turns together. The atmosphere is exhilarating and free. Audio: Board cutting through snow, powder spraying, wind rushing, the rider's excited shouts, and the soft thuds of landing in deep snow."
+            ],
+            "description": "Text prompt for video generation",
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "prompt_optimizer"
+        ],
+        "type": "object",
+        "required": [
+          "prompt"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "prompt_optimizer"
+        ]
+      },
+      "examplePayload": {
+        "prompt_optimizer": true,
+        "prompt": "The camera follows the snowboarder as they carve down the mountain through deep powder, each turn sending up huge rooster tails of snow. They navigate between trees, floating through the powder with smooth, flowing movements. The rider launches off a natural jump, grabbing the board mid-air before landing softly in deep snow and continuing down. Powder sprays continuously as they link turns together. The atmosphere is exhilarating and free. Audio: Board cutting through snow, powder spraying, wind rushing, the rider's excited shouts, and the soft thuds of landing in deep snow."
+      }
+    },
+    {
+      "id": "video:fal-fal-ai-minimax-hailuo-2-3-pro-image-to-video",
+      "vendor": "fal",
+      "category": "video",
+      "title": "MiniMax Hailuo 2.3 [Pro] (Image to Video)",
+      "docUrl": "https://fal.ai/models/fal-ai/minimax/hailuo-2.3/pro/image-to-video/api",
+      "provider": "minimax",
+      "alias": null,
+      "endpoint": "/fal-ai/minimax/hailuo-2.3/pro/image-to-video",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/minimax/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/minimax/hailuo-2.3/pro/image-to-video"
+      ],
+      "requestSchema": {
+        "title": "ProImageToVideoHailuo23Input",
+        "properties": {
+          "image_url": {
+            "title": "Image Url",
+            "examples": [
+              "https://storage.googleapis.com/falserverless/example_inputs/hailuo23/pro_i2v_in.jpg"
+            ],
+            "_fal_ui_field": "image",
+            "type": "string",
+            "description": "URL of the image to use as the first frame"
+          },
+          "prompt_optimizer": {
+            "title": "Prompt Optimizer",
+            "description": "Whether to use the model's prompt optimizer",
+            "type": "boolean",
+            "default": true
+          },
+          "prompt": {
+            "title": "Prompt",
+            "examples": [
+              "The camera follows the mountain biker as they navigate a technical forest trail at high speed, wheels bouncing over roots and rocks. The rider approaches a jump, launching into the air with the bike, both rider and machine perfectly synchronized. They land smoothly and continue through tight turns, splashing through a stream crossing. Mud and water spray as the bike powers through challenging terrain. The atmosphere is wild and adventurous. Audio: Tires gripping dirt, gears shifting, heavy breathing, branches whipping past, and water splashing."
+            ],
+            "description": "Text prompt for video generation",
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "prompt_optimizer",
+          "image_url"
+        ],
+        "type": "object",
+        "required": [
+          "prompt",
+          "image_url"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "prompt_optimizer",
+          "image_url"
+        ]
+      },
+      "examplePayload": {
+        "image_url": "https://storage.googleapis.com/falserverless/example_inputs/hailuo23/pro_i2v_in.jpg",
+        "prompt_optimizer": true,
+        "prompt": "The camera follows the mountain biker as they navigate a technical forest trail at high speed, wheels bouncing over roots and rocks. The rider approaches a jump, launching into the air with the bike, both rider and machine perfectly synchronized. They land smoothly and continue through tight turns, splashing through a stream crossing. Mud and water spray as the bike powers through challenging terrain. The atmosphere is wild and adventurous. Audio: Tires gripping dirt, gears shifting, heavy breathing, branches whipping past, and water splashing."
+      }
+    },
+    {
+      "id": "video:fal-fal-ai-minimax-hailuo-2-3-fast-standard-image-to-video",
+      "vendor": "fal",
+      "category": "video",
+      "title": "MiniMax Hailuo 2.3 Fast [Standard] (Image to Video)",
+      "docUrl": "https://fal.ai/models/fal-ai/minimax/hailuo-2.3-fast/standard/image-to-video/api",
+      "provider": "minimax",
+      "alias": null,
+      "endpoint": "/fal-ai/minimax/hailuo-2.3-fast/standard/image-to-video",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/minimax/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/minimax/hailuo-2.3-fast/standard/image-to-video"
+      ],
+      "requestSchema": {
+        "title": "StandardFastImageToVideoHailuo23Input",
+        "properties": {
+          "prompt_optimizer": {
+            "title": "Prompt Optimizer",
+            "description": "Whether to use the model's prompt optimizer",
+            "type": "boolean",
+            "default": true
+          },
+          "image_url": {
+            "title": "Image Url",
+            "examples": [
+              "https://storage.googleapis.com/falserverless/example_inputs/hailuo23/fast_standard_i2v_in.jpg"
+            ],
+            "_fal_ui_field": "image",
+            "type": "string",
+            "description": "URL of the image to use as the first frame"
+          },
+          "duration": {
+            "title": "Duration",
+            "default": "6",
+            "description": "The duration of the video in seconds.",
+            "type": "string",
+            "enum": [
+              "6",
+              "10"
+            ]
+          },
+          "prompt": {
+            "title": "Prompt",
+            "examples": [
+              "Athlete running powerfully on beach, dynamic camera movement tracking the runner, waves and sunset in motion, Hollywood movie cinematography, professional sports filming, inspiring atmosphere"
+            ],
+            "description": "Text prompt for video generation",
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "prompt_optimizer",
+          "image_url",
+          "duration"
+        ],
+        "type": "object",
+        "required": [
+          "prompt",
+          "image_url"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "prompt_optimizer",
+          "image_url",
+          "duration"
+        ]
+      },
+      "examplePayload": {
+        "prompt_optimizer": true,
+        "image_url": "https://storage.googleapis.com/falserverless/example_inputs/hailuo23/fast_standard_i2v_in.jpg",
+        "duration": "6",
+        "prompt": "Athlete running powerfully on beach, dynamic camera movement tracking the runner, waves and sunset in motion, Hollywood movie cinematography, professional sports filming, inspiring atmosphere"
+      }
+    },
+    {
+      "id": "video:fal-fal-ai-minimax-hailuo-2-3-fast-pro-image-to-video",
+      "vendor": "fal",
+      "category": "video",
+      "title": "MiniMax Hailuo 2.3 Fast [Pro] (Image to Video)",
+      "docUrl": "https://fal.ai/models/fal-ai/minimax/hailuo-2.3-fast/pro/image-to-video/api",
+      "provider": "minimax",
+      "alias": null,
+      "endpoint": "/fal-ai/minimax/hailuo-2.3-fast/pro/image-to-video",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/minimax/requests/{request_id}/status",
+      "modelKeys": [
+        "fal-ai/minimax/hailuo-2.3-fast/pro/image-to-video"
+      ],
+      "requestSchema": {
+        "title": "ProFastImageToVideoHailuo23Input",
+        "properties": {
+          "image_url": {
+            "title": "Image Url",
+            "examples": [
+              "https://storage.googleapis.com/falserverless/example_inputs/hailuo23/fast_pro_i2v_in.jpg"
+            ],
+            "_fal_ui_field": "image",
+            "type": "string",
+            "description": "URL of the image to use as the first frame"
+          },
+          "prompt_optimizer": {
+            "title": "Prompt Optimizer",
+            "description": "Whether to use the model's prompt optimizer",
+            "type": "boolean",
+            "default": true
+          },
+          "prompt": {
+            "title": "Prompt",
+            "examples": [
+              "Subject-tracking orbit: camera glides parallel to astronaut, Earth rotates beneath, sun crest reveals lens flare, astronaut tethers and spins slowly, 8K 60 fps slow-motion, ends with spacecraft blackout on sun disk"
+            ],
+            "description": "Text prompt for video generation",
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "prompt_optimizer",
+          "image_url"
+        ],
+        "type": "object",
+        "required": [
+          "prompt",
+          "image_url"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "prompt_optimizer",
+          "image_url"
+        ]
+      },
+      "examplePayload": {
+        "image_url": "https://storage.googleapis.com/falserverless/example_inputs/hailuo23/fast_pro_i2v_in.jpg",
+        "prompt_optimizer": true,
+        "prompt": "Subject-tracking orbit: camera glides parallel to astronaut, Earth rotates beneath, sun crest reveals lens flare, astronaut tethers and spins slowly, 8K 60 fps slow-motion, ends with spacecraft blackout on sun disk"
       }
     },
     {
@@ -9841,6 +11861,119 @@
       }
     },
     {
+      "id": "image:fal-xai-grok-imagine-image",
+      "vendor": "fal",
+      "category": "image",
+      "title": "Grok Imagine Image",
+      "docUrl": "https://fal.ai/models/xai/grok-imagine-image/api",
+      "provider": "xAI",
+      "alias": null,
+      "endpoint": "/fal-ai/xai",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/xai/requests/{request_id}/status",
+      "modelKeys": [
+        "xai/grok-imagine-image"
+      ],
+      "requestSchema": {
+        "properties": {
+          "num_images": {
+            "description": "Number of images to generate.",
+            "default": 1,
+            "type": "integer",
+            "maximum": 4,
+            "title": "Number of Images",
+            "minimum": 1
+          },
+          "aspect_ratio": {
+            "description": "Aspect ratio of the generated image.",
+            "default": "1:1",
+            "enum": [
+              "2:1",
+              "20:9",
+              "19.5:9",
+              "16:9",
+              "4:3",
+              "3:2",
+              "1:1",
+              "2:3",
+              "3:4",
+              "9:16",
+              "9:19.5",
+              "9:20",
+              "1:2"
+            ],
+            "type": "string",
+            "title": "Aspect Ratio"
+          },
+          "output_format": {
+            "description": "The format of the generated image.",
+            "default": "jpeg",
+            "enum": [
+              "jpeg",
+              "png",
+              "webp"
+            ],
+            "type": "string",
+            "title": "Output Format"
+          },
+          "resolution": {
+            "description": "Resolution of the generated image. `1k` for standard resolution, `2k` for high resolution.",
+            "default": "1k",
+            "enum": [
+              "1k",
+              "2k"
+            ],
+            "type": "string",
+            "title": "Resolution"
+          },
+          "sync_mode": {
+            "description": "If `True`, the media will be returned as a data URI and the output data won't be available in the request history.",
+            "default": false,
+            "type": "boolean",
+            "title": "Sync Mode"
+          },
+          "prompt": {
+            "examples": [
+              "Abstract human silhouette, golden particles ready to burst outward representing joy, data visualization style, emotional expression through particles, artistic scientific"
+            ],
+            "description": "Text description of the desired image.",
+            "type": "string",
+            "maxLength": 8000,
+            "title": "Prompt"
+          }
+        },
+        "required": [
+          "prompt"
+        ],
+        "type": "object",
+        "title": "XAIImageInput",
+        "x-fal-order-properties": [
+          "prompt",
+          "num_images",
+          "aspect_ratio",
+          "resolution",
+          "output_format",
+          "sync_mode"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "num_images",
+          "aspect_ratio",
+          "resolution",
+          "output_format",
+          "sync_mode"
+        ]
+      },
+      "examplePayload": {
+        "num_images": 1,
+        "aspect_ratio": "1:1",
+        "output_format": "jpeg",
+        "resolution": "1k",
+        "sync_mode": false,
+        "prompt": "Abstract human silhouette, golden particles ready to burst outward representing joy, data visualization style, emotional expression through particles, artistic scientific"
+      }
+    },
+    {
       "id": "image:fal-xai-grok-imagine-image-edit",
       "vendor": "fal",
       "category": "image",
@@ -9855,52 +11988,18 @@
         "xai/grok-imagine-image/edit"
       ],
       "requestSchema": {
-        "required": [
-          "prompt"
-        ],
-        "type": "object",
         "properties": {
-          "output_format": {
-            "type": "string",
-            "enum": [
-              "jpeg",
-              "png",
-              "webp"
-            ],
-            "default": "jpeg",
-            "title": "Output Format",
-            "description": "The format of the generated image."
-          },
-          "sync_mode": {
-            "type": "boolean",
-            "default": false,
-            "title": "Sync Mode",
-            "description": "If `True`, the media will be returned as a data URI and the output data won't be available in the request history."
-          },
-          "prompt": {
-            "maxLength": 8000,
-            "type": "string",
-            "title": "Prompt",
-            "examples": [
-              "Make this scene more realistic but still keep the game vibes"
-            ],
-            "description": "Text description of the desired image."
-          },
-          "image_urls": {
-            "type": "array",
-            "title": "Image URLs",
-            "items": {
-              "type": "string"
-            },
-            "examples": [
-              [
-                "https://v3b.fal.media/files/b/0a8b911d/Abk8vStrvmSPlzUqI_NN3_image_043.png"
-              ]
-            ],
-            "description": "List of URLs of the images to edit. A maximum of 3 images are supported."
+          "num_images": {
+            "description": "Number of images to generate.",
+            "default": 1,
+            "type": "integer",
+            "maximum": 4,
+            "title": "Number of Images",
+            "minimum": 1
           },
           "aspect_ratio": {
-            "type": "string",
+            "description": "Aspect ratio of the edited image. When set to `auto` (the default), the output preserves the aspect ratio of the first input image.",
+            "default": "auto",
             "enum": [
               "auto",
               "2:1",
@@ -9917,29 +12016,63 @@
               "9:20",
               "1:2"
             ],
-            "default": "auto",
-            "title": "Aspect Ratio",
-            "description": "Aspect ratio of the edited image. When set to `auto` (the default), the output preserves the aspect ratio of the first input image."
+            "type": "string",
+            "title": "Aspect Ratio"
           },
-          "num_images": {
-            "type": "integer",
-            "maximum": 4,
-            "minimum": 1,
-            "default": 1,
-            "title": "Number of Images",
-            "description": "Number of images to generate."
+          "image_urls": {
+            "description": "List of URLs of the images to edit. A maximum of 3 images are supported.",
+            "examples": [
+              [
+                "https://v3b.fal.media/files/b/0a8b911d/Abk8vStrvmSPlzUqI_NN3_image_043.png"
+              ]
+            ],
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Image URLs"
+          },
+          "output_format": {
+            "description": "The format of the generated image.",
+            "default": "jpeg",
+            "enum": [
+              "jpeg",
+              "png",
+              "webp"
+            ],
+            "type": "string",
+            "title": "Output Format"
           },
           "resolution": {
-            "type": "string",
+            "description": "Resolution of the generated image. `1k` for standard resolution, `2k` for high resolution.",
+            "default": "1k",
             "enum": [
               "1k",
               "2k"
             ],
-            "default": "1k",
-            "title": "Resolution",
-            "description": "Resolution of the generated image. `1k` for standard resolution, `2k` for high resolution."
+            "type": "string",
+            "title": "Resolution"
+          },
+          "sync_mode": {
+            "description": "If `True`, the media will be returned as a data URI and the output data won't be available in the request history.",
+            "default": false,
+            "type": "boolean",
+            "title": "Sync Mode"
+          },
+          "prompt": {
+            "examples": [
+              "Make this scene more realistic but still keep the game vibes"
+            ],
+            "description": "Text description of the desired image.",
+            "type": "string",
+            "maxLength": 8000,
+            "title": "Prompt"
           }
         },
+        "required": [
+          "prompt"
+        ],
+        "type": "object",
         "title": "XAIImageEditInput",
         "x-fal-order-properties": [
           "prompt",
@@ -9961,15 +12094,260 @@
         ]
       },
       "examplePayload": {
-        "output_format": "jpeg",
-        "sync_mode": false,
-        "prompt": "Make this scene more realistic but still keep the game vibes",
+        "num_images": 1,
+        "aspect_ratio": "auto",
         "image_urls": [
           "https://v3b.fal.media/files/b/0a8b911d/Abk8vStrvmSPlzUqI_NN3_image_043.png"
         ],
-        "aspect_ratio": "auto",
+        "output_format": "jpeg",
+        "resolution": "1k",
+        "sync_mode": false,
+        "prompt": "Make this scene more realistic but still keep the game vibes"
+      }
+    },
+    {
+      "id": "image:fal-xai-grok-imagine-image-quality-text-to-image",
+      "vendor": "fal",
+      "category": "image",
+      "title": "Grok Imagine Image",
+      "docUrl": "https://fal.ai/models/xai/grok-imagine-image/quality/text-to-image/api",
+      "provider": "xAI",
+      "alias": null,
+      "endpoint": "/fal-ai/xai/quality/text-to-image",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/xai/requests/{request_id}/status",
+      "modelKeys": [
+        "xai/grok-imagine-image/quality/text-to-image"
+      ],
+      "requestSchema": {
+        "properties": {
+          "num_images": {
+            "description": "Number of images to generate.",
+            "default": 1,
+            "type": "integer",
+            "maximum": 4,
+            "title": "Number of Images",
+            "minimum": 1
+          },
+          "aspect_ratio": {
+            "description": "Aspect ratio of the generated image.",
+            "default": "1:1",
+            "enum": [
+              "2:1",
+              "20:9",
+              "19.5:9",
+              "16:9",
+              "4:3",
+              "3:2",
+              "1:1",
+              "2:3",
+              "3:4",
+              "9:16",
+              "9:19.5",
+              "9:20",
+              "1:2"
+            ],
+            "type": "string",
+            "title": "Aspect Ratio"
+          },
+          "output_format": {
+            "description": "The format of the generated image.",
+            "default": "jpeg",
+            "enum": [
+              "jpeg",
+              "png",
+              "webp"
+            ],
+            "type": "string",
+            "title": "Output Format"
+          },
+          "resolution": {
+            "description": "Resolution of the generated image. `1k` for standard resolution, `2k` for high resolution.",
+            "default": "1k",
+            "enum": [
+              "1k",
+              "2k"
+            ],
+            "type": "string",
+            "title": "Resolution"
+          },
+          "sync_mode": {
+            "description": "If `True`, the media will be returned as a data URI and the output data won't be available in the request history.",
+            "default": false,
+            "type": "boolean",
+            "title": "Sync Mode"
+          },
+          "prompt": {
+            "examples": [
+              "Abstract human silhouette, golden particles ready to burst outward representing joy, data visualization style, emotional expression through particles, artistic scientific"
+            ],
+            "description": "Text description of the desired image.",
+            "type": "string",
+            "maxLength": 8000,
+            "title": "Prompt"
+          }
+        },
+        "required": [
+          "prompt"
+        ],
+        "type": "object",
+        "title": "XAIImageQualityInput",
+        "x-fal-order-properties": [
+          "prompt",
+          "num_images",
+          "aspect_ratio",
+          "resolution",
+          "output_format",
+          "sync_mode"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "num_images",
+          "aspect_ratio",
+          "resolution",
+          "output_format",
+          "sync_mode"
+        ]
+      },
+      "examplePayload": {
         "num_images": 1,
-        "resolution": "1k"
+        "aspect_ratio": "1:1",
+        "output_format": "jpeg",
+        "resolution": "1k",
+        "sync_mode": false,
+        "prompt": "Abstract human silhouette, golden particles ready to burst outward representing joy, data visualization style, emotional expression through particles, artistic scientific"
+      }
+    },
+    {
+      "id": "image:fal-xai-grok-imagine-image-quality-edit",
+      "vendor": "fal",
+      "category": "image",
+      "title": "Grok Imagine Image Editing Quality",
+      "docUrl": "https://fal.ai/models/xai/grok-imagine-image/quality/edit/api",
+      "provider": "xAI",
+      "alias": null,
+      "endpoint": "/fal-ai/xai/quality/edit",
+      "method": "POST",
+      "statusEndpoint": "/fal-ai/xai/requests/{request_id}/status",
+      "modelKeys": [
+        "xai/grok-imagine-image/quality/edit"
+      ],
+      "requestSchema": {
+        "properties": {
+          "num_images": {
+            "description": "Number of images to generate.",
+            "default": 1,
+            "type": "integer",
+            "maximum": 4,
+            "title": "Number of Images",
+            "minimum": 1
+          },
+          "aspect_ratio": {
+            "description": "Aspect ratio of the edited image. When set to `auto` (the default), the output preserves the aspect ratio of the first input image.",
+            "default": "auto",
+            "enum": [
+              "auto",
+              "2:1",
+              "20:9",
+              "19.5:9",
+              "16:9",
+              "4:3",
+              "3:2",
+              "1:1",
+              "2:3",
+              "3:4",
+              "9:16",
+              "9:19.5",
+              "9:20",
+              "1:2"
+            ],
+            "type": "string",
+            "title": "Aspect Ratio"
+          },
+          "image_urls": {
+            "description": "List of URLs of the images to edit. A maximum of 3 images are supported.",
+            "examples": [
+              [
+                "https://v3b.fal.media/files/b/0a8b911d/Abk8vStrvmSPlzUqI_NN3_image_043.png"
+              ]
+            ],
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Image URLs"
+          },
+          "output_format": {
+            "description": "The format of the generated image.",
+            "default": "jpeg",
+            "enum": [
+              "jpeg",
+              "png",
+              "webp"
+            ],
+            "type": "string",
+            "title": "Output Format"
+          },
+          "resolution": {
+            "description": "Resolution of the generated image. `1k` for standard resolution, `2k` for high resolution.",
+            "default": "1k",
+            "enum": [
+              "1k",
+              "2k"
+            ],
+            "type": "string",
+            "title": "Resolution"
+          },
+          "sync_mode": {
+            "description": "If `True`, the media will be returned as a data URI and the output data won't be available in the request history.",
+            "default": false,
+            "type": "boolean",
+            "title": "Sync Mode"
+          },
+          "prompt": {
+            "examples": [
+              "Make this scene more realistic but still keep the game vibes"
+            ],
+            "description": "Text description of the desired image.",
+            "type": "string",
+            "maxLength": 8000,
+            "title": "Prompt"
+          }
+        },
+        "required": [
+          "prompt"
+        ],
+        "type": "object",
+        "title": "XAIImageEditQualityInput",
+        "x-fal-order-properties": [
+          "prompt",
+          "num_images",
+          "aspect_ratio",
+          "resolution",
+          "output_format",
+          "sync_mode",
+          "image_urls"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "num_images",
+          "aspect_ratio",
+          "resolution",
+          "output_format",
+          "sync_mode",
+          "image_urls"
+        ]
+      },
+      "examplePayload": {
+        "num_images": 1,
+        "aspect_ratio": "auto",
+        "image_urls": [
+          "https://v3b.fal.media/files/b/0a8b911d/Abk8vStrvmSPlzUqI_NN3_image_043.png"
+        ],
+        "output_format": "jpeg",
+        "resolution": "1k",
+        "sync_mode": false,
+        "prompt": "Make this scene more realistic but still keep the game vibes"
       }
     },
     {

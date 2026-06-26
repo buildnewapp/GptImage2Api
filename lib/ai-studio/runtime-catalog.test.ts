@@ -549,6 +549,33 @@ test("uses explicit dynamic pricing for grok imagine image pricing", () => {
   assert.equal("pricingRows" in (compiled.items[0] ?? {}), false);
 });
 
+test("preserves hidden form ui fields in compiled runtime details", () => {
+  const compiled = compileAiStudioRuntimeCatalog({
+    upstream: {
+      version: 1,
+      generatedAt: "2026-03-08T00:00:00.000Z",
+      items: [createDetail()],
+    },
+    modelOverrides: {
+      models: {},
+    },
+    pricingOverrides: {
+      models: {},
+    },
+    formUiOverrides: {
+      models: {
+        "video:sora2-text-to-video": {
+          hiddenFields: ["max_images"],
+        },
+      },
+    },
+  });
+
+  assert.deepEqual(compiled.items[0]?.formUi, {
+    hiddenFields: ["max_images"],
+  });
+});
+
 test("drops disabled models from the compiled runtime catalog", () => {
   const compiled = compileAiStudioRuntimeCatalog({
     upstream: {
@@ -840,6 +867,29 @@ test("exposes dynamic pricing only for models backed by pricing overrides", asyn
     assert.equal("pricingRows" in entry, false, `${id} should not expose fallback pricing`);
     assert.equal(entry.pricing, undefined, `${id} should not expose fallback pricing`);
   }
+});
+
+test("resolves bundled fal grok imagine video edit pricing for default payload", async () => {
+  const entry = await getCachedAiStudioCatalogEntry(
+    "video:fal-xai-grok-imagine-video-edit-video",
+  );
+
+  assert.ok(entry);
+  assert.ok(entry.pricing);
+
+  const row = resolveDynamicPricing(
+    entry.pricing,
+    { resolution: "auto" },
+    {
+      modelId: entry.id,
+      title: entry.title,
+      provider: entry.provider,
+      category: entry.category,
+    },
+  );
+
+  assert.equal(row?.pricingKey, "auto");
+  assert.equal(row?.creditPrice, "96");
 });
 
 test("keeps exposed dynamic pricing isolated to the correct model family", async () => {

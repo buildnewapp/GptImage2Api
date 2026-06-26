@@ -1,5 +1,25 @@
 {
   "models": {
+    "image:fal-fal-ai-bytedance-seedream-v5-lite-text-to-image": {
+      "hiddenFields": [
+        "max_images"
+      ]
+    },
+    "image:fal-fal-ai-bytedance-seedream-v5-lite-edit": {
+      "hiddenFields": [
+        "max_images"
+      ]
+    },
+    "image:fal-fal-ai-bytedance-seedream-v4-5-text-to-image": {
+      "hiddenFields": [
+        "max_images"
+      ]
+    },
+    "image:fal-fal-ai-bytedance-seedream-v4-5-edit": {
+      "hiddenFields": [
+        "max_images"
+      ]
+    },
     "video:ama-seedance-2-0": {
       "advancedFields": [
         "audio_urls",

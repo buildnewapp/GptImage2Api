@@ -198,6 +198,17 @@ test("exposes broader KIE video families with older supported variants", () => {
       "hailuo-pro-image-to-video",
       "hailuo-2.3-standard-image-to-video",
       "hailuo-2.3-pro-image-to-video",
+      "fal-hailuo-02-standard-text-to-video",
+      "fal-hailuo-02-standard-image-to-video",
+      "fal-hailuo-02-pro-text-to-video",
+      "fal-hailuo-02-pro-image-to-video",
+      "fal-hailuo-02-fast-image-to-video",
+      "fal-hailuo-2.3-standard-text-to-video",
+      "fal-hailuo-2.3-standard-image-to-video",
+      "fal-hailuo-2.3-pro-text-to-video",
+      "fal-hailuo-2.3-pro-image-to-video",
+      "fal-hailuo-2.3-fast-standard-image-to-video",
+      "fal-hailuo-2.3-fast-pro-image-to-video",
     ],
   );
   assert.deepEqual(
@@ -210,7 +221,13 @@ test("exposes broader KIE video families with older supported variants", () => {
   );
   assert.deepEqual(
     getAiVideoStudioVersions("gpt-image-2").map((version) => version.key),
-    ["gpt-image-2-text-to-image", "gpt-image-2-image-to-image", "fal-gpt-image-2"],
+    [
+      "gpt-image-2-text-to-image",
+      "gpt-image-2-image-to-image",
+      "ama-gpt-image-2",
+      "fal-openai-gpt-image-2",
+      "fal-openai-gpt-image-2-edit",
+    ],
   );
   assert.deepEqual(
     getAiVideoStudioVersions("seedream-image").map((version) => version.key),
@@ -219,11 +236,20 @@ test("exposes broader KIE video families with older supported variants", () => {
       "seedream-5-lite-image-to-image",
       "seedream-4.5-text-to-image",
       "seedream-4.5-edit",
+      "seedream-5-lite-text-to-image-fal",
+      "seedream-5-lite-edit-fal",
+      "seedream-4.5-text-to-image-fal",
+      "seedream-4.5-edit-fal",
     ],
   );
   assert.deepEqual(
     getAiVideoStudioVersions("qwen2-image").map((version) => version.key),
-    ["qwen2-text-to-image", "qwen2-image-edit"],
+    [
+      "qwen2-text-to-image",
+      "qwen2-image-edit",
+      "qwen2-text-to-image-fal",
+      "qwen2-image-edit-fal",
+    ],
   );
   assert.deepEqual(
     getAiVideoStudioVersions("grok-imagine-image").map((version) => version.key),
@@ -257,6 +283,8 @@ test("keeps versions nested under each family for single-source config managemen
       "sora-2-official",
       "fal-sora-2-text-to-video",
       "fal-sora-2-image-to-video",
+      "fal-sora-2-pro-text-to-video",
+      "fal-sora-2-pro-image-to-video",
       "fal-sora-2-video-remix",
     ],
   );
@@ -274,15 +302,21 @@ test("returns the supported Sora2 versions", () => {
       "sora-2-official",
       "fal-sora-2-text-to-video",
       "fal-sora-2-image-to-video",
+      "fal-sora-2-pro-text-to-video",
+      "fal-sora-2-pro-image-to-video",
       "fal-sora-2-video-remix",
     ],
   );
 });
 
-test("keeps Seedance 1.0 variants explicit while Seedance 1.5 stays single-entry", () => {
+test("keeps Seedance 1.0 variants explicit while Seedance 1.5 includes fal variants", () => {
   assert.deepEqual(
     getAiVideoStudioVersions("seedance-1.5").map((version) => version.key),
-    ["seedance-1.5"],
+    [
+      "seedance-1.5",
+      "fal-seedance-1.5-pro-text-to-video",
+      "fal-seedance-1.5-pro-image-to-video",
+    ],
   );
   assert.deepEqual(
     getAiVideoStudioVersions("seedance-1.0").map((version) => version.key),
@@ -303,8 +337,8 @@ test("exposes Seedance 2.0 as a selectable family with KIE VIP variants", () => 
   assert.deepEqual(
     family?.versions.map((version) => version.key),
     [
-      "seedance-2.0-vip",
-      "seedance-2.0-fast-vip",
+      "seedance-2.0",
+      "seedance-2.0-fast",
       "fal-seedance-2.0-text-to-video",
       "fal-seedance-2.0-fast-text-to-video",
       "fal-seedance-2.0-image-to-video",
@@ -382,7 +416,7 @@ test("resolves version selections to a single ai-studio model id", () => {
   assert.equal(
     resolveAiVideoStudioModelId({
       familyKey: "seedance-2.0",
-      versionKey: "seedance-2.0-vip",
+      versionKey: "seedance-2.0",
     }),
     "video:bytedance-seedance-2",
   );

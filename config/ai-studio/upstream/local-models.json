@@ -226,12 +226,12 @@
         "x-apidog-orders": [
           "model",
           "prompt",
+          "image_urls",
+          "video_urls",
           "duration",
           "resolution",
           "aspect_ratio",
-          "generation_type",
-          "image_urls",
-          "video_urls"
+          "generation_type"
         ],
         "examples": [
           {

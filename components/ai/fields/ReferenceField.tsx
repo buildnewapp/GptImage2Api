@@ -126,13 +126,32 @@ function getFieldTokens(path: string[]) {
 const PLURAL_REFERENCE_TOKENS = new Set(["images", "videos", "audios", "urls"]);
 const SINGLE_REFERENCE_TOKENS = new Set(["image", "video", "audio", "url"]);
 
+function isReferenceValueSchema(schema: unknown) {
+  if (!schema || typeof schema !== "object" || Array.isArray(schema)) {
+    return false;
+  }
+
+  const typedSchema = schema as Record<string, any>;
+  return (
+    typedSchema.type === "string" ||
+    (typedSchema.type === "array" && typedSchema.items?.type === "string")
+  );
+}
+
 function supportsReferenceField(field: AiVideoStudioFieldDescriptor) {
   if (field.kind === "text") {
-    return field.schema.type === "string";
+    return (
+      isReferenceValueSchema(field.schema) ||
+      [field.schema.anyOf, field.schema.oneOf].some(
+        (variants) =>
+          Array.isArray(variants) &&
+          variants.some((variant) => isReferenceValueSchema(variant)),
+      )
+    );
   }
 
   if (field.kind === "array") {
-    return field.schema.type === "array" && field.schema.items?.type === "string";
+    return isReferenceValueSchema(field.schema);
   }
 
   return false;
@@ -153,6 +172,14 @@ export function resolveReferenceFieldKind(
 
   if (
     (tokens.includes("id") || tokens.includes("ids")) &&
+    !tokens.includes("url") &&
+    !tokens.includes("urls")
+  ) {
+    return null;
+  }
+
+  if (
+    (tokens.includes("size") || tokens.includes("sizes")) &&
     !tokens.includes("url") &&
     !tokens.includes("urls")
   ) {

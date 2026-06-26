@@ -3,6 +3,15 @@ type JsonSchema = Record<string, any>;
 type AiVideoStudioFormUiConfig = {
   fieldOrder?: string[];
   advancedFields?: string[];
+  hiddenFields?: string[];
+};
+
+type AiVideoStudioPricingConfig = {
+  price_txt?: string | null;
+  price_key?: string | null;
+  price_map?: Record<string, unknown> | null;
+  price_final?: string | null;
+  billing_adapter?: string | null;
 };
 
 export type AiVideoStudioFieldKind =
@@ -153,9 +162,18 @@ function getPathTokens(path: string[]) {
 
 function matchesDefaultAdvancedField(path: string[]) {
   const tokens = getPathTokens(path);
+  const fields = path.map((segment) => segment.toLowerCase());
 
-  return tokens.some(
-    (token) => token === "seed" || token === "seeds" || token === "watermark",
+  return (
+    tokens.some(
+      (token) => token === "seed" || token === "seeds" || token === "watermark",
+    ) ||
+    fields.some(
+      (field) =>
+        field === "bitrate_mode" ||
+        field === "end_user_id" ||
+        field === "safety_tolerance",
+    )
   );
 }
 
@@ -233,6 +251,47 @@ function buildImageSizeFieldSchema(key: string, schema: JsonSchema) {
         custom: true,
       },
     ],
+  };
+}
+
+function pricingUsesDirectDuration(pricing: AiVideoStudioPricingConfig | null | undefined) {
+  return [pricing?.price_key, pricing?.price_final].some(
+    (template) =>
+      typeof template === "string" &&
+      /\$(?:input\.)?duration\b/.test(template),
+  );
+}
+
+function buildPricedDurationFieldSchema(input: {
+  key: string;
+  schema: JsonSchema;
+  pricing?: AiVideoStudioPricingConfig | null;
+}) {
+  if (
+    input.key !== "duration" ||
+    !pricingUsesDirectDuration(input.pricing) ||
+    !Array.isArray(input.schema.enum) ||
+    input.schema.enum.length === 0
+  ) {
+    return input.schema;
+  }
+
+  const enumOptions = input.schema.enum.filter(
+    (option: unknown) =>
+      !(typeof option === "string" && option.trim().toLowerCase() === "auto"),
+  );
+  if (enumOptions.length === input.schema.enum.length || enumOptions.length === 0) {
+    return input.schema;
+  }
+
+  const defaultValue = enumOptions.some((option: unknown) => option === input.schema.default)
+    ? input.schema.default
+    : enumOptions[0];
+
+  return {
+    ...input.schema,
+    enum: enumOptions,
+    default: defaultValue,
   };
 }
 
@@ -405,6 +464,7 @@ export function normalizeAiVideoStudioSchema(detail: {
   requestSchema: JsonSchema | null | undefined;
   examplePayload: JsonSchema | null | undefined;
   formUi?: AiVideoStudioFormUiConfig | null | undefined;
+  pricing?: AiVideoStudioPricingConfig | null | undefined;
 }): AiVideoStudioSchemaState {
   const payloadSchema = getPayloadSchemaRoot(detail.requestSchema);
   const exampleRoot = getPayloadExampleRoot(detail.examplePayload);
@@ -413,6 +473,11 @@ export function normalizeAiVideoStudioSchema(detail: {
   const advancedFieldSet = new Set(
     Array.isArray(detail.formUi?.advancedFields)
       ? detail.formUi?.advancedFields.filter((key): key is string => typeof key === "string")
+      : [],
+  );
+  const hiddenFieldSet = new Set(
+    Array.isArray(detail.formUi?.hiddenFields)
+      ? detail.formUi.hiddenFields.filter((key): key is string => typeof key === "string")
       : [],
   );
   const hasCustomFormUi =
@@ -445,6 +510,15 @@ export function normalizeAiVideoStudioSchema(detail: {
       }
 
       const nextPath = [...path, key];
+      const joinedPath = nextPath.join(".");
+      if (
+        hiddenFieldSet.has(joinedPath) ||
+        hiddenFieldSet.has(key) ||
+        hiddenFieldSet.has(nextPath[0] ?? "")
+      ) {
+        continue;
+      }
+
       const isNestedObject =
         childSchema.type === "object" &&
         childSchema.properties &&
@@ -455,8 +529,12 @@ export function normalizeAiVideoStudioSchema(detail: {
         continue;
       }
 
-      const fieldSchema = buildImageSizeFieldSchema(key, childSchema);
-      const defaultValue = childSchema.default;
+      const fieldSchema = buildPricedDurationFieldSchema({
+        key,
+        schema: buildImageSizeFieldSchema(key, childSchema),
+        pricing: detail.pricing,
+      });
+      const defaultValue = fieldSchema.default;
       const field = {
         key,
         path: nextPath,

@@ -871,7 +871,7 @@ Veo 3.1 拆分模型的价格就是按拆分后的 id 配的：
 
 ## form-ui.json 说明
 
-`form-ui.json` 是前端表单 UI 覆盖表。它不改变 provider 请求，也不改变 schema 本身，只影响字段在 AI Video Studio 表单里的排序和高级字段分组。
+`form-ui.json` 是前端表单 UI 覆盖表。它不改变 provider 请求，也不改变 schema 本身，只影响字段在 AI Video Studio 表单里的排序、高级字段分组和字段隐藏。
 
 当前文件结构：
 
@@ -880,7 +880,8 @@ Veo 3.1 拆分模型的价格就是按拆分后的 id 配的：
   "models": {
     "<runtime 模型 id>": {
       "fieldOrder": ["prompt", "duration", "resolution"],
-      "advancedFields": ["seed", "generate_audio"]
+      "advancedFields": ["seed", "generate_audio"],
+      "hiddenFields": ["max_images"]
     }
   }
 }
@@ -920,7 +921,43 @@ Veo 3.1 拆分模型的价格就是按拆分后的 id 配的：
 
 一旦某个模型配置了 `advancedFields` 或 `fieldOrder`，前端会认为它有自定义表单 UI，不再完全使用默认高级字段分组。
 
+#### hiddenFields
+
+类型：`string[]`
+
+指定哪些字段不在 AI Video Studio 表单中渲染。可以写字段 key，也可以写点号路径。字段仍保留在 runtime schema 里；这个配置只影响表单层显示和默认值收集。
+
+示例：
+
+```json
+{
+  "hiddenFields": ["max_images", "input.debug"]
+}
+```
+
+适合用于上游 schema 中存在但前台不希望暴露的重复字段或内部字段。例如 Seedream FAL 模型里 `max_images` 和 `num_images` 对用户来说功能重复，前台只保留 `num_images`。
+
 ### form-ui.json 当前配置逐项说明
+
+#### image:fal-fal-ai-bytedance-seedream-v5-lite-text-to-image
+
+隐藏字段：
+
+- `max_images`
+
+作用：Seedream FAL 同时暴露 `max_images` 和 `num_images`，前台只保留 `num_images`，避免重复控制生成数量。
+
+#### image:fal-fal-ai-bytedance-seedream-v5-lite-edit
+
+隐藏字段同 `image:fal-fal-ai-bytedance-seedream-v5-lite-text-to-image`。
+
+#### image:fal-fal-ai-bytedance-seedream-v4-5-text-to-image
+
+隐藏字段同 `image:fal-fal-ai-bytedance-seedream-v5-lite-text-to-image`。
+
+#### image:fal-fal-ai-bytedance-seedream-v4-5-edit
+
+隐藏字段同 `image:fal-fal-ai-bytedance-seedream-v5-lite-text-to-image`。
 
 #### video:ama-seedance-2-0
 
@@ -961,6 +998,7 @@ Veo 3.1 拆分模型的价格就是按拆分后的 id 配的：
 
 - 它只影响表单 UI，不影响请求 schema 和真实 payload。
 - `advancedFields` 要写 schema 里实际存在的字段 key 或路径。
+- `hiddenFields` 也要写 schema 里实际存在的字段 key 或路径；它不会从 runtime schema 中删除字段。
 - 如果字段在嵌套 `input` 下，前端匹配时既会看完整路径，也会看字段 key；但为了可读性，复杂字段优先写点号路径。
 - 配了自定义 `advancedFields` 后，默认高级字段规则会被替换，别漏掉仍想放进高级区的字段。
 
@@ -1002,10 +1040,11 @@ Veo 3.1 拆分模型的价格就是按拆分后的 id 配的：
 
 ### form-ui.json
 
-负责前端表单显示顺序和高级字段：
+负责前端表单显示顺序、高级字段和隐藏字段：
 
 - `fieldOrder`
 - `advancedFields`
+- `hiddenFields`
 
 ## 常见坑
 

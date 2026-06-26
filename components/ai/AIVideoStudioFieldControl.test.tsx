@@ -373,6 +373,141 @@ test("renders audio url arrays with the specialized audio reference UI", () => {
   assert.doesNotMatch(html, /0\/9/);
 });
 
+test("renders nullable audio urls with the specialized audio reference UI", () => {
+  const html = renderToStaticMarkup(
+    <AIVideoStudioFieldControl
+      field={{
+        key: "audio_url",
+        path: ["audio_url"],
+        kind: "text",
+        schema: {
+          anyOf: [
+            {
+              ui: {
+                field: "audio",
+              },
+              type: "string",
+            },
+            {
+              type: "null",
+            },
+          ],
+          description: "URL of driving audio.",
+        },
+      } as any}
+      label="参考音频"
+      value=""
+      onChange={() => {}}
+    />,
+  );
+
+  assert.match(html, /data-ai-video-studio-reference-field="audio"/);
+});
+
+test("renders nullable image url arrays with the specialized image reference UI", () => {
+  const html = renderToStaticMarkup(
+    <AIVideoStudioFieldControl
+      field={{
+        key: "reference_image_urls",
+        path: ["reference_image_urls"],
+        kind: "text",
+        schema: {
+          anyOf: [
+            {
+              type: "array",
+              items: {
+                type: "string",
+                ui: {
+                  field: "image",
+                },
+              },
+            },
+            {
+              type: "null",
+            },
+          ],
+          description: "Reference image URLs for character/object appearance.",
+        },
+      } as any}
+      label="参考图片"
+      value={[]}
+      onChange={() => {}}
+    />,
+  );
+
+  assert.match(html, /data-ai-video-studio-reference-field="image"/);
+});
+
+test("renders nullable video url arrays with the specialized video reference UI", () => {
+  const html = renderToStaticMarkup(
+    <AIVideoStudioFieldControl
+      field={{
+        key: "reference_video_urls",
+        path: ["reference_video_urls"],
+        kind: "text",
+        schema: {
+          anyOf: [
+            {
+              type: "array",
+              items: {
+                type: "string",
+                ui: {
+                  field: "video",
+                },
+              },
+            },
+            {
+              type: "null",
+            },
+          ],
+          description: "Reference video URLs for character/object motion.",
+        },
+      } as any}
+      label="参考视频"
+      value={[]}
+      onChange={() => {}}
+    />,
+  );
+
+  assert.match(html, /data-ai-video-studio-reference-field="video"/);
+});
+
+test("does not render nullable image size schemas as image reference uploads", () => {
+  const html = renderToStaticMarkup(
+    <AIVideoStudioFieldControl
+      field={{
+        key: "image_size",
+        path: ["image_size"],
+        kind: "text",
+        schema: {
+          anyOf: [
+            {
+              type: "object",
+              properties: {
+                width: {
+                  type: "integer",
+                },
+                height: {
+                  type: "integer",
+                },
+              },
+            },
+            {
+              type: "string",
+            },
+          ],
+          description: "The size of the generated image.",
+        },
+      } as any}
+      label="Image Size"
+      value=""
+      onChange={() => {}}
+    />,
+  );
+
+  assert.doesNotMatch(html, /data-ai-video-studio-reference-field="image"/);
+});
+
 test("renders audio id fields as plain text inputs", () => {
   const html = renderToStaticMarkup(
     <AIVideoStudioFieldControl
