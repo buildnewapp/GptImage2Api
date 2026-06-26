@@ -60,6 +60,10 @@ function isFieldValueSupported(
   field: AiVideoStudioFieldDescriptor,
   value: unknown,
 ) {
+  if (field.kind === "boolean") {
+    return typeof value === "boolean";
+  }
+
   if (!hasFilledValue(value)) {
     return false;
   }
@@ -340,12 +344,70 @@ function getPayloadSchemaRoot(requestSchema: JsonSchema | null | undefined) {
   return requestSchema ?? null;
 }
 
+function getPayloadExampleRoot(examplePayload: JsonSchema | null | undefined) {
+  const inputExample = examplePayload?.input;
+
+  if (
+    inputExample &&
+    typeof inputExample === "object" &&
+    !Array.isArray(inputExample)
+  ) {
+    return inputExample as Record<string, unknown>;
+  }
+
+  return examplePayload ?? null;
+}
+
+function getFirstEnumOption(schema: JsonSchema) {
+  return Array.isArray(schema.enum) && schema.enum.length > 0
+    ? schema.enum[0]
+    : undefined;
+}
+
+function resolveFieldDefaultValue(input: {
+  field: AiVideoStudioFieldDescriptor;
+  exampleRoot: Record<string, unknown> | null;
+}) {
+  const schemaDefault = input.field.defaultValue;
+  if (schemaDefault !== undefined) {
+    return schemaDefault;
+  }
+
+  if (
+    !input.field.required ||
+    input.field.kind === "text" ||
+    input.field.kind === "array"
+  ) {
+    return undefined;
+  }
+
+  const exampleValue =
+    input.exampleRoot === null
+      ? undefined
+      : getValueAtPath(input.exampleRoot, input.field.path);
+  const normalizedExampleValue = normalizeFieldValue(input.field, exampleValue);
+  if (isFieldValueSupported(input.field, normalizedExampleValue)) {
+    return normalizedExampleValue;
+  }
+
+  if (input.field.kind === "boolean") {
+    return false;
+  }
+
+  if (input.field.kind === "enum") {
+    return getFirstEnumOption(input.field.schema);
+  }
+
+  return undefined;
+}
+
 export function normalizeAiVideoStudioSchema(detail: {
   requestSchema: JsonSchema | null | undefined;
   examplePayload: JsonSchema | null | undefined;
   formUi?: AiVideoStudioFormUiConfig | null | undefined;
 }): AiVideoStudioSchemaState {
   const payloadSchema = getPayloadSchemaRoot(detail.requestSchema);
+  const exampleRoot = getPayloadExampleRoot(detail.examplePayload);
   const fields: AiVideoStudioFieldDescriptor[] = [];
   const defaults: Record<string, unknown> = {};
   const advancedFieldSet = new Set(
@@ -395,8 +457,7 @@ export function normalizeAiVideoStudioSchema(detail: {
 
       const fieldSchema = buildImageSizeFieldSchema(key, childSchema);
       const defaultValue = childSchema.default;
-      setValueAtPath(defaults, nextPath, defaultValue);
-      fields.push({
+      const field = {
         key,
         path: nextPath,
         label: titleCase(nextPath.join(" / ")),
@@ -404,7 +465,13 @@ export function normalizeAiVideoStudioSchema(detail: {
         required: required.has(key) || isPromptField(key),
         schema: fieldSchema,
         defaultValue,
-      });
+      };
+      setValueAtPath(
+        defaults,
+        nextPath,
+        resolveFieldDefaultValue({ field, exampleRoot }),
+      );
+      fields.push(field);
     }
   }
 

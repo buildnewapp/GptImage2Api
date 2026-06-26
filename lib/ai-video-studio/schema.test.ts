@@ -178,6 +178,79 @@ test("uses schema defaults without prefilling example input values", () => {
   });
 });
 
+test("uses required non-text fallbacks without prefilling example prompt text", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    requestSchema: {
+      type: "object",
+      properties: {
+        input: {
+          type: "object",
+          properties: {
+            prompt: {
+              type: "string",
+            },
+            duration: {
+              type: "string",
+              enum: ["4", "6", "8", "10"],
+            },
+            mode: {
+              type: "string",
+              enum: ["standard", "pro"],
+            },
+          },
+          required: ["prompt", "duration", "mode"],
+          "x-apidog-orders": ["prompt", "duration", "mode"],
+        },
+      },
+    },
+    examplePayload: {
+      input: {
+        prompt: "A sample prompt should not prefill the form.",
+        duration: "6",
+      },
+    },
+  });
+
+  assert.deepEqual(normalized.defaults, {
+    prompt: undefined,
+    duration: "6",
+    mode: "standard",
+  });
+});
+
+test("uses false as the fallback for required boolean fields", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    requestSchema: {
+      type: "object",
+      properties: {
+        input: {
+          type: "object",
+          properties: {
+            prompt: {
+              type: "string",
+            },
+            generate_audio: {
+              type: "boolean",
+            },
+          },
+          required: ["prompt", "generate_audio"],
+          "x-apidog-orders": ["prompt", "generate_audio"],
+        },
+      },
+    },
+    examplePayload: {
+      input: {
+        prompt: "A sample prompt should not prefill the form.",
+      },
+    },
+  });
+
+  assert.deepEqual(normalized.defaults, {
+    prompt: undefined,
+    generate_audio: false,
+  });
+});
+
 test("marks required fields from the schema without semantic field conversion", () => {
   const normalized = normalizeAiVideoStudioSchema(textToVideoDetail);
 
