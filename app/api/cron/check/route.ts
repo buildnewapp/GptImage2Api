@@ -9,16 +9,17 @@ import { sql } from "drizzle-orm";
  curl -X GET "http://localhost:3000/api/cron/check" \
  -H "Authorization: Bearer sk_xxx"
 
- curl -X GET "http://localhost:3000/api/cron/check?key=sk_xxx"
+ curl -X GET "http://localhost:3000/api/cron/check?key=sk_b33cadaa81edba2af3095ea0ce7abcc148d036bcf417ce43"
 
  curl -X GET "http://localhost:3000/api/cron/check?m=show" \
   -H "Authorization: Bearer sk_xxx"
  */
 export const dynamic = "force-dynamic";
 
-const KIE_CREDIT_WARN_THRESHOLD = 50000;
+const KIE_CREDIT_WARN_THRESHOLD = 3000;
 const OPENROUTER_CREDIT_WARN_THRESHOLD = 10;
 const APIMART_CREDIT_WARN_THRESHOLD = 20;
+const FAL_CREDIT_WARN_THRESHOLD = 10;
 
 type CheckStatus = "ok" | "warn" | "error";
 
@@ -38,6 +39,7 @@ type CronCheckResult = {
     kie: CheckItem;
     openrouter: CheckItem;
     apimart: CheckItem;
+    fal: CheckItem;
   };
   warnings: string[];
 };
@@ -166,6 +168,28 @@ async function getApimartCredits(): Promise<number | null> {
   throw new Error(`APIMART credit query failed: ${JSON.stringify(result)}`);
 }
 
+async function getFalCredits(): Promise<number | null> {
+  const apiKey = process.env.FAL_ADMIN_API_KEY;
+
+  if (!apiKey) {
+    throw new Error("FAL_ADMIN_API_KEY is not configured");
+  }
+
+  const response = await fetch("https://api.fal.ai/v1/account/billing?expand=credits", {
+    method: "GET",
+    headers: {
+      Authorization: apiKey.startsWith("Key ") ? apiKey : `Key ${apiKey}`,
+    },
+  });
+  const result = await response.json().catch(() => ({}));
+
+  if (response.ok) {
+    return normalizeNumber(result?.credits?.current_balance);
+  }
+
+  throw new Error(`FAL admin billing query failed: ${JSON.stringify(result)}`);
+}
+
 async function checkCredit(
   name: string,
   threshold: number,
@@ -213,6 +237,9 @@ function collectWarnings(result: Omit<CronCheckResult, "warnings" | "status">) {
   if (result.checks.apimart.status === "warn") {
     warnings.push(`APIMART_API_KEY 余额低于 ${APIMART_CREDIT_WARN_THRESHOLD}: ${result.checks.apimart.value}`);
   }
+  if (result.checks.fal.status === "warn") {
+    warnings.push(`FAL 账户余额低于 ${FAL_CREDIT_WARN_THRESHOLD}: ${result.checks.fal.value}`);
+  }
 
   return warnings;
 }
@@ -244,6 +271,7 @@ async function sendWeComWarning(result: CronCheckResult) {
     `KIE: ${result.checks.kie.value ?? "查询失败"}`,
     `OpenRouter: ${result.checks.openrouter.value ?? "查询失败"}`,
     `APIMART: ${result.checks.apimart.value ?? "查询失败"}`,
+    `FAL: ${result.checks.fal.value ?? "查询失败"}`,
   ].join("\n");
 
   const response = await fetch(
@@ -270,7 +298,7 @@ async function sendWeComWarning(result: CronCheckResult) {
 
 async function runCheck(): Promise<CronCheckResult> {
   const startTime = Date.now();
-  const [dbResult, kieResult, openrouterResult, apimartResult] = await Promise.all([
+  const [dbResult, kieResult, openrouterResult, apimartResult, falResult] = await Promise.all([
     checkDb().catch((error) => ({
       status: "error" as const,
       message: toCheckError(error),
@@ -278,6 +306,7 @@ async function runCheck(): Promise<CronCheckResult> {
     checkCredit("KIE", KIE_CREDIT_WARN_THRESHOLD, getKieCredits),
     checkCredit("OpenRouter", OPENROUTER_CREDIT_WARN_THRESHOLD, getOpenrouterCredits),
     checkCredit("APIMART", APIMART_CREDIT_WARN_THRESHOLD, getApimartCredits),
+    checkCredit("FAL", FAL_CREDIT_WARN_THRESHOLD, getFalCredits),
   ]);
 
   const partialResult = {
@@ -288,6 +317,7 @@ async function runCheck(): Promise<CronCheckResult> {
       kie: kieResult,
       openrouter: openrouterResult,
       apimart: apimartResult,
+      fal: falResult,
     },
   };
   const warnings = collectWarnings(partialResult);
