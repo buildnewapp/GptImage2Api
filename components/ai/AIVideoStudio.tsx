@@ -83,6 +83,20 @@ type DetailResponse = {
   error?: string;
 };
 
+type FamiliesResponse = {
+  success: boolean;
+  data: {
+    families: Array<{
+      key: string;
+      versions: Array<{
+        key: string;
+        priceLabel?: string | null;
+      }>;
+    }>;
+  };
+  error?: string;
+};
+
 type ExecuteResponse = {
   success: boolean;
   data: {
@@ -662,6 +676,9 @@ export default function AIVideoStudio({
   const [hasClientMounted, setHasClientMounted] = useState(false);
   const [membershipLevel, setMembershipLevel] =
     useState<AiVideoStudioLevelLimit>("none");
+  const [versionPriceLabels, setVersionPriceLabels] = useState<
+    Record<string, string>
+  >({});
 
   const availableFamilies = AI_VIDEO_STUDIO_FAMILIES;
   const availableVersions = useMemo(
@@ -692,6 +709,41 @@ export default function AIVideoStudio({
 
   useEffect(() => {
     setHasClientMounted(true);
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadVersionPrices() {
+      try {
+        const response = await fetch("/api/ai-studio/families");
+        const json = (await response.json()) as FamiliesResponse;
+        if (!response.ok || !json.success) {
+          return;
+        }
+
+        const next: Record<string, string> = {};
+        for (const family of json.data.families) {
+          for (const version of family.versions) {
+            if (version.priceLabel) {
+              next[`${family.key}::${version.key}`] = version.priceLabel;
+            }
+          }
+        }
+
+        if (mounted) {
+          setVersionPriceLabels(next);
+        }
+      } catch {
+        // keep prices hidden when the lightweight pricing lookup fails
+      }
+    }
+
+    void loadVersionPrices();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -1573,9 +1625,13 @@ export default function AIVideoStudio({
       availableVersions.map((version) => ({
         id: version.key,
         name: version.label,
+        isSpecial: version.isSpecial === true,
+        isHot: version.isHot === true,
+        priceLabel:
+          versionPriceLabels[`${selectedFamilyKey}::${version.key}`] ?? null,
         levelLimit: getAiVideoStudioLevelLimit(version.levelLimit),
       })),
-    [availableVersions],
+    [availableVersions, selectedFamilyKey, versionPriceLabels],
   );
   const versionLabelByKey = useMemo(
     () =>
