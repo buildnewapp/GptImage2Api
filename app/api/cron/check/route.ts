@@ -1,18 +1,18 @@
 import { siteConfig } from "@/config/site";
 import { apiResponse } from "@/lib/api-response";
-import { assertCronAdminApiKey } from "@/lib/cron/auth";
+import { assertCronPassword } from "@/lib/cron/auth";
 import { getDb } from "@/lib/db";
 import { sql } from "drizzle-orm";
 
 
 /**
  curl -X GET "http://localhost:3000/api/cron/check" \
- -H "Authorization: Bearer sk_xxx"
+ -H "Authorization: Bearer cron_pwd"
 
- curl -X GET "http://localhost:3000/api/cron/check?key=sk_b33cadaa81edba2af3095ea0ce7abcc148d036bcf417ce43"
+ curl -X GET "http://localhost:3000/api/cron/check?pwd=cron_pwd"
 
  curl -X GET "http://localhost:3000/api/cron/check?m=show" \
-  -H "Authorization: Bearer sk_xxx"
+  -H "Authorization: Bearer cron_pwd"
  */
 export const dynamic = "force-dynamic";
 
@@ -334,7 +334,7 @@ async function runCheck(): Promise<CronCheckResult> {
 }
 
 export async function GET(request: Request) {
-  const authError = await assertCronAdminApiKey(request);
+  const authError = assertCronPassword(request);
   if (authError) {
     return authError;
   }
