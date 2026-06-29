@@ -23,6 +23,7 @@ export type ModelSelectorItem = {
 export type ModelSelectorVersionItem = {
   id: string;
   name: string;
+  description?: string | null;
   isSpecial?: boolean;
   isHot?: boolean;
   priceLabel?: string | null;
@@ -266,6 +267,8 @@ const VersionOption = ({
   isSelected: boolean;
   onClick: () => void;
 }) => {
+  const description = version.description?.trim();
+
   return (
     <button
       type="button"
@@ -287,6 +290,11 @@ const VersionOption = ({
           </span>
           <VersionBadges version={version} />
         </div>
+        {description ? (
+          <span className="line-clamp-2 whitespace-normal break-words text-[10px] leading-relaxed text-muted-foreground">
+            {description}
+          </span>
+        ) : null}
         <span className="line-clamp-2 whitespace-normal break-words text-[10px] leading-relaxed text-muted-foreground">
           {version.priceLabel ?? "--"}
         </span>

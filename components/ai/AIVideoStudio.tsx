@@ -1625,6 +1625,7 @@ export default function AIVideoStudio({
       availableVersions.map((version) => ({
         id: version.key,
         name: version.label,
+        description: version.description,
         isSpecial: version.isSpecial === true,
         isHot: version.isHot === true,
         priceLabel:

@@ -35,6 +35,7 @@ export type AiVideoStudioVersion = {
   key: AiVideoStudioVersionKey;
   label: string;
   familyKey: AiVideoStudioFamilyKey;
+  description?: string;
   modelId: string;
   isSpecial?: boolean;
   isHot?: boolean;
