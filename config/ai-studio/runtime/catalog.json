@@ -24151,13 +24151,14 @@
       "pricing": {
         "docUrl": "https://docs.kie.ai/market/wan/2-2-animate-move.md",
         "price_txt": "wan/2-2-animate-move, 480p: 6 per second | wan/2-2-animate-move, 580p: 9.5 per second | wan/2-2-animate-move, 720p: 12.5 per second",
+        "billing_adapter": "kie_seedance_2",
         "price_key": "{$input.resolution || $resolution || $input.quality || $quality || $input.image_resolution || $image_resolution || $input.size || $size || $input.mode || $mode}",
         "price_map": {
           "480p": 6,
           "580p": 10,
           "720p": 13
         },
-        "price_final": "{$price}*{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}"
+        "price_final": "{$price}*{$billing.input_video_duration}"
       }
     },
     {
@@ -24265,13 +24266,14 @@
       "pricing": {
         "docUrl": "https://docs.kie.ai/market/wan/2-2-animate-replace.md",
         "price_txt": "wan/2-2-animate-replace, 480p: 6 per second | wan/2-2-animate-replace, 580p: 9.5 per second | wan/2-2-animate-replace, 720p: 12.5 per second",
+        "billing_adapter": "kie_seedance_2",
         "price_key": "{$input.resolution || $resolution || $input.quality || $quality || $input.image_resolution || $image_resolution || $input.size || $size || $input.mode || $mode}",
         "price_map": {
           "480p": 6,
           "580p": 10,
           "720p": 13
         },
-        "price_final": "{$price}*{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}"
+        "price_final": "{$price}*{$billing.input_video_duration}"
       }
     },
     {
