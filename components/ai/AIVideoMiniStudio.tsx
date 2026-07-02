@@ -4,20 +4,21 @@ import AIVideoMiniStudioTaskHistory from "@/components/ai/AIVideoMiniStudioTaskH
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { AiVideoStudioFamilyIcon } from "@/components/ai/AiVideoStudioFamilyIcon";
 import { authClient } from "@/lib/auth/auth-client";
 import {
   AI_VIDEO_STUDIO_FAMILIES,
+  getAiVideoStudioLevelLimit,
   getAiVideoStudioSelectionFromModelId,
   getAiVideoStudioVersions,
-  listAiVideoStudioModelOptions,
   resolveAiVideoStudioModelId,
   type AiVideoStudioFamilyKey,
+  type AiVideoStudioFamilyIconKey,
+  type AiVideoStudioLevelLimit,
   type AiVideoStudioVersionKey,
 } from "@/config/ai-video-studio";
 import {
@@ -51,7 +52,17 @@ import type { AiStudioResolvedPricing } from "@/lib/ai-studio/runtime";
 import { fetchWithTimeout } from "@/lib/fetch/with-timeout";
 import { cn } from "@/lib/utils";
 import { useRouter } from "@/i18n/routing";
-import { ImagePlus, Loader2, Sparkles, X, Zap } from "lucide-react";
+import {
+  ArrowLeft,
+  Check,
+  ChevronRight,
+  ImagePlus,
+  Loader2,
+  Search,
+  Sparkles,
+  X,
+  Zap,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   Suspense,
@@ -67,6 +78,20 @@ import { toast } from "sonner";
 type DetailResponse = {
   success: boolean;
   data: AiStudioPublicDocDetail;
+  error?: string;
+};
+
+type FamiliesResponse = {
+  success: boolean;
+  data: {
+    families: Array<{
+      key: string;
+      versions: Array<{
+        key: string;
+        priceLabel?: string | null;
+      }>;
+    }>;
+  };
   error?: string;
 };
 
@@ -178,6 +203,542 @@ function formatDurationOptionLabel(fieldKey: string, value: string | number) {
   return value;
 }
 
+type MiniModelSelectorItem = {
+  id: AiVideoStudioFamilyKey;
+  name: string;
+  description: string;
+  icon: AiVideoStudioFamilyIconKey;
+  tags?: { text: string; type: string }[];
+  selectable?: boolean;
+};
+
+type MiniVersionSelectorItem = {
+  id: AiVideoStudioVersionKey;
+  name: string;
+  description?: string | null;
+  isSpecial?: boolean;
+  isHot?: boolean;
+  priceLabel?: string | null;
+  levelLimit: AiVideoStudioLevelLimit;
+};
+
+function MiniModelVersionSelector({
+  models,
+  versionsByFamily,
+  selectedFamilyKey,
+  selectedVersionKey,
+  onSelect,
+  searchPlaceholder,
+  allModelsLabel,
+}: {
+  models: MiniModelSelectorItem[];
+  versionsByFamily: Record<string, MiniVersionSelectorItem[]>;
+  selectedFamilyKey: AiVideoStudioFamilyKey;
+  selectedVersionKey: AiVideoStudioVersionKey;
+  onSelect: (selection: {
+    familyKey: AiVideoStudioFamilyKey;
+    versionKey: AiVideoStudioVersionKey;
+  }) => void;
+  searchPlaceholder: string;
+  allModelsLabel: string;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [mobileView, setMobileView] = useState<"models" | "versions">("models");
+  const [activeFamilyKey, setActiveFamilyKey] =
+    useState<AiVideoStudioFamilyKey>(selectedFamilyKey);
+  const [activeFeaturedFamilyKey, setActiveFeaturedFamilyKey] =
+    useState<AiVideoStudioFamilyKey | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setActiveFamilyKey(selectedFamilyKey);
+      setActiveFeaturedFamilyKey(null);
+      setMobileView("models");
+    }
+  }, [isOpen, selectedFamilyKey]);
+
+  const selectedModel =
+    models.find((model) => model.id === selectedFamilyKey) ?? models[0] ?? null;
+  const selectedVersion =
+    versionsByFamily[selectedFamilyKey]?.find(
+      (version) => version.id === selectedVersionKey,
+    ) ??
+    versionsByFamily[selectedFamilyKey]?.[0] ??
+    null;
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+  const filteredModels = normalizedSearch
+    ? models.filter(
+        (model) =>
+          model.name.toLowerCase().includes(normalizedSearch) ||
+          model.description.toLowerCase().includes(normalizedSearch),
+      )
+    : models;
+  const featuredModels = normalizedSearch
+    ? []
+    : models.filter((model) =>
+        (versionsByFamily[model.id] ?? []).some(
+          (version) => version.isHot === true,
+        ),
+      );
+  const activeFamilyVersions =
+    versionsByFamily[activeFamilyKey] ??
+    versionsByFamily[selectedFamilyKey] ??
+    [];
+  const activeVersions =
+    activeFeaturedFamilyKey === activeFamilyKey
+      ? activeFamilyVersions.filter((version) => version.isHot === true)
+      : activeFamilyVersions;
+  const activeModel =
+    models.find((model) => model.id === activeFamilyKey) ?? selectedModel;
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        aria-label={allModelsLabel}
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((value) => !value)}
+        className="h-9 w-[120px] rounded-full border border-white/12 bg-white/6 px-2 py-2 text-[12px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] transition hover:border-white/20 hover:bg-white/10"
+      >
+        <span className="block truncate">
+          {selectedVersion?.name ?? selectedModel?.name ?? allModelsLabel}
+        </span>
+      </button>
+
+      {isOpen ? (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+          <div className="fixed inset-x-0 bottom-0 z-50 flex h-[60dvh] flex-col overflow-hidden rounded-[1.35rem] border border-white/10 bg-[#15191c]/95 text-white shadow-2xl backdrop-blur-xl sm:absolute sm:inset-x-auto sm:bottom-full sm:left-0 sm:mb-2 sm:max-h-none sm:w-[min(calc(100vw-2rem),680px)] sm:max-w-[calc(100vw-2rem)]">
+            <div className="flex h-[60dvh] flex-col sm:hidden">
+              {mobileView === "models" ? (
+                <div className="flex h-16 items-center gap-3 border-b border-white/8 px-4">
+                  <Search className="h-5 w-5 shrink-0 text-white/45" />
+                  <input
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    placeholder={searchPlaceholder}
+                    className="h-14 min-w-0 flex-1 bg-transparent py-0 text-base leading-none text-white outline-none placeholder:text-white/45"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setIsOpen(false)}
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white/50 transition hover:bg-white/8 hover:text-white"
+                    aria-label="Close"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex h-14 items-center gap-3 border-b border-white/8 px-3">
+                  <button
+                    type="button"
+                    onClick={() => setMobileView("models")}
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white/60 transition hover:bg-white/8 hover:text-white"
+                    aria-label="Back"
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                  </button>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-sm font-semibold text-white">
+                      {activeModel?.name ?? allModelsLabel}
+                    </div>
+                    <div className="truncate text-xs text-white/45">
+                      {activeFeaturedFamilyKey === activeFamilyKey
+                        ? "Featured versions"
+                        : "Versions"}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsOpen(false)}
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white/50 transition hover:bg-white/8 hover:text-white"
+                    aria-label="Close"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              )}
+
+              <div className="min-h-0 flex-1 overflow-y-auto px-3 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-3 [scrollbar-color:rgba(255,255,255,0.18)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20">
+                {mobileView === "models" ? (
+                  <>
+                    {featuredModels.length > 0 ? (
+                      <div className="pb-3">
+                        <div className="mb-2 flex items-center gap-2 px-2 text-sm font-medium text-white/45">
+                          <Sparkles className="h-4 w-4" />
+                          Featured models
+                        </div>
+                        <div className="space-y-1">
+                          {featuredModels.map((model) => {
+                            const isSelected = model.id === selectedFamilyKey;
+
+                            return (
+                              <button
+                                key={`mobile-featured-${model.id}`}
+                                type="button"
+                                onClick={() => {
+                                  setActiveFamilyKey(model.id);
+                                  setActiveFeaturedFamilyKey(model.id);
+                                  setMobileView("versions");
+                                }}
+                                className={cn(
+                                  "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition",
+                                  isSelected ? "bg-white/8" : "hover:bg-white/6",
+                                )}
+                              >
+                                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/8">
+                                  <AiVideoStudioFamilyIcon icon={model.icon} size={26} />
+                                </span>
+                                <span className="min-w-0 flex-1">
+                                  <span className="flex min-w-0 items-center gap-2">
+                                    <span className="truncate text-base font-semibold text-white">
+                                      {model.name}
+                                    </span>
+                                    {model.tags?.map((tag) => (
+                                      <MiniSelectorBadge
+                                        key={`mobile-featured-${model.id}-${tag.text}`}
+                                        type={tag.type}
+                                        text={tag.text}
+                                      />
+                                    ))}
+                                  </span>
+                                  <span className="mt-1 line-clamp-1 text-sm leading-snug text-white/45">
+                                    {model.description}
+                                  </span>
+                                </span>
+                                <ChevronRight className="h-5 w-5 shrink-0 text-white/45" />
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ) : null}
+
+                    <div className="flex items-center gap-2 px-2 py-3 text-sm text-white/45">
+                      <span className="h-2 w-2 rounded-full bg-white/45" />
+                      {allModelsLabel}
+                    </div>
+                    {filteredModels.map((model) => {
+                      const isSelected = model.id === selectedFamilyKey;
+
+                      return (
+                        <button
+                          key={`mobile-${model.id}`}
+                          type="button"
+                          onClick={() => {
+                            setActiveFamilyKey(model.id);
+                            setActiveFeaturedFamilyKey(null);
+                            setMobileView("versions");
+                          }}
+                          className={cn(
+                            "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition",
+                            isSelected ? "bg-white/8" : "hover:bg-white/6",
+                          )}
+                        >
+                          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/8">
+                            <AiVideoStudioFamilyIcon icon={model.icon} size={28} />
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="flex min-w-0 items-center gap-2">
+                              <span className="truncate text-base font-semibold text-white">
+                                {model.name}
+                              </span>
+                              {model.tags?.map((tag) => (
+                                <MiniSelectorBadge
+                                  key={`mobile-${model.id}-${tag.text}`}
+                                  type={tag.type}
+                                  text={tag.text}
+                                />
+                              ))}
+                            </span>
+                            <span className="mt-1 line-clamp-2 text-sm leading-snug text-white/45">
+                              {model.description}
+                            </span>
+                          </span>
+                          <ChevronRight className="h-5 w-5 shrink-0 text-white/45" />
+                        </button>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <div className="space-y-1">
+                    {activeVersions.map((version) => {
+                      const isSelected =
+                        activeFamilyKey === selectedFamilyKey &&
+                        version.id === selectedVersionKey;
+
+                      return (
+                        <button
+                          key={`mobile-version-${version.id}`}
+                          type="button"
+                          onClick={() => {
+                            onSelect({
+                              familyKey: activeFamilyKey,
+                              versionKey: version.id,
+                            });
+                            setIsOpen(false);
+                          }}
+                          className={cn(
+                            "flex w-full items-start gap-3 rounded-xl px-3 py-3 text-left transition",
+                            isSelected ? "bg-white/8" : "hover:bg-white/6",
+                          )}
+                        >
+                          <span className="min-w-0 flex-1">
+                            <span className="flex min-w-0 items-center gap-2">
+                              <span className="truncate text-base font-semibold text-white">
+                                {version.name}
+                              </span>
+                              <MiniVersionBadges version={version} />
+                            </span>
+                            {version.description ? (
+                              <span className="mt-1 line-clamp-2 text-sm leading-snug text-white/45">
+                                {version.description}
+                              </span>
+                            ) : null}
+                            {version.priceLabel ? (
+                              <span className="mt-1 line-clamp-2 text-sm leading-snug text-white/45">
+                                {version.priceLabel}
+                              </span>
+                            ) : null}
+                          </span>
+                          {isSelected ? (
+                            <Check className="mt-1 h-4 w-4 shrink-0 text-white/70" />
+                          ) : null}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="hidden sm:flex">
+            <div className="flex max-h-[360px] w-full flex-col border-b border-white/8 sm:max-h-[480px] sm:w-[340px] sm:border-b-0 sm:border-r">
+              <div className="flex h-16 items-center gap-3 border-b border-white/8 px-4">
+                <Search className="h-5 w-5 shrink-0 text-white/45" />
+                <input
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                  placeholder={searchPlaceholder}
+                  className="h-14 min-w-0 flex-1 bg-transparent py-0 text-base leading-none text-white outline-none placeholder:text-white/45"
+                />
+              </div>
+              <div className="overflow-y-auto px-3 pb-3 [scrollbar-color:rgba(255,255,255,0.18)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20 hover:[&::-webkit-scrollbar-thumb]:bg-white/30">
+                {featuredModels.length > 0 ? (
+                  <div className="px-2 py-3">
+                    <div className="mb-2 flex items-center gap-2 text-sm font-medium text-white/45">
+                      <Sparkles className="h-4 w-4" />
+                      Featured models
+                    </div>
+                    <div className="space-y-1">
+                      {featuredModels.map((model) => {
+                        const isActive =
+                          model.id === activeFamilyKey &&
+                          activeFeaturedFamilyKey === model.id;
+                        const isSelected = model.id === selectedFamilyKey;
+
+                        return (
+                          <button
+                            key={`featured-${model.id}`}
+                            type="button"
+                            onClick={() => {
+                              setActiveFamilyKey(model.id);
+                              setActiveFeaturedFamilyKey(model.id);
+                            }}
+                            onMouseEnter={() => {
+                              setActiveFamilyKey(model.id);
+                              setActiveFeaturedFamilyKey(model.id);
+                            }}
+                            className={cn(
+                              "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition",
+                              isActive || isSelected
+                                ? "bg-white/8"
+                                : "hover:bg-white/6",
+                            )}
+                          >
+                            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/8">
+                              <AiVideoStudioFamilyIcon icon={model.icon} size={26} />
+                            </span>
+                            <span className="min-w-0 flex-1">
+                              <span className="flex min-w-0 items-center gap-2">
+                                <span className="truncate text-base font-semibold text-white">
+                                  {model.name}
+                                </span>
+                                {model.tags?.map((tag) => (
+                                  <MiniSelectorBadge
+                                    key={`featured-${model.id}-${tag.text}`}
+                                    type={tag.type}
+                                    text={tag.text}
+                                  />
+                                ))}
+                              </span>
+                              <span className="mt-1 line-clamp-1 text-sm leading-snug text-white/45">
+                                {model.description}
+                              </span>
+                            </span>
+                            {isSelected ? (
+                              <Check className="h-4 w-4 shrink-0 text-[#b6ff00]" />
+                            ) : (
+                              <ChevronRight className="h-5 w-5 shrink-0 text-white/45" />
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : null}
+
+                <div className="flex items-center gap-2 px-2 py-3 text-sm text-white/45">
+                  <span className="h-2 w-2 rounded-full bg-white/45" />
+                  {allModelsLabel}
+                </div>
+                {filteredModels.map((model) => {
+                  const isActive = model.id === activeFamilyKey;
+                  const isSelected = model.id === selectedFamilyKey;
+
+                  return (
+                    <button
+                      key={model.id}
+                      type="button"
+                      onClick={() => {
+                        setActiveFamilyKey(model.id);
+                        setActiveFeaturedFamilyKey(null);
+                      }}
+                      onMouseEnter={() => {
+                        setActiveFamilyKey(model.id);
+                        setActiveFeaturedFamilyKey(null);
+                      }}
+                      className={cn(
+                        "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition",
+                        isActive || isSelected
+                          ? "bg-white/8"
+                          : "hover:bg-white/6",
+                      )}
+                    >
+                      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/8">
+                        <AiVideoStudioFamilyIcon icon={model.icon} size={28} />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="flex min-w-0 items-center gap-2">
+                          <span className="truncate text-base font-semibold text-white">
+                            {model.name}
+                          </span>
+                          {model.tags?.map((tag) => (
+                            <MiniSelectorBadge
+                              key={`${model.id}-${tag.text}`}
+                              type={tag.type}
+                              text={tag.text}
+                            />
+                          ))}
+                        </span>
+                        <span className="mt-1 line-clamp-2 text-sm leading-snug text-white/45">
+                          {model.description}
+                        </span>
+                      </span>
+                      <ChevronRight className="h-5 w-5 shrink-0 text-white/45" />
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="max-h-[320px] w-full overflow-y-auto p-3 [scrollbar-color:rgba(255,255,255,0.18)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20 hover:[&::-webkit-scrollbar-thumb]:bg-white/30 sm:max-h-[480px] sm:w-[320px]">
+              {activeVersions.map((version) => {
+                const isSelected =
+                  activeFamilyKey === selectedFamilyKey &&
+                  version.id === selectedVersionKey;
+
+                return (
+                  <button
+                    key={version.id}
+                    type="button"
+                    onClick={() => {
+                      onSelect({
+                        familyKey: activeFamilyKey,
+                        versionKey: version.id,
+                      });
+                      setIsOpen(false);
+                    }}
+                    className={cn(
+                      "flex w-full items-start gap-3 rounded-xl px-3 py-3 text-left transition",
+                      isSelected ? "bg-white/8" : "hover:bg-white/6",
+                    )}
+                  >
+                    <span className="min-w-0 flex-1">
+                      <span className="flex min-w-0 items-center gap-2">
+                        <span className="truncate text-base font-semibold text-white">
+                          {version.name}
+                        </span>
+                        <MiniVersionBadges version={version} />
+                      </span>
+                      {version.description ? (
+                        <span className="mt-1 line-clamp-2 text-sm leading-snug text-white/45">
+                          {version.description}
+                        </span>
+                      ) : null}
+                      {version.priceLabel ? (
+                        <span className="mt-1 line-clamp-2 text-sm leading-snug text-white/45">
+                          {version.priceLabel}
+                        </span>
+                      ) : null}
+                    </span>
+                    {isSelected ? (
+                      <Check className="mt-1 h-4 w-4 shrink-0 text-white/70" />
+                    ) : null}
+                  </button>
+                );
+              })}
+            </div>
+            </div>
+          </div>
+        </>
+      ) : null}
+    </div>
+  );
+}
+
+function MiniVersionBadges({
+  version,
+}: {
+  version: MiniVersionSelectorItem;
+}) {
+  return (
+    <span className="flex shrink-0 items-center gap-1">
+      {version.isSpecial ? <MiniSelectorBadge type="special" text="SALE" /> : null}
+      {version.isHot ? <MiniSelectorBadge type="hot" text="HOT" /> : null}
+      {version.levelLimit !== "none" ? (
+        <MiniSelectorBadge type="level" text={version.levelLimit.toUpperCase()} />
+      ) : null}
+    </span>
+  );
+}
+
+function MiniSelectorBadge({
+  text,
+  type,
+}: {
+  text: string;
+  type: string;
+}) {
+  const styles: Record<string, string> = {
+    hot: "bg-sky-400 text-black",
+    level: "bg-[#b6ff00] text-black",
+    special: "bg-[#b6ff00] text-black",
+  };
+
+  return (
+    <span
+      className={cn(
+        "inline-flex shrink-0 items-center rounded-md px-1.5 py-0.5 text-[10px] font-black italic leading-none",
+        styles[type] ?? "bg-white/15 text-white/70",
+      )}
+    >
+      {text}
+    </span>
+  );
+}
+
 interface AIVideoMiniStudioProps {
   initialModelId?: string | null;
 }
@@ -192,18 +753,6 @@ export default function AIVideoMiniStudio({
   const defaultSelection = useMemo(
     () => getDefaultSelection(initialModelId),
     [initialModelId],
-  );
-  const modelOptions = useMemo(() => listAiVideoStudioModelOptions(), []);
-  const modelOptionGroups = useMemo(
-    () =>
-      AI_VIDEO_STUDIO_FAMILIES
-        .filter((family) => family.selectable !== false)
-        .map((family) => ({
-          family,
-          options: modelOptions.filter((option) => option.familyKey === family.key),
-        }))
-        .filter((group) => group.options.length > 0),
-    [modelOptions],
   );
   const { data: session } = authClient.useSession();
   const hasInitializedFromStorageRef = useRef(false);
@@ -227,6 +776,9 @@ export default function AIVideoMiniStudio({
     AiVideoMiniStudioGenerationTask[]
   >([]);
   const [activeTaskLocalId, setActiveTaskLocalId] = useState<string | null>(null);
+  const [versionPriceLabels, setVersionPriceLabels] = useState<
+    Record<string, string>
+  >({});
 
   const availableVersions = useMemo(
     () => getAiVideoStudioVersions(selectedFamilyKey),
@@ -249,7 +801,74 @@ export default function AIVideoMiniStudio({
         : null,
     [selectedFamilyKey, selectedVersion],
   );
-  const selectedModelValue = `${selectedFamilyKey}::${selectedVersionKey}`;
+  const modelOptions = useMemo<MiniModelSelectorItem[]>(
+    () =>
+      AI_VIDEO_STUDIO_FAMILIES
+        .filter((family) => family.selectable !== false)
+        .map((family) => ({
+          id: family.key,
+          name: family.label,
+          description: family.description,
+          icon: family.icon,
+          tags: family.tags,
+          selectable: family.selectable,
+        })),
+    [],
+  );
+  const versionsByFamily = useMemo<Record<string, MiniVersionSelectorItem[]>>(
+    () =>
+      Object.fromEntries(
+        AI_VIDEO_STUDIO_FAMILIES.map((family) => [
+          family.key,
+          family.versions.map((version) => ({
+            id: version.key,
+            name: version.label,
+            description: version.description,
+            isSpecial: version.isSpecial === true,
+            isHot: version.isHot === true,
+            priceLabel:
+              versionPriceLabels[`${family.key}::${version.key}`] ?? null,
+            levelLimit: getAiVideoStudioLevelLimit(version.levelLimit),
+          })),
+        ]),
+      ),
+    [versionPriceLabels],
+  );
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadVersionPrices() {
+      try {
+        const response = await fetch("/api/ai-studio/families");
+        const json = (await response.json()) as FamiliesResponse;
+        if (!response.ok || !json.success) {
+          return;
+        }
+
+        const next: Record<string, string> = {};
+        for (const family of json.data.families) {
+          for (const version of family.versions) {
+            if (version.priceLabel) {
+              next[`${family.key}::${version.key}`] = version.priceLabel;
+            }
+          }
+        }
+
+        if (mounted) {
+          setVersionPriceLabels(next);
+        }
+      } catch {
+        // keep prices hidden when the lightweight pricing lookup fails
+      }
+    }
+
+    void loadVersionPrices();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (availableVersions.length === 0) {
@@ -719,7 +1338,7 @@ export default function AIVideoMiniStudio({
   return (
     <div
       data-ai-video-mini-studio
-      className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.06] shadow-[0_28px_60px_-36px_rgba(2,8,23,0.65)] backdrop-blur-xl"
+      className="relative rounded-[1.75rem] border border-white/10 bg-white/[0.06] shadow-[0_28px_60px_-36px_rgba(2,8,23,0.65)] backdrop-blur-xl"
     >
       <div className="px-5 pb-4 pt-5 sm:px-7 sm:pb-5 sm:pt-6">
         <div className="flex gap-4">
@@ -783,37 +1402,22 @@ export default function AIVideoMiniStudio({
       </div>
 
       <div className="flex flex-wrap items-center gap-2.5 border-t border-white/8 px-5 py-3.5 sm:px-7">
-        <div data-ai-video-mini-studio-model className="min-w-0">
-          <Select
-            value={selectedModelValue}
-            onValueChange={(value) => {
-              const [familyKey, versionKey] = value.split("::");
-              setSelectedFamilyKey(familyKey as AiVideoStudioFamilyKey);
-              setSelectedVersionKey(versionKey as AiVideoStudioVersionKey);
+        <div
+          data-ai-video-mini-studio-model
+          className="min-w-0"
+        >
+          <MiniModelVersionSelector
+            models={modelOptions}
+            versionsByFamily={versionsByFamily}
+            selectedFamilyKey={selectedFamilyKey}
+            selectedVersionKey={selectedVersionKey}
+            onSelect={({ familyKey, versionKey }) => {
+              setSelectedFamilyKey(familyKey);
+              setSelectedVersionKey(versionKey);
             }}
-          >
-            <SelectTrigger
-              aria-label={t("form.aiModel")}
-              className="h-9 w-[120px] rounded-full border-white/12 bg-white/6 px-2 py-2 text-[12px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] hover:border-white/20"
-            >
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent
-              align="start"
-              className="max-h-[400px] border-white/12 bg-slate-950 text-white"
-            >
-              {modelOptionGroups.map(({ family, options }) => (
-                <SelectGroup key={family.key}>
-                  <SelectLabel>{family.label}</SelectLabel>
-                  {options.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              ))}
-            </SelectContent>
-          </Select>
+            searchPlaceholder="Search..."
+            allModelsLabel="All models"
+          />
         </div>
 
         {displayedAspectRatioOptions.length > 0 ? (
