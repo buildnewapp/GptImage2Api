@@ -21,8 +21,9 @@ REVOKE ALL PRIVILEGES ON DATABASE db_gptapi FROM PUBLIC;
 GRANT ALL PRIVILEGES ON DATABASE db_gptapi TO user_gptapi;
 
 ```
-postgresql://user_gptapi:yS1cG5gW3aY8sK0j@31.97.65.98:9876/db_gptapi
+postgresql://user_gptapi:yS1cG5gW3aY8sK0j@149.56.24.231:9876/db_gptapi
 postgresql://user_gptapi:yS1cG5gW3aY8sK0j@localhost:5432/db_gptapi
+postgresql://user_gptapi:yS1cG5gW3aY8sK0j@database-pg17ssl-pvhus1:5432/db_gptapi
 
 ### 初始化数据库 （正式库+测试库）
 pnpm db:migrate
