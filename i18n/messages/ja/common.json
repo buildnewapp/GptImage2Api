@@ -600,12 +600,14 @@
     }
   },
   "Navigation": {
+    "home": "ホーム",
     "product": "製品",
     "resources": "リソース",
     "legal": "法的事項",
     "generate": "生成",
     "features": "機能",
     "prompts": "プロンプト",
+    "premium": "プレミアム",
     "pricing": "料金",
     "showcase": "ショーケース",
     "blog": "ブログ",
@@ -613,6 +615,7 @@
     "help": "ヘルプセンター",
     "privacy": "プライバシーポリシー",
     "terms": "利用規約",
+    "user": "ユーザー",
     "signIn": "サインイン",
     "footerAbout": "高度に制御可能なマルチモーダルAI動画生成プラットフォーム。"
   },

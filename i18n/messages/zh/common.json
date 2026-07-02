@@ -600,12 +600,14 @@
     }
   },
   "Navigation": {
+    "home": "首页",
     "product": "产品",
     "resources": "资源",
     "legal": "法律",
     "generate": "生成",
     "features": "功能",
     "prompts": "提示词",
+    "premium": "会员",
     "pricing": "价格",
     "showcase": "案例展示",
     "blog": "博客",
@@ -613,6 +615,7 @@
     "help": "帮助中心",
     "privacy": "隐私政策",
     "terms": "服务条款",
+    "user": "我的",
     "signIn": "登录",
     "footerAbout": "先进的可控多模态 AI 视频生成平台。"
   },

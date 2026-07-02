@@ -2,6 +2,7 @@ import { getUserBenefits } from "@/actions/usage/benefits";
 import { getSession } from "@/lib/auth/server";
 import { AuthGuard } from "@/components/auth/AuthGuard";
 import SidebarInsetHeader from "@/components/header/SidebarInsetHeader";
+import MobileTabBar from "@/components/home/video/MobileTabBar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import React from "react";
 import { DashboardSidebar } from "./DashboardSidebar";
@@ -32,6 +33,7 @@ export default async function DashboardLayout({
             </div>
           </div>
         </SidebarInset>
+        <MobileTabBar />
       </SidebarProvider>
     </AuthGuard>
   );
