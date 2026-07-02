@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-06-27T10:56:44.705Z",
+  "generatedAt": "2026-06-29T13:03:43.766Z",
   "items": [
     {
       "id": "chat:claude-fable-5",
@@ -20033,7 +20033,7 @@
           "720p": 11,
           "1080p": 18
         },
-        "price_final": "{$price}*{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}"
+        "price_final": "{$price * ($input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || ($__local_reference_metadata && $__local_reference_metadata.videoDurationsByUrl && $input.video_urls && $__local_reference_metadata.videoDurationsByUrl[$input.video_urls[0]]) || ($__local_reference_metadata && $__local_reference_metadata.videoDurationsByUrl && $video_urls && $__local_reference_metadata.videoDurationsByUrl[$video_urls[0]]) || ($input.__local_reference_metadata && $input.__local_reference_metadata.videoDurationsByUrl && $input.video_urls && $input.__local_reference_metadata.videoDurationsByUrl[$input.video_urls[0]]) || $input.audio_duration || $audio_duration)}"
       }
     },
     {
@@ -20379,12 +20379,12 @@
       "pricing": {
         "docUrl": "https://docs.kie.ai/market/kling/motion-control-v3.md",
         "price_txt": "kling-3.0/motion-control, 720p: 20 per second | kling-3.0/motion-control, 1080p: 27 per second",
-        "price_key": "{$input.resolution || $resolution || $input.quality || $quality || $input.image_resolution || $image_resolution || $input.size || $size || $input.mode || $mode}",
+        "price_key": "{$input.resolution || $resolution || $input.quality || $quality || $input.image_resolution || $image_resolution || $input.size || $size || $input.mode || $mode || '720p'}",
         "price_map": {
           "720p": 20,
           "1080p": 27
         },
-        "price_final": "{$price}*{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}"
+        "price_final": "{$price * ($input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || ($__local_reference_metadata && $__local_reference_metadata.videoDurationsByUrl && $input.video_urls && $__local_reference_metadata.videoDurationsByUrl[$input.video_urls[0]]) || ($__local_reference_metadata && $__local_reference_metadata.videoDurationsByUrl && $video_urls && $__local_reference_metadata.videoDurationsByUrl[$video_urls[0]]) || ($input.__local_reference_metadata && $input.__local_reference_metadata.videoDurationsByUrl && $input.video_urls && $input.__local_reference_metadata.videoDurationsByUrl[$input.video_urls[0]]) || $input.audio_duration || $audio_duration)}"
       }
     },
     {
@@ -24421,7 +24421,7 @@
           "480p": 8,
           "720p": 16
         },
-        "price_final": "{$price}*{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}"
+        "price_final": "{$price * 5}"
       }
     },
     {
@@ -24573,7 +24573,7 @@
           "480p": 8,
           "720p": 16
         },
-        "price_final": "{$price}*{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}"
+        "price_final": "{$price * 5}"
       }
     },
     {
