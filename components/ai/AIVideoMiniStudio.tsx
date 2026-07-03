@@ -309,7 +309,7 @@ function MiniModelVersionSelector({
       {isOpen ? (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="fixed inset-x-0 bottom-0 z-50 flex h-[60dvh] flex-col overflow-hidden rounded-[1.35rem] border border-white/10 bg-[#15191c]/95 text-white shadow-2xl backdrop-blur-xl sm:absolute sm:inset-x-auto sm:bottom-full sm:left-0 sm:mb-2 sm:max-h-none sm:w-[min(calc(100vw-2rem),680px)] sm:max-w-[calc(100vw-2rem)]">
+          <div className="fixed inset-x-0 bottom-0 z-50 flex h-[60dvh] flex-col overflow-hidden rounded-[1.35rem] border border-white/10 bg-[#15191c]/95 text-white shadow-2xl backdrop-blur-xl sm:absolute sm:inset-x-auto sm:bottom-full sm:left-0 sm:mb-2 sm:h-auto sm:max-h-none sm:w-[min(calc(100vw-2rem),680px)] sm:max-w-[calc(100vw-2rem)]">
             <div className="flex h-[60dvh] flex-col sm:hidden">
               {mobileView === "models" ? (
                 <div className="flex h-16 items-center gap-3 border-b border-white/8 px-4">
@@ -403,7 +403,7 @@ function MiniModelVersionSelector({
                                       />
                                     ))}
                                   </span>
-                                  <span className="mt-1 line-clamp-1 text-sm leading-snug text-white/45">
+                                  <span className="mt-1 line-clamp-2 text-[10px] leading-snug text-white/45">
                                     {model.description}
                                   </span>
                                 </span>
@@ -452,7 +452,7 @@ function MiniModelVersionSelector({
                                 />
                               ))}
                             </span>
-                            <span className="mt-1 line-clamp-2 text-sm leading-snug text-white/45">
+                            <span className="mt-1 line-clamp-2 text-[10px] leading-snug text-white/45">
                               {model.description}
                             </span>
                           </span>
@@ -524,7 +524,7 @@ function MiniModelVersionSelector({
                   className="h-14 min-w-0 flex-1 bg-transparent py-0 text-base leading-none text-white outline-none placeholder:text-white/45"
                 />
               </div>
-              <div className="overflow-y-auto px-3 pb-3 [scrollbar-color:rgba(255,255,255,0.18)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20 hover:[&::-webkit-scrollbar-thumb]:bg-white/30">
+              <div className="overflow-y-auto space-y-1 px-3 pb-3 [scrollbar-color:rgba(255,255,255,0.18)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20 hover:[&::-webkit-scrollbar-thumb]:bg-white/30">
                 {featuredModels.length > 0 ? (
                   <div className="px-2 py-3">
                     <div className="mb-2 flex items-center gap-2 text-sm font-medium text-white/45">
@@ -573,7 +573,7 @@ function MiniModelVersionSelector({
                                   />
                                 ))}
                               </span>
-                              <span className="mt-1 line-clamp-1 text-sm leading-snug text-white/45">
+                              <span className="mt-1 line-clamp-2 text-[10px] leading-snug text-white/45">
                                 {model.description}
                               </span>
                             </span>
@@ -632,7 +632,7 @@ function MiniModelVersionSelector({
                             />
                           ))}
                         </span>
-                        <span className="mt-1 line-clamp-2 text-sm leading-snug text-white/45">
+                        <span className="mt-1 line-clamp-2 text-[10px] leading-snug text-white/45">
                           {model.description}
                         </span>
                       </span>
