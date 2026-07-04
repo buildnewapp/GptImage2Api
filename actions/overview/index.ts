@@ -3,7 +3,12 @@
 import { actionResponse, ActionResult } from '@/lib/action-response';
 import { isAdmin } from '@/lib/auth/server';
 import { getDb } from '@/lib/db';
-import { orders as ordersSchema, pricingPlans as pricingPlansSchema, user as userSchema } from '@/lib/db/schema';
+import {
+  aiStudioGenerations as aiStudioGenerationsSchema,
+  orders as ordersSchema,
+  pricingPlans as pricingPlansSchema,
+  user as userSchema,
+} from '@/lib/db/schema';
 import { getErrorMessage } from '@/lib/error-utils';
 import { ONE_TIME_ORDER_TYPES, SUBSCRIPTION_ORDER_TYPES } from '@/lib/payments/provider-utils';
 import { and, count, eq, gte, inArray, lt, sql } from 'drizzle-orm';
@@ -37,6 +42,33 @@ export interface IDailyGrowthStats {
   reportDate: string;
   newUsersCount: number;
   newOrdersCount: number;
+}
+
+export interface IDailyGenerationStats {
+  reportDate: string;
+  succeededCount: number;
+  failedCount: number;
+  consumedCredits: number;
+}
+
+export interface IGenerationModelCreditStats {
+  modelId: string;
+  modelTitle: string;
+  generationCount: number;
+  consumedCredits: number;
+}
+
+export interface IGenerationProviderStats {
+  provider: string;
+  totalCount: number;
+  succeededCount: number;
+  failedCount: number;
+  consumedCredits: number;
+}
+
+export interface IGenerationBreakdownStats {
+  models: IGenerationModelCreditStats[];
+  providers: IGenerationProviderStats[];
 }
 
 function calculateGrowthRate(today: number, yesterday: number): number {
@@ -320,6 +352,153 @@ export const getDailyGrowthStats = async (
     }
 
     return actionResponse.success(result);
+  } catch (error) {
+    return actionResponse.error(getErrorMessage(error));
+  }
+};
+
+export const getDailyGenerationStats = async (
+  period: '7d' | '30d' | '90d'
+): Promise<ActionResult<IDailyGenerationStats[]>> => {
+  if (!(await isAdmin())) {
+    return actionResponse.forbidden('Admin privileges required.');
+  }
+
+  const db = getDb();
+
+  try {
+    const now = new Date();
+    let startDate: Date;
+
+    switch (period) {
+      case '7d':
+        startDate = new Date(new Date().setDate(now.getDate() - 7));
+        break;
+      case '30d':
+        startDate = new Date(new Date().setMonth(now.getMonth() - 1));
+        break;
+      case '90d':
+        startDate = new Date(new Date().setMonth(now.getMonth() - 3));
+        break;
+      default:
+        throw new Error('Invalid period specified.');
+    }
+
+    const generationDateTrunc = sql`date_trunc('day', ${aiStudioGenerationsSchema.createdAt})`;
+
+    const dailyGenerations = await db
+      .select({
+        date: generationDateTrunc,
+        succeededCount:
+          sql<number>`coalesce(sum(case when ${aiStudioGenerationsSchema.status} = 'succeeded' then 1 else 0 end), 0)::int`,
+        failedCount:
+          sql<number>`coalesce(sum(case when ${aiStudioGenerationsSchema.status} = 'failed' then 1 else 0 end), 0)::int`,
+        consumedCredits:
+          sql<number>`coalesce(sum(${aiStudioGenerationsSchema.creditsCaptured}), 0)::int`,
+      })
+      .from(aiStudioGenerationsSchema)
+      .where(gte(aiStudioGenerationsSchema.createdAt, startDate))
+      .groupBy(generationDateTrunc);
+
+    const dailyGenerationsMap = new Map(
+      dailyGenerations.map((r) => {
+        let dateStr: string;
+        if (r.date instanceof Date) {
+          dateStr = r.date.toISOString().split('T')[0];
+        } else {
+          dateStr = new Date(r.date as string).toISOString().split('T')[0];
+        }
+        return [
+          dateStr,
+          {
+            succeededCount: r.succeededCount,
+            failedCount: r.failedCount,
+            consumedCredits: r.consumedCredits,
+          },
+        ];
+      })
+    );
+
+    const result: IDailyGenerationStats[] = [];
+    const currentDate = new Date(startDate);
+    while (currentDate <= now) {
+      const dateStr = currentDate.toISOString().split('T')[0];
+      const stats = dailyGenerationsMap.get(dateStr);
+      result.push({
+        reportDate: dateStr,
+        succeededCount: stats?.succeededCount ?? 0,
+        failedCount: stats?.failedCount ?? 0,
+        consumedCredits: stats?.consumedCredits ?? 0,
+      });
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return actionResponse.success(result);
+  } catch (error) {
+    return actionResponse.error(getErrorMessage(error));
+  }
+};
+
+export const getGenerationBreakdownStats = async (
+  period: '7d' | '30d' | '90d'
+): Promise<ActionResult<IGenerationBreakdownStats>> => {
+  if (!(await isAdmin())) {
+    return actionResponse.forbidden('Admin privileges required.');
+  }
+
+  const db = getDb();
+
+  try {
+    const now = new Date();
+    let startDate: Date;
+
+    switch (period) {
+      case '7d':
+        startDate = new Date(new Date().setDate(now.getDate() - 7));
+        break;
+      case '30d':
+        startDate = new Date(new Date().setMonth(now.getMonth() - 1));
+        break;
+      case '90d':
+        startDate = new Date(new Date().setMonth(now.getMonth() - 3));
+        break;
+      default:
+        throw new Error('Invalid period specified.');
+    }
+
+    const [models, providers] = await Promise.all([
+      db
+        .select({
+          modelId: aiStudioGenerationsSchema.catalogModelId,
+          modelTitle: sql<string>`max(${aiStudioGenerationsSchema.titleSnapshot})`,
+          generationCount: count(aiStudioGenerationsSchema.id),
+          consumedCredits:
+            sql<number>`coalesce(sum(${aiStudioGenerationsSchema.creditsCaptured}), 0)::int`,
+        })
+        .from(aiStudioGenerationsSchema)
+        .where(gte(aiStudioGenerationsSchema.createdAt, startDate))
+        .groupBy(aiStudioGenerationsSchema.catalogModelId)
+        .orderBy(sql`coalesce(sum(${aiStudioGenerationsSchema.creditsCaptured}), 0) desc`)
+        .limit(10),
+      db
+        .select({
+          provider: aiStudioGenerationsSchema.providerSnapshot,
+          totalCount: count(aiStudioGenerationsSchema.id),
+          succeededCount:
+            sql<number>`coalesce(sum(case when ${aiStudioGenerationsSchema.status} = 'succeeded' then 1 else 0 end), 0)::int`,
+          failedCount:
+            sql<number>`coalesce(sum(case when ${aiStudioGenerationsSchema.status} = 'failed' then 1 else 0 end), 0)::int`,
+          consumedCredits:
+            sql<number>`coalesce(sum(${aiStudioGenerationsSchema.creditsCaptured}), 0)::int`,
+        })
+        .from(aiStudioGenerationsSchema)
+        .where(gte(aiStudioGenerationsSchema.createdAt, startDate))
+        .groupBy(aiStudioGenerationsSchema.providerSnapshot)
+        .orderBy(sql`coalesce(sum(${aiStudioGenerationsSchema.creditsCaptured}), 0) desc`)
+        .limit(10),
+    ]);
+
+    return actionResponse.success({ models, providers });
   } catch (error) {
     return actionResponse.error(getErrorMessage(error));
   }

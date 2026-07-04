@@ -1,4 +1,6 @@
 import { DatabaseConfigPreview } from "./DatabaseConfigPreview";
+import { GenerationBreakdownCharts } from "./GenerationBreakdownCharts";
+import { GenerationStatsChart } from "./GenerationStatsChart";
 import { GrowthChart } from "./GrowthChart";
 import { OverviewStats } from "./OverviewStats";
 
@@ -8,6 +10,10 @@ const OverviewPage = () => {
       <OverviewStats />
 
       <GrowthChart />
+
+      <GenerationStatsChart />
+
+      <GenerationBreakdownCharts />
 
       <DatabaseConfigPreview />
     </div>
