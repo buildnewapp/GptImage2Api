@@ -115,7 +115,6 @@ async function fetchGeoApi<TData>(
       Authorization: `Bearer ${token}`,
       Accept: "application/json",
     },
-    next: { revalidate: 3600 },
   });
 
   if (!response.ok) {

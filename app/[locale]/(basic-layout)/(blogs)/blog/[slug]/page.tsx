@@ -19,9 +19,12 @@ import { PostBase } from "@/types/cms";
 import dayjs from "dayjs";
 import { ArrowLeftIcon, CalendarIcon, EyeIcon } from "lucide-react";
 import { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+
+const BLOG_REVALIDATE_SECONDS = 3600;
 
 export const dynamicParams = true;
 export const dynamic = "force-dynamic";
@@ -35,6 +38,35 @@ type MetadataProps = {
   params: Params;
 };
 
+const getCachedGeoBlogPostBySlug = unstable_cache(
+  async (slug: string, locale: string) => getGeoBlogPostBySlug(slug, locale),
+  ["geo-blog-post-detail"],
+  { revalidate: BLOG_REVALIDATE_SECONDS },
+);
+
+const getCachedGeoBlogPostMetadata = unstable_cache(
+  async (slug: string, locale: string) => getGeoBlogPostMetadata(slug, locale),
+  ["geo-blog-post-metadata"],
+  { revalidate: BLOG_REVALIDATE_SECONDS },
+);
+
+const getCachedCmsBlogPostBySlug = unstable_cache(
+  async (slug: string, locale: string) => blogCms.getBySlug(slug, locale),
+  ["cms-blog-post-detail"],
+  { revalidate: BLOG_REVALIDATE_SECONDS },
+);
+
+const getCachedCmsBlogLocalizedMetadata = unstable_cache(
+  async (slug: string, locale: string) =>
+    loadLocalizedMetadata({
+      locales: LOCALES,
+      currentLocale: locale,
+      loadMetadata: (checkLocale) => blogCms.getPostMetadata(slug, checkLocale),
+    }),
+  ["cms-blog-post-localized-metadata"],
+  { revalidate: BLOG_REVALIDATE_SECONDS },
+);
+
 export async function generateMetadata({
   params,
 }: MetadataProps): Promise<Metadata> {
@@ -42,7 +74,7 @@ export async function generateMetadata({
   const blogDataSource = getBlogDataSource();
 
   if (blogDataSource === "geo") {
-    const { metadata: postMetadata } = await getGeoBlogPostMetadata(
+    const { metadata: postMetadata } = await getCachedGeoBlogPostMetadata(
       slug,
       locale,
     ).catch((error) => {
@@ -75,14 +107,13 @@ export async function generateMetadata({
     });
   }
 
-  const localizedMetadata = await loadLocalizedMetadata({
-      locales: LOCALES,
-      currentLocale: locale,
-      loadMetadata: (checkLocale) => blogCms.getPostMetadata(slug, checkLocale),
-    }).catch((error) => {
-      console.error("Failed to fetch blog metadata:", error);
-      return null;
-    });
+  const localizedMetadata = await getCachedCmsBlogLocalizedMetadata(
+    slug,
+    locale,
+  ).catch((error) => {
+    console.error("Failed to fetch blog metadata:", error);
+    return null;
+  });
   const postMetadata = localizedMetadata?.currentMetadata;
   const availableLocales = localizedMetadata?.availableLocales ?? [];
 
@@ -122,13 +153,13 @@ export default async function BlogPage({ params }: { params: Params }) {
   const pageData = await Promise.all([
     getTranslations("Blogs"),
     isGeoBlog
-      ? getGeoBlogPostBySlug(slug, locale)
+      ? getCachedGeoBlogPostBySlug(slug, locale)
           .then((result) => ({ ...result, errorCode: undefined }))
           .catch((error) => {
             console.error("Failed to fetch GEO blog post:", error);
             return { post: null, errorCode: undefined };
           })
-      : blogCms.getBySlug(slug, locale),
+      : getCachedCmsBlogPostBySlug(slug, locale),
     !isGeoBlog && viewCountConfig.enabled && viewCountConfig.showInUI
       ? getViewCountAction({
           slug,
