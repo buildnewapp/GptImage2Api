@@ -9,12 +9,16 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { VideoTemplateShowcaseItem } from "@/components/home/video/types";
+import FeatureHoverVideo from "@/components/home/video/FeatureHoverVideo";
+import type {
+  VideoTemplateHeroVideo,
+  VideoTemplateShowcaseItem,
+} from "@/components/home/video/types";
 
 const IMAGE_FILE_RE = /\.(png|jpe?g|webp|gif|avif|svg)(?:[?#].*)?$/i;
 
 interface VideoTemplateHeroBackgroundProps {
-  videos: readonly string[];
+  videos: readonly VideoTemplateHeroVideo[];
 }
 
 interface VideoShowcaseMediaProps {
@@ -24,6 +28,7 @@ interface VideoShowcaseMediaProps {
 interface LazyPreviewVideoProps {
   className?: string;
   loadDelayMs?: number;
+  poster?: string;
   rootMargin?: string;
   src: string;
 }
@@ -31,6 +36,7 @@ interface LazyPreviewVideoProps {
 export function LazyPreviewVideo({
   className,
   loadDelayMs = 0,
+  poster,
   rootMargin = "200px 0px",
   src,
 }: LazyPreviewVideoProps) {
@@ -91,6 +97,7 @@ export function LazyPreviewVideo({
       muted
       playsInline
       loop
+      poster={poster}
       preload={shouldLoad ? "metadata" : "none"}
       className={className}
     />
@@ -103,6 +110,21 @@ export function VideoHeroMedia({ videos }: VideoTemplateHeroBackgroundProps) {
 
   useEffect(() => {
     if (videos.length === 0) {
+      return undefined;
+    }
+
+    const shouldSkipAutoplay =
+      window.matchMedia("(max-width: 767px)").matches ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      Boolean(
+        (
+          navigator as Navigator & {
+            connection?: { saveData?: boolean };
+          }
+        ).connection?.saveData,
+      );
+
+    if (shouldSkipAutoplay) {
       return undefined;
     }
 
@@ -127,13 +149,24 @@ export function VideoHeroMedia({ videos }: VideoTemplateHeroBackgroundProps) {
           data-video-hero-placeholder
           className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.22),transparent_30%),linear-gradient(180deg,rgba(3,7,18,0.94)_0%,rgba(3,7,18,1)_100%)]"
         />
+        {activeVideo?.cover ? (
+          <img
+            src={activeVideo.cover}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover"
+            decoding="async"
+            fetchPriority="low"
+          />
+        ) : null}
         {shouldLoadVideo ? (
           <video
-            key={activeVideo}
-            src={activeVideo}
+            key={activeVideo.src}
+            src={activeVideo.src}
             autoPlay
             muted
             playsInline
+            poster={activeVideo.cover}
             preload="metadata"
             onEnded={() => {
               if (videos.length > 1) {
@@ -158,7 +191,7 @@ export function VideoHeroMedia({ videos }: VideoTemplateHeroBackgroundProps) {
 
             return (
               <button
-                key={video}
+                key={video.src}
                 type="button"
                 aria-label={`Play hero background ${index + 1}`}
                 onClick={() => setActiveIndex(index)}
@@ -205,12 +238,22 @@ export function VideoShowcaseMedia({ items }: VideoShowcaseMediaProps) {
                 <span className="sr-only">{`Open ${item.title} preview`}</span>
                 <div className="relative aspect-video overflow-hidden">
                   {thumbnailIsImage ? (
-                    <img
-                      src={thumbnailSrc}
-                      alt={`${item.title} preview image`}
-                      loading="lazy"
-                      className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
-                    />
+                    <>
+                      <img
+                        src={thumbnailSrc}
+                        alt={`${item.title} preview image`}
+                        loading="lazy"
+                        className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
+                      />
+                      {!isImage ? (
+                        <FeatureHoverVideo
+                          src={item.src}
+                          poster={thumbnailSrc}
+                          title={item.title}
+                          className="absolute inset-0 h-full w-full cursor-pointer object-cover transition-[opacity,transform] duration-500 group-hover:scale-105"
+                        />
+                      ) : null}
+                    </>
                   ) : (
                     <LazyPreviewVideo
                       src={thumbnailSrc}
@@ -219,7 +262,6 @@ export function VideoShowcaseMedia({ items }: VideoShowcaseMediaProps) {
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
                   <div className="absolute left-2 top-2">
                     <span className="inline-flex items-center rounded-md bg-black/60 px-2 py-1 text-xs font-medium text-white backdrop-blur-sm">
                       {item.category}

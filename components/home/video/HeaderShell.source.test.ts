@@ -5,7 +5,7 @@ import test from "node:test";
 
 const projectRoot = process.cwd();
 
-test("video header stays static and loads user credits on the client", () => {
+test("video header gates client session until after hydration", () => {
   const headerSource = readFileSync(
     path.join(projectRoot, "components/home/video/Header.tsx"),
     "utf8",
@@ -15,7 +15,13 @@ test("video header stays static and loads user credits on the client", () => {
     "utf8",
   );
 
+  assert.doesNotMatch(headerSource, /getSession/);
   assert.doesNotMatch(headerSource, /getUserBenefits/);
+  assert.match(headerShellSource, /setHasHydrated\(true\)/);
+  assert.match(
+    headerShellSource,
+    /hasHydrated\s*\?\s*\(\(session\?\.user \?\? null\) as User \| null\)\s*:\s*null/,
+  );
   assert.match(headerShellSource, /fetch\("\/api\/auth\/user"/);
   assert.match(headerShellSource, /setClientCredits/);
 });

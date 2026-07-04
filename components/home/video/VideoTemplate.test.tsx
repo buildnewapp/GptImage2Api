@@ -264,6 +264,19 @@ test("renders the hero photo wall deterministically for the same image input", (
   }
 });
 
+test("mounts hero photo wall preview videos only while a card is hovered", () => {
+  const source = readFileSync(
+    path.join(projectRoot, "components/home/video/HeroPhotoWall.tsx"),
+    "utf8",
+  );
+
+  assert.match(source, /hoveredPreviewKey/);
+  assert.match(source, /setHoveredPreviewKey/);
+  assert.match(source, /isPreviewHovered/);
+  assert.doesNotMatch(source, /data-hover-video-src/);
+  assert.doesNotMatch(source, /querySelector\(\s*"video/);
+});
+
 test("extracts video header into dedicated components instead of inline nav markup", () => {
   const source = readFileSync(
     path.join(projectRoot, "components/home/video/VideoTemplate.tsx"),

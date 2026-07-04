@@ -26,8 +26,8 @@ export default async function Home({
   // return <Seedance15Home />;
   // return <SeedanceHome />;
   // return <HomeTemplate1 />;
-  return <VideoTemplate />;
-  // return <ImageTemplate />;
+  // return <VideoTemplate />;
+  return <ImageTemplate />;
   // return <HomeComponent />;
   // return <ToolHomeComponent />;
 }

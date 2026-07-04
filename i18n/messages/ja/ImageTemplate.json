@@ -11,30 +11,72 @@
     "resolutionLabel": "1024x1024",
     "title": "GptImage2Api で商用向け画像を素早く生成",
     "videos": [],
-    "images": ["https://file.gptimage2api.net/media/1776756799880_c8u8w7_HGUKjjaasAAvVRa-300x240.jpg","https://file.gptimage2api.net/media/1776668128332_d2wtbo_HGQDh30bMAARz9E-300x300.jpg","https://file.gptimage2api.net/media/1776695123224_6cabrf_HGCZTbKawAAaS5X-300x450.jpg","https://file.gptimage2api.net/media/1776756799069_v5dm3d_HGaEzbEasAAe7sy-300x200.jpg","https://file.gptimage2api.net/media/1776756854427_qzcik2_HGYy_KObcAA66sM-300x200.jpg","https://file.gptimage2api.net/media/1776756858185_6z7569_HGV6FtKbwAAK6L0-300x169.jpg","https://file.gptimage2api.net/media/1776756838105_09bui0_HGWtW5LaEAE1ao5-300x450.jpg","https://file.gptimage2api.net/media/1776756778810_dclrin_HGYS0HYakAAO1Kt-300x200.jpg","https://file.gptimage2api.net/media/1776756845933_k4n9y9_HGXxMxeawAE11LJ-300x200.jpg","https://file.gptimage2api.net/media/1776756852880_v094nl_HGXcdOPbUAA06XY-300x300.jpg","https://file.gptimage2api.net/media/1776756809391_6lhkiq_HGXR9V_bIAARJPu-300x240.jpg","https://file.gptimage2api.net/media/1776756782732_rwl7km_HGXJbgbaAAQQd4O-300x533.jpg","https://file.gptimage2api.net/media/1776756762098_oz5z4c_HGXGwsMagAEYuqa-300x225.jpg","https://file.gptimage2api.net/media/1776756781085_e23ett_HGXBV05XwAA2yU4-300x450.jpg","https://file.gptimage2api.net/media/1776756843035_0y4dr0_HGV2dbja8AA3IvB-300x400.jpg","https://file.gptimage2api.net/media/1776756855692_stwo0a_HGT1-4Bb0AA312i-300x424.jpg","https://file.gptimage2api.net/media/1776756789445_z4tzjp_HGTxSpFaMAAuxns-300x300.jpg","https://file.gptimage2api.net/media/1776668159375_sd2tyn_HGTivWjXkAAt6tk-300x375.jpg","https://file.gptimage2api.net/media/1776661915237_r1emn3_HGRFgTdaEAAt63O-300x450.jpg","https://file.gptimage2api.net/media/1776756775486_4fd52x_HGRomaeboAA-DR6-300x450.jpg","https://file.gptimage2api.net/media/1776662628547_pc62qe_HGRnQTja8AASNom-300x533.jpg","https://file.gptimage2api.net/media/1776668115222_j6vl73_HGQ9NH3bQAAVUT8-300x450.jpg","https://file.gptimage2api.net/media/1776661994608_2lvoxe_HGQ9NKVaMAA-xFS-300x450.jpg","https://file.gptimage2api.net/media/1776658762495_8ewb2m_HGQr7nCa8AAiaSP-300x398.jpg","https://file.gptimage2api.net/media/1776662581155_jmf49d_HGPvP8vacAADS5B-300x300.jpg","https://file.gptimage2api.net/media/1776658759466_0vvd9m_HGPgEzEbUAA6-9s-300x398.jpg","https://file.gptimage2api.net/media/1776662627550_b8twjr_HGNFz2LbkAA1mcT-300x300.jpg","https://file.gptimage2api.net/media/1776699416625_76138j_HGLw5u2aMAIkzeF-300x450.jpg","https://file.gptimage2api.net/media/1776699450623_5ct1le_HGK8gRMX0AATb8O-300x240.jpg","https://file.gptimage2api.net/media/1776699445902_sfhrjh_HGHBOIrb0AAkXJR-300x450.jpg","https://file.gptimage2api.net/media/1776697099289_x4jdgx_HGGQsN5aMAAAjT0-300x532.jpg","https://file.gptimage2api.net/media/1776695089047_tujkw0_HGFn2-NbkAA-tXK-300x450.jpg","https://file.gptimage2api.net/media/1776695086349_pfmtbk_HGFn2-IbsAAWHPw-300x417.jpg","https://file.gptimage2api.net/media/1776697064224_fs22qb_HGE_FK_WwAAOsAo-300x169.jpg","https://file.gptimage2api.net/media/1776695100409_im47dt_HGCY5CSbMAAdw_G-300x533.jpg","https://file.gptimage2api.net/media/1776695097319_qo1ro9_HGCTzyHaQAAyN76-300x533.jpg","https://file.gptimage2api.net/media/1776695112490_phpst3_HGAuWVwaIAECnjY-300x450.jpg","https://file.gptimage2api.net/media/1776695094646_as3wii_HF_Qx-fWAAA--l6-300x450.jpg","https://file.gptimage2api.net/media/1776701503291_06vsnv_HF-1mIabEAMQ5Ej-300x300.jpg","https://file.gptimage2api.net/media/1776701488942_vgrwp4_HF9SpBnbsAAeF4g-300x300.jpg","https://file.gptimage2api.net/media/1776701513937_vtw05u_HF8YsTeaMAAqgex-300x450.jpg"]
+    "images": [
+      "/demo/image-1776756799880_c8u8w7_HGUKjjaasAAvVRa-300x240.webp",
+      "/demo/image-1776668128332_d2wtbo_HGQDh30bMAARz9E-300x300.webp",
+      "/demo/image-1776695123224_6cabrf_HGCZTbKawAAaS5X-300x450.webp",
+      "/demo/image-1776756799069_v5dm3d_HGaEzbEasAAe7sy-300x200.webp",
+      "/demo/image-1776756854427_qzcik2_HGYy_KObcAA66sM-300x200.webp",
+      "/demo/image-1776756858185_6z7569_HGV6FtKbwAAK6L0-300x169.webp",
+      "/demo/image-1776756838105_09bui0_HGWtW5LaEAE1ao5-300x450.webp",
+      "/demo/image-1776756778810_dclrin_HGYS0HYakAAO1Kt-300x200.webp",
+      "/demo/image-1776756845933_k4n9y9_HGXxMxeawAE11LJ-300x200.webp",
+      "/demo/image-1776756852880_v094nl_HGXcdOPbUAA06XY-300x300.webp",
+      "/demo/image-1776756809391_6lhkiq_HGXR9V_bIAARJPu-300x240.webp",
+      "/demo/image-1776756782732_rwl7km_HGXJbgbaAAQQd4O-300x533.webp",
+      "/demo/image-1776756762098_oz5z4c_HGXGwsMagAEYuqa-300x225.webp",
+      "/demo/image-1776756781085_e23ett_HGXBV05XwAA2yU4-300x450.webp",
+      "/demo/image-1776756843035_0y4dr0_HGV2dbja8AA3IvB-300x400.webp",
+      "/demo/image-1776756855692_stwo0a_HGT1-4Bb0AA312i-300x424.webp",
+      "/demo/image-1776756789445_z4tzjp_HGTxSpFaMAAuxns-300x300.webp",
+      "/demo/image-1776668159375_sd2tyn_HGTivWjXkAAt6tk-300x375.webp",
+      "/demo/image-1776661915237_r1emn3_HGRFgTdaEAAt63O-300x450.webp",
+      "/demo/image-1776756775486_4fd52x_HGRomaeboAA-DR6-300x450.webp",
+      "/demo/image-1776662628547_pc62qe_HGRnQTja8AASNom-300x533.webp",
+      "/demo/image-1776668115222_j6vl73_HGQ9NH3bQAAVUT8-300x450.webp",
+      "/demo/image-1776661994608_2lvoxe_HGQ9NKVaMAA-xFS-300x450.webp",
+      "/demo/image-1776658762495_8ewb2m_HGQr7nCa8AAiaSP-300x398.webp",
+      "/demo/image-1776662581155_jmf49d_HGPvP8vacAADS5B-300x300.webp",
+      "/demo/image-1776658759466_0vvd9m_HGPgEzEbUAA6-9s-300x398.webp",
+      "/demo/image-1776662627550_b8twjr_HGNFz2LbkAA1mcT-300x300.webp",
+      "/demo/image-1776699416625_76138j_HGLw5u2aMAIkzeF-300x450.webp",
+      "/demo/image-1776699450623_5ct1le_HGK8gRMX0AATb8O-300x240.webp",
+      "/demo/image-1776699445902_sfhrjh_HGHBOIrb0AAkXJR-300x450.webp",
+      "/demo/image-1776697099289_x4jdgx_HGGQsN5aMAAAjT0-300x532.webp",
+      "/demo/image-1776695089047_tujkw0_HGFn2-NbkAA-tXK-300x450.webp",
+      "/demo/image-1776695086349_pfmtbk_HGFn2-IbsAAWHPw-300x417.webp",
+      "/demo/image-1776697064224_fs22qb_HGE_FK_WwAAOsAo-300x169.webp",
+      "/demo/image-1776695100409_im47dt_HGCY5CSbMAAdw_G-300x533.webp",
+      "/demo/image-1776695097319_qo1ro9_HGCTzyHaQAAyN76-300x533.webp",
+      "/demo/image-1776695112490_phpst3_HGAuWVwaIAECnjY-300x450.webp",
+      "/demo/image-1776695094646_as3wii_HF_Qx-fWAAA--l6-300x450.webp",
+      "/demo/image-1776701503291_06vsnv_HF-1mIabEAMQ5Ej-300x300.webp",
+      "/demo/image-1776701488942_vgrwp4_HF9SpBnbsAAeF4g-300x300.webp",
+      "/demo/image-1776701513937_vtw05u_HF8YsTeaMAAqgex-300x450.webp"
+    ]
   },
   "featureRows": [
     {
       "title": "高精細なテキストから画像生成",
       "description": "詳細なプロンプトから、構図・質感・文字レイアウトの精度が高いビジュアルを生成できます。",
-      "imageSrc": "https://file.gptimage2api.net/media/1776756799069_v5dm3d_HGaEzbEasAAe7sy.jpg"
+      "imageSrc": "/demo/image-1776756799069_v5dm3d_HGaEzbEasAAe7sy.webp"
     },
     {
       "title": "狙った箇所を編集できる画像ワークフロー",
       "description": "既存画像をアップロードし、被写体差し替え、背景変更、スタイル調整、部分リタッチを行えます。",
       "reverse": true,
-      "imageSrc": "https://file.gptimage2api.net/media/1776695106960_424uv9_HGBnGc4bgAA2vft.jpg"
+      "imageSrc": "/demo/image-1776695106960_424uv9_HGBnGc4bgAA2vft.webp"
     },
     {
       "title": "ポスターやレイアウト文字が読みやすい",
       "description": "見出し・補足文・ラベルを含む素材を作りやすく、文字崩れを減らして実運用しやすくします。",
-      "imageSrc": "https://file.gptimage2api.net/media/1776756858951_6ijm10_HGV6HyHaUAA68FT.jpg"
+      "imageSrc": "/demo/image-1776756858951_6ijm10_HGV6HyHaUAA68FT.webp"
     },
     {
       "title": "商品ビジュアルの一貫性を維持",
       "description": "複数画像でも角度・配色・パッケージ表現を揃えやすく、カタログや広告運用に向いています。",
       "reverse": true,
-      "imageSrc": "https://file.gptimage2api.net/media/1776661915237_r1emn3_HGRFgTdaEAAt63O.jpg"
+      "imageSrc": "/demo/image-1776661915237_r1emn3_HGRFgTdaEAAt63O.webp"
     }
   ],
   "scope": {
@@ -144,7 +186,7 @@
         "description": "シーンを入力し、アスペクト比・長さ・解像度を選ぶだけで、Web アプリ内で短尺クリップを生成できます。",
         "icon": "RiFileTextLine",
         "image": {
-          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/4ryp8bssv.png"
+          "src": "/demo/image-4ryp8bssv.webp"
         }
       },
       {
@@ -152,7 +194,7 @@
         "description": "1 枚の静止画から始めることで、被写体、構図、ビジュアル方向を保ったままモーションを加えられます。",
         "icon": "RiMagicLine",
         "image": {
-          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/sel4unt33.png"
+          "src": "/demo/image-sel4unt33.webp"
         }
       },
       {
@@ -160,7 +202,7 @@
         "description": "最大 1080p・15 秒のクリップを作成し、複数のアイデアを素早く検証しながらデイリータスクでクレジットも獲得できます。",
         "icon": "RiFlashlightFill",
         "image": {
-          "src": "https://cdn.sdanceai.com/sdanceai/sdance_images/9qfkzq75i.png"
+          "src": "/demo/image-9qfkzq75i.webp"
         }
       }
     ]
@@ -237,63 +279,63 @@
         "title": "メンズスキンケアLPモックアップ",
         "prompt": "男性向けスキンケアブランドのダークトーンLP。人物ビジュアル、商品ボトル、訴求ポイント、実績表示を一体化。",
         "resolution": "1792x1024",
-        "src": "https://file.gptimage2api.net/media/1776756858185_6z7569_HGV6FtKbwAAK6L0.jpg"
+        "src": "/demo/image-1776756858185_6z7569_HGV6FtKbwAAK6L0.webp"
       },
       {
         "category": "図解",
         "title": "キャラクター相関図ポスター",
         "prompt": "主要キャラクター、勢力、関係線を整理し、作品らしい世界観でまとめた情報量の高い相関図ポスター。",
         "resolution": "1024x1280",
-        "src": "https://file.gptimage2api.net/media/1776756766331_2wdcq7_HGXHhQcbAAAFcYA.jpg"
+        "src": "/demo/image-1776756766331_2wdcq7_HGXHhQcbAAAFcYA.webp"
       },
       {
         "category": "マンガ",
         "title": "5コマ配達員サスペンス漫画",
         "prompt": "玄関先のやり取りを軸に、不穏さと感情の変化をフルカラーの5コマで見せる漫画ページ。",
         "resolution": "1024x1365",
-        "src": "https://file.gptimage2api.net/media/1776756843035_0y4dr0_HGV2dbja8AA3IvB.jpg"
+        "src": "/demo/image-1776756843035_0y4dr0_HGV2dbja8AA3IvB.webp"
       },
       {
         "category": "キャラクター",
         "title": "3D表情グリッド",
         "prompt": "同じキャラクターを9マスで見せる表情ボード。破れた紙から覗く構図と衣装差分を統一して展開。",
         "resolution": "1024x1024",
-        "src": "https://file.gptimage2api.net/media/1776756789445_z4tzjp_HGTxSpFaMAAuxns.jpg"
+        "src": "/demo/image-1776756789445_z4tzjp_HGTxSpFaMAAuxns.webp"
       },
       {
         "category": "エディトリアル",
         "title": "ファッション誌表紙ポートレート",
         "prompt": "高級感のある雑誌表紙ポートレート。誌名、見出し、本文のレイアウトまで含めて完成度高く構成。",
         "resolution": "1024x1536",
-        "src": "https://file.gptimage2api.net/media/1776668115222_j6vl73_HGQ9NH3bQAAVUT8.jpg"
+        "src": "/demo/image-1776668115222_j6vl73_HGQ9NH3bQAAVUT8.webp"
       },
       {
         "category": "広告",
         "title": "4分割広告キャンペーンボード",
         "prompt": "フード、ファッション、旅行、SaaS の4テーマを縦4分割で見せる広告モックアップ集。",
         "resolution": "1024x1024",
-        "src": "https://file.gptimage2api.net/media/1776658771842_fx88g6_HGPorW_aIAA0F_y.jpg"
+        "src": "/demo/image-1776658771842_fx88g6_HGPorW_aIAA0F_y.webp"
       },
       {
         "category": "設定資料",
         "title": "総合キャラクターデザインシート",
         "prompt": "三面図、表情差分、細部資料、衣装バリエーション、カラーパレットまで含む設定シート。",
         "resolution": "1024x1408",
-        "src": "https://file.gptimage2api.net/media/1776695087912_me13yy_HGFn2-HacAA5QqJ.jpg"
+        "src": "/demo/image-1776695087912_me13yy_HGFn2-HacAA5QqJ.webp"
       },
       {
         "category": "ポートレート",
         "title": "イベント会場のコスプレ写真",
         "prompt": "コスチュームの情報量と会場の空気感を両立した、フォトリアルなコスプレイベントポートレート。",
         "resolution": "1024x1024",
-        "src": "https://file.gptimage2api.net/media/1776695092623_5mm99u_HGBT7WJa0AAMxp2.jpg"
+        "src": "/demo/image-1776695092623_5mm99u_HGBT7WJa0AAMxp2.webp"
       },
       {
         "category": "解説マンガ",
         "title": "8コマAI機能紹介マンガ",
         "prompt": "ちびキャラ、UIモック、比較図、説明セリフを組み合わせた8コマの機能解説マンガ。",
         "resolution": "1024x1536",
-        "src": "https://file.gptimage2api.net/media/1776701513937_vtw05u_HF8YsTeaMAAqgex.jpg"
+        "src": "/demo/image-1776701513937_vtw05u_HF8YsTeaMAAqgex.webp"
       }
     ]
   },

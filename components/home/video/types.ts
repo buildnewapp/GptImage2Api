@@ -16,6 +16,12 @@ export interface VideoTemplateHeroImagePreview {
   title?: string;
 }
 
+export interface VideoTemplateHeroVideo {
+  cover: string;
+  src: string;
+  title?: string;
+}
+
 export interface VideoTemplateHero {
   badge: string;
   ctaLabel: string;
@@ -28,7 +34,7 @@ export interface VideoTemplateHero {
   placeholder: string;
   resolutionLabel: string;
   title: string;
-  videos: string[];
+  videos: VideoTemplateHeroVideo[];
 }
 
 export interface VideoTemplateFeatureRow {

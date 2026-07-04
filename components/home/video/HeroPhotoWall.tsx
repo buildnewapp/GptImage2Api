@@ -12,9 +12,9 @@ interface HeroPhotoWallProps {
 
 const VIDEO_FILE_RE = /\.(mp4|webm|mov|m4v)(?:[?#].*)?$/i;
 
-export const HERO_PHOTO_WALL_COLUMN_COUNT = 10;
+export const HERO_PHOTO_WALL_COLUMN_COUNT = 8;
 export const HERO_PHOTO_WALL_MOBILE_COLUMN_COUNT = 4;
-export const HERO_PHOTO_WALL_ITEMS_PER_COLUMN = 6;
+export const HERO_PHOTO_WALL_ITEMS_PER_COLUMN = 4;
 export const HERO_PHOTO_WALL_COLUMN_START_STEP = HERO_PHOTO_WALL_ITEMS_PER_COLUMN;
 export const HERO_PHOTO_WALL_COLUMN_PADDING_TOP = [
   28, 64, 48, 84, 68, 104, 88, 124, 108, 144,
@@ -30,6 +30,9 @@ export default function HeroPhotoWall({ images }: HeroPhotoWallProps) {
   const [displayImages, setDisplayImages] = useState(images);
   const [columnCount, setColumnCount] = useState(
     HERO_PHOTO_WALL_MOBILE_COLUMN_COUNT,
+  );
+  const [hoveredPreviewKey, setHoveredPreviewKey] = useState<string | null>(
+    null,
   );
 
   useEffect(() => {
@@ -126,41 +129,26 @@ export default function HeroPhotoWall({ images }: HeroPhotoWallProps) {
                 const imageKey = isPreview
                   ? `${image.cover}-${image.src}-${image.title ?? ""}`
                   : image;
+                const previewKey = `${imageKey}-${columnIndex}-${imageIndex}`;
+                const isPreviewHovered = hoveredPreviewKey === previewKey;
 
                 return (
                   <div
-                    key={`${imageKey}-${columnIndex}-${imageIndex}`}
-                    onMouseEnter={(event) => {
+                    key={previewKey}
+                    onPointerEnter={() => {
                       if (!isPreview) {
                         return;
                       }
 
-                      const video = event.currentTarget.querySelector(
-                        "video[data-hover-video-src]",
-                      );
-
-                      if (!(video instanceof HTMLVideoElement)) {
-                        return;
-                      }
-
-                      if (!video.src) {
-                        video.src = video.dataset.hoverVideoSrc ?? "";
-                      }
-
-                      void video.play();
+                      setHoveredPreviewKey(previewKey);
                     }}
-                    onMouseLeave={(event) => {
+                    onPointerLeave={() => {
                       if (!isPreview) {
                         return;
                       }
 
-                      const video = event.currentTarget.querySelector(
-                        "video[data-hover-video-src]",
-                      );
-
-                      if (video instanceof HTMLVideoElement) {
-                        video.pause();
-                        video.currentTime = 0;
+                      if (hoveredPreviewKey === previewKey) {
+                        setHoveredPreviewKey(null);
                       }
                     }}
                     className={`group relative overflow-hidden rounded-[1rem] border border-white/12 bg-white/6 shadow-[0_20px_40px_-24px_rgba(15,23,42,0.65)] ${HERO_PHOTO_WALL_CARD_VARIANTS[(imageIndex + columnIndex) % HERO_PHOTO_WALL_CARD_VARIANTS.length]}`}
@@ -175,16 +163,20 @@ export default function HeroPhotoWall({ images }: HeroPhotoWallProps) {
                           fetchPriority="low"
                           className="h-full w-full transform-gpu object-cover transition-transform duration-200 ease-out will-change-transform group-hover:scale-[1.2]"
                         />
-                        <video
-                          data-hover-video-src={videoSrc}
-                          muted
-                          playsInline
-                          loop
-                          preload="none"
-                          poster={src}
-                          aria-label={title}
-                          className="absolute inset-0 h-full w-full transform-gpu object-cover opacity-0 transition-[opacity,transform] duration-200 ease-out will-change-transform group-hover:scale-[1.2] group-hover:opacity-100"
-                        />
+                        {isPreviewHovered ? (
+                          <video
+                            key={videoSrc}
+                            src={videoSrc}
+                            autoPlay
+                            muted
+                            playsInline
+                            loop
+                            preload="metadata"
+                            poster={src}
+                            aria-label={title}
+                            className="absolute inset-0 h-full w-full transform-gpu object-cover transition-[opacity,transform] duration-200 ease-out will-change-transform group-hover:scale-[1.2]"
+                          />
+                        ) : null}
                       </>
                     ) : VIDEO_FILE_RE.test(src) ? (
                       <LazyPreviewVideo
