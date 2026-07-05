@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { Play } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import { LazyPreviewVideo } from "@/components/home/video/Media";
@@ -131,6 +132,8 @@ export default function HeroPhotoWall({ images }: HeroPhotoWallProps) {
                   : image;
                 const previewKey = `${imageKey}-${columnIndex}-${imageIndex}`;
                 const isPreviewHovered = hoveredPreviewKey === previewKey;
+                const isVideoCard = isPreview || VIDEO_FILE_RE.test(src);
+                const isVideoPlaying = isPreview ? isPreviewHovered : VIDEO_FILE_RE.test(src);
 
                 return (
                   <div
@@ -195,6 +198,16 @@ export default function HeroPhotoWall({ images }: HeroPhotoWallProps) {
                         className="h-full w-full transform-gpu object-cover transition-transform duration-200 ease-out will-change-transform group-hover:scale-[1.2]"
                       />
                     )}
+                    {isVideoCard && !isVideoPlaying ? (
+                      <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+                        <span className="flex size-9 items-center justify-center rounded-full border border-white/35 bg-black/35 text-white shadow-[0_10px_24px_-12px_rgba(0,0,0,0.75)] backdrop-blur-sm sm:size-10">
+                          <Play
+                            aria-hidden="true"
+                            className="ml-0.5 size-4 fill-current"
+                          />
+                        </span>
+                      </div>
+                    ) : null}
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/18 via-transparent to-white/10 opacity-80" />
                   </div>
                 );

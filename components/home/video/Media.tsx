@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Clock3, X } from "lucide-react";
+import { Clock3, Play, X } from "lucide-react";
 
 import {
   Dialog,
@@ -272,6 +272,16 @@ export function VideoShowcaseMedia({ items }: VideoShowcaseMediaProps) {
                       <span className="inline-flex items-center rounded-md bg-black/60 px-2 py-1 text-xs font-medium text-white backdrop-blur-sm">
                         <Clock3 className="mr-1 h-3 w-3" />
                         {item.duration}
+                      </span>
+                    </div>
+                  ) : null}
+                  {!isImage && thumbnailIsImage ? (
+                    <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center opacity-100 transition-opacity duration-200 group-hover:opacity-0">
+                      <span className="flex size-11 items-center justify-center rounded-full border border-white/35 bg-black/35 text-white shadow-[0_10px_24px_-12px_rgba(0,0,0,0.75)] backdrop-blur-sm">
+                        <Play
+                          aria-hidden="true"
+                          className="ml-0.5 size-5 fill-current"
+                        />
                       </span>
                     </div>
                   ) : null}
