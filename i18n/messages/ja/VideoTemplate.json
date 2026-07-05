@@ -12,20 +12,20 @@
     "title": "短尺動画を直接生成",
     "videos": [
       {
-        "src": "/demo/video-4vr3llg33.mp4",
-        "cover": "/demo/video-4vr3llg33-cover.webp"
+        "src": "https://cdn.sdanceai.com/seedance20/video/4vr3llg33.mp4",
+        "cover": "https://cdn.sdanceai.com/seedance20/video/4vr3llg33-cover.webp"
       },
       {
-        "src": "/demo/video-cslx142y0.mp4",
-        "cover": "/demo/video-cslx142y0-cover.webp"
+        "src": "https://cdn.sdanceai.com/seedance20/video/cslx142y0.mp4",
+        "cover": "https://cdn.sdanceai.com/seedance20/video/cslx142y0-cover.webp"
       },
       {
-        "src": "/demo/video-0yk60yijj.mp4",
-        "cover": "/demo/video-0yk60yijj-cover.webp"
+        "src": "https://cdn.sdanceai.com/seedance20/video/0yk60yijj.mp4",
+        "cover": "https://cdn.sdanceai.com/seedance20/video/0yk60yijj-cover.webp"
       },
       {
-        "src": "/demo/video-598uoczz9.mp4",
-        "cover": "/demo/video-598uoczz9-cover.webp"
+        "src": "https://cdn.sdanceai.com/seedance20/video/598uoczz9.mp4",
+        "cover": "https://cdn.sdanceai.com/seedance20/video/598uoczz9-cover.webp"
       }
     ]
   },
@@ -33,24 +33,24 @@
     {
       "description": "プロンプトを書き、アスペクト比・長さ・解像度を選ぶだけで、現在の Web アプリ内で短尺クリップを生成できます。新規ユーザーでも Seedance 2.0 をすぐに使い始められ、デイリータスクで多くのクレジットを継続的に獲得できます。",
       "title": "短尺テキスト動画生成",
-      "videoSrc": "/demo/video-gomdqjkt4.mp4"
+      "videoSrc": "https://cdn.sdanceai.com/seedance20/video/gomdqjkt4.mp4"
     },
     {
       "description": "1 枚の静止画像を開始フレームとして使い、動き始める前に被写体、構図、アートディレクションを固定できます。現在の Web アプリは単一の参照画像による画像から動画生成をサポートしています。",
       "reverse": true,
       "title": "参照画像ガイダンス",
-      "videoSrc": "/demo/video-es600fg0x.mp4"
+      "videoSrc": "https://cdn.sdanceai.com/seedance20/video/es600fg0x.mp4"
     },
     {
       "description": "新規ユーザーは Seedance 2.0 をすぐに使い始められ、デイリータスクで多くのクレジットを継続的に獲得できます。モデルの制限は生成前に UI 上で確認できます。",
       "title": "すぐに 2.0 を開始",
-      "videoSrc": "/demo/video-88jhjdm4l.mp4"
+      "videoSrc": "https://cdn.sdanceai.com/seedance20/video/88jhjdm4l.mp4"
     },
     {
       "description": "現在の seedance2.app の公開プランでは、Seedance 2.0 は最大 1080p・15 秒までです。クレジットを使う前に現実的なプロンプト設計ができるよう、こうした上限を UI 上で明示しています。",
       "reverse": true,
       "title": "出力上限を明確に表示",
-      "videoSrc": "/demo/video-nf3vdfl8a.mp4"
+      "videoSrc": "https://cdn.sdanceai.com/seedance20/video/nf3vdfl8a.mp4"
     }
   ],
   "scope": {
@@ -160,7 +160,7 @@
         "description": "シーンを入力し、アスペクト比・長さ・解像度を選ぶだけで、Web アプリ内で短尺クリップを生成できます。",
         "icon": "RiFileTextLine",
         "image": {
-          "src": "/demo/image-4ryp8bssv.webp"
+          "src": "https://cdn.sdanceai.com/seedance20/image/4ryp8bssv.webp"
         }
       },
       {
@@ -168,7 +168,7 @@
         "description": "1 枚の静止画から始めることで、被写体、構図、ビジュアル方向を保ったままモーションを加えられます。",
         "icon": "RiMagicLine",
         "image": {
-          "src": "/demo/image-sel4unt33.webp"
+          "src": "https://cdn.sdanceai.com/seedance20/image/sel4unt33.webp"
         }
       },
       {
@@ -176,7 +176,7 @@
         "description": "最大 1080p・15 秒のクリップを作成し、複数のアイデアを素早く検証しながらデイリータスクでクレジットも獲得できます。",
         "icon": "RiFlashlightFill",
         "image": {
-          "src": "/demo/image-9qfkzq75i.webp"
+          "src": "https://cdn.sdanceai.com/seedance20/image/9qfkzq75i.webp"
         }
       }
     ]
@@ -253,54 +253,54 @@
         "duration": "13.0s",
         "prompt": "@Image1 の女優をメイン被写体に設定。リズミカルな push-pull-pan-tilt のカメラワークは @Video1 を参照。女優は @Video1 の女性ダンサーの動きを再現し、ステージ上でエネルギッシュに踊る。",
         "resolution": "720x1280",
-        "src": "/demo/video-cslx142y0.mp4",
+        "src": "https://cdn.sdanceai.com/seedance20/video/cslx142y0.mp4",
         "title": "カメラと動きの再現",
-        "cover": "/demo/video-cslx142y0-cover.webp"
+        "cover": "https://cdn.sdanceai.com/seedance20/video/cslx142y0-cover.webp"
       },
       {
         "category": "ドキュメンタリー",
         "duration": "15.0s",
         "prompt": "絵の中のキャラクターが後ろめたそうな表情で左右を見回し、フレームの外に手を伸ばしてコーラを取り、一口飲んで満足そうな表情を見せる。足音が聞こえると急いでコーラを元に戻す。カウボーイがそのコーラを持ち去る。カメラは純黒の背景へ前進し、缶入りコーラにスポットライトが当たり、芸術的な字幕「Yikou Cola, a must-try!」が表示される。",
         "resolution": "1280x720",
-        "src": "/demo/video-3xh83niox.mp4",
+        "src": "https://cdn.sdanceai.com/seedance20/video/3xh83niox.mp4",
         "title": "基礎性能の強化",
-        "cover": "/demo/video-3xh83niox-cover.webp"
+        "cover": "https://cdn.sdanceai.com/seedance20/video/3xh83niox-cover.webp"
       },
       {
         "category": "解説",
         "duration": "15.0s",
         "prompt": "男性（@Image1）が仕事帰りに疲れた様子で廊下を歩き、次第に足取りが重くなる。玄関前で立ち止まり、顔のクローズアップ。深呼吸して気持ちを整え、穏やかな表情を作る。鍵を探して差し込む手元のアップ。家に入ると幼い娘と飼い犬が嬉しそうに駆け寄って抱きつく。室内はとても暖かく居心地がよく、全体に自然な会話が流れる。",
         "resolution": "1280x720",
-        "src": "/demo/video-kewve4hf7.mp4",
+        "src": "https://cdn.sdanceai.com/seedance20/video/kewve4hf7.mp4",
         "title": "ブランド解説シーケンス",
-        "cover": "/demo/video-kewve4hf7-cover.webp"
+        "cover": "https://cdn.sdanceai.com/seedance20/video/kewve4hf7-cover.webp"
       },
       {
         "category": "ファッション",
         "duration": "10.0s",
         "prompt": "最初の画像にあるモデルの顔立ちを参照する。モデルは参照画像 2-6 の衣装を着てカメラに向かって歩き、遊び心、クールさ、可愛らしさ、驚き、スタイリッシュさを表現するポーズを順に見せる。",
         "resolution": "720x1280",
-        "src": "/demo/video-nnxk9k7w5.mp4",
+        "src": "https://cdn.sdanceai.com/seedance20/video/nnxk9k7w5.mp4",
         "title": "クリエイティブテンプレートと効果",
-        "cover": "/demo/video-nnxk9k7w5-cover.webp"
+        "cover": "https://cdn.sdanceai.com/seedance20/video/nnxk9k7w5-cover.webp"
       },
       {
         "category": "ライフスタイル",
         "duration": "14.0s",
         "prompt": "Video1 の音声を参照し、Image1-5 をインスピレーションとして感情駆動型の動画を作る。BGM は @Video1 を参考にする。",
         "resolution": "1280x720",
-        "src": "/demo/video-q3zb6o149.mp4",
+        "src": "https://cdn.sdanceai.com/seedance20/video/q3zb6o149.mp4",
         "title": "クリエイティブな物語補完",
-        "cover": "/demo/video-q3zb6o149-cover.webp"
+        "cover": "https://cdn.sdanceai.com/seedance20/video/q3zb6o149-cover.webp"
       },
       {
         "category": "エンタメ",
         "duration": "15.0s",
         "prompt": "動画をさらに 15 秒延長する。@Image1 と @Image2 に登場するバイクに乗ったロバのキャラクターを参照し、破天荒な広告シーケンスを作成する。",
         "resolution": "1280x720",
-        "src": "/demo/video-598uoczz9.mp4",
+        "src": "https://cdn.sdanceai.com/seedance20/video/598uoczz9.mp4",
         "title": "動画延長",
-        "cover": "/demo/video-598uoczz9-cover.webp"
+        "cover": "https://cdn.sdanceai.com/seedance20/video/598uoczz9-cover.webp"
       }
     ]
   },

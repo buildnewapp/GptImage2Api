@@ -12,62 +12,100 @@
     "title": "Create Production-Ready Images with GptImage2Api",
     "videos": [],
     "images": [
-      "/demo/image-1776695106960_424uv9_HGBnGc4bgAA2vft.webp",
-      "/demo/image-1776756799880_c8u8w7_HGUKjjaasAAvVRa-300x240.webp",
-      "/demo/image-1776668128332_d2wtbo_HGQDh30bMAARz9E-300x300.webp",
-      "/demo/image-1776695123224_6cabrf_HGCZTbKawAAaS5X-300x450.webp",
-      "/demo/image-1776668128332_d2wtbo_HGQDh30bMAARz9E-300x300.webp",
       {
-        "cover": "/demo/image-1776756799880_c8u8w7_HGUKjjaasAAvVRa-300x240.webp",
-        "src": "/demo/video-4vr3llg33.mp4",
-        "title": "demo 1"
+        "cover": "https://cdn.sdanceai.com/seedance20/video/0go1c06d9-cover.webp",
+        "src": "https://cdn.sdanceai.com/seedance20/video/0go1c06d9.mp4",
+        "title": "0go1c06d9"
       },
       {
-        "cover": "/demo/image-1776668128332_d2wtbo_HGQDh30bMAARz9E-300x300.webp",
-        "src": "/demo/video-cslx142y0.mp4",
-        "title": "demo 1"
+        "cover": "https://cdn.sdanceai.com/seedance20/video/0yk60yijj-cover.webp",
+        "src": "https://cdn.sdanceai.com/seedance20/video/0yk60yijj.mp4",
+        "title": "0yk60yijj"
       },
       {
-        "cover": "/demo/image-1776695123224_6cabrf_HGCZTbKawAAaS5X-300x450.webp",
-        "src": "/demo/video-0yk60yijj.mp4",
-        "title": "demo 1"
+        "cover": "https://cdn.sdanceai.com/seedance20/video/3xh83niox-cover.webp",
+        "src": "https://cdn.sdanceai.com/seedance20/video/3xh83niox.mp4",
+        "title": "3xh83niox"
       },
       {
-        "cover": "/demo/image-1776756799069_v5dm3d_HGaEzbEasAAe7sy-300x200.webp",
-        "src": "/demo/video-598uoczz9.mp4",
-        "title": "demo 1"
-      }
+        "cover": "https://cdn.sdanceai.com/seedance20/video/4vr3llg33-cover.webp",
+        "src": "https://cdn.sdanceai.com/seedance20/video/4vr3llg33.mp4",
+        "title": "4vr3llg33"
+      },
+      {
+        "cover": "https://cdn.sdanceai.com/seedance20/video/598uoczz9-cover.webp",
+        "src": "https://cdn.sdanceai.com/seedance20/video/598uoczz9.mp4",
+        "title": "598uoczz9"
+      },
+      {
+        "cover": "https://cdn.sdanceai.com/seedance20/video/6i3dguvnr-cover.webp",
+        "src": "https://cdn.sdanceai.com/seedance20/video/6i3dguvnr.mp4",
+        "title": "6i3dguvnr"
+      },
+      "https://cdn.sdanceai.com/gpt2image/image/02c8yi-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/0ssxq9-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/0uhy6b-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/111ch0-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/1qihbt-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/30xotg-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/3nc3nu-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/3v3ppc-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/3y89n9-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/4qqpsm-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/4va97a-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/5ybbnl-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/5zm9wx-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/6ie5mg-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/6w3qcu-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/73potn-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/7jsqdt-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/7mo72m-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/7r7a3a-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/9gyy5f-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/arppkk-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/c8zufu-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/cndu8r-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/czkzi1-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/ek3cij-thumb.webp",
+      "https://cdn.sdanceai.com/gpt2image/image/j8gv1w-thumb.webp"
     ]
   },
   "featureRows": [
     {
       "title": "High-Fidelity Text to Image",
       "description": "Turn detailed prompts into polished visuals with stable composition, realistic materials, and strong typography readability.",
-      "imageSrc": "/demo/image-1776756799069_v5dm3d_HGaEzbEasAAe7sy.webp",
-      "video": "/demo/video-4vr3llg33.mp4"
+      "imageSrc": "https://cdn.sdanceai.com/seedance20/video/es600fg0x-cover.webp",
+      "video": "https://cdn.sdanceai.com/seedance20/video/es600fg0x.mp4"
     },
     {
       "title": "Precise Image Editing Workflow",
       "description": "Upload a source image, then refine only what you need: subject swap, background replacement, style updates, and local retouching.",
       "reverse": true,
       "imageSrc": [
-        "/demo/image-1776695106960_424uv9_HGBnGc4bgAA2vft.webp",
-        "/demo/image-1776756799880_c8u8w7_HGUKjjaasAAvVRa-300x240.webp",
-        "/demo/image-1776668128332_d2wtbo_HGQDh30bMAARz9E-300x300.webp",
-        "/demo/image-1776695123224_6cabrf_HGCZTbKawAAaS5X-300x450.webp",
-        "/demo/image-1776668128332_d2wtbo_HGQDh30bMAARz9E-300x300.webp"
+        "https://cdn.sdanceai.com/seedance20/image/hr9m2q177.webp",
+        "https://cdn.sdanceai.com/seedance20/image/jkx01ic8s.webp",
+        "https://cdn.sdanceai.com/seedance20/image/lntpiel9o.webp",
+        "https://cdn.sdanceai.com/seedance20/image/rthxgreoc.webp",
+        "https://cdn.sdanceai.com/seedance20/image/t5bj54vt1.webp",
+        "https://cdn.sdanceai.com/seedance20/image/u8x24mn73.webp",
+        "https://cdn.sdanceai.com/seedance20/image/vgek3ghwv.webp",
+        "https://cdn.sdanceai.com/seedance20/image/xdnerrnzc.webp",
+        "https://cdn.sdanceai.com/seedance20/image/xsnia6p7m.webp",
+        "https://cdn.sdanceai.com/seedance20/image/zr7zxl72k.webp"
       ]
     },
     {
       "title": "Readable Text in Posters and Mockups",
       "description": "Generate marketing assets with cleaner small text, structured hierarchy, and consistent spacing for real campaign usage.",
-      "imageSrc": "/demo/image-1776756858951_6ijm10_HGV6HyHaUAA68FT.webp"
+      "imageSrc": "https://cdn.sdanceai.com/seedance20/video/598uoczz9-cover.webp",
+      "video": "https://cdn.sdanceai.com/seedance20/video/598uoczz9.mp4"
     },
     {
       "title": "Consistent Product Visual Direction",
       "description": "Keep colors, angle, and packaging details aligned across batches, so your catalog and ad creatives look unified.",
       "reverse": true,
-      "imageSrc": "/demo/image-1776661915237_r1emn3_HGRFgTdaEAAt63O.webp"
+      "imageSrc": "https://cdn.sdanceai.com/seedance20/video/eddn94864-cover.webp",
+      "video": "https://cdn.sdanceai.com/seedance20/video/eddn94864.mp4"
     }
   ],
   "scope": {
@@ -177,7 +215,7 @@
         "description": "Write a scene, choose aspect ratio, duration, and resolution, then render short clips directly in the web app.",
         "icon": "RiFileTextLine",
         "image": {
-          "src": "/demo/image-4ryp8bssv.webp"
+          "src": "https://cdn.sdanceai.com/seedance20/image/4ryp8bssv.webp"
         }
       },
       {
@@ -185,7 +223,7 @@
         "description": "Start from a still image to keep the subject, framing, or visual direction stable before motion begins.",
         "icon": "RiMagicLine",
         "image": {
-          "src": "/demo/image-sel4unt33.webp"
+          "src": "https://cdn.sdanceai.com/seedance20/image/sel4unt33.webp"
         }
       },
       {
@@ -193,7 +231,7 @@
         "description": "Create 1080p clips up to 15 seconds, test several ideas quickly, and keep earning credits through daily tasks.",
         "icon": "RiFlashlightFill",
         "image": {
-          "src": "/demo/image-9qfkzq75i.webp"
+          "src": "https://cdn.sdanceai.com/seedance20/image/9qfkzq75i.webp"
         }
       }
     ]
@@ -270,63 +308,63 @@
         "title": "Men's Skincare Landing Page Mockup",
         "prompt": "Dark-mode skincare landing page with a model portrait, product bottle, feature highlights, and ecommerce-style statistics.",
         "resolution": "1792x1024",
-        "src": "/demo/image-1776756858185_6z7569_HGV6FtKbwAAK6L0.webp"
+        "src": "https://cdn.sdanceai.com/seedance20/image/2y42lulkw.webp"
       },
       {
         "category": "Infographic",
         "title": "Character Relationship Map Poster",
         "prompt": "A polished relationship diagram poster that organizes key characters, factions, and narrative ties with strong visual hierarchy.",
         "resolution": "1024x1280",
-        "src": "/demo/image-1776756766331_2wdcq7_HGXHhQcbAAAFcYA.webp"
+        "src": "https://cdn.sdanceai.com/seedance20/image/3fa1yg78l.webp"
       },
       {
         "category": "Comic",
         "title": "Five-Panel Creepy Delivery Manga",
         "prompt": "Full-color manga page with a staged doorstep encounter, expressive reactions, and clean multi-panel storytelling.",
         "resolution": "1024x1365",
-        "src": "/demo/image-1776756843035_0y4dr0_HGV2dbja8AA3IvB.webp"
+        "src": "https://cdn.sdanceai.com/seedance20/image/4hwmlvj5n.webp"
       },
       {
         "category": "Character",
         "title": "3D Expression Grid",
         "prompt": "A 3x3 expression board showing one stylized character in different outfits and poses peeking through torn paper.",
         "resolution": "1024x1024",
-        "src": "/demo/image-1776756789445_z4tzjp_HGTxSpFaMAAuxns.webp"
+        "src": "https://cdn.sdanceai.com/seedance20/image/5ce3ldocu.webp"
       },
       {
         "category": "Editorial",
         "title": "Fashion Magazine Cover Portrait",
         "prompt": "Luxury magazine cover portrait with readable serif masthead, elegant studio styling, and premium fashion copy layout.",
         "resolution": "1024x1536",
-        "src": "/demo/image-1776668115222_j6vl73_HGQ9NH3bQAAVUT8.webp"
+        "src": "https://cdn.sdanceai.com/seedance20/image/9qfkzq75i.webp"
       },
       {
         "category": "Advertising",
         "title": "Four-Panel Ad Campaign Board",
         "prompt": "Four vertical ad concepts for food, fashion, travel, and SaaS, each with its own typography and campaign mood.",
         "resolution": "1024x1024",
-        "src": "/demo/image-1776658771842_fx88g6_HGPorW_aIAA0F_y.webp"
+        "src": "https://cdn.sdanceai.com/seedance20/image/84cwkziit.webp"
       },
       {
         "category": "Design Sheet",
         "title": "Comprehensive Character Design Sheet",
         "prompt": "Anime character reference sheet with turnarounds, expressions, detail callouts, outfit variants, and palette notes.",
         "resolution": "1024x1408",
-        "src": "/demo/image-1776695087912_me13yy_HGFn2-HacAA5QqJ.webp"
+        "src": "https://cdn.sdanceai.com/seedance20/image/ge8osrp29.webp"
       },
       {
         "category": "Portrait",
         "title": "Convention Cosplayer Portrait",
         "prompt": "Photorealistic cosplay portrait with costume detail, convention crowd bokeh, and event-style character presentation.",
         "resolution": "1024x1024",
-        "src": "/demo/image-1776695092623_5mm99u_HGBT7WJa0AAMxp2.webp"
+        "src": "https://cdn.sdanceai.com/seedance20/image/htmir28rk.webp"
       },
       {
         "category": "Explainer",
         "title": "Eight-Panel AI Feature Manga",
         "prompt": "Chibi explainer comic that mixes UI mockups, comparison diagrams, and feature narration in an eight-panel layout.",
         "resolution": "1024x1536",
-        "src": "/demo/image-1776701513937_vtw05u_HF8YsTeaMAAqgex.webp"
+        "src": "https://cdn.sdanceai.com/seedance20/image/sel4unt33.webp"
       }
     ]
   },
