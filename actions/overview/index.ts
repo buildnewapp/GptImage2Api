@@ -5,13 +5,16 @@ import { isAdmin } from '@/lib/auth/server';
 import { getDb } from '@/lib/db';
 import {
   aiStudioGenerations as aiStudioGenerationsSchema,
+  creditLogs as creditLogsSchema,
   orders as ordersSchema,
   pricingPlans as pricingPlansSchema,
+  taskRewardClaims as taskRewardClaimsSchema,
+  usage as usageSchema,
   user as userSchema,
 } from '@/lib/db/schema';
 import { getErrorMessage } from '@/lib/error-utils';
 import { ONE_TIME_ORDER_TYPES, SUBSCRIPTION_ORDER_TYPES } from '@/lib/payments/provider-utils';
-import { and, count, eq, gte, inArray, lt, sql } from 'drizzle-orm';
+import { and, count, eq, gte, inArray, lt, sql, type SQL } from 'drizzle-orm';
 
 interface IStats {
   today: number;
@@ -69,6 +72,48 @@ export interface IGenerationProviderStats {
 export interface IGenerationBreakdownStats {
   models: IGenerationModelCreditStats[];
   providers: IGenerationProviderStats[];
+}
+
+export type IUserCreditReportPeriod = 'all' | '1d' | '7d' | '30d' | '90d';
+
+export interface IUserCreditReportRow {
+  userId: string;
+  email: string | null;
+  name: string | null;
+  createdAt: string;
+  purchasedCredits: number;
+  consumedCredits: number;
+  taskRewardCredits: number;
+  taskRewardClaims: number;
+  signupBonusCredits: number;
+  referralBonusCredits: number;
+  manualGrantCredits: number;
+  freeCredits: number;
+  currentCredits: number;
+  generationCount: number;
+  netCredits: number;
+  freeToPurchasedRatio: number | null;
+  riskLevel: 'high' | 'medium' | 'low';
+}
+
+function getUserCreditReportStartDate(
+  period: IUserCreditReportPeriod,
+): Date | null {
+  const now = new Date();
+
+  switch (period) {
+    case '1d':
+      return new Date(new Date().setDate(now.getDate() - 1));
+    case '7d':
+      return new Date(new Date().setDate(now.getDate() - 7));
+    case '30d':
+      return new Date(new Date().setDate(now.getDate() - 30));
+    case '90d':
+      return new Date(new Date().setDate(now.getDate() - 90));
+    case 'all':
+    default:
+      return null;
+  }
 }
 
 function calculateGrowthRate(today: number, yesterday: number): number {
@@ -259,7 +304,7 @@ export const getOverviewStats = async (): Promise<ActionResult<IOverviewStats>> 
 };
 
 export const getDailyGrowthStats = async (
-  period: '7d' | '30d' | '90d'
+  period: '1d' | '7d' | '30d' | '90d'
 ): Promise<ActionResult<IDailyGrowthStats[]>> => {
   if (!(await isAdmin())) {
     return actionResponse.forbidden('Admin privileges required.');
@@ -272,6 +317,9 @@ export const getDailyGrowthStats = async (
     let startDate: Date;
 
     switch (period) {
+      case '1d':
+        startDate = new Date(new Date().setDate(now.getDate() - 1));
+        break;
       case '7d':
         startDate = new Date(new Date().setDate(now.getDate() - 7));
         break;
@@ -358,7 +406,7 @@ export const getDailyGrowthStats = async (
 };
 
 export const getDailyGenerationStats = async (
-  period: '7d' | '30d' | '90d'
+  period: '1d' | '7d' | '30d' | '90d'
 ): Promise<ActionResult<IDailyGenerationStats[]>> => {
   if (!(await isAdmin())) {
     return actionResponse.forbidden('Admin privileges required.');
@@ -371,6 +419,9 @@ export const getDailyGenerationStats = async (
     let startDate: Date;
 
     switch (period) {
+      case '1d':
+        startDate = new Date(new Date().setDate(now.getDate() - 1));
+        break;
       case '7d':
         startDate = new Date(new Date().setDate(now.getDate() - 7));
         break;
@@ -440,7 +491,7 @@ export const getDailyGenerationStats = async (
 };
 
 export const getGenerationBreakdownStats = async (
-  period: '7d' | '30d' | '90d'
+  period: '1d' | '7d' | '30d' | '90d'
 ): Promise<ActionResult<IGenerationBreakdownStats>> => {
   if (!(await isAdmin())) {
     return actionResponse.forbidden('Admin privileges required.');
@@ -453,6 +504,9 @@ export const getGenerationBreakdownStats = async (
     let startDate: Date;
 
     switch (period) {
+      case '1d':
+        startDate = new Date(new Date().setDate(now.getDate() - 1));
+        break;
       case '7d':
         startDate = new Date(new Date().setDate(now.getDate() - 7));
         break;
@@ -499,6 +553,228 @@ export const getGenerationBreakdownStats = async (
     ]);
 
     return actionResponse.success({ models, providers });
+  } catch (error) {
+    return actionResponse.error(getErrorMessage(error));
+  }
+};
+
+export const getUserCreditReport = async (
+  period: IUserCreditReportPeriod = 'all',
+): Promise<
+  ActionResult<IUserCreditReportRow[]>
+> => {
+  if (!(await isAdmin())) {
+    return actionResponse.forbidden('Admin privileges required.');
+  }
+
+  const db = getDb();
+
+  try {
+    const startDate = getUserCreditReportStartDate(period);
+    const purchasedConditions: SQL[] = [
+      inArray(creditLogsSchema.type, [
+        'one_time_purchase',
+        'subscription_grant',
+      ]),
+      inArray(ordersSchema.status, ['succeeded', 'active']),
+    ];
+    const freeCreditConditions: SQL[] = [
+      inArray(creditLogsSchema.type, [
+        'task_reward',
+        'welcome_bonus',
+        'referral_signup_bonus',
+        'manual_one_time_grant',
+        'manual_subscription_grant',
+      ]),
+    ];
+    const creditUsageConditions: SQL[] = [
+      inArray(creditLogsSchema.type, [
+        'ai_studio_chat_usage',
+        'feature_usage',
+        'video_generation',
+      ]),
+    ];
+
+    if (startDate) {
+      purchasedConditions.push(gte(creditLogsSchema.createdAt, startDate));
+      freeCreditConditions.push(gte(creditLogsSchema.createdAt, startDate));
+      creditUsageConditions.push(gte(creditLogsSchema.createdAt, startDate));
+    }
+
+    const [
+      purchasedRows,
+      freeCreditRows,
+      generationUsageRows,
+      creditUsageRows,
+      taskClaimRows,
+    ] = await Promise.all([
+      db
+        .select({
+          userId: creditLogsSchema.userId,
+          purchasedCredits:
+            sql<number>`coalesce(sum(${creditLogsSchema.amount}), 0)::int`,
+        })
+        .from(creditLogsSchema)
+        .innerJoin(ordersSchema, eq(creditLogsSchema.relatedOrderId, ordersSchema.id))
+        .where(and(...purchasedConditions))
+        .groupBy(creditLogsSchema.userId),
+      db
+        .select({
+          userId: creditLogsSchema.userId,
+          taskRewardCredits:
+            sql<number>`coalesce(sum(${creditLogsSchema.amount}) filter (where ${creditLogsSchema.type} = 'task_reward'), 0)::int`,
+          signupBonusCredits:
+            sql<number>`coalesce(sum(${creditLogsSchema.amount}) filter (where ${creditLogsSchema.type} = 'welcome_bonus'), 0)::int`,
+          referralBonusCredits:
+            sql<number>`coalesce(sum(${creditLogsSchema.amount}) filter (where ${creditLogsSchema.type} = 'referral_signup_bonus'), 0)::int`,
+          manualGrantCredits:
+            sql<number>`coalesce(sum(${creditLogsSchema.amount}) filter (where ${creditLogsSchema.type} in ('manual_one_time_grant', 'manual_subscription_grant')), 0)::int`,
+          freeCredits:
+            sql<number>`coalesce(sum(${creditLogsSchema.amount}), 0)::int`,
+        })
+        .from(creditLogsSchema)
+        .where(and(...freeCreditConditions))
+        .groupBy(creditLogsSchema.userId),
+      db
+        .select({
+          userId: aiStudioGenerationsSchema.userId,
+          consumedCredits:
+            sql<number>`coalesce(sum(${aiStudioGenerationsSchema.creditsCaptured}), 0)::int`,
+          generationCount: count(aiStudioGenerationsSchema.id),
+        })
+        .from(aiStudioGenerationsSchema)
+        .where(
+          startDate ? gte(aiStudioGenerationsSchema.createdAt, startDate) : undefined,
+        )
+        .groupBy(aiStudioGenerationsSchema.userId),
+      db
+        .select({
+          userId: creditLogsSchema.userId,
+          consumedCredits:
+            sql<number>`coalesce(sum(abs(${creditLogsSchema.amount})), 0)::int`,
+        })
+        .from(creditLogsSchema)
+        .where(
+          and(...creditUsageConditions),
+        )
+        .groupBy(creditLogsSchema.userId),
+      db
+        .select({
+          userId: taskRewardClaimsSchema.userId,
+          taskRewardClaims: count(taskRewardClaimsSchema.id),
+        })
+        .from(taskRewardClaimsSchema)
+        .where(
+          startDate ? gte(taskRewardClaimsSchema.claimedAt, startDate) : undefined,
+        )
+        .groupBy(taskRewardClaimsSchema.userId),
+    ]);
+
+    const userIds = new Set<string>();
+    [
+      purchasedRows,
+      freeCreditRows,
+      generationUsageRows,
+      creditUsageRows,
+      taskClaimRows,
+    ].forEach((rows) => rows.forEach((row) => userIds.add(row.userId)));
+
+    if (userIds.size === 0) {
+      return actionResponse.success([]);
+    }
+
+    const userRows = await db
+      .select({
+        id: userSchema.id,
+        email: userSchema.email,
+        name: userSchema.name,
+        createdAt: userSchema.createdAt,
+        oneTimeCreditsBalance: usageSchema.oneTimeCreditsBalance,
+        subscriptionCreditsBalance: usageSchema.subscriptionCreditsBalance,
+      })
+      .from(userSchema)
+      .leftJoin(usageSchema, eq(userSchema.id, usageSchema.userId))
+      .where(inArray(userSchema.id, Array.from(userIds)));
+
+    const purchasedMap = new Map(
+      purchasedRows.map((row) => [row.userId, row.purchasedCredits]),
+    );
+    const freeMap = new Map(freeCreditRows.map((row) => [row.userId, row]));
+    const generationUsageMap = new Map(
+      generationUsageRows.map((row) => [row.userId, row]),
+    );
+    const creditUsageMap = new Map(
+      creditUsageRows.map((row) => [row.userId, row.consumedCredits]),
+    );
+    const taskClaimMap = new Map(
+      taskClaimRows.map((row) => [row.userId, row.taskRewardClaims]),
+    );
+
+    const rows = userRows.map((user) => {
+      const purchasedCredits = purchasedMap.get(user.id) ?? 0;
+      const freeStats = freeMap.get(user.id);
+      const generationUsage = generationUsageMap.get(user.id);
+      const consumedCredits =
+        (generationUsage?.consumedCredits ?? 0) +
+        (creditUsageMap.get(user.id) ?? 0);
+      const taskRewardCredits = freeStats?.taskRewardCredits ?? 0;
+      const signupBonusCredits = freeStats?.signupBonusCredits ?? 0;
+      const referralBonusCredits = freeStats?.referralBonusCredits ?? 0;
+      const manualGrantCredits = freeStats?.manualGrantCredits ?? 0;
+      const freeCredits = freeStats?.freeCredits ?? 0;
+      const currentCredits =
+        (user.oneTimeCreditsBalance ?? 0) +
+        (user.subscriptionCreditsBalance ?? 0);
+      const netCredits = purchasedCredits + freeCredits - consumedCredits;
+      const freeToPurchasedRatio =
+        purchasedCredits > 0
+          ? Number((freeCredits / purchasedCredits).toFixed(2))
+          : freeCredits > 0
+            ? null
+            : 0;
+      const riskLevel =
+        freeCredits >= 100 && purchasedCredits === 0
+          ? 'high'
+          : taskRewardCredits >= 50 && purchasedCredits === 0
+            ? 'high'
+            : freeCredits >= 50 && consumedCredits < freeCredits * 0.25
+              ? 'medium'
+              : taskRewardCredits >= 20 && purchasedCredits === 0
+                ? 'medium'
+                : 'low';
+
+      return {
+        userId: user.id,
+        email: user.email,
+        name: user.name,
+        createdAt: user.createdAt.toISOString(),
+        purchasedCredits,
+        consumedCredits,
+        taskRewardCredits,
+        taskRewardClaims: taskClaimMap.get(user.id) ?? 0,
+        signupBonusCredits,
+        referralBonusCredits,
+        manualGrantCredits,
+        freeCredits,
+        currentCredits,
+        generationCount: generationUsage?.generationCount ?? 0,
+        netCredits,
+        freeToPurchasedRatio,
+        riskLevel,
+      } satisfies IUserCreditReportRow;
+    });
+
+    rows.sort((a, b) => {
+      const riskRank = { high: 3, medium: 2, low: 1 };
+      return (
+        riskRank[b.riskLevel] - riskRank[a.riskLevel] ||
+        b.freeCredits - a.freeCredits ||
+        b.taskRewardCredits - a.taskRewardCredits ||
+        b.netCredits - a.netCredits
+      );
+    });
+
+    return actionResponse.success(rows.slice(0, 50));
   } catch (error) {
     return actionResponse.error(getErrorMessage(error));
   }

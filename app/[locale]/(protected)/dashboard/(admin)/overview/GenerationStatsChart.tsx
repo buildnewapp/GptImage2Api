@@ -34,7 +34,7 @@ import {
 } from "recharts";
 import useSWR from "swr";
 
-type Period = "7d" | "30d" | "90d";
+type Period = "1d" | "7d" | "30d" | "90d";
 
 const CHART_COLORS = {
   succeeded: "#16a34a",
@@ -52,7 +52,7 @@ const fetcher = async (period: Period): Promise<IDailyGenerationStats[]> => {
 
 export const GenerationStatsChart = () => {
   const t = useTranslations("Overview");
-  const [period, setPeriod] = useState<Period>("30d");
+  const [period, setPeriod] = useState<Period>("7d");
 
   const { data, error, isLoading } = useSWR(
     ["daily-generation-stats", period],
@@ -121,6 +121,7 @@ export const GenerationStatsChart = () => {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="1d">{t("last1Day")}</SelectItem>
             <SelectItem value="7d">{t("last7Days")}</SelectItem>
             <SelectItem value="30d">{t("last30Days")}</SelectItem>
             <SelectItem value="90d">{t("last90Days")}</SelectItem>
