@@ -64,6 +64,323 @@ const AI_VIDEO_STUDIO_LEVEL_LIMIT_RANK: Record<AiVideoStudioLevelLimit, number> 
 
 export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
   {
+    key: "gpt-image-2",
+    label: "GPT Image 2",
+    description: "OpenAI text-to-image and image-to-image workflows",
+    icon: "sora",
+    tags: [{ text: "HOT", type: "hot" }],
+    selectable: true,
+    versions: [
+      {
+        key: "gpt-image-2-text-to-image",
+        label: "Text to Image",
+        familyKey: "gpt-image-2",
+        modelId: "image:gpt-image-2-text-to-image",
+        isSpecial: true,
+        isHot: true
+      },
+      {
+        key: "gpt-image-2-image-to-image",
+        label: "Image to Image",
+        familyKey: "gpt-image-2",
+        modelId: "image:gpt-image-2-image-to-image",
+        isSpecial: true,
+      },
+      {
+        key: "ama-gpt-image-2",
+        label: "Gpt image 2 Special offer",
+        familyKey: "gpt-image-2",
+        modelId: "image:ama-gpt-image-2",
+        isSpecial: true,
+        isHot: true
+      },
+      {
+        key: "fal-openai-gpt-image-2",
+        label: "Gpt image 2",
+        familyKey: "gpt-image-2",
+        modelId: "image:fal-openai-gpt-image-2",
+        isHot: true
+      },
+      {
+        key: "fal-openai-gpt-image-2-edit",
+        label: "Gpt image 2 edit",
+        familyKey: "gpt-image-2",
+        modelId: "image:fal-openai-gpt-image-2-edit",
+      },
+      {
+        key: "fal-gpt-image-1.5",
+        label: "GPT Image 1.5",
+        familyKey: "gpt-image-2",
+        modelId: "image:fal-fal-ai-gpt-image-1-5",
+      },
+      {
+        key: "fal-gpt-image-1.5-edit",
+        label: "GPT Image 1.5 Edit",
+        familyKey: "gpt-image-2",
+        modelId: "image:fal-fal-ai-gpt-image-1-5-edit",
+      }
+    ],
+  },
+  {
+    key: "seedream-image",
+    label: "Seedream",
+    description: "Seedream image generation and edit models",
+    icon: "jimeng",
+    selectable: true,
+    versions: [
+      {
+        key: "seedream-5-lite-text-to-image",
+        label: "Seedream5.0 Lite - Text to Image",
+        familyKey: "seedream-image",
+        modelId: "image:seedream5-0-lite-text-to-image",
+        isSpecial: true,
+      },
+      {
+        key: "seedream-5-lite-image-to-image",
+        label: "Seedream5.0 Lite - Image to Image",
+        familyKey: "seedream-image",
+        modelId: "image:seedream5-0-lite-image-to-image",
+        isSpecial: true,
+      },
+      {
+        key: "seedream-4.5-text-to-image",
+        label: "Seedream4.5 - Text to Image",
+        familyKey: "seedream-image",
+        modelId: "image:seedream4-5-text-to-image",
+        isSpecial: true,
+      },
+      {
+        key: "seedream-4.5-edit",
+        label: "Seedream4.5 - Edit",
+        familyKey: "seedream-image",
+        modelId: "image:seedream4-5-edit",
+        isSpecial: true,
+      },
+
+      {
+        key: "seedream-5-lite-text-to-image-fal",
+        label: "Seedream 5.0 Lite Text to Image",
+        familyKey: "seedream-image",
+        modelId: "image:fal-fal-ai-bytedance-seedream-v5-lite-text-to-image",
+      },
+      {
+        key: "seedream-5-lite-edit-fal",
+        label: "Seedream 5.0 Lite Edit",
+        familyKey: "seedream-image",
+        modelId: "image:fal-fal-ai-bytedance-seedream-v5-lite-edit",
+      },
+      {
+        key: "seedream-4.5-text-to-image-fal",
+        label: "Seedream 4.5 Text to Image",
+        familyKey: "seedream-image",
+        modelId: "image:fal-fal-ai-bytedance-seedream-v4-5-text-to-image",
+      },
+      {
+        key: "seedream-4.5-edit-fal",
+        label: "Seedream 4.5 Edit",
+        familyKey: "seedream-image",
+        modelId: "image:fal-fal-ai-bytedance-seedream-v4-5-edit",
+      },
+    ],
+  },
+  {
+    key: "nano-banana",
+    label: "Nano Banana",
+    description: "Nano Banana image generation and edit models",
+    icon: "nano-banana",
+    selectable: true,
+    tags: [{ text: "HOT", type: "hot" }],
+    versions: [
+      {
+        key: "nano-banana-pro",
+        label: "Nano Banana Pro",
+        familyKey: "nano-banana",
+        modelId: "image:google-nano-banana-pro",
+        isSpecial: true,
+      },
+      {
+        key: "nano-banana-2",
+        label: "Nano Banana 2",
+        familyKey: "nano-banana",
+        modelId: "image:google-nano-banana-2",
+        isSpecial: true,
+        isHot: true
+      },
+      {
+        key: "fal-gemini-3.1-flash-image-preview",
+        label: "Gemini 3.1 Flash Image Preview",
+        familyKey: "nano-banana",
+        modelId: "image:fal-fal-ai-gemini-3-1-flash-image-preview",
+        isHot: true
+      },
+      {
+        key: "fal-gemini-3.1-flash-image-preview-edit",
+        label: "Gemini 3.1 Flash Image Preview Edit",
+        familyKey: "nano-banana",
+        modelId: "image:fal-fal-ai-gemini-3-1-flash-image-preview-edit",
+      },
+      {
+        key: "fal-gemini-3-pro-image-preview",
+        label: "Gemini 3 Pro Image Preview",
+        familyKey: "nano-banana",
+        modelId: "image:fal-fal-ai-gemini-3-pro-image-preview",
+      },
+      {
+        key: "fal-gemini-3-pro-image-preview-edit",
+        label: "Gemini 3 Pro Image Preview Edit",
+        familyKey: "nano-banana",
+        modelId: "image:fal-fal-ai-gemini-3-pro-image-preview-edit",
+      },
+      {
+        key: "fal-nano-banana",
+        label: "Nano Banana",
+        familyKey: "nano-banana",
+        modelId: "image:fal-fal-ai-nano-banana",
+      },
+      {
+        key: "fal-nano-banana-edit",
+        label: "Nano Banana Edit",
+        familyKey: "nano-banana",
+        modelId: "image:fal-fal-ai-nano-banana-edit",
+      },
+    ],
+  },
+  {
+    key: "qwen2-image",
+    label: "Qwen2",
+    description: "Qwen2 text-to-image and image edit models",
+    icon: "qwen",
+    selectable: true,
+    versions: [
+      {
+        key: "qwen2-text-to-image",
+        label: "Qwen2 - Text To Image",
+        familyKey: "qwen2-image",
+        modelId: "image:qwen2-text-to-image",
+        isSpecial: true,
+      },
+      {
+        key: "qwen2-image-edit",
+        label: "Qwen2 - Image Edit",
+        familyKey: "qwen2-image",
+        modelId: "image:qwen2-image-edit",
+        isSpecial: true,
+      },
+      {
+        key: "qwen2-text-to-image-fal",
+        label: "Qwen2 - Text To Image",
+        familyKey: "qwen2-image",
+        modelId: "image:fal-fal-ai-qwen-image-2-text-to-image",
+      },
+      {
+        key: "qwen2-image-edit-fal",
+        label: "Qwen2 - Image Edit",
+        familyKey: "qwen2-image",
+        modelId: "image:fal-fal-ai-qwen-image-2-edit",
+      },
+    ],
+  },
+  {
+    key: "grok-imagine-image",
+    label: "Grok Imagine",
+    description: "Grok Imagine text-to-image and image-to-image models",
+    icon: "grok",
+    tags: [
+      { text: "HOT", type: "hot" },
+    ],
+    selectable: true,
+    versions: [
+      {
+        key: "grok-imagine-text-to-image",
+        label: "Grok Imagine - Text to Image",
+        familyKey: "grok-imagine-image",
+        modelId: "image:grok-imagine-text-to-image",
+        isSpecial: true,
+      },
+      {
+        key: "grok-imagine-image-to-image",
+        label: "Grok Imagine - image to image",
+        familyKey: "grok-imagine-image",
+        modelId: "image:grok-imagine-image-to-image",
+        isSpecial: true,
+      },
+      {
+        key: "fal-grok-imagine-text-to-image",
+        label: "Grok Imagine Text to Image",
+        familyKey: "grok-imagine-image",
+        modelId: "image:fal-xai-grok-imagine-image",
+        isHot: true
+      },
+      {
+        key: "fal-grok-imagine-image-edit",
+        label: "Grok Imagine Image Edit",
+        familyKey: "grok-imagine-image",
+        modelId: "image:fal-xai-grok-imagine-image-edit",
+      },
+      {
+        key: "fal-grok-imagine-quality-text-to-image",
+        label: "Grok Imagine Quality Text to Image",
+        familyKey: "grok-imagine-image",
+        modelId: "image:fal-xai-grok-imagine-image-quality-text-to-image",
+      },
+      {
+        key: "fal-grok-imagine-quality-image-edit",
+        label: "Grok Imagine Quality Image Edit",
+        familyKey: "grok-imagine-image",
+        modelId: "image:fal-xai-grok-imagine-image-quality-edit",
+      },
+    ],
+  },
+  {
+    key: "wan-image",
+    label: "Wan Image",
+    description: "Wan 2.7 image generation and edit models",
+    icon: "qwen",
+    selectable: true,
+    versions: [
+      {
+        key: "wan-2.7-image",
+        label: "Wan 2.7 Image",
+        familyKey: "wan-image",
+        modelId: "image:wan-2-7-image"
+      },
+      {
+        key: "wan-2.7-image-pro",
+        label: "Wan 2.7 Image Pro",
+        familyKey: "wan-image",
+        modelId: "image:wan-2-7-image-pro",
+        isSpecial: true,
+      },
+      {
+        key: "fal-wan-2.7-text-to-image",
+        label: "Wan 2.7 Text to Image",
+        familyKey: "wan-image",
+        modelId: "image:fal-fal-ai-wan-v2-7-text-to-image",
+      },
+      {
+        key: "fal-wan-2.7-edit",
+        label: "Wan 2.7 Edit",
+        familyKey: "wan-image",
+        modelId: "image:fal-fal-ai-wan-v2-7-edit",
+      },
+      {
+        key: "fal-wan-2.7-pro-text-to-image",
+        label: "Wan 2.7 Pro Text to Image",
+        familyKey: "wan-image",
+        modelId: "image:fal-fal-ai-wan-v2-7-pro-text-to-image",
+        levelLimit: "pro",
+        isSpecial: true,
+        isHot: true,
+      },
+      {
+        key: "fal-wan-2.7-pro-edit",
+        label: "Wan 2.7 Pro Edit",
+        familyKey: "wan-image",
+        modelId: "image:fal-fal-ai-wan-v2-7-pro-edit",
+      }
+    ],
+  },
+  {
     key: "grok-imagine",
     label: "Grok Imagine",
     description: "Grok video generation with text, image, extend, and upscale variants",
@@ -949,323 +1266,6 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         modelId: "video:generate-aleph-video",
         isSpecial: true,
       },
-    ],
-  },
-  {
-    key: "nano-banana",
-    label: "Nano Banana",
-    description: "Nano Banana image generation and edit models",
-    icon: "nano-banana",
-    selectable: true,
-    tags: [{ text: "HOT", type: "hot" }],
-    versions: [
-      {
-        key: "nano-banana-pro",
-        label: "Nano Banana Pro",
-        familyKey: "nano-banana",
-        modelId: "image:google-nano-banana-pro",
-        isSpecial: true,
-      },
-      {
-        key: "nano-banana-2",
-        label: "Nano Banana 2",
-        familyKey: "nano-banana",
-        modelId: "image:google-nano-banana-2",
-        isSpecial: true,
-        isHot: true
-      },
-      {
-        key: "fal-gemini-3.1-flash-image-preview",
-        label: "Gemini 3.1 Flash Image Preview",
-        familyKey: "nano-banana",
-        modelId: "image:fal-fal-ai-gemini-3-1-flash-image-preview",
-        isHot: true
-      },
-      {
-        key: "fal-gemini-3.1-flash-image-preview-edit",
-        label: "Gemini 3.1 Flash Image Preview Edit",
-        familyKey: "nano-banana",
-        modelId: "image:fal-fal-ai-gemini-3-1-flash-image-preview-edit",
-      },
-      {
-        key: "fal-gemini-3-pro-image-preview",
-        label: "Gemini 3 Pro Image Preview",
-        familyKey: "nano-banana",
-        modelId: "image:fal-fal-ai-gemini-3-pro-image-preview",
-      },
-      {
-        key: "fal-gemini-3-pro-image-preview-edit",
-        label: "Gemini 3 Pro Image Preview Edit",
-        familyKey: "nano-banana",
-        modelId: "image:fal-fal-ai-gemini-3-pro-image-preview-edit",
-      },
-      {
-        key: "fal-nano-banana",
-        label: "Nano Banana",
-        familyKey: "nano-banana",
-        modelId: "image:fal-fal-ai-nano-banana",
-      },
-      {
-        key: "fal-nano-banana-edit",
-        label: "Nano Banana Edit",
-        familyKey: "nano-banana",
-        modelId: "image:fal-fal-ai-nano-banana-edit",
-      },
-    ],
-  },
-  {
-    key: "gpt-image-2",
-    label: "GPT Image 2",
-    description: "OpenAI text-to-image and image-to-image workflows",
-    icon: "sora",
-    tags: [{ text: "HOT", type: "hot" }],
-    selectable: true,
-    versions: [
-      {
-        key: "gpt-image-2-text-to-image",
-        label: "Text to Image",
-        familyKey: "gpt-image-2",
-        modelId: "image:gpt-image-2-text-to-image",
-        isSpecial: true,
-        isHot: true
-      },
-      {
-        key: "gpt-image-2-image-to-image",
-        label: "Image to Image",
-        familyKey: "gpt-image-2",
-        modelId: "image:gpt-image-2-image-to-image",
-        isSpecial: true,
-      },
-      {
-        key: "ama-gpt-image-2",
-        label: "Gpt image 2 Special offer",
-        familyKey: "gpt-image-2",
-        modelId: "image:ama-gpt-image-2",
-        isSpecial: true,
-        isHot: true
-      },
-      {
-        key: "fal-openai-gpt-image-2",
-        label: "Gpt image 2",
-        familyKey: "gpt-image-2",
-        modelId: "image:fal-openai-gpt-image-2",
-        isHot: true
-      },
-      {
-        key: "fal-openai-gpt-image-2-edit",
-        label: "Gpt image 2 edit",
-        familyKey: "gpt-image-2",
-        modelId: "image:fal-openai-gpt-image-2-edit",
-      },
-      {
-        key: "fal-gpt-image-1.5",
-        label: "GPT Image 1.5",
-        familyKey: "gpt-image-2",
-        modelId: "image:fal-fal-ai-gpt-image-1-5",
-      },
-      {
-        key: "fal-gpt-image-1.5-edit",
-        label: "GPT Image 1.5 Edit",
-        familyKey: "gpt-image-2",
-        modelId: "image:fal-fal-ai-gpt-image-1-5-edit",
-      }
-    ],
-  },
-  {
-    key: "seedream-image",
-    label: "Seedream",
-    description: "Seedream image generation and edit models",
-    icon: "jimeng",
-    selectable: true,
-    versions: [
-      {
-        key: "seedream-5-lite-text-to-image",
-        label: "Seedream5.0 Lite - Text to Image",
-        familyKey: "seedream-image",
-        modelId: "image:seedream5-0-lite-text-to-image",
-        isSpecial: true,
-      },
-      {
-        key: "seedream-5-lite-image-to-image",
-        label: "Seedream5.0 Lite - Image to Image",
-        familyKey: "seedream-image",
-        modelId: "image:seedream5-0-lite-image-to-image",
-        isSpecial: true,
-      },
-      {
-        key: "seedream-4.5-text-to-image",
-        label: "Seedream4.5 - Text to Image",
-        familyKey: "seedream-image",
-        modelId: "image:seedream4-5-text-to-image",
-        isSpecial: true,
-      },
-      {
-        key: "seedream-4.5-edit",
-        label: "Seedream4.5 - Edit",
-        familyKey: "seedream-image",
-        modelId: "image:seedream4-5-edit",
-        isSpecial: true,
-      },
-
-      {
-        key: "seedream-5-lite-text-to-image-fal",
-        label: "Seedream 5.0 Lite Text to Image",
-        familyKey: "seedream-image",
-        modelId: "image:fal-fal-ai-bytedance-seedream-v5-lite-text-to-image",
-      },
-      {
-        key: "seedream-5-lite-edit-fal",
-        label: "Seedream 5.0 Lite Edit",
-        familyKey: "seedream-image",
-        modelId: "image:fal-fal-ai-bytedance-seedream-v5-lite-edit",
-      },
-      {
-        key: "seedream-4.5-text-to-image-fal",
-        label: "Seedream 4.5 Text to Image",
-        familyKey: "seedream-image",
-        modelId: "image:fal-fal-ai-bytedance-seedream-v4-5-text-to-image",
-      },
-      {
-        key: "seedream-4.5-edit-fal",
-        label: "Seedream 4.5 Edit",
-        familyKey: "seedream-image",
-        modelId: "image:fal-fal-ai-bytedance-seedream-v4-5-edit",
-      },
-    ],
-  },
-  {
-    key: "qwen2-image",
-    label: "Qwen2",
-    description: "Qwen2 text-to-image and image edit models",
-    icon: "qwen",
-    selectable: true,
-    versions: [
-      {
-        key: "qwen2-text-to-image",
-        label: "Qwen2 - Text To Image",
-        familyKey: "qwen2-image",
-        modelId: "image:qwen2-text-to-image",
-        isSpecial: true,
-      },
-      {
-        key: "qwen2-image-edit",
-        label: "Qwen2 - Image Edit",
-        familyKey: "qwen2-image",
-        modelId: "image:qwen2-image-edit",
-        isSpecial: true,
-      },
-      {
-        key: "qwen2-text-to-image-fal",
-        label: "Qwen2 - Text To Image",
-        familyKey: "qwen2-image",
-        modelId: "image:fal-fal-ai-qwen-image-2-text-to-image",
-      },
-      {
-        key: "qwen2-image-edit-fal",
-        label: "Qwen2 - Image Edit",
-        familyKey: "qwen2-image",
-        modelId: "image:fal-fal-ai-qwen-image-2-edit",
-      },
-    ],
-  },
-  {
-    key: "grok-imagine-image",
-    label: "Grok Imagine",
-    description: "Grok Imagine text-to-image and image-to-image models",
-    icon: "grok",
-    tags: [
-      { text: "HOT", type: "hot" },
-    ],
-    selectable: true,
-    versions: [
-      {
-        key: "grok-imagine-text-to-image",
-        label: "Grok Imagine - Text to Image",
-        familyKey: "grok-imagine-image",
-        modelId: "image:grok-imagine-text-to-image",
-        isSpecial: true,
-      },
-      {
-        key: "grok-imagine-image-to-image",
-        label: "Grok Imagine - image to image",
-        familyKey: "grok-imagine-image",
-        modelId: "image:grok-imagine-image-to-image",
-        isSpecial: true,
-      },
-      {
-        key: "fal-grok-imagine-text-to-image",
-        label: "Grok Imagine Text to Image",
-        familyKey: "grok-imagine-image",
-        modelId: "image:fal-xai-grok-imagine-image",
-        isHot: true
-      },
-      {
-        key: "fal-grok-imagine-image-edit",
-        label: "Grok Imagine Image Edit",
-        familyKey: "grok-imagine-image",
-        modelId: "image:fal-xai-grok-imagine-image-edit",
-      },
-      {
-        key: "fal-grok-imagine-quality-text-to-image",
-        label: "Grok Imagine Quality Text to Image",
-        familyKey: "grok-imagine-image",
-        modelId: "image:fal-xai-grok-imagine-image-quality-text-to-image",
-      },
-      {
-        key: "fal-grok-imagine-quality-image-edit",
-        label: "Grok Imagine Quality Image Edit",
-        familyKey: "grok-imagine-image",
-        modelId: "image:fal-xai-grok-imagine-image-quality-edit",
-      },
-    ],
-  },
-  {
-    key: "wan-image",
-    label: "Wan Image",
-    description: "Wan 2.7 image generation and edit models",
-    icon: "qwen",
-    selectable: true,
-    versions: [
-      {
-        key: "wan-2.7-image",
-        label: "Wan 2.7 Image",
-        familyKey: "wan-image",
-        modelId: "image:wan-2-7-image"
-      },
-      {
-        key: "wan-2.7-image-pro",
-        label: "Wan 2.7 Image Pro",
-        familyKey: "wan-image",
-        modelId: "image:wan-2-7-image-pro",
-        isSpecial: true,
-      },
-      {
-        key: "fal-wan-2.7-text-to-image",
-        label: "Wan 2.7 Text to Image",
-        familyKey: "wan-image",
-        modelId: "image:fal-fal-ai-wan-v2-7-text-to-image",
-      },
-      {
-        key: "fal-wan-2.7-edit",
-        label: "Wan 2.7 Edit",
-        familyKey: "wan-image",
-        modelId: "image:fal-fal-ai-wan-v2-7-edit",
-      },
-      {
-        key: "fal-wan-2.7-pro-text-to-image",
-        label: "Wan 2.7 Pro Text to Image",
-        familyKey: "wan-image",
-        modelId: "image:fal-fal-ai-wan-v2-7-pro-text-to-image",
-        levelLimit: "pro",
-        isSpecial: true,
-        isHot: true,
-      },
-      {
-        key: "fal-wan-2.7-pro-edit",
-        label: "Wan 2.7 Pro Edit",
-        familyKey: "wan-image",
-        modelId: "image:fal-fal-ai-wan-v2-7-pro-edit",
-      }
     ],
   },
 ];
