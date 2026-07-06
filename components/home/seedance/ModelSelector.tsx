@@ -2,13 +2,6 @@
 
 import { AiVideoStudioFamilyIcon } from "@/components/ai/AiVideoStudioFamilyIcon";
 import { cn } from "@/lib/utils";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { AnimatePresence, motion } from "framer-motion";
 import {Check, ChevronDown, Sparkles, Video} from "lucide-react";
 import { useMemo, useState, type ReactNode } from "react";
@@ -30,6 +23,10 @@ export type ModelSelectorItem = {
 export type ModelSelectorVersionItem = {
   id: string;
   name: string;
+  description?: string | null;
+  isSpecial?: boolean;
+  isHot?: boolean;
+  priceLabel?: string | null;
   levelLimit?: AiVideoStudioLevelLimit;
 };
 
@@ -59,8 +56,8 @@ export function ModelSelector({
   labelAccessory,
 }: ModelSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isVersionOpen, setIsVersionOpen] = useState(false);
   const activeVersionId = selectedVersionId || versions?.[0]?.id;
-  const useVersionDropdown = (versions?.length ?? 0) >= 3;
 
   const selectedModel = useMemo(
     () => models.find((item) => item.id === selectedId) || models[0],
@@ -70,7 +67,6 @@ export function ModelSelector({
     () => versions?.find((item) => item.id === activeVersionId),
     [activeVersionId, versions],
   );
-  const activeVersionLevelLimit = activeVersion?.levelLimit;
 
   if (!selectedModel) return null;
 
@@ -124,7 +120,7 @@ export function ModelSelector({
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.98 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
-                className="absolute top-full left-0 right-0 mt-2 z-50 bg-white backdrop-blur-md rounded-2xl border border-border/50 shadow-xl overflow-hidden max-h-[400px] flex flex-col"
+                className="absolute top-full left-0 right-0 mt-2 z-50 flex max-h-[400px] flex-col overflow-hidden rounded-2xl border border-border/50 bg-popover/95 text-popover-foreground shadow-xl backdrop-blur-md"
               >
                 <div className="overflow-y-auto p-2 scrollbar-hide">
                   {models.map((model) => (
@@ -157,66 +153,69 @@ export function ModelSelector({
             <Sparkles className="w-4 h-4" />
             {versionLabel || "Version"}
           </label>
-          {useVersionDropdown ? (
-            <Select value={activeVersionId} onValueChange={onSelectVersion}>
-              <SelectTrigger className="w-full !h-11 rounded-xl border-border/50 bg-background/50">
-                <SelectValue placeholder={versionLabel || "Version"}>
-                  <span className="flex min-w-0 items-center gap-2">
-                    <span className="truncate font-semibold">
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setIsVersionOpen(!isVersionOpen)}
+              className="flex items-center justify-between whitespace-nowrap border text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 disabled:cursor-not-allowed disabled:opacity-50 w-full h-auto min-h-10 py-2 bg-background/50 backdrop-blur-sm border-border/50 focus:ring-primary/20 rounded-xl px-4 hover:bg-muted/30 transition-colors"
+            >
+              <div className="flex items-center gap-3 overflow-hidden">
+                <div className="flex flex-col items-start gap-0.5 min-w-0">
+                  <div className="flex items-center gap-1.5 w-full">
+                    <span className="font-semibold text-foreground truncate">
                       {activeVersion?.name}
                     </span>
-                    {activeVersionLevelLimit &&
-                    activeVersionLevelLimit !== "none" ? (
-                      <span className="rounded-md border border-amber-500/40 bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-300">
-                        {activeVersionLevelLimit}
-                      </span>
-                    ) : null}
-                  </span>
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                {versions.map((version) => (
-                  <SelectItem key={version.id} value={version.id}>
-                    <span className="flex items-center gap-2">
-                      <span>{version.name}</span>
-                      {version.levelLimit && version.levelLimit !== "none" ? (
-                        <span className="rounded-md border border-amber-500/40 bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-300">
-                          {version.levelLimit}
-                        </span>
-                      ) : null}
-                    </span>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          ) : (
-            <div className="flex w-full min-w-0 rounded-xl border border-border/50 bg-background/50 p-1 gap-2">
-              {versions.map((version) => (
-                <button
-                  key={version.id}
-                  type="button"
-                  onClick={() => onSelectVersion(version.id)}
-                  className={cn(
-                    "flex min-w-0 flex-1 items-center justify-center overflow-hidden rounded-lg border px-3 py-2 text-center text-sm transition-all",
-                    activeVersionId === version.id
-                      ? "bg-zinc-200/50 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 shadow-sm"
-                      : "border-transparent hover:bg-muted/50",
-                  )}
-                >
-                  <span className="flex min-w-0 items-center gap-1.5">
-                    <span className="font-semibold text-foreground text-xs sm:text-sm truncate">
-                      {version.name}
-                    </span>
-                    {version.levelLimit && version.levelLimit !== "none" ? (
-                      <span className="rounded-md border border-amber-500/40 bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-300">
-                        {version.levelLimit}
-                      </span>
-                    ) : null}
-                  </span>
-                </button>
-              ))}
-            </div>
-          )}
+                    <VersionBadges version={activeVersion} />
+                  </div>
+                </div>
+              </div>
+              <ChevronDown
+                className={cn(
+                  "h-4 w-4 opacity-50 transition-transform duration-200",
+                  isVersionOpen && "rotate-180",
+                )}
+              />
+            </button>
+
+            <AnimatePresence>
+              {isVersionOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setIsVersionOpen(false)}
+                  />
+
+                  <motion.div
+                    initial={{ opacity: 0, y: -10, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="absolute top-full left-0 right-0 mt-2 z-50 flex max-h-[400px] flex-col overflow-hidden rounded-2xl border border-border/50 bg-popover/95 text-popover-foreground shadow-xl backdrop-blur-md"
+                  >
+                    <div className="overflow-y-auto p-2 scrollbar-hide">
+                      {versions.map((version) => (
+                        <VersionOption
+                          key={version.id}
+                          version={version}
+                          isSelected={activeVersionId === version.id}
+                          onClick={() => {
+                            onSelectVersion(version.id);
+                            setIsVersionOpen(false);
+                          }}
+                        />
+                      ))}
+                    </div>
+
+                    <div className="p-2 border-t border-border/50 bg-muted/20">
+                      <div className="text-[10px] text-center text-muted-foreground">
+                        {versionLabel || "Version"}
+                      </div>
+                    </div>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       )}
     </div>
@@ -239,6 +238,72 @@ const ModelIcon = ({ model }: { model: ModelSelectorItem }) => {
   );
 };
 
+const VersionBadges = ({
+  version,
+}: {
+  version?: ModelSelectorVersionItem;
+}) => {
+  if (!version) {
+    return null;
+  }
+
+  return (
+    <span className="flex items-center gap-1">
+      {version.isSpecial ? <Badge type="special" text="SALE" /> : null}
+      {version.isHot ? <Badge type="hot" text="HOT" /> : null}
+      {version.levelLimit && version.levelLimit !== "none" ? (
+        <Badge type="level" text={version.levelLimit.toUpperCase()} />
+      ) : null}
+    </span>
+  );
+};
+
+const VersionOption = ({
+  version,
+  isSelected,
+  onClick,
+}: {
+  version: ModelSelectorVersionItem;
+  isSelected: boolean;
+  onClick: () => void;
+}) => {
+  const description = version.description?.trim();
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "flex w-full items-center gap-3 rounded-xl p-2 text-left transition-all duration-200 hover:cursor-pointer",
+        isSelected ? "bg-muted shadow-sm" : "hover:bg-muted/90",
+      )}
+    >
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <div className="flex items-center gap-2">
+          <span
+            className={cn(
+              "truncate text-sm font-semibold",
+              isSelected ? "text-foreground" : "text-foreground/80",
+            )}
+          >
+            {version.name}
+          </span>
+          <VersionBadges version={version} />
+        </div>
+        {description ? (
+          <span className="line-clamp-2 whitespace-normal break-words text-[10px] leading-relaxed text-muted-foreground">
+            {description}
+          </span>
+        ) : null}
+        <span className="line-clamp-2 whitespace-normal break-words text-[10px] leading-relaxed text-muted-foreground">
+          {version.priceLabel ?? "--"}
+        </span>
+      </div>
+      {isSelected && <Check className="ml-2 h-4 w-4 shrink-0 text-primary" />}
+    </button>
+  );
+};
+
 const Badge = ({
   text,
   type,
@@ -251,6 +316,8 @@ const Badge = ({
     "coming-soon": "bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400",
     "error": "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400",
     "hot": "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400",
+    "level": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+    "special": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
   };
 
   const currentStyle = styles[type] || "bg-gray-100 text-gray-600 dark:bg-zinc-800 dark:text-zinc-400";

@@ -31,7 +31,7 @@ import {
 } from "recharts";
 import useSWR from "swr";
 
-type Period = "7d" | "30d" | "90d";
+type Period = "1d" | "7d" | "30d" | "90d";
 
 const fetcher = async (period: Period): Promise<IDailyGrowthStats[]> => {
   const result = await getDailyGrowthStats(period);
@@ -43,7 +43,7 @@ const fetcher = async (period: Period): Promise<IDailyGrowthStats[]> => {
 
 export const GrowthChart = () => {
   const t = useTranslations("Overview");
-  const [period, setPeriod] = useState<Period>("30d");
+  const [period, setPeriod] = useState<Period>("7d");
 
   const { data, error, isLoading } = useSWR(
     ["daily-growth-stats", period],
@@ -95,6 +95,7 @@ export const GrowthChart = () => {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="1d">{t("last1Day")}</SelectItem>
             <SelectItem value="7d">{t("last7Days")}</SelectItem>
             <SelectItem value="30d">{t("last30Days")}</SelectItem>
             <SelectItem value="90d">{t("last90Days")}</SelectItem>

@@ -4,12 +4,8 @@ import {
   type AiVideoStudioVersion,
 } from "@/config/ai-video-studio";
 import { DEFAULT_LOCALE } from "@/i18n/routing";
-import { calculateSeedanceVideoPricing } from "@/lib/ai-studio/seedance-pricing";
 
 type SupportedLocale = "en" | "zh" | "ja";
-
-type RuntimeCatalogEntry = (typeof runtimeCatalog.items)[number];
-type RuntimePricingRow = RuntimeCatalogEntry["pricingRows"][number];
 
 export interface AiVideoModelPricingRow {
   billingNote: string;
@@ -35,16 +31,6 @@ function formatRate(value: number) {
   return value.toFixed(1).replace(/\.0$/, "");
 }
 
-function formatCredits(value: string, locale: SupportedLocale) {
-  if (locale === "zh") {
-    return `${value} 积分`;
-  }
-  if (locale === "ja") {
-    return `${value} クレジット`;
-  }
-  return `${value} credits`;
-}
-
 function formatCreditsPerSecond(value: number, locale: SupportedLocale) {
   if (locale === "zh") {
     return `${formatRate(value)} 积分/秒`;
@@ -53,6 +39,26 @@ function formatCreditsPerSecond(value: number, locale: SupportedLocale) {
     return `${formatRate(value)} クレジット/秒`;
   }
   return `${formatRate(value)} credits/s`;
+}
+
+function formatFixedCredits(value: number, locale: SupportedLocale) {
+  if (locale === "zh") {
+    return `${formatRate(value)} 积分`;
+  }
+  if (locale === "ja") {
+    return `${formatRate(value)} クレジット`;
+  }
+  return `${formatRate(value)} credits`;
+}
+
+function formatCreditsPerImage(value: number, locale: SupportedLocale) {
+  if (locale === "zh") {
+    return `${formatRate(value)} 积分/张`;
+  }
+  if (locale === "ja") {
+    return `${formatRate(value)} クレジット/枚`;
+  }
+  return `${formatRate(value)} credits/image`;
 }
 
 function normalizeTypeLabel(value: string, locale: SupportedLocale) {
@@ -125,34 +131,41 @@ function normalizeTypeLabel(value: string, locale: SupportedLocale) {
   return value.trim();
 }
 
-function getFixedPriceNote(locale: SupportedLocale) {
-  if (locale === "zh") {
-    return "按规格固定计费";
-  }
-  if (locale === "ja") {
-    return "仕様ごとの固定料金";
-  }
-  return "Fixed price by spec";
+function isDurationPricing(priceFinal: string) {
+  return /\b(duration|video_duration|audio_duration|n_frames|extend_times)\b/.test(
+    priceFinal,
+  );
 }
 
-function getPerSecondPriceNote(locale: SupportedLocale, rate: string) {
-  if (locale === "zh") {
-    return `输出秒数 × ${rate}`;
+function isImageCountPricing(priceFinal: string) {
+  return /\b(num_images|image_count|quantity|count)\b/.test(priceFinal);
+}
+
+function formatCreditPrice(input: {
+  locale: SupportedLocale;
+  priceFinal: string;
+  rate: number;
+}) {
+  if (isImageCountPricing(input.priceFinal)) {
+    return formatCreditsPerImage(input.rate, input.locale);
   }
-  if (locale === "ja") {
-    return `出力秒数 × ${rate}`;
+
+  if (isDurationPricing(input.priceFinal)) {
+    return formatCreditsPerSecond(input.rate, input.locale);
   }
-  return `Output seconds × ${rate}`;
+
+  return formatFixedCredits(input.rate, input.locale);
 }
 
 function getDynamicPriceNote(input: {
-  hasVideoInput: boolean;
+  mode: string | null;
   locale: SupportedLocale;
+  priceFinal: string;
   rate: number;
 }) {
   const rate = formatRate(input.rate);
 
-  if (input.hasVideoInput) {
+  if (input.mode === "with_video" || input.mode === "video-input") {
     if (input.locale === "zh") {
       return `（输入秒数 + 输出秒数）× ${rate}`;
     }
@@ -160,6 +173,26 @@ function getDynamicPriceNote(input: {
       return `（入力秒数 + 出力秒数）× ${rate}`;
     }
     return `(input + output) × ${rate}`;
+  }
+
+  if (isImageCountPricing(input.priceFinal)) {
+    if (input.locale === "zh") {
+      return `图片数量 × ${rate}`;
+    }
+    if (input.locale === "ja") {
+      return `画像数 × ${rate}`;
+    }
+    return `Images × ${rate}`;
+  }
+
+  if (!isDurationPricing(input.priceFinal)) {
+    if (input.locale === "zh") {
+      return "单次生成固定价格";
+    }
+    if (input.locale === "ja") {
+      return "生成ごとの固定価格";
+    }
+    return "Fixed per generation";
   }
 
   if (input.locale === "zh") {
@@ -171,145 +204,120 @@ function getDynamicPriceNote(input: {
   return `Output seconds × ${rate}`;
 }
 
-function parseStaticPricingRow(
-  modelLabel: string,
-  pricingRow: RuntimePricingRow,
-  locale: SupportedLocale,
-): AiVideoModelPricingRow {
-  const segments = pricingRow.modelDescription
-    .split(",")
-    .map((segment) => segment.trim())
-    .filter(Boolean);
-  const inferredImageType = pricingRow.modelDescription
-    .toLowerCase()
-    .match(/(?:text|image)-to-image/)?.[0];
-  const typeSource =
-    segments.length === 2 && inferredImageType
-      ? inferredImageType
-      : (segments[1] ?? "");
-  const type = normalizeTypeLabel(typeSource, locale);
-  const spec =
-    segments.length === 2 && inferredImageType
-      ? segments[1]
-      : segments.slice(2).join(", ") || "-";
-  const isPerSecond = pricingRow.creditUnit
-    .trim()
-    .toLowerCase()
-    .includes("per second");
-
-  return {
-    billingNote: isPerSecond
-      ? getPerSecondPriceNote(locale, pricingRow.creditPrice)
-      : getFixedPriceNote(locale),
-    creditPrice: isPerSecond
-      ? formatCreditsPerSecond(
-          Number.parseFloat(pricingRow.creditPrice),
-          locale,
-        )
-      : formatCredits(pricingRow.creditPrice, locale),
-    model: modelLabel,
-    spec,
-    type,
-  };
-}
-
 function resolveRuntimeCatalogEntry(version: AiVideoStudioVersion) {
-  const candidateIds = [version.modelId, ...(version.aliases ?? [])];
-
-  return runtimeCatalog.items.find((item) => candidateIds.includes(item.id));
+  return runtimeCatalog.items.find((item) => item.id === version.modelId);
 }
 
-function buildDynamicSeedanceRows(
+function getPriceKeyParts(key: string) {
+  return key === "default" ? [] : key.split("|").filter(Boolean);
+}
+
+function inferBaseType(version: AiVideoStudioVersion) {
+  const label = version.label.toLowerCase();
+
+  if (version.modelId.startsWith("image:")) {
+    return label.includes("image to image") || label.includes("edit")
+      ? "image-to-image"
+      : "text-to-image";
+  }
+
+  if (label.includes("storyboard")) {
+    return "storyboard";
+  }
+
+  if (label.includes("image to video")) {
+    return "image-to-video";
+  }
+
+  if (label.includes("text to video")) {
+    return "text-to-video";
+  }
+
+  return "text/image-to-video";
+}
+
+function inferPriceType(
+  parts: string[],
+  locale: SupportedLocale,
+  version: AiVideoStudioVersion,
+) {
+  const mode = parts.find((part) =>
+    part === "with_video" ||
+    part === "video-input" ||
+    part === "no_video" ||
+    part === "no-video-input",
+  ) ?? null;
+
+  if (mode === "with_video" || mode === "video-input") {
+    return normalizeTypeLabel("video-to-video", locale);
+  }
+
+  return normalizeTypeLabel(inferBaseType(version), locale);
+}
+
+function inferPriceSpec(parts: string[]) {
+  return parts.find((part) => /p$|x/.test(part)) ?? parts[0] ?? "-";
+}
+
+function buildVersionPricingRows(
   version: AiVideoStudioVersion,
   locale: SupportedLocale,
-): AiVideoModelPricingRow[] {
-  const examples = [
-    {
-      payload: {
-        duration: 1,
-        resolution: "480p",
-      },
-      spec: "480p",
-      type: "text/image-to-video",
-    },
-    {
-      payload: {
-        duration: 1,
-        resolution: "720p",
-      },
-      spec: "720p",
-      type: "text/image-to-video",
-    },
-    {
-      payload: {
-        duration: 1,
-        resolution: "1080p",
-      },
-      spec: "1080p",
-      type: "text/image-to-video",
-    },
-    {
-      payload: {
-        duration: 1,
-        resolution: "480p",
-        input: {
-          video_duration: 1,
-          video_url: "https://example.com/input.mp4",
-        },
-      },
-      spec: "480p",
-      type: "video-to-video",
-    },
-    {
-      payload: {
-        duration: 1,
-        resolution: "720p",
-        input: {
-          video_duration: 1,
-          video_url: "https://example.com/input.mp4",
-        },
-      },
-      spec: "720p",
-      type: "video-to-video",
-    },
-    {
-      payload: {
-        duration: 1,
-        resolution: "1080p",
-        input: {
-          video_duration: 1,
-          video_url: "https://example.com/input.mp4",
-        },
-      },
-      spec: "1080p",
-      type: "video-to-video",
-    },
-  ] as const;
+) {
+  const entry = resolveRuntimeCatalogEntry(version);
+  if (!entry?.pricing?.price_map) {
+    return [];
+  }
 
-  const rows: Array<AiVideoModelPricingRow | null> = examples.map((example) => {
-    const pricing = calculateSeedanceVideoPricing({
-      model: version.aliases?.[0] ?? version.modelId,
-      payload: example.payload,
-    });
+  const rows: AiVideoModelPricingRow[] = [];
+  const seen = new Set<string>();
 
-    if (!pricing) {
-      return null;
+  for (const [priceKey, rate] of Object.entries(entry.pricing.price_map)) {
+    if (!Number.isFinite(rate) || rate <= 0) {
+      continue;
     }
 
-    return {
+    const parts = getPriceKeyParts(priceKey);
+    const mode =
+      parts.find((part) => part === "with_video" || part === "video-input") ??
+      null;
+    const row = {
       billingNote: getDynamicPriceNote({
-        hasVideoInput: pricing.hasVideoInput,
+        mode,
         locale,
-        rate: pricing.rate,
+        priceFinal: entry.pricing.price_final,
+        rate,
       }),
-      creditPrice: formatCreditsPerSecond(pricing.rate, locale),
+      creditPrice: formatCreditPrice({
+        locale,
+        priceFinal: entry.pricing.price_final,
+        rate,
+      }),
       model: version.label,
-      spec: example.spec,
-      type: normalizeTypeLabel(example.type, locale),
+      spec: inferPriceSpec(parts),
+      type: inferPriceType(parts, locale, version),
     } satisfies AiVideoModelPricingRow;
-  });
 
-  return rows.filter((row): row is AiVideoModelPricingRow => row !== null);
+    const key = `${row.model}|${row.type}|${row.spec}|${row.creditPrice}`;
+    if (seen.has(key)) {
+      continue;
+    }
+    seen.add(key);
+    rows.push(row);
+  }
+
+  return rows;
+}
+
+function comparePricingRows(left: AiVideoModelPricingRow, right: AiVideoModelPricingRow) {
+  if (left.model !== right.model) {
+    return left.model.localeCompare(right.model);
+  }
+
+  if (left.type !== right.type) {
+    return left.type.localeCompare(right.type);
+  }
+
+  return left.spec.localeCompare(right.spec, undefined, { numeric: true });
 }
 
 export function buildAiVideoModelPricingRows({
@@ -323,33 +331,14 @@ export function buildAiVideoModelPricingRows({
   const rows: AiVideoModelPricingRow[] = [];
 
   for (const family of AI_VIDEO_STUDIO_FAMILIES) {
-    if (family.selectable === false) {
-      continue;
-    }
-    if (familyKey && family.key !== familyKey) {
+    if (family.selectable === false || (familyKey && family.key !== familyKey)) {
       continue;
     }
 
     for (const version of family.versions) {
-      const entry = resolveRuntimeCatalogEntry(version);
-
-      if ((entry?.pricingRows.length ?? 0) > 0) {
-        rows.push(
-          ...entry!.pricingRows.map((pricingRow) =>
-            parseStaticPricingRow(version.label, pricingRow, resolvedLocale),
-          ),
-        );
-        continue;
-      }
-
-      if (version.familyKey === "seedance-2.0") {
-        rows.push(...buildDynamicSeedanceRows(version, resolvedLocale));
-        continue;
-      }
-
-      rows.push(...buildDynamicSeedanceRows(version, resolvedLocale));
+      rows.push(...buildVersionPricingRows(version, resolvedLocale));
     }
   }
 
-  return rows;
+  return rows.sort(comparePricingRows);
 }

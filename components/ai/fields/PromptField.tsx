@@ -2,6 +2,11 @@
 
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { AiVideoStudioFieldDescriptor } from "@/lib/ai-video-studio/schema";
 import type { ReactNode } from "react";
@@ -59,24 +64,43 @@ export default function PromptField({
 }: PromptFieldProps) {
   const textValue = typeof value === "string" ? value : "";
   const maxLength = resolvePromptMaxLength(field);
+  const labelElement = (
+    <Label
+      htmlFor={inputId}
+      data-ai-video-studio-field-description-trigger={labelTitle ? "true" : undefined}
+      onClick={
+        labelTitle
+          ? (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              toast.info(labelTitle, { position: "bottom-center" });
+            }
+          : undefined
+      }
+      className={cn(
+        "inline-flex items-center gap-2 font-medium text-muted-foreground text-sm",
+        labelTitle && "cursor-pointer transition hover:text-foreground active:opacity-80",
+      )}
+    >
+      {labelIcon ? (
+        <span className="size-4 text-muted-foreground">{labelIcon}</span>
+      ) : null}
+      {label}
+    </Label>
+  );
 
   return (
     <div data-ai-video-studio-prompt-field className="space-y-2">
-      <Label
-        htmlFor={inputId}
-        title={labelTitle}
-        data-ai-video-studio-field-description-trigger={labelTitle ? "true" : undefined}
-        onClick={labelTitle ? () => toast.info(labelTitle) : undefined}
-        className={cn(
-          "inline-flex items-center gap-2 font-medium text-muted-foreground text-sm",
-          labelTitle && "cursor-pointer transition hover:text-foreground active:opacity-80",
-        )}
-      >
-        {labelIcon ? (
-          <span className="size-4 text-muted-foreground">{labelIcon}</span>
-        ) : null}
-        {label}
-      </Label>
+      {labelTitle ? (
+        <Tooltip>
+          <TooltipTrigger asChild>{labelElement}</TooltipTrigger>
+          <TooltipContent side="right" align="center" className="max-w-xs text-left">
+            {labelTitle}
+          </TooltipContent>
+        </Tooltip>
+      ) : (
+        labelElement
+      )}
       <div className="relative">
         <Textarea
           id={inputId}

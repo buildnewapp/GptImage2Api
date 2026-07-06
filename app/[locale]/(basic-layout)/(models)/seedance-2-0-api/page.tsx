@@ -16,12 +16,14 @@ const config = {
   messageKey: "seedance2",
   path: "/seedance-2-0-api",
   showcaseModelIds: [
-    "video:seedance-2-0-vip",
-    "video:seedance-2-0-fast-vip",
-    "video:seedance-2-0",
-    "video:seedance-2-0-fast",
-    "video:fal-seedance-2-0",
-    "video:fal-seedance-2-0-fast",
+    "video:bytedance-seedance-2",
+    "video:bytedance-seedance-2-0-fast",
+    "video:fal-bytedance-seedance-2-0-text-to-video",
+    "video:fal-bytedance-seedance-2-0-fast-text-to-video",
+    "video:fal-bytedance-seedance-2-0-image-to-video",
+    "video:fal-bytedance-seedance-2-0-fast-image-to-video",
+    "video:fal-bytedance-seedance-2-0-reference-to-video",
+    "video:fal-bytedance-seedance-2-0-fast-reference-to-video",
   ],
 } satisfies ModelApiPageConfig;
 

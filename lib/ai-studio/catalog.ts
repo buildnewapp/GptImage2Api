@@ -3,9 +3,10 @@ import path from "node:path";
 import YAML from "yaml";
 import bundledAiStudioRuntimeCatalog from "@/config/ai-studio/runtime/catalog.json";
 import {
-  type AiStudioStructuredKiePriceFile,
-  buildAiStudioStructuredKiePrices,
-} from "@/lib/ai-studio/kie-pricing";
+  type AiStudioDynamicPricingConfig,
+  isAiStudioBillingAdapter,
+} from "@/lib/ai-studio/runtime";
+import { getErrorMessage } from "@/lib/error-utils";
 
 export type AiStudioCategory = "image" | "video" | "music" | "chat";
 
@@ -18,38 +19,7 @@ export interface AiStudioCatalogSeedEntry {
   alias?: string | null;
 }
 
-export interface AiStudioPricingRow {
-  modelDescription: string;
-  interfaceType: string;
-  provider: string;
-  creditPrice: string;
-  creditUnit: string;
-  usdPrice: string;
-  falPrice: string;
-  discountRate: number;
-  anchor: string;
-  discountPrice: boolean;
-  pricingKey?: string;
-  catalogModelId?: string | null;
-  runtimeModel?: string | null;
-  resolution?: string | null;
-  duration?: number | null;
-  audio?: boolean | null;
-  aspectRatio?: string | null;
-  source?: string | null;
-}
-
-export interface AiStudioPricingSelectors {
-  resolution?: string[];
-  duration?: string[];
-  audio?: string[];
-  aspectRatio?: string[];
-}
-
-export interface AiStudioPricingConfig {
-  strategy?: "exact";
-  selectors?: AiStudioPricingSelectors;
-}
+export type AiStudioPricingConfig = AiStudioDynamicPricingConfig;
 
 export interface AiStudioResultArtifactRule {
   kind: string;
@@ -65,7 +35,6 @@ export interface AiStudioDocDetail extends AiStudioCatalogSeedEntry {
   modelKeys: string[];
   requestSchema: Record<string, any> | null;
   examplePayload: Record<string, any>;
-  pricingRows: AiStudioPricingRow[];
   statusEndpoint?: string | null;
   formUi?: AiStudioFormUiModelOverride;
   pricing?: AiStudioPricingConfig;
@@ -73,7 +42,6 @@ export interface AiStudioDocDetail extends AiStudioCatalogSeedEntry {
 }
 
 export interface AiStudioCatalogEntry extends AiStudioCatalogSeedEntry {
-  pricingRows: AiStudioPricingRow[];
   pricing?: AiStudioPricingConfig;
 }
 
@@ -99,19 +67,12 @@ export interface AiStudioModelOverride {
   resultArtifacts?: AiStudioResultArtifactRule[];
 }
 
-export interface AiStudioPricingRowMatch {
-  runtimeModel?: string;
-  modelDescriptionIncludes?: string;
-  provider?: string;
-}
-
 export interface AiStudioSplitModelOverride {
   id: string;
   title: string;
   alias?: string | null;
   provider?: string;
   schemaModel: string;
-  pricingMatch: AiStudioPricingRowMatch;
 }
 
 export interface AiStudioModelOverridesFile {
@@ -119,7 +80,13 @@ export interface AiStudioModelOverridesFile {
 }
 
 export interface AiStudioPricingOverrideBucket {
-  addRows?: AiStudioPricingRow[];
+  docUrl?: string;
+  price_txt?: string;
+  billing_adapter?: string;
+  price_key?: string;
+  price_map?: Record<string, number>;
+  price_final?: string;
+  notes?: string;
 }
 
 export interface AiStudioPricingOverridesFile {
@@ -129,6 +96,7 @@ export interface AiStudioPricingOverridesFile {
 export interface AiStudioFormUiModelOverride {
   fieldOrder?: string[];
   advancedFields?: string[];
+  hiddenFields?: string[];
 }
 
 export interface AiStudioFormUiOverridesFile {
@@ -144,9 +112,28 @@ export interface AiStudioSchemaOverridesFile {
   models: Record<string, AiStudioSchemaModelOverride>;
 }
 
+export type AiStudioFalModelConfig =
+  | string
+  | AiStudioFalModelConfigObject;
+
+export interface AiStudioFalModelConfigObject {
+  id: string;
+  endpointId?: string;
+  category?: AiStudioCategory;
+  title?: string;
+  provider?: string;
+  alias?: string | null;
+  enabled?: boolean;
+}
+
+export interface AiStudioFalModelsFile {
+  version: number;
+  models: AiStudioFalModelConfig[];
+  prices?: Record<string, string>;
+}
+
 type CompileRuntimeCatalogInput = {
   upstream: AiStudioUpstreamCatalogFile;
-  kiePrices?: AiStudioStructuredKiePriceFile;
   modelOverrides: AiStudioModelOverridesFile;
   pricingOverrides: AiStudioPricingOverridesFile;
   formUiOverrides?: AiStudioFormUiOverridesFile;
@@ -156,8 +143,17 @@ type CompileRuntimeCatalogInput = {
 const LLMS_INDEX_URL = "https://docs.kie.ai/llms.txt";
 const APIMART_LLMS_INDEX_URL = "https://docs.apimart.ai/llms.txt";
 const APIMART_LLMS_FULL_URL = "https://docs.apimart.ai/llms-full.txt";
+const FAL_MODELS_URL = "https://api.fal.ai/v1/models";
 const DOC_LINE_PATTERN =
   /^- (?:(Image|Video|Music|Chat)\s+Models?\s+>\s+.+?|4o Image API|Flux Kontext API|Runway API(?: > Aleph)?|Veo3\.1 API|Suno API(?: > .+?)?) \[(.+?)\]\((https:\/\/docs\.kie\.ai\/(?!cn\/)[^)]+\.md)\):/;
+const SUPPORTED_KIE_DOC_PATH_PREFIXES = [
+  "/4o-image-api/",
+  "/flux-kontext-api/",
+  "/market/",
+  "/runway-api/",
+  "/suno-api/",
+  "/veo3-api/",
+];
 const APIMART_DOC_LINE_PATTERN =
   /^- \[(.+?)\]\((https:\/\/docs\.apimart\.ai\/en\/api-reference\/(?:audios|images|texts|videos)\/[^)]+\.md)\):/;
 const APIMART_SECTION_PATTERN =
@@ -165,8 +161,16 @@ const APIMART_SECTION_PATTERN =
 const APIMART_STATUS_ENDPOINT = "/v1/tasks/{taskId}?language=en";
 
 const USER_AGENT =
-  "Mozilla/5.0 (compatible; Nexty AiStudio Catalog Sync/1.0; +https://nexty.dev)";
+  "Mozilla/5.0 (compatible; Nexty AiStudio Catalog Sync/1.0; +https://google.dev)";
 const DEFAULT_AI_STUDIO_DATA_DIR = path.join(process.cwd(), "config", "ai-studio");
+const DEFAULT_AI_STUDIO_FETCH_TIMEOUT_MS = 8_000;
+const DEFAULT_AI_STUDIO_FETCH_ATTEMPTS = 1;
+const DEFAULT_AI_STUDIO_FETCH_RETRY_WAIT_MAX_MS = 1_000;
+const DEFAULT_AI_STUDIO_FETCH_CONCURRENCY_WITH_KEY = 2;
+const DEFAULT_AI_STUDIO_FETCH_CONCURRENCY_WITHOUT_KEY = 1;
+const DEFAULT_AI_STUDIO_FETCH_INTERVAL_MS = 3_000;
+const DEFAULT_AI_STUDIO_FETCH_MAX_FAILURE_RATIO = 0.5;
+const DEFAULT_AI_STUDIO_CATALOG_MIN_REPLACEMENT_RATIO = 0.75;
 
 type RuntimeCatalogCache = {
   filePath: string;
@@ -188,12 +192,12 @@ export function getAiStudioCatalogPaths() {
     apimartCatalogPath:
       process.env.AI_STUDIO_APIMART_CATALOG_PATH ??
       path.join(DEFAULT_AI_STUDIO_DATA_DIR, "upstream", "apimart.json"),
-    kieRawPricePath:
-      process.env.AI_STUDIO_KIE_RAW_PRICE_PATH ??
-      path.join(DEFAULT_AI_STUDIO_DATA_DIR, "upstream", "kie_price.json"),
-    kiePricesPath:
-      process.env.AI_STUDIO_KIE_PRICES_PATH ??
-      path.join(DEFAULT_AI_STUDIO_DATA_DIR, "upstream", "kie_prices.json"),
+    falCatalogPath:
+      process.env.AI_STUDIO_FAL_CATALOG_PATH ??
+      path.join(DEFAULT_AI_STUDIO_DATA_DIR, "upstream", "fal.json"),
+    falModelsPath:
+      process.env.AI_STUDIO_FAL_MODELS_PATH ??
+      path.join(DEFAULT_AI_STUDIO_DATA_DIR, "upstream", "fal-models.json"),
     modelOverridesPath:
       process.env.AI_STUDIO_MODEL_OVERRIDES_PATH ??
       path.join(DEFAULT_AI_STUDIO_DATA_DIR, "overrides", "models.json"),
@@ -230,6 +234,32 @@ export function normalizeModelHandle(input: string) {
     .replace(/^-+|-+$/g, "");
 }
 
+export function sortAiStudioCatalogItems<T extends Pick<AiStudioDocDetail, "id">>(
+  items: T[],
+): T[] {
+  return [...items].sort((left, right) => left.id.localeCompare(right.id));
+}
+
+export function assertAiStudioCatalogCanReplaceExisting(
+  next: Pick<AiStudioUpstreamCatalogFile, "items">,
+  existing: Pick<AiStudioUpstreamCatalogFile, "items">,
+  filePath: string,
+  minReplacementRatio = DEFAULT_AI_STUDIO_CATALOG_MIN_REPLACEMENT_RATIO,
+) {
+  const nextCount = next.items.length;
+  const existingCount = existing.items.length;
+
+  if (
+    existingCount >= 50 &&
+    nextCount < Math.ceil(existingCount * minReplacementRatio)
+  ) {
+    throw new Error(
+      `Refusing to overwrite ${filePath}: new AI Studio catalog has ${nextCount} items, existing has ${existingCount}. ` +
+        "This usually means the upstream sync only partially succeeded. Set AI_STUDIO_ALLOW_CATALOG_SHRINK=1 to allow an intentional shrink.",
+    );
+  }
+}
+
 export function getAiStudioPublicModelId(
   entry: Pick<AiStudioCatalogSeedEntry, "id" | "category" | "alias">,
 ) {
@@ -242,14 +272,6 @@ export function getAiStudioPublicModelId(
 
 function stripApiSuffix(input: string) {
   return input.replace(/\bapi\b/gi, " ").replace(/\s+/g, " ").trim();
-}
-
-function normalizeTokens(input: string): string[] {
-  return input
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, " ")
-    .split(/\s+/)
-    .filter((token) => token.length >= 2);
 }
 
 function inferCategory(source: string, docUrl: string): AiStudioCategory | null {
@@ -353,7 +375,10 @@ function shouldIncludeCatalogEntry(title: string, docUrl: string): boolean {
     "/webhook-verification",
   ];
 
+  const pathname = new URL(docUrl).pathname;
+
   return (
+    SUPPORTED_KIE_DOC_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix)) &&
     !blockedTitlePrefixes.some((prefix) => title.startsWith(prefix)) &&
     !blockedTitleFragments.some((fragment) => title.includes(fragment)) &&
     !blockedUrlFragments.some((fragment) => docUrl.includes(fragment))
@@ -397,6 +422,268 @@ function extractRequestSchema(methodDef: Record<string, any>) {
     methodDef.requestBody?.content?.["application/json"]?.example ??
     null
   );
+}
+
+function resolveOpenApiRef(openapiDoc: Record<string, any>, ref: string) {
+  const segments = ref.replace(/^#\//, "").split("/").filter(Boolean);
+  let current: unknown = openapiDoc;
+
+  for (const segment of segments) {
+    if (!current || typeof current !== "object") {
+      return null;
+    }
+    current = (current as Record<string, unknown>)[segment];
+  }
+
+  return current && typeof current === "object"
+    ? (current as Record<string, any>)
+    : null;
+}
+
+function dereferenceOpenApiSchema(
+  openapiDoc: Record<string, any>,
+  schema: unknown,
+  seen = new Set<string>(),
+): unknown {
+  if (!schema || typeof schema !== "object") {
+    return schema;
+  }
+
+  if (Array.isArray(schema)) {
+    return schema.map((item) => dereferenceOpenApiSchema(openapiDoc, item, seen));
+  }
+
+  const record = schema as Record<string, any>;
+  if (typeof record.$ref === "string") {
+    if (seen.has(record.$ref)) {
+      return {};
+    }
+
+    const resolved = resolveOpenApiRef(openapiDoc, record.$ref);
+    if (!resolved) {
+      return structuredClone(record);
+    }
+
+    return dereferenceOpenApiSchema(
+      openapiDoc,
+      {
+        ...resolved,
+        ...Object.fromEntries(
+          Object.entries(record).filter(([key]) => key !== "$ref"),
+        ),
+      },
+      new Set([...seen, record.$ref]),
+    );
+  }
+
+  return Object.fromEntries(
+    Object.entries(record).map(([key, value]) => [
+      key,
+      dereferenceOpenApiSchema(openapiDoc, value, seen),
+    ]),
+  );
+}
+
+function normalizeFalSchema(schema: Record<string, any> | null) {
+  if (!schema) {
+    return null;
+  }
+
+  return {
+    ...schema,
+    ...(Array.isArray(schema["x-fal-order-properties"]) && !schema["x-apidog-orders"]
+      ? { "x-apidog-orders": schema["x-fal-order-properties"] }
+      : {}),
+  };
+}
+
+function getSchemaType(schema: Record<string, any>) {
+  if (typeof schema.type === "string") {
+    return schema.type;
+  }
+
+  const nonNullAnyOf = Array.isArray(schema.anyOf)
+    ? schema.anyOf.find(
+        (item: unknown): item is Record<string, any> =>
+          Boolean(item) &&
+          typeof item === "object" &&
+          (item as Record<string, any>).type !== "null",
+      )
+    : null;
+
+  return typeof nonNullAnyOf?.type === "string" ? nonNullAnyOf.type : null;
+}
+
+function exampleValueFromSchema(schema: Record<string, any>): unknown {
+  if (schema.default !== undefined) {
+    return structuredClone(schema.default);
+  }
+
+  if (Array.isArray(schema.examples) && schema.examples.length > 0) {
+    return structuredClone(schema.examples[0]);
+  }
+
+  if (Array.isArray(schema.enum) && schema.enum.length > 0) {
+    return structuredClone(schema.enum[0]);
+  }
+
+  const type = getSchemaType(schema);
+  if (type === "array") {
+    return [];
+  }
+  if (type === "object") {
+    return {};
+  }
+  if (type === "boolean") {
+    return false;
+  }
+  if (type === "integer" || type === "number") {
+    return 0;
+  }
+
+  return "";
+}
+
+function buildExamplePayloadFromSchema(schema: Record<string, any> | null) {
+  const properties = schema?.properties;
+  if (!properties || typeof properties !== "object") {
+    return {};
+  }
+
+  return Object.fromEntries(
+    Object.entries(properties as Record<string, Record<string, any>>).map(
+      ([key, value]) => [key, exampleValueFromSchema(value)],
+    ),
+  );
+}
+
+function findFalSubmitPath(openapiDoc: Record<string, any>) {
+  for (const [endpoint, pathDef] of Object.entries(openapiDoc.paths ?? {})) {
+    if (!pathDef || typeof pathDef !== "object") {
+      continue;
+    }
+
+    const methods = pathDef as Record<string, any>;
+    const methodDef = methods.post ?? methods.put ?? methods.get;
+    const method = methods.post ? "POST" : methods.put ? "PUT" : methods.get ? "GET" : null;
+    if (!method || !methodDef || typeof methodDef !== "object") {
+      continue;
+    }
+
+    if (methodDef.requestBody?.content?.["application/json"]?.schema) {
+      return {
+        endpoint,
+        method,
+        methodDef: methodDef as Record<string, any>,
+      };
+    }
+  }
+
+  throw new Error("Unable to parse fal submit endpoint from OpenAPI doc");
+}
+
+function findFalStatusEndpoint(openapiDoc: Record<string, any>) {
+  return (
+    Object.keys(openapiDoc.paths ?? {}).find((endpoint) =>
+      /\/requests\/\{request_id\}\/status$/.test(endpoint),
+    ) ?? null
+  );
+}
+
+function buildFalQueueStatusEndpoint(submitEndpoint: string) {
+  const parts = submitEndpoint.replace(/^\/+/, "").split("/").filter(Boolean);
+  if (parts.length < 2) {
+    return null;
+  }
+
+  return `/${parts[0]}/${parts[1]}/requests/{request_id}/status`;
+}
+
+function normalizeFalEndpointId(config: AiStudioFalModelConfig) {
+  return typeof config === "string" ? config : config.endpointId ?? config.id;
+}
+
+function isFalModelConfigEnabled(config: AiStudioFalModelConfig) {
+  return typeof config === "string" || config.enabled !== false;
+}
+
+function inferFalCategory(endpointId: string, model: FalApiModel): AiStudioCategory {
+  const category = model.metadata?.category?.toLowerCase() ?? "";
+  const source = `${category} ${endpointId}`.toLowerCase();
+
+  if (source.includes("video")) {
+    return "video";
+  }
+  if (source.includes("image")) {
+    return "image";
+  }
+  if (source.includes("audio") || source.includes("music")) {
+    return "music";
+  }
+  return "chat";
+}
+
+function inferFalProvider(endpointId: string, model: FalApiModel) {
+  const metadataGroup =
+    typeof model.metadata?.group === "string" ? model.metadata.group : null;
+  const providerKey =
+    metadataGroup ??
+    (endpointId.startsWith("fal-ai/")
+      ? endpointId.split("/")[1]
+      : endpointId.split("/")[0]);
+  const providerMap: Record<string, string> = {
+    alibaba: "Alibaba",
+    blackforestlabs: "Black Forest Labs",
+    bytedance: "ByteDance",
+    google: "Google",
+    ideogram: "Ideogram",
+    openai: "OpenAI",
+    qwen: "Qwen",
+    xai: "xAI",
+  };
+  const normalizedProvider = normalizeLoose(providerKey ?? "");
+  return providerMap[normalizedProvider] ?? providerKey ?? "fal";
+}
+
+function getFalCatalogModelId(endpointId: string, category: AiStudioCategory) {
+  return `${category}:fal-${slugify(endpointId)}`;
+}
+
+function normalizeFalTitle(title: string) {
+  return stripApiSuffix(title).replace(/\s+/g, " ").trim();
+}
+
+export function extractFalPricingTextFromLlms(content: string) {
+  const pricingHeadingMatch = /^## Pricing\s*$/m.exec(content);
+  if (!pricingHeadingMatch) {
+    return null;
+  }
+
+  const sectionStart = pricingHeadingMatch.index + pricingHeadingMatch[0].length;
+  const remaining = content.slice(sectionStart).replace(/^\s*\n/, "");
+  const nextHeadingMatch = /^##\s/m.exec(remaining);
+  const section = nextHeadingMatch
+    ? remaining.slice(0, nextHeadingMatch.index)
+    : remaining;
+
+  const paragraphs = section
+    .split(/\n\s*\n/)
+    .map((paragraph) =>
+      paragraph
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .join("\n"),
+    )
+    .filter(Boolean);
+
+  const pricingParagraphs = paragraphs.filter(
+    (paragraph) =>
+      !/^For more details\b/i.test(paragraph) &&
+      !/fal\.ai\/pricing/i.test(paragraph),
+  );
+
+  return pricingParagraphs.length > 0 ? pricingParagraphs.join("\n\n") : null;
 }
 
 function extractRequestExample(methodDef: Record<string, any>) {
@@ -753,7 +1040,7 @@ function toApimartModelId(category: AiStudioCategory, modelKey: string) {
   const handle = normalizeModelHandle(modelKey)
     .replace(/^doubao-seedance-/, "seedance-")
     .replace(/-apimart$/, "");
-  return `${category}:fal-${handle}`;
+  return `${category}:ama-${handle}`;
 }
 
 function rewriteApimartSchemaForModel(
@@ -811,7 +1098,6 @@ function buildApimartDetailsFromSection(
       ...omitSkippedApimartRequestFields(examplePayload),
       model: modelKey,
     },
-    pricingRows: [],
   }));
 }
 
@@ -888,435 +1174,6 @@ export function parseApimartLlmsFull(content: string): AiStudioUpstreamCatalogFi
   };
 }
 
-function buildAliases(
-  entry: Pick<
-    AiStudioCatalogSeedEntry,
-    "title" | "provider" | "docUrl"
-  > & { modelKeys?: string[] },
-) {
-  const aliases = new Set<string>();
-  const docSlug = entry.docUrl.split("/").pop()?.replace(/\.md$/, "") ?? "";
-  const docFamily = entry.docUrl.split("/").at(-2) ?? "";
-  const cleanedProvider = stripApiSuffix(entry.provider);
-
-  aliases.add(normalizeLoose(entry.title));
-  aliases.add(normalizeLoose(entry.provider));
-  aliases.add(normalizeLoose(cleanedProvider));
-  aliases.add(normalizeLoose(docSlug));
-  aliases.add(normalizeLoose(stripApiSuffix(docFamily)));
-
-  for (const modelKey of entry.modelKeys ?? []) {
-    aliases.add(normalizeLoose(modelKey));
-    aliases.add(normalizeLoose(`${entry.title} ${modelKey}`));
-  }
-
-  return [...aliases].filter((alias) => alias.length >= 4);
-}
-
-export function extractPricingAnchorModel(anchor: string) {
-  try {
-    const url = new URL(anchor);
-    return url.searchParams.get("model") ?? "";
-  } catch {
-    return "";
-  }
-}
-
-const GENERIC_MODEL_HANDLES = new Set([
-  "api",
-  "model",
-  "generate",
-  "create",
-  "chat",
-  "image",
-  "video",
-  "music",
-]);
-
-const GENERIC_OPERATION_HANDLES = new Set([
-  "text-to-video",
-  "image-to-video",
-  "reference-to-video",
-  "video-to-video",
-  "extend",
-  "upscale",
-  "text-to-image",
-  "image-to-image",
-  "inpaint",
-  "outpaint",
-  "edit",
-  "chat",
-  "music",
-  "text-to-music",
-]);
-
-function isSpecificModelHandle(handle: string) {
-  if (handle.length < 4 || GENERIC_MODEL_HANDLES.has(handle)) {
-    return false;
-  }
-
-  const [firstSegment] = handle.split("-");
-  return Boolean(
-    firstSegment &&
-      !GENERIC_MODEL_HANDLES.has(firstSegment) &&
-      !GENERIC_OPERATION_HANDLES.has(handle),
-  );
-}
-
-function isGenericOperationHandle(handle: string) {
-  return GENERIC_OPERATION_HANDLES.has(handle);
-}
-
-function getDocFamilyHandle(docUrl: string) {
-  const docFamily = normalizeModelHandle(docUrl.split("/").at(-2) ?? "");
-  return isSpecificModelHandle(docFamily) ? docFamily : "";
-}
-
-function getEntryFamilyHandles(
-  entry: Pick<
-    AiStudioCatalogSeedEntry,
-    "title" | "provider" | "docUrl"
-  > & { modelKeys?: string[] },
-) {
-  const handles = new Set<string>();
-  const docFamily = getDocFamilyHandle(entry.docUrl);
-
-  if (docFamily) {
-    handles.add(docFamily);
-  }
-
-  for (const source of [entry.provider, stripApiSuffix(entry.provider), entry.title]) {
-    const normalized = normalizeModelHandle(source);
-    if (isSpecificModelHandle(normalized)) {
-      handles.add(normalized);
-    }
-  }
-
-  for (const modelKey of entry.modelKeys ?? []) {
-    const normalized = normalizeModelHandle(modelKey);
-    const operationHandle = [...GENERIC_OPERATION_HANDLES].find((handle) =>
-      normalized.includes(handle),
-    );
-    if (operationHandle) {
-      const family = normalized.replace(`-${operationHandle}`, "").replace(/-+$/g, "");
-      if (isSpecificModelHandle(family)) {
-        handles.add(family);
-      }
-    }
-  }
-
-  return [...handles];
-}
-
-function getEntryModelHandles(
-  entry: Pick<
-    AiStudioCatalogSeedEntry,
-    "title" | "provider" | "docUrl"
-  > & { modelKeys?: string[] },
-) {
-  const handles = new Set<string>();
-  const docSlug = normalizeModelHandle(
-    entry.docUrl.split("/").pop()?.replace(/\.md$/, "") ?? "",
-  );
-
-  for (const modelKey of entry.modelKeys ?? []) {
-    const handle = normalizeModelHandle(modelKey);
-    if (handle.length >= 2 && !GENERIC_MODEL_HANDLES.has(handle)) {
-      handles.add(handle);
-    }
-  }
-
-  if (isSpecificModelHandle(docSlug)) {
-    handles.add(docSlug);
-  }
-
-  return [...handles];
-}
-
-function getEntryOperationHandles(
-  entry: Pick<
-    AiStudioCatalogSeedEntry,
-    "title" | "provider" | "docUrl"
-  > & { modelKeys?: string[] },
-) {
-  const handles = new Set<string>();
-  const docSlug = normalizeModelHandle(
-    entry.docUrl.split("/").pop()?.replace(/\.md$/, "") ?? "",
-  );
-
-  if (isGenericOperationHandle(docSlug)) {
-    handles.add(docSlug);
-  }
-
-  for (const modelKey of entry.modelKeys ?? []) {
-    const normalized = normalizeModelHandle(modelKey);
-    for (const handle of GENERIC_OPERATION_HANDLES) {
-      if (normalized.includes(handle)) {
-        handles.add(handle);
-      }
-    }
-  }
-
-  for (const handle of GENERIC_OPERATION_HANDLES) {
-    if (normalizeModelHandle(entry.title).includes(handle)) {
-      handles.add(handle);
-    }
-  }
-
-  return [...handles];
-}
-
-function rowContainsAnyHandle(
-  row: AiStudioPricingRow,
-  handles: string[],
-  anchorModel: string,
-) {
-  if (handles.length === 0) {
-    return false;
-  }
-
-  const descriptionHandle = normalizeModelHandle(row.modelDescription);
-  const providerHandle = normalizeModelHandle(row.provider);
-  const anchorHandle = normalizeModelHandle(row.anchor);
-  const descriptionLoose = normalizeLoose(row.modelDescription);
-  const providerLoose = normalizeLoose(row.provider);
-  const anchorLoose = normalizeLoose(row.anchor);
-  const anchorModelLoose = normalizeLoose(anchorModel);
-
-  return handles.some(
-    (handle) => {
-      const looseHandle = normalizeLoose(handle);
-      return (
-        descriptionHandle.includes(handle) ||
-        providerHandle.includes(handle) ||
-        anchorHandle.includes(handle) ||
-        anchorModel.includes(handle) ||
-        descriptionLoose.includes(looseHandle) ||
-        providerLoose.includes(looseHandle) ||
-        anchorLoose.includes(looseHandle) ||
-        anchorModelLoose.includes(looseHandle)
-      );
-    },
-  );
-}
-
-function extractOperationHandlesFromText(value: string) {
-  const normalized = normalizeModelHandle(value);
-  return [...GENERIC_OPERATION_HANDLES].filter((handle) => normalized.includes(handle));
-}
-
-function getRowOperationHandles(row: AiStudioPricingRow, anchorModel: string) {
-  const descriptionHandles = extractOperationHandlesFromText(row.modelDescription);
-  if (descriptionHandles.length > 0) {
-    return descriptionHandles;
-  }
-
-  const anchorModelHandles = extractOperationHandlesFromText(anchorModel);
-  if (anchorModelHandles.length > 0) {
-    return anchorModelHandles;
-  }
-
-  return extractOperationHandlesFromText(row.anchor);
-}
-
-function runtimeModelMatchesEntry(
-  entry: Pick<
-    AiStudioCatalogSeedEntry,
-    "category" | "title" | "provider" | "docUrl"
-  > & { modelKeys?: string[] },
-  runtimeModel: string,
-) {
-  const normalized = normalizeModelHandle(runtimeModel);
-  const normalizedLoose = normalizeLoose(runtimeModel);
-  const modelHandles = getEntryModelHandles(entry);
-  const familyHandles = getEntryFamilyHandles(entry);
-  const operationHandles = getEntryOperationHandles(entry);
-
-  if (modelHandles.length > 0) {
-    const hasSpecificMatch = modelHandles.some(
-      (handle) =>
-        normalized === handle ||
-        normalized.startsWith(`${handle}-`) ||
-        handle.startsWith(`${normalized}-`),
-    );
-    if (!hasSpecificMatch) {
-      return false;
-    }
-  }
-
-  if (familyHandles.length > 0) {
-    const hasFamilyMatch = familyHandles.some((handle) => {
-      const looseHandle = normalizeLoose(handle);
-      return normalized.includes(handle) || normalizedLoose.includes(looseHandle);
-    });
-    if (!hasFamilyMatch) {
-      return false;
-    }
-  }
-
-  if (operationHandles.length > 0) {
-    const hasOperationMatch = operationHandles.some((handle) =>
-      normalized.includes(handle),
-    );
-    if (!hasOperationMatch) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-export function resolvePricingRowRuntimeModel(
-  entry: Pick<
-    AiStudioCatalogSeedEntry,
-    "category" | "title" | "provider" | "docUrl"
-  > & { modelKeys?: string[] },
-  row: AiStudioPricingRow,
-) {
-  if (row.runtimeModel) {
-    return row.runtimeModel;
-  }
-
-  const anchorModel = extractPricingAnchorModel(row.anchor);
-  if (!anchorModel) {
-    return entry.modelKeys?.[0] ?? null;
-  }
-
-  if (runtimeModelMatchesEntry(entry, anchorModel)) {
-    return anchorModel;
-  }
-
-  if ((entry.modelKeys?.length ?? 0) === 1) {
-    return entry.modelKeys?.[0] ?? null;
-  }
-
-  return anchorModel;
-}
-
-function scorePricingMatch(
-  entry: Pick<
-    AiStudioCatalogSeedEntry,
-    "title" | "provider" | "docUrl" | "category"
-  > & { modelKeys?: string[] },
-  row: AiStudioPricingRow,
-): number {
-  if (row.interfaceType.toLowerCase() !== entry.category) {
-    return -1;
-  }
-
-  const description = normalizeLoose(row.modelDescription);
-  const anchor = normalizeLoose(row.anchor);
-  const anchorModel = normalizeModelHandle(extractPricingAnchorModel(row.anchor));
-  const aliases = buildAliases(entry);
-  const modelHandles = getEntryModelHandles(entry);
-  const familyHandles = getEntryFamilyHandles(entry);
-  const operationHandles = getEntryOperationHandles(entry);
-  const rowOperationHandles = getRowOperationHandles(row, anchorModel);
-
-  let score = 0;
-  if (familyHandles.length > 0 && !rowContainsAnyHandle(row, familyHandles, anchorModel)) {
-    return -1;
-  }
-
-  if (operationHandles.length > 0) {
-    if (rowOperationHandles.length > 0) {
-      const hasOperationMatch = operationHandles.some((handle) =>
-        rowOperationHandles.includes(handle),
-      );
-      if (!hasOperationMatch) {
-        return -1;
-      }
-    } else if (!rowContainsAnyHandle(row, operationHandles, anchorModel)) {
-      return -1;
-    }
-  }
-
-  if (modelHandles.length > 0 && anchorModel) {
-    const exactMatch = modelHandles.some((handle) => anchorModel === handle);
-    const prefixMatch = modelHandles.some(
-      (handle) =>
-        anchorModel.startsWith(`${handle}-`) || handle.startsWith(`${anchorModel}-`),
-    );
-
-    if (exactMatch) {
-      score += 120;
-    } else if (prefixMatch) {
-      score += 80;
-    } else {
-      return -1;
-    }
-  }
-
-  for (const alias of aliases) {
-    if (description.includes(alias) || alias.includes(description)) {
-      score += alias.length >= 10 ? 6 : 4;
-    }
-    if (anchor && (anchor.includes(alias) || alias.includes(anchor))) {
-      score += alias.length >= 8 ? 5 : 3;
-    }
-  }
-
-  const descriptionTokens = new Set(normalizeTokens(row.modelDescription));
-  const entryTokens = new Set(
-    normalizeTokens(
-      `${entry.title} ${entry.provider} ${(entry.modelKeys ?? []).join(" ")} ${entry.docUrl}`,
-    ),
-  );
-  let shared = 0;
-  for (const token of entryTokens) {
-    if (descriptionTokens.has(token)) {
-      shared += 1;
-    }
-  }
-
-  score += shared;
-  return score;
-}
-
-function canonicalizePricingDescription(input: string) {
-  return input
-    .toLowerCase()
-    .replace(/(\d+)\.0(?=s\b)/g, "$1")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function normalizeNumericString(input: string) {
-  const value = Number.parseFloat(input);
-  return Number.isFinite(value) ? String(value) : input.trim();
-}
-
-function dedupeMatchedPricingRows(rows: AiStudioPricingRow[]) {
-  const seen = new Set<string>();
-  const deduped: AiStudioPricingRow[] = [];
-
-  for (const row of rows) {
-    const key = [
-      row.pricingKey ?? "",
-      row.catalogModelId ?? "",
-      normalizeLoose(row.provider),
-      row.interfaceType.toLowerCase(),
-      canonicalizePricingDescription(row.modelDescription),
-      normalizeModelHandle(row.runtimeModel ?? extractPricingAnchorModel(row.anchor)),
-      row.resolution ?? "",
-      row.aspectRatio ?? "",
-      row.duration ?? "",
-      row.audio ?? "",
-      normalizeNumericString(row.creditPrice),
-      row.creditUnit.toLowerCase(),
-    ].join("|");
-
-    if (seen.has(key)) {
-      continue;
-    }
-
-    seen.add(key);
-    deduped.push(row);
-  }
-
-  return deduped;
-}
-
 export function parseLlmsIndex(content: string): AiStudioCatalogSeedEntry[] {
   const entries: AiStudioCatalogSeedEntry[] = [];
 
@@ -1374,20 +1231,44 @@ export function parseApiDocMarkdown(
     modelKeys,
     requestSchema: schema,
     examplePayload,
-    pricingRows: [],
   };
 }
 
 async function fetchText(url: string): Promise<string> {
-  const response = await fetch(url, {
-    headers: {
-      "User-Agent": USER_AGENT,
-    },
-  });
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}: ${response.status}`);
+  const source = url.includes("docs.kie.ai")
+    ? "kie"
+    : url.includes("docs.apimart.ai")
+      ? "apimart"
+      : "upstream";
+
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      headers: {
+        "User-Agent": USER_AGENT,
+      },
+    });
+  } catch (error) {
+    console.log(
+      `[AI Studio ${source}] 连接: ${url} 失败: ${getErrorMessage(error)}`,
+    );
+    throw error;
   }
-  return response.text();
+
+  if (response.ok) {
+    console.log(`[AI Studio ${source}] 连接: ${url} 成功: ${response.status}`);
+    return response.text();
+  }
+
+  const responseText = await response.clone().text().catch(() => "");
+  const reason =
+    responseText.trim().replace(/\s+/g, " ").slice(0, 240) ||
+    response.statusText ||
+    `HTTP ${response.status}`;
+  console.log(
+    `[AI Studio ${source}] 连接: ${url} 失败: ${response.status} ${reason}`,
+  );
+  throw new Error(`Failed to fetch ${url}: ${response.status}`);
 }
 
 export async function fetchAiStudioCatalogSeeds() {
@@ -1398,28 +1279,64 @@ export async function fetchAiStudioCatalogSeeds() {
 export async function getAiStudioCatalog(): Promise<AiStudioCatalogEntry[]> {
   const seeds = await fetchAiStudioCatalogSeeds();
 
-  return seeds.map((seed) => ({
-    ...seed,
-    pricingRows: [],
-  }));
+  return seeds.map((seed) => ({ ...seed }));
 }
 
 export async function getAiStudioCatalogDetail(
   entry: AiStudioCatalogEntry,
 ): Promise<AiStudioDocDetail> {
   const markdown = await fetchText(entry.docUrl);
-  const detail = parseApiDocMarkdown(entry, markdown);
-  detail.pricingRows = entry.pricingRows;
-  return detail;
+  try {
+    return parseApiDocMarkdown(entry, markdown);
+  } catch (error) {
+    throw new Error(
+      `Failed to parse AI Studio catalog doc "${entry.title}" (${entry.docUrl}): ${getErrorMessage(error)}`,
+    );
+  }
 }
 
 export async function buildAiStudioUpstreamCatalog(): Promise<AiStudioUpstreamCatalogFile> {
   const entries = await getAiStudioCatalog();
-  const items = await Promise.all(entries.map((entry) => getAiStudioCatalogDetail(entry)));
+  const results = await mapWithConcurrency(
+    entries,
+    getAiStudioFetchConcurrency(),
+    (entry) => getAiStudioCatalogDetail(entry),
+    getAiStudioFetchIntervalMs(),
+  );
+  const items: AiStudioDocDetail[] = [];
+  const failures: string[] = [];
+
+  for (const [index, result] of results.entries()) {
+    if (result.status === "fulfilled") {
+      items.push(result.value);
+      continue;
+    }
+
+    const entry = entries[index];
+    failures.push(
+      entry
+        ? `${entry.title} (${entry.docUrl}): ${getErrorMessage(result.reason)}`
+        : getErrorMessage(result.reason),
+    );
+  }
+
+  if (failures.length > 0) {
+    console.warn(
+      `Skipped ${failures.length} AI Studio catalog docs that could not be parsed:`,
+    );
+    for (const failure of failures) {
+      console.warn(`- ${failure}`);
+    }
+  }
+
+  if (entries.length > 0 && items.length === 0) {
+    throw new Error("Unable to build AI Studio upstream catalog: all docs failed to parse");
+  }
+
   return {
     version: 1,
     generatedAt: new Date().toISOString(),
-    items,
+    items: sortAiStudioCatalogItems(items),
   };
 }
 
@@ -1450,41 +1367,429 @@ export async function buildAiStudioApimartCatalog(): Promise<AiStudioUpstreamCat
   };
 }
 
-function clonePricingRow(row: AiStudioPricingRow): AiStudioPricingRow {
-  return {
-    ...row,
+type FalApiModel = {
+  endpoint_id?: string;
+  metadata?: {
+    display_name?: string;
+    category?: string;
+    group?: string;
+  };
+  openapi?: Record<string, any>;
+};
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function getPositiveNumberEnv(names: string[]) {
+  for (const name of names) {
+    const value = Number(process.env[name]);
+    if (Number.isFinite(value) && value > 0) {
+      return value;
+    }
+  }
+
+  return null;
+}
+
+function getRatioEnv(names: string[]) {
+  for (const name of names) {
+    const value = Number(process.env[name]);
+    if (Number.isFinite(value) && value >= 0 && value <= 1) {
+      return value;
+    }
+  }
+
+  return null;
+}
+
+function getAiStudioFetchTimeoutMs() {
+  return getPositiveNumberEnv([
+    "AI_STUDIO_FETCH_TIMEOUT_MS",
+  ]) ?? DEFAULT_AI_STUDIO_FETCH_TIMEOUT_MS;
+}
+
+function getAiStudioFetchRetryWaitMaxMs() {
+  return getPositiveNumberEnv([
+    "AI_STUDIO_FETCH_RETRY_WAIT_MAX_MS",
+  ]) ?? DEFAULT_AI_STUDIO_FETCH_RETRY_WAIT_MAX_MS;
+}
+
+function getAiStudioFetchAttempts() {
+  return Math.floor(getPositiveNumberEnv([
+    "AI_STUDIO_FETCH_ATTEMPTS",
+  ]) ?? DEFAULT_AI_STUDIO_FETCH_ATTEMPTS);
+}
+
+function getFalApiKey() {
+  return process.env.FAL_API_KEY || process.env.FAL_KEY;
+}
+
+function getAiStudioFetchConcurrency(hasApiKey = false) {
+  return Math.floor(getPositiveNumberEnv([
+    "AI_STUDIO_FETCH_CONCURRENCY",
+  ]) ?? (
+    hasApiKey
+      ? DEFAULT_AI_STUDIO_FETCH_CONCURRENCY_WITH_KEY
+      : DEFAULT_AI_STUDIO_FETCH_CONCURRENCY_WITHOUT_KEY
+  ));
+}
+
+function getAiStudioFetchIntervalMs() {
+  return getPositiveNumberEnv([
+    "AI_STUDIO_FETCH_INTERVAL_MS",
+  ]) ?? DEFAULT_AI_STUDIO_FETCH_INTERVAL_MS;
+}
+
+function getAiStudioFetchMaxFailureRatio() {
+  return getRatioEnv([
+    "AI_STUDIO_FETCH_MAX_FAILURE_RATIO",
+  ]) ?? DEFAULT_AI_STUDIO_FETCH_MAX_FAILURE_RATIO;
+}
+
+function createIntervalGate(intervalMs: number) {
+  let nextAvailableAt = 0;
+  let previous = Promise.resolve();
+
+  return async () => {
+    let release: () => void = () => {};
+    const current = previous.then(async () => {
+      const waitMs = Math.max(0, nextAvailableAt - Date.now());
+      if (waitMs > 0) {
+        await sleep(waitMs);
+      }
+      nextAvailableAt = Date.now() + intervalMs;
+      release();
+    });
+    previous = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await current;
   };
 }
 
-function matchStructuredKieRowsToDetail(
-  detail: Pick<AiStudioDocDetail, "id" | "modelKeys">,
-  kiePrices: AiStudioStructuredKiePriceFile | undefined,
-) {
-  if (!kiePrices) {
-    return [];
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  concurrency: number,
+  mapper: (item: T, index: number) => Promise<R>,
+  intervalMs = 0,
+): Promise<PromiseSettledResult<R>[]> {
+  const results = new Array<PromiseSettledResult<R>>(items.length);
+  const waitForFetchInterval = intervalMs > 0
+    ? createIntervalGate(intervalMs)
+    : async () => {};
+  let nextIndex = 0;
+
+  async function worker() {
+    while (nextIndex < items.length) {
+      const index = nextIndex;
+      nextIndex += 1;
+
+      try {
+        await waitForFetchInterval();
+        results[index] = {
+          status: "fulfilled",
+          value: await mapper(items[index]!, index),
+        };
+      } catch (reason) {
+        results[index] = {
+          status: "rejected",
+          reason,
+        };
+      }
+    }
   }
 
-  return kiePrices.rows
-    .filter((row) => {
-      if (row.catalogModelId) {
-        return row.catalogModelId === detail.id;
-      }
+  await Promise.all(
+    Array.from(
+      { length: Math.min(Math.max(concurrency, 1), items.length) },
+      () => worker(),
+    ),
+  );
 
-      return Boolean(
-        row.runtimeModel &&
-          detail.modelKeys.some((modelKey) => modelKey === row.runtimeModel),
-      );
-    })
-    .map((row) => clonePricingRow(row));
+  return results;
 }
 
-function resolveBasePricingRows(
-  detail: AiStudioDocDetail,
-  kiePrices: AiStudioStructuredKiePriceFile | undefined,
-): AiStudioPricingRow[] {
-  void detail;
-  void kiePrices;
-  return [];
+export function parseFalOpenApiModel(
+  config: AiStudioFalModelConfig,
+  model: FalApiModel,
+): AiStudioDocDetail {
+  const endpointId = normalizeFalEndpointId(config);
+  const openapiDoc = model.openapi;
+  if (!openapiDoc) {
+    throw new Error(`fal model is missing OpenAPI schema: ${endpointId}`);
+  }
+
+  const { endpoint, method, methodDef } = findFalSubmitPath(openapiDoc);
+  const rawSchema = extractRequestSchema(methodDef);
+  const requestSchema = normalizeFalSchema(
+    dereferenceOpenApiSchema(openapiDoc, rawSchema) as Record<string, any> | null,
+  );
+  const examplePayload = {
+    ...buildExamplePayloadFromSchema(requestSchema),
+    ...extractRequestExample(methodDef),
+  };
+  const category =
+    typeof config === "string" ? inferFalCategory(endpointId, model) : config.category ?? inferFalCategory(endpointId, model);
+  const title = normalizeFalTitle(
+    (typeof config === "string" ? null : config.title) ??
+      model.metadata?.display_name ??
+      endpointId,
+  );
+  const provider =
+    (typeof config === "string" ? null : config.provider) ??
+    inferFalProvider(endpointId, model);
+  const id =
+    typeof config !== "string" && config.endpointId
+      ? config.id
+      : getFalCatalogModelId(endpointId, category);
+  const detail = {
+    id,
+    vendor: "fal",
+    category,
+    title,
+    docUrl: `https://fal.ai/models/${endpointId}/api`,
+    provider,
+    alias: typeof config === "string" ? null : config.alias ?? null,
+    endpoint,
+    method,
+    statusEndpoint:
+      buildFalQueueStatusEndpoint(endpoint) ?? findFalStatusEndpoint(openapiDoc),
+    modelKeys: [endpointId],
+    requestSchema,
+    examplePayload,
+  } satisfies AiStudioDocDetail;
+
+  return detail;
+}
+
+export function parseFalCatalogModels(
+  configFile: AiStudioFalModelsFile,
+  models: FalApiModel[],
+): AiStudioUpstreamCatalogFile {
+  const modelsByEndpoint = new Map(
+    models
+      .filter((model): model is FalApiModel & { endpoint_id: string } =>
+        typeof model.endpoint_id === "string",
+      )
+      .map((model) => [model.endpoint_id, model]),
+  );
+
+  const items = configFile.models.flatMap((config) => {
+    if (!isFalModelConfigEnabled(config)) {
+      return [];
+    }
+
+    const endpointId = normalizeFalEndpointId(config);
+    const model = modelsByEndpoint.get(endpointId);
+    if (!model) {
+      throw new Error(`fal model not found: ${endpointId}`);
+    }
+
+    return [parseFalOpenApiModel(config, model)];
+  });
+
+  return {
+    version: 1,
+    generatedAt: new Date().toISOString(),
+    items,
+  };
+}
+
+async function fetchFalWithRetry(url: URL, init: RequestInit, label: string) {
+  let lastResponse: Response | null = null;
+  const urlString = url.toString();
+  const authStatus = getFalApiKey()
+    ? "认证: 已带 FAL API Key"
+    : "认证: 未带 FAL API Key";
+
+  for (let attempt = 0; attempt < getAiStudioFetchAttempts(); attempt += 1) {
+    const controller = new AbortController();
+    const timeoutMs = getAiStudioFetchTimeoutMs();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    let response: Response;
+
+    try {
+      response = await fetch(url, {
+        ...init,
+        signal: controller.signal,
+      });
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        const reason = `Timed out fetching ${label} after ${timeoutMs}ms`;
+        console.log(`[AI Studio fal] 连接: ${urlString} ${authStatus} 失败: ${reason}`);
+        throw new Error(reason);
+      }
+      console.log(
+        `[AI Studio fal] 连接: ${urlString} ${authStatus} 失败: ${getErrorMessage(error)}`,
+      );
+      throw error;
+    } finally {
+      clearTimeout(timeout);
+    }
+
+    if (response.ok) {
+      console.log(`[AI Studio fal] 连接: ${urlString} ${authStatus} 成功: ${response.status}`);
+      return response;
+    }
+
+    const responseText = await response.clone().text().catch(() => "");
+    const reason =
+      responseText.trim().replace(/\s+/g, " ").slice(0, 240) ||
+      response.statusText ||
+      `HTTP ${response.status}`;
+    console.log(
+      `[AI Studio fal] 连接: ${urlString} ${authStatus} 失败: ${response.status} ${reason}`,
+    );
+
+    if (response.status !== 429) {
+      return response;
+    }
+
+    lastResponse = response;
+    if (attempt === getAiStudioFetchAttempts() - 1) {
+      break;
+    }
+
+    const retryAfter = Number(response.headers.get("retry-after"));
+    const retryWaitMs = Number.isFinite(retryAfter) && retryAfter > 0
+      ? retryAfter * 1000
+      : 1500 * (attempt + 1);
+    const waitMs = Math.min(retryWaitMs, getAiStudioFetchRetryWaitMaxMs());
+    await sleep(waitMs);
+  }
+
+  return lastResponse ?? fetch(url, init).catch((error) => {
+    throw new Error(`Failed to fetch ${label}: ${String(error)}`);
+  });
+}
+
+async function fetchFalModel(endpointId: string): Promise<FalApiModel> {
+  const url = new URL(FAL_MODELS_URL);
+  url.searchParams.set("endpoint_id", endpointId);
+  url.searchParams.set("expand", "openapi-3.0");
+
+  const apiKey = getFalApiKey();
+  const response = await fetchFalWithRetry(url, {
+    headers: {
+      "User-Agent": USER_AGENT,
+      ...(apiKey ? { Authorization: `Key ${apiKey}` } : {}),
+    },
+  }, endpointId);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${url.toString()}: ${response.status}`);
+  }
+
+  const payload = await response.json() as { models?: FalApiModel[] };
+  const model = payload.models?.[0];
+  if (!model) {
+    throw new Error(`fal model not found: ${endpointId}`);
+  }
+
+  return model;
+}
+
+async function fetchFalModelLlmsPricingText(endpointId: string) {
+  const url = new URL(`https://fal.ai/models/${endpointId}/llms.txt`);
+  const response = await fetchFalWithRetry(url, {
+    headers: {
+      "User-Agent": USER_AGENT,
+    },
+  }, `${endpointId} llms.txt`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${url.toString()}: ${response.status}`);
+  }
+
+  const pricingText = extractFalPricingTextFromLlms(await response.text());
+  if (!pricingText) {
+    throw new Error(`fal model is missing llms pricing text: ${endpointId}`);
+  }
+
+  return pricingText;
+}
+
+export async function syncAiStudioFalModelPrices(
+  configFile: AiStudioFalModelsFile,
+): Promise<AiStudioFalModelsFile> {
+  const enabledModels = configFile.models.filter(isFalModelConfigEnabled);
+  const prices: Record<string, string> = {};
+
+  for (const endpointId of enabledModels.map(normalizeFalEndpointId)) {
+    prices[endpointId] = await fetchFalModelLlmsPricingText(endpointId);
+  }
+
+  return {
+    ...configFile,
+    prices,
+  };
+}
+
+export async function buildAiStudioFalCatalog(
+  configFile: AiStudioFalModelsFile,
+): Promise<AiStudioUpstreamCatalogFile> {
+  const enabledModels = configFile.models.filter(isFalModelConfigEnabled);
+  const endpointIds = enabledModels.map(normalizeFalEndpointId);
+  const results = await mapWithConcurrency(
+    endpointIds,
+    getAiStudioFetchConcurrency(Boolean(getFalApiKey())),
+    (endpointId) => fetchFalModel(endpointId),
+    getAiStudioFetchIntervalMs(),
+  );
+  const models: FalApiModel[] = [];
+  const modelConfigs: AiStudioFalModelConfig[] = [];
+  const failures: string[] = [];
+
+  for (const [index, result] of results.entries()) {
+    const endpointId = endpointIds[index] ?? "unknown";
+    if (result.status === "fulfilled") {
+      models.push(result.value);
+      modelConfigs.push(enabledModels[index]!);
+      continue;
+    }
+
+    failures.push(`${endpointId}: ${getErrorMessage(result.reason)}`);
+  }
+
+  if (failures.length > 0) {
+    console.warn(
+      `Skipped ${failures.length} AI Studio fal catalog models that could not be fetched:`,
+    );
+    for (const failure of failures) {
+      console.warn(`- ${failure}`);
+    }
+  }
+
+  if (enabledModels.length > 0 && models.length === 0) {
+    throw new Error("Unable to build AI Studio fal catalog: all models failed to fetch");
+  }
+
+  if (
+    enabledModels.length > 0 &&
+    failures.length / enabledModels.length > getAiStudioFetchMaxFailureRatio()
+  ) {
+    throw new Error(
+      `Unable to build AI Studio fal catalog: ${failures.length}/${enabledModels.length} models failed to fetch`,
+    );
+  }
+
+  return parseFalCatalogModels(
+    {
+      ...configFile,
+      models: modelConfigs,
+    },
+    models,
+  );
+}
+
+function hasPricingOverrideIntent(bucket: AiStudioPricingOverrideBucket | undefined) {
+  return Boolean(
+    bucket?.price_key ||
+      bucket?.price_map ||
+      bucket?.price_final ||
+      bucket?.billing_adapter ||
+      bucket?.docUrl ||
+      bucket?.price_txt,
+  );
 }
 
 function cloneFormUiOverride(
@@ -1501,6 +1806,9 @@ function cloneFormUiOverride(
     ...(Array.isArray(value.advancedFields)
       ? { advancedFields: [...value.advancedFields] }
       : {}),
+    ...(Array.isArray(value.hiddenFields)
+      ? { hiddenFields: [...value.hiddenFields] }
+      : {}),
   };
 }
 
@@ -1511,229 +1819,7 @@ function clonePricingConfig(
     return undefined;
   }
 
-  return {
-    ...(value.strategy ? { strategy: value.strategy } : {}),
-    ...(value.selectors
-      ? {
-          selectors: {
-            ...(Array.isArray(value.selectors.resolution)
-              ? { resolution: [...value.selectors.resolution] }
-              : {}),
-            ...(Array.isArray(value.selectors.duration)
-              ? { duration: [...value.selectors.duration] }
-              : {}),
-            ...(Array.isArray(value.selectors.audio)
-              ? { audio: [...value.selectors.audio] }
-              : {}),
-            ...(Array.isArray(value.selectors.aspectRatio)
-              ? { aspectRatio: [...value.selectors.aspectRatio] }
-              : {}),
-          },
-        }
-      : {}),
-  };
-}
-
-const DURATION_SELECTOR_CANDIDATES = [
-  "input.duration",
-  "duration",
-  "input.video_duration",
-  "video_duration",
-  "input.audio_duration",
-  "audio_duration",
-  "input.n_frames",
-  "input.extend_times",
-] as const;
-
-const RESOLUTION_SELECTOR_CANDIDATES = [
-  "input.resolution",
-  "resolution",
-  "input.quality",
-  "quality",
-  "input.image_resolution",
-  "image_resolution",
-  "input.size",
-  "size",
-  "input.mode",
-  "mode",
-] as const;
-
-const AUDIO_SELECTOR_CANDIDATES = [
-  "input.generate_audio",
-  "generate_audio",
-  "input.sound",
-  "sound",
-  "input.audio",
-  "audio",
-  "input.with_audio",
-  "with_audio",
-  "input.enable_pro",
-  "enable_pro",
-] as const;
-
-const ASPECT_RATIO_SELECTOR_CANDIDATES = [
-  "input.aspect_ratio",
-  "aspect_ratio",
-] as const;
-
-function getSchemaValueAtPath(schema: Record<string, any> | null, path: string) {
-  if (!schema) {
-    return null;
-  }
-
-  const segments = path.split(".").filter(Boolean);
-  let current: any = schema;
-
-  for (const segment of segments) {
-    if (!current || typeof current !== "object") {
-      return null;
-    }
-
-    if (segment in current) {
-      current = current[segment];
-      continue;
-    }
-
-    const properties =
-      current.properties &&
-      typeof current.properties === "object" &&
-      !Array.isArray(current.properties)
-        ? current.properties
-        : null;
-
-    if (properties && segment in properties) {
-      current = properties[segment];
-      continue;
-    }
-
-    return null;
-  }
-
-  return current && typeof current === "object" ? current : null;
-}
-
-function getSchemaEnumValues(schemaNode: Record<string, any> | null) {
-  if (!schemaNode || !Array.isArray(schemaNode.enum)) {
-    return [];
-  }
-
-  return schemaNode.enum
-    .filter((item): item is string => typeof item === "string" && item.trim().length > 0)
-    .map((item) => item.trim().toLowerCase());
-}
-
-function collectNormalizedPricingValues(
-  rows: AiStudioPricingRow[],
-  key: "resolution" | "aspectRatio",
-) {
-  return new Set(
-    rows
-      .map((row) => row[key])
-      .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
-      .map((value) => value.trim().toLowerCase()),
-  );
-}
-
-function hasPricingDuration(rows: AiStudioPricingRow[]) {
-  return rows.some((row) => typeof row.duration === "number" && Number.isFinite(row.duration));
-}
-
-function hasPricingAudio(rows: AiStudioPricingRow[]) {
-  return rows.some((row) => typeof row.audio === "boolean");
-}
-
-function hasEnumOverlap(schemaNode: Record<string, any> | null, values: Set<string>) {
-  if (values.size === 0) {
-    return false;
-  }
-
-  return getSchemaEnumValues(schemaNode).some((value) => values.has(value));
-}
-
-function inferSelectorPath(
-  schema: Record<string, any> | null,
-  candidates: readonly string[],
-  matcher?: (schemaNode: Record<string, any> | null, path: string) => boolean,
-) {
-  for (const path of candidates) {
-    const schemaNode = getSchemaValueAtPath(schema, path);
-    if (!schemaNode) {
-      continue;
-    }
-    if (!matcher || matcher(schemaNode, path)) {
-      return path;
-    }
-  }
-
-  return null;
-}
-
-function inferPricingConfig(detail: AiStudioDocDetail): AiStudioPricingConfig | undefined {
-  if (detail.pricingRows.length === 0) {
-    return undefined;
-  }
-
-  const schema = detail.requestSchema;
-  const selectors: AiStudioPricingSelectors = {};
-  const resolutionValues = collectNormalizedPricingValues(detail.pricingRows, "resolution");
-  const aspectRatioValues = collectNormalizedPricingValues(detail.pricingRows, "aspectRatio");
-
-  if (hasPricingDuration(detail.pricingRows)) {
-    const durationPath = inferSelectorPath(schema, DURATION_SELECTOR_CANDIDATES);
-    if (durationPath) {
-      selectors.duration = [durationPath];
-    }
-  }
-
-  if (resolutionValues.size > 0) {
-    const resolutionPath = inferSelectorPath(
-      schema,
-      RESOLUTION_SELECTOR_CANDIDATES,
-      (schemaNode, path) =>
-        path.includes("resolution") ||
-        path.includes("quality") ||
-        hasEnumOverlap(schemaNode, resolutionValues),
-    );
-    if (resolutionPath) {
-      selectors.resolution = [resolutionPath];
-    }
-  }
-
-  if (
-    aspectRatioValues.size > 0 ||
-    getSchemaValueAtPath(schema, "input.aspect_ratio") ||
-    getSchemaValueAtPath(schema, "aspect_ratio")
-  ) {
-    const aspectRatioPath = inferSelectorPath(
-      schema,
-      ASPECT_RATIO_SELECTOR_CANDIDATES,
-      (schemaNode, path) =>
-        path.includes("aspect_ratio") || hasEnumOverlap(schemaNode, aspectRatioValues),
-    );
-    if (aspectRatioPath) {
-      selectors.aspectRatio = [aspectRatioPath];
-    }
-  }
-
-  if (hasPricingAudio(detail.pricingRows)) {
-    const audioPath = inferSelectorPath(schema, AUDIO_SELECTOR_CANDIDATES);
-    if (audioPath) {
-      selectors.audio = [audioPath];
-    }
-  }
-
-  if (Object.keys(selectors).length === 0) {
-    return undefined;
-  }
-
-  return {
-    strategy: "exact",
-    selectors,
-  };
-}
-
-function applyGeneratedPricingConfigToDetail(detail: AiStudioDocDetail) {
-  detail.pricing = inferPricingConfig(detail);
+  return structuredClone(value);
 }
 
 function cloneDetail(detail: AiStudioDocDetail): AiStudioDocDetail {
@@ -1743,7 +1829,6 @@ function cloneDetail(detail: AiStudioDocDetail): AiStudioDocDetail {
       ? structuredClone(detail.requestSchema)
       : detail.requestSchema,
     examplePayload: structuredClone(detail.examplePayload),
-    pricingRows: detail.pricingRows.map(clonePricingRow),
     formUi: cloneFormUiOverride(detail.formUi),
     pricing: clonePricingConfig(detail.pricing),
     resultArtifacts: detail.resultArtifacts
@@ -1828,6 +1913,18 @@ function applySchemaOverridesToDetail(
       continue;
     }
     target.parent[target.key] = structuredClone(value);
+    const rootPropertyMatch = overridePath.match(/^properties\.([^.]+)$/);
+    if (
+      rootPropertyMatch?.[1] &&
+      value &&
+      typeof value === "object" &&
+      !Array.isArray(value) &&
+      "default" in value
+    ) {
+      detail.examplePayload[rootPropertyMatch[1]] = structuredClone(
+        (value as Record<string, unknown>).default,
+      );
+    }
   }
 }
 
@@ -1839,66 +1936,6 @@ function mergeAiStudioUpstreamCatalogFiles(
     generatedAt: new Date().toISOString(),
     items: files.flatMap((file) => file.items.map(cloneDetail)),
   };
-}
-
-function matchesPricingRowMatch(
-  entry: Pick<
-    AiStudioDocDetail,
-    "category" | "title" | "provider" | "docUrl" | "modelKeys"
-  >,
-  row: AiStudioPricingRow,
-  match: AiStudioPricingRowMatch,
-) {
-  if (match.runtimeModel) {
-    const runtimeModel = resolvePricingRowRuntimeModel(entry, row) ?? "";
-    if (runtimeModel !== match.runtimeModel) {
-      return false;
-    }
-  }
-
-  if (match.provider) {
-    if (row.provider.toLowerCase() !== match.provider.toLowerCase()) {
-      return false;
-    }
-  }
-
-  if (match.modelDescriptionIncludes) {
-    if (
-      !row.modelDescription
-        .toLowerCase()
-        .includes(match.modelDescriptionIncludes.toLowerCase())
-    ) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-function selectMatchingPricingRows(
-  detail: Pick<
-    AiStudioDocDetail,
-    "category" | "title" | "provider" | "docUrl" | "modelKeys"
-  >,
-  pricingRows: AiStudioPricingRow[],
-  match: AiStudioPricingRowMatch,
-) {
-  return pricingRows
-    .filter((row) => matchesPricingRowMatch(detail, row, match))
-    .map(clonePricingRow);
-}
-
-function resolveSplitModelPricingRows(
-  detail: AiStudioDocDetail,
-  kiePrices: AiStudioStructuredKiePriceFile | undefined,
-  match: AiStudioPricingRowMatch,
-) {
-  const baseRows = resolveBasePricingRows(detail, kiePrices);
-  if (baseRows.some((row) => row.catalogModelId === detail.id)) {
-    return baseRows;
-  }
-
-  return selectMatchingPricingRows(detail, baseRows, match);
 }
 
 function rewriteSchemaModel(detail: AiStudioDocDetail, schemaModel: string) {
@@ -1924,14 +1961,45 @@ function applyPricingOverridesToDetail(
   detail: AiStudioDocDetail,
   bucket: AiStudioPricingOverrideBucket,
 ) {
-  const addRows = bucket.addRows ?? [];
+  const errors = validatePricingOverrideBucket(detail.id, bucket);
+  if (errors.length > 0) {
+    throw new Error(errors.join("\n"));
+  }
 
-  if (addRows.length === 0) {
+  if (!bucket.price_key || !bucket.price_map || !bucket.price_final) {
     return detail;
   }
 
-  detail.pricingRows = addRows.map(clonePricingRow);
+  detail.pricing = {
+    ...(bucket.docUrl ? { docUrl: bucket.docUrl } : {}),
+    ...(bucket.price_txt ? { price_txt: bucket.price_txt } : {}),
+    ...(bucket.billing_adapter ? { billing_adapter: bucket.billing_adapter } : {}),
+    price_key: bucket.price_key,
+    price_map: { ...bucket.price_map },
+    price_final: bucket.price_final,
+    ...(bucket.notes ? { notes: bucket.notes } : {}),
+  };
   return detail;
+}
+
+function validatePricingOverrideBucket(
+  modelId: string,
+  bucket: AiStudioPricingOverrideBucket,
+) {
+  const errors: string[] = [];
+  if (!hasPricingOverrideIntent(bucket)) {
+    return errors;
+  }
+
+  if (bucket.billing_adapter && !isAiStudioBillingAdapter(bucket.billing_adapter)) {
+    errors.push(`Unknown billing_adapter for pricing override: ${modelId} -> ${bucket.billing_adapter}`);
+  }
+
+  if (!bucket.price_key || !bucket.price_map || !bucket.price_final) {
+    errors.push(`Incomplete pricing override for model: ${modelId}`);
+  }
+
+  return errors;
 }
 
 function applyModelOverrideToDetail(
@@ -1982,14 +2050,12 @@ function createSplitModelDetail(
   detail.title = splitModel.title;
   detail.alias = splitModel.alias ?? null;
   detail.provider = splitModel.provider ?? detail.provider;
-  detail.pricingRows = [];
   rewriteSchemaModel(detail, splitModel.schemaModel);
   return detail;
 }
 
 export function compileAiStudioRuntimeCatalog({
   upstream,
-  kiePrices,
   modelOverrides,
   pricingOverrides,
   formUiOverrides = { models: {} },
@@ -2004,30 +2070,22 @@ export function compileAiStudioRuntimeCatalog({
     if ((modelOverride?.splitModels?.length ?? 0) > 0) {
       return (modelOverride!.splitModels ?? []).map((splitModel) => {
         const detail = createSplitModelDetail(rawDetail, splitModel);
-        detail.pricingRows = resolveSplitModelPricingRows(
-          detail,
-          kiePrices,
-          splitModel.pricingMatch,
-        );
         const pricingOverrideBucket = pricingOverrides.models[detail.id];
-        if ((pricingOverrideBucket?.addRows?.length ?? 0) > 0) {
+        if (hasPricingOverrideIntent(pricingOverrideBucket)) {
           applyPricingOverridesToDetail(detail, pricingOverrideBucket);
         }
         applySchemaOverridesToDetail(detail, schemaOverrides.models[detail.id]);
-        applyGeneratedPricingConfigToDetail(detail);
         applyFormUiOverrideToDetail(detail, formUiOverrides.models[detail.id]);
         return detail;
       });
     }
 
     const detail = applyModelOverrideToDetail(cloneDetail(rawDetail), modelOverride);
-    detail.pricingRows = resolveBasePricingRows(detail, kiePrices);
     const pricingOverrideBucket = pricingOverrides.models[detail.id];
-    if ((pricingOverrideBucket?.addRows?.length ?? 0) > 0) {
+    if (hasPricingOverrideIntent(pricingOverrideBucket)) {
       applyPricingOverridesToDetail(detail, pricingOverrideBucket);
     }
     applySchemaOverridesToDetail(detail, schemaOverrides.models[detail.id]);
-    applyGeneratedPricingConfigToDetail(detail);
     applyFormUiOverrideToDetail(detail, formUiOverrides.models[detail.id]);
 
     return [detail];
@@ -2040,27 +2098,8 @@ export function compileAiStudioRuntimeCatalog({
   };
 }
 
-function pricingRowKey(entry: AiStudioDocDetail, row: AiStudioPricingRow) {
-  return [
-    entry.id,
-    row.pricingKey ?? "",
-    row.catalogModelId ?? "",
-    resolvePricingRowRuntimeModel(entry, row) ?? "",
-    row.resolution ?? "",
-    row.aspectRatio ?? "",
-    row.duration ?? "",
-    row.audio ?? "",
-    normalizeLoose(row.provider),
-    row.interfaceType.toLowerCase(),
-    canonicalizePricingDescription(row.modelDescription),
-    normalizeNumericString(row.creditPrice),
-    row.creditUnit.toLowerCase(),
-  ].join("|");
-}
-
 export function validateAiStudioRuntimeBuildInput({
   upstream,
-  kiePrices,
   modelOverrides,
   pricingOverrides,
   formUiOverrides = { models: {} },
@@ -2123,7 +2162,7 @@ export function validateAiStudioRuntimeBuildInput({
       continue;
     }
 
-    item.pricingRows = resolveBasePricingRows(item, kiePrices);
+    errors.push(...validatePricingOverrideBucket(modelId, bucket));
   }
 
   for (const [modelId] of Object.entries(formUiOverrides.models)) {
@@ -2143,8 +2182,6 @@ export function validateAiStudioRuntimeBuildInput({
       errors.push(`Schema override targets unknown model: ${modelId}`);
       continue;
     }
-
-    item.pricingRows = resolveBasePricingRows(item, kiePrices);
 
     if (override.replace !== undefined) {
       item.requestSchema =
@@ -2166,21 +2203,12 @@ export function validateAiStudioRuntimeBuildInput({
 export function validateAiStudioRuntimeCatalog(file: AiStudioCompiledCatalogFile) {
   const errors: string[] = [];
   const ids = new Set<string>();
-  const rowKeys = new Set<string>();
 
   for (const item of file.items) {
     if (ids.has(item.id)) {
       errors.push(`Duplicate runtime model id: ${item.id}`);
     }
     ids.add(item.id);
-
-    for (const row of item.pricingRows) {
-      const key = pricingRowKey(item, row);
-      if (rowKeys.has(key)) {
-        errors.push(`Duplicate runtime pricing row: ${item.id}`);
-      }
-      rowKeys.add(key);
-    }
   }
 
   return errors;
@@ -2208,11 +2236,13 @@ export async function loadAiStudioUpstreamCatalogFile(
   return readJsonFile<AiStudioUpstreamCatalogFile>(filePath);
 }
 
-export async function buildAiStudioKiePricesFile(
-  rawPricePath = getAiStudioCatalogPaths().kieRawPricePath,
+export async function loadAiStudioFalModelsFile(
+  filePath = getAiStudioCatalogPaths().falModelsPath,
 ) {
-  const rawFile = await readJsonFile<Record<string, unknown>>(rawPricePath);
-  return buildAiStudioStructuredKiePrices(rawFile);
+  return readJsonFileOrDefault<AiStudioFalModelsFile>(filePath, {
+    version: 1,
+    models: [],
+  });
 }
 
 export async function loadAiStudioMergedUpstreamCatalogFiles(
@@ -2250,16 +2280,6 @@ export async function loadAiStudioModelOverridesFile(
 ) {
   return readJsonFileOrDefault<AiStudioModelOverridesFile>(filePath, {
     models: {},
-  });
-}
-
-export async function loadAiStudioKiePricesFile(
-  filePath = getAiStudioCatalogPaths().kiePricesPath,
-) {
-  return readJsonFileOrDefault<AiStudioStructuredKiePriceFile>(filePath, {
-    version: 1,
-    generatedAt: "",
-    rows: [],
   });
 }
 
@@ -2301,7 +2321,6 @@ export function toAiStudioCatalogEntries(file: AiStudioCompiledCatalogFile) {
     alias: item.alias,
     docUrl: item.docUrl,
     provider: item.provider,
-    pricingRows: item.pricingRows.map(clonePricingRow),
     pricing: clonePricingConfig(item.pricing),
   }));
 }

@@ -16,20 +16,11 @@ function createEntry(
     title: "Sora2 - Text to Video",
     docUrl: "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
     provider: "Sora2",
-    pricingRows: [
-      {
-        modelDescription: "Sora2 - Standard",
-        interfaceType: "video",
-        provider: "Sora2",
-        creditPrice: "30",
-        creditUnit: "per video",
-        usdPrice: "0.15",
-        falPrice: "1.0",
-        discountRate: 85,
-        anchor: "https://kie.ai/sora2?model=sora-2-text-to-video",
-        discountPrice: false,
-      },
-    ],
+    pricing: {
+      price_key: "{$duration}",
+      price_map: { "5": 30 },
+      price_final: "{$price}",
+    },
     ...overrides,
   };
 }
@@ -57,7 +48,7 @@ test("filters blocked and non-whitelisted models from catalog", () => {
 test("hides unpriced models from non-admin users", () => {
   const entry = createEntry({
     id: "video:no-price-model",
-    pricingRows: [],
+    pricing: undefined,
   });
 
   assert.equal(
@@ -86,7 +77,7 @@ test("hides unpriced models from non-admin users", () => {
 test("allows explicitly whitelisted unpriced models for non-admin users", () => {
   const entry = createEntry({
     id: "video:bytedance-v1-pro-text-to-video",
-    pricingRows: [],
+    pricing: undefined,
   });
 
   assert.equal(

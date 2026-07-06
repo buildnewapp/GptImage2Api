@@ -1,5 +1,3 @@
-import { applyPricingRowToPayload } from "@/lib/ai-studio/runtime";
-import type { AiStudioPublicPricingRow } from "@/lib/ai-studio/public";
 import type {
   AiVideoStudioFamilyKey,
   AiVideoStudioVersionKey,
@@ -95,7 +93,6 @@ export function buildAiVideoStudioPayload(input: {
     requestSchema?: Record<string, any> | null;
   };
   formValues: AiVideoStudioFormValues;
-  selectedPricing?: AiStudioPublicPricingRow | null;
 }) {
   const basePayload = input.detail.examplePayload ?? {};
   const nextPayload =
@@ -113,10 +110,6 @@ export function buildAiVideoStudioPayload(input: {
           ...nextPayload,
         }
   ) as Record<string, any>;
-
-  if (input.selectedPricing) {
-    return applyPricingRowToPayload(payload, input.selectedPricing);
-  }
 
   return payload;
 }

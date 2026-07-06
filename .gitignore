@@ -154,3 +154,5 @@ p.json
 porg.json
 reports
 next-env.d.ts
+public/cdn
+public/demo.html

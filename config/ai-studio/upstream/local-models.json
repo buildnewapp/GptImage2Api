@@ -47,8 +47,7 @@
       "examplePayload": {
         "taskId": "veo_task_abcdef123456",
         "index": 0
-      },
-      "pricingRows": []
+      }
     },
     {
       "id": "video:get-veo3-1-4k-video",
@@ -105,14 +104,13 @@
         "taskId": "veo_task_abcdef123456",
         "index": 0,
         "callBackUrl": "http://your-callback-url.com/4k-callback"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-omni-flash-ext",
+      "id": "video:am-omni-flash-ext",
       "category": "video",
       "title": "Omni-Flash-Ext Video Generation",
-      "docUrl": "https://docs.apimart.ai/cn/api-reference/videos/omni-flash-ext/generation",
+      "docUrl": "https://docs.apimart.ai/en/api-reference/videos/omni-flash-ext/generation",
       "provider": "Omni-Flash-Ext",
       "vendor": "apimart",
       "endpoint": "/v1/videos/generations",
@@ -130,7 +128,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "Video generation model name, fixed value: Omni-Flash-Ext.",
+            "description": "Video generation model name. Must be Omni-Flash-Ext.",
             "enum": [
               "Omni-Flash-Ext"
             ],
@@ -141,14 +139,14 @@
           },
           "prompt": {
             "type": "string",
-            "description": "Video content description. Describe the scene, subject, action, environment, camera movement, visual style, and audio hints in detail.",
+            "description": "Video content description. Describe the scene, subject, action, environment, camera movement, visual style, and audio cues in detail.",
             "examples": [
               "a girl is dancing happily in a sunny garden"
             ]
           },
           "duration": {
             "type": "integer",
-            "description": "Video duration in seconds. Only 4, 6, 8, and 10 are supported.",
+            "description": "Video duration in seconds. Supported values are 4, 6, 8, and 10. Do not pass duration together with video_urls.",
             "enum": [
               4,
               6,
@@ -162,7 +160,7 @@
           },
           "resolution": {
             "type": "string",
-            "description": "Video resolution. Values are case-insensitive.",
+            "description": "Video resolution. Values are case-insensitive. Supported values are 720p, 1080p, and 4k.",
             "enum": [
               "720p",
               "1080p",
@@ -175,7 +173,7 @@
           },
           "aspect_ratio": {
             "type": "string",
-            "description": "Video aspect ratio. Use 16:9 for landscape or 9:16 for portrait.",
+            "description": "Video aspect ratio. Common values are 16:9 for landscape and 9:16 for portrait.",
             "enum": [
               "16:9",
               "9:16"
@@ -183,6 +181,17 @@
             "default": "16:9",
             "examples": [
               "9:16"
+            ]
+          },
+          "generation_type": {
+            "type": "string",
+            "description": "Generation type for image inputs. Use frame for first-frame mode with one image, or reference for one or three reference images.",
+            "enum": [
+              "frame",
+              "reference"
+            ],
+            "examples": [
+              "reference"
             ]
           },
           "image_urls": {
@@ -198,16 +207,31 @@
                 "https://example.com/character.jpg"
               ]
             ]
+          },
+          "video_urls": {
+            "type": "array",
+            "description": "Reference video URL array. Omit it or provide one publicly accessible HTTP/HTTPS video URL. Do not pass video_urls together with duration.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "maxItems": 1,
+            "examples": [
+              [
+                "https://example.com/reference.mp4"
+              ]
+            ]
           }
         },
         "x-apidog-orders": [
           "model",
           "prompt",
+          "image_urls",
+          "video_urls",
           "duration",
           "resolution",
           "aspect_ratio",
-          "size",
-          "image_urls"
+          "generation_type"
         ],
         "examples": [
           {
@@ -216,6 +240,15 @@
             "duration": 10,
             "resolution": "1080p",
             "aspect_ratio": "9:16"
+          },
+          {
+            "model": "Omni-Flash-Ext",
+            "prompt": "the same scene but at night with neon lights",
+            "resolution": "720p",
+            "aspect_ratio": "16:9",
+            "video_urls": [
+              "https://example.com/reference.mp4"
+            ]
           }
         ],
         "x-apidog-ignore-properties": []
@@ -226,8 +259,7 @@
         "duration": 10,
         "resolution": "1080p",
         "aspect_ratio": "9:16"
-      },
-      "pricingRows": []
+      }
     },
     {
       "id": "chat:qwen3-6-flash-openrouter",
@@ -317,8 +349,7 @@
           }
         ],
         "stream": true
-      },
-      "pricingRows": []
+      }
     },
     {
       "id": "chat:deepseek-v4-flash-openrouter",
@@ -408,8 +439,7 @@
           }
         ],
         "stream": true
-      },
-      "pricingRows": []
+      }
     },
     {
       "id": "chat:kimi-k2-6-openrouter",
@@ -499,8 +529,7 @@
           }
         ],
         "stream": true
-      },
-      "pricingRows": []
+      }
     },
     {
       "id": "chat:gpt-5-4-mini-openrouter",
@@ -590,322 +619,7 @@
           }
         ],
         "stream": true
-      },
-      "pricingRows": []
-    },
-    {
-      "id": "video:gemini-omni-text-to-video",
-      "category": "video",
-      "title": "Gemini Omni Text to Video",
-      "docUrl": "https://docs.kie.ai/market/grok-imagine/text-to-video.md",
-      "provider": "Gemini Omni Text to Video",
-      "endpoint": "/api/v1/jobs/createTask",
-      "method": "POST",
-      "modelKeys": [
-        "grok-imagine/text-to-video"
-      ],
-      "requestSchema": {
-        "type": "object",
-        "properties": {
-          "model": {
-            "type": "string",
-            "enum": [
-              "grok-imagine/text-to-video"
-            ],
-            "default": "grok-imagine/text-to-video",
-            "description": "The model name to use for generation. Required field.\n\n- Must be `grok-imagine/text-to-video` for this endpoint",
-            "examples": [
-              "grok-imagine/text-to-video"
-            ]
-          },
-          "callBackUrl": {
-            "type": "string",
-            "format": "uri",
-            "description": "The URL to receive video generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when video generation completes\n- Callback includes generated video URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing video results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
-            "examples": [
-              "https://your-domain.com/api/callback"
-            ]
-          },
-          "input": {
-            "type": "object",
-            "description": "Input parameters for the video generation task",
-            "properties": {
-              "prompt": {
-                "type": "string",
-                "description": "Text prompt describing the desired video motion. Required field.\n\n- Should be detailed and specific about the desired visual motion\n- Describe movement, action sequences, camera work, and timing\n- Include details about subjects, environments, and motion dynamics\n- Maximum length: 5000 characters\n- Supports English language prompts",
-                "examples": [
-                  "A couple of doors open to the right one by one randomly and stay open, to show the inside, each is either a living room, or a kitchen, or a bedroom or an office, with little people living inside."
-                ]
-              },
-              "aspect_ratio": {
-                "type": "string",
-                "description": "Specifies the width-to-height ratio of the generated video. Supported values: 16:9 and 9:16.",
-                "enum": [
-                  "16:9",
-                  "9:16"
-                ],
-                "default": "16:9",
-                "examples": [
-                  "16:9"
-                ]
-              },
-              "duration": {
-                "type": "string",
-                "enum": [
-                  "6",
-                  "8",
-                  "15",
-                  "10"
-                ],
-                "default": "8",
-                "description": "The duration of the generated video in seconds. ",
-                "examples": [
-                  "8"
-                ]
-              },
-              "resolution": {
-                "type": "string",
-                "description": "The resolution of the generated video.",
-                "enum": [
-                  "480p",
-                  "720p"
-                ],
-                "x-apidog-enum": [
-                  {
-                    "value": "480p",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "720p",
-                    "name": "",
-                    "description": ""
-                  }
-                ],
-                "default": "480p",
-                "examples": [
-                  "480p"
-                ]
-              },
-              "nsfw_checker": {
-                "type": "boolean",
-                "default": false,
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
-              }
-            },
-            "required": [
-              "prompt"
-            ],
-            "x-apidog-orders": [
-              "prompt",
-              "aspect_ratio",
-              "mode",
-              "duration",
-              "resolution",
-              "nsfw_checker"
-            ],
-            "x-apidog-ignore-properties": []
-          }
-        },
-        "required": [
-          "model",
-          "input"
-        ],
-        "x-apidog-orders": [
-          "model",
-          "callBackUrl",
-          "input"
-        ],
-        "examples": [
-          {
-            "model": "gemini-omni/text-to-video",
-            "callBackUrl": "https://your-domain.com/api/callback",
-            "input": {
-              "prompt": "A couple of doors open to the right one by one randomly and stay open, to show the inside, each is either a living room, or a kitchen, or a bedroom or an office, with little people living inside.",
-              "aspect_ratio": "16:9",
-              "duration": "8"
-            }
-          }
-        ],
-        "x-apidog-ignore-properties": []
-      },
-      "examplePayload": {
-        "model": "gemini-omni/text-to-video",
-        "callBackUrl": "https://your-domain.com/api/callback",
-        "input": {
-          "prompt": "A couple of doors open to the right one by one randomly and stay open, to show the inside, each is either a living room, or a kitchen, or a bedroom or an office, with little people living inside.",
-          "aspect_ratio": "16:9",
-          "duration": "8",
-          "resolution": "480p"
-        }
-      },
-      "pricingRows": []
-    },
-    {
-      "id": "video:gemini-omni-image-to-video",
-      "category": "video",
-      "title": "Gemini Omni Image to Video",
-      "docUrl": "https://docs.kie.ai/market/grok-imagine/image-to-video.md",
-      "provider": "Gemini Omni Image to Video",
-      "endpoint": "/api/v1/jobs/createTask",
-      "method": "POST",
-      "modelKeys": [
-        "grok-imagine/image-to-video"
-      ],
-      "requestSchema": {
-        "type": "object",
-        "properties": {
-          "model": {
-            "type": "string",
-            "enum": [
-              "grok-imagine/image-to-video"
-            ],
-            "default": "grok-imagine/image-to-video",
-            "description": "The model name to use for generation. Required field.\n\n- Must be `grok-imagine/image-to-video` for this endpoint",
-            "examples": [
-              "grok-imagine/image-to-video"
-            ]
-          },
-          "callBackUrl": {
-            "type": "string",
-            "format": "uri",
-            "description": "The URL to receive video generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when video generation completes\n- Callback includes generated video URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing video results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
-            "examples": [
-              "https://your-domain.com/api/callback"
-            ]
-          },
-          "input": {
-            "type": "object",
-            "description": "Input parameters for the video generation task",
-            "properties": {
-              "image_urls": {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "format": "uri"
-                },
-                "description": "Provide an external image URL as a reference for video generation. Up to 7 images are supported. Do not use it simultaneously with task_id. In your prompt, reference an uploaded image by typing @image(n) followed by a space (for example: @image1 a sunset over the ocean).\n- Supports JPEG, PNG, and WEBP formats\n- Maximum file size for each image: 10MB\n- The Spicy mode is not available when using external images\n- The array can contain a maximum of seven URLs",
-                "maxItems": 7,
-                "examples": [
-                  [
-                    "https://file.aiquickdraw.com/custom-page/akr/section-images/1762247692373tw5di116.png"
-                  ]
-                ]
-              },
-              "prompt": {
-                "type": "string",
-                "description": "Text prompt describing the desired video motion. Optional field.\n\n- Should be detailed and specific about the desired visual motion\n- Describe movement, action sequences, camera work, and timing\n- Include details about subjects, environments, and motion dynamics\n- Maximum length: 5000 characters\n- Supports English language prompts",
-                "examples": [
-                  "POV hand comes into frame handing the girl a cup of take away coffee, the girl steps out of the screen looking tired, then takes it and she says happily: \"thanks! Back to work\" she exits the frame and walks right to a different part of the office."
-                ]
-              },
-              "duration": {
-                "type": "string",
-                "enum": [
-                  "6",
-                  "8",
-                  "15",
-                  "10"
-                ],
-                "default": "8",
-                "description": "The duration of the generated video in seconds. ",
-                "examples": [
-                  "8"
-                ]
-              },
-              "resolution": {
-                "type": "string",
-                "description": "The resolution of the generated video.",
-                "enum": [
-                  "480p",
-                  "720p"
-                ],
-                "x-apidog-enum": [
-                  {
-                    "value": "480p",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "720p",
-                    "name": "",
-                    "description": ""
-                  }
-                ],
-                "default": "480p",
-                "examples": [
-                  "480p"
-                ]
-              },
-              "aspect_ratio": {
-                "type": "string",
-                "description": "Specifies the width-to-height ratio of the generated video. Supported values: 16:9 and 9:16.",
-                "enum": [
-                  "16:9",
-                  "9:16"
-                ],
-                "default": "16:9",
-                "examples": [
-                  "16:9"
-                ]
-              },
-              "nsfw_checker": {
-                "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.",
-                "default": false
-              }
-            },
-            "x-apidog-orders": [
-              "image_urls",
-              "prompt",
-              "mode",
-              "duration",
-              "resolution",
-              "aspect_ratio",
-              "nsfw_checker"
-            ],
-            "x-apidog-ignore-properties": []
-          }
-        },
-        "required": [
-          "model",
-          "input"
-        ],
-        "x-apidog-orders": [
-          "model",
-          "callBackUrl",
-          "input"
-        ],
-        "examples": [
-          {
-            "model": "gemini-omni/image-to-video",
-            "callBackUrl": "https://your-domain.com/api/callback",
-            "input": {
-              "image_urls": [
-                "https://file.aiquickdraw.com/custom-page/akr/section-images/1762247692373tw5di116.png"
-              ],
-              "prompt": "POV hand comes into frame handing the girl a cup of take away coffee, the girl steps out of the screen looking tired, then takes it and she says happily: \"thanks! Back to work\" she exits the frame and walks right to a different part of the office.",
-              "aspect_ratio": "16:9",
-              "duration": "8"
-            }
-          }
-        ],
-        "x-apidog-ignore-properties": []
-      },
-      "examplePayload": {
-        "model": "gemini-omni/image-to-video",
-        "callBackUrl": "https://your-domain.com/api/callback",
-        "input": {
-          "image_urls": [
-            "https://file.aiquickdraw.com/custom-page/akr/section-images/1762247692373tw5di116.png"
-          ],
-          "prompt": "POV hand comes into frame handing the girl a cup of take away coffee, the girl steps out of the screen looking tired, then takes it and she says happily: \"thanks! Back to work\" she exits the frame and walks right to a different part of the office.",
-          "duration": "8",
-          "resolution": "480p",
-          "aspect_ratio": "16:9"
-        }
-      },
-      "pricingRows": []
+      }
     },
     {
       "id": "video:sora2-text-to-video-standard",
@@ -1024,8 +738,7 @@
           "aspect_ratio": "16:9",
           "duration": "10"
         }
-      },
-      "pricingRows": []
+      }
     },
     {
       "id": "video:sora2-image-to-video-standard",
@@ -1162,8 +875,7 @@
           "duration": "10",
           "aspect_ratio": "16:9"
         }
-      },
-      "pricingRows": []
+      }
     },
     {
       "id": "video:sora2-pro-text-to-video",
@@ -1282,8 +994,7 @@
           "aspect_ratio": "16:9",
           "duration": "10"
         }
-      },
-      "pricingRows": []
+      }
     },
     {
       "id": "video:sora2-pro-image-to-video",
@@ -1420,8 +1131,7 @@
           "duration": "10",
           "aspect_ratio": "16:9"
         }
-      },
-      "pricingRows": []
+      }
     },
     {
       "id": "video:sora2-pro-storyboard",
@@ -1539,8 +1249,7 @@
           "aspect_ratio": "16:9",
           "duration": "25"
         }
-      },
-      "pricingRows": []
+      }
     },
     {
       "id": "video:sora2-official",
@@ -1662,11 +1371,10 @@
           "aspect_ratio": "16:9",
           "duration": "8"
         }
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-gpt-image-2",
+      "id": "image:ama-gpt-image-2",
       "vendor": "apimart",
       "category": "image",
       "title": "GPT-Image-2 Image Generation",
@@ -1746,11 +1454,10 @@
         "n": 1,
         "size": "16:9",
         "resolution": "1k"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-gpt-image-2-official",
+      "id": "image:ama-gpt-image-2-official",
       "vendor": "apimart",
       "category": "image",
       "title": "GPT-Image-2 Official Channel Image Generation",
@@ -1881,8 +1588,7 @@
         "resolution": "2k",
         "quality": "high",
         "n": 1
-      },
-      "pricingRows": []
+      }
     }
   ]
 }

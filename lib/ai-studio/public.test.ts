@@ -8,7 +8,7 @@ import {
   toPublicDocDetail,
 } from "@/lib/ai-studio/public";
 
-test("serializes public model detail without kie urls, anchors, or callback fields", () => {
+test("serializes public model detail without kie urls or callback fields", () => {
   const detail = toPublicDocDetail({
     id: "video:grok-imagine-text-to-video",
     category: "video",
@@ -45,20 +45,6 @@ test("serializes public model detail without kie urls, anchors, or callback fiel
       callBackUrl: "https://api.example.com/callback",
       progressCallBackUrl: "https://api.example.com/progress",
     },
-    pricingRows: [
-      {
-        modelDescription: "grok-imagine, text-to-video, 10.0s 720p",
-        interfaceType: "video",
-        provider: "Grok",
-        creditPrice: "40",
-        creditUnit: "per video",
-        usdPrice: "0.2",
-        falPrice: "0.5",
-        discountRate: 60,
-        anchor: "https://kie.ai/grok-imagine?model=grok-imagine%2Fimage-to-video",
-        discountPrice: false,
-      },
-    ],
   });
 
   assert.equal("docUrl" in detail, false);
@@ -68,8 +54,6 @@ test("serializes public model detail without kie urls, anchors, or callback fiel
   assert.equal("callBackUrl" in detail.examplePayload, false);
   assert.equal("progressCallBackUrl" in detail.examplePayload, false);
   assert.equal(detail.examplePayload.waterMark, "AI Studio");
-  assert.equal(detail.pricingRows[0] && "anchor" in detail.pricingRows[0], false);
-  assert.equal(detail.pricingRows[0]?.runtimeModel, "grok-imagine/text-to-video");
   assert.equal(JSON.stringify(detail).toLowerCase().includes("kie"), false);
   assert.equal(detail.requestMeta.bodyType, "json");
   assert.deepEqual(detail.requestMeta.hiddenFields.sort(), [
@@ -82,6 +66,33 @@ test("serializes public model detail without kie urls, anchors, or callback fiel
   ]);
   assert.equal(detail.taskMeta.mode, "poll+callback");
   assert.equal(detail.taskMeta.statusEndpoint, "/api/v1/runway/record-detail");
+});
+
+test("removes pricing doc urls from public model detail", () => {
+  const detail = toPublicDocDetail({
+    id: "image:ama-gpt-image-2",
+    category: "image",
+    title: "GPT Image 2",
+    docUrl: "https://docs.apimart.ai/en/api-reference/images/gpt-image-2/generation",
+    provider: "GPT Image",
+    endpoint: "/api/v1/gpt-image-2/generate",
+    method: "POST",
+    modelKeys: ["gpt-image-2"],
+    requestSchema: null,
+    examplePayload: {},
+    pricing: {
+      docUrl: "https://docs.apimart.ai/en/api-reference/images/gpt-image-2/generation",
+      price_txt: "$0.01 per image",
+      price_key: "default",
+      price_map: {
+        default: 10,
+      },
+    },
+  });
+
+  assert.equal("docUrl" in (detail.pricing ?? {}), false);
+  assert.equal(detail.pricing?.price_txt, "$0.01 per image");
+  assert.deepEqual(detail.pricing?.price_map, { default: 10 });
 });
 
 test("hides vendor while preserving alias-based public ids for seedance vip models", () => {
@@ -111,7 +122,6 @@ test("hides vendor while preserving alias-based public ids for seedance vip mode
     examplePayload: {
       model: "bytedance/seedance-2",
     },
-    pricingRows: [],
   });
 
   assert.equal(detail.id, "video:seedance-2-0-vip");
@@ -158,20 +168,6 @@ test("replaces provider model names with alias in public detail output", () => {
     examplePayload: {
       model: "sora-2-text-to-video",
     },
-    pricingRows: [
-      {
-        modelDescription: "Sdance, text-to-video, Standard-10.0s",
-        interfaceType: "video",
-        provider: "Sdance",
-        creditPrice: "60",
-        creditUnit: "per video",
-        usdPrice: "0.3",
-        falPrice: "1.0",
-        discountRate: 40,
-        anchor: "https://kie.ai/sora-2?model=sora-2-text-to-video",
-        discountPrice: false,
-      },
-    ],
   });
 
   assert.deepEqual(detail.modelKeys, ["sdance-text-to-video"]);
@@ -180,7 +176,6 @@ test("replaces provider model names with alias in public detail output", () => {
     "sdance-text-to-video",
   ]);
   assert.equal(detail.requestSchema?.properties?.model?.default, "sdance-text-to-video");
-  assert.equal(detail.pricingRows[0]?.runtimeModel, "sdance-text-to-video");
   assert.equal(detail.id, "video:sdance-text-to-video");
 });
 
@@ -203,7 +198,7 @@ test("uses alias-derived public ids when available", () => {
   );
 });
 
-test("replaces single-runtime catalog pricing rows with alias labels", () => {
+test("uses alias-derived public ids in catalog entries", () => {
   const entry = toPublicCatalogEntry({
     id: "video:sora2-text-to-video-standard",
     category: "video",
@@ -211,24 +206,10 @@ test("replaces single-runtime catalog pricing rows with alias labels", () => {
     alias: "sdance-text-to-video",
     docUrl: "https://docs.kie.ai/market/sora2/sora-2-text-to-video.md",
     provider: "Sdance",
-    pricingRows: [
-      {
-        modelDescription: "Sdance, text-to-video, Standard-10.0s",
-        interfaceType: "video",
-        provider: "Sdance",
-        creditPrice: "60",
-        creditUnit: "per video",
-        usdPrice: "0.3",
-        falPrice: "1.0",
-        discountRate: 40,
-        anchor: "https://kie.ai/sora-2?model=sora-2-text-to-video",
-        discountPrice: false,
-      },
-    ],
   });
 
   assert.equal(entry.id, "video:sdance-text-to-video");
-  assert.equal(entry.pricingRows[0]?.runtimeModel, "sdance-text-to-video");
+  assert.equal("docUrl" in entry, false);
 });
 
 test("removes nested callback fields from public detail and exposes matching metadata", () => {
@@ -274,7 +255,6 @@ test("removes nested callback fields from public detail and exposes matching met
         webhook_url: "https://example.com/webhook",
       },
     },
-    pricingRows: [],
   });
 
   assert.equal("callbackUrl" in (detail.requestSchema?.properties?.input?.properties ?? {}), false);

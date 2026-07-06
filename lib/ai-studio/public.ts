@@ -1,9 +1,7 @@
 import {
   AiStudioCatalogEntry,
   AiStudioDocDetail,
-  AiStudioPricingRow,
   getAiStudioPublicModelId,
-  resolvePricingRowRuntimeModel,
 } from "@/lib/ai-studio/catalog";
 import {
   type AiStudioRequestMeta,
@@ -13,26 +11,16 @@ import {
   isAiStudioCallbackField,
 } from "@/lib/ai-studio/provider-metadata";
 
-export type AiStudioPublicPricingRow = Omit<AiStudioPricingRow, "anchor"> & {
-  runtimeModel: string | null;
-};
 export type AiStudioPublicCatalogEntry = Omit<
   AiStudioCatalogEntry,
-  "docUrl" | "pricingRows" | "vendor"
-> & {
-  pricingRows: AiStudioPublicPricingRow[];
-};
+  "docUrl" | "vendor"
+>;
 export type AiStudioPublicDocDetail = Omit<
   AiStudioDocDetail,
-  "docUrl" | "pricingRows" | "vendor"
+  "docUrl" | "vendor"
 > & {
-  pricingRows: AiStudioPublicPricingRow[];
   requestMeta: AiStudioRequestMeta;
   taskMeta: AiStudioTaskMeta;
-};
-
-type AiStudioModelDetailResponse = {
-  pricingRows: Record<string, unknown>[];
 };
 
 function isCallbackKey(input: string) {
@@ -72,7 +60,7 @@ function sanitizeValue(
 
   const next: Record<string, unknown> = {};
   for (const [key, child] of Object.entries(value as Record<string, unknown>)) {
-    if (key === "docUrl" || key === "anchor") {
+    if (key === "docUrl") {
       continue;
     }
 
@@ -175,50 +163,18 @@ function rewritePublicModelFields(
   detail.modelKeys = publicModelKeys;
 }
 
-export function toPublicPricingRow(
-  row: AiStudioPricingRow,
-  entry: Pick<AiStudioCatalogEntry, "category" | "title" | "provider" | "docUrl" | "alias"> & {
-    modelKeys?: string[];
-  },
-): AiStudioPublicPricingRow {
-  const { anchor: _anchor, ...rest } = row;
-  const runtimeModel = resolvePricingRowRuntimeModel(entry, row);
-  return {
-    ...(sanitizeValue(rest, {
-      stripCallbackFields: false,
-    }) as Omit<AiStudioPublicPricingRow, "runtimeModel">),
-    runtimeModel: getPublicModelAlias(entry, runtimeModel),
-  };
-}
-
 export function toPublicCatalogEntry(entry: AiStudioCatalogEntry): AiStudioPublicCatalogEntry {
-  const { docUrl: _docUrl, pricingRows, ...rest } = entry;
-  const runtimeModels = [
-    ...new Set(
-      pricingRows
-        .map((row) => resolvePricingRowRuntimeModel(entry, row))
-        .filter((value): value is string => typeof value === "string" && value.length > 0),
-    ),
-  ];
-  const publicEntry =
-    runtimeModels.length === 1
-      ? {
-          ...entry,
-          modelKeys: runtimeModels,
-        }
-      : entry;
-
+  const { docUrl: _docUrl, ...rest } = entry;
   return {
     ...rest,
     id: getPublicAiStudioModelId(entry),
-    pricingRows: pricingRows.map((row) => toPublicPricingRow(row, publicEntry)),
   };
 }
 
 export function toPublicDocDetail(detail: AiStudioDocDetail): AiStudioPublicDocDetail {
   const {
     docUrl: _docUrl,
-    pricingRows,
+    pricing,
     requestSchema,
     examplePayload,
     vendor: _vendor,
@@ -233,7 +189,13 @@ export function toPublicDocDetail(detail: AiStudioDocDetail): AiStudioPublicDocD
     examplePayload: sanitizeValue(examplePayload, {
       stripCallbackFields: true,
     }) as AiStudioDocDetail["examplePayload"],
-    pricingRows: pricingRows.map((row) => toPublicPricingRow(row, detail)),
+    ...(pricing
+      ? {
+          pricing: sanitizeValue(pricing, {
+            stripCallbackFields: false,
+          }) as AiStudioDocDetail["pricing"],
+        }
+      : {}),
     requestMeta: getAiStudioRequestMeta(detail),
     taskMeta: getAiStudioTaskMeta(detail),
   };
@@ -243,21 +205,5 @@ export function toPublicDocDetail(detail: AiStudioDocDetail): AiStudioPublicDocD
   return {
     ...next,
     id: getPublicAiStudioModelId(detail),
-  };
-}
-
-export function stripModelDetailPricingFields<T extends AiStudioModelDetailResponse>(detail: T) {
-  return {
-    ...detail,
-    pricingRows: detail.pricingRows.map(
-      ({
-        discountPrice: _discountPrice,
-        discountRate: _discountRate,
-        falPrice: _falPrice,
-        modelDescription: _modelDescription,
-        usdPrice: _usdPrice,
-        ...row
-      }) => row,
-    ),
   };
 }

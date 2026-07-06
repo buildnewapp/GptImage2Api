@@ -147,12 +147,10 @@ function getPublicRuntimeCatalogId(item: RuntimeCatalogItem) {
 }
 
 function resolveRuntimeCatalogEntry(version: AiVideoStudioVersion) {
-  const candidateIds = new Set([version.modelId, ...(version.aliases ?? [])]);
-
   return runtimeCatalogItems.find(
     (item) =>
-      candidateIds.has(item.id) ||
-      candidateIds.has(getPublicRuntimeCatalogId(item)),
+      version.modelId === item.id ||
+      version.modelId === getPublicRuntimeCatalogId(item),
   );
 }
 
@@ -367,10 +365,7 @@ async function buildModelPage(input: {
   });
   const showcaseModelIds =
     input.config.showcaseModelIds ??
-    modelFamily.versions.flatMap((version) => [
-      version.modelId,
-      ...(version.aliases ?? []),
-    ]);
+    modelFamily.versions.map((version) => version.modelId);
   const communityShowcase = await getShowcaseGenerations({
     limit: 6,
     modelIds: showcaseModelIds,

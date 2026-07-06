@@ -178,6 +178,79 @@ test("uses schema defaults without prefilling example input values", () => {
   });
 });
 
+test("uses required non-text fallbacks without prefilling example prompt text", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    requestSchema: {
+      type: "object",
+      properties: {
+        input: {
+          type: "object",
+          properties: {
+            prompt: {
+              type: "string",
+            },
+            duration: {
+              type: "string",
+              enum: ["4", "6", "8", "10"],
+            },
+            mode: {
+              type: "string",
+              enum: ["standard", "pro"],
+            },
+          },
+          required: ["prompt", "duration", "mode"],
+          "x-apidog-orders": ["prompt", "duration", "mode"],
+        },
+      },
+    },
+    examplePayload: {
+      input: {
+        prompt: "A sample prompt should not prefill the form.",
+        duration: "6",
+      },
+    },
+  });
+
+  assert.deepEqual(normalized.defaults, {
+    prompt: undefined,
+    duration: "6",
+    mode: "standard",
+  });
+});
+
+test("uses false as the fallback for required boolean fields", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    requestSchema: {
+      type: "object",
+      properties: {
+        input: {
+          type: "object",
+          properties: {
+            prompt: {
+              type: "string",
+            },
+            generate_audio: {
+              type: "boolean",
+            },
+          },
+          required: ["prompt", "generate_audio"],
+          "x-apidog-orders": ["prompt", "generate_audio"],
+        },
+      },
+    },
+    examplePayload: {
+      input: {
+        prompt: "A sample prompt should not prefill the form.",
+      },
+    },
+  });
+
+  assert.deepEqual(normalized.defaults, {
+    prompt: undefined,
+    generate_audio: false,
+  });
+});
+
 test("marks required fields from the schema without semantic field conversion", () => {
   const normalized = normalizeAiVideoStudioSchema(textToVideoDetail);
 
@@ -313,6 +386,45 @@ test("applies form ui field order and advanced field grouping overrides", () => 
   );
 });
 
+test("hides fields configured by form ui overrides", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    requestSchema: {
+      type: "object",
+      properties: {
+        prompt: {
+          type: "string",
+        },
+        max_images: {
+          type: "integer",
+          default: 1,
+        },
+        num_images: {
+          type: "integer",
+          default: 1,
+        },
+      },
+      "x-apidog-orders": ["prompt", "max_images", "num_images"],
+    },
+    examplePayload: {
+      prompt: "hello",
+      max_images: 1,
+      num_images: 1,
+    },
+    formUi: {
+      hiddenFields: ["max_images"],
+    },
+  });
+
+  assert.deepEqual(
+    normalized.fields.map((field) => field.key),
+    ["prompt", "num_images"],
+  );
+  assert.deepEqual(normalized.defaults, {
+    prompt: undefined,
+    num_images: 1,
+  });
+});
+
 test("uses default advanced grouping for boolean and seed fields when no custom form ui exists", () => {
   const normalized = normalizeAiVideoStudioSchema({
     requestSchema: {
@@ -381,6 +493,45 @@ test("uses default advanced grouping for seeds and watermark-like fields", () =>
   assert.deepEqual(
     normalized.advancedFields.map((field) => field.key),
     ["seeds", "watermark", "watermark_text"],
+  );
+});
+
+test("uses default advanced grouping for bitrate mode and end user id fields", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    requestSchema: {
+      type: "object",
+      properties: {
+        prompt: {
+          type: "string",
+        },
+        bitrate_mode: {
+          type: "string",
+          enum: ["standard", "high"],
+        },
+        end_user_id: {
+          type: "string",
+        },
+        safety_tolerance: {
+          type: "string",
+          enum: ["1", "2", "3", "4", "5", "6"],
+          default: "4",
+        },
+      },
+      "x-apidog-orders": ["prompt", "bitrate_mode", "end_user_id", "safety_tolerance"],
+    },
+    examplePayload: {
+      prompt: "hello",
+    },
+  });
+
+  assert.equal(normalized.usesDefaultAdvancedGrouping, true);
+  assert.deepEqual(
+    normalized.primaryFields.map((field) => field.key),
+    ["prompt"],
+  );
+  assert.deepEqual(
+    normalized.advancedFields.map((field) => field.key),
+    ["bitrate_mode", "end_user_id", "safety_tolerance"],
   );
 });
 
@@ -477,6 +628,87 @@ test("drops stale enum values that are not supported by the newly selected model
   );
 });
 
+test("removes auto duration when dynamic pricing depends on duration", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    requestSchema: {
+      type: "object",
+      properties: {
+        prompt: {
+          type: "string",
+        },
+        duration: {
+          type: "string",
+          enum: ["auto", "4", "5", "6"],
+          default: "auto",
+        },
+      },
+      required: ["prompt"],
+      "x-apidog-orders": ["prompt", "duration"],
+    },
+    examplePayload: {
+      prompt: "Generate a video.",
+      duration: "auto",
+    },
+    pricing: {
+      price_txt: "480p costs 26.9 credits/s.",
+      price_key: "{$input.resolution || $resolution}",
+      price_map: {
+        "480p": 26.9,
+      },
+      price_final: "{$price}*{$input.duration || $duration}",
+    },
+  });
+
+  const durationField = normalized.fields.find(
+    (field) => field.key === "duration",
+  );
+
+  assert.deepEqual(durationField?.schema.enum, ["4", "5", "6"]);
+  assert.equal(durationField?.schema.default, "4");
+  assert.equal(durationField?.defaultValue, "4");
+  assert.equal(normalized.defaults.duration, "4");
+});
+
+test("removes auto duration when dynamic pricing keys depend on duration", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    requestSchema: {
+      type: "object",
+      properties: {
+        duration: {
+          type: "string",
+          enum: ["auto", "8", "12"],
+          default: "auto",
+        },
+        aspect_ratio: {
+          type: "string",
+          enum: ["16:9", "9:16"],
+          default: "16:9",
+        },
+      },
+      "x-apidog-orders": ["duration", "aspect_ratio"],
+    },
+    examplePayload: {
+      duration: "auto",
+      aspect_ratio: "16:9",
+    },
+    pricing: {
+      price_key: "{$duration}|{$aspect_ratio}",
+      price_map: {
+        "8|16:9": 5,
+        "12|16:9": 5,
+      },
+      price_final: "{$price}",
+    },
+  });
+
+  const durationField = normalized.fields.find(
+    (field) => field.key === "duration",
+  );
+
+  assert.deepEqual(durationField?.schema.enum, ["8", "12"]);
+  assert.equal(normalized.defaults.duration, "8");
+});
+
 test("drops stale number values outside the supported range", () => {
   const normalized = normalizeAiVideoStudioSchema({
     requestSchema: {
@@ -561,4 +793,78 @@ test("wraps cached scalar string values for string array fields", () => {
       image_urls: ["https://example.com/reference.png"],
     },
   );
+});
+
+test("maps fal image_size anyOf schemas to image size controls", () => {
+  const normalized = normalizeAiVideoStudioSchema({
+    requestSchema: {
+      type: "object",
+      properties: {
+        prompt: {
+          type: "string",
+        },
+        image_size: {
+          anyOf: [
+            {
+              title: "ImageSize",
+              type: "object",
+              properties: {
+                width: {
+                  type: "integer",
+                  default: 512,
+                },
+                height: {
+                  type: "integer",
+                  default: 512,
+                },
+              },
+              "x-fal-order-properties": ["width", "height"],
+            },
+            {
+              type: "string",
+              enum: [
+                "square_hd",
+                "landscape_4_3",
+                "auto_2K",
+              ],
+            },
+          ],
+          default: "auto_2K",
+          title: "Image Size",
+        },
+      },
+      "x-apidog-orders": ["prompt", "image_size"],
+    },
+    examplePayload: {
+      prompt: "Edit the image.",
+      image_size: "auto_2K",
+    },
+  });
+
+  const imageSizeField = normalized.fields.find(
+    (field) => field.key === "image_size",
+  );
+
+  assert.equal(imageSizeField?.kind, "text");
+  assert.equal(imageSizeField?.schema["x-ui-control"], "image-size");
+  assert.deepEqual(imageSizeField?.schema["x-ui-image-size-options"], [
+    {
+      label: "Square HD",
+      value: "square_hd",
+    },
+    {
+      label: "Landscape 4:3",
+      value: "landscape_4_3",
+    },
+    {
+      label: "Auto 2K",
+      value: "auto_2K",
+    },
+    {
+      label: "Custom",
+      value: "__custom",
+      custom: true,
+    },
+  ]);
+  assert.equal(normalized.defaults.image_size, "auto_2K");
 });

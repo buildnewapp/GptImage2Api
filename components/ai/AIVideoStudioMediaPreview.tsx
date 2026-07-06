@@ -9,7 +9,6 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -76,32 +75,28 @@ export default function AIVideoStudioMediaPreview({
       {preview ? (
         <DialogContent
           showCloseButton={false}
-          className={cn(
-            "overflow-hidden border-white/10 bg-black p-0 text-white shadow-2xl",
-            preview.kind === "image"
-              ? "h-[90vh] w-[min(96vw,1200px)] max-w-[1200px]"
-              : "w-[min(96vw,1100px)] max-w-[1100px]",
-          )}
+          className="h-[80dvh] w-[calc(100vw-1rem)] !max-w-[calc(100vw-1rem)] overflow-hidden border-white/10 bg-black p-0 text-white shadow-2xl sm:h-[80vh] sm:w-[80vw] sm:!max-w-[80vw]"
         >
           <DialogTitle className="sr-only">Media Preview</DialogTitle>
 
           <button
             type="button"
             onClick={onClose}
-            className="absolute right-4 top-4 z-20 rounded-full bg-black/60 p-2 text-white/70 transition-colors hover:text-white"
+            aria-label="Close media preview"
+            className="absolute right-3 top-3 z-20 rounded-full bg-black/60 p-2.5 text-white/70 transition-colors hover:text-white sm:right-4 sm:top-4"
           >
             <X className="h-5 w-5" />
           </button>
 
           {preview.kind === "image" ? (
             <div className="relative flex h-full flex-col">
-              <div className="absolute left-4 top-4 z-20 rounded-full bg-black/60 px-3 py-1 text-xs text-white/80">
+              <div className="absolute left-3 top-3 z-20 rounded-full bg-black/60 px-3 py-1 text-xs text-white/80 sm:left-4 sm:top-4">
                 {currentImageIndex + 1} / {preview.urls.length}
               </div>
               <Carousel
                 setApi={(api) => setCarouselApi(api)}
                 opts={{ startIndex: preview.index }}
-                className="h-full"
+                className="h-full min-h-0 [&_[data-slot=carousel-content]>div]:h-full [&_[data-slot=carousel-content]]:h-full"
               >
                 <CarouselContent className="ml-0 h-full">
                   {preview.urls.map((url, index) => (
@@ -109,11 +104,11 @@ export default function AIVideoStudioMediaPreview({
                       key={`${url}-${index}`}
                       className="h-full pl-0"
                     >
-                      <div className="flex h-full items-center justify-center p-4">
+                      <div className="relative h-full min-h-0 overflow-hidden p-3 sm:p-4">
                         <img
                           src={url}
                           alt={`Generated image ${index + 1}`}
-                          className="max-h-full w-full object-contain"
+                          className="absolute inset-0 m-auto !h-auto !max-h-[calc(100%-1.5rem)] !w-auto !max-w-[calc(100%-1.5rem)] object-contain sm:!max-h-[calc(100%-2rem)] sm:!max-w-[calc(100%-2rem)]"
                         />
                       </div>
                     </CarouselItem>
@@ -128,12 +123,11 @@ export default function AIVideoStudioMediaPreview({
               </Carousel>
             </div>
           ) : (
-            <div className="aspect-video w-full bg-black">
+            <div className="relative h-full min-h-0 w-full overflow-hidden bg-black p-3 sm:p-4">
               <video
                 src={preview.url}
-                className="h-full w-full object-contain"
+                className="absolute inset-0 m-auto !h-auto !max-h-[calc(100%-1.5rem)] !w-auto !max-w-[calc(100%-1.5rem)] object-contain sm:!max-h-[calc(100%-2rem)] sm:!max-w-[calc(100%-2rem)]"
                 controls
-                autoPlay
                 playsInline
               />
             </div>

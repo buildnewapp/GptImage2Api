@@ -2,6 +2,11 @@
 
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
 import { toast } from "sonner";
@@ -39,6 +44,28 @@ export default function ToolsField({
   onChange,
 }: ToolsFieldProps) {
   const checked = hasWebSearchTool(value);
+  const labelElement = (
+    <Label
+      htmlFor={inputId}
+      data-ai-video-studio-field-description-trigger={labelTitle ? "true" : undefined}
+      onClick={
+        labelTitle
+          ? (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              toast.info(labelTitle, { position: "bottom-center" });
+            }
+          : undefined
+      }
+      className={cn(
+        "font-medium text-muted-foreground",
+        labelTitle && "cursor-pointer transition hover:text-foreground active:opacity-80",
+        compact ? "text-[13px]" : "text-sm",
+      )}
+    >
+      {label}
+    </Label>
+  );
 
   return (
     <div
@@ -49,19 +76,16 @@ export default function ToolsField({
     >
       <div className="flex min-w-0 items-center gap-2.5 text-muted-foreground">
         <Search className={cn("shrink-0", compact ? "size-4" : "size-4")} />
-        <Label
-          htmlFor={inputId}
-          title={labelTitle}
-          data-ai-video-studio-field-description-trigger={labelTitle ? "true" : undefined}
-          onClick={labelTitle ? () => toast.info(labelTitle) : undefined}
-          className={cn(
-            "font-medium text-muted-foreground",
-            labelTitle && "cursor-pointer transition hover:text-foreground active:opacity-80",
-            compact ? "text-[13px]" : "text-sm",
-          )}
-        >
-          {label}
-        </Label>
+        {labelTitle ? (
+          <Tooltip>
+            <TooltipTrigger asChild>{labelElement}</TooltipTrigger>
+            <TooltipContent side="right" align="center" className="max-w-xs text-left">
+              {labelTitle}
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          labelElement
+        )}
       </div>
       <Switch
         id={inputId}

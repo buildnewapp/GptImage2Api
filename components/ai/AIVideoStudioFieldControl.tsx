@@ -1,6 +1,21 @@
 "use client";
 
 import ImageWithRolesField from "@/components/ai/fields/ImageWithRolesField";
+import ImageSizeField, {
+  isImageSizeFieldDescriptor,
+} from "@/components/ai/fields/ImageSizeField";
+import MaxImagesField, {
+  isMaxImagesFieldDescriptor,
+} from "@/components/ai/fields/MaxImagesField";
+import NegativePromptField, {
+  isNegativePromptFieldDescriptor,
+} from "@/components/ai/fields/NegativePromptField";
+import NumImagesField, {
+  isNumImagesFieldDescriptor,
+} from "@/components/ai/fields/NumImagesField";
+import OutputFormatField, {
+  isOutputFormatFieldDescriptor,
+} from "@/components/ai/fields/OutputFormatField";
 import PromptField, {
   isPromptFieldDescriptor,
 } from "@/components/ai/fields/PromptField";
@@ -9,10 +24,16 @@ import ReferenceField, {
   type ReferenceFieldTexts,
 } from "@/components/ai/fields/ReferenceField";
 import ToolsField from "@/components/ai/fields/ToolsField";
+import { formatAiVideoStudioFieldLabel } from "@/components/ai/fields/format-field-label";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { isImageWithRolesFieldDescriptor } from "@/lib/ai-video-studio/image-with-roles";
 import { cn } from "@/lib/utils";
 import type {
@@ -253,12 +274,19 @@ function renderFieldLabel(
   icon?: ReactNode,
   title?: string,
 ) {
-  return (
+  const labelElement = (
     <Label
       htmlFor={htmlFor}
-      title={title}
       data-ai-video-studio-field-description-trigger={title ? "true" : undefined}
-      onClick={title ? () => toast.info(title) : undefined}
+      onClick={
+        title
+          ? (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              toast.info(title, { position: "bottom-center" });
+            }
+          : undefined
+      }
       className={cn(
         "inline-flex items-center gap-2 font-medium text-muted-foreground",
         title && "cursor-pointer transition hover:text-foreground active:opacity-80",
@@ -272,6 +300,19 @@ function renderFieldLabel(
       ) : null}
       {label}
     </Label>
+  );
+
+  if (!title) {
+    return labelElement;
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{labelElement}</TooltipTrigger>
+      <TooltipContent side="right" align="center" className="max-w-xs text-left">
+        {title}
+      </TooltipContent>
+    </Tooltip>
   );
 }
 
@@ -343,7 +384,7 @@ function renderObjectSchemaFields(input: {
           className="space-y-2 rounded-xl border border-border/50 bg-background/30 p-3"
         >
           <div className="text-[13px] font-medium text-muted-foreground">
-            {key}
+            {formatAiVideoStudioFieldLabel(key)}
           </div>
           <div className="space-y-2">
             {renderObjectSchemaFields({
@@ -366,7 +407,7 @@ function renderObjectSchemaFields(input: {
       <AIVideoStudioFieldControl
         key={childPath.join(".")}
         field={createSyntheticField(key, childPath, childSchema)}
-        label={key}
+        label={formatAiVideoStudioFieldLabel(key)}
         value={childValue}
         disabled={input.disabled}
         compact
@@ -453,6 +494,87 @@ export default function AIVideoStudioFieldControl({
         value={value}
         disabled={disabled}
         compact={compact}
+        labelTitle={labelTitle}
+        onChange={onChange}
+      />
+    );
+  }
+
+  if (isImageSizeFieldDescriptor(field)) {
+    return (
+      <ImageSizeField
+        field={field}
+        inputId={inputId}
+        label={label}
+        value={value}
+        disabled={disabled}
+        compact={compact}
+        labelIcon={labelIcon}
+        labelTitle={labelTitle}
+        onChange={onChange}
+      />
+    );
+  }
+
+  if (isNegativePromptFieldDescriptor(field)) {
+    return (
+      <NegativePromptField
+        field={field}
+        inputId={inputId}
+        label={label}
+        value={value}
+        disabled={disabled}
+        compact={compact}
+        labelIcon={labelIcon}
+        labelTitle={labelTitle}
+        placeholder={placeholder}
+        onChange={onChange}
+      />
+    );
+  }
+
+  if (isNumImagesFieldDescriptor(field)) {
+    return (
+      <NumImagesField
+        field={field}
+        inputId={inputId}
+        label={label}
+        value={value}
+        disabled={disabled}
+        compact={compact}
+        labelIcon={labelIcon}
+        labelTitle={labelTitle}
+        onChange={onChange}
+      />
+    );
+  }
+
+  if (isMaxImagesFieldDescriptor(field)) {
+    return (
+      <MaxImagesField
+        field={field}
+        inputId={inputId}
+        label={label}
+        value={value}
+        disabled={disabled}
+        compact={compact}
+        labelIcon={labelIcon}
+        labelTitle={labelTitle}
+        onChange={onChange}
+      />
+    );
+  }
+
+  if (isOutputFormatFieldDescriptor(field)) {
+    return (
+      <OutputFormatField
+        field={field}
+        inputId={inputId}
+        label={label}
+        value={value}
+        disabled={disabled}
+        compact={compact}
+        labelIcon={labelIcon}
         labelTitle={labelTitle}
         onChange={onChange}
       />

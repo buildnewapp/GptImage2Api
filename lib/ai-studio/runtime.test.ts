@@ -2,125 +2,321 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
-  applyPricingRowToPayload,
-  collectRuntimeModels,
   getDisplayModelLabel,
   getEstimatedCreditsForPricing,
-  resolveExactPricingRow,
+  resolveDynamicPricing,
   resolveSelectedPricing,
   resolvePublicModelId,
   toBillableCredits,
 } from "@/lib/ai-studio/runtime";
 
-test("collects distinct runtime models from public pricing rows", () => {
-  const models = collectRuntimeModels([
+test("resolves dynamic pricing from price key, price map, and final expression", () => {
+  const row = resolveDynamicPricing(
     {
-      modelDescription: "Open AI sora 2, text-to-video, Standard-10.0s",
-      interfaceType: "video",
-      provider: "OpenAI",
-      creditPrice: "30",
-      creditUnit: "per video",
-      usdPrice: "0.15",
-      falPrice: "1.0",
-      discountRate: 85,
-      discountPrice: false,
-      runtimeModel: "sora-2-text-to-video",
-    },
-    {
-      modelDescription: "Open AI sora 2, text-to-video, stable-10.0s",
-      interfaceType: "video",
-      provider: "OpenAI",
-      creditPrice: "35",
-      creditUnit: "per video",
-      usdPrice: "0.175",
-      falPrice: "1.0",
-      discountRate: 82.5,
-      discountPrice: false,
-      runtimeModel: "sora-2-text-to-video-stable",
-    },
-  ]);
-
-  assert.deepEqual(models, [
-    "sora-2-text-to-video",
-    "sora-2-text-to-video-stable",
-  ]);
-});
-
-test("applies the selected pricing row runtime model onto the payload", () => {
-  const payload = applyPricingRowToPayload(
-    {
-      model: "sora-2-text-to-video",
-      input: {
-        n_frames: "10",
+      docUrl: "https://example.com/video",
+      price_txt: "720p with audio costs 20 credits/s; 720p without audio costs 14 credits/s.",
+      price_key: "{$resolution}|{$generate_audio ? 'with_audio':'without_audio'}",
+      price_map: {
+        "720p|with_audio": 20,
+        "720p|without_audio": 14,
       },
+      price_final: "{$price}*{$duration}",
     },
     {
-      modelDescription: "Open AI sora 2, text-to-video, stable-10.0s",
-      runtimeModel: "sora-2-text-to-video-stable",
+      resolution: "720p",
+      generate_audio: true,
+      duration: "5s",
+    },
+    {
+      modelId: "video:test-model",
+      title: "Test Model",
+      provider: "Test Provider",
+      category: "video",
     },
   );
 
-  assert.equal(payload.model, "sora-2-text-to-video-stable");
-  assert.equal(payload.input?.n_frames, "10");
+  assert.equal(row?.creditPrice, "100");
+  assert.equal(row?.creditUnit, "credits");
+  assert.equal(row?.pricingKey, "720p|with_audio");
 });
 
-test("applies common duration hints from the pricing description", () => {
-  const payload = applyPricingRowToPayload(
+test("resolves seedance 2 dynamic pricing from billing adapter context", () => {
+  const row = resolveDynamicPricing(
     {
-      model: "runway-duration-5-generate",
-      duration: 5,
+      docUrl: "https://docs.kie.ai/market/bytedance/seedance-2.md",
+      price_txt: "With video = Price * (Input + Output).",
+      billing_adapter: "kie_seedance_2",
+      price_key: "{$input.resolution}|{$billing.has_video_input ? 'with_video':'no_video'}",
+      price_map: {
+        "720p|with_video": 25,
+        "720p|no_video": 41,
+      },
+      price_final:
+        "{$price}*({$billing.has_video_input ? ($billing.input_video_duration + $input.duration) : $input.duration})",
+    },
+    {
       input: {
-        n_frames: "10",
+        resolution: "720p",
+        duration: "5s",
+        reference_video_urls: ["https://example.com/input.mp4"],
+      },
+      __local_reference_metadata: {
+        videoDurationsByUrl: {
+          "https://example.com/input.mp4": 8,
+        },
       },
     },
     {
-      modelDescription: "Open AI sora 2, text-to-video, stable-15.0s",
-      runtimeModel: "sora-2-text-to-video-stable",
+      modelId: "video:bytedance-seedance-2",
+      title: "Seedance 2.0 VIP",
+      provider: "ByteDance",
+      category: "video",
     },
   );
 
-  assert.equal(payload.input?.n_frames, "15");
-  assert.equal(payload.duration, 15);
+  assert.equal(row?.creditPrice, "325");
+  assert.equal(row?.pricingKey, "720p|with_video");
+  assert.match(row?.modelDescription ?? "", /720p\|with_video/);
 });
 
-test("applies explicit duration metadata from structured pricing rows", () => {
-  const payload = applyPricingRowToPayload(
+test("normalizes duration-like string values in pricing expressions", () => {
+  const baseConfig = {
+    price_key: "default",
+    price_map: {
+      default: 20,
+    },
+    price_final: "{$price}*{$duration}",
+  };
+  const model = {
+    modelId: "video:test-model",
+    title: "Test Model",
+    provider: "Test Provider",
+    category: "video",
+  };
+
+  assert.equal(
+    resolveDynamicPricing(baseConfig, { duration: 8 }, model)?.creditPrice,
+    "160",
+  );
+  assert.equal(
+    resolveDynamicPricing(baseConfig, { duration: "8" }, model)?.creditPrice,
+    "160",
+  );
+  assert.equal(
+    resolveDynamicPricing(baseConfig, { duration: "8s" }, model)?.creditPrice,
+    "160",
+  );
+});
+
+test("returns null for auto duration", () => {
+  const row = resolveDynamicPricing(
     {
-      model: "wan/2-5-text-to-video",
-      duration: 5,
+      price_key: "default",
+      price_map: {
+        default: 20,
+      },
+      price_final: "{$price}*{$duration}",
+    },
+    {
+      duration: "auto",
+    },
+    {
+      modelId: "video:test-model",
+      title: "Test Model",
+      provider: "Test Provider",
+      category: "video",
+    },
+  );
+
+  assert.equal(row, null);
+});
+
+test("normalizes duration-like string values in price key", () => {
+  const row = resolveDynamicPricing(
+    {
+      price_key: "{$input.duration}|{$size}",
+      price_map: {
+        "8|720p": 12,
+      },
+      price_final: "{$price}",
+    },
+    {
       input: {
-        n_frames: "5",
+        duration: "8s",
+      },
+      size: "720p",
+    },
+    {
+      modelId: "video:test-model",
+      title: "Test Model",
+      provider: "Test Provider",
+      category: "video",
+    },
+  );
+
+  assert.equal(row?.creditPrice, "12");
+  assert.equal(row?.pricingKey, "8|720p");
+});
+
+test("normalizes duration-like strings from the fields referenced by pricing expressions", () => {
+  const row = resolveDynamicPricing(
+    {
+      price_key: "{$input.seconds}|{$mode}",
+      price_map: {
+        "8|fast": 12,
+      },
+      price_final: "{$price}*{$input.seconds}",
+    },
+    {
+      input: {
+        seconds: "8s",
+      },
+      mode: "fast",
+    },
+    {
+      modelId: "video:test-model",
+      title: "Test Model",
+      provider: "Test Provider",
+      category: "video",
+    },
+  );
+
+  assert.equal(row?.creditPrice, "96");
+  assert.equal(row?.pricingKey, "8|fast");
+});
+
+test("normalizes image size values from the fields referenced by pricing expressions", () => {
+  const config = {
+    price_key: "{$input.image_size}|{$input.quality || 'high'}",
+    price_map: {
+      "1024x768|high": 29,
+      "1024x1024|high": 42.2,
+    },
+    price_final: "{$price}*({$input.num_images || 1})",
+  };
+  const model = {
+    modelId: "image:test-model",
+    title: "Test Image Model",
+    provider: "Test Provider",
+    category: "image",
+  };
+
+  assert.equal(
+    resolveDynamicPricing(
+      config,
+      {
+        input: {
+          image_size: "1024 x 768",
+          quality: "high",
+          num_images: 2,
+        },
+      },
+      model,
+    )?.creditPrice,
+    "58",
+  );
+  assert.equal(
+    resolveDynamicPricing(
+      config,
+      {
+        input: {
+          image_size: {
+            width: 1024,
+            height: 1024,
+          },
+          quality: "high",
+        },
+      },
+      model,
+    )?.pricingKey,
+    "1024x1024|high",
+  );
+});
+
+test("does not require duration when pricing branch does not use it", () => {
+  const row = resolveDynamicPricing(
+    {
+      price_key: "{$has_input ? 'with_input' : $duration}",
+      price_map: {
+        with_input: 80,
+        "8": 50,
+      },
+      price_final: "{$price}",
+    },
+    {
+      has_input: true,
+    },
+    {
+      modelId: "video:test-model",
+      title: "Test Model",
+      provider: "Test Provider",
+      category: "video",
+    },
+  );
+
+  assert.equal(row?.creditPrice, "80");
+  assert.equal(row?.pricingKey, "with_input");
+});
+
+test("seedance 2 returns null for auto output duration", () => {
+  const row = resolveDynamicPricing(
+    {
+      billing_adapter: "kie_seedance_2",
+      price_key: "{$input.resolution}|{$billing.has_video_input ? 'with_video':'no_video'}",
+      price_map: {
+        "720p|with_video": 25,
+        "720p|no_video": 41,
+      },
+      price_final:
+        "{$price}*({$billing.has_video_input ? ($billing.input_video_duration + $input.duration) : $input.duration})",
+    },
+    {
+      input: {
+        resolution: "720p",
+        duration: "auto",
       },
     },
     {
-      modelDescription: "wan/2-5-text-to-video, 1080p, 10s",
-      runtimeModel: "wan/2-5-text-to-video",
-      duration: 10,
+      modelId: "video:bytedance-seedance-2",
+      title: "Seedance 2.0 VIP",
+      provider: "ByteDance",
+      category: "video",
     },
   );
 
-  assert.equal(payload.duration, 10);
-  assert.equal(payload.input?.n_frames, "10");
+  assert.equal(row, null);
 });
 
-test("does not crash when selected pricing metadata has no model description", () => {
-  const payload = applyPricingRowToPayload(
+test("returns null when seedance 2 has video input without input duration", () => {
+  const row = resolveDynamicPricing(
     {
-      model: "video:seedance-2-0-vip",
-      duration: 5,
+      docUrl: "https://docs.kie.ai/market/bytedance/seedance-2.md",
+      price_txt: "With video = Price * (Input + Output).",
+      billing_adapter: "kie_seedance_2",
+      price_key: "{$input.resolution}|{$billing.has_video_input ? 'with_video':'no_video'}",
+      price_map: {
+        "720p|with_video": 25,
+        "720p|no_video": 41,
+      },
+      price_final:
+        "{$price}*({$billing.has_video_input ? ($billing.input_video_duration + $input.duration) : $input.duration})",
+    },
+    {
       input: {
-        n_frames: "5",
+        resolution: "720p",
+        duration: 5,
+        reference_video_urls: ["https://example.com/input.mp4"],
       },
     },
     {
-      runtimeModel: "video:seedance-2-0-vip",
-      duration: null,
-    } as any,
+      modelId: "video:bytedance-seedance-2",
+      title: "Seedance 2.0 VIP",
+      provider: "ByteDance",
+      category: "video",
+    },
   );
 
-  assert.equal(payload.model, "video:seedance-2-0-vip");
-  assert.equal(payload.duration, 5);
-  assert.equal(payload.input?.n_frames, "5");
+  assert.equal(row, null);
 });
 
 test("rounds official decimal credit prices into billable whole credits", () => {
@@ -129,419 +325,19 @@ test("rounds official decimal credit prices into billable whole credits", () => 
   assert.equal(toBillableCredits("0"), 0);
 });
 
-test("estimates total credits for per-second pricing rows from output duration", () => {
+test("estimates billable credits from resolved dynamic pricing", () => {
   const credits = getEstimatedCreditsForPricing(
     {
-      creditPrice: "16",
-      creditUnit: "per second",
-    },
-    {
-      model: "wan/2-7-text-to-video",
-      input: {
-        duration: "5",
-        resolution: "720p",
-      },
+      creditPrice: "16.2",
+      creditUnit: "credits",
     },
   );
 
-  assert.equal(credits, 80);
+  assert.equal(credits, 17);
 });
 
-test("estimates total credits for per-second pricing rows from uploaded media metadata", () => {
-  const credits = getEstimatedCreditsForPricing(
-    {
-      creditPrice: "6",
-      creditUnit: "per second",
-    },
-    {
-      model: "kling-2.6/motion-control",
-      input: {
-        input_urls: ["https://example.com/subject.png"],
-        video_urls: ["https://example.com/motion.mp4"],
-        mode: "720p",
-      },
-      __local_reference_metadata: {
-        videoDurationsByUrl: {
-          "https://example.com/motion.mp4": 8,
-        },
-      },
-    },
-  );
-
-  assert.equal(credits, 48);
-});
-
-test("estimates total credits for per-second pricing rows from uploaded audio metadata", () => {
-  const credits = getEstimatedCreditsForPricing(
-    {
-      creditPrice: "8.0",
-      creditUnit: "per second",
-    },
-    {
-      model: "kling/ai-avatar-standard",
-      input: {
-        image_url: "https://example.com/avatar.png",
-        audio_url: "https://example.com/voice.mp3",
-      },
-      __local_reference_metadata: {
-        audioDurationsByUrl: {
-          "https://example.com/voice.mp3": 12,
-        },
-      },
-    },
-  );
-
-  assert.equal(credits, 96);
-});
-
-test("resolves exact pricing rows from explicit structured duration metadata", () => {
-  const row = resolveExactPricingRow(
-    [
-      {
-        modelDescription: "Open AI sora 2, image-to-video, Standard-15.0s",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "35",
-        creditUnit: "per video",
-        usdPrice: "0.175",
-        falPrice: "1.5",
-        discountRate: 88.33,
-        discountPrice: false,
-        runtimeModel: "sora-2-image-to-video",
-        duration: 15,
-      },
-      {
-        modelDescription: "Open AI sora 2, image-to-video, Standard-10.0s",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "30",
-        creditUnit: "per video",
-        usdPrice: "0.15",
-        falPrice: "1.0",
-        discountRate: 85,
-        discountPrice: false,
-        runtimeModel: "sora-2-image-to-video",
-        duration: 10,
-      },
-    ],
-    {
-      model: "sora-2-image-to-video",
-      input: {
-        n_frames: "10",
-        image_urls: [
-          "https://example.com/uploads/frame_15_reference.png",
-        ],
-      },
-    },
-  );
-
-  assert.equal(row?.creditPrice, "30");
-});
-
-test("resolves video-input pricing rows from source metadata", () => {
-  const row = resolveExactPricingRow(
-    [
-      {
-        modelDescription: "Gemini Omni Video, 720p, 4s, no video input",
-        interfaceType: "video",
-        provider: "Gemini Omni Video",
-        creditPrice: "30",
-        creditUnit: "per video",
-        usdPrice: "0.15",
-        falPrice: "",
-        discountRate: 0,
-        discountPrice: false,
-        runtimeModel: "gemini-omni-video",
-        resolution: "720p",
-        duration: 4,
-        source: "no-video-input",
-      },
-      {
-        modelDescription: "Gemini Omni Video, 720p, with video input",
-        interfaceType: "video",
-        provider: "Gemini Omni Video",
-        creditPrice: "80",
-        creditUnit: "per video",
-        usdPrice: "0.4",
-        falPrice: "",
-        discountRate: 0,
-        discountPrice: false,
-        runtimeModel: "gemini-omni-video",
-        resolution: "720p",
-        source: "video-input",
-      },
-    ],
-    {
-      model: "gemini-omni-video",
-      input: {
-        duration: "4",
-        resolution: "720p",
-        video_list: [
-          {
-            url: "https://example.com/source.mp4",
-            start: 0,
-            ends: 4,
-          },
-        ],
-      },
-    },
-  );
-
-  assert.equal(row?.creditPrice, "80");
-});
-
-test("resolves sora 2 pro pricing rows from input size and n_frames", () => {
-  const row = resolveExactPricingRow(
-    [
-      {
-        modelDescription: "sora-2-pro-text-to-video, high, 15s",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "315",
-        creditUnit: "per video",
-        usdPrice: "",
-        falPrice: "",
-        discountRate: 0,
-        discountPrice: false,
-        runtimeModel: "sora-2-pro-text-to-video",
-        resolution: "high",
-        duration: 15,
-      },
-      {
-        modelDescription: "sora-2-pro-text-to-video, high, 10s",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "165",
-        creditUnit: "per video",
-        usdPrice: "",
-        falPrice: "",
-        discountRate: 0,
-        discountPrice: false,
-        runtimeModel: "sora-2-pro-text-to-video",
-        resolution: "high",
-        duration: 10,
-      },
-    ],
-    {
-      model: "sora-2-pro-text-to-video",
-      input: {
-        size: "high",
-        n_frames: "10",
-        aspect_ratio: "landscape",
-      },
-    },
-  );
-
-  assert.equal(row?.creditPrice, "165");
-});
-
-test("resolves storyboard pricing rows when only duration varies", () => {
-  const row = resolveSelectedPricing(
-    [
-      {
-        modelDescription: "sora-2-pro-storyboard, standard, 10s",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "75",
-        creditUnit: "per video",
-        usdPrice: "",
-        falPrice: "",
-        discountRate: 0,
-        discountPrice: false,
-        runtimeModel: "sora-2-pro-storyboard",
-        resolution: "standard",
-        duration: 10,
-      },
-      {
-        modelDescription: "sora-2-pro-storyboard, standard, 15s",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "135",
-        creditUnit: "per video",
-        usdPrice: "",
-        falPrice: "",
-        discountRate: 0,
-        discountPrice: false,
-        runtimeModel: "sora-2-pro-storyboard",
-        resolution: "standard",
-        duration: 15,
-      },
-      {
-        modelDescription: "sora-2-pro-storyboard, standard, 25s",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "135",
-        creditUnit: "per video",
-        usdPrice: "",
-        falPrice: "",
-        discountRate: 0,
-        discountPrice: false,
-        runtimeModel: "sora-2-pro-storyboard",
-        resolution: "standard",
-        duration: 25,
-      },
-    ],
-    {
-      modelId: "video:sora2-pro-storyboard",
-      payload: {
-        model: "sora-2-pro-storyboard",
-        input: {
-          n_frames: "15",
-          aspect_ratio: "landscape",
-          upload_method: "s3",
-        },
-      },
-      pricing: {
-        selectors: {
-          duration: ["input.n_frames"],
-          aspectRatio: ["input.aspect_ratio"],
-        },
-      },
-    },
-  );
-
-  assert.equal(row?.creditPrice, "135");
-  assert.equal(row?.duration, 15);
-});
-
-test("prefers configured pricing selectors over generic fallback fields", () => {
-  const row = resolveExactPricingRow(
-    [
-      {
-        modelDescription: "sora-2-pro-text-to-video, standard, 10s",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "75",
-        creditUnit: "per video",
-        usdPrice: "",
-        falPrice: "",
-        discountRate: 0,
-        discountPrice: false,
-        runtimeModel: "sora-2-pro-text-to-video",
-        resolution: "standard",
-        duration: 10,
-      },
-      {
-        modelDescription: "sora-2-pro-text-to-video, high, 10s",
-        interfaceType: "video",
-        provider: "OpenAI",
-        creditPrice: "165",
-        creditUnit: "per video",
-        usdPrice: "",
-        falPrice: "",
-        discountRate: 0,
-        discountPrice: false,
-        runtimeModel: "sora-2-pro-text-to-video",
-        resolution: "high",
-        duration: 10,
-      },
-    ],
-    {
-      model: "sora-2-pro-text-to-video",
-      resolution: "standard",
-      input: {
-        size: "high",
-        n_frames: "10",
-      },
-    },
-    {
-      selectors: {
-        resolution: ["input.size"],
-        duration: ["input.n_frames"],
-      },
-    },
-  );
-
-  assert.equal(row?.creditPrice, "165");
-});
-
-test("resolves exact audio-matching pricing rows when models expose variants", () => {
-  const row = resolveExactPricingRow(
-    [
-      {
-        modelDescription: "kling 2.6, text-to-video, without audio-5.0s",
-        interfaceType: "video",
-        provider: "Kling",
-        creditPrice: "55.0",
-        creditUnit: "per video",
-        usdPrice: "",
-        falPrice: "",
-        discountRate: 0,
-        discountPrice: false,
-        runtimeModel: "kling-2.6/text-to-video",
-        duration: 5,
-        audio: false,
-      },
-      {
-        modelDescription: "kling 2.6, text-to-video, with audio-5.0s",
-        interfaceType: "video",
-        provider: "Kling",
-        creditPrice: "110.0",
-        creditUnit: "per video",
-        usdPrice: "",
-        falPrice: "",
-        discountRate: 0,
-        discountPrice: false,
-        runtimeModel: "kling-2.6/text-to-video",
-        duration: 5,
-        audio: true,
-      },
-    ],
-    {
-      model: "kling-2.6/text-to-video",
-      input: {
-        duration: "5",
-        sound: true,
-      },
-    },
-  );
-
-  assert.equal(row?.creditPrice, "110.0");
-});
-
-test("returns null when exact pricing rows remain ambiguous after structured matching", () => {
-  const row = resolveExactPricingRow(
-    [
-      {
-        modelDescription: "veo3 fast row a",
-        runtimeModel: "veo3_fast",
-        resolution: "1080p",
-        aspectRatio: "16:9",
-      },
-      {
-        modelDescription: "veo3 fast row b",
-        runtimeModel: "veo3_fast",
-        resolution: "1080p",
-        aspectRatio: "16:9",
-      },
-    ],
-    {
-      model: "veo3_fast",
-      input: {
-        resolution: "1080p",
-        aspect_ratio: "16:9",
-      },
-    },
-  );
-
-  assert.equal(row, null);
-});
-
-test("resolves seedance 2 dynamic pricing even when no static pricing rows exist", () => {
-  const row = resolveSelectedPricing<
-    {
-      modelDescription: string;
-      interfaceType: string;
-      provider: string;
-      creditPrice: string;
-      creditUnit: string;
-      usdPrice: string;
-      falPrice: string;
-      discountRate: number;
-      discountPrice: boolean;
-      runtimeModel?: string | null;
-    }
-  >([], {
+test("resolveSelectedPricing requires dynamic pricing config", () => {
+  const row = resolveSelectedPricing({
     modelId: "video:seedance-2-0",
     payload: {
       model: "seedance-2-0",
@@ -550,62 +346,98 @@ test("resolves seedance 2 dynamic pricing even when no static pricing rows exist
     },
   });
 
-  assert.equal(row?.creditPrice, "205");
-  assert.equal(row?.usdPrice, "");
-  assert.equal(
-    row?.modelDescription,
-    "Seedance 2.0, text/image-to-video, 720p, 5s",
-  );
+  assert.equal(row, null);
 });
 
-test("keeps seedance 2 dynamic totals as per-video pricing when static rows are per-second", () => {
-  const row = resolveSelectedPricing<
-    {
-      modelDescription: string;
-      interfaceType: string;
-      provider: string;
-      creditPrice: string;
-      creditUnit: string;
-      usdPrice: string;
-      falPrice: string;
-      discountRate: number;
-      discountPrice: boolean;
-      runtimeModel?: string | null;
-    }
-  >(
-    [
-      {
-        modelDescription: "Seedance 2.0, 480p no video input",
-        interfaceType: "video",
-        provider: "ByteDance",
-        creditPrice: "19",
-        creditUnit: "per second",
-        usdPrice: "",
-        falPrice: "",
-        discountRate: 0,
-        discountPrice: false,
-      },
-    ],
-    {
-      modelId: "video:seedance-2-0",
-      payload: {
-        model: "seedance-2-0",
+test("resolveSelectedPricing calculates seedance 2 from dynamic config", () => {
+  const row = resolveSelectedPricing({
+    modelId: "video:bytedance-seedance-2",
+    title: "Seedance 2.0 VIP",
+    provider: "ByteDance",
+    category: "video",
+    payload: {
+      input: {
         resolution: "480p",
         duration: 5,
       },
     },
-  );
+    pricing: {
+      docUrl: "https://docs.kie.ai/market/bytedance/seedance-2.md",
+      price_txt: "480P no video costs 19 credits/s.",
+      billing_adapter: "kie_seedance_2",
+      price_key: "{$input.resolution}|{$billing.has_video_input ? 'with_video':'no_video'}",
+      price_map: {
+        "480p|with_video": 11.5,
+        "480p|no_video": 19,
+      },
+      price_final:
+        "{$price}*({$billing.has_video_input ? ($billing.input_video_duration + $input.duration) : $input.duration})",
+    },
+  });
 
   assert.equal(row?.creditPrice, "95");
-  assert.equal(row?.creditUnit, "per video");
+  assert.equal(row?.creditUnit, "credits");
   assert.equal(
-    getEstimatedCreditsForPricing(row, {
-      model: "seedance-2-0",
-      resolution: "480p",
-      duration: 5,
-    }),
+    getEstimatedCreditsForPricing(row),
     95,
   );
+});
+
+test("seedance 2 ignores incidental numbers inside video input objects", () => {
+  const row = resolveDynamicPricing(
+    {
+      billing_adapter: "kie_seedance_2",
+      price_key: "{$input.resolution}|{$billing.has_video_input ? 'with_video':'no_video'}",
+      price_map: {
+        "720p|with_video": 25,
+        "720p|no_video": 41,
+      },
+      price_final:
+        "{$price}*({$billing.has_video_input ? ($billing.input_video_duration + $input.duration) : $input.duration})",
+    },
+    {
+      input: {
+        resolution: "720p",
+        duration: 5,
+        video_input: {
+          url: "https://example.com/input.mp4",
+          width: 1920,
+        },
+      },
+    },
+    {
+      modelId: "video:bytedance-seedance-2",
+      title: "Seedance 2.0 VIP",
+      provider: "ByteDance",
+      category: "video",
+    },
+  );
+
+  assert.equal(row, null);
+});
+
+test("dynamic pricing returns null for unknown billing adapters", () => {
+  const row = resolveDynamicPricing(
+    {
+      billing_adapter: "unknown_adapter",
+      price_key: "{$unknown_value}",
+      price_map: {
+        "5": 20,
+      },
+      price_final: "{$price}",
+    },
+    {
+      duration: 5,
+    },
+    {
+      modelId: "video:test-model",
+      title: "Test Model",
+      provider: "Test Provider",
+      category: "video",
+    },
+  );
+
+  assert.equal(row, null);
 });
 
 test("uses the configured alias when rendering a single model key", () => {

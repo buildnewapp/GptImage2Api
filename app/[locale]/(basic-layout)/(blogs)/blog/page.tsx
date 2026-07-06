@@ -45,6 +45,8 @@ export async function generateMetadata({
 
 const SERVER_POST_PAGE_SIZE = 12;
 
+export const revalidate = 3600;
+
 function parsePositiveInt(
   value: string | string[] | undefined,
   fallback: number,

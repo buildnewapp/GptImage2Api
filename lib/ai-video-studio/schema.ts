@@ -3,6 +3,15 @@ type JsonSchema = Record<string, any>;
 type AiVideoStudioFormUiConfig = {
   fieldOrder?: string[];
   advancedFields?: string[];
+  hiddenFields?: string[];
+};
+
+type AiVideoStudioPricingConfig = {
+  price_txt?: string | null;
+  price_key?: string | null;
+  price_map?: Record<string, unknown> | null;
+  price_final?: string | null;
+  billing_adapter?: string | null;
 };
 
 export type AiVideoStudioFieldKind =
@@ -60,6 +69,10 @@ function isFieldValueSupported(
   field: AiVideoStudioFieldDescriptor,
   value: unknown,
 ) {
+  if (field.kind === "boolean") {
+    return typeof value === "boolean";
+  }
+
   if (!hasFilledValue(value)) {
     return false;
   }
@@ -149,9 +162,18 @@ function getPathTokens(path: string[]) {
 
 function matchesDefaultAdvancedField(path: string[]) {
   const tokens = getPathTokens(path);
+  const fields = path.map((segment) => segment.toLowerCase());
 
-  return tokens.some(
-    (token) => token === "seed" || token === "seeds" || token === "watermark",
+  return (
+    tokens.some(
+      (token) => token === "seed" || token === "seeds" || token === "watermark",
+    ) ||
+    fields.some(
+      (field) =>
+        field === "bitrate_mode" ||
+        field === "end_user_id" ||
+        field === "safety_tolerance",
+    )
   );
 }
 
@@ -159,6 +181,118 @@ function titleCase(input: string) {
   return input
     .replace(/[_-]+/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function getAnyOfVariants(schema: JsonSchema) {
+  const variants = Array.isArray(schema.anyOf)
+    ? schema.anyOf
+    : Array.isArray(schema.oneOf)
+      ? schema.oneOf
+      : [];
+
+  return variants.filter(
+    (item): item is JsonSchema =>
+      item && typeof item === "object" && !Array.isArray(item),
+  );
+}
+
+function isWidthHeightObjectSchema(schema: JsonSchema) {
+  return (
+    schema.type === "object" &&
+    schema.properties &&
+    typeof schema.properties === "object" &&
+    "width" in schema.properties &&
+    "height" in schema.properties
+  );
+}
+
+function buildImageSizeFieldSchema(key: string, schema: JsonSchema) {
+  if (key !== "image_size" || schema["x-ui-control"] === "image-size") {
+    return schema;
+  }
+
+  const variants = getAnyOfVariants(schema);
+  const hasObjectSize = variants.some(isWidthHeightObjectSchema);
+  const enumVariant = variants.find(
+    (variant) => Array.isArray(variant.enum) && variant.enum.length > 0,
+  );
+  const options = Array.isArray(enumVariant?.enum)
+    ? enumVariant.enum.filter((item): item is string => typeof item === "string")
+    : [];
+
+  if (!hasObjectSize || options.length === 0) {
+    return schema;
+  }
+
+  function formatImageSizeOptionLabel(value: string) {
+    const ratioMatch = value.match(/^(landscape|portrait)_(\d+)_(\d+)$/i);
+    if (ratioMatch?.[1] && ratioMatch[2] && ratioMatch[3]) {
+      return `${titleCase(ratioMatch[1])} ${ratioMatch[2]}:${ratioMatch[3]}`;
+    }
+
+    return value
+      .split("_")
+      .filter(Boolean)
+      .map((part) => (/^hd$/i.test(part) ? "HD" : titleCase(part)))
+      .join(" ");
+  }
+
+  return {
+    ...schema,
+    "x-ui-control": "image-size",
+    "x-ui-image-size-options": [
+      ...options.map((value) => ({
+        label: formatImageSizeOptionLabel(value),
+        value,
+      })),
+      {
+        label: "Custom",
+        value: "__custom",
+        custom: true,
+      },
+    ],
+  };
+}
+
+function pricingUsesDirectDuration(pricing: AiVideoStudioPricingConfig | null | undefined) {
+  return [pricing?.price_key, pricing?.price_final].some(
+    (template) =>
+      typeof template === "string" &&
+      /\$(?:input\.)?duration\b/.test(template),
+  );
+}
+
+function buildPricedDurationFieldSchema(input: {
+  key: string;
+  schema: JsonSchema;
+  pricing?: AiVideoStudioPricingConfig | null;
+}) {
+  if (
+    input.key !== "duration" ||
+    !pricingUsesDirectDuration(input.pricing) ||
+    !Array.isArray(input.schema.enum) ||
+    input.schema.enum.length === 0
+  ) {
+    return input.schema;
+  }
+
+  const enumOptions = input.schema.enum.filter(
+    (option: unknown) =>
+      !(typeof option === "string" && option.trim().toLowerCase() === "auto"),
+  );
+  if (enumOptions.length === input.schema.enum.length || enumOptions.length === 0) {
+    return input.schema;
+  }
+
+  const defaultValue = enumOptions.some((option: unknown) => option === input.schema.default)
+    ? input.schema.default
+    : enumOptions[0];
+
+  return {
+    ...input.schema,
+    enum: enumOptions,
+    default: defaultValue,
+  };
 }
 
 function getFieldKind(schema: JsonSchema): AiVideoStudioFieldKind {
@@ -269,17 +403,81 @@ function getPayloadSchemaRoot(requestSchema: JsonSchema | null | undefined) {
   return requestSchema ?? null;
 }
 
+function getPayloadExampleRoot(examplePayload: JsonSchema | null | undefined) {
+  const inputExample = examplePayload?.input;
+
+  if (
+    inputExample &&
+    typeof inputExample === "object" &&
+    !Array.isArray(inputExample)
+  ) {
+    return inputExample as Record<string, unknown>;
+  }
+
+  return examplePayload ?? null;
+}
+
+function getFirstEnumOption(schema: JsonSchema) {
+  return Array.isArray(schema.enum) && schema.enum.length > 0
+    ? schema.enum[0]
+    : undefined;
+}
+
+function resolveFieldDefaultValue(input: {
+  field: AiVideoStudioFieldDescriptor;
+  exampleRoot: Record<string, unknown> | null;
+}) {
+  const schemaDefault = input.field.defaultValue;
+  if (schemaDefault !== undefined) {
+    return schemaDefault;
+  }
+
+  if (
+    !input.field.required ||
+    input.field.kind === "text" ||
+    input.field.kind === "array"
+  ) {
+    return undefined;
+  }
+
+  const exampleValue =
+    input.exampleRoot === null
+      ? undefined
+      : getValueAtPath(input.exampleRoot, input.field.path);
+  const normalizedExampleValue = normalizeFieldValue(input.field, exampleValue);
+  if (isFieldValueSupported(input.field, normalizedExampleValue)) {
+    return normalizedExampleValue;
+  }
+
+  if (input.field.kind === "boolean") {
+    return false;
+  }
+
+  if (input.field.kind === "enum") {
+    return getFirstEnumOption(input.field.schema);
+  }
+
+  return undefined;
+}
+
 export function normalizeAiVideoStudioSchema(detail: {
   requestSchema: JsonSchema | null | undefined;
   examplePayload: JsonSchema | null | undefined;
   formUi?: AiVideoStudioFormUiConfig | null | undefined;
+  pricing?: AiVideoStudioPricingConfig | null | undefined;
 }): AiVideoStudioSchemaState {
   const payloadSchema = getPayloadSchemaRoot(detail.requestSchema);
+  const exampleRoot = getPayloadExampleRoot(detail.examplePayload);
   const fields: AiVideoStudioFieldDescriptor[] = [];
   const defaults: Record<string, unknown> = {};
   const advancedFieldSet = new Set(
     Array.isArray(detail.formUi?.advancedFields)
       ? detail.formUi?.advancedFields.filter((key): key is string => typeof key === "string")
+      : [],
+  );
+  const hiddenFieldSet = new Set(
+    Array.isArray(detail.formUi?.hiddenFields)
+      ? detail.formUi.hiddenFields.filter((key): key is string => typeof key === "string")
       : [],
   );
   const hasCustomFormUi =
@@ -312,6 +510,15 @@ export function normalizeAiVideoStudioSchema(detail: {
       }
 
       const nextPath = [...path, key];
+      const joinedPath = nextPath.join(".");
+      if (
+        hiddenFieldSet.has(joinedPath) ||
+        hiddenFieldSet.has(key) ||
+        hiddenFieldSet.has(nextPath[0] ?? "")
+      ) {
+        continue;
+      }
+
       const isNestedObject =
         childSchema.type === "object" &&
         childSchema.properties &&
@@ -322,17 +529,27 @@ export function normalizeAiVideoStudioSchema(detail: {
         continue;
       }
 
-      const defaultValue = childSchema.default;
-      setValueAtPath(defaults, nextPath, defaultValue);
-      fields.push({
+      const fieldSchema = buildPricedDurationFieldSchema({
+        key,
+        schema: buildImageSizeFieldSchema(key, childSchema),
+        pricing: detail.pricing,
+      });
+      const defaultValue = fieldSchema.default;
+      const field = {
         key,
         path: nextPath,
         label: titleCase(nextPath.join(" / ")),
-        kind: getFieldKind(childSchema),
+        kind: getFieldKind(fieldSchema),
         required: required.has(key) || isPromptField(key),
-        schema: childSchema,
+        schema: fieldSchema,
         defaultValue,
-      });
+      };
+      setValueAtPath(
+        defaults,
+        nextPath,
+        resolveFieldDefaultValue({ field, exampleRoot }),
+      );
+      fields.push(field);
     }
   }
 

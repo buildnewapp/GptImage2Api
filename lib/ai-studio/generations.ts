@@ -8,13 +8,15 @@ import {
 import type {
   AiStudioCatalogEntry,
   AiStudioDocDetail,
-  AiStudioPricingRow,
 } from "@/lib/ai-studio/catalog";
 import {
   hasNonR2AiStudioMediaUrls,
   persistAiStudioMediaUrls,
 } from "@/lib/ai-studio/assets";
-import { getEstimatedCreditsForPricing } from "@/lib/ai-studio/runtime";
+import {
+  type AiStudioResolvedPricing,
+  getEstimatedCreditsForPricing,
+} from "@/lib/ai-studio/runtime";
 import {
   asc,
   and,
@@ -35,7 +37,7 @@ type ReserveInput = {
   isPublic: boolean;
   detail: AiStudioDocDetail;
   payload: Record<string, any>;
-  selectedPricing: AiStudioPricingRow | null;
+  selectedPricing: AiStudioResolvedPricing | null;
 };
 
 type ReservedBucketAllocation = {
@@ -69,7 +71,7 @@ function areStringArraysEqual(left: string[], right: string[]) {
 function buildReserveNotes(
   generationId: string,
   detail: AiStudioCatalogEntry | AiStudioDocDetail,
-  selectedPricing: AiStudioPricingRow | null,
+  selectedPricing: AiStudioResolvedPricing | null,
 ) {
   return stringifyNotes({
     generationId,
@@ -82,10 +84,7 @@ function buildReserveNotes(
 
 export async function reserveAiStudioGeneration(input: ReserveInput) {
   const generationId = crypto.randomUUID();
-  const reservedCredits = getEstimatedCreditsForPricing(
-    input.selectedPricing,
-    input.payload,
-  );
+  const reservedCredits = getEstimatedCreditsForPricing(input.selectedPricing);
 
   if (reservedCredits <= 0) {
     throw Object.assign(new Error("AI_STUDIO_MODEL_UNAVAILABLE"), {

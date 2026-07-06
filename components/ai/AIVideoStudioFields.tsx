@@ -1,9 +1,11 @@
 "use client";
 
 import {
+  type ReferenceFieldKind,
   resolveReferenceFieldKind,
   type ReferenceFieldTexts,
 } from "@/components/ai/fields/ReferenceField";
+import { formatAiVideoStudioFieldLabel } from "@/components/ai/fields/format-field-label";
 import { useState } from "react";
 
 import AIVideoStudioFieldControl from "@/components/ai/AIVideoStudioFieldControl";
@@ -14,10 +16,13 @@ import { Switch } from "@/components/ui/switch";
 import type { AiVideoStudioFieldDescriptor } from "@/lib/ai-video-studio/schema";
 import {
   AudioLines,
+  Ban,
   ChevronDown,
   Clock3,
   Crop,
+  FileImage,
   FileText,
+  Hash,
   Images,
   Link2,
   Monitor,
@@ -55,16 +60,16 @@ type AIVideoStudioFieldsProps = {
 type AiVideoStudioSpecialFieldKey =
   | "prompt"
   | "size"
+  | "imageSize"
+  | "negativePrompt"
+  | "numImages"
+  | "maxImages"
+  | "outputFormat"
+  | "quality"
   | "resolution"
   | "aspectRatio"
   | "duration"
-  | "seed"
-  | "firstFrameImage"
-  | "lastFrameImage"
-  | "referenceAudios"
-  | "referenceImages"
-  | "referenceVideos"
-  | "referenceUrls";
+  | "seed";
 
 type JsonSchema = Record<string, any>;
 
@@ -127,38 +132,24 @@ function resolveSpecialFieldKey(
   for (const segment of [...field.path].reverse()) {
     const token = normalizeFieldToken(segment);
 
-    if (token === "firstframeurl") {
-      return "firstFrameImage";
-    }
-
-    if (token === "lastframeurl") {
-      return "lastFrameImage";
-    }
-  }
-
-  const referenceFieldKind = resolveReferenceFieldKind(field);
-
-  if (referenceFieldKind === "image") {
-    return "referenceImages";
-  }
-
-  if (referenceFieldKind === "video") {
-    return "referenceVideos";
-  }
-
-  if (referenceFieldKind === "audio") {
-    return "referenceAudios";
-  }
-
-  if (referenceFieldKind === "url") {
-    return "referenceUrls";
-  }
-
-  for (const segment of [...field.path].reverse()) {
-    const token = normalizeFieldToken(segment);
-
     if (token === "prompt") {
       return "prompt";
+    }
+
+    if (token === "negativeprompt") {
+      return "negativePrompt";
+    }
+
+    if (token === "numimages" || token === "imagecount" || token === "n") {
+      return "numImages";
+    }
+
+    if (token === "maximages") {
+      return "maxImages";
+    }
+
+    if (token === "outputformat") {
+      return "outputFormat";
     }
 
     if (
@@ -169,11 +160,17 @@ function resolveSpecialFieldKey(
       return "resolution";
     }
 
+    if (token === "imagesize") {
+      return "imageSize";
+    }
+
+    if (token === "quality") {
+      return "quality";
+    }
+
     if (
       token === "size" ||
-      token === "imagesize" ||
-      token === "videosize" ||
-      token === "quality"
+      token === "videosize"
     ) {
       return resolveSizeFieldMeaning(field.schema);
     }
@@ -198,38 +195,52 @@ function resolveSpecialFieldKey(
   return null;
 }
 
-function renderSpecialFieldIcon(
-  key: AiVideoStudioSpecialFieldKey | null,
-) {
+function renderReferenceFieldIcon(kind: ReferenceFieldKind | null) {
+  if (kind === "image") {
+    return <Images className="size-4" />;
+  }
+
+  if (kind === "video") {
+    return <Video className="size-4" />;
+  }
+
+  if (kind === "audio") {
+    return <AudioLines className="size-4" />;
+  }
+
+  if (kind === "url") {
+    return <Link2 className="size-4" />;
+  }
+
+  return null;
+}
+
+function renderSpecialFieldIcon(key: AiVideoStudioSpecialFieldKey | null) {
   if (key === "prompt") {
     return <FileText className="size-4" />;
+  }
+
+  if (key === "negativePrompt") {
+    return <Ban className="size-4" />;
+  }
+
+  if (key === "numImages") {
+    return <Hash className="size-4" />;
+  }
+
+  if (key === "maxImages") {
+    return <Hash className="size-4" />;
+  }
+
+  if (key === "outputFormat") {
+    return <FileImage className="size-4" />;
   }
 
   if (key === "resolution") {
     return <Monitor className="size-4" />;
   }
 
-  if (key === "referenceImages") {
-    return <Images className="size-4" />;
-  }
-
-  if (key === "firstFrameImage" || key === "lastFrameImage") {
-    return <Images className="size-4" />;
-  }
-
-  if (key === "referenceVideos") {
-    return <Video className="size-4" />;
-  }
-
-  if (key === "referenceAudios") {
-    return <AudioLines className="size-4" />;
-  }
-
-  if (key === "referenceUrls") {
-    return <Link2 className="size-4" />;
-  }
-
-  if (key === "size") {
+  if (key === "size" || key === "imageSize" || key === "quality") {
     return <SlidersHorizontal className="size-4" />;
   }
 
@@ -330,17 +341,13 @@ export default function AIVideoStudioFields({
     options?: { compact?: boolean },
   ) {
     const specialFieldKey = resolveSpecialFieldKey(field);
-    const label =
-      (specialFieldKey
-        ? localizedFieldLabels?.[specialFieldKey]
-        : undefined) ??
-      (specialFieldKey === "seed"
-        ? "Seed"
-        : specialFieldKey === "firstFrameImage"
-          ? "First Frame"
-          : specialFieldKey === "lastFrameImage"
-            ? "Last Frame"
-            : field.path.join("."));
+    const referenceFieldKind = resolveReferenceFieldKind(field);
+    const label = referenceFieldKind
+      ? formatAiVideoStudioFieldLabel(field.path)
+      : (specialFieldKey
+          ? localizedFieldLabels?.[specialFieldKey]
+          : undefined) ??
+        formatAiVideoStudioFieldLabel(field.path);
     const isPromptField = specialFieldKey === "prompt";
     const compact = options?.compact ?? false;
 
@@ -354,7 +361,10 @@ export default function AIVideoStudioFields({
         field={field}
         label={label}
         compact={compact}
-        labelIcon={renderSpecialFieldIcon(specialFieldKey)}
+        labelIcon={
+          renderReferenceFieldIcon(referenceFieldKind) ??
+          renderSpecialFieldIcon(specialFieldKey)
+        }
         placeholder={isPromptField ? promptPlaceholder : undefined}
         referenceFieldTexts={referenceFieldTexts}
         value={getValueAtPath(values, field.path)}

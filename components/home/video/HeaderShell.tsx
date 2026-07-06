@@ -30,7 +30,8 @@ export default function HeaderShell({
   const t = useTranslations("Home");
   const pathname = usePathname();
   const { data: session } = authClient.useSession();
-  const resolvedUser = user ?? ((session?.user ?? null) as User | null);
+  const [hasHydrated, setHasHydrated] = useState(false);
+  const resolvedUser = user ?? (hasHydrated ? ((session?.user ?? null) as User | null) : null);
   const resolvedUserId = resolvedUser?.id ?? null;
   const [clientCredits, setClientCredits] = useState<number | null>(null);
   const resolvedTotalAvailableCredits = totalAvailableCredits ?? clientCredits;
@@ -59,6 +60,10 @@ export default function HeaderShell({
   );
   const freeCreditsButtonClassName =
     "group inline-flex h-9 min-w-[104px] items-center justify-center gap-1.5 rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-3 text-[11px] font-semibold leading-none text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] ring-offset-background transition-all duration-300 ease-out hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
 
   useEffect(() => {
     if (!resolvedUserId || typeof totalAvailableCredits === "number") {

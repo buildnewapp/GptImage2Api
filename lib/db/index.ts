@@ -6,7 +6,8 @@ import type * as schema from './schema';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type DB = PgDatabase<any, typeof schema>;
 
-const connectionString = process.env.DATABASE_URL || '';
+const useBuildDatabaseUrl = process.env.NEXT_PHASE === 'phase-production-build';
+const connectionString = useBuildDatabaseUrl && process.env.BUILD_DATABASE_URL ? process.env.BUILD_DATABASE_URL : process.env.DATABASE_URL || '';
 const isCloudflare = process.env.DEPLOYMENT_PLATFORM === 'cloudflare';
 const dbProvider = connectionString ? detectDatabase(connectionString) : 'unknown';
 const isNeon = dbProvider === 'neon';

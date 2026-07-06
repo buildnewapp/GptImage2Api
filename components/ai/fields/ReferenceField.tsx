@@ -3,6 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { getErrorMessage } from "@/lib/error-utils";
 import { uploadReferenceFile } from "@/lib/ai-video-studio/reference-upload";
 import { cn } from "@/lib/utils";
@@ -121,13 +126,32 @@ function getFieldTokens(path: string[]) {
 const PLURAL_REFERENCE_TOKENS = new Set(["images", "videos", "audios", "urls"]);
 const SINGLE_REFERENCE_TOKENS = new Set(["image", "video", "audio", "url"]);
 
+function isReferenceValueSchema(schema: unknown) {
+  if (!schema || typeof schema !== "object" || Array.isArray(schema)) {
+    return false;
+  }
+
+  const typedSchema = schema as Record<string, any>;
+  return (
+    typedSchema.type === "string" ||
+    (typedSchema.type === "array" && typedSchema.items?.type === "string")
+  );
+}
+
 function supportsReferenceField(field: AiVideoStudioFieldDescriptor) {
   if (field.kind === "text") {
-    return field.schema.type === "string";
+    return (
+      isReferenceValueSchema(field.schema) ||
+      [field.schema.anyOf, field.schema.oneOf].some(
+        (variants) =>
+          Array.isArray(variants) &&
+          variants.some((variant) => isReferenceValueSchema(variant)),
+      )
+    );
   }
 
   if (field.kind === "array") {
-    return field.schema.type === "array" && field.schema.items?.type === "string";
+    return isReferenceValueSchema(field.schema);
   }
 
   return false;
@@ -148,6 +172,14 @@ export function resolveReferenceFieldKind(
 
   if (
     (tokens.includes("id") || tokens.includes("ids")) &&
+    !tokens.includes("url") &&
+    !tokens.includes("urls")
+  ) {
+    return null;
+  }
+
+  if (
+    (tokens.includes("size") || tokens.includes("sizes")) &&
     !tokens.includes("url") &&
     !tokens.includes("urls")
   ) {
@@ -831,6 +863,32 @@ export default function ReferenceField({
       }
     }
   };
+  const labelElement = (
+    <div
+      data-ai-video-studio-field-description-trigger={labelTitle ? "true" : undefined}
+      onClick={
+        labelTitle
+          ? (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              toast.info(labelTitle, { position: "bottom-center" });
+            }
+          : undefined
+      }
+      className={cn(
+        "inline-flex items-center gap-2 font-medium text-muted-foreground text-sm",
+        labelTitle && "cursor-pointer transition hover:text-foreground active:opacity-80",
+      )}
+    >
+      {labelIcon ? <span className="size-4 text-muted-foreground">{labelIcon}</span> : null}
+      <span>{label}</span>
+      {countText ? (
+        <span className="text-xs font-medium text-muted-foreground">
+          {countText}
+        </span>
+      ) : null}
+    </div>
+  );
 
   return (
     <div
@@ -841,25 +899,18 @@ export default function ReferenceField({
       <ReferenceUploadShell
         kind={fieldKind}
         inputId={inputId}
-        label={(
-          <div
-            title={labelTitle}
-            data-ai-video-studio-field-description-trigger={labelTitle ? "true" : undefined}
-            onClick={labelTitle ? () => toast.info(labelTitle) : undefined}
-            className={cn(
-              "inline-flex items-center gap-2 font-medium text-muted-foreground text-sm",
-              labelTitle && "cursor-pointer transition hover:text-foreground active:opacity-80",
-            )}
-          >
-            {labelIcon ? <span className="size-4 text-muted-foreground">{labelIcon}</span> : null}
-            <span>{label}</span>
-            {countText ? (
-              <span className="text-xs font-medium text-muted-foreground">
-                {countText}
-              </span>
-            ) : null}
-          </div>
-        )}
+        label={
+          labelTitle ? (
+            <Tooltip>
+              <TooltipTrigger asChild>{labelElement}</TooltipTrigger>
+              <TooltipContent side="right" align="center" className="max-w-xs text-left">
+                {labelTitle}
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            labelElement
+          )
+        }
         disabled={disabled}
         supportsUpload={supportsUpload}
         isUrlMode={isUrlMode}

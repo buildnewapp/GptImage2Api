@@ -1,3 +1,5 @@
+import { Play } from "lucide-react";
+
 import { featureTitleClass } from "@/components/home/video/constants";
 import FeatureHoverVideo from "@/components/home/video/FeatureHoverVideo";
 import { LazyPreviewVideo } from "@/components/home/video/Media";
@@ -158,6 +160,16 @@ function FeaturePreview({
             title={title}
             className="h-full w-full cursor-pointer object-cover transition-opacity duration-200"
           />
+        ) : null}
+        {video ? (
+          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center opacity-100 transition-opacity duration-200 group-hover:opacity-0">
+            <span className="flex size-12 items-center justify-center rounded-full border border-white/35 bg-black/35 text-white shadow-[0_10px_24px_-12px_rgba(0,0,0,0.75)] backdrop-blur-sm sm:size-14">
+              <Play
+                aria-hidden="true"
+                className="ml-0.5 size-5 fill-current sm:size-6"
+              />
+            </span>
+          </div>
         ) : null}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
       </div>

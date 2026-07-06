@@ -3,7 +3,7 @@
   "generatedAt": "2026-05-15T08:47:40.698Z",
   "items": [
     {
-      "id": "music:fal-gpt-4o-mini-tts",
+      "id": "music:ama-gpt-4o-mini-tts",
       "vendor": "apimart",
       "category": "music",
       "title": "TTS Text-to-Speech",
@@ -58,11 +58,10 @@
         "voice": "alloy",
         "response_format": "opus",
         "speed": 1
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "music:fal-whisper-1",
+      "id": "music:ama-whisper-1",
       "vendor": "apimart",
       "category": "music",
       "title": "Whisper-1 Audio Transcription",
@@ -119,11 +118,10 @@
       "examplePayload": {
         "text": "This is a transcribed text from the test audio.",
         "model": "whisper-1"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-gemini-2-5-flash-image-preview",
+      "id": "image:ama-gemini-2-5-flash-image-preview",
       "vendor": "apimart",
       "category": "image",
       "title": "Gemini-2.5-Flash-Image-preview (Nano banana) Image Generation",
@@ -186,11 +184,10 @@
         "image_urls": [
           "https://openai-documentation.vercel.app/images/cat_and_otter.png"
         ]
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-gemini-3-pro-image-preview",
+      "id": "image:ama-gemini-3-pro-image-preview",
       "vendor": "apimart",
       "category": "image",
       "title": "Gemini-3-Pro-Image-preview (Nano banana Pro) Image Generation",
@@ -250,11 +247,10 @@
         "prompt": "A bamboo forest path under moonlight",
         "size": "1:1",
         "resolution": "1K"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-gemini-3-1-flash-image-preview",
+      "id": "image:ama-gemini-3-1-flash-image-preview",
       "vendor": "apimart",
       "category": "image",
       "title": "Gemini-3.1-Flash-Image-preview (Nano banana2) Image Generation",
@@ -325,11 +321,10 @@
         "prompt": "Cyberpunk cityscape at night with neon lights",
         "size": "16:9",
         "resolution": "2K"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-gpt-image-1-official",
+      "id": "image:ama-gpt-image-1-official",
       "vendor": "apimart",
       "category": "image",
       "title": "GPT-Image(1/1.5) Image Generation - gpt-image-1-official",
@@ -409,11 +404,10 @@
         "prompt": "An ancient castle under a starry sky",
         "size": "1:1",
         "quality": "auto"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-gpt-image-1-5-official",
+      "id": "image:ama-gpt-image-1-5-official",
       "vendor": "apimart",
       "category": "image",
       "title": "GPT-Image(1/1.5) Image Generation - gpt-image-1.5-official",
@@ -493,11 +487,10 @@
         "prompt": "An ancient castle under a starry sky",
         "size": "1:1",
         "quality": "auto"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-grok-imagine-1-0-edit",
+      "id": "image:ama-grok-imagine-1-0-edit",
       "vendor": "apimart",
       "category": "image",
       "title": "Grok Imagine 1.0 Image Editing",
@@ -541,11 +534,10 @@
         "image_urls": [
           "https://example.com/original.png"
         ]
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-grok-imagine-1-0",
+      "id": "image:ama-grok-imagine-1-0",
       "vendor": "apimart",
       "category": "image",
       "title": "Grok Imagine 1.0 Image Generation",
@@ -587,11 +579,10 @@
         "model": "grok-imagine-1.0-apimart",
         "prompt": "An orange cat sitting on a sunny windowsill, oil painting style",
         "size": "1:1"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-imagen-4-0",
+      "id": "image:ama-imagen-4-0",
       "vendor": "apimart",
       "category": "image",
       "title": "Imagen 4.0 Apimart Image Generation",
@@ -633,11 +624,10 @@
         "model": "imagen-4.0-apimart",
         "prompt": "A corgi wearing an astronaut helmet, standing on the lunar surface, Earth in the background, cinematic lighting, 8k",
         "size": "16:9"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-qwen-image-2-0",
+      "id": "image:ama-qwen-image-2-0",
       "vendor": "apimart",
       "category": "image",
       "title": "Qwen Image 2.0 Image Generation - qwen-image-2.0",
@@ -695,11 +685,10 @@
       "examplePayload": {
         "model": "qwen-image-2.0",
         "prompt": "A cute orange cat napping in the sunshine"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-qwen-image-2-0-pro",
+      "id": "image:ama-qwen-image-2-0-pro",
       "vendor": "apimart",
       "category": "image",
       "title": "Qwen Image 2.0 Image Generation - qwen-image-2.0-pro",
@@ -757,11 +746,10 @@
       "examplePayload": {
         "model": "qwen-image-2.0-pro",
         "prompt": "A cute orange cat napping in the sunshine"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-seedance-4-5",
+      "id": "image:ama-seedance-4-5",
       "vendor": "apimart",
       "category": "image",
       "title": "Seedream-4.5 Image Generation",
@@ -840,11 +828,10 @@
         "image_urls": [
           "https://cdn.apimart.ai/doc/1761215838466614297_9852.png"
         ]
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-seedance-4-0",
+      "id": "image:ama-seedance-4-0",
       "vendor": "apimart",
       "category": "image",
       "title": "Seedream-4.0 Image Generation",
@@ -923,11 +910,10 @@
         "image_urls": [
           "https://cdn.apimart.ai/doc/1761215838466614297_9852.png"
         ]
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-doubao-seedream-5-0-lite",
+      "id": "image:ama-doubao-seedream-5-0-lite",
       "vendor": "apimart",
       "category": "image",
       "title": "Seedream-5.0-Lite Image Generation",
@@ -1002,11 +988,10 @@
         "prompt": "A golden retriever playing in a garden, sunny day, high-definition photography style",
         "size": "16:9",
         "resolution": "2K"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-wan2-7-image-pro",
+      "id": "image:ama-wan2-7-image-pro",
       "vendor": "apimart",
       "category": "image",
       "title": "wan2.7 Image Generation & Editing - wan2.7-image-pro",
@@ -1093,11 +1078,10 @@
       "examplePayload": {
         "model": "wan2.7-image-pro",
         "prompt": "A flower shop with exquisite windows, beautiful wooden door, flowers on display"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-wan2-7-image",
+      "id": "image:ama-wan2-7-image",
       "vendor": "apimart",
       "category": "image",
       "title": "wan2.7 Image Generation & Editing - wan2.7-image",
@@ -1184,11 +1168,10 @@
       "examplePayload": {
         "model": "wan2.7-image",
         "prompt": "A flower shop with exquisite windows, beautiful wooden door, flowers on display"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "image:fal-z-image-turbo",
+      "id": "image:ama-z-image-turbo",
       "vendor": "apimart",
       "category": "image",
       "title": "Z-Image-Turbo Image Generation",
@@ -1239,11 +1222,10 @@
       "examplePayload": {
         "model": "z-image-turbo",
         "prompt": "Ink painting style landscape scenery"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "chat:fal-gemini-2-5-pro",
+      "id": "chat:ama-gemini-2-5-pro",
       "vendor": "apimart",
       "category": "chat",
       "title": "Gemini Native Format - gemini-2.5-pro",
@@ -1296,11 +1278,10 @@
           }
         ],
         "model": "gemini-2.5-pro"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "chat:fal-gemini-2-5-flash",
+      "id": "chat:ama-gemini-2-5-flash",
       "vendor": "apimart",
       "category": "chat",
       "title": "Gemini Native Format - gemini-2.5-flash",
@@ -1353,11 +1334,10 @@
           }
         ],
         "model": "gemini-2.5-flash"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "chat:fal-gemini-2-5-flash-lite",
+      "id": "chat:ama-gemini-2-5-flash-lite",
       "vendor": "apimart",
       "category": "chat",
       "title": "Gemini Native Format - gemini-2.5-flash-lite",
@@ -1410,11 +1390,10 @@
           }
         ],
         "model": "gemini-2.5-flash-lite"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "chat:fal-gemini-2-5-pro-thinking",
+      "id": "chat:ama-gemini-2-5-pro-thinking",
       "vendor": "apimart",
       "category": "chat",
       "title": "Gemini Native Format - gemini-2.5-pro-thinking",
@@ -1467,11 +1446,10 @@
           }
         ],
         "model": "gemini-2.5-pro-thinking"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "chat:fal-gpt-5",
+      "id": "chat:ama-gpt-5",
       "vendor": "apimart",
       "category": "chat",
       "title": "General Chat API (Default Streaming)",
@@ -1548,11 +1526,10 @@
             "content": "Tell me about the history of artificial intelligence."
           }
         ]
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-seedance-1-5-pro",
+      "id": "video:ama-seedance-1-5-pro",
       "vendor": "apimart",
       "category": "video",
       "title": "doubao-seedance-1-5-pro Video Generation",
@@ -1634,11 +1611,10 @@
         "aspect_ratio": "16:9",
         "resolution": "720p",
         "audio": true
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-seedance-2-0",
+      "id": "video:ama-seedance-2-0",
       "vendor": "apimart",
       "category": "video",
       "title": "doubao-seedance-2.0 Video Generation - doubao-seedance-2.0",
@@ -1748,11 +1724,10 @@
         "size": "16:9",
         "duration": 5,
         "generate_audio": true
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-seedance-2-0-fast",
+      "id": "video:ama-seedance-2-0-fast",
       "vendor": "apimart",
       "category": "video",
       "title": "doubao-seedance-2.0 Video Generation - doubao-seedance-2.0-fast",
@@ -1862,11 +1837,10 @@
         "size": "16:9",
         "duration": 5,
         "generate_audio": true
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-seedance-2-0-face",
+      "id": "video:ama-seedance-2-0-face",
       "vendor": "apimart",
       "category": "video",
       "title": "doubao-seedance-2.0 Video Generation - doubao-seedance-2.0-face",
@@ -1976,11 +1950,10 @@
         "size": "16:9",
         "duration": 5,
         "generate_audio": true
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-seedance-2-0-fast-face",
+      "id": "video:ama-seedance-2-0-fast-face",
       "vendor": "apimart",
       "category": "video",
       "title": "doubao-seedance-2.0 Video Generation - doubao-seedance-2.0-fast-face",
@@ -2090,11 +2063,10 @@
         "size": "16:9",
         "duration": 5,
         "generate_audio": true
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-virtual-avatar-assets",
+      "id": "video:ama-virtual-avatar-assets",
       "vendor": "apimart",
       "category": "video",
       "title": "Virtual Avatar Assets",
@@ -2168,11 +2140,10 @@
           }
         ],
         "model": "virtual-avatar-assets"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-real-person-avatar-assets",
+      "id": "video:ama-real-person-avatar-assets",
       "vendor": "apimart",
       "category": "video",
       "title": "Real Person Avatar Assets",
@@ -2233,11 +2204,10 @@
         "callback_url": "https://example.com/callback",
         "project_name": "default",
         "model": "real-person-avatar-assets"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-seedance-1-0-pro-fast",
+      "id": "video:ama-seedance-1-0-pro-fast",
       "vendor": "apimart",
       "category": "video",
       "title": "doubao-seedance-1-0-pro Video Generation - doubao-seedance-1-0-pro-fast",
@@ -2308,11 +2278,10 @@
         "duration": 5,
         "aspect_ratio": "16:9",
         "resolution": "1080p"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-seedance-1-0-pro-quality",
+      "id": "video:ama-seedance-1-0-pro-quality",
       "vendor": "apimart",
       "category": "video",
       "title": "doubao-seedance-1-0-pro Video Generation - doubao-seedance-1-0-pro-quality",
@@ -2383,11 +2352,10 @@
         "duration": 5,
         "aspect_ratio": "16:9",
         "resolution": "1080p"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-grok-imagine-1-0-video",
+      "id": "video:ama-grok-imagine-1-0-video",
       "vendor": "apimart",
       "category": "video",
       "title": "Grok Imagine 1.0 Video Generation",
@@ -2444,11 +2412,90 @@
         "size": "16:9",
         "duration": 6,
         "quality": "720p"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-happyhorse-1-0",
+      "id": "video:ama-grok-imagine-1-5-video",
+      "vendor": "apimart",
+      "category": "video",
+      "title": "Grok Imagine 1.5 Video Generation",
+      "docUrl": "https://docs.apimart.ai/en/api-reference/videos/grok-imagine/generation",
+      "provider": "Grok Imagine 1.5",
+      "endpoint": "/v1/videos/generations",
+      "method": "POST",
+      "statusEndpoint": "/v1/tasks/{taskId}?language=en",
+      "modelKeys": [
+        "grok-imagine-1.5-video-apimart"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Video generation model name. Supported model: grok-imagine-1.5-video-apimart - Grok Video Generation.",
+            "default": "grok-imagine-1.5-video-apimart",
+            "enum": [
+              "grok-imagine-1.5-video-apimart"
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Video content description, supports multiple languages."
+          },
+          "size": {
+            "type": "string",
+            "description": "Video size. Options: 16:9 landscape, 9:16 portrait, 1:1 square, 3:2 landscape, 2:3 portrait.",
+            "default": "16:9",
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1",
+              "3:2",
+              "2:3"
+            ]
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Video duration in seconds. Range: 6-30. Must be a plain number, not a string.",
+            "default": 6,
+            "minimum": 6,
+            "maximum": 30,
+            "multipleOf": 1
+          },
+          "quality": {
+            "type": "string",
+            "description": "Video quality. Options: 480p standard definition, 720p high definition.",
+            "default": "480p",
+            "enum": [
+              "480p",
+              "720p"
+            ]
+          },
+          "image_urls": {
+            "type": "array",
+            "description": "List of reference image URLs. Maximum 7 publicly accessible URLs. Base64 format is not supported.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "maxItems": 7
+          }
+        }
+      },
+      "examplePayload": {
+        "model": "grok-imagine-1.5-video-apimart",
+        "prompt": "A dog running on the beach, sunny weather, slow motion",
+        "size": "16:9",
+        "duration": 6,
+        "quality": "720p"
+      }
+    },
+    {
+      "id": "video:ama-happyhorse-1-0",
       "vendor": "apimart",
       "category": "video",
       "title": "HappyHorse 1.0 Video Generation",
@@ -2532,11 +2579,10 @@
         "size": "16:9",
         "duration": 5,
         "seed": 42
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-kling-v2-6",
+      "id": "video:ama-kling-v2-6",
       "vendor": "apimart",
       "category": "video",
       "title": "Kling 2.6 Video Generation",
@@ -2612,11 +2658,10 @@
         "mode": "std",
         "duration": 5,
         "aspect_ratio": "16:9"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-kling-v3-motion-control",
+      "id": "video:ama-kling-v3-motion-control",
       "vendor": "apimart",
       "category": "video",
       "title": "Kling v2.6 Motion Control Video Generation - kling-v3-motion-control",
@@ -2688,11 +2733,10 @@
         "watermark_info": {
           "enabled": false
         }
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-kling-v2-6-motion-control",
+      "id": "video:ama-kling-v2-6-motion-control",
       "vendor": "apimart",
       "category": "video",
       "title": "Kling v2.6 Motion Control Video Generation - kling-v2-6-motion-control",
@@ -2764,11 +2808,10 @@
         "watermark_info": {
           "enabled": false
         }
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-kling-v3-omni",
+      "id": "video:ama-kling-v3-omni",
       "vendor": "apimart",
       "category": "video",
       "title": "Kling v3 Omni Video Generation",
@@ -2881,11 +2924,10 @@
         "mode": "std",
         "duration": 5,
         "aspect_ratio": "16:9"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-kling-v3",
+      "id": "video:ama-kling-v3",
       "vendor": "apimart",
       "category": "video",
       "title": "Kling v3 Video Generation",
@@ -2984,11 +3026,10 @@
         "mode": "std",
         "duration": 5,
         "aspect_ratio": "16:9"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-kling-video-o1",
+      "id": "video:ama-kling-video-o1",
       "vendor": "apimart",
       "category": "video",
       "title": "Kling Video O1 Video Generation",
@@ -3058,11 +3099,10 @@
         "mode": "std",
         "duration": 5,
         "aspect_ratio": "16:9"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-minimax-hailuo-2-3",
+      "id": "video:ama-minimax-hailuo-2-3",
       "vendor": "apimart",
       "category": "video",
       "title": "MiniMax-Hailuo-2.3 Video Generation - MiniMax-Hailuo-2.3",
@@ -3132,11 +3172,10 @@
         "prompt_optimizer": true,
         "fast_pretreatment": false,
         "watermark": false
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-minimax-hailuo-2-3-fast",
+      "id": "video:ama-minimax-hailuo-2-3-fast",
       "vendor": "apimart",
       "category": "video",
       "title": "MiniMax-Hailuo-2.3 Video Generation - MiniMax-Hailuo-2.3-Fast",
@@ -3206,11 +3245,10 @@
         "prompt_optimizer": true,
         "fast_pretreatment": false,
         "watermark": false
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-first-frame-image",
+      "id": "video:ama-first-frame-image",
       "vendor": "apimart",
       "category": "video",
       "title": "MiniMax-Hailuo-2.3 Video Generation - first_frame_image",
@@ -3280,11 +3318,10 @@
         "prompt_optimizer": true,
         "fast_pretreatment": false,
         "watermark": false
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-minimax-hailuo-02",
+      "id": "video:ama-minimax-hailuo-02",
       "vendor": "apimart",
       "category": "video",
       "title": "MiniMax-Hailuo-02 Video Generation",
@@ -3358,11 +3395,10 @@
         "prompt_optimizer": true,
         "fast_pretreatment": false,
         "watermark": false
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-skyreels-v4-fast",
+      "id": "video:ama-skyreels-v4-fast",
       "vendor": "apimart",
       "category": "video",
       "title": "SkyReels V4 Video Generation",
@@ -3442,11 +3478,10 @@
         "resolution": "1080p",
         "aspect_ratio": "16:9",
         "prompt_optimizer": true
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-sora-2",
+      "id": "video:ama-sora-2",
       "vendor": "apimart",
       "category": "video",
       "title": "Sora2 Video Generation - sora-2",
@@ -3512,11 +3547,10 @@
         "image_urls": [
           "https://cdn.apimart.ai/doc/9998238782946594-f62f70ce-348c-4b13-bb5f-15f17bee676b-image_task_01K88BEGZHVJWJ3ZV6HY99SWQR_0.png"
         ]
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-sora-2-pro",
+      "id": "video:ama-sora-2-pro",
       "vendor": "apimart",
       "category": "video",
       "title": "Sora2 Video Generation - sora-2-pro",
@@ -3582,11 +3616,10 @@
         "image_urls": [
           "https://cdn.apimart.ai/doc/9998238782946594-f62f70ce-348c-4b13-bb5f-15f17bee676b-image_task_01K88BEGZHVJWJ3ZV6HY99SWQR_0.png"
         ]
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-veo3-1-fast",
+      "id": "video:ama-veo3-1-fast",
       "vendor": "apimart",
       "category": "video",
       "title": "VEO3 Video Generation",
@@ -3661,11 +3694,10 @@
         "image_urls": [
           "https://cdn.apimart.ai/doc/9998238783208208-9972597b-255d-4e7e-9649-e6ee38a837aa-image_task_01K88B53MTK41PP5KGDTG2PA5P_0.png"
         ]
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-veo3-1-fast-official",
+      "id": "video:ama-veo3-1-fast-official",
       "vendor": "apimart",
       "category": "video",
       "title": "VEO3 Official Video Generation - veo3.1-fast-official",
@@ -3759,11 +3791,10 @@
         "prompt": "a golden retriever running on the beach, sunset, cinematic",
         "duration": 8,
         "aspect_ratio": "16:9"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-veo3-1-quality-official",
+      "id": "video:ama-veo3-1-quality-official",
       "vendor": "apimart",
       "category": "video",
       "title": "VEO3 Official Video Generation - veo3.1-quality-official",
@@ -3857,11 +3888,10 @@
         "prompt": "a golden retriever running on the beach, sunset, cinematic",
         "duration": 8,
         "aspect_ratio": "16:9"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-veo3-1-quality",
+      "id": "video:ama-veo3-1-quality",
       "vendor": "apimart",
       "category": "video",
       "title": "VEO3 Video Remix - veo3.1-quality",
@@ -3912,11 +3942,10 @@
         "raw": false,
         "aspect_ratio": "16:9",
         "resolution": "720p"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-viduq3-pro",
+      "id": "video:ama-viduq3-pro",
       "vendor": "apimart",
       "category": "video",
       "title": "Vidu Q3(pro/turbo) Video Generation - viduq3-pro",
@@ -3987,11 +4016,10 @@
         "duration": 8,
         "resolution": "1080p",
         "aspect_ratio": "16:9"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-viduq3-turbo",
+      "id": "video:ama-viduq3-turbo",
       "vendor": "apimart",
       "category": "video",
       "title": "Vidu Q3(pro/turbo) Video Generation - viduq3-turbo",
@@ -4062,11 +4090,10 @@
         "duration": 8,
         "resolution": "1080p",
         "aspect_ratio": "16:9"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-viduq3-mix",
+      "id": "video:ama-viduq3-mix",
       "vendor": "apimart",
       "category": "video",
       "title": "Vidu Q3(mix/standard) Reference-to-Video - viduq3-mix",
@@ -4138,11 +4165,10 @@
         "duration": 8,
         "resolution": "720p",
         "aspect_ratio": "16:9"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-viduq3",
+      "id": "video:ama-viduq3",
       "vendor": "apimart",
       "category": "video",
       "title": "Vidu Q3(mix/standard) Reference-to-Video - viduq3",
@@ -4214,11 +4240,10 @@
         "duration": 8,
         "resolution": "720p",
         "aspect_ratio": "16:9"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-wan2-5-preview",
+      "id": "video:ama-wan2-5-preview",
       "vendor": "apimart",
       "category": "video",
       "title": "wan2.5-preview Video Generation",
@@ -4306,11 +4331,10 @@
         "size": "16:9",
         "resolution": "720p",
         "duration": 5
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-wan2-6",
+      "id": "video:ama-wan2-6",
       "vendor": "apimart",
       "category": "video",
       "title": "Wan2.6 Video Generation",
@@ -4404,11 +4428,10 @@
         "aspect_ratio": "16:9",
         "resolution": "720p",
         "duration": 5
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-wan2-6-i2v-flash",
+      "id": "video:ama-wan2-6-i2v-flash",
       "vendor": "apimart",
       "category": "video",
       "title": "wan2.6-i2v-flash Image-to-Video",
@@ -4498,11 +4521,10 @@
         ],
         "resolution": "1080p",
         "duration": 5
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-wan2-7-r2v",
+      "id": "video:ama-wan2-7-r2v",
       "vendor": "apimart",
       "category": "video",
       "title": "Wan2.7-R2V Reference-to-Video",
@@ -4595,11 +4617,10 @@
         ],
         "resolution": "1080P",
         "duration": 8
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-wan2-7-videoedit",
+      "id": "video:ama-wan2-7-videoedit",
       "vendor": "apimart",
       "category": "video",
       "title": "Wan2.7-VideoEdit Video Editing",
@@ -4692,11 +4713,10 @@
         ],
         "prompt": "Replace the background with a snowy mountain scene",
         "resolution": "1080P"
-      },
-      "pricingRows": []
+      }
     },
     {
-      "id": "video:fal-wan2-7",
+      "id": "video:ama-wan2-7",
       "vendor": "apimart",
       "category": "video",
       "title": "Wan2.7 Video Generation",
@@ -4794,8 +4814,7 @@
         "resolution": "1080P",
         "duration": 8,
         "size": "16:9"
-      },
-      "pricingRows": []
+      }
     }
   ]
 }

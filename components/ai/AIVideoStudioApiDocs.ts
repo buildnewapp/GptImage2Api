@@ -17,7 +17,8 @@ type AiVideoStudioApiFieldDocCopy = {
 function getInputSchema(detail: {
   requestSchema?: Record<string, any> | null;
 }) {
-  const inputSchema = detail.requestSchema?.properties?.input;
+  const requestSchema = detail.requestSchema;
+  const inputSchema = requestSchema?.properties?.input;
 
   if (
     inputSchema &&
@@ -26,6 +27,15 @@ function getInputSchema(detail: {
     inputSchema.properties
   ) {
     return inputSchema as Record<string, any>;
+  }
+
+  if (
+    requestSchema &&
+    typeof requestSchema === "object" &&
+    requestSchema.type === "object" &&
+    requestSchema.properties
+  ) {
+    return requestSchema;
   }
 
   return null;

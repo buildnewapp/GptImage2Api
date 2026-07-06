@@ -1,12 +1,22 @@
 "use client";
 
 import {
+  archiveDeletedUser,
   banUser,
   setUserPassword,
   unbanUser,
   updateUserRole,
   UserWithSource,
 } from "@/actions/users/admin";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { buildAdminUserQuickActionLinks } from "@/lib/admin/dashboard-users";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -37,7 +47,7 @@ import {
 } from "@/components/ui/tooltip";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { MoreHorizontal } from "lucide-react";
+import { Loader2, MoreHorizontal, Trash2 } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -177,6 +187,70 @@ const UnbanUserDialog = ({
   );
 };
 
+const ArchiveDeletedUserDialog = ({
+  open,
+  onOpenChange,
+  user,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  user: UserType;
+}) => {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  return (
+    <AlertDialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isPending) {
+          onOpenChange(isOpen);
+        }
+      }}
+    >
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>删除用户</AlertDialogTitle>
+          <AlertDialogDescription>
+            这会把 {user.email || user.id} 的邮箱改为 del_时间戳@gmail.com，
+            并封禁账号、清除登录会话。订单、积分和生成记录会保留，方便后续追踪。
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={isPending}>取消</AlertDialogCancel>
+          <Button
+            variant="destructive"
+            disabled={isPending}
+            onClick={() => {
+              startTransition(async () => {
+                const res = await archiveDeletedUser({ userId: user.id });
+                if (res.success) {
+                  toast.success("用户已删除", {
+                    description: `邮箱已修改为 ${res.data?.archivedEmail}`,
+                  });
+                  onOpenChange(false);
+                  router.refresh();
+                } else {
+                  toast.error("删除用户失败", {
+                    description: res.error,
+                  });
+                }
+              });
+            }}
+          >
+            {isPending ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Trash2 className="mr-2 h-4 w-4" />
+            )}
+            确认删除
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
 const SetPasswordDialog = ({
   open,
   onOpenChange,
@@ -286,6 +360,7 @@ const ActionsCell = ({ user }: { user: UserType }) => {
   const [openBan, setOpenBan] = useState(false);
   const [openUnban, setOpenUnban] = useState(false);
   const [openPassword, setOpenPassword] = useState(false);
+  const [openArchiveDelete, setOpenArchiveDelete] = useState(false);
   const [isRolePending, startRoleTransition] = useTransition();
   const quickLinks = buildAdminUserQuickActionLinks({
     locale,
@@ -375,10 +450,28 @@ const ActionsCell = ({ user }: { user: UserType }) => {
               Ban user
             </DropdownMenuItem>
           )}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            className="text-destructive focus:text-destructive"
+            onClick={() => {
+              if (user.role === "admin") {
+                toast.error("Cannot delete admin users");
+                return;
+              }
+              setOpenArchiveDelete(true);
+            }}
+          >
+            删除用户
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
       <BanUserDialog open={openBan} onOpenChange={setOpenBan} user={user} />
+      <ArchiveDeletedUserDialog
+        open={openArchiveDelete}
+        onOpenChange={setOpenArchiveDelete}
+        user={user}
+      />
       <SetPasswordDialog
         open={openPassword}
         onOpenChange={setOpenPassword}

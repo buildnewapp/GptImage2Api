@@ -6,7 +6,6 @@ import type {
 import type {
   AiStudioPublicCatalogEntry,
   AiStudioPublicDocDetail,
-  AiStudioPublicPricingRow,
 } from "@/lib/ai-studio/public";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -23,8 +22,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useUserBenefits } from "@/hooks/useUserBenefits";
 import {
-  applyPricingRowToPayload,
-  collectRuntimeModels,
+  type AiStudioResolvedPricing,
   getDisplayModelLabel,
   resolveSelectedPricing,
   resolvePublicModelId,
@@ -86,7 +84,7 @@ type ExecuteResponse = {
     raw: unknown;
     mediaUrls?: string[];
     artifacts?: AiStudioResultArtifact[];
-    selectedPricing?: AiStudioPublicPricingRow | null;
+    selectedPricing?: AiStudioResolvedPricing | null;
   };
   error?: string;
 };
@@ -281,8 +279,7 @@ function collectFields(
 }
 
 function guessSelectedPricing(
-  detail: Pick<AiStudioPublicDocDetail, "pricingRows" | "pricing"> | null | undefined,
-  pricingRows: AiStudioPublicPricingRow[],
+  detail: Pick<AiStudioPublicDocDetail, "pricing" | "title" | "provider" | "category"> | null | undefined,
   modelId: string | null,
   payload: Record<string, any>,
 ) {
@@ -290,10 +287,13 @@ function guessSelectedPricing(
     return null;
   }
 
-  return resolveSelectedPricing(pricingRows, {
+  return resolveSelectedPricing({
     modelId,
     payload,
     pricing: detail?.pricing,
+    title: detail?.title,
+    provider: detail?.provider,
+    category: detail?.category,
   });
 }
 
@@ -789,7 +789,6 @@ export default function AiStudioShell({
         },
         selectedPricing: guessSelectedPricing(
           detail,
-          detail?.pricingRows ?? [],
           detail?.id ?? null,
           payload,
         ),
@@ -1032,10 +1031,6 @@ export default function AiStudioShell({
     setPayload((current) => setValueAtPath(current, path, value));
   }
 
-  function handlePricingSelection(row: AiStudioPublicPricingRow) {
-    setPayload((current) => applyPricingRowToPayload(current, row));
-  }
-
   const fields = detail
     ? collectFields(
         detail.requestSchema,
@@ -1045,10 +1040,9 @@ export default function AiStudioShell({
         new Set(detail.requestMeta.hiddenFields.map(normalizeFieldHandle)),
       )
     : [];
-  const runtimeModels = collectRuntimeModels(detail?.pricingRows ?? []);
   const selectedPricing =
     executeResult?.selectedPricing ||
-    guessSelectedPricing(detail, detail?.pricingRows ?? [], detail?.id ?? null, payload);
+    guessSelectedPricing(detail, detail?.id ?? null, payload);
   const chatText = executeResult ? extractChatText(executeResult.raw) : "";
   const renderableMediaUrls = collectRenderableMediaUrls(
     executeResult?.mediaUrls ?? [],
@@ -1156,19 +1150,9 @@ export default function AiStudioShell({
                                 : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200",
                             )}
                           >
-                            {entry.pricingRows.length}
+                            {entry.pricing ? "fx" : "-"}
                           </Badge>
                         </div>
-                        {entry.pricingRows[0] && (
-                          <div
-                            className={cn(
-                              "mt-3 text-xs",
-                              selectedId === entry.id ? "text-slate-200" : "text-slate-600 dark:text-slate-300",
-                            )}
-                          >
-                            {entry.pricingRows[0].creditPrice} {entry.pricingRows[0].creditUnit}
-                          </div>
-                        )}
                       </button>
                     ))
                   )}
@@ -1232,25 +1216,6 @@ export default function AiStudioShell({
                     </div>
                   ) : (
                     <>
-                      {runtimeModels.length > 1 && (
-                        <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 dark:border-white/10 dark:bg-slate-900/70">
-                          <div className="mb-2 text-sm font-medium text-slate-900 dark:text-white">
-                            Runtime Model Variant
-                          </div>
-                          <select
-                            value={typeof payload.model === "string" ? payload.model : ""}
-                            onChange={(event) => updateField(["model"], event.target.value)}
-                            className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none ring-0 dark:border-white/10 dark:bg-slate-950 dark:text-white"
-                          >
-                            {runtimeModels.map((runtimeModel) => (
-                              <option key={runtimeModel} value={runtimeModel}>
-                                {displayModelLabel(runtimeModel)}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      )}
-
                       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-white/10 dark:bg-slate-950">
                         <div
                           ref={chatViewportRef}
@@ -1390,28 +1355,6 @@ export default function AiStudioShell({
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      {runtimeModels.length > 1 && (
-                        <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 dark:border-white/10 dark:bg-slate-900/70">
-                          <div className="mb-2 text-sm font-medium text-slate-900 dark:text-white">
-                            Runtime Model Variant
-                          </div>
-                          <div className="text-sm text-slate-500 dark:text-slate-300">
-                            Pricing rows can point to different runtime models even when the schema exposes one default.
-                          </div>
-                          <select
-                            value={typeof payload.model === "string" ? payload.model : ""}
-                            onChange={(event) => updateField(["model"], event.target.value)}
-                            className="mt-3 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none ring-0 dark:border-white/10 dark:bg-slate-950 dark:text-white"
-                          >
-                            {runtimeModels.map((runtimeModel) => (
-                              <option key={runtimeModel} value={runtimeModel}>
-                                {displayModelLabel(runtimeModel)}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      )}
-
                       {fields.map((field) => {
                         const fieldType = field.schema.type;
                         const enumValues = Array.isArray(field.schema.enum)
@@ -1535,7 +1478,7 @@ export default function AiStudioShell({
                       <div className="text-lg font-semibold">
                         {selectedPricing
                           ? `${selectedPricing.creditPrice} ${selectedPricing.creditUnit}`
-                          : "No pricing row matched yet"}
+                          : "No pricing rule matched yet"}
                       </div>
                     </div>
                     <Button
@@ -1562,62 +1505,31 @@ export default function AiStudioShell({
                   <Card className="border-slate-200 bg-slate-50/60 shadow-none dark:border-white/10 dark:bg-slate-900/70">
                     <CardHeader>
                       <CardTitle className="text-lg text-slate-900 dark:text-white">
-                        Official Pricing Rows
+                        Official Pricing
                       </CardTitle>
                       <CardDescription className="dark:text-slate-300">
                         These values are sourced from the synced pricing snapshot.
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-3">
-                      {(detail?.pricingRows ?? []).length === 0 ? (
-                        <div className="rounded-2xl border border-dashed border-slate-200 p-4 text-sm text-slate-500 dark:border-white/10 dark:text-slate-400">
-                          No official pricing rows were matched for this entry yet.
+                      {detail?.pricing ? (
+                        <div className="rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-600 dark:border-white/10 dark:bg-slate-950 dark:text-slate-300">
+                          <div className="font-semibold text-slate-900 dark:text-white">
+                            Dynamic pricing
+                          </div>
+                          <div className="mt-2 font-mono text-xs">
+                            {detail.pricing.price_key}
+                          </div>
+                          {selectedPricing ? (
+                            <div className="mt-3">
+                              {selectedPricing.creditPrice} {selectedPricing.creditUnit}
+                            </div>
+                          ) : null}
                         </div>
                       ) : (
-                        detail?.pricingRows.map((row) => (
-                          <button
-                            key={`${row.modelDescription}-${row.creditPrice}`}
-                            type="button"
-                            onClick={() => handlePricingSelection(row)}
-                            className={cn(
-                              "w-full rounded-2xl border p-4 text-left transition-colors",
-                              selectedPricing?.modelDescription === row.modelDescription
-                                ? "border-slate-950 bg-slate-950 text-white dark:border-teal-400/60"
-                                : "border-slate-200 bg-white dark:border-white/10 dark:bg-slate-950",
-                            )}
-                          >
-                            <div className={cn(
-                              "text-sm font-semibold",
-                              selectedPricing?.modelDescription === row.modelDescription
-                                ? "text-white"
-                                : "text-slate-900 dark:text-white",
-                            )}>
-                              {row.modelDescription}
-                            </div>
-                            <div
-                              className={cn(
-                                "mt-2 text-sm",
-                                selectedPricing?.modelDescription === row.modelDescription
-                                  ? "text-slate-200"
-                                  : "text-slate-600 dark:text-slate-300",
-                              )}
-                            >
-                              {row.creditPrice} {row.creditUnit}
-                            </div>
-                            {row.runtimeModel && (
-                              <div
-                                className={cn(
-                                  "mt-2 text-xs font-mono",
-                                  selectedPricing?.modelDescription === row.modelDescription
-                                    ? "text-slate-300"
-                                    : "text-slate-500 dark:text-slate-400",
-                                )}
-                              >
-                                model: {displayModelLabel(row.runtimeModel)}
-                              </div>
-                            )}
-                          </button>
-                        ))
+                        <div className="rounded-2xl border border-dashed border-slate-200 p-4 text-sm text-slate-500 dark:border-white/10 dark:text-slate-400">
+                          No official pricing config was matched for this entry yet.
+                        </div>
                       )}
                     </CardContent>
                   </Card>

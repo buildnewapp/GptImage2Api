@@ -149,7 +149,7 @@ test("does not leak example input values into the payload when the form is blank
   });
 });
 
-test("applies selected ai-studio pricing rows onto the payload", () => {
+test("builds payload independently from pricing selection", () => {
   const payload = buildAiVideoStudioPayload({
     detail,
     formValues: {
@@ -157,22 +157,10 @@ test("applies selected ai-studio pricing rows onto the payload", () => {
       image_urls: ["https://example.com/custom.png"],
       n_frames: "10",
     },
-    selectedPricing: {
-      modelDescription: "Sdance, image-to-video, Standard-15.0s",
-      interfaceType: "video",
-      provider: "Sdance",
-      creditPrice: "70",
-      creditUnit: "per video",
-      usdPrice: "0.175",
-      falPrice: "1.5",
-      discountRate: 88.33,
-      discountPrice: false,
-      runtimeModel: "sora-2-image-to-video",
-    },
   });
 
   assert.equal(payload.model, "sora-2-image-to-video");
-  assert.equal(payload.input.n_frames, "15");
+  assert.equal(payload.input.n_frames, "10");
 });
 
 test("restores cached form state from an existing ai-studio payload", () => {

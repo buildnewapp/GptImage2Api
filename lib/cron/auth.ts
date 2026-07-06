@@ -1,22 +1,29 @@
 import { apiResponse } from "@/lib/api-response";
-import { getRequestUser } from "@/lib/auth/request-user";
 
-export async function assertCronAdminApiKey(request: Request) {
+function getBearerToken(request: Request) {
+  const authorization = request.headers.get("authorization")?.trim();
+
+  if (!authorization?.toLowerCase().startsWith("bearer ")) {
+    return null;
+  }
+
+  return authorization.slice(7).trim();
+}
+
+export function assertCronPassword(request: Request) {
   const { searchParams } = new URL(request.url);
-  const key = searchParams.get("key")?.trim();
-  const headers = new Headers(request.headers);
-  if (key) {
-    headers.set("authorization", `Bearer ${key}`);
-  }
-  const authRequest = key ? new Request(request, { headers }) : request;
-  const user = await getRequestUser(authRequest);
+  const cronPwd = process.env.CRON_PWD?.trim();
 
-  if (!user) {
-    return apiResponse.unauthorized("invalid api key");
+  if (!cronPwd) {
+    return apiResponse.serverError("CRON_PWD is not configured");
   }
 
-  if (user.authType !== "apikey" || user.role !== "admin") {
-    return apiResponse.forbidden("admin api key required");
+  const requestPwd = searchParams.get("pwd")?.trim()
+    || searchParams.get("key")?.trim()
+    || getBearerToken(request);
+
+  if (requestPwd !== cronPwd) {
+    return apiResponse.unauthorized("invalid cron password");
   }
 
   return null;
