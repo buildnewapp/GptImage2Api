@@ -201,7 +201,7 @@ test("loads VideoTemplate copy through next-intl instead of manual locale loader
   assert.doesNotMatch(source, /LOCALES\.includes/);
 });
 
-test("keeps the hero server-renderable by delegating the photo wall to a client motion component", () => {
+test("keeps the hero server-renderable with CSS-only photo wall motion", () => {
   const heroSource = readFileSync(
     path.join(projectRoot, "components/home/video/Hero.tsx"),
     "utf8",
@@ -218,9 +218,11 @@ test("keeps the hero server-renderable by delegating the photo wall to a client 
   assert.match(heroSource, /@\/components\/home\/video\/HeroPhotoWall/);
   assert.doesNotMatch(heroSource, /<style jsx>/);
   assert.match(heroPhotoWallSource, /^"use client";/);
-  assert.match(heroPhotoWallSource, /from "framer-motion"/);
+  assert.doesNotMatch(heroPhotoWallSource, /from "framer-motion"/);
   assert.match(heroPhotoWallSource, /useMemo/);
-  assert.match(heroPhotoWallSource, /useReducedMotion/);
+  assert.match(heroPhotoWallSource, /@keyframes hero-photo-wall-scroll-up/);
+  assert.match(heroPhotoWallSource, /@keyframes hero-photo-wall-scroll-down/);
+  assert.match(heroPhotoWallSource, /prefers-reduced-motion: reduce/);
   assert.doesNotMatch(heroPhotoWallSource, /whileHover/);
   assert.match(
     heroPhotoWallSource,
