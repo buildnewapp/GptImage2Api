@@ -155,3 +155,28 @@ test("keeps the public homepage cacheable by avoiding request-bound header auth"
   assert.match(pricesSource, /unstable_cache/);
   assert.match(routingSource, /localeCookie:\s*false/);
 });
+
+test("keeps template icons tree-shakeable", () => {
+  const iconSource = readFileSync(
+    path.join(projectRoot, "components/icon/index.tsx"),
+    "utf8"
+  );
+
+  assert.doesNotMatch(iconSource, /import\s+\*\s+as\s+Ri\s+from\s+"react-icons\/ri"/);
+  for (const iconName of [
+    "RiFileTextLine",
+    "RiMagicLine",
+    "RiFlashlightFill",
+    "RiVideoAddFill",
+    "RiPlayCircleLine",
+    "RiImageAddLine",
+    "RiSparkling2Line",
+    "RiHdLine",
+    "RiQuillPenLine",
+    "RiImageLine",
+    "RiDropLine",
+    "RiCopyrightLine",
+  ]) {
+    assert.match(iconSource, new RegExp(`${iconName}:`));
+  }
+});
