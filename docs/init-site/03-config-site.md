@@ -110,7 +110,7 @@ https://www.sandbox.paypal.com/billing/overview
 pnpm db:sync-paypal-products
 PAY_ENV=test pnpm db:sync-paypal-products -- --force
 PAY_ENV=live pnpm db:sync-paypal-products -- --force
-
+pnpm db:seed
 
 #### 真实环境
 1 新建应用，登录主账户
@@ -133,8 +133,10 @@ pnpm db:sync-paypal-products
 https://many-fine-bullfrog.ngrok-free.app/api/creem/webhook
 https://xxxx/api/creem/webhook
 *修改 .env 配置*
+把 test 环境 CREEM_API_BASE_URL 、 CREEM_API_KEY 临时拷贝到 .env中
 PAY_ENV=test pnpm db:sync-creem-products -- --force
 PAY_ENV=live pnpm db:sync-creem-products -- --force
+pnpm db:seed
 # moderation provider: none | creem
 MODERATION=creem
 MODERATION_API_KEY=

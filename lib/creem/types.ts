@@ -109,6 +109,7 @@ export interface CreemProductCreateParams {
   currency: string;
   billing_type: 'recurring' | 'onetime';
   billing_period?: 'every-month' | 'every-year';
+  tax_mode?: 'inclusive' | 'exclusive';
 }
 
 // Checkout type
