@@ -8,8 +8,10 @@ type PricingPlan = typeof pricingPlansSchema.$inferSelect;
 
 interface PricingCardDisplayProps {
   checkoutAvailabilityEnv?: {
+    creemEnabled?: boolean;
     nowpaymentsEnabled?: boolean;
     paypalEnabled?: boolean;
+    stripeEnabled?: boolean;
   };
   checkoutMode?: "default" | "nowpayments";
   id?: string;

@@ -23,8 +23,10 @@ type PricingPlan = typeof pricingPlansSchema.$inferSelect;
 export default async function PricingAll() {
   const t = await getTranslations("Pricing");
   const checkoutAvailabilityEnv = {
+    creemEnabled: Boolean(process.env.CREEM_API_KEY),
     nowpaymentsEnabled: Boolean(process.env.NOWPAYMENTS_API_KEY),
     paypalEnabled: isPayPalEnabled,
+    stripeEnabled: Boolean(process.env.STRIPE_SECRET_KEY),
   };
 
   const locale = await getLocale();

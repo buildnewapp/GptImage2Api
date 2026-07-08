@@ -27,8 +27,10 @@ const RECURRING_PURCHASE_REQUIRES_HIGHER_TIER_ERROR =
 type Params = {
   checkoutMode?: "default" | "nowpayments";
   checkoutAvailabilityEnv?: {
+    creemEnabled?: boolean;
     nowpaymentsEnabled?: boolean;
     paypalEnabled?: boolean;
+    stripeEnabled?: boolean;
   };
   plan: PricingPlan;
   localizedPlan: any;

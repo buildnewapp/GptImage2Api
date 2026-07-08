@@ -23,12 +23,55 @@ test("returns all configured one-time checkout providers", () => {
       stripePriceId: "price_123",
     },
     {
+      creemEnabled: true,
+      nowpaymentsEnabled: true,
+      paypalEnabled: true,
+      stripeEnabled: true,
+    },
+  );
+
+  assert.deepEqual(providers, ["creem", "paypal", "nowpayments", "stripe"]);
+});
+
+test("does not expose creem when creem checkout is disabled", () => {
+  const providers = getAvailableCheckoutProviders(
+    {
+      creemProductId: "prod_123",
+      currency: "USD",
+      provider: "all",
+      paymentType: "one_time",
+      price: "12.00",
+      stripePriceId: "price_123",
+    },
+    {
+      creemEnabled: false,
       nowpaymentsEnabled: true,
       paypalEnabled: true,
     },
   );
 
-  assert.deepEqual(providers, ["creem", "paypal", "nowpayments", "stripe"]);
+  assert.deepEqual(providers, ["paypal", "nowpayments", "stripe"]);
+});
+
+test("does not expose stripe when stripe checkout is disabled", () => {
+  const providers = getAvailableCheckoutProviders(
+    {
+      creemProductId: "prod_123",
+      currency: "USD",
+      provider: "all",
+      paymentType: "one_time",
+      price: "12.00",
+      stripePriceId: "price_123",
+    },
+    {
+      creemEnabled: true,
+      nowpaymentsEnabled: true,
+      paypalEnabled: true,
+      stripeEnabled: false,
+    },
+  );
+
+  assert.deepEqual(providers, ["creem", "paypal", "nowpayments"]);
 });
 
 test("only exposes choice providers for all-provider plans", () => {
