@@ -42,6 +42,13 @@ type CronCheckResult = {
     fal: CheckItem;
   };
   warnings: string[];
+  changes: CronCheckChange[];
+};
+
+type CronCheckChange = {
+  label: string;
+  previous: string | null;
+  current: string;
 };
 
 const globalState = globalThis as typeof globalThis & {
@@ -54,12 +61,12 @@ function toCheckError(error: unknown) {
 
 function normalizeNumber(value: unknown): number | null {
   if (typeof value === "number" && Number.isFinite(value)) {
-    return value;
+    return Math.round(value);
   }
 
   if (typeof value === "string" && value.trim()) {
     const numberValue = Number(value);
-    return Number.isFinite(numberValue) ? numberValue : null;
+    return Number.isFinite(numberValue) ? Math.round(numberValue) : null;
   }
 
   return null;
@@ -225,7 +232,7 @@ async function checkCredit(
   }
 }
 
-function collectWarnings(result: Omit<CronCheckResult, "warnings" | "status">) {
+function collectWarnings(result: Omit<CronCheckResult, "warnings" | "status" | "changes">) {
   const warnings: string[] = [];
 
   if (result.checks.kie.status === "warn") {
@@ -252,21 +259,52 @@ function getOverallStatus(checks: CronCheckResult["checks"], warnings: string[])
   return warnings.length > 0 ? "warn" : "ok";
 }
 
-async function sendWeComWarning(result: CronCheckResult) {
-  if (result.warnings.length === 0) {
+function formatCheckSnapshot(item: CheckItem) {
+  const valueText = item.value === undefined ? "" : `, value=${item.value ?? "null"}`;
+  return `status=${item.status}${valueText}`;
+}
+
+function collectCheckChanges(
+  previous: CronCheckResult | undefined,
+  current: Omit<CronCheckResult, "status" | "warnings" | "changes">,
+) {
+  const checks: Array<[string, CheckItem | undefined, CheckItem]> = [
+    ["DB", previous?.checks.db, current.checks.db],
+    ["KIE", previous?.checks.kie, current.checks.kie],
+    ["OpenRouter", previous?.checks.openrouter, current.checks.openrouter],
+    ["APIMART", previous?.checks.apimart, current.checks.apimart],
+    ["FAL", previous?.checks.fal, current.checks.fal],
+  ];
+
+  return checks
+    .map(([label, previousItem, currentItem]) => ({
+      label,
+      previous: previousItem ? formatCheckSnapshot(previousItem) : null,
+      current: formatCheckSnapshot(currentItem),
+    }))
+    .filter((change) => change.previous === null || change.previous !== change.current);
+}
+
+function formatShanghaiTime(value: string) {
+  return new Date(value).toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" });
+}
+
+async function sendWeComCheckChange(result: CronCheckResult) {
+  if (result.changes.length === 0) {
     return;
   }
 
-  const webhookKey = process.env.WECOM_WARN_WEBHOOK_KEY;
+  const webhookKey = process.env.WECOM_MSG_WEBHOOK_KEY;
   if (!webhookKey) {
-    console.error("WECOM_WARN_WEBHOOK_KEY is not configured");
+    console.error("WECOM_MSG_WEBHOOK_KEY is not configured");
     return;
   }
 
   const content = [
-    `${siteConfig.name} 系统报警`,
-    `时间: ${new Date(result.checkedAt).toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" })}`,
-    ...result.warnings,
+    `${siteConfig.name} 系统检测变动通知`,
+    `时间: ${formatShanghaiTime(result.checkedAt)}`,
+    ...result.changes.map((change) => `${change.label}: ${change.previous ?? "无"} -> ${change.current}`),
+    ...(result.warnings.length > 0 ? result.warnings : ["报警: 无"]),
     `DB: ${result.checks.db.status}`,
     `KIE: ${result.checks.kie.value ?? "查询失败"}`,
     `OpenRouter: ${result.checks.openrouter.value ?? "查询失败"}`,
@@ -292,12 +330,13 @@ async function sendWeComWarning(result: CronCheckResult) {
   const body = await response.json().catch(() => ({}));
 
   if (!response.ok || body?.errcode !== 0) {
-    console.error("send wecom warning failed:", body);
+    console.error("send wecom check change failed:", body);
   }
 }
 
 async function runCheck(): Promise<CronCheckResult> {
   const startTime = Date.now();
+  const previousResult = globalState.__cronCheckLastResult;
   const [dbResult, kieResult, openrouterResult, apimartResult, falResult] = await Promise.all([
     checkDb().catch((error) => ({
       status: "error" as const,
@@ -325,10 +364,11 @@ async function runCheck(): Promise<CronCheckResult> {
     ...partialResult,
     status: getOverallStatus(partialResult.checks, warnings),
     warnings,
+    changes: collectCheckChanges(previousResult, partialResult),
   };
 
   globalState.__cronCheckLastResult = result;
-  await sendWeComWarning(result);
+  await sendWeComCheckChange(result);
 
   return result;
 }

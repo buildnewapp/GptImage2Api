@@ -31,8 +31,10 @@ export default async function PricingByGroup({
 }: PricingByGroupProps = {}) {
   const t = await getTranslations("PricingPlans");
   const checkoutAvailabilityEnv = {
+    creemEnabled: Boolean(process.env.CREEM_API_KEY),
     nowpaymentsEnabled: Boolean(process.env.NOWPAYMENTS_API_KEY),
     paypalEnabled: isPayPalEnabled,
+    stripeEnabled: Boolean(process.env.STRIPE_SECRET_KEY),
   };
 
   const locale = await getLocale();

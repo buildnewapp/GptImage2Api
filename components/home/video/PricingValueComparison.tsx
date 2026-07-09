@@ -59,28 +59,28 @@ export default function PricingValueComparison({
         </h3>
         <div data-aos="fade-up" className={`${moduleCardClass} rounded-[calc(var(--radius)+0.45rem)]`}>
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[760px]">
               <thead>
                 <tr className="border-b">
-                  <th className="p-6 text-left font-semibold">{copy.plan}</th>
-                  <th className="p-6 text-center font-semibold">{copy.price}</th>
-                  <th className="p-6 text-center font-semibold">{copy.credits}</th>
-                  <th className="p-6 text-center font-semibold">{copy.purchaseNote}</th>
-                  <th className="p-6 text-center font-semibold text-primary">{copy.creditsPerDollar}</th>
-                  <th className="p-6 text-center font-semibold text-muted-foreground">{copy.dollarsPerCredit}</th>
+                  <th className="whitespace-nowrap p-6 text-left font-semibold">{copy.plan}</th>
+                  <th className="whitespace-nowrap p-6 text-center font-semibold">{copy.price}</th>
+                  <th className="whitespace-nowrap p-6 text-center font-semibold">{copy.credits}</th>
+                  <th className="whitespace-nowrap p-6 text-center font-semibold">{copy.purchaseNote}</th>
+                  <th className="whitespace-nowrap p-6 text-center font-semibold text-primary">{copy.creditsPerDollar}</th>
+                  <th className="whitespace-nowrap p-6 text-center font-semibold text-muted-foreground">{copy.dollarsPerCredit}</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row) => (
                   <tr key={row.plan} className="border-b last:border-0">
-                    <td className="p-6">{row.plan}</td>
-                    <td className="p-6 text-center">{row.price}</td>
-                    <td className="p-6 text-center">{row.credits.toLocaleString(locale)}</td>
-                    <td className="p-6 text-center">{row.purchaseNote}</td>
-                    <td className="p-6 text-center">
+                    <td className="whitespace-nowrap p-6">{row.plan}</td>
+                    <td className="whitespace-nowrap p-6 text-center">{row.price}</td>
+                    <td className="whitespace-nowrap p-6 text-center">{row.credits.toLocaleString(locale)}</td>
+                    <td className="whitespace-nowrap p-6 text-center">{row.purchaseNote}</td>
+                    <td className="whitespace-nowrap p-6 text-center">
                       <span className="font-semibold text-primary">{row.creditsPerDollar}</span>
                     </td>
-                    <td className="p-6 text-center">
+                    <td className="whitespace-nowrap p-6 text-center">
                       <span className="text-muted-foreground">${row.dollarsPerCredit}</span>
                     </td>
                   </tr>

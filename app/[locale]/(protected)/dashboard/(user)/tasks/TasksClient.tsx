@@ -4,12 +4,6 @@ import {
   claimTaskRewardAction,
 } from "@/actions/task-rewards/user";
 import { referralConfig } from "@/config/referral";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -50,11 +44,6 @@ type ExternalTaskKey = Extract<
   "github_star" | "huggingface_like"
 >;
 
-type FAQItem = {
-  question: string;
-  answer: string;
-};
-
 type ExternalTaskStarts = Partial<Record<ExternalTaskKey, string>>;
 
 function getTaskIcon(taskKey: TaskRewardItemData["taskKey"]) {
@@ -88,7 +77,6 @@ export default function TasksClient({
   data: TaskRewardsDashboardData;
 }) {
   const t = useTranslations("DashboardUserTasks");
-  const landingFaqT = useTranslations("Landing.FAQ");
   const router = useRouter();
   const [pendingTaskKey, setPendingTaskKey] = useState<string | null>(null);
   const [externalTaskStarts, setExternalTaskStarts] =
@@ -150,7 +138,6 @@ export default function TasksClient({
     };
   }, [data.tasks, externalTaskStarts]);
 
-  const faqItems = (landingFaqT.raw("items") as FAQItem[]).slice(0, 4);
   const firstOrderReward =
     referralConfig.firstOrderRewardMode === "fixed"
       ? `$${referralConfig.firstOrderRewardFixedUsd}`
@@ -497,43 +484,6 @@ export default function TasksClient({
         </div>
 
         <div className="space-y-3">
-          <Card className="h-fit border-slate-200 bg-slate-50 shadow-none dark:border-slate-800 dark:bg-slate-950/70">
-            <CardContent className="space-y-3 p-4">
-              <div className="space-y-1">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
-                  {t("faq.eyebrow")}
-                </div>
-                <h2 className="text-lg font-black tracking-tight text-slate-950 dark:text-slate-50">
-                  {t("faq.title")}
-                </h2>
-                <p className="text-xs leading-5 text-slate-500 dark:text-slate-400">
-                  {landingFaqT("description")}
-                </p>
-              </div>
-
-              <Accordion
-                type="single"
-                collapsible
-                className="rounded-2xl border bg-white px-3.5 dark:border-slate-800 dark:bg-slate-950/80"
-              >
-                {faqItems.map((item, index) => (
-                  <AccordionItem
-                    key={item.question}
-                    value={`faq-${index}`}
-                    className="border-dashed dark:border-slate-800"
-                  >
-                    <AccordionTrigger className="py-3 text-left text-[13px] font-semibold leading-5 text-slate-950 hover:no-underline dark:text-slate-100">
-                      {item.question}
-                    </AccordionTrigger>
-                    <AccordionContent className="pb-3 text-xs leading-5 text-slate-500 dark:text-slate-400">
-                      {item.answer}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </CardContent>
-          </Card>
-
           <Card className="border-slate-200 bg-slate-50 shadow-none dark:border-slate-800 dark:bg-slate-950/70">
             <CardContent className="space-y-3 p-4">
               <div className="space-y-1">

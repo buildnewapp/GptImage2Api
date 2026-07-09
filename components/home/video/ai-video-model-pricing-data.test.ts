@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { buildAiVideoModelPricingRows } from "@/components/home/video/ai-video-model-pricing-data";
+import {
+  buildAiVideoModelPricingGroups,
+  buildAiVideoModelPricingRows,
+} from "@/components/home/video/ai-video-model-pricing-data";
 
 test("buildAiVideoModelPricingRows includes dynamic AI video pricing rows", () => {
   const rows = buildAiVideoModelPricingRows({ locale: "en" });
@@ -42,5 +45,29 @@ test("buildAiVideoModelPricingRows includes dynamic AI video pricing rows", () =
   assert.ok(
     soraText,
     "runtime-priced Sora models should be rendered in the pricing table",
+  );
+});
+
+test("buildAiVideoModelPricingRows keeps AI video studio family order", () => {
+  const rows = buildAiVideoModelPricingRows({ locale: "en" });
+
+  assert.equal(rows[0]?.familyKey, "grok-imagine");
+  assert.equal(rows[0]?.familyLabel, "Grok Imagine");
+  assert.equal(rows[0]?.isSpecial, true);
+  assert.equal(rows[0]?.model, "Grok Imagine Text to Video");
+  assert.equal(rows[0]?.versionKey, "grok-imagine-text-to-video");
+});
+
+test("buildAiVideoModelPricingGroups aggregates rows by family", () => {
+  const groups = buildAiVideoModelPricingGroups({ locale: "en" });
+
+  assert.equal(groups[0]?.familyKey, "grok-imagine");
+  assert.equal(groups[0]?.familyLabel, "Grok Imagine");
+  assert.ok((groups[0]?.modelCount ?? 0) > 1);
+  assert.match(groups[0]?.priceSummary ?? "", /credits/);
+  assert.ok((groups[0]?.rows.length ?? 0) > 1);
+  assert.equal(
+    groups[0]?.rows.every((row) => row.familyKey === "grok-imagine"),
+    true,
   );
 });

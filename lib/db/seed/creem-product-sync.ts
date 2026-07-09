@@ -39,6 +39,7 @@ export interface BuildCreemProductPayloadResult extends DeriveCreemBillingResult
   description: string
   price: number
   currency: string
+  taxMode: 'exclusive'
 }
 
 function normalizePaymentType(paymentType: string | null | undefined) {
@@ -134,6 +135,7 @@ export function buildCreemProductPayload(
     description: (input.cardDescription ?? input.cardTitle).trim(),
     price: parsePrice(input.price, input.planId),
     currency: normalizeCurrency(input.currency),
+    taxMode: 'exclusive',
   }
 }
 

@@ -179,10 +179,12 @@ function buildCheckoutPlan(plan: VideoPricingSourcePlan): VideoTemplateCheckoutP
     planId: plan.id ?? null,
     provider: plan.provider ?? null,
     providerOptions: getAvailableCheckoutProviders(plan, {
+      creemEnabled: Boolean(process.env.CREEM_API_KEY),
       nowpaymentsEnabled: Boolean(process.env.NOWPAYMENTS_API_KEY),
       paypalEnabled: Boolean(
         process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET,
       ),
+      stripeEnabled: Boolean(process.env.STRIPE_SECRET_KEY),
     }),
     stripeCouponId: plan.stripeCouponId ?? null,
     stripePriceId: plan.stripePriceId ?? null,

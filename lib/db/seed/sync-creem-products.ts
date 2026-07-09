@@ -74,6 +74,7 @@ function buildCreateParamsFromPlan(plan: (typeof pricingPlans)[number]): CreemPr
     currency: payload.currency,
     billing_type: payload.billingType,
     billing_period: payload.billingPeriod,
+    tax_mode: payload.taxMode,
   }
 }
 
@@ -134,7 +135,7 @@ async function main() {
     if (dryRun) {
       const billingPeriodDisplay = createParams.billing_period ?? '-'
       console.log(
-        `- [DRY-RUN] ${plan.cardTitle} (${plan.id}) -> ${createParams.billing_type}/${billingPeriodDisplay}, ${createParams.price} ${createParams.currency}`
+        `- [DRY-RUN] ${plan.cardTitle} (${plan.id}) -> ${createParams.billing_type}/${billingPeriodDisplay}, ${createParams.price} ${createParams.currency}, tax_mode=${createParams.tax_mode}`
       )
       continue
     }

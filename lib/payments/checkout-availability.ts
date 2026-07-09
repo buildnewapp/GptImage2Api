@@ -16,8 +16,10 @@ export type CheckoutAvailabilityPlan = {
 };
 
 export type CheckoutAvailabilityEnv = {
+  creemEnabled?: boolean;
   nowpaymentsEnabled?: boolean;
   paypalEnabled?: boolean;
+  stripeEnabled?: boolean;
 };
 
 const TODO_VALUE_PREFIX = "TODO_";
@@ -47,8 +49,10 @@ export function getAvailableCheckoutProviders(
   }
 
   const providers: CheckoutProvider[] = [];
+  const creemEnabled = env.creemEnabled ?? true;
+  const stripeEnabled = env.stripeEnabled ?? true;
 
-  if (hasUsableProviderId(plan.creemProductId)) {
+  if (creemEnabled && hasUsableProviderId(plan.creemProductId)) {
     providers.push("creem");
   }
 
@@ -74,7 +78,7 @@ export function getAvailableCheckoutProviders(
     providers.push("nowpayments");
   }
 
-  if (hasUsableProviderId(plan.stripePriceId)) {
+  if (stripeEnabled && hasUsableProviderId(plan.stripePriceId)) {
     providers.push("stripe");
   }
 

@@ -27,8 +27,10 @@ const RECURRING_PURCHASE_REQUIRES_HIGHER_TIER_ERROR =
 type Params = {
   checkoutMode?: "default" | "nowpayments";
   checkoutAvailabilityEnv?: {
+    creemEnabled?: boolean;
     nowpaymentsEnabled?: boolean;
     paypalEnabled?: boolean;
+    stripeEnabled?: boolean;
   };
   plan: PricingPlan;
   localizedPlan: any;
@@ -248,7 +250,7 @@ export default function PricingCTA({
       const data = result.data;
 
       if (data.url) {
-        router.push(data.url);
+        window.location.assign(data.url);
         setIsLoading(false);
         setLoadingProvider(null);
       } else {

@@ -1,18 +1,35 @@
 import runtimeCatalog from "@/config/ai-studio/runtime/catalog.json";
 import {
   AI_VIDEO_STUDIO_FAMILIES,
+  type AiVideoStudioFamily,
   type AiVideoStudioVersion,
 } from "@/config/ai-video-studio";
 import { DEFAULT_LOCALE } from "@/i18n/routing";
 
 type SupportedLocale = "en" | "zh" | "ja";
+type PriceUnit = "fixed" | "per_image" | "per_second";
 
 export interface AiVideoModelPricingRow {
   billingNote: string;
   creditPrice: string;
+  familyKey: string;
+  familyLabel: string;
+  isHot: boolean;
+  isSpecial: boolean;
   model: string;
+  priceRate: number;
+  priceUnit: PriceUnit;
   spec: string;
   type: string;
+  versionKey: string;
+}
+
+export interface AiVideoModelPricingGroup {
+  familyKey: string;
+  familyLabel: string;
+  modelCount: number;
+  priceSummary: string;
+  rows: AiVideoModelPricingRow[];
 }
 
 function resolveLocale(locale: string): SupportedLocale {
@@ -59,6 +76,36 @@ function formatCreditsPerImage(value: number, locale: SupportedLocale) {
     return `${formatRate(value)} クレジット/枚`;
   }
   return `${formatRate(value)} credits/image`;
+}
+
+function formatCreditUnit(unit: PriceUnit, locale: SupportedLocale) {
+  if (unit === "per_second") {
+    if (locale === "zh") {
+      return "积分/秒";
+    }
+    if (locale === "ja") {
+      return "クレジット/秒";
+    }
+    return "credits/s";
+  }
+
+  if (unit === "per_image") {
+    if (locale === "zh") {
+      return "积分/张";
+    }
+    if (locale === "ja") {
+      return "クレジット/枚";
+    }
+    return "credits/image";
+  }
+
+  if (locale === "zh") {
+    return "积分";
+  }
+  if (locale === "ja") {
+    return "クレジット";
+  }
+  return "credits";
 }
 
 function normalizeTypeLabel(value: string, locale: SupportedLocale) {
@@ -141,20 +188,61 @@ function isImageCountPricing(priceFinal: string) {
   return /\b(num_images|image_count|quantity|count)\b/.test(priceFinal);
 }
 
+function getPriceUnit(priceFinal: string): PriceUnit {
+  if (isImageCountPricing(priceFinal)) {
+    return "per_image";
+  }
+
+  if (isDurationPricing(priceFinal)) {
+    return "per_second";
+  }
+
+  return "fixed";
+}
+
 function formatCreditPrice(input: {
   locale: SupportedLocale;
   priceFinal: string;
   rate: number;
 }) {
-  if (isImageCountPricing(input.priceFinal)) {
+  const unit = getPriceUnit(input.priceFinal);
+
+  if (unit === "per_image") {
     return formatCreditsPerImage(input.rate, input.locale);
   }
 
-  if (isDurationPricing(input.priceFinal)) {
+  if (unit === "per_second") {
     return formatCreditsPerSecond(input.rate, input.locale);
   }
 
   return formatFixedCredits(input.rate, input.locale);
+}
+
+function formatPriceSummary(
+  rows: AiVideoModelPricingRow[],
+  locale: SupportedLocale,
+) {
+  const unitOrder: PriceUnit[] = ["per_second", "fixed", "per_image"];
+
+  return unitOrder
+    .map((unit) => {
+      const rates = rows
+        .filter((row) => row.priceUnit === unit)
+        .map((row) => row.priceRate);
+
+      if (rates.length === 0) {
+        return null;
+      }
+
+      const min = Math.min(...rates);
+      const max = Math.max(...rates);
+      const rateLabel =
+        min === max ? formatRate(min) : `${formatRate(min)}-${formatRate(max)}`;
+
+      return `${rateLabel} ${formatCreditUnit(unit, locale)}`;
+    })
+    .filter(Boolean)
+    .join(" / ");
 }
 
 function getDynamicPriceNote(input: {
@@ -260,6 +348,7 @@ function inferPriceSpec(parts: string[]) {
 }
 
 function buildVersionPricingRows(
+  family: AiVideoStudioFamily,
   version: AiVideoStudioVersion,
   locale: SupportedLocale,
 ) {
@@ -280,6 +369,7 @@ function buildVersionPricingRows(
     const mode =
       parts.find((part) => part === "with_video" || part === "video-input") ??
       null;
+    const priceUnit = getPriceUnit(entry.pricing.price_final);
     const row = {
       billingNote: getDynamicPriceNote({
         mode,
@@ -292,9 +382,16 @@ function buildVersionPricingRows(
         priceFinal: entry.pricing.price_final,
         rate,
       }),
+      familyKey: family.key,
+      familyLabel: family.label,
+      isHot: version.isHot === true,
+      isSpecial: version.isSpecial === true,
       model: version.label,
+      priceRate: rate,
+      priceUnit,
       spec: inferPriceSpec(parts),
       type: inferPriceType(parts, locale, version),
+      versionKey: version.key,
     } satisfies AiVideoModelPricingRow;
 
     const key = `${row.model}|${row.type}|${row.spec}|${row.creditPrice}`;
@@ -306,18 +403,6 @@ function buildVersionPricingRows(
   }
 
   return rows;
-}
-
-function comparePricingRows(left: AiVideoModelPricingRow, right: AiVideoModelPricingRow) {
-  if (left.model !== right.model) {
-    return left.model.localeCompare(right.model);
-  }
-
-  if (left.type !== right.type) {
-    return left.type.localeCompare(right.type);
-  }
-
-  return left.spec.localeCompare(right.spec, undefined, { numeric: true });
 }
 
 export function buildAiVideoModelPricingRows({
@@ -336,9 +421,41 @@ export function buildAiVideoModelPricingRows({
     }
 
     for (const version of family.versions) {
-      rows.push(...buildVersionPricingRows(version, resolvedLocale));
+      rows.push(...buildVersionPricingRows(family, version, resolvedLocale));
     }
   }
 
-  return rows.sort(comparePricingRows);
+  return rows;
+}
+
+export function buildAiVideoModelPricingGroups({
+  locale,
+}: {
+  locale: string;
+}): AiVideoModelPricingGroup[] {
+  const resolvedLocale = resolveLocale(locale);
+  const rows = buildAiVideoModelPricingRows({ locale });
+  const groups: AiVideoModelPricingGroup[] = [];
+  const groupMap = new Map<string, AiVideoModelPricingGroup>();
+
+  for (const row of rows) {
+    let group = groupMap.get(row.familyKey);
+    if (!group) {
+      group = {
+        familyKey: row.familyKey,
+        familyLabel: row.familyLabel,
+        modelCount: 0,
+        priceSummary: "",
+        rows: [],
+      };
+      groupMap.set(row.familyKey, group);
+      groups.push(group);
+    }
+
+    group.rows.push(row);
+    group.modelCount = new Set(group.rows.map((item) => item.versionKey)).size;
+    group.priceSummary = formatPriceSummary(group.rows, resolvedLocale);
+  }
+
+  return groups;
 }
