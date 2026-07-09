@@ -250,7 +250,7 @@ export default function PricingCTA({
       const data = result.data;
 
       if (data.url) {
-        router.push(data.url);
+        window.location.assign(data.url);
         setIsLoading(false);
         setLoadingProvider(null);
       } else {

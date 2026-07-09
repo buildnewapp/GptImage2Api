@@ -14,6 +14,12 @@ import {
   hasUsableProviderId,
   hasUsablePriceAndCurrency,
 } from '@/lib/payments/checkout-availability';
+import { signPaymentHandoffToken } from '@/lib/payments/handoff';
+import {
+  getPaymentPayUrl,
+  getPaymentRequestHost,
+  isMainPaymentSite,
+} from '@/lib/payments/main-site';
 import { isRecurringPaymentType } from '@/lib/payments/provider-utils';
 import { assertRecurringPurchaseIsHigherTier } from '@/lib/payments/subscription-purchase';
 import { getURL } from '@/lib/url';
@@ -48,6 +54,22 @@ export async function POST(req: Request) {
 
   const provider = requestData.provider;
   const nowpaymentsEnabled = Boolean(process.env.NOWPAYMENTS_API_KEY);
+
+  if (!isMainPaymentSite()) {
+    if (!provider || provider === 'nowpayments') {
+      return apiResponse.badRequest('Unsupported payment handoff provider');
+    }
+
+    const token = signPaymentHandoffToken({
+      payload: {
+        checkout: requestData,
+        sourceHost: getPaymentRequestHost(req),
+        userId: user.id,
+      },
+    });
+
+    return apiResponse.success({ url: getPaymentPayUrl(token) });
+  }
 
   try {
     if (provider === 'stripe') {
