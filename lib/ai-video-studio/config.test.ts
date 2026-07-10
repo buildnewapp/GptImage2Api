@@ -79,6 +79,115 @@ test("exposes the Sora2 family for AI Video Studio", () => {
   );
 });
 
+test("shows Meta Muse video and image models as coming soon", () => {
+  const videoFamily = AI_VIDEO_STUDIO_FAMILIES.find(
+    (family) => family.key === "meta-muse-video",
+  );
+  const imageFamily = AI_VIDEO_STUDIO_FAMILIES.find(
+    (family) => family.key === "meta-muse-image",
+  );
+
+  assert.deepEqual(videoFamily, {
+    key: "meta-muse-video",
+    label: "Meta Muse Video",
+    description: "Meta Muse video generation model",
+    icon: "meta-muse",
+    tags: [{ text: "Coming Soon", type: "coming-soon" }],
+    selectable: false,
+    versions: [
+      {
+        key: "meta-muse-text-to-video",
+        label: "Text to Video",
+        familyKey: "meta-muse-video",
+        modelId: "video:meta-muse-text-to-video",
+        description: "Create video from a text prompt.",
+        isSpecial: true,
+        isHot: true,
+      },
+      {
+        key: "meta-muse-image-to-video",
+        label: "Image to Video",
+        familyKey: "meta-muse-video",
+        modelId: "video:meta-muse-image-to-video",
+        description: "Animate a source image into video.",
+        isSpecial: true,
+        isHot: true,
+      },
+      {
+        key: "meta-muse-reference-to-video",
+        label: "Reference to Video",
+        familyKey: "meta-muse-video",
+        modelId: "video:meta-muse-reference-to-video",
+        description: "Create video guided by reference images.",
+        isSpecial: true,
+        isHot: true,
+      },
+    ],
+  });
+  assert.deepEqual(imageFamily, {
+    key: "meta-muse-image",
+    label: "Meta Muse Image",
+    description: "Meta Muse image generation model",
+    icon: "meta-muse",
+    tags: [{ text: "Coming Soon", type: "coming-soon" }],
+    selectable: false,
+    versions: [
+      {
+        key: "meta-muse-text-to-image",
+        label: "Text to Image",
+        familyKey: "meta-muse-image",
+        modelId: "image:meta-muse-text-to-image",
+        description: "Create an image from a text prompt.",
+        isSpecial: true,
+        isHot: true,
+      },
+      {
+        key: "meta-muse-image-edit",
+        label: "Image Edit",
+        familyKey: "meta-muse-image",
+        modelId: "image:meta-muse-image-edit",
+        description: "Edit an image with precise instructions.",
+        isSpecial: true,
+        isHot: true,
+      },
+      {
+        key: "meta-muse-multi-reference-image",
+        label: "Multi-Reference Image",
+        familyKey: "meta-muse-image",
+        modelId: "image:meta-muse-multi-reference-image",
+        description: "Create an image from multiple reference images.",
+        isSpecial: true,
+        isHot: true,
+      },
+    ],
+  });
+
+  const familyKeys = AI_VIDEO_STUDIO_FAMILIES.map((family) => family.key);
+  assert.equal(
+    familyKeys.indexOf("meta-muse-video") < familyKeys.indexOf("grok-imagine"),
+    true,
+  );
+  assert.equal(
+    familyKeys.indexOf("runway") < familyKeys.indexOf("meta-muse-image"),
+    true,
+  );
+  assert.equal(
+    familyKeys.indexOf("meta-muse-image") < familyKeys.indexOf("nano-banana"),
+    true,
+  );
+});
+
+test("uses the LobeHub Meta icon for the Meta Muse family", () => {
+  const iconSource = readFileSync(
+    "components/ai/AiVideoStudioFamilyIcon.tsx",
+    "utf8",
+  );
+
+  assert.match(iconSource, /\bMeta,/);
+  assert.match(iconSource, /case "meta-muse":\s*return <Meta\.Color/);
+  assert.doesNotMatch(iconSource, /src="\/logo\.png"/);
+});
+
 test("keeps fal upstream model allowlist as endpoint id strings only", () => {
   const modelIds = loadFalModelIds();
 

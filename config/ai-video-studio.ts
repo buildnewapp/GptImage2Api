@@ -16,6 +16,7 @@ export type AiVideoStudioFamilyIconKey =
   | "hailuo"
   | "jimeng"
   | "kling"
+  | "meta-muse"
   | "nano-banana"
   | "qwen"
   | "runway"
@@ -63,6 +64,80 @@ const AI_VIDEO_STUDIO_LEVEL_LIMIT_RANK: Record<AiVideoStudioLevelLimit, number> 
 };
 
 export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
+  {
+    key: "seedance-2.5",
+    label: "Seedance 2.5",
+    description: "Seedance 2.5 video generation with text, image, and reference inputs",
+    icon: "bytedance",
+    tags: [{ text: "Coming Soon", type: "coming-soon" }],
+    selectable: false,
+    versions: [
+      {
+        key: "seedance-2-5-text-to-video",
+        label: "Text to Video",
+        familyKey: "seedance-2.5",
+        modelId: "video:seedance-2-5-text-to-video",
+        description: "Create video from a text prompt.",
+        isSpecial: true,
+        isHot: true,
+      },
+      {
+        key: "seedance-2-5-image-to-video",
+        label: "Image to Video",
+        familyKey: "seedance-2.5",
+        modelId: "video:seedance-2-5-image-to-video",
+        description: "Animate a source image into video.",
+        isSpecial: true,
+        isHot: true,
+      },
+      {
+        key: "seedance-2-5-reference-to-video",
+        label: "Reference to Video",
+        familyKey: "seedance-2.5",
+        modelId: "video:seedance-2-5-reference-to-video",
+        description: "Create video guided by reference assets.",
+        isSpecial: true,
+        isHot: true,
+      },
+    ],
+  },
+  {
+    key: "meta-muse-video",
+    label: "Meta Muse Video",
+    description: "Meta Muse video generation model",
+    icon: "meta-muse",
+    tags: [{ text: "Coming Soon", type: "coming-soon" }],
+    selectable: false,
+    versions: [
+      {
+        key: "meta-muse-text-to-video",
+        label: "Text to Video",
+        familyKey: "meta-muse-video",
+        modelId: "video:meta-muse-text-to-video",
+        description: "Create video from a text prompt.",
+        isSpecial: true,
+        isHot: true,
+      },
+      {
+        key: "meta-muse-image-to-video",
+        label: "Image to Video",
+        familyKey: "meta-muse-video",
+        modelId: "video:meta-muse-image-to-video",
+        description: "Animate a source image into video.",
+        isSpecial: true,
+        isHot: true,
+      },
+      {
+        key: "meta-muse-reference-to-video",
+        label: "Reference to Video",
+        familyKey: "meta-muse-video",
+        modelId: "video:meta-muse-reference-to-video",
+        description: "Create video guided by reference images.",
+        isSpecial: true,
+        isHot: true,
+      },
+    ],
+  },
   {
     key: "grok-imagine",
     label: "Grok Imagine",
@@ -948,6 +1023,43 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         familyKey: "runway",
         modelId: "video:generate-aleph-video",
         isSpecial: true,
+      },
+    ],
+  },
+  {
+    key: "meta-muse-image",
+    label: "Meta Muse Image",
+    description: "Meta Muse image generation model",
+    icon: "meta-muse",
+    tags: [{ text: "Coming Soon", type: "coming-soon" }],
+    selectable: false,
+    versions: [
+      {
+        key: "meta-muse-text-to-image",
+        label: "Text to Image",
+        familyKey: "meta-muse-image",
+        modelId: "image:meta-muse-text-to-image",
+        description: "Create an image from a text prompt.",
+        isSpecial: true,
+        isHot: true,
+      },
+      {
+        key: "meta-muse-image-edit",
+        label: "Image Edit",
+        familyKey: "meta-muse-image",
+        modelId: "image:meta-muse-image-edit",
+        description: "Edit an image with precise instructions.",
+        isSpecial: true,
+        isHot: true,
+      },
+      {
+        key: "meta-muse-multi-reference-image",
+        label: "Multi-Reference Image",
+        familyKey: "meta-muse-image",
+        modelId: "image:meta-muse-multi-reference-image",
+        description: "Create an image from multiple reference images.",
+        isSpecial: true,
+        isHot: true,
       },
     ],
   },
