@@ -1,6 +1,12 @@
 import { buildAiVideoModelPricingRows } from "@/components/home/video/ai-video-model-pricing-data";
 import { AI_VIDEO_STUDIO_FAMILIES } from "@/config/ai-video-studio";
 import { DEFAULT_LOCALE } from "@/i18n/routing";
+import modelMarkdownEn from "@/i18n/messages/en/ModelMarkdown.json";
+import commonEn from "@/i18n/messages/en/common.json";
+import modelMarkdownJa from "@/i18n/messages/ja/ModelMarkdown.json";
+import commonJa from "@/i18n/messages/ja/common.json";
+import modelMarkdownZh from "@/i18n/messages/zh/ModelMarkdown.json";
+import commonZh from "@/i18n/messages/zh/common.json";
 import {
   getCachedAiStudioCatalogDetail,
   normalizeModelHandle,
@@ -8,148 +14,21 @@ import {
 import { toPublicDocDetail } from "@/lib/ai-studio/public";
 import { NextResponse } from "next/server";
 
-type SupportedLocale = "en" | "zh" | "ja";
-
-const supportedLocales = new Set<string>(["en", "zh", "ja"]);
-
 const copyByLocale = {
-  en: {
-    apiDocumentation: "API Documentation",
-    authentication: "Authentication",
-    authIntro: "All requests require an API key in the `Authorization` header.",
-    availableModels: "Available models",
-    billing: "Billing",
-    commonErrors: "Common errors",
-    contentType: "Content-Type",
-    createEndpointTitle: "Endpoint",
-    createTask: "Create generation task",
-    defaultExample: "Default / Example",
-    description: "Description",
-    endpoint: "Endpoint",
-    errorDocNotFound: "API doc not found.",
-    errorMdOnly: "Only .md API docs are supported.",
-    field: "Field",
-    fieldsEmpty: "_No fields are configured for this model._",
-    inputFields: "Input fields",
-    meaning: "Meaning",
-    model: "Model",
-    modelsHeader: "| modelId | Version | Provider | Runtime model |",
-    no: "No",
-    options: "Options",
-    overview: "Overview",
-    overviewBody: (model: string) =>
-      `Use the AI Studio API to create ${model} generation tasks and query their status. The flow is asynchronous: create a task first, then poll the task endpoint with the returned \`taskId\`.`,
-    payloadFields: "Payload fields",
-    price: "Price",
-    pricing: "Pricing",
-    pricingEmpty: "_No pricing rows are configured for this model._",
-    pricingIntro:
-      "Credits are reserved when a generation task is created. The `reservedCredits` value in the create-task response is the final amount reserved for that request.",
-    queryTask: "Query task status",
-    requestExample: "Request example",
-    requestFields: "Request fields",
-    required: "Required",
-    spec: "Spec",
-    status: "Status",
-    successResponse: "Success response",
-    tagline: (model: string) =>
-      `Generate videos with the ${model} model through the AI Studio API.`,
-    type: "Type",
-    yes: "Yes",
-  },
-  zh: {
-    apiDocumentation: "API 文档",
-    authentication: "认证方式",
-    authIntro: "所有请求都需要在 `Authorization` 请求头中携带 API Key。",
-    availableModels: "可用模型",
-    billing: "计费方式",
-    commonErrors: "常见错误",
-    contentType: "内容类型",
-    createEndpointTitle: "接口地址",
-    createTask: "创建生成任务",
-    defaultExample: "默认值 / 示例",
-    description: "说明",
-    endpoint: "接口",
-    errorDocNotFound: "未找到 API 文档。",
-    errorMdOnly: "仅支持 .md API 文档。",
-    field: "字段",
-    fieldsEmpty: "_该模型暂无字段配置。_",
-    inputFields: "input 字段",
-    meaning: "含义",
-    model: "模型",
-    modelsHeader: "| modelId | 版本 | 服务商 | 运行模型 |",
-    no: "否",
-    options: "可选值",
-    overview: "概览",
-    overviewBody: (model: string) =>
-      `使用 AI Studio API 创建 ${model} 生成任务并查询任务状态。接口采用异步流程：先创建任务拿到 \`taskId\`，再通过任务查询接口轮询结果。`,
-    payloadFields: "Payload 字段",
-    price: "价格",
-    pricing: "价格",
-    pricingEmpty: "_该模型暂无价格配置。_",
-    pricingIntro:
-      "创建生成任务时会预扣积分。创建任务响应中的 `reservedCredits` 是本次请求最终预留的积分数量。",
-    queryTask: "查询任务状态",
-    requestExample: "请求示例",
-    requestFields: "请求字段",
-    required: "必填",
-    spec: "规格",
-    status: "状态",
-    successResponse: "成功响应",
-    tagline: (model: string) =>
-      `通过 AI Studio API 使用 ${model} 模型生成视频。`,
-    type: "类型",
-    yes: "是",
-  },
-  ja: {
-    apiDocumentation: "API ドキュメント",
-    authentication: "認証",
-    authIntro:
-      "すべてのリクエストで `Authorization` ヘッダーに API Key が必要です。",
-    availableModels: "利用可能なモデル",
-    billing: "課金",
-    commonErrors: "一般的なエラー",
-    contentType: "Content-Type",
-    createEndpointTitle: "エンドポイント",
-    createTask: "生成タスクを作成",
-    defaultExample: "デフォルト / 例",
-    description: "説明",
-    endpoint: "エンドポイント",
-    errorDocNotFound: "API ドキュメントが見つかりません。",
-    errorMdOnly: ".md API ドキュメントのみ対応しています。",
-    field: "フィールド",
-    fieldsEmpty: "_このモデルのフィールド設定はありません。_",
-    inputFields: "input フィールド",
-    meaning: "意味",
-    model: "モデル",
-    modelsHeader: "| modelId | バージョン | プロバイダー | 実行モデル |",
-    no: "いいえ",
-    options: "選択肢",
-    overview: "概要",
-    overviewBody: (model: string) =>
-      `AI Studio API を使用して ${model} の生成タスクを作成し、タスク状態を確認します。処理は非同期です。まずタスクを作成して \`taskId\` を取得し、その後タスク API で結果を確認します。`,
-    payloadFields: "Payload フィールド",
-    price: "価格",
-    pricing: "価格",
-    pricingEmpty: "_このモデルの価格設定はありません。_",
-    pricingIntro:
-      "生成タスクの作成時にクレジットが予約されます。作成レスポンスの `reservedCredits` が、そのリクエストで予約されたクレジット数です。",
-    queryTask: "タスク状態を確認",
-    requestExample: "リクエスト例",
-    requestFields: "リクエストフィールド",
-    required: "必須",
-    spec: "仕様",
-    status: "ステータス",
-    successResponse: "成功レスポンス",
-    tagline: (model: string) =>
-      `AI Studio API で ${model} モデルを使用して動画を生成します。`,
-    type: "タイプ",
-    yes: "はい",
-  },
-} satisfies Record<
-  SupportedLocale,
-  Record<string, string | ((value: string) => string)>
->;
+  en: modelMarkdownEn,
+  zh: modelMarkdownZh,
+  ja: modelMarkdownJa,
+} as const;
+
+const modelPricingCopyByLocale = {
+  en: commonEn.VideoPricing.dynamic.modelPricing,
+  zh: commonZh.VideoPricing.dynamic.modelPricing,
+  ja: commonJa.VideoPricing.dynamic.modelPricing,
+} as const;
+
+type SupportedLocale = keyof typeof copyByLocale;
+
+const supportedLocales = new Set<string>(Object.keys(copyByLocale));
 
 function resolveLocale(locale: string): SupportedLocale {
   if (supportedLocales.has(locale)) {
@@ -161,6 +40,16 @@ function resolveLocale(locale: string): SupportedLocale {
 
 function getCopy(locale: SupportedLocale) {
   return copyByLocale[locale] ?? copyByLocale.en;
+}
+
+function getModelPricingCopy(locale: SupportedLocale) {
+  return modelPricingCopyByLocale[locale] ?? modelPricingCopyByLocale.en;
+}
+
+function formatTemplate(template: string, values: Record<string, string | number>) {
+  return template.replace(/\{(\w+)\}/g, (match, key) =>
+    values[key] === undefined ? match : String(values[key]),
+  );
 }
 
 function normalizeLoose(input: string) {
@@ -382,18 +271,17 @@ function buildMarkdown({
     .join("\n\n");
 
   const pricingRows = buildAiVideoModelPricingRows({
+    copy: getModelPricingCopy(locale),
     familyKey: doc.family.key,
     locale,
   });
 
-  const overviewBody =
-    typeof copy.overviewBody === "function"
-      ? copy.overviewBody(doc.family.label)
-      : copy.overviewBody;
-  const tagline =
-    typeof copy.tagline === "function"
-      ? copy.tagline(doc.family.label)
-      : copy.tagline;
+  const overviewBody = formatTemplate(copy.overviewBody, {
+    model: doc.family.label,
+  });
+  const tagline = formatTemplate(copy.tagline, {
+    model: doc.family.label,
+  });
 
   return [
     `# ${doc.family.label} ${copy.apiDocumentation}`,

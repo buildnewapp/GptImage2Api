@@ -324,11 +324,16 @@ async function buildModelPage(input: {
   locale: string;
 }) {
   const content = await loadModelApiPageContent(input);
+  const videoPricingT = await getTranslations({
+    locale: input.locale,
+    namespace: "VideoPricing",
+  });
   const modelFamily =
     AI_VIDEO_STUDIO_FAMILIES.find(
       (family) => family.key === input.config.familyKey,
     ) ?? AI_VIDEO_STUDIO_FAMILIES[0];
   const pricingRows = buildAiVideoModelPricingRows({
+    copy: videoPricingT.raw("dynamic.modelPricing"),
     familyKey: modelFamily.key,
     locale: input.locale,
   });

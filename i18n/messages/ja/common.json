@@ -1024,6 +1024,80 @@
       "saveLabel": "17% お得",
       "title": "現在のWebアプリ向け明瞭な料金体系",
       "yearlyLabel": "年額"
+    },
+    "dynamic": {
+      "pricing": {
+        "billing": {
+          "annual": "年額請求 {amount}",
+          "monthly": "月額請求 {amount}"
+        },
+        "creditPackTitle": "{credits} クレジット",
+        "credits": {
+          "monthly": "毎月 {credits} クレジット",
+          "oneTime": "{credits} クレジット"
+        },
+        "savings": "最大{percent}%お得"
+      },
+      "valueComparison": {
+        "columns": {
+          "credits": "総クレジット",
+          "creditsPerDollar": "1ドルあたりのクレジット",
+          "dollarsPerCredit": "1クレジットあたりのドル",
+          "plan": "プラン",
+          "price": "価格",
+          "purchaseNote": "購入条件"
+        },
+        "planLabels": {
+          "annual": "年額 {planTitle}",
+          "monthly": "月額 {planTitle}"
+        },
+        "purchaseNotes": {
+          "onetime": "繰り返し購入可",
+          "recurring": "1回のみ購入可"
+        },
+        "title": "プラン別クレジット換算表"
+      },
+      "modelPricing": {
+        "billingNotes": {
+          "fixed": "生成ごとの固定価格",
+          "imageCount": "画像数 × {rate}",
+          "outputSeconds": "出力秒数 × {rate}",
+          "withVideo": "（入力秒数 + 出力秒数）× {rate}"
+        },
+        "columns": {
+          "billingNote": "課金ルール",
+          "creditPrice": "クレジット価格",
+          "model": "モデル",
+          "spec": "仕様",
+          "type": "タイプ"
+        },
+        "creditPrices": {
+          "fixed": "{value} クレジット",
+          "perImage": "{value} クレジット/枚",
+          "perSecond": "{value} クレジット/秒"
+        },
+        "filters": {
+          "hot": "Hot",
+          "special": "Special"
+        },
+        "modelCount": "モデル",
+        "searchPlaceholder": "モデル系列またはバージョンを検索",
+        "title": "AI Video Studio モデル価格表",
+        "typeLabels": {
+          "image-to-image": "画像から画像",
+          "image-to-video": "画像から動画",
+          "storyboard": "Storyboard",
+          "text-to-image": "テキストから画像",
+          "text-to-video": "テキストから動画",
+          "text/image-to-video": "テキスト/画像から動画",
+          "video-to-video": "動画から動画"
+        },
+        "units": {
+          "fixed": "クレジット",
+          "perImage": "クレジット/枚",
+          "perSecond": "クレジット/秒"
+        }
+      }
     }
   }
 }

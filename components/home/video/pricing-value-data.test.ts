@@ -60,3 +60,55 @@ test("buildPricingValueRows calculates credits per dollar across active plans", 
   assert.equal(proPack.dollarsPerCredit, "0.007973");
   assert.equal(proPack.purchaseNote, "Repeat purchase");
 });
+
+test("buildPricingValueRows formats localized labels from supplied copy", () => {
+  const rows = buildPricingValueRows({
+    copy: {
+      planLabels: {
+        annual: "Yearly {planTitle}",
+        monthly: "Monthly {planTitle}",
+      },
+      purchaseNotes: {
+        recurring: "Single checkout",
+        onetime: "Reusable pack",
+      },
+    },
+    environment: "test",
+    locale: "fr",
+    plans: [
+      {
+        environment: "test",
+        groupSlug: "annual",
+        cardTitle: "Standard",
+        displayOrder: 1,
+        isActive: true,
+        isHighlighted: false,
+        price: "120",
+        benefitsJsonb: {
+          monthlyCredits: 100,
+          totalMonths: 12,
+        },
+      },
+      {
+        environment: "test",
+        groupSlug: "onetime",
+        cardTitle: "Starter Pack",
+        displayOrder: 2,
+        isActive: true,
+        isHighlighted: false,
+        price: "10",
+        benefitsJsonb: {
+          oneTimeCredits: 100,
+        },
+      },
+    ],
+  });
+
+  assert.deepEqual(
+    rows.map((row) => [row.plan, row.purchaseNote]),
+    [
+      ["Yearly Standard", "Single checkout"],
+      ["Starter Pack", "Reusable pack"],
+    ],
+  );
+});

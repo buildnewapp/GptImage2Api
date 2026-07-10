@@ -41,6 +41,7 @@ export default async function VideoTemplate() {
     testimonials: t.raw("testimonials"),
     pricing: buildVideoTemplatePricingSection({
       baseSection: pricingT.raw("section"),
+      copy: pricingT.raw("dynamic.pricing"),
       locale,
       plans,
     }),

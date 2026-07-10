@@ -2,54 +2,35 @@ import {
   moduleCardClass,
   subsectionTitleClass,
 } from "@/components/home/video/constants";
-import { buildPricingValueRows } from "@/components/home/video/pricing-value-data";
+import {
+  buildPricingValueRows,
+  type PricingValueCopy,
+} from "@/components/home/video/pricing-value-data";
 import type { VideoPricingSourcePlan } from "@/components/home/video/pricing-data";
+import { getTranslations } from "next-intl/server";
 
-function getCopy(locale: string) {
-  if (locale === "zh") {
-    return {
-      credits: "总积分",
-      creditsPerDollar: "1$ 可买积分",
-      dollarsPerCredit: "1 积分 = $",
-      plan: "产品",
-      price: "价格",
-      purchaseNote: "购买说明",
-      title: "套餐积分换算表",
-    };
-  }
-
-  if (locale === "ja") {
-    return {
-      credits: "総クレジット",
-      creditsPerDollar: "1ドルあたりのクレジット",
-      dollarsPerCredit: "1クレジットあたりのドル",
-      plan: "プラン",
-      price: "価格",
-      purchaseNote: "購入条件",
-      title: "プラン別クレジット換算表",
-    };
-  }
-
-  return {
-    credits: "Credits",
-    creditsPerDollar: "Credits per $1",
-    dollarsPerCredit: "$ per Credit",
-    plan: "Plan",
-    price: "Price",
-    purchaseNote: "Purchase Note",
-    title: "Credits Value Comparison",
+type PricingValueTableCopy = PricingValueCopy & {
+  columns: {
+    credits: string;
+    creditsPerDollar: string;
+    dollarsPerCredit: string;
+    plan: string;
+    price: string;
+    purchaseNote: string;
   };
-}
+  title: string;
+};
 
-export default function PricingValueComparison({
+export default async function PricingValueComparison({
   locale,
   plans,
 }: {
   locale: string;
   plans: VideoPricingSourcePlan[];
 }) {
-  const copy = getCopy(locale);
-  const rows = buildPricingValueRows({ locale, plans });
+  const t = await getTranslations({ locale, namespace: "VideoPricing" });
+  const copy = t.raw("dynamic.valueComparison") as PricingValueTableCopy;
+  const rows = buildPricingValueRows({ copy, locale, plans });
 
   return (
     <div className="container mx-auto px-4 pb-24">
@@ -62,12 +43,12 @@ export default function PricingValueComparison({
             <table className="w-full min-w-[760px]">
               <thead>
                 <tr className="border-b">
-                  <th className="whitespace-nowrap p-6 text-left font-semibold">{copy.plan}</th>
-                  <th className="whitespace-nowrap p-6 text-center font-semibold">{copy.price}</th>
-                  <th className="whitespace-nowrap p-6 text-center font-semibold">{copy.credits}</th>
-                  <th className="whitespace-nowrap p-6 text-center font-semibold">{copy.purchaseNote}</th>
-                  <th className="whitespace-nowrap p-6 text-center font-semibold text-primary">{copy.creditsPerDollar}</th>
-                  <th className="whitespace-nowrap p-6 text-center font-semibold text-muted-foreground">{copy.dollarsPerCredit}</th>
+                  <th className="whitespace-nowrap p-6 text-left font-semibold">{copy.columns.plan}</th>
+                  <th className="whitespace-nowrap p-6 text-center font-semibold">{copy.columns.price}</th>
+                  <th className="whitespace-nowrap p-6 text-center font-semibold">{copy.columns.credits}</th>
+                  <th className="whitespace-nowrap p-6 text-center font-semibold">{copy.columns.purchaseNote}</th>
+                  <th className="whitespace-nowrap p-6 text-center font-semibold text-primary">{copy.columns.creditsPerDollar}</th>
+                  <th className="whitespace-nowrap p-6 text-center font-semibold text-muted-foreground">{copy.columns.dollarsPerCredit}</th>
                 </tr>
               </thead>
               <tbody>

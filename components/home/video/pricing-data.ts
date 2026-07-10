@@ -10,7 +10,20 @@ import type {
 } from "@/components/home/video/types";
 
 type PricingEnvironment = "live" | "test";
-type SupportedLocale = "en" | "zh" | "ja";
+type VideoPricingTemplateValues = Record<string, string | number>;
+
+export type VideoPricingDynamicCopy = {
+  billing?: {
+    annual?: string;
+    monthly?: string;
+  };
+  creditPackTitle?: string;
+  credits?: {
+    monthly?: string;
+    oneTime?: string;
+  };
+  savings?: string;
+};
 
 type PricingFeature = {
   bold?: boolean;
@@ -80,57 +93,69 @@ function resolvePricingEnvironment(environment?: PricingEnvironment): PricingEnv
   return process.env.PAY_ENV === "live" ? "live" : "test";
 }
 
-function resolveLocale(locale: string): SupportedLocale {
-  if (locale === "zh" || locale === "ja") {
-    return locale;
-  }
+const defaultDynamicCopy = {
+  billing: {
+    annual: "Billed yearly at {amount}",
+    monthly: "Billed monthly at {amount}",
+  },
+  creditPackTitle: "{credits} Credits",
+  credits: {
+    monthly: "{credits} credits / month",
+    oneTime: "{credits} credits",
+  },
+  savings: "Save up to {percent}%",
+} as const;
 
-  return DEFAULT_LOCALE as SupportedLocale;
+function formatTemplate(template: string, values: VideoPricingTemplateValues) {
+  return template.replace(/\{(\w+)\}/g, (match, key) =>
+    values[key] === undefined ? match : String(values[key]),
+  );
 }
 
 function getLocalizedPlanContent(
   plan: VideoPricingSourcePlan,
-  locale: SupportedLocale,
+  locale: string,
 ): LocalizedPricingContent {
   const content = (plan.langJsonb ?? {}) as Record<string, LocalizedPricingContent>;
   return content[locale] ?? content[DEFAULT_LOCALE] ?? {};
 }
 
-function formatNumber(value: number, locale: SupportedLocale): string {
-  return new Intl.NumberFormat(locale === "en" ? "en-US" : locale === "zh" ? "zh-CN" : "ja-JP").format(value);
+function formatNumber(value: number, locale: string): string {
+  return new Intl.NumberFormat(locale || DEFAULT_LOCALE).format(value);
 }
 
-function formatCredits(benefits: PricingBenefits | null | undefined, locale: SupportedLocale): string | undefined {
+function formatCredits(
+  benefits: PricingBenefits | null | undefined,
+  locale: string,
+  copy: VideoPricingDynamicCopy,
+): string | undefined {
   if (!benefits) {
     return undefined;
   }
 
   if (typeof benefits.monthlyCredits === "number") {
     const credits = formatNumber(benefits.monthlyCredits, locale);
-    if (locale === "zh") {
-      return `每月 ${credits} 积分`;
-    }
-    if (locale === "ja") {
-      return `毎月 ${credits} クレジット`;
-    }
-    return `${credits} credits / month`;
+    return formatTemplate(
+      copy.credits?.monthly ?? defaultDynamicCopy.credits.monthly,
+      { credits },
+    );
   }
 
   if (typeof benefits.oneTimeCredits === "number") {
     const credits = formatNumber(benefits.oneTimeCredits, locale);
-    if (locale === "zh") {
-      return `${credits} 积分`;
-    }
-    if (locale === "ja") {
-      return `${credits} クレジット`;
-    }
-    return `${credits} credits`;
+    return formatTemplate(
+      copy.credits?.oneTime ?? defaultDynamicCopy.credits.oneTime,
+      { credits },
+    );
   }
 
   return undefined;
 }
 
-function formatBilled(plan: VideoPricingSourcePlan, locale: SupportedLocale): string | undefined {
+function formatBilled(
+  plan: VideoPricingSourcePlan,
+  copy: VideoPricingDynamicCopy,
+): string | undefined {
   if (!plan.price) {
     return undefined;
   }
@@ -138,23 +163,17 @@ function formatBilled(plan: VideoPricingSourcePlan, locale: SupportedLocale): st
   const amount = `${plan.currency ?? "USD"} ${plan.price}`;
 
   if (plan.groupSlug === "annual") {
-    if (locale === "zh") {
-      return `按年计费 ${amount}`;
-    }
-    if (locale === "ja") {
-      return `年額請求 ${amount}`;
-    }
-    return `Billed yearly at ${amount}`;
+    return formatTemplate(
+      copy.billing?.annual ?? defaultDynamicCopy.billing.annual,
+      { amount },
+    );
   }
 
   if (plan.groupSlug === "monthly") {
-    if (locale === "zh") {
-      return `按月计费 ${amount}`;
-    }
-    if (locale === "ja") {
-      return `月額請求 ${amount}`;
-    }
-    return `Billed monthly at ${amount}`;
+    return formatTemplate(
+      copy.billing?.monthly ?? defaultDynamicCopy.billing.monthly,
+      { amount },
+    );
   }
 
   return undefined;
@@ -194,7 +213,7 @@ function buildCheckoutPlan(plan: VideoPricingSourcePlan): VideoTemplateCheckoutP
 function buildSavingsLabel(
   annualPlans: VideoPricingSourcePlan[],
   monthlyPlans: VideoPricingSourcePlan[],
-  locale: SupportedLocale,
+  copy: VideoPricingDynamicCopy,
   fallback: string,
 ): string {
   const savings = annualPlans
@@ -217,18 +236,15 @@ function buildSavingsLabel(
 
   const highestSaving = Math.max(...savings);
 
-  if (locale === "zh") {
-    return `最高省 ${highestSaving}%`;
-  }
-  if (locale === "ja") {
-    return `最大${highestSaving}%お得`;
-  }
-  return `Save up to ${highestSaving}%`;
+  return formatTemplate(copy.savings ?? defaultDynamicCopy.savings, {
+    percent: highestSaving,
+  });
 }
 
 function mapRecurringPlan(
   plan: VideoPricingSourcePlan,
-  locale: SupportedLocale,
+  locale: string,
+  copy: VideoPricingDynamicCopy,
   matchingMonthlyPlan?: VideoPricingSourcePlan,
 ): VideoTemplatePricingPlan {
   const localizedPlan = getLocalizedPlanContent(plan, locale);
@@ -244,9 +260,13 @@ function mapRecurringPlan(
 
   return {
     accent,
-    billed: formatBilled(plan, locale),
+    billed: formatBilled(plan, copy),
     checkoutPlan: buildCheckoutPlan(plan),
-    credits: formatCredits(plan.benefitsJsonb as PricingBenefits | undefined, locale),
+    credits: formatCredits(
+      plan.benefitsJsonb as PricingBenefits | undefined,
+      locale,
+      copy,
+    ),
     cta: localizedPlan.buttonText ?? plan.buttonText ?? "Subscribe",
     description: localizedPlan.cardDescription ?? plan.cardDescription ?? undefined,
     featured: plan.isHighlighted,
@@ -263,12 +283,19 @@ function mapRecurringPlan(
   };
 }
 
-function mapOneTimePlan(plan: VideoPricingSourcePlan, locale: SupportedLocale): VideoTemplateCreditPack {
+function mapOneTimePlan(
+  plan: VideoPricingSourcePlan,
+  locale: string,
+  copy: VideoPricingDynamicCopy,
+): VideoTemplateCreditPack {
   const localizedPlan = getLocalizedPlanContent(plan, locale);
   const benefits = plan.benefitsJsonb as PricingBenefits | undefined;
   const creditTitle =
     typeof benefits?.oneTimeCredits === "number"
-      ? `${formatNumber(benefits.oneTimeCredits, locale)} Credits`
+      ? formatTemplate(
+          copy.creditPackTitle ?? defaultDynamicCopy.creditPackTitle,
+          { credits: formatNumber(benefits.oneTimeCredits, locale) },
+        )
       : undefined;
 
   return {
@@ -283,16 +310,17 @@ function mapOneTimePlan(plan: VideoPricingSourcePlan, locale: SupportedLocale): 
 
 export function buildVideoTemplatePricingSection({
   baseSection,
+  copy = defaultDynamicCopy,
   environment,
   locale,
   plans,
 }: {
   baseSection: VideoTemplatePricing;
+  copy?: VideoPricingDynamicCopy;
   environment?: PricingEnvironment;
   locale: string;
   plans: VideoPricingSourcePlan[];
 }): VideoTemplatePricing {
-  const pricingLocale = resolveLocale(locale);
   const pricingEnvironment = resolvePricingEnvironment(environment);
   const activePlans = plans
     .filter((plan) => plan.environment === pricingEnvironment && plan.isActive)
@@ -305,19 +333,29 @@ export function buildVideoTemplatePricingSection({
   const yearlyPlans = annualSourcePlans.map((plan) =>
     mapRecurringPlan(
       plan,
-      pricingLocale,
+      locale,
+      copy,
       monthlySourcePlans.find((candidate) => candidate.cardTitle === plan.cardTitle),
     ),
   );
-  const monthlyPlans = monthlySourcePlans.map((plan) => mapRecurringPlan(plan, pricingLocale));
-  const creditPacks = oneTimeSourcePlans.map((plan) => mapOneTimePlan(plan, pricingLocale));
+  const monthlyPlans = monthlySourcePlans.map((plan) =>
+    mapRecurringPlan(plan, locale, copy),
+  );
+  const creditPacks = oneTimeSourcePlans.map((plan) =>
+    mapOneTimePlan(plan, locale, copy),
+  );
 
   return {
     ...baseSection,
     creditPacks,
     monthlyPlans,
     plans: yearlyPlans,
-    saveLabel: buildSavingsLabel(annualSourcePlans, monthlySourcePlans, pricingLocale, baseSection.saveLabel),
+    saveLabel: buildSavingsLabel(
+      annualSourcePlans,
+      monthlySourcePlans,
+      copy,
+      baseSection.saveLabel,
+    ),
     yearlyPlans,
   };
 }

@@ -71,3 +71,42 @@ test("buildAiVideoModelPricingGroups aggregates rows by family", () => {
     true,
   );
 });
+
+test("buildAiVideoModelPricingRows formats generated labels from supplied copy", () => {
+  const rows = buildAiVideoModelPricingRows({
+    copy: {
+      billingNotes: {
+        fixed: "Fixed run",
+        imageCount: "Images times {rate}",
+        outputSeconds: "Seconds times {rate}",
+        withVideo: "Input plus output times {rate}",
+      },
+      creditPrices: {
+        fixed: "{value} points",
+        perImage: "{value} points/image",
+        perSecond: "{value} points/s",
+      },
+      typeLabels: {
+        "image-to-image": "Image edit",
+        "image-to-video": "Image video",
+        "storyboard": "Storyboard",
+        "text-to-image": "Text image",
+        "text-to-video": "Text video",
+        "text/image-to-video": "Text or image video",
+        "video-to-video": "Video edit",
+      },
+    },
+    locale: "fr",
+  });
+
+  const seedanceDynamic = rows.find(
+    (row) =>
+      row.model === "Seedance 2.0" &&
+      row.type === "Text or image video" &&
+      row.spec === "480p",
+  );
+
+  assert.ok(seedanceDynamic);
+  assert.equal(seedanceDynamic.creditPrice, "19 points/s");
+  assert.equal(seedanceDynamic.billingNote, "Seconds times 19");
+});

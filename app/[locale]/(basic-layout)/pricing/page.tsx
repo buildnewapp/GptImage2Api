@@ -51,6 +51,7 @@ export default async function PricingPage({ params }: { params: Params }) {
 
   const pricing = buildVideoTemplatePricingSection({
     baseSection: videoPricingT.raw("section"),
+    copy: videoPricingT.raw("dynamic.pricing"),
     locale,
     plans,
   });

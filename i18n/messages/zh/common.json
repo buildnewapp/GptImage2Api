@@ -1024,6 +1024,80 @@
       "saveLabel": "节省 17%",
       "title": "当前应用的透明定价",
       "yearlyLabel": "年付"
+    },
+    "dynamic": {
+      "pricing": {
+        "billing": {
+          "annual": "按年计费 {amount}",
+          "monthly": "按月计费 {amount}"
+        },
+        "creditPackTitle": "{credits} 积分",
+        "credits": {
+          "monthly": "每月 {credits} 积分",
+          "oneTime": "{credits} 积分"
+        },
+        "savings": "最高省 {percent}%"
+      },
+      "valueComparison": {
+        "columns": {
+          "credits": "总积分",
+          "creditsPerDollar": "1$ 可买积分",
+          "dollarsPerCredit": "1 积分 = $",
+          "plan": "产品",
+          "price": "价格",
+          "purchaseNote": "购买说明"
+        },
+        "planLabels": {
+          "annual": "年付 {planTitle}",
+          "monthly": "月付 {planTitle}"
+        },
+        "purchaseNotes": {
+          "onetime": "可重复购买",
+          "recurring": "仅可购买一次"
+        },
+        "title": "套餐积分换算表"
+      },
+      "modelPricing": {
+        "billingNotes": {
+          "fixed": "单次生成固定价格",
+          "imageCount": "图片数量 × {rate}",
+          "outputSeconds": "输出秒数 × {rate}",
+          "withVideo": "（输入秒数 + 输出秒数）× {rate}"
+        },
+        "columns": {
+          "billingNote": "计费说明",
+          "creditPrice": "积分价格",
+          "model": "模型",
+          "spec": "规格",
+          "type": "类型"
+        },
+        "creditPrices": {
+          "fixed": "{value} 积分",
+          "perImage": "{value} 积分/张",
+          "perSecond": "{value} 积分/秒"
+        },
+        "filters": {
+          "hot": "Hot",
+          "special": "Special"
+        },
+        "modelCount": "个模型",
+        "searchPlaceholder": "搜索模型系列或版本",
+        "title": "AI Video Studio 模型价格表",
+        "typeLabels": {
+          "image-to-image": "图生图",
+          "image-to-video": "图生视频",
+          "storyboard": "Storyboard",
+          "text-to-image": "文生图",
+          "text-to-video": "文生视频",
+          "text/image-to-video": "文/图生视频",
+          "video-to-video": "视频转视频"
+        },
+        "units": {
+          "fixed": "积分",
+          "perImage": "积分/张",
+          "perSecond": "积分/秒"
+        }
+      }
     }
   }
 }
