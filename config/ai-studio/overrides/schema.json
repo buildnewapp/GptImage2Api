@@ -392,6 +392,34 @@
           }
         }
       }
+    },
+    "video:bytedance-seedance-2-0-mini": {
+      "set": {
+        "properties.input.properties.duration.minimum": 4,
+        "properties.input.properties.duration.maximum": 15
+      }
+    },
+    "video:kling-v3-turbo-text-to-video": {
+      "set": {
+        "properties.input.properties.duration": {
+          "type": "integer",
+          "minimum": 3,
+          "maximum": 15,
+          "default": 5,
+          "description": "Video duration in seconds."
+        }
+      }
+    },
+    "video:kling-v3-turbo-image-to-video": {
+      "set": {
+        "properties.input.properties.duration": {
+          "type": "integer",
+          "minimum": 3,
+          "maximum": 15,
+          "default": 5,
+          "description": "Video duration in seconds."
+        }
+      }
     }
   }
 }

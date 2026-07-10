@@ -16,6 +16,9 @@
       "title": "Seedance 2.0 Fast VIP",
       "provider": "ByteDance"
     },
+    "video:bytedance-seedance-2-0-mini": {
+      "schemaModel": "bytedance/seedance-2-mini"
+    },
     "video:gemini-omni-audio": {
       "resultArtifacts": [
         {

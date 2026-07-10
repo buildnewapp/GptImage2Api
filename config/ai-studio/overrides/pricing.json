@@ -1780,6 +1780,210 @@
       },
       "price_final": "{$price}*({$num_images || $input.num_images || 1})+2*({$image_urls && $image_urls.length || $input.image_urls && $input.image_urls.length || 1})",
       "docUrl": "https://fal.ai/models/xai/grok-imagine-image/quality/edit/api"
+    },
+    "video:bytedance-seedance-2-0-mini": {
+      "price_txt": "Seedance 2.0 Mini, 480p: 6 credits/s with video or 9.5 credits/s without video; 720p: 12.5 credits/s with video or 20.5 credits/s without video. With video = Price × (Input + Output); no video = Price × Output.",
+      "billing_adapter": "kie_seedance_2",
+      "price_key": "{$input.resolution}|{$billing.has_video_input ? 'with_video':'no_video'}",
+      "price_map": {
+        "480p|with_video": 6,
+        "480p|no_video": 9.5,
+        "720p|with_video": 12.5,
+        "720p|no_video": 20.5
+      },
+      "price_final": "{$price}*({$billing.has_video_input ? ($billing.input_video_duration + $input.duration) : $input.duration})",
+      "docUrl": "https://docs.kie.ai/market/bytedance/seedance-2-mini.md"
+    },
+    "video:grok-imagine-video-1-5-preview": {
+      "price_txt": "Grok Imagine Video 1.5 Preview, 480p: 1.6 credits/s | 720p: 3 credits/s.",
+      "price_key": "{$input.resolution || '480p'}",
+      "price_map": {
+        "480p": 1.6,
+        "720p": 3
+      },
+      "price_final": "{$price}*{$input.duration}",
+      "docUrl": "https://docs.kie.ai/market/grok-imagine/1-5-preview.md"
+    },
+    "video:happyhorse-1-1-text-to-video": {
+      "price_txt": "HappyHorse 1.1 Text to Video, 720p: 22.5 credits/s | 1080p: 29 credits/s.",
+      "price_key": "{$input.resolution || '1080p'}",
+      "price_map": {
+        "720p": 22.5,
+        "1080p": 29
+      },
+      "price_final": "{$price}*{$input.duration}",
+      "docUrl": "https://docs.kie.ai/market/happyhorse-1-1/text-to-video.md"
+    },
+    "video:happyhorse-1-1-image-to-video": {
+      "price_txt": "HappyHorse 1.1 Image to Video, 720p: 22.5 credits/s | 1080p: 29 credits/s.",
+      "price_key": "{$input.resolution || '1080p'}",
+      "price_map": {
+        "720p": 22.5,
+        "1080p": 29
+      },
+      "price_final": "{$price}*{$input.duration}",
+      "docUrl": "https://docs.kie.ai/market/happyhorse-1-1/image-to-video.md"
+    },
+    "video:happyhorse-1-1-reference-to-video": {
+      "price_txt": "HappyHorse 1.1 Reference to Video, 720p: 22.5 credits/s | 1080p: 29 credits/s.",
+      "price_key": "{$input.resolution || '1080p'}",
+      "price_map": {
+        "720p": 22.5,
+        "1080p": 29
+      },
+      "price_final": "{$price}*{$input.duration}",
+      "docUrl": "https://docs.kie.ai/market/happyhorse-1-1/reference-to-video.md"
+    },
+    "video:kling-v3-turbo-text-to-video": {
+      "price_txt": "Kling V3 Turbo Text to Video, 720p: 18 credits/s | 1080p: 22.5 credits/s.",
+      "price_key": "{$input.resolution || '720p'}",
+      "price_map": {
+        "720p": 18,
+        "1080p": 22.5
+      },
+      "price_final": "{$price}*{$input.duration}",
+      "docUrl": "https://docs.kie.ai/market/kling/v3-turbo-text-to-video.md"
+    },
+    "video:kling-v3-turbo-image-to-video": {
+      "price_txt": "Kling V3 Turbo Image to Video, 720p: 18 credits/s | 1080p: 22.5 credits/s.",
+      "price_key": "{$input.resolution || '720p'}",
+      "price_map": {
+        "720p": 18,
+        "1080p": 22.5
+      },
+      "price_final": "{$price}*{$input.duration}",
+      "docUrl": "https://docs.kie.ai/market/kling/v3-turbo-image-to-video.md"
+    },
+    "image:google-nano-banana-2-lite": {
+      "price_txt": "Nano Banana 2 Lite, 1K: 3 credits per image.",
+      "price_key": "default",
+      "price_map": {
+        "default": 3
+      },
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/google/nano-banana-2-lite.md"
+    },
+    "image:seedream5-0-pro-text-to-image": {
+      "price_txt": "Seedream 5.0 Pro Text to Image, 1K: 7 credits per image | 2K: 14 credits per image.",
+      "price_key": "{$input.quality || 'basic'}",
+      "price_map": {
+        "basic": 7,
+        "high": 14
+      },
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/seedream/5-pro-text-to-image.md"
+    },
+    "image:seedream5-0-pro-image-to-image": {
+      "price_txt": "Seedream 5.0 Pro Image to Image, 1K: 7 credits per image | 2K: 14 credits per image; input images cost 0.5 credits each after the first free image.",
+      "price_key": "{$input.quality || 'basic'}",
+      "price_map": {
+        "basic": 7,
+        "high": 14
+      },
+      "price_final": "{$price}+0.5*({$input.image_urls && $input.image_urls.length || 1}-1)",
+      "docUrl": "https://docs.kie.ai/market/seedream/5-pro-image-to-image.md"
+    },
+    "video:fal-bytedance-seedance-2-0-mini-text-to-video": {
+      "price_txt": "Seedance 2.0 Mini Text to Video, 480p: 14.42 credits/s | 720p: 30.94 credits/s.",
+      "price_key": "{$input.resolution || $resolution || '720p'}",
+      "price_map": {
+        "480p": 15,
+        "720p": 31
+      },
+      "price_final": "{$price}*{$input.duration || $duration}",
+      "docUrl": "https://fal.ai/models/bytedance/seedance-2.0/mini/text-to-video/api"
+    },
+    "video:fal-bytedance-seedance-2-0-mini-image-to-video": {
+      "price_txt": "Seedance 2.0 Mini Image to Video, 480p: 14.42 credits/s | 720p: 30.94 credits/s.",
+      "price_key": "{$input.resolution || $resolution || '720p'}",
+      "price_map": {
+        "480p": 15,
+        "720p": 31
+      },
+      "price_final": "{$price}*{$input.duration || $duration}",
+      "docUrl": "https://fal.ai/models/bytedance/seedance-2.0/mini/image-to-video/api"
+    },
+    "video:fal-bytedance-seedance-2-0-mini-reference-to-video": {
+      "price_txt": "Seedance 2.0 Mini Reference to Video, 480p: 14.42 credits/output-second plus 8.652 credits/input-second | 720p: 30.94 credits/output-second plus 18.564 credits/input-second.",
+      "billing_adapter": "kie_seedance_2",
+      "price_key": "{$input.resolution || $resolution || '720p'}",
+      "price_map": {
+        "480p": 15,
+        "720p": 31
+      },
+      "price_final": "{$price}*({$input.duration || $duration}+({$billing.has_video_input ? $billing.input_video_duration*0.6 : 0}))",
+      "docUrl": "https://fal.ai/models/bytedance/seedance-2.0/mini/reference-to-video/api"
+    },
+    "video:fal-alibaba-happy-horse-v1-1-text-to-video": {
+      "price_txt": "Happy Horse 1.1 Text to Video, 720p: 28 credits/s | 1080p: 36 credits/s.",
+      "price_key": "{$input.resolution || $resolution || '1080p'}",
+      "price_map": {
+        "720p": 28,
+        "1080p": 36
+      },
+      "price_final": "{$price}*{$input.duration || $duration}",
+      "docUrl": "https://fal.ai/models/alibaba/happy-horse/v1.1/text-to-video/api"
+    },
+    "video:fal-alibaba-happy-horse-v1-1-image-to-video": {
+      "price_txt": "Happy Horse 1.1 Image to Video, 720p: 28 credits/s | 1080p: 36 credits/s.",
+      "price_key": "{$input.resolution || $resolution || '1080p'}",
+      "price_map": {
+        "720p": 28,
+        "1080p": 36
+      },
+      "price_final": "{$price}*{$input.duration || $duration}",
+      "docUrl": "https://fal.ai/models/alibaba/happy-horse/v1.1/image-to-video/api"
+    },
+    "video:fal-alibaba-happy-horse-v1-1-reference-to-video": {
+      "price_txt": "Happy Horse 1.1 Reference to Video, 720p: 28 credits/s | 1080p: 36 credits/s.",
+      "price_key": "{$input.resolution || $resolution || '1080p'}",
+      "price_map": {
+        "720p": 28,
+        "1080p": 36
+      },
+      "price_final": "{$price}*{$input.duration || $duration}",
+      "docUrl": "https://fal.ai/models/alibaba/happy-horse/v1.1/reference-to-video/api"
+    },
+    "video:fal-fal-ai-kling-video-v3-4k-text-to-video": {
+      "price_txt": "Kling Video V3 Text to Video 4K, audio on/off: 84 credits/s.",
+      "price_key": "default",
+      "price_map": {
+        "default": 84
+      },
+      "price_final": "{$price}*{$input.duration || $duration}",
+      "docUrl": "https://fal.ai/models/fal-ai/kling-video/v3/4k/text-to-video/api"
+    },
+    "image:fal-bytedance-seedream-v5-pro-text-to-image": {
+      "price_txt": "Seedream 5.0 Pro Text to Image, <=1536x1536: 13.5 credits/image | <=2048x2048: 27 credits/image.",
+      "price_key": "{$input.image_size || $image_size || 'auto_2K'}",
+      "price_map": {
+        "square_hd": 13.5,
+        "square": 13.5,
+        "portrait_4_3": 13.5,
+        "portrait_16_9": 13.5,
+        "landscape_4_3": 13.5,
+        "landscape_16_9": 13.5,
+        "auto_1K": 13.5,
+        "auto_2K": 27
+      },
+      "price_final": "{$price}*({$input.num_images || $num_images || 1})",
+      "docUrl": "https://fal.ai/models/bytedance/seedream/v5/pro/text-to-image/api"
+    },
+    "image:fal-bytedance-seedream-v5-pro-edit": {
+      "price_txt": "Seedream 5.0 Pro Image Editing, <=1536x1536: 13.5 credits/output image | <=2048x2048: 27 credits/output image; each input image after the first adds 0.9 credits per output image.",
+      "price_key": "{$input.image_size || $image_size || 'auto_2K'}",
+      "price_map": {
+        "square_hd": 13.5,
+        "square": 13.5,
+        "portrait_4_3": 13.5,
+        "portrait_16_9": 13.5,
+        "landscape_4_3": 13.5,
+        "landscape_16_9": 13.5,
+        "auto_1K": 13.5,
+        "auto_2K": 27
+      },
+      "price_final": "({$price}+0.9*({$input.image_urls && $input.image_urls.length || $image_urls && $image_urls.length || 1}-1))*({$input.num_images || $num_images || 1})",
+      "docUrl": "https://fal.ai/models/bytedance/seedream/v5/pro/edit/api"
     }
   }
 }
