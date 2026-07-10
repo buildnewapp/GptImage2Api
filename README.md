@@ -81,6 +81,24 @@ git fetch upstream
 git merge --no-ff --no-commit upstream/main
 open -na "WebStorm" --args "./"
 
+## seedance25-web
+cd /Users/syx/WebstormProjects/sdanceai/seedance25-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
+## freemusevideo-web
+cd /Users/syx/WebstormProjects/freemusevideo/freemusevideo-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
+## metamuse-web
+cd /Users/syx/WebstormProjects/freemusevideo/metamuse-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
 ## Jsontranslate
 cd /Users/syx/WebstormProjects/Jsontranslate/Jsontranslate-new
 git fetch upstream
