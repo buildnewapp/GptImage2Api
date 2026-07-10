@@ -16,6 +16,7 @@ export type AiVideoStudioFamilyIconKey =
   | "hailuo"
   | "jimeng"
   | "kling"
+  | "meta-muse"
   | "nano-banana"
   | "qwen"
   | "runway"
@@ -122,68 +123,6 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     ],
   },
   {
-    key: "seedream-image",
-    label: "Seedream",
-    description: "Seedream image generation and edit models",
-    icon: "jimeng",
-    selectable: true,
-    versions: [
-      {
-        key: "seedream-5-lite-text-to-image",
-        label: "Seedream5.0 Lite - Text to Image",
-        familyKey: "seedream-image",
-        modelId: "image:seedream5-0-lite-text-to-image",
-        isSpecial: true,
-      },
-      {
-        key: "seedream-5-lite-image-to-image",
-        label: "Seedream5.0 Lite - Image to Image",
-        familyKey: "seedream-image",
-        modelId: "image:seedream5-0-lite-image-to-image",
-        isSpecial: true,
-      },
-      {
-        key: "seedream-4.5-text-to-image",
-        label: "Seedream4.5 - Text to Image",
-        familyKey: "seedream-image",
-        modelId: "image:seedream4-5-text-to-image",
-        isSpecial: true,
-      },
-      {
-        key: "seedream-4.5-edit",
-        label: "Seedream4.5 - Edit",
-        familyKey: "seedream-image",
-        modelId: "image:seedream4-5-edit",
-        isSpecial: true,
-      },
-
-      {
-        key: "seedream-5-lite-text-to-image-fal",
-        label: "Seedream 5.0 Lite Text to Image",
-        familyKey: "seedream-image",
-        modelId: "image:fal-fal-ai-bytedance-seedream-v5-lite-text-to-image",
-      },
-      {
-        key: "seedream-5-lite-edit-fal",
-        label: "Seedream 5.0 Lite Edit",
-        familyKey: "seedream-image",
-        modelId: "image:fal-fal-ai-bytedance-seedream-v5-lite-edit",
-      },
-      {
-        key: "seedream-4.5-text-to-image-fal",
-        label: "Seedream 4.5 Text to Image",
-        familyKey: "seedream-image",
-        modelId: "image:fal-fal-ai-bytedance-seedream-v4-5-text-to-image",
-      },
-      {
-        key: "seedream-4.5-edit-fal",
-        label: "Seedream 4.5 Edit",
-        familyKey: "seedream-image",
-        modelId: "image:fal-fal-ai-bytedance-seedream-v4-5-edit",
-      },
-    ],
-  },
-  {
     key: "nano-banana",
     label: "Nano Banana",
     description: "Nano Banana image generation and edit models",
@@ -205,6 +144,13 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         modelId: "image:google-nano-banana-2",
         isSpecial: true,
         isHot: true
+      },
+      {
+        key: "nano-banana-2-lite",
+        label: "Nano Banana 2 Lite",
+        familyKey: "nano-banana",
+        modelId: "image:google-nano-banana-2-lite",
+        isSpecial: true,
       },
       {
         key: "fal-gemini-3.1-flash-image-preview",
@@ -242,6 +188,100 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "Nano Banana Edit",
         familyKey: "nano-banana",
         modelId: "image:fal-fal-ai-nano-banana-edit",
+      },
+      {
+        key: "fal-nano-banana-2-lite",
+        label: "Nano Banana 2 Lite",
+        familyKey: "nano-banana",
+        modelId: "image:fal-google-nano-banana-2-lite",
+      },
+    ],
+  },
+  {
+    key: "seedream-image",
+    label: "Seedream",
+    description: "Seedream image generation and edit models",
+    icon: "jimeng",
+    selectable: true,
+    versions: [
+      {
+        key: "seedream-5-lite-text-to-image",
+        label: "Seedream5.0 Lite - Text to Image",
+        familyKey: "seedream-image",
+        modelId: "image:seedream5-0-lite-text-to-image",
+        isSpecial: true,
+      },
+      {
+        key: "seedream-5-lite-image-to-image",
+        label: "Seedream5.0 Lite - Image to Image",
+        familyKey: "seedream-image",
+        modelId: "image:seedream5-0-lite-image-to-image",
+        isSpecial: true,
+      },
+      {
+        key: "seedream-5-pro-text-to-image",
+        label: "Seedream5.0 Pro - Text to Image",
+        familyKey: "seedream-image",
+        modelId: "image:seedream5-0-pro-text-to-image",
+        isSpecial: true,
+      },
+      {
+        key: "seedream-5-pro-image-to-image",
+        label: "Seedream5.0 Pro - Image to Image",
+        familyKey: "seedream-image",
+        modelId: "image:seedream5-0-pro-image-to-image",
+        isSpecial: true,
+      },
+      {
+        key: "seedream-4.5-text-to-image",
+        label: "Seedream4.5 - Text to Image",
+        familyKey: "seedream-image",
+        modelId: "image:seedream4-5-text-to-image",
+        isSpecial: true,
+      },
+      {
+        key: "seedream-4.5-edit",
+        label: "Seedream4.5 - Edit",
+        familyKey: "seedream-image",
+        modelId: "image:seedream4-5-edit",
+        isSpecial: true,
+      },
+
+      {
+        key: "seedream-5-lite-text-to-image-fal",
+        label: "Seedream 5.0 Lite Text to Image",
+        familyKey: "seedream-image",
+        modelId: "image:fal-fal-ai-bytedance-seedream-v5-lite-text-to-image",
+      },
+      {
+        key: "seedream-5-lite-edit-fal",
+        label: "Seedream 5.0 Lite Edit",
+        familyKey: "seedream-image",
+        modelId: "image:fal-fal-ai-bytedance-seedream-v5-lite-edit",
+      },
+      {
+        key: "seedream-5-pro-text-to-image-fal",
+        label: "Seedream 5.0 Pro Text to Image",
+        familyKey: "seedream-image",
+        modelId: "image:fal-bytedance-seedream-v5-pro-text-to-image",
+      },
+      {
+        key: "seedream-5-pro-edit-fal",
+        label: "Seedream 5.0 Pro Edit",
+        familyKey: "seedream-image",
+        modelId: "image:fal-bytedance-seedream-v5-pro-edit",
+      },
+      {
+        key: "seedream-4.5-text-to-image-fal",
+        label: "Seedream 4.5 Text to Image",
+        familyKey: "seedream-image",
+        modelId: "image:fal-fal-ai-bytedance-seedream-v4-5-text-to-image",
+      },
+      {
+        key: "seedream-4.5-edit-fal",
+        label: "Seedream 4.5 Edit",
+        familyKey: "seedream-image",
+        modelId: "image:fal-fal-ai-bytedance-seedream-v4-5-edit",
       },
     ],
   },
@@ -381,116 +421,6 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
     ],
   },
   {
-    key: "grok-imagine",
-    label: "Grok Imagine",
-    description: "Grok video generation with text, image, extend, and upscale variants",
-    icon: "grok",
-    tags: [{ text: "HOT", type: "hot" }],
-    selectable: true,
-    versions: [
-      {
-        key: "grok-imagine-text-to-video",
-        label: "Grok Imagine Text to Video",
-        familyKey: "grok-imagine",
-        modelId: "video:grok-imagine-text-to-video",
-        isSpecial: true
-      },
-      {
-        key: "grok-imagine-image-to-video",
-        label: "Grok Imagine Image to Video",
-        familyKey: "grok-imagine",
-        modelId: "video:grok-imagine-image-to-video",
-        isSpecial: true
-      },
-      {
-        key: "grok-imagine-video-upscale",
-        label: "Grok Imagine Video Upscale",
-        familyKey: "grok-imagine",
-        modelId: "video:grok-imagine-video-upscale",
-        isSpecial: true,
-      },
-      {
-        key: "grok-imagine-video-extend",
-        label: "Grok Imagine Video Extend",
-        familyKey: "grok-imagine",
-        modelId: "video:grok-imagine-video-extend",
-        isSpecial: true,
-      },
-      {
-        key: "fal-grok-imagine-text-to-video",
-        label: "Grok Imagine Text to Video",
-        familyKey: "grok-imagine",
-        modelId: "video:fal-xai-grok-imagine-video-text-to-video",
-        isHot: true
-      },
-      {
-        key: "fal-grok-imagine-image-to-video",
-        label: "Grok Imagine Image to Video",
-        familyKey: "grok-imagine",
-        modelId: "video:fal-xai-grok-imagine-video-image-to-video",
-        isHot: true
-      },
-      {
-        key: "fal-grok-imagine-1.5-image-to-video",
-        label: "Grok Imagine 1.5 Image to Video",
-        familyKey: "grok-imagine",
-        modelId: "video:fal-xai-grok-imagine-video-v1-5-image-to-video",
-        isHot: true
-      },
-      {
-        key: "fal-grok-imagine-reference-to-video",
-        label: "Grok Imagine Reference to Video",
-        familyKey: "grok-imagine",
-        modelId: "video:fal-xai-grok-imagine-video-reference-to-video",
-      },
-      {
-        key: "fal-grok-imagine-video-edit",
-        label: "Grok Imagine Video Edit",
-        familyKey: "grok-imagine",
-        modelId: "video:fal-xai-grok-imagine-video-edit-video",
-      },
-    ],
-  },
-  {
-    key: "gemini-omni",
-    label: "Gemini Omni",
-    description: "Gemini Omni video generation with text and image variants",
-    icon: "gemini",
-    tags: [{ text: "HOT", type: "hot" }],
-    selectable: true,
-    versions: [
-      {
-        key: "omni-flash-ext",
-        label: "Gemini Omni Flash Lite",
-        familyKey: "gemini-omni",
-        modelId: "video:am-omni-flash-ext",
-        isSpecial: true,
-      },
-      {
-        key: "gemini-omni-video",
-        label: "Gemini Omni Video",
-        familyKey: "gemini-omni",
-        modelId: "video:gemini-omni-video",
-        isSpecial: true,
-        isHot: true
-      },
-      {
-        key: "gemini-omni-character",
-        label: "Gemini Omni Character",
-        familyKey: "gemini-omni",
-        modelId: "video:gemini-omni-character",
-        isSpecial: true,
-      },
-      {
-        key: "gemini-omni-audio",
-        label: "Gemini Omni Audio",
-        familyKey: "gemini-omni",
-        modelId: "video:gemini-omni-audio",
-        isSpecial: true,
-      }
-    ],
-  },
-  {
     key: "seedance-2.0",
     label: "Seedance 2.0",
     description: "Seedance 2.0 for prompt-first and reference-driven video generation",
@@ -510,6 +440,13 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "Seedance 2.0 Fast",
         familyKey: "seedance-2.0",
         modelId: "video:bytedance-seedance-2-0-fast",
+        isSpecial: true,
+      },
+      {
+        key: "seedance-2.0-mini",
+        label: "Seedance 2.0 Mini",
+        familyKey: "seedance-2.0",
+        modelId: "video:bytedance-seedance-2-0-mini",
         isSpecial: true,
       },
       {
@@ -552,6 +489,24 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "Seedance 2.0 Fast Reference to Video",
         familyKey: "seedance-2.0",
         modelId: "video:fal-bytedance-seedance-2-0-fast-reference-to-video",
+      },
+      {
+        key: "fal-seedance-2.0-mini-text-to-video",
+        label: "Seedance 2.0 Mini Text to Video",
+        familyKey: "seedance-2.0",
+        modelId: "video:fal-bytedance-seedance-2-0-mini-text-to-video",
+      },
+      {
+        key: "fal-seedance-2.0-mini-image-to-video",
+        label: "Seedance 2.0 Mini Image to Video",
+        familyKey: "seedance-2.0",
+        modelId: "video:fal-bytedance-seedance-2-0-mini-image-to-video",
+      },
+      {
+        key: "fal-seedance-2.0-mini-reference-to-video",
+        label: "Seedance 2.0 Mini Reference to Video",
+        familyKey: "seedance-2.0",
+        modelId: "video:fal-bytedance-seedance-2-0-mini-reference-to-video",
       },
     ],
   },
@@ -822,6 +777,20 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         isSpecial: true,
       },
       {
+        key: "kling-v3-turbo-text-to-video",
+        label: "Kling V3 Turbo Text to Video",
+        familyKey: "kling",
+        modelId: "video:kling-v3-turbo-text-to-video",
+        isSpecial: true,
+      },
+      {
+        key: "kling-v3-turbo-image-to-video",
+        label: "Kling V3 Turbo Image to Video",
+        familyKey: "kling",
+        modelId: "video:kling-v3-turbo-image-to-video",
+        isSpecial: true,
+      },
+      {
         key: "kling-2.6-text-to-video",
         label: "Kling 2.6 Text to Video",
         familyKey: "kling",
@@ -927,6 +896,12 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "Kling v3 4K Image to Video",
         familyKey: "kling",
         modelId: "video:fal-fal-ai-kling-video-v3-4k-image-to-video",
+      },
+      {
+        key: "fal-kling-v3-4k-text-to-video",
+        label: "Kling v3 4K Text to Video",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-v3-4k-text-to-video",
       },
       {
         key: "fal-kling-o1-image-to-video",
@@ -1109,6 +1084,27 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         isSpecial: true,
       },
       {
+        key: "happyhorse-1.1-text-to-video",
+        label: "HappyHorse 1.1 Text to Video",
+        familyKey: "happyhorse",
+        modelId: "video:happyhorse-1-1-text-to-video",
+        isSpecial: true,
+      },
+      {
+        key: "happyhorse-1.1-image-to-video",
+        label: "HappyHorse 1.1 Image to Video",
+        familyKey: "happyhorse",
+        modelId: "video:happyhorse-1-1-image-to-video",
+        isSpecial: true,
+      },
+      {
+        key: "happyhorse-1.1-reference-to-video",
+        label: "HappyHorse 1.1 Reference to Video",
+        familyKey: "happyhorse",
+        modelId: "video:happyhorse-1-1-reference-to-video",
+        isSpecial: true,
+      },
+      {
         key: "fal-happy-horse-text-to-video",
         label: "Happy Horse Text to Video",
         familyKey: "happyhorse",
@@ -1125,6 +1121,24 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "Happy Horse Reference to Video",
         familyKey: "happyhorse",
         modelId: "video:fal-alibaba-happy-horse-reference-to-video",
+      },
+      {
+        key: "fal-happy-horse-1.1-text-to-video",
+        label: "Happy Horse 1.1 Text to Video",
+        familyKey: "happyhorse",
+        modelId: "video:fal-alibaba-happy-horse-v1-1-text-to-video",
+      },
+      {
+        key: "fal-happy-horse-1.1-image-to-video",
+        label: "Happy Horse 1.1 Image to Video",
+        familyKey: "happyhorse",
+        modelId: "video:fal-alibaba-happy-horse-v1-1-image-to-video",
+      },
+      {
+        key: "fal-happy-horse-1.1-reference-to-video",
+        label: "Happy Horse 1.1 Reference to Video",
+        familyKey: "happyhorse",
+        modelId: "video:fal-alibaba-happy-horse-v1-1-reference-to-video",
       },
     ],
   },

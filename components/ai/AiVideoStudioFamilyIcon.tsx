@@ -7,6 +7,7 @@ import {
   Hailuo,
   Jimeng,
   Kling,
+  Meta,
   NanoBanana,
   Qwen,
   Runway,
@@ -42,6 +43,8 @@ export function AiVideoStudioFamilyIcon({
       return <Jimeng.Color className={className} size={size} />;
     case "kling":
       return <Kling.Color className={className} size={size} />;
+    case "meta-muse":
+      return <Meta.Color className={className} size={size} />;
     case "nano-banana":
       return <NanoBanana.Color className={className} size={size} />;
     case "qwen":

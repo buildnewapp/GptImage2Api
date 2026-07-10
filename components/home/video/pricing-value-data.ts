@@ -2,11 +2,20 @@ import { DEFAULT_LOCALE } from "@/i18n/routing";
 import type { VideoPricingSourcePlan } from "@/components/home/video/pricing-data";
 
 type PricingEnvironment = "live" | "test";
-type SupportedLocale = "en" | "zh" | "ja";
 type SupportedGroupSlug = "annual" | "monthly" | "onetime";
 type SupportedPricingPlan = VideoPricingSourcePlan & { groupSlug: SupportedGroupSlug };
 type LocalizedPricingContent = {
   cardTitle?: string;
+};
+export type PricingValueCopy = {
+  planLabels?: {
+    annual?: string;
+    monthly?: string;
+  };
+  purchaseNotes?: {
+    onetime?: string;
+    recurring?: string;
+  };
 };
 type PricingBenefits = {
   monthlyCredits?: number;
@@ -18,6 +27,16 @@ const groupOrder: Record<SupportedGroupSlug, number> = {
   monthly: 1,
   onetime: 2,
 };
+const defaultCopy = {
+  planLabels: {
+    annual: "Annual {planTitle}",
+    monthly: "Monthly {planTitle}",
+  },
+  purchaseNotes: {
+    onetime: "Repeat purchase",
+    recurring: "Purchase once",
+  },
+} as const;
 
 export interface PricingValueRow {
   credits: number;
@@ -36,17 +55,15 @@ function resolvePricingEnvironment(environment?: PricingEnvironment): PricingEnv
   return process.env.PAY_ENV === "live" ? "live" : "test";
 }
 
-function resolveLocale(locale: string): SupportedLocale {
-  if (locale === "zh" || locale === "ja") {
-    return locale;
-  }
-
-  return DEFAULT_LOCALE as SupportedLocale;
+function formatTemplate(template: string, values: Record<string, string | number>) {
+  return template.replace(/\{(\w+)\}/g, (match, key) =>
+    values[key] === undefined ? match : String(values[key]),
+  );
 }
 
 function getLocalizedPlanContent(
   plan: VideoPricingSourcePlan,
-  locale: SupportedLocale,
+  locale: string,
 ): LocalizedPricingContent {
   const content = (plan.langJsonb ?? {}) as Record<string, LocalizedPricingContent>;
   return content[locale] ?? content[DEFAULT_LOCALE] ?? {};
@@ -60,28 +77,24 @@ function isSupportedPricingPlan(plan: VideoPricingSourcePlan): plan is Supported
   return isSupportedGroupSlug(plan.groupSlug);
 }
 
-function buildPlanLabel(plan: VideoPricingSourcePlan, locale: SupportedLocale): string {
+function buildPlanLabel(
+  plan: VideoPricingSourcePlan,
+  locale: string,
+  copy: PricingValueCopy,
+): string {
   const localizedPlan = getLocalizedPlanContent(plan, locale);
   const planTitle = localizedPlan.cardTitle ?? plan.cardTitle ?? "";
 
   if (plan.groupSlug === "annual") {
-    if (locale === "zh") {
-      return `年付 ${planTitle}`;
-    }
-    if (locale === "ja") {
-      return `年額 ${planTitle}`;
-    }
-    return `Annual ${planTitle}`;
+    return formatTemplate(copy.planLabels?.annual ?? defaultCopy.planLabels.annual, {
+      planTitle,
+    });
   }
 
   if (plan.groupSlug === "monthly") {
-    if (locale === "zh") {
-      return `月付 ${planTitle}`;
-    }
-    if (locale === "ja") {
-      return `月額 ${planTitle}`;
-    }
-    return `Monthly ${planTitle}`;
+    return formatTemplate(copy.planLabels?.monthly ?? defaultCopy.planLabels.monthly, {
+      planTitle,
+    });
   }
 
   return planTitle;
@@ -106,37 +119,29 @@ function getPlanCredits(benefits: PricingBenefits | null | undefined): number | 
   return null;
 }
 
-function getPurchaseNote(groupSlug: SupportedGroupSlug, locale: SupportedLocale): string {
+function getPurchaseNote(
+  groupSlug: SupportedGroupSlug,
+  copy: PricingValueCopy,
+): string {
   if (groupSlug === "onetime") {
-    if (locale === "zh") {
-      return "可重复购买";
-    }
-    if (locale === "ja") {
-      return "繰り返し購入可";
-    }
-    return "Repeat purchase";
+    return copy.purchaseNotes?.onetime ?? defaultCopy.purchaseNotes.onetime;
   }
 
-  if (locale === "zh") {
-    return "仅可购买一次";
-  }
-  if (locale === "ja") {
-    return "1回のみ購入可";
-  }
-  return "Purchase once";
+  return copy.purchaseNotes?.recurring ?? defaultCopy.purchaseNotes.recurring;
 }
 
 export function buildPricingValueRows({
+  copy = defaultCopy,
   environment,
   locale,
   plans,
 }: {
+  copy?: PricingValueCopy;
   environment?: PricingEnvironment;
   locale: string;
   plans: VideoPricingSourcePlan[];
 }): PricingValueRow[] {
   const pricingEnvironment = resolvePricingEnvironment(environment);
-  const pricingLocale = resolveLocale(locale);
 
   const supportedPlans = plans
     .filter((plan) => plan.environment === pricingEnvironment && plan.isActive)
@@ -165,9 +170,9 @@ export function buildPricingValueRows({
         credits,
         creditsPerDollar: (credits / priceNumber).toFixed(4),
         dollarsPerCredit: (priceNumber / credits).toFixed(6),
-        plan: buildPlanLabel(plan, pricingLocale),
+        plan: buildPlanLabel(plan, locale, copy),
         price: `$${priceNumber.toFixed(2)}`,
-        purchaseNote: getPurchaseNote(plan.groupSlug, pricingLocale),
+        purchaseNote: getPurchaseNote(plan.groupSlug, copy),
       } satisfies PricingValueRow;
     })
     .filter((row): row is PricingValueRow => row !== null);

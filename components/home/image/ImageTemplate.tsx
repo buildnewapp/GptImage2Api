@@ -21,6 +21,7 @@ import BannerAd from "@/components/home/video/BannerAd";
 export default async function ImageTemplate() {
   const locale = await getLocale();
   const t = await getTranslations("ImageTemplate");
+  const pricingT = await getTranslations("VideoPricing");
   const plansResult = await getPublicPricingPlans();
   const plans = plansResult.success ? plansResult.data ?? [] : [];
 
@@ -39,6 +40,7 @@ export default async function ImageTemplate() {
     testimonials: t.raw("testimonials"),
     pricing: buildVideoTemplatePricingSection({
       baseSection: t.raw("pricing"),
+      copy: pricingT.raw("dynamic.pricing"),
       locale,
       plans,
     }),

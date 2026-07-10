@@ -18,12 +18,38 @@ test("mini studio reads shared AI Studio form copy through common translations",
   assert.match(source, /t\("form\.reference"\)/);
 });
 
-test("mini studio groups model versions under non-selectable family labels", () => {
+test("mini studio lets users browse non-selectable family versions without selecting them", () => {
   const source = readFileSync(
     path.join(projectRoot, "components/ai/AIVideoMiniStudio.tsx"),
     "utf8",
   );
 
-  assert.match(source, /<optgroup/);
-  assert.match(source, /label=\{family\.label\}/);
+  assert.match(
+    source,
+    /AI_VIDEO_STUDIO_FAMILIES\s*\.map\(\(family\) => \(\{/,
+  );
+  assert.equal(
+    source.match(/aria-disabled=\{model\.selectable === false\}/g)?.length,
+    4,
+  );
+  assert.equal(
+    source.match(/activeModel\?\.selectable !== false/g)?.length,
+    1,
+  );
+  assert.equal(
+    source.match(/disabled=\{!isActiveFamilySelectable\}/g)?.length,
+    2,
+  );
+  assert.equal(
+    source.match(/if \(!isActiveFamilySelectable\) \{/g)?.length,
+    2,
+  );
+  assert.equal(
+    source.match(
+      /model\.selectable === false && "flex-col items-start gap-1"/g,
+    )?.length,
+    4,
+  );
+  assert.doesNotMatch(source, /const versionName =/);
+  assert.doesNotMatch(source, /Version ·/);
 });

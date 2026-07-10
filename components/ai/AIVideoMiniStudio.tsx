@@ -291,6 +291,7 @@ function MiniModelVersionSelector({
       : activeFamilyVersions;
   const activeModel =
     models.find((model) => model.id === activeFamilyKey) ?? selectedModel;
+  const isActiveFamilySelectable = activeModel?.selectable !== false;
 
   return (
     <div className="relative">
@@ -377,6 +378,7 @@ function MiniModelVersionSelector({
                               <button
                                 key={`mobile-featured-${model.id}`}
                                 type="button"
+                                aria-disabled={model.selectable === false}
                                 onClick={() => {
                                   setActiveFamilyKey(model.id);
                                   setActiveFeaturedFamilyKey(model.id);
@@ -384,6 +386,8 @@ function MiniModelVersionSelector({
                                 }}
                                 className={cn(
                                   "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition",
+                                  model.selectable === false &&
+                                    "cursor-not-allowed opacity-50",
                                   isSelected ? "bg-white/8" : "hover:bg-white/6",
                                 )}
                               >
@@ -391,8 +395,13 @@ function MiniModelVersionSelector({
                                   <AiVideoStudioFamilyIcon icon={model.icon} size={26} />
                                 </span>
                                 <span className="min-w-0 flex-1">
-                                  <span className="flex min-w-0 items-center gap-2">
-                                    <span className="truncate text-base font-semibold text-white">
+                                  <span
+                                    className={cn(
+                                      "flex min-w-0 items-center gap-2",
+                                      model.selectable === false && "flex-col items-start gap-1",
+                                    )}
+                                  >
+                                    <span className="max-w-full truncate text-base font-semibold text-white">
                                       {model.name}
                                     </span>
                                     {model.tags?.map((tag) => (
@@ -426,6 +435,7 @@ function MiniModelVersionSelector({
                         <button
                           key={`mobile-${model.id}`}
                           type="button"
+                          aria-disabled={model.selectable === false}
                           onClick={() => {
                             setActiveFamilyKey(model.id);
                             setActiveFeaturedFamilyKey(null);
@@ -433,6 +443,8 @@ function MiniModelVersionSelector({
                           }}
                           className={cn(
                             "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition",
+                            model.selectable === false &&
+                              "cursor-not-allowed opacity-50",
                             isSelected ? "bg-white/8" : "hover:bg-white/6",
                           )}
                         >
@@ -440,8 +452,13 @@ function MiniModelVersionSelector({
                             <AiVideoStudioFamilyIcon icon={model.icon} size={28} />
                           </span>
                           <span className="min-w-0 flex-1">
-                            <span className="flex min-w-0 items-center gap-2">
-                              <span className="truncate text-base font-semibold text-white">
+                            <span
+                              className={cn(
+                                "flex min-w-0 items-center gap-2",
+                                model.selectable === false && "flex-col items-start gap-1",
+                              )}
+                            >
+                              <span className="max-w-full truncate text-base font-semibold text-white">
                                 {model.name}
                               </span>
                               {model.tags?.map((tag) => (
@@ -472,7 +489,11 @@ function MiniModelVersionSelector({
                         <button
                           key={`mobile-version-${version.id}`}
                           type="button"
+                          disabled={!isActiveFamilySelectable}
                           onClick={() => {
+                            if (!isActiveFamilySelectable) {
+                              return;
+                            }
                             onSelect({
                               familyKey: activeFamilyKey,
                               versionKey: version.id,
@@ -480,8 +501,10 @@ function MiniModelVersionSelector({
                             setIsOpen(false);
                           }}
                           className={cn(
-                            "flex w-full items-start gap-3 rounded-xl px-3 py-3 text-left transition",
-                            isSelected ? "bg-white/8" : "hover:bg-white/6",
+                            "flex w-full items-start gap-3 rounded-xl px-3 py-3 text-left transition disabled:cursor-not-allowed disabled:opacity-50",
+                            isSelected
+                              ? "bg-white/8"
+                              : isActiveFamilySelectable && "hover:bg-white/6",
                           )}
                         >
                           <span className="min-w-0 flex-1">
@@ -542,6 +565,7 @@ function MiniModelVersionSelector({
                           <button
                             key={`featured-${model.id}`}
                             type="button"
+                            aria-disabled={model.selectable === false}
                             onClick={() => {
                               setActiveFamilyKey(model.id);
                               setActiveFeaturedFamilyKey(model.id);
@@ -552,6 +576,8 @@ function MiniModelVersionSelector({
                             }}
                             className={cn(
                               "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition",
+                              model.selectable === false &&
+                                "cursor-not-allowed opacity-50",
                               isActive || isSelected
                                 ? "bg-white/8"
                                 : "hover:bg-white/6",
@@ -561,8 +587,13 @@ function MiniModelVersionSelector({
                               <AiVideoStudioFamilyIcon icon={model.icon} size={26} />
                             </span>
                             <span className="min-w-0 flex-1">
-                              <span className="flex min-w-0 items-center gap-2">
-                                <span className="truncate text-base font-semibold text-white">
+                              <span
+                                className={cn(
+                                  "flex min-w-0 items-center gap-2",
+                                  model.selectable === false && "flex-col items-start gap-1",
+                                )}
+                              >
+                                <span className="max-w-full truncate text-base font-semibold text-white">
                                   {model.name}
                                 </span>
                                 {model.tags?.map((tag) => (
@@ -601,6 +632,7 @@ function MiniModelVersionSelector({
                     <button
                       key={model.id}
                       type="button"
+                      aria-disabled={model.selectable === false}
                       onClick={() => {
                         setActiveFamilyKey(model.id);
                         setActiveFeaturedFamilyKey(null);
@@ -611,6 +643,8 @@ function MiniModelVersionSelector({
                       }}
                       className={cn(
                         "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition",
+                        model.selectable === false &&
+                          "cursor-not-allowed opacity-50",
                         isActive || isSelected
                           ? "bg-white/8"
                           : "hover:bg-white/6",
@@ -620,8 +654,13 @@ function MiniModelVersionSelector({
                         <AiVideoStudioFamilyIcon icon={model.icon} size={28} />
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="flex min-w-0 items-center gap-2">
-                          <span className="truncate text-base font-semibold text-white">
+                        <span
+                          className={cn(
+                            "flex min-w-0 items-center gap-2",
+                            model.selectable === false && "flex-col items-start gap-1",
+                          )}
+                        >
+                          <span className="max-w-full truncate text-base font-semibold text-white">
                             {model.name}
                           </span>
                           {model.tags?.map((tag) => (
@@ -653,7 +692,11 @@ function MiniModelVersionSelector({
                   <button
                     key={version.id}
                     type="button"
+                    disabled={!isActiveFamilySelectable}
                     onClick={() => {
+                      if (!isActiveFamilySelectable) {
+                        return;
+                      }
                       onSelect({
                         familyKey: activeFamilyKey,
                         versionKey: version.id,
@@ -661,8 +704,10 @@ function MiniModelVersionSelector({
                       setIsOpen(false);
                     }}
                     className={cn(
-                      "flex w-full items-start gap-3 rounded-xl px-3 py-3 text-left transition",
-                      isSelected ? "bg-white/8" : "hover:bg-white/6",
+                      "flex w-full items-start gap-3 rounded-xl px-3 py-3 text-left transition disabled:cursor-not-allowed disabled:opacity-50",
+                      isSelected
+                        ? "bg-white/8"
+                        : isActiveFamilySelectable && "hover:bg-white/6",
                     )}
                   >
                     <span className="min-w-0 flex-1">
@@ -804,7 +849,6 @@ export default function AIVideoMiniStudio({
   const modelOptions = useMemo<MiniModelSelectorItem[]>(
     () =>
       AI_VIDEO_STUDIO_FAMILIES
-        .filter((family) => family.selectable !== false)
         .map((family) => ({
           id: family.key,
           name: family.label,

@@ -992,6 +992,80 @@
       "saveLabel": "Save 17%",
       "title": "Transparent Pricing for the Current App",
       "yearlyLabel": "Yearly"
+    },
+    "dynamic": {
+      "pricing": {
+        "billing": {
+          "annual": "Billed yearly at {amount}",
+          "monthly": "Billed monthly at {amount}"
+        },
+        "creditPackTitle": "{credits} Credits",
+        "credits": {
+          "monthly": "{credits} credits / month",
+          "oneTime": "{credits} credits"
+        },
+        "savings": "Save up to {percent}%"
+      },
+      "valueComparison": {
+        "columns": {
+          "credits": "Credits",
+          "creditsPerDollar": "Credits per $1",
+          "dollarsPerCredit": "$ per Credit",
+          "plan": "Plan",
+          "price": "Price",
+          "purchaseNote": "Purchase Note"
+        },
+        "planLabels": {
+          "annual": "Annual {planTitle}",
+          "monthly": "Monthly {planTitle}"
+        },
+        "purchaseNotes": {
+          "onetime": "Repeat purchase",
+          "recurring": "Purchase once"
+        },
+        "title": "Credits Value Comparison"
+      },
+      "modelPricing": {
+        "billingNotes": {
+          "fixed": "Fixed per generation",
+          "imageCount": "Images × {rate}",
+          "outputSeconds": "Output seconds × {rate}",
+          "withVideo": "(input + output) × {rate}"
+        },
+        "columns": {
+          "billingNote": "Billing Note",
+          "creditPrice": "Credit Price",
+          "model": "Model",
+          "spec": "Spec",
+          "type": "Type"
+        },
+        "creditPrices": {
+          "fixed": "{value} credits",
+          "perImage": "{value} credits/image",
+          "perSecond": "{value} credits/s"
+        },
+        "filters": {
+          "hot": "Hot",
+          "special": "Special"
+        },
+        "modelCount": "models",
+        "searchPlaceholder": "Search family or version",
+        "title": "AI Video Studio Model Pricing",
+        "typeLabels": {
+          "image-to-image": "Image to Image",
+          "image-to-video": "Image to Video",
+          "storyboard": "Storyboard",
+          "text-to-image": "Text to Image",
+          "text-to-video": "Text to Video",
+          "text/image-to-video": "Text/Image to Video",
+          "video-to-video": "Video to Video"
+        },
+        "units": {
+          "fixed": "credits",
+          "perImage": "credits/image",
+          "perSecond": "credits/s"
+        }
+      }
     }
   }
 }

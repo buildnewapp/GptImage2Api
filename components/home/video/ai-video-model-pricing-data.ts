@@ -4,10 +4,28 @@ import {
   type AiVideoStudioFamily,
   type AiVideoStudioVersion,
 } from "@/config/ai-video-studio";
-import { DEFAULT_LOCALE } from "@/i18n/routing";
 
-type SupportedLocale = "en" | "zh" | "ja";
 type PriceUnit = "fixed" | "per_image" | "per_second";
+
+export type AiVideoModelPricingCopy = {
+  billingNotes?: {
+    fixed?: string;
+    imageCount?: string;
+    outputSeconds?: string;
+    withVideo?: string;
+  };
+  creditPrices?: {
+    fixed?: string;
+    perImage?: string;
+    perSecond?: string;
+  };
+  typeLabels?: Record<string, string>;
+  units?: {
+    fixed?: string;
+    perImage?: string;
+    perSecond?: string;
+  };
+};
 
 export interface AiVideoModelPricingRow {
   billingNote: string;
@@ -32,12 +50,40 @@ export interface AiVideoModelPricingGroup {
   rows: AiVideoModelPricingRow[];
 }
 
-function resolveLocale(locale: string): SupportedLocale {
-  if (locale === "zh" || locale === "ja") {
-    return locale;
-  }
+const defaultTypeLabels: Record<string, string> = {
+  "image-to-image": "Image to Image",
+  "image-to-video": "Image to Video",
+  "storyboard": "Storyboard",
+  "text-to-image": "Text to Image",
+  "text-to-video": "Text to Video",
+  "text/image-to-video": "Text/Image to Video",
+  "video-to-video": "Video to Video",
+};
 
-  return DEFAULT_LOCALE as SupportedLocale;
+const defaultCopy = {
+  billingNotes: {
+    fixed: "Fixed per generation",
+    imageCount: "Images × {rate}",
+    outputSeconds: "Output seconds × {rate}",
+    withVideo: "(input + output) × {rate}",
+  },
+  creditPrices: {
+    fixed: "{value} credits",
+    perImage: "{value} credits/image",
+    perSecond: "{value} credits/s",
+  },
+  typeLabels: defaultTypeLabels,
+  units: {
+    fixed: "credits",
+    perImage: "credits/image",
+    perSecond: "credits/s",
+  },
+} as const;
+
+function formatTemplate(template: string, values: Record<string, string | number>) {
+  return template.replace(/\{(\w+)\}/g, (match, key) =>
+    values[key] === undefined ? match : String(values[key]),
+  );
 }
 
 function formatRate(value: number) {
@@ -48,134 +94,43 @@ function formatRate(value: number) {
   return value.toFixed(1).replace(/\.0$/, "");
 }
 
-function formatCreditsPerSecond(value: number, locale: SupportedLocale) {
-  if (locale === "zh") {
-    return `${formatRate(value)} 积分/秒`;
-  }
-  if (locale === "ja") {
-    return `${formatRate(value)} クレジット/秒`;
-  }
-  return `${formatRate(value)} credits/s`;
+function formatCreditsPerSecond(value: number, copy: AiVideoModelPricingCopy) {
+  return formatTemplate(
+    copy.creditPrices?.perSecond ?? defaultCopy.creditPrices.perSecond,
+    { value: formatRate(value) },
+  );
 }
 
-function formatFixedCredits(value: number, locale: SupportedLocale) {
-  if (locale === "zh") {
-    return `${formatRate(value)} 积分`;
-  }
-  if (locale === "ja") {
-    return `${formatRate(value)} クレジット`;
-  }
-  return `${formatRate(value)} credits`;
+function formatFixedCredits(value: number, copy: AiVideoModelPricingCopy) {
+  return formatTemplate(
+    copy.creditPrices?.fixed ?? defaultCopy.creditPrices.fixed,
+    { value: formatRate(value) },
+  );
 }
 
-function formatCreditsPerImage(value: number, locale: SupportedLocale) {
-  if (locale === "zh") {
-    return `${formatRate(value)} 积分/张`;
-  }
-  if (locale === "ja") {
-    return `${formatRate(value)} クレジット/枚`;
-  }
-  return `${formatRate(value)} credits/image`;
+function formatCreditsPerImage(value: number, copy: AiVideoModelPricingCopy) {
+  return formatTemplate(
+    copy.creditPrices?.perImage ?? defaultCopy.creditPrices.perImage,
+    { value: formatRate(value) },
+  );
 }
 
-function formatCreditUnit(unit: PriceUnit, locale: SupportedLocale) {
+function formatCreditUnit(unit: PriceUnit, copy: AiVideoModelPricingCopy) {
   if (unit === "per_second") {
-    if (locale === "zh") {
-      return "积分/秒";
-    }
-    if (locale === "ja") {
-      return "クレジット/秒";
-    }
-    return "credits/s";
+    return copy.units?.perSecond ?? defaultCopy.units.perSecond;
   }
 
   if (unit === "per_image") {
-    if (locale === "zh") {
-      return "积分/张";
-    }
-    if (locale === "ja") {
-      return "クレジット/枚";
-    }
-    return "credits/image";
+    return copy.units?.perImage ?? defaultCopy.units.perImage;
   }
 
-  if (locale === "zh") {
-    return "积分";
-  }
-  if (locale === "ja") {
-    return "クレジット";
-  }
-  return "credits";
+  return copy.units?.fixed ?? defaultCopy.units.fixed;
 }
 
-function normalizeTypeLabel(value: string, locale: SupportedLocale) {
+function normalizeTypeLabel(value: string, copy: AiVideoModelPricingCopy) {
   const normalized = value.trim().toLowerCase();
 
-  if (normalized === "text-to-video") {
-    if (locale === "zh") {
-      return "文生视频";
-    }
-    if (locale === "ja") {
-      return "テキストから動画";
-    }
-    return "Text to Video";
-  }
-
-  if (normalized === "image-to-video") {
-    if (locale === "zh") {
-      return "图生视频";
-    }
-    if (locale === "ja") {
-      return "画像から動画";
-    }
-    return "Image to Video";
-  }
-
-  if (normalized === "text/image-to-video") {
-    if (locale === "zh") {
-      return "文/图生视频";
-    }
-    if (locale === "ja") {
-      return "テキスト/画像から動画";
-    }
-    return "Text/Image to Video";
-  }
-
-  if (normalized === "text-to-image") {
-    if (locale === "zh") {
-      return "文生图";
-    }
-    if (locale === "ja") {
-      return "テキストから画像";
-    }
-    return "Text to Image";
-  }
-
-  if (normalized === "image-to-image") {
-    if (locale === "zh") {
-      return "图生图";
-    }
-    if (locale === "ja") {
-      return "画像から画像";
-    }
-    return "Image to Image";
-  }
-
-  if (normalized === "video-to-video") {
-    if (locale === "zh") {
-      return "视频转视频";
-    }
-    if (locale === "ja") {
-      return "動画から動画";
-    }
-    return "Video to Video";
-  }
-
-  if (normalized === "storyboard") {
-    return "Storyboard";
-  }
-
-  return value.trim();
+  return copy.typeLabels?.[normalized] ?? defaultCopy.typeLabels[normalized] ?? value.trim();
 }
 
 function isDurationPricing(priceFinal: string) {
@@ -201,26 +156,26 @@ function getPriceUnit(priceFinal: string): PriceUnit {
 }
 
 function formatCreditPrice(input: {
-  locale: SupportedLocale;
+  copy: AiVideoModelPricingCopy;
   priceFinal: string;
   rate: number;
 }) {
   const unit = getPriceUnit(input.priceFinal);
 
   if (unit === "per_image") {
-    return formatCreditsPerImage(input.rate, input.locale);
+    return formatCreditsPerImage(input.rate, input.copy);
   }
 
   if (unit === "per_second") {
-    return formatCreditsPerSecond(input.rate, input.locale);
+    return formatCreditsPerSecond(input.rate, input.copy);
   }
 
-  return formatFixedCredits(input.rate, input.locale);
+  return formatFixedCredits(input.rate, input.copy);
 }
 
 function formatPriceSummary(
   rows: AiVideoModelPricingRow[],
-  locale: SupportedLocale,
+  copy: AiVideoModelPricingCopy,
 ) {
   const unitOrder: PriceUnit[] = ["per_second", "fixed", "per_image"];
 
@@ -239,57 +194,42 @@ function formatPriceSummary(
       const rateLabel =
         min === max ? formatRate(min) : `${formatRate(min)}-${formatRate(max)}`;
 
-      return `${rateLabel} ${formatCreditUnit(unit, locale)}`;
+      return `${rateLabel} ${formatCreditUnit(unit, copy)}`;
     })
     .filter(Boolean)
     .join(" / ");
 }
 
 function getDynamicPriceNote(input: {
+  copy: AiVideoModelPricingCopy;
   mode: string | null;
-  locale: SupportedLocale;
   priceFinal: string;
   rate: number;
 }) {
   const rate = formatRate(input.rate);
 
   if (input.mode === "with_video" || input.mode === "video-input") {
-    if (input.locale === "zh") {
-      return `（输入秒数 + 输出秒数）× ${rate}`;
-    }
-    if (input.locale === "ja") {
-      return `（入力秒数 + 出力秒数）× ${rate}`;
-    }
-    return `(input + output) × ${rate}`;
+    return formatTemplate(
+      input.copy.billingNotes?.withVideo ?? defaultCopy.billingNotes.withVideo,
+      { rate },
+    );
   }
 
   if (isImageCountPricing(input.priceFinal)) {
-    if (input.locale === "zh") {
-      return `图片数量 × ${rate}`;
-    }
-    if (input.locale === "ja") {
-      return `画像数 × ${rate}`;
-    }
-    return `Images × ${rate}`;
+    return formatTemplate(
+      input.copy.billingNotes?.imageCount ?? defaultCopy.billingNotes.imageCount,
+      { rate },
+    );
   }
 
   if (!isDurationPricing(input.priceFinal)) {
-    if (input.locale === "zh") {
-      return "单次生成固定价格";
-    }
-    if (input.locale === "ja") {
-      return "生成ごとの固定価格";
-    }
-    return "Fixed per generation";
+    return input.copy.billingNotes?.fixed ?? defaultCopy.billingNotes.fixed;
   }
 
-  if (input.locale === "zh") {
-    return `输出秒数 × ${rate}`;
-  }
-  if (input.locale === "ja") {
-    return `出力秒数 × ${rate}`;
-  }
-  return `Output seconds × ${rate}`;
+  return formatTemplate(
+    input.copy.billingNotes?.outputSeconds ?? defaultCopy.billingNotes.outputSeconds,
+    { rate },
+  );
 }
 
 function resolveRuntimeCatalogEntry(version: AiVideoStudioVersion) {
@@ -326,7 +266,7 @@ function inferBaseType(version: AiVideoStudioVersion) {
 
 function inferPriceType(
   parts: string[],
-  locale: SupportedLocale,
+  copy: AiVideoModelPricingCopy,
   version: AiVideoStudioVersion,
 ) {
   const mode = parts.find((part) =>
@@ -337,10 +277,10 @@ function inferPriceType(
   ) ?? null;
 
   if (mode === "with_video" || mode === "video-input") {
-    return normalizeTypeLabel("video-to-video", locale);
+    return normalizeTypeLabel("video-to-video", copy);
   }
 
-  return normalizeTypeLabel(inferBaseType(version), locale);
+  return normalizeTypeLabel(inferBaseType(version), copy);
 }
 
 function inferPriceSpec(parts: string[]) {
@@ -350,7 +290,7 @@ function inferPriceSpec(parts: string[]) {
 function buildVersionPricingRows(
   family: AiVideoStudioFamily,
   version: AiVideoStudioVersion,
-  locale: SupportedLocale,
+  copy: AiVideoModelPricingCopy,
 ) {
   const entry = resolveRuntimeCatalogEntry(version);
   if (!entry?.pricing?.price_map) {
@@ -372,13 +312,13 @@ function buildVersionPricingRows(
     const priceUnit = getPriceUnit(entry.pricing.price_final);
     const row = {
       billingNote: getDynamicPriceNote({
+        copy,
         mode,
-        locale,
         priceFinal: entry.pricing.price_final,
         rate,
       }),
       creditPrice: formatCreditPrice({
-        locale,
+        copy,
         priceFinal: entry.pricing.price_final,
         rate,
       }),
@@ -390,7 +330,7 @@ function buildVersionPricingRows(
       priceRate: rate,
       priceUnit,
       spec: inferPriceSpec(parts),
-      type: inferPriceType(parts, locale, version),
+      type: inferPriceType(parts, copy, version),
       versionKey: version.key,
     } satisfies AiVideoModelPricingRow;
 
@@ -406,13 +346,13 @@ function buildVersionPricingRows(
 }
 
 export function buildAiVideoModelPricingRows({
+  copy = defaultCopy,
   familyKey,
-  locale,
 }: {
+  copy?: AiVideoModelPricingCopy;
   familyKey?: string;
   locale: string;
 }): AiVideoModelPricingRow[] {
-  const resolvedLocale = resolveLocale(locale);
   const rows: AiVideoModelPricingRow[] = [];
 
   for (const family of AI_VIDEO_STUDIO_FAMILIES) {
@@ -421,7 +361,7 @@ export function buildAiVideoModelPricingRows({
     }
 
     for (const version of family.versions) {
-      rows.push(...buildVersionPricingRows(family, version, resolvedLocale));
+      rows.push(...buildVersionPricingRows(family, version, copy));
     }
   }
 
@@ -429,12 +369,13 @@ export function buildAiVideoModelPricingRows({
 }
 
 export function buildAiVideoModelPricingGroups({
+  copy = defaultCopy,
   locale,
 }: {
+  copy?: AiVideoModelPricingCopy;
   locale: string;
 }): AiVideoModelPricingGroup[] {
-  const resolvedLocale = resolveLocale(locale);
-  const rows = buildAiVideoModelPricingRows({ locale });
+  const rows = buildAiVideoModelPricingRows({ copy, locale });
   const groups: AiVideoModelPricingGroup[] = [];
   const groupMap = new Map<string, AiVideoModelPricingGroup>();
 
@@ -454,7 +395,7 @@ export function buildAiVideoModelPricingGroups({
 
     group.rows.push(row);
     group.modelCount = new Set(group.rows.map((item) => item.versionKey)).size;
-    group.priceSummary = formatPriceSummary(group.rows, resolvedLocale);
+    group.priceSummary = formatPriceSummary(group.rows, copy);
   }
 
   return groups;

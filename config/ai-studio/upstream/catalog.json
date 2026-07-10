@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-06-23T05:54:38.997Z",
+  "generatedAt": "2026-07-10T03:36:57.592Z",
   "items": [
     {
       "id": "chat:claude-fable-5",
@@ -2036,6 +2036,265 @@
       }
     },
     {
+      "id": "chat:claude-sonnet-5",
+      "category": "chat",
+      "title": "Claude Sonnet 5",
+      "docUrl": "https://docs.kie.ai/market/claude/cluade-sonnet-5.md",
+      "provider": "Claude Sonnet 5",
+      "endpoint": "/claude/v1/messages",
+      "method": "POST",
+      "modelKeys": [
+        "claude-sonnet-5"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model name. It must match the current document.",
+            "enum": [
+              "claude-sonnet-5"
+            ],
+            "x-apidog-enum": [
+              {
+                "value": "claude-sonnet-5",
+                "name": "",
+                "description": ""
+              }
+            ],
+            "examples": [
+              "claude-sonnet-5"
+            ]
+          },
+          "messages": {
+            "type": "array",
+            "description": "Conversation messages in chronological order.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "user",
+                    "assistant"
+                  ],
+                  "description": "Message role.",
+                  "examples": [
+                    "user"
+                  ]
+                },
+                "content": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "description": "Plain text content."
+                    },
+                    {
+                      "type": "array",
+                      "description": "Structured content blocks.",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "x-apidog-orders": []
+                      }
+                    }
+                  ],
+                  "description": "Message content.",
+                  "examples": [
+                    "What is the weather like in Boston today?"
+                  ]
+                }
+              },
+              "required": [
+                "role",
+                "content"
+              ],
+              "x-apidog-orders": [
+                "role",
+                "content"
+              ]
+            },
+            "minItems": 1
+          },
+          "tools": {
+            "type": "array",
+            "description": "Optional callable tools. Each tool includes a name, description, and input_schema.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Function name.",
+                  "examples": [
+                    "get_current_weather"
+                  ]
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Human-readable function description.",
+                  "examples": [
+                    "Get the current weather in a given location"
+                  ]
+                },
+                "input_schema": {
+                  "type": "object",
+                  "description": "JSON Schema for function parameters.",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "Schema type.",
+                      "examples": [
+                        "object"
+                      ]
+                    },
+                    "properties": {
+                      "type": "object",
+                      "description": "Function parameter definitions.",
+                      "additionalProperties": true,
+                      "x-apidog-orders": [],
+                      "properties": {}
+                    },
+                    "required": {
+                      "type": "array",
+                      "description": "Required parameter names.",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "x-apidog-orders": [
+                    "type",
+                    "properties",
+                    "required"
+                  ],
+                  "examples": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "location": {
+                          "type": "string",
+                          "description": "The city and state, e.g. Boston, MA"
+                        }
+                      },
+                      "required": [
+                        "location"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "description",
+                "input_schema"
+              ],
+              "x-apidog-orders": [
+                "name",
+                "description",
+                "input_schema"
+              ]
+            }
+          },
+          "thinkingFlag": {
+            "type": "boolean",
+            "description": "Project-specific thinking flag used by the current Claude adapter.",
+            "examples": [
+              true
+            ]
+          },
+          "stream": {
+            "type": "boolean",
+            "default": true,
+            "description": "If set to true, the response is returned as an SSE stream.",
+            "examples": [
+              false
+            ]
+          },
+          "max_tokens": {
+            "type": "number",
+            "default": 4096,
+            "examples": [
+              4096
+            ],
+            "description": "Optional Claude output token limit. Leave empty to use the default of 4096."
+          }
+        },
+        "required": [
+          "model",
+          "messages"
+        ],
+        "x-apidog-orders": [
+          "model",
+          "messages",
+          "tools",
+          "thinkingFlag",
+          "stream",
+          "max_tokens"
+        ],
+        "examples": [
+          {
+            "model": "claude-opus-4-6-v1messages",
+            "messages": [
+              {
+                "role": "user",
+                "content": "What is the weather like in Boston today?"
+              }
+            ],
+            "tools": [
+              {
+                "name": "get_current_weather",
+                "description": "Get the current weather in a given location",
+                "input_schema": {
+                  "type": "object",
+                  "properties": {
+                    "location": {
+                      "type": "string",
+                      "description": "The city and state, e.g. Boston, MA"
+                    }
+                  },
+                  "required": [
+                    "location"
+                  ]
+                }
+              }
+            ],
+            "thinkingFlag": true,
+            "stream": false
+          }
+        ]
+      },
+      "examplePayload": {
+        "model": "claude-sonnet-5",
+        "messages": [
+          {
+            "role": "user",
+            "content": "What is the weather like in Boston today?"
+          }
+        ],
+        "tools": [
+          {
+            "name": "get_current_weather",
+            "description": "Get the current weather in a given location",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "type": "string",
+                  "description": "The city and state, e.g. Boston, MA"
+                }
+              },
+              "required": [
+                "location"
+              ]
+            }
+          }
+        ],
+        "thinkingFlag": true,
+        "stream": false,
+        "max_tokens": 4096
+      }
+    },
+    {
       "id": "chat:gemini-2-5-flash-openai",
       "category": "chat",
       "title": "Gemini 2.5 Flash (openai)",
@@ -2901,6 +3160,34 @@
       "examplePayload": {}
     },
     {
+      "id": "chat:grok-4-3",
+      "category": "chat",
+      "title": "Grok 4.3",
+      "docUrl": "https://docs.kie.ai/market/grok/grok-4-3.md",
+      "provider": "Grok 4.3",
+      "endpoint": "/grok/v1/responses",
+      "method": "POST",
+      "modelKeys": [
+        "grok"
+      ],
+      "requestSchema": null,
+      "examplePayload": {}
+    },
+    {
+      "id": "chat:grok-4-5",
+      "category": "chat",
+      "title": "Grok 4.5",
+      "docUrl": "https://docs.kie.ai/market/grok/grok-4-5.md",
+      "provider": "Grok 4.5",
+      "endpoint": "/grok/v1/responses",
+      "method": "POST",
+      "modelKeys": [
+        "grok"
+      ],
+      "requestSchema": null,
+      "examplePayload": {}
+    },
+    {
       "id": "image:flux-2-image-to-image",
       "category": "image",
       "title": "Flux-2 - Image to Image",
@@ -2995,7 +3282,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -3009,9 +3296,16 @@
               "prompt",
               "aspect_ratio",
               "resolution",
-              "nsfw_checker"
+              "01KWKKM9GXCPD0W623S7CE02HS"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKKM9GXCPD0W623S7CE02HS": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -3131,7 +3425,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -3145,9 +3439,16 @@
               "prompt",
               "aspect_ratio",
               "resolution",
-              "nsfw_checker"
+              "01KWKKJT259C3ZRAYKFJZ2A06M"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKKJT259C3ZRAYKFJZ2A06M": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -3288,7 +3589,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -3300,9 +3601,16 @@
               "prompt",
               "aspect_ratio",
               "resolution",
-              "nsfw_checker"
+              "01KWKKKH6B3CDM7AGTZXZCPH5P"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKKKH6B3CDM7AGTZXZCPH5P": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -3439,7 +3747,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -3451,9 +3759,16 @@
               "prompt",
               "aspect_ratio",
               "resolution",
-              "nsfw_checker"
+              "01KWKKN00S0QBA76FQ5GKQ61C6"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKKN00S0QBA76FQ5GKQ61C6": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -3520,53 +3835,12 @@
               "1:1"
             ]
           },
-          "maskUrl": {
-            "type": "string",
-            "format": "uri",
-            "description": "(Optional) Mask image URL indicating areas to modify (black) versus preserve (white). The mask must match the reference image’s dimensions and format (≤ 25 MB). When more than one image is supplied in `filesUrl`, `maskUrl` is ignored.\n\nExample:\n![Mask Example](https://static.aiquickdraw.com/images/docs/4o-gen-image-mask.png)\n\nIn the image above, the left side shows the original image, the middle shows the mask image (white areas indicate parts to be preserved, black areas indicate parts to be modified), and the right side shows the final generated image.",
-            "examples": [
-              "https://example.com/mask.png"
-            ]
-          },
           "callBackUrl": {
             "type": "string",
             "format": "uri",
             "description": "The URL to receive 4o image generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when 4o image generation completes\n- Callback includes generated image URLs and task information for all variations\n- Your callback endpoint should accept POST requests with JSON payload containing image generation results\n- For detailed callback format and implementation guide, see [4o Image Generation Callbacks](https://docs.kie.ai/4o-image-api/generate-4-o-image-callbacks)\n- Alternatively, use the Get 4o Image Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
             "examples": [
               "https://your-callback-url.com/callback"
-            ]
-          },
-          "isEnhance": {
-            "type": "boolean",
-            "description": "(Optional) Enable prompt enhancement for more refined outputs in specialised scenarios (e.g., 3D renders). Default false.",
-            "examples": [
-              false
-            ]
-          },
-          "uploadCn": {
-            "type": "boolean",
-            "description": "(Optional) Choose the upload region. `true` routes uploads via China servers; `false` via non‑China servers.",
-            "examples": [
-              false
-            ]
-          },
-          "enableFallback": {
-            "type": "boolean",
-            "description": "(Optional) Activate automatic fallback to backup models (e.g., Flux) if GPT‑4o image generation is unavailable. Default false.",
-            "examples": [
-              false
-            ]
-          },
-          "fallbackModel": {
-            "type": "string",
-            "description": "(Optional) Specify which backup model to use when the main model is unavailable. Takes effect when enableFallback is true. Available values: GPT_IMAGE_1  or FLUX_MAX. Default value is FLUX_MAX.",
-            "enum": [
-              "GPT_IMAGE_1",
-              "FLUX_MAX"
-            ],
-            "default": "FLUX_MAX",
-            "examples": [
-              "FLUX_MAX"
             ]
           },
           "fileUrl": {
@@ -3586,12 +3860,7 @@
           "prompt",
           "filesUrl",
           "size",
-          "maskUrl",
           "callBackUrl",
-          "isEnhance",
-          "uploadCn",
-          "enableFallback",
-          "fallbackModel",
           "fileUrl"
         ],
         "examples": [
@@ -3616,11 +3885,7 @@
         ],
         "prompt": "A beautiful sunset over the mountains",
         "size": "1:1",
-        "callBackUrl": "https://your-callback-url.com/callback",
-        "isEnhance": false,
-        "uploadCn": false,
-        "enableFallback": false,
-        "fallbackModel": "FLUX_MAX"
+        "callBackUrl": "https://your-callback-url.com/callback"
       }
     },
     {
@@ -4303,7 +4568,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -4314,9 +4579,16 @@
               "output_format",
               "aspect_ratio",
               "image_size",
-              "nsfw_checker"
+              "01KWKJQQG1VHBE614W0DV84ECJ"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKJQQG1VHBE614W0DV84ECJ": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -4477,6 +4749,125 @@
           "aspect_ratio": "auto",
           "resolution": "1K",
           "output_format": "png"
+        }
+      }
+    },
+    {
+      "id": "image:google-nano-banana-2-lite",
+      "category": "image",
+      "title": "Google - Nano Banana 2 Lite",
+      "docUrl": "https://docs.kie.ai/market/google/nano-banana-2-lite.md",
+      "provider": "Google",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "nano-banana-2-lite"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "nano-banana-2-lite"
+            ],
+            "default": "nano-banana-2-lite",
+            "description": "The model name used for generation. This field is required. This endpoint must use the `nano-banana-2-lite` model.",
+            "examples": [
+              "nano-banana-2-lite"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Callback URL for task completion notifications. Optional parameter. If provided, the system will send a POST request to this URL when the task completes, whether it succeeds or fails. If omitted, no callback notification will be sent.",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the image generation task.",
+            "required": [
+              "prompt",
+              "aspect_ratio"
+            ],
+            "properties": {
+              "image_urls": {
+                "type": "array",
+                "maxItems": 10,
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "default": [],
+                "description": "Input image URL array. Optional parameter. Set to an empty array or omit it for pure text-to-image generation. Supports up to 10 images.\n\n- Please provide uploaded file URLs, not raw file content\n- Accepted types: `image/jpeg`, `image/png`, `image/webp`\n- Max size: 30.0MB",
+                "examples": [
+                  [
+                    "https://file.aiquickdraw.com/custom-page/akr/section-images/1756223420389w8xa2jfe.png"
+                  ]
+                ]
+              },
+              "prompt": {
+                "type": "string",
+                "maxLength": 20000,
+                "description": "Text prompt used to generate the image. Required. Maximum length: 20000 characters.",
+                "examples": [
+                  "Generate a pig on the grass, cinematic light"
+                ]
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "enum": [
+                  "1:1",
+                  "1:4",
+                  "1:8",
+                  "2:3",
+                  "3:2",
+                  "3:4",
+                  "4:1",
+                  "4:3",
+                  "4:5",
+                  "5:4",
+                  "8:1",
+                  "9:16",
+                  "16:9",
+                  "21:9",
+                  "auto"
+                ],
+                "default": "auto",
+                "description": "Generated image aspect ratio. Default value: `auto`. Use `auto` to let the system choose the aspect ratio automatically.",
+                "examples": [
+                  "auto"
+                ]
+              }
+            },
+            "x-apidog-orders": [
+              "image_urls",
+              "prompt",
+              "aspect_ratio"
+            ]
+          }
+        },
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ]
+      },
+      "examplePayload": {
+        "model": "nano-banana-2-lite",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "image_urls": [
+            "https://file.aiquickdraw.com/custom-page/akr/section-images/1756223420389w8xa2jfe.png"
+          ],
+          "prompt": "Generate a pig on the grass, cinematic light",
+          "aspect_ratio": "auto"
         }
       }
     },
@@ -5064,7 +5455,7 @@
               },
               "aspect_ratio": {
                 "type": "string",
-                "description": "The aspect ratio of the generated image is set to auto by default.",
+                "description": "The aspect ratio of the generated image is set to auto by default.\nNote: 5:4 and 4:5 aspect ratios only support 1K images.",
                 "enum": [
                   "auto",
                   "1:1",
@@ -5160,8 +5551,8 @@
                     "description": ""
                   },
                   {
-                    "label": "9:21",
                     "value": "9:21",
+                    "name": "",
                     "description": ""
                   }
                 ]
@@ -5283,7 +5674,7 @@
               },
               "aspect_ratio": {
                 "type": "string",
-                "description": "The aspect ratio of the generated image is set to auto by default.",
+                "description": "The aspect ratio of the generated image is set to auto by default.\nNote: for 2K and 4K resolution, the following aspect ratios are not supported: 5:4, 4:5, 3:1, 1:3, and 9:21.",
                 "enum": [
                   "auto",
                   "1:1",
@@ -5379,8 +5770,8 @@
                     "description": ""
                   },
                   {
-                    "label": "9:21",
                     "value": "9:21",
+                    "name": "",
                     "description": ""
                   }
                 ]
@@ -5500,8 +5891,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "default": false,
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -5510,9 +5900,16 @@
             "x-apidog-orders": [
               "prompt",
               "image_urls",
-              "nsfw_checker"
+              "01KWKKPRV1ZZV5A5MNR4YZ5FVD"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKKPRV1ZZV5A5MNR4YZ5FVD": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -5593,8 +5990,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "default": false,
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               },
               "enable_pro": {
                 "type": "boolean",
@@ -5607,10 +6003,17 @@
             "x-apidog-orders": [
               "prompt",
               "aspect_ratio",
-              "nsfw_checker",
+              "01KWKKNWENNX8AZBVKNVKCEVTM",
               "enable_pro"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKKNWENNX8AZBVKNVKCEVTM": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "required": [
@@ -6818,8 +7221,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "default": false,
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -6839,9 +7241,16 @@
               "enable_safety_checker",
               "output_format",
               "negative_prompt",
-              "nsfw_checker"
+              "01KWKM0AMCDJ070EPKBJBNEPGH"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKM0AMCDJ070EPKBJBNEPGH": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -6999,8 +7408,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "default": false,
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -7018,9 +7426,16 @@
               "num_inference_steps",
               "guidance_scale",
               "enable_safety_checker",
-              "nsfw_checker"
+              "01KWKKZ74FZWPMQ7JNYP7FNF2B"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKKZ74FZWPMQ7JNYP7FNF2B": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -7176,8 +7591,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "default": false,
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -7193,9 +7607,16 @@
               "output_format",
               "negative_prompt",
               "acceleration",
-              "nsfw_checker"
+              "01KWKKY7BT19W5R0JHASAQTSFY"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKKY7BT19W5R0JHASAQTSFY": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -7360,8 +7781,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.",
-                "default": false
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -7374,9 +7794,16 @@
               "image_size",
               "seed",
               "output_format",
-              "nsfw_checker"
+              "01KWKM0Y0VH804SXN1Y4W9KBWJ"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKM0Y0VH804SXN1Y4W9KBWJ": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -7513,8 +7940,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "default": false,
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -7525,9 +7951,16 @@
               "image_size",
               "seed",
               "output_format",
-              "nsfw_checker"
+              "01KWKM1ER4WZ9KHEVYM9M7WMJD"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKM1ER4WZ9KHEVYM9M7WMJD": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -7902,7 +8335,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -7916,9 +8349,16 @@
               "image_resolution",
               "max_images",
               "seed",
-              "nsfw_checker"
+              "01KWKKBVR7D6T2Z43EZTXTYWKX"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKKBVR7D6T2Z43EZTXTYWKX": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -8040,7 +8480,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -8052,9 +8492,16 @@
               "image_resolution",
               "max_images",
               "seed",
-              "nsfw_checker"
+              "01KWKKAYD4AP9MQ0XGF3QAJP22"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKKAYD4AP9MQ0XGF3QAJP22": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -8171,7 +8618,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -8185,9 +8632,16 @@
               "image_urls",
               "aspect_ratio",
               "quality",
-              "nsfw_checker"
+              "01KWKKDK5ZN1V5DDC3SBHGKYGP"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKKDK5ZN1V5DDC3SBHGKYGP": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -8291,7 +8745,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -8303,9 +8757,16 @@
               "prompt",
               "aspect_ratio",
               "quality",
-              "nsfw_checker"
+              "01KWKKCSXFRHDTJVM4ENMWXEVE"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKKCSXFRHDTJVM4ENMWXEVE": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -8419,9 +8880,33 @@
                   "basic"
                 ]
               },
+              "output_format": {
+                "type": "string",
+                "enum": [
+                  "png",
+                  "jpeg"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "png",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "jpeg",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "default": "png",
+                "examples": [
+                  "png"
+                ],
+                "description": "Format of the output image"
+              },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -8435,9 +8920,17 @@
               "image_urls",
               "aspect_ratio",
               "quality",
-              "nsfw_checker"
+              "output_format",
+              "01KWKKFJ8AJ8QG7EPA3TV0MEF9"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKKFJ8AJ8QG7EPA3TV0MEF9": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -8457,6 +8950,7 @@
           ],
           "aspect_ratio": "1:1",
           "quality": "basic",
+          "output_format": "png",
           "nsfw_checker": true
         }
       }
@@ -8540,9 +9034,33 @@
                   "basic"
                 ]
               },
+              "output_format": {
+                "type": "string",
+                "description": "Format of the output image",
+                "enum": [
+                  "png",
+                  "jpeg"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "png",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "jpeg",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "default": "png",
+                "examples": [
+                  "png"
+                ]
+              },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -8554,9 +9072,17 @@
               "prompt",
               "aspect_ratio",
               "quality",
-              "nsfw_checker"
+              "output_format",
+              "01KWKKET9KFFMY3KSTSTNZ0894"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKKET9KFFMY3KSTSTNZ0894": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -8573,6 +9099,412 @@
           "prompt": "A full-process cafe design tool for entrepreneurs and designers. It covers core needs including store layout, functional zoning, decoration style, equipment selection, and customer group adaptation, supporting integrated planning of \"commercial attributes + aesthetic design.\" Suitable as a promotional image for a cafe design SaaS product, with a 16:9 aspect ratio.",
           "aspect_ratio": "1:1",
           "quality": "basic",
+          "output_format": "png",
+          "nsfw_checker": false
+        }
+      }
+    },
+    {
+      "id": "image:seedream5-0-pro-image-to-image",
+      "category": "image",
+      "title": "Seedream5.0 Pro - Image to Image",
+      "docUrl": "https://docs.kie.ai/market/seedream/5-pro-image-to-image.md",
+      "provider": "Seedream5.0 Pro",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "seedream/5-pro-image-to-image"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `seedream/5-pro-image-to-image` for this endpoint",
+            "enum": [
+              "seedream/5-pro-image-to-image"
+            ],
+            "default": "seedream/5-pro-image-to-image",
+            "x-apidog-enum": [
+              {
+                "value": "seedream/5-pro-image-to-image",
+                "name": "",
+                "description": ""
+              }
+            ],
+            "examples": [
+              "seedream/5-pro-image-to-image"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to receive generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when generation completes\n- Callback includes generated content URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the generation task",
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "description": "A text description of the image you want to generate (Max length: 3-3000 characters)",
+                "maxLength": 3000,
+                "examples": [
+                  "Keep the model's pose and the flowing shape of the liquid dress unchanged. Change the clothing material from silver metal to completely transparent clear water (or glass). Through the liquid water, the model's skin details are visible. Lighting changes from reflection to refraction."
+                ],
+                "minLength": 3
+              },
+              "image_urls": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "description": "Upload an image file to use as input for the API (File URL after upload, not file content; Accepted types: image/jpeg, image/png, image/webp; Max size: 10.0MB)",
+                "maxItems": 10,
+                "examples": [
+                  [
+                    "https://static.aiquickdraw.com/tools/example/1764851484363_ScV1s2aq.webp"
+                  ]
+                ]
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "description": "Width-height ratio of the image, determining its visual form. ",
+                "enum": [
+                  "1:1",
+                  "4:3",
+                  "3:4",
+                  "16:9",
+                  "9:16",
+                  "2:3",
+                  "3:2"
+                ],
+                "default": "1:1",
+                "examples": [
+                  "1:1"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "1:1",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "4:3",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "3:4",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "16:9",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "9:16",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "2:3",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "3:2",
+                    "name": "",
+                    "description": ""
+                  }
+                ]
+              },
+              "quality": {
+                "description": "Basic outputs 1K images, while High outputs 2K images.",
+                "type": "string",
+                "enum": [
+                  "basic",
+                  "high"
+                ],
+                "default": "basic",
+                "examples": [
+                  "basic"
+                ]
+              },
+              "output_format": {
+                "type": "string",
+                "description": "Format of the output image",
+                "enum": [
+                  "png",
+                  "jpeg"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "png",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "jpeg",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "default": "png",
+                "examples": [
+                  "png"
+                ]
+              },
+              "nsfw_checker": {
+                "type": "boolean",
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
+              }
+            },
+            "required": [
+              "prompt",
+              "image_urls",
+              "aspect_ratio",
+              "quality"
+            ],
+            "x-apidog-orders": [
+              "prompt",
+              "image_urls",
+              "aspect_ratio",
+              "quality",
+              "output_format",
+              "01KX31NNF3HWXZ2E1R2HT933GV"
+            ],
+            "x-apidog-refs": {
+              "01KX31NNF3HWXZ2E1R2HT933GV": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
+          }
+        },
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "seedream/5-pro-image-to-image",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "Keep the model's pose and the flowing shape of the liquid dress unchanged. Change the clothing material from silver metal to completely transparent clear water (or glass). Through the liquid water, the model's skin details are visible. Lighting changes from reflection to refraction.",
+          "image_urls": [
+            "https://static.aiquickdraw.com/tools/example/1764851484363_ScV1s2aq.webp"
+          ],
+          "aspect_ratio": "1:1",
+          "quality": "basic",
+          "output_format": "png",
+          "nsfw_checker": true
+        }
+      }
+    },
+    {
+      "id": "image:seedream5-0-pro-text-to-image",
+      "category": "image",
+      "title": "Seedream5.0 Pro - Text to Image",
+      "docUrl": "https://docs.kie.ai/market/seedream/5-pro-text-to-image.md",
+      "provider": "Seedream5.0 Pro",
+      "endpoint": "/api/v1/jobs/createTask",
+      "method": "POST",
+      "modelKeys": [
+        "seedream/5-pro-text-to-image"
+      ],
+      "requestSchema": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "The model name to use for generation. Required field.\n\n- Must be `seedream/5-pro-text-to-image` for this endpoint",
+            "enum": [
+              "seedream/5-pro-text-to-image"
+            ],
+            "default": "seedream/5-pro-text-to-image",
+            "x-apidog-enum": [
+              {
+                "value": "seedream/5-pro-text-to-image",
+                "name": "",
+                "description": ""
+              }
+            ],
+            "examples": [
+              "seedream/5-pro-text-to-image"
+            ]
+          },
+          "callBackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to receive generation task completion updates. Optional but recommended for production use.\n\n- System will POST task status and results to this URL when generation completes\n- Callback includes generated content URLs and task information\n- Your callback endpoint should accept POST requests with JSON payload containing results\n- Alternatively, use the Get Task Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
+            "examples": [
+              "https://your-domain.com/api/callback"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameters for the generation task",
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "description": "A text description of the image you want to generate (Max length: 3-3000 characters)",
+                "maxLength": 3000,
+                "examples": [
+                  "A full-process cafe design tool for entrepreneurs and designers. It covers core needs including store layout, functional zoning, decoration style, equipment selection, and customer group adaptation, supporting integrated planning of \"commercial attributes + aesthetic design.\" Suitable as a promotional image for a cafe design SaaS product, with a 16:9 aspect ratio."
+                ],
+                "minLength": 3
+              },
+              "aspect_ratio": {
+                "type": "string",
+                "description": "Width-height ratio of the image, determining its visual form.",
+                "enum": [
+                  "1:1",
+                  "4:3",
+                  "3:4",
+                  "16:9",
+                  "9:16",
+                  "2:3",
+                  "3:2"
+                ],
+                "default": "1:1",
+                "examples": [
+                  "1:1"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "1:1",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "4:3",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "3:4",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "16:9",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "9:16",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "2:3",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "3:2",
+                    "name": "",
+                    "description": ""
+                  }
+                ]
+              },
+              "quality": {
+                "description": "Basic outputs 1K images, while High outputs 2K images.",
+                "type": "string",
+                "enum": [
+                  "basic",
+                  "high"
+                ],
+                "default": "basic",
+                "examples": [
+                  "basic"
+                ]
+              },
+              "output_format": {
+                "type": "string",
+                "enum": [
+                  "png",
+                  "jpeg"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "png",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "jpeg",
+                    "name": "",
+                    "description": ""
+                  }
+                ],
+                "default": "png",
+                "examples": [
+                  "png"
+                ],
+                "description": "Format of the output image"
+              },
+              "nsfw_checker": {
+                "type": "boolean",
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
+              }
+            },
+            "required": [
+              "prompt",
+              "aspect_ratio",
+              "quality"
+            ],
+            "x-apidog-orders": [
+              "prompt",
+              "aspect_ratio",
+              "quality",
+              "output_format",
+              "01KX31P7PWM8T39RWCBB910HAY"
+            ],
+            "x-apidog-refs": {
+              "01KX31P7PWM8T39RWCBB910HAY": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
+          }
+        },
+        "x-apidog-orders": [
+          "model",
+          "callBackUrl",
+          "input"
+        ],
+        "x-apidog-ignore-properties": []
+      },
+      "examplePayload": {
+        "model": "seedream/5-pro-text-to-image",
+        "callBackUrl": "https://your-domain.com/api/callback",
+        "input": {
+          "prompt": "A full-process cafe design tool for entrepreneurs and designers. It covers core needs including store layout, functional zoning, decoration style, equipment selection, and customer group adaptation, supporting integrated planning of \"commercial attributes + aesthetic design.\" Suitable as a promotional image for a cafe design SaaS product, with a 16:9 aspect ratio.",
+          "aspect_ratio": "1:1",
+          "quality": "basic",
+          "output_format": "png",
           "nsfw_checker": false
         }
       }
@@ -8904,8 +9836,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.",
-                "default": false
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -8923,7 +9854,7 @@
               "bbox_list",
               "watermark",
               "seed",
-              "nsfw_checker"
+              "01KWKM3Z0W5ZTEMZEDV632Q54X"
             ],
             "examples": [
               {
@@ -8942,7 +9873,14 @@
                 ]
               }
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKM3Z0W5ZTEMZEDV632Q54X": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -9185,8 +10123,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.",
-                "default": false
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -9204,7 +10141,7 @@
               "bbox_list",
               "watermark",
               "seed",
-              "nsfw_checker"
+              "01KWKM4X2B83B594MFP07P1QBD"
             ],
             "examples": [
               {
@@ -9223,7 +10160,14 @@
                 ]
               }
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKM4X2B83B594MFP07P1QBD": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -9300,7 +10244,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -9310,9 +10254,16 @@
             "x-apidog-orders": [
               "prompt",
               "aspect_ratio",
-              "nsfw_checker"
+              "01KWKK19E61VHY69WQ83861BQH"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKK19E61VHY69WQ83861BQH": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -12782,8 +13733,6 @@
       "requestSchema": {
         "type": "object",
         "required": [
-          "taskId",
-          "audioId",
           "prompt",
           "tags",
           "title",
@@ -12791,21 +13740,136 @@
           "infillEndS",
           "fullLyrics"
         ],
+        "oneOf": [
+          {
+            "title": "Replace section using existing audio",
+            "required": [
+              "taskId",
+              "audioId"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "uploadUrl"
+                  ]
+                },
+                {
+                  "required": [
+                    "model"
+                  ]
+                }
+              ]
+            },
+            "properties": {
+              "taskId": {
+                "type": "string",
+                "description": "Original task ID (parent task), used to identify the source music for section replacement.",
+                "examples": [
+                  "2fac****9f72"
+                ]
+              },
+              "audioId": {
+                "type": "string",
+                "description": "Unique identifier of the audio track to replace. This ID is returned in the callback data after music generation completes.",
+                "examples": [
+                  "e231****-****-****-****-****8cadc7dc"
+                ]
+              }
+            },
+            "x-apidog-orders": [
+              "taskId",
+              "audioId"
+            ],
+            "x-apidog-ignore-properties": [],
+            "type": "object"
+          },
+          {
+            "title": "Replace section using uploaded custom audio",
+            "required": [
+              "uploadUrl",
+              "model"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "taskId"
+                  ]
+                },
+                {
+                  "required": [
+                    "audioId"
+                  ]
+                }
+              ]
+            },
+            "properties": {
+              "uploadUrl": {
+                "type": "string",
+                "format": "uri",
+                "description": "URL of the custom audio uploaded by the user.",
+                "examples": [
+                  "https://example.com/audio.mp3"
+                ]
+              },
+              "model": {
+                "type": "string",
+                "description": "AI model version used for generation. \n- Available options:\n  - **`V5_5`**: A tailor-made exclusive model that fits your unique taste.  \n  - **`V5`**: Better musical expressiveness with faster generation speed.  \n  - **`V4_5PLUS`**: V4.5+ with richer timbre, new creative methods, up to 8 minutes.  \n  - **`V4_5`**: V4.5 with smarter prompts, faster generation speed, up to 8 minutes.  \n  - **`V4_5ALL`**: V4.5ALL with smarter prompts, faster generation speed, up to 8 minutes.  \n  - **`V4`**: V4 with improved vocal quality, up to 4 minutes.",
+                "enum": [
+                  "V4",
+                  "V4_5",
+                  "V4_5PLUS",
+                  "V4_5ALL",
+                  "V5",
+                  "V5_5"
+                ],
+                "examples": [
+                  "V4"
+                ],
+                "x-apidog-enum": [
+                  {
+                    "value": "V4",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "V4_5",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "V4_5PLUS",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "V4_5ALL",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "V5",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "V5_5",
+                    "name": "",
+                    "description": ""
+                  }
+                ]
+              }
+            },
+            "x-apidog-orders": [
+              "uploadUrl",
+              "model"
+            ],
+            "x-apidog-ignore-properties": [],
+            "type": "object"
+          }
+        ],
         "properties": {
-          "taskId": {
-            "type": "string",
-            "description": "Original task ID (parent task), used to identify the source music for section replacement",
-            "examples": [
-              "2fac****9f72"
-            ]
-          },
-          "audioId": {
-            "type": "string",
-            "description": "Unique identifier of the audio track to replace. This ID is returned in the callback data after music generation completes.",
-            "examples": [
-              "e231****-****-****-****-****8cadc7dc"
-            ]
-          },
           "prompt": {
             "type": "string",
             "description": "Replaced lyrics",
@@ -12867,8 +13931,6 @@
           }
         },
         "x-apidog-orders": [
-          "taskId",
-          "audioId",
           "prompt",
           "tags",
           "title",
@@ -13566,7 +14628,7 @@
           },
           "personaId": {
             "type": "string",
-            "description": "Only available when Custom Mode (`customMode: true`) is enabled. Persona ID or Voice ID to apply to the generated music. Optional. Use this to apply a specific persona style to your music generation. \n\nTo generate a persona ID, use the [Generate Persona](https://docs.kie.ai/suno-api/generate-persona) endpoint to create a personalized music Persona based on generated music.\n\nTo generate a Voice ID, use the [Generate Voice](https://docs.kie.ai/suno-api/suno-voice-generate)endpoint",
+            "description": "Only available when Custom Mode (`defaultParamFlag: true`) is enabled. Persona ID or Voice ID to apply to the generated music. Optional. Use this to apply a specific persona style to your music generation. \n\nTo generate a persona ID, use the [Generate Persona](https://docs.kie.ai/suno-api/generate-persona) endpoint to create a personalized music Persona based on generated music.\n\nTo generate a Voice ID, use the [Generate Voice](https://docs.kie.ai/suno-api/suno-voice-generate)endpoint",
             "examples": [
               "persona_123"
             ]
@@ -13654,12 +14716,13 @@
         "required": [
           "taskId",
           "audioId",
+          "stemName",
           "callBackUrl"
         ],
         "properties": {
           "taskId": {
             "type": "string",
-            "description": "Unique identifier of the music generation task. This should be a taskId returned from either the \"Generate Music\" or \"Extend Music\" endpoints.",
+            "description": "Unique identifier of the music generation task. This should be a taskId returned from the Generate Music or Extend Music endpoint.",
             "examples": [
               "5c79****be8e"
             ]
@@ -13673,20 +14736,128 @@
           },
           "type": {
             "type": "string",
+            "description": "Separation mode:\n\n- **separate_vocal**: Split into 2 stems (vocals and instrumental)\n- **split_stem**: Split into multiple stems (vocals, backing vocals, drums, bass, guitar, keyboard, strings, brass, woodwinds, percussion, synth, FX/other)\n- **split_stem_advanced**: Advanced multi-stem separation with support for targeting a specific instrument track via `stemName`.",
             "enum": [
               "separate_vocal",
-              "split_stem"
+              "split_stem",
+              "split_stem_advanced"
             ],
             "default": "separate_vocal",
-            "description": "Separation type with the following options:\n\n- **separate_vocal**: Separate vocals and accompaniment, generating vocal and instrumental tracks\n- **split_stem**: Separate various instrument sounds, generating vocals, backing vocals, drums, bass, guitar, keyboard, strings, brass, woodwinds, percussion, synthesizer, effects, and other tracks",
             "examples": [
               "separate_vocal"
+            ]
+          },
+          "stemName": {
+            "type": "string",
+            "description": "Only used when `type` is `split_stem_advanced` to request a single stem track (e.g., Bass, Drums, Piano, etc.). ",
+            "enum": [
+              "Lead Vocal",
+              "Drum Kit",
+              "Kick",
+              "Snare",
+              "Risers",
+              "Bass",
+              "Backing Vocals",
+              "Piano",
+              "Electric Guitar",
+              "Percussion",
+              "String Section",
+              "Synth",
+              "Acoustic Guitar",
+              "Sound Effects",
+              "Synth Pad",
+              "Synth Bass",
+              "Guitar",
+              "Brass Section",
+              "Organ",
+              "Electronic Drum Kit",
+              "Lead Electric Guitar",
+              "Synth Keys",
+              "Rhythm Electric Guitar",
+              "Electric Piano",
+              "Upright Bass",
+              "Keyboards",
+              "Distorted Electric Guitar",
+              "Synth Strings",
+              "Synth Lead",
+              "Woodwinds",
+              "Rhythm Acoustic Guitar",
+              "Flute",
+              "Harp",
+              "Tambourine",
+              "Trumpet",
+              "Arpeggiator",
+              "Accordion",
+              "Fiddle",
+              "Pedal Steel Guitar",
+              "Synth Voice",
+              "Violin",
+              "Digital Piano",
+              "Synth Brass",
+              "Mandolin",
+              "Choir",
+              "Banjo",
+              "Bells",
+              "Clarinet",
+              "Tenor Saxophone",
+              "Trombone",
+              "Shaker",
+              "French Horn",
+              "Glockenspiel",
+              "Electric Bass",
+              "Cello",
+              "Timpani",
+              "Harmonica",
+              "Marimba",
+              "Vibraphone",
+              "Lap Steel Guitar",
+              "Saxophone",
+              "Orchestra",
+              "Horns",
+              "Cymbals",
+              "Hand Clap",
+              "Oboe",
+              "Celesta",
+              "Congas",
+              "Drone",
+              "Alto Saxophone",
+              "Double Bass",
+              "Ukulele",
+              "Harpsichord",
+              "Baritone Saxophone",
+              "Xylophone",
+              "Tuba",
+              "Bass Guitar",
+              "Whistle",
+              "Lead Guitar",
+              "Rhodes",
+              "808",
+              "Bongos",
+              "Bassoon",
+              "Cowbell",
+              "Viola",
+              "Sitar",
+              "Steel Drums",
+              "Piccolo",
+              "Theremin",
+              "Bagpipes",
+              "Hi-Hat",
+              "Music Box",
+              "Melodica",
+              "Tabla",
+              "Koto",
+              "Djembe",
+              "Taiko",
+              "Didgeridoo"
+            ],
+            "examples": [
+              "Bass"
             ]
           },
           "callBackUrl": {
             "type": "string",
             "format": "uri",
-            "description": "The URL to receive vocal separation task completion updates. Required for all vocal separation requests.\n\n- System will POST task status and results to this URL when vocal separation completes\n- Callback content varies based on the type parameter: separate_vocal returns vocals and accompaniment, split_stem returns multiple instrument tracks\n- Your callback endpoint should accept POST requests with JSON payload containing separated audio file links\n- For detailed callback format and implementation guide, see [Vocal Separation Callbacks](https://docs.kie.ai/suno-api/separate-vocals-callbacks)\n- Alternatively, use the Get Vocal Separation Details endpoint to poll task status\n- To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation",
+            "description": "URL used to receive vocal separation completion callbacks. Required for all vocal separation requests.\n\n- The system will POST task status and results when processing is done.\n- Callback payload differs by type (`separate_vocal` vs `split_stem` vs `split_stem_advanced`).\n- Your endpoint should accept a JSON POST payload containing separated audio file URLs.\n- See Vocal Separation Callbacks docs for exact format and security guidance.",
             "examples": [
               "https://api.example.com/callback"
             ]
@@ -13696,6 +14867,7 @@
           "taskId",
           "audioId",
           "type",
+          "stemName",
           "callBackUrl"
         ],
         "x-apidog-ignore-properties": []
@@ -13821,7 +14993,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -13837,9 +15009,16 @@
               "duration",
               "fixed_lens",
               "generate_audio",
-              "nsfw_checker"
+              "01KWKMQGWN2MCZ227HK20TQZE6"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMQGWN2MCZ227HK20TQZE6": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -13970,7 +15149,7 @@
                 "deprecated": true
               },
               "generate_audio": {
-                "description": "Whether to generate audio for the video.\n\n- **true**: Generate with audio (higher cost)\n- **false**: Generate without audio\n\nNote: Enabling audio will increase the generation cost",
+                "description": "Whether to generate audio for the video.\n\n- **true**: Generate with audio\n- **false**: Generate without audio",
                 "type": "boolean",
                 "default": true,
                 "examples": [
@@ -13979,11 +15158,12 @@
               },
               "resolution": {
                 "type": "string",
-                "description": "Video resolution - 480p for faster generation, 720p for balance, 1080p for High-quality video",
+                "description": "Video resolution - 480p for faster generation, 720p for balance, 1080p for High-quality video, 4K Ultra-High Definition, delivering perfect visual details.",
                 "enum": [
                   "480p",
                   "720p",
-                  "1080p"
+                  "1080p",
+                  "4k"
                 ],
                 "default": "720p",
                 "examples": [
@@ -14002,6 +15182,11 @@
                   },
                   {
                     "value": "1080p",
+                    "name": "",
+                    "description": ""
+                  },
+                  {
+                    "value": "4k",
                     "name": "",
                     "description": ""
                   }
@@ -14075,8 +15260,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.",
-                "default": false
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "x-apidog-orders": [
@@ -14092,9 +15276,16 @@
               "aspect_ratio",
               "duration",
               "web_search",
-              "nsfw_checker"
+              "01KWKMN7PBRAKVAWC9BZ3PW3YJ"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMN7PBRAKVAWC9BZ3PW3YJ": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -14233,7 +15424,7 @@
                 "deprecated": true
               },
               "generate_audio": {
-                "description": "Whether to generate audio for the video.\n\n- **true**: Generate with audio \n- **false**: Generate without audio\n\nNote: Enabling audio will increase the generation cost",
+                "description": "Whether to generate audio for the video.\n\n- **true**: Generate with audio \n- **false**: Generate without audio",
                 "type": "boolean",
                 "default": true,
                 "examples": [
@@ -14332,8 +15523,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.",
-                "default": false
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "x-apidog-orders": [
@@ -14349,9 +15539,16 @@
               "aspect_ratio",
               "duration",
               "web_search",
-              "nsfw_checker"
+              "01KWKMP1DAE3N8WCZ26ATC5MZ0"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMP1DAE3N8WCZ26ATC5MZ0": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -14484,7 +15681,7 @@
                 "maxItems": 3
               },
               "generate_audio": {
-                "description": "Whether to generate audio for the video.\n\n- **true**: Generate with audio \n- **false**: Generate without audio\n\nNote: Enabling audio will increase the generation cost",
+                "description": "Whether to generate audio for the video.\n\n- **true**: Generate with audio \n- **false**: Generate without audio",
                 "type": "boolean",
                 "default": true,
                 "examples": [
@@ -14583,8 +15780,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.",
-                "default": false
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "x-apidog-orders": [
@@ -14599,9 +15795,16 @@
               "aspect_ratio",
               "duration",
               "web_search",
-              "nsfw_checker"
+              "01KWKMPYXNXCV78KK4C7EX32V1"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMPYXNXCV78KK4C7EX32V1": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -14749,7 +15952,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -14765,9 +15968,16 @@
               "seed",
               "enable_safety_checker",
               "end_image_url",
-              "nsfw_checker"
+              "01KWKMSSBV2ZAB19H02W9900M3"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMSSBV2ZAB19H02W9900M3": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -14902,7 +16112,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -14916,9 +16126,16 @@
               "camera_fixed",
               "seed",
               "enable_safety_checker",
-              "nsfw_checker"
+              "01KWKMTDQE7SZ80CBKD24A1XYS"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMTDQE7SZ80CBKD24A1XYS": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -15024,7 +16241,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -15036,9 +16253,16 @@
               "image_url",
               "resolution",
               "duration",
-              "nsfw_checker"
+              "01KWKMR03MX9CVVNRTQQHMG7VD"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMR03MX9CVVNRTQQHMG7VD": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -15166,7 +16390,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -15181,9 +16405,16 @@
               "camera_fixed",
               "seed",
               "enable_safety_checker",
-              "nsfw_checker"
+              "01KWKMRJGP8R2HS1EQ9P8MTS1C"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMRJGP8R2HS1EQ9P8MTS1C": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -15323,7 +16554,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -15337,9 +16568,16 @@
               "camera_fixed",
               "seed",
               "enable_safety_checker",
-              "nsfw_checker"
+              "01KWKMS59NKPDVSM1YPK9XBZ5Y"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMS59NKPDVSM1YPK9XBZ5Y": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -16482,8 +17720,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.",
-                "default": false
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "x-apidog-orders": [
@@ -16495,9 +17732,16 @@
               "duration",
               "resolution",
               "aspect_ratio",
-              "nsfw_checker"
+              "01KWKMG689R3ZTSNFWKDSMJN7E"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMG689R3ZTSNFWKDSMJN7E": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "required": [
@@ -16642,8 +17886,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "default": false,
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -16655,9 +17898,16 @@
               "mode",
               "duration",
               "resolution",
-              "nsfw_checker"
+              "01KWKMFAYBQKQF6HD8J308JTKX"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMFAYBQKQF6HD8J308JTKX": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "required": [
@@ -16739,13 +17989,14 @@
                 "maxLength": 4096
               },
               "image_urls": {
-                "description": "Upload image files to be used as API input. Supported file types: image/jpeg, image/png, image/webp, image/jpg. Maximum file size: 20MB. Supports multi-file upload, up to 1 file.",
                 "type": "array",
                 "items": {
                   "type": "string",
                   "format": "uri"
                 },
-                "maxItems": 1
+                "description": "Upload image files to be used as API input. Supported file types: image/jpeg, image/png, image/webp, image/jpg. Maximum file size: 20MB. Supports multi-file upload, up to 1 file.",
+                "maxItems": 1,
+                "nullable": true
               },
               "aspect_ratio": {
                 "type": "string",
@@ -16754,8 +18005,6 @@
                   "1:1",
                   "16:9",
                   "9:16",
-                  "4:3",
-                  "3:4",
                   "3:2",
                   "2:3",
                   "auto"
@@ -16773,16 +18022,6 @@
                   },
                   {
                     "value": "9:16",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "4:3",
-                    "name": "",
-                    "description": ""
-                  },
-                  {
-                    "value": "3:4",
                     "name": "",
                     "description": ""
                   },
@@ -16826,21 +18065,25 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
-            "required": [
-              "image_urls"
-            ],
             "x-apidog-orders": [
               "prompt",
               "image_urls",
               "aspect_ratio",
               "resolution",
               "duration",
-              "nsfw_checker"
+              "01KWKMHB0TTBF3NCABSPH30YV4"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMHB0TTBF3NCABSPH30YV4": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-refs": {},
@@ -17140,8 +18383,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "default": false,
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -17153,9 +18395,16 @@
               "image_url",
               "duration",
               "resolution",
-              "nsfw_checker"
+              "01KWKMV59J1YRS3ADCTBQRCDS9"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMV59J1YRS3ADCTBQRCDS9": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -17257,8 +18506,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "default": false,
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -17270,9 +18518,16 @@
               "image_url",
               "duration",
               "resolution",
-              "nsfw_checker"
+              "01KWKMVP66ZSBMN3KQ1FMNXN3Y"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMVP66ZSBMN3KQ1FMNXN3Y": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -17364,8 +18619,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "default": false,
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -17377,9 +18631,16 @@
               "image_url",
               "end_image_url",
               "prompt_optimizer",
-              "nsfw_checker"
+              "01KWKMWRJQ1YMP60R20EKJRZ8R"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMWRJQ1YMP60R20EKJRZ8R": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -17457,8 +18718,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "default": false,
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -17467,9 +18727,16 @@
             "x-apidog-orders": [
               "prompt",
               "prompt_optimizer",
-              "nsfw_checker"
+              "01KWKMWAG6RDGPAC4X0DQ1FE8N"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMWAG6RDGPAC4X0DQ1FE8N": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -17583,8 +18850,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "default": false,
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -17598,9 +18864,16 @@
               "duration",
               "resolution",
               "prompt_optimizer",
-              "nsfw_checker"
+              "01KWKMXKNXPZWRTXAKK1HXDGGA"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMXKNXPZWRTXAKK1HXDGGA": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -17692,8 +18965,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.",
-                "default": false
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -17703,9 +18975,16 @@
               "prompt",
               "duration",
               "prompt_optimizer",
-              "nsfw_checker"
+              "01KWKMX7VSHHQMGTQKCCHCZW0J"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKMX7VSHHQMGTQKCCHCZW0J": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -21158,8 +22437,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "default": false,
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -21179,9 +22457,16 @@
               "num_inference_steps",
               "guidance_scale",
               "shift",
-              "nsfw_checker"
+              "01KWKNVT27CG4VA146TDGP3KKG"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKNVT27CG4VA146TDGP3KKG": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -21310,7 +22595,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Enabled by default in Playground. For API calls, you can turn it on or off based on your needs."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "x-apidog-orders": [
@@ -21321,9 +22606,16 @@
               "negative_prompt",
               "enable_prompt_expansion",
               "seed",
-              "nsfw_checker"
+              "01KWKP0NVNJPEJJKQ01KF7QC97"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKP0NVNJPEJJKQ01KF7QC97": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -21453,7 +22745,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "x-apidog-orders": [
@@ -21464,9 +22756,16 @@
               "negative_prompt",
               "enable_prompt_expansion",
               "seed",
-              "nsfw_checker"
+              "01KWKP14GYA0FDMPW5FPH0FZJN"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKP14GYA0FDMPW5FPH0FZJN": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -21592,8 +22891,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.",
-                "default": false
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -21608,9 +22906,16 @@
               "resolution",
               "audio",
               "multi_shots",
-              "nsfw_checker"
+              "01KWKNZNCP8J10P4YEM6DS7PCC"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKNZNCP8J10P4YEM6DS7PCC": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -21731,8 +23036,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.",
-                "default": false
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -21746,9 +23050,16 @@
               "resolution",
               "audio",
               "multi_shots",
-              "nsfw_checker"
+              "01KWKP077E72HW2T6F75653GWA"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKP077E72HW2T6F75653GWA": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -21860,7 +23171,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -21872,9 +23183,16 @@
               "image_urls",
               "duration",
               "resolution",
-              "nsfw_checker"
+              "01KWKNXZPECYPAXHWHSYF61FYY"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKNXZPECYPAXHWHSYF61FYY": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -21973,7 +23291,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Enabled by default in Playground. For API calls, you can turn it on or off based on your needs."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -21983,9 +23301,16 @@
               "prompt",
               "duration",
               "resolution",
-              "nsfw_checker"
+              "01KWKNYJZHXZG8M36GJBYPX23M"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKNYJZHXZG8M36GJBYPX23M": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -22094,8 +23419,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.",
-                "default": false
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -22107,9 +23431,16 @@
               "video_urls",
               "duration",
               "resolution",
-              "nsfw_checker"
+              "01KWKNZ2Z137FWYPF91MQYNZPD"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKNZ2Z137FWYPF91MQYNZPD": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -22238,7 +23569,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "x-apidog-orders": [
@@ -22253,10 +23584,18 @@
               "prompt_extend",
               "watermark",
               "seed",
-              "nsfw_checker"
+              "01KWKP24VVHA3ESYYK5KE5XDR1"
             ],
             "required": [
               "prompt"
+            ],
+            "x-apidog-refs": {
+              "01KWKP24VVHA3ESYYK5KE5XDR1": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
             ]
           }
         },
@@ -22264,7 +23603,8 @@
           "model",
           "callBackUrl",
           "input"
-        ]
+        ],
+        "x-apidog-ignore-properties": []
       },
       "examplePayload": {}
     },
@@ -22437,7 +23777,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "x-apidog-orders": [
@@ -22453,6 +23793,14 @@
               "prompt_extend",
               "watermark",
               "seed",
+              "01KWKP34KJ2B573MY75T2EBYCC"
+            ],
+            "x-apidog-refs": {
+              "01KWKP34KJ2B573MY75T2EBYCC": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
               "nsfw_checker"
             ]
           }
@@ -22461,7 +23809,8 @@
           "model",
           "callBackUrl",
           "input"
-        ]
+        ],
+        "x-apidog-ignore-properties": []
       },
       "examplePayload": {
         "model": "wan/2-7-r2v",
@@ -22585,7 +23934,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "x-apidog-orders": [
@@ -22598,6 +23947,14 @@
               "prompt_extend",
               "watermark",
               "seed",
+              "01KWKP1MDAYX7NKBX2MXGPP9SS"
+            ],
+            "x-apidog-refs": {
+              "01KWKP1MDAYX7NKBX2MXGPP9SS": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
               "nsfw_checker"
             ]
           },
@@ -22611,7 +23968,8 @@
           "model",
           "input",
           "callBackUrl"
-        ]
+        ],
+        "x-apidog-ignore-properties": []
       },
       "examplePayload": {
         "model": "wan/2-7-text-to-video",
@@ -22697,6 +24055,14 @@
                   "https://example.com/demo/video.mp4"
                 ]
               },
+              "reference_image": {
+                "type": "string",
+                "format": "uri",
+                "description": "Optional reference image URL for character, clothing, or style guidance.\n\n- Formats: `JPEG`, `JPG`, `PNG` (no alpha channel), `BMP`, `WEBP`\n- Resolution: width and height range `[240,8000]` pixels\n- Aspect ratio: `1:8` to `8:1`\n- Supports public `http/https` URLs or temporary `oss` URLs",
+                "examples": [
+                  "https://example.com/demo/reference.png"
+                ]
+              },
               "resolution": {
                 "type": "string",
                 "enum": [
@@ -22772,15 +24138,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
-              },
-              "reference_image": {
-                "type": "string",
-                "format": "uri",
-                "description": "Optional reference image URL for character, clothing, or style guidance.\n\n- Formats: `JPEG`, `JPG`, `PNG` (no alpha channel), `BMP`, `WEBP`\n- Resolution: width and height range `[240,8000]` pixels\n- Aspect ratio: `1:8` to `8:1`\n- Supports public `http/https` URLs or temporary `oss` URLs",
-                "examples": [
-                  "https://example.com/demo/reference.png"
-                ]
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "x-apidog-orders": [
@@ -22795,6 +24153,14 @@
               "prompt_extend",
               "watermark",
               "seed",
+              "01KWKP2M1R1ESRKQ0WVE6E66YB"
+            ],
+            "x-apidog-refs": {
+              "01KWKP2M1R1ESRKQ0WVE6E66YB": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
               "nsfw_checker"
             ]
           }
@@ -22803,7 +24169,8 @@
           "model",
           "callBackUrl",
           "input"
-        ]
+        ],
+        "x-apidog-ignore-properties": []
       },
       "examplePayload": {
         "model": "wan/2-7-videoedit",
@@ -22892,7 +24259,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -22903,9 +24270,16 @@
               "video_url",
               "image_url",
               "resolution",
-              "nsfw_checker"
+              "01KWKNWVX4YBC7AWVG1ZNPAGD9"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKNWVX4YBC7AWVG1ZNPAGD9": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -22995,7 +24369,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -23006,9 +24380,16 @@
               "video_url",
               "image_url",
               "resolution",
-              "nsfw_checker"
+              "01KWKNXDMQRA91RS02C52HJ9S4"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKNXDMQRA91RS02C52HJ9S4": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -23127,7 +24508,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -23141,9 +24522,16 @@
               "enable_prompt_expansion",
               "seed",
               "acceleration",
-              "nsfw_checker"
+              "01KWKNVAYZWGSGK5Z67D022ZRY"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKNVAYZWGSGK5Z67D022ZRY": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
@@ -23270,7 +24658,7 @@
               },
               "nsfw_checker": {
                 "type": "boolean",
-                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself."
+                "description": "Defaults to false. You can set it to false based on your needs. If set to false, our content filtering will be disabled, and all results will be returned directly by the model itself.\nNote: There is no guarantee that everything can be filtered out; if you are not satisfied with the results, you will need to make your own arrangements."
               }
             },
             "required": [
@@ -23283,9 +24671,16 @@
               "enable_prompt_expansion",
               "seed",
               "acceleration",
-              "nsfw_checker"
+              "01KWKNWAQ2G89AECQ2RZBNAV9X"
             ],
-            "x-apidog-ignore-properties": []
+            "x-apidog-refs": {
+              "01KWKNWAQ2G89AECQ2RZBNAV9X": {
+                "$ref": "#/components/schemas/nsfw_checker"
+              }
+            },
+            "x-apidog-ignore-properties": [
+              "nsfw_checker"
+            ]
           }
         },
         "x-apidog-orders": [
