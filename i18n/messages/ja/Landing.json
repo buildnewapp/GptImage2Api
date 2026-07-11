@@ -150,6 +150,13 @@
       "apiFieldDocMaximum": "最大値"
     }
   },
+  "VideoShowcase": {
+    "badge": "作品例",
+    "titlePrefix": "制作の",
+    "titleHighlight": "ヒント",
+    "description": "Seedance 2.0 のマルチモーダル機能で作成された動画例をご覧ください。",
+    "viewMore": "作品をもっと見る"
+  },
   "Features": {
     "badge": {
       "label": "主な機能",

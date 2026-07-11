@@ -1,12 +1,12 @@
 import BannerAdClient from "@/components/home/video/BannerAdClient";
 import { getTranslations } from "next-intl/server";
 
-export default async function BannerAd() {
+export default async function BannerAd({ locale }: { locale: string }) {
   if (process.env.SHOW_BANNER_AD !== "true") {
     return null;
   }
 
-  const t = await getTranslations("BannerAd");
+  const t = await getTranslations({ locale, namespace: "BannerAd" });
 
   return (
     <BannerAdClient

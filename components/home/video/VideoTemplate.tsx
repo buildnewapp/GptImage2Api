@@ -1,4 +1,4 @@
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 import { getPublicPricingPlans } from "@/actions/prices/public";
 import TemplateJsonLd from "@/components/home/image/TemplateJsonLd";
@@ -19,10 +19,9 @@ import FAQ from "@/components/home/video/FAQ";
 import CTA from "@/components/home/video/CTA";
 import BannerAd from "@/components/home/video/BannerAd";
 
-export default async function VideoTemplate() {
-  const locale = await getLocale();
-  const t = await getTranslations("VideoTemplate");
-  const pricingT = await getTranslations("VideoPricing");
+export default async function VideoTemplate({ locale }: { locale: string }) {
+  const t = await getTranslations({ locale, namespace: "VideoTemplate" });
+  const pricingT = await getTranslations({ locale, namespace: "VideoPricing" });
   const plansResult = await getPublicPricingPlans();
   const plans = plansResult.success ? plansResult.data ?? [] : [];
 
@@ -52,11 +51,12 @@ export default async function VideoTemplate() {
   return (
     <div className={pageShellClass + " -mt-20 w-full overflow-x-hidden"}>
       <TemplateJsonLd
+        locale={locale}
         pricingNamespace="VideoPricing"
         templateName="VideoTemplate"
       />
       {/*<Header />*/}
-      <BannerAd />
+      <BannerAd locale={locale} />
       <Hero hero={page.hero} />
       <Showcase section={page.showcase} />
       <Scope section={page.scope} />

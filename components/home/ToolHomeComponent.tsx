@@ -236,8 +236,8 @@ function SectionHeader({
   );
 }
 
-export default async function ToolHomeComponent() {
-  const t = await getTranslations("ToolHome");
+export default async function ToolHomeComponent({ locale }: { locale: string }) {
+  const t = await getTranslations({ locale, namespace: "ToolHome" });
 
   const hero = t.raw("hero") as HeroContent;
   const capabilities = t.raw("capabilities") as CapabilitiesContent;
@@ -253,6 +253,7 @@ export default async function ToolHomeComponent() {
   return (
     <>
       <HomeJsonLd
+        locale={locale}
         applicationCategory="BusinessApplication"
         description={hero.description}
         name="JsonTranslate"
@@ -626,7 +627,7 @@ export default async function ToolHomeComponent() {
         />
       </section>
 
-      <PricingByGroup />
+      <PricingByGroup locale={locale} />
 
       <section
         id="faq"

@@ -14,6 +14,7 @@ import {
 } from "@/lib/seo/jsonld";
 
 interface TemplateJsonLdProps {
+  locale?: string;
   pricingNamespace?: string;
   templateName: string;
 }
@@ -24,15 +25,19 @@ function normalizeOfferPrice(price: string) {
 }
 
 export default async function TemplateJsonLd({
+  locale: providedLocale,
   pricingNamespace,
   templateName,
 }: TemplateJsonLdProps) {
-  const locale = await getLocale();
-  const t = await getTranslations(templateName);
+  const locale = providedLocale ?? (await getLocale());
+  const t = await getTranslations({ locale, namespace: templateName });
   const pricingT = pricingNamespace
-    ? await getTranslations(pricingNamespace)
+    ? await getTranslations({ locale, namespace: pricingNamespace })
     : null;
-  const structuredData = await getTranslations("StructuredData");
+  const structuredData = await getTranslations({
+    locale,
+    namespace: "StructuredData",
+  });
   const hero = t.raw("hero") as VideoTemplateHero;
   const faq = t.raw("faq") as VideoTemplateFaq;
   const pricing = (

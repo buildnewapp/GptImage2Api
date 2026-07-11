@@ -162,6 +162,7 @@ function normalizeGeoSlug(slug: string | undefined) {
 function mapGeoArticleToPublicPost(
   article: GeoBlogArticle,
   locale: string,
+  coverWidth: number | null = null,
 ): PublicPost {
   const publishedAt = parseGeoDate(article.published_at || article.created_at);
 
@@ -186,7 +187,8 @@ function mapGeoArticleToPublicPost(
         author: article.author ?? null,
       },
     },
-    featuredImageUrl: normalizeGeoFileCdnUrls(article.cover_image_url) || null,
+    featuredImageUrl:
+      normalizeGeoFileCdnUrls(article.cover_image_url, coverWidth) || null,
     status: "published",
     visibility: "public",
     isPinned: article.is_featured ?? false,
@@ -241,7 +243,9 @@ export async function listGeoBlogPosts({
   const items = data?.items ?? [];
 
   return {
-    posts: items.map((article) => mapGeoArticleToPublicPost(article, locale)),
+    posts: items.map((article) =>
+      mapGeoArticleToPublicPost(article, locale, 500),
+    ),
     count: data?.pagination?.total ?? items.length,
   };
 }

@@ -3,6 +3,7 @@
 import { Play, Sparkles, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -13,6 +14,7 @@ const ASSET_PATH = "/sdanceai";
 const ALL_VIDEO_IDS = Array.from({ length: 50 }, (_, i) => i + 1);
 
 const VideoShowcase = () => {
+  const t = useTranslations("Landing.VideoShowcase");
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [videos, setVideos] = useState<{ video: string, poster: string }[]>([]);
 
@@ -37,14 +39,14 @@ const VideoShowcase = () => {
         <div className="text-center mb-16 lg:mb-20">
           <div className="inline-flex items-center gap-2 border py-2 px-5 rounded-full bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border-purple-200 dark:border-purple-800 mb-6">
             <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-            <span className="text-sm font-semibold text-gray-900 dark:text-white">Showcase</span>
+            <span className="text-sm font-semibold text-gray-900 dark:text-white">{t("badge")}</span>
           </div>
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-6">
-            <span className="text-gray-900 dark:text-white">Get </span>
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-fuchsia-600">Inspired</span>
+            <span className="text-gray-900 dark:text-white">{t("titlePrefix")}</span>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-fuchsia-600">{t("titleHighlight")}</span>
           </h2>
           <p className="text-lg lg:text-xl text-gray-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            Explore stunning video examples created with Seedance 2.0's multi-modal capabilities.
+            {t("description")}
           </p>
         </div>
 
@@ -76,7 +78,7 @@ const VideoShowcase = () => {
 
         <div className="text-center mt-16">
           <Link href="/prompts" className="px-8 py-4 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-semibold rounded-full hover:shadow-xl hover:shadow-violet-500/20 transition-all duration-300 hover:scale-105 cursor-pointer inline-block">
-            View More Showcases
+            {t("viewMore")}
           </Link>
         </div>
       </div>

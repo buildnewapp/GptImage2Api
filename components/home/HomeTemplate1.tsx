@@ -14,8 +14,8 @@ import {LandingPage} from "@/types/template1";
 import {getTranslations} from "next-intl/server";
 
 
-export default async function HomeTemplate1() {
-  const t = await getTranslations("HomeTemplate1");
+export default async function HomeTemplate1({ locale }: { locale: string }) {
+  const t = await getTranslations({ locale, namespace: "HomeTemplate1" });
 
   const page = {
     hero:t.raw("hero"),
@@ -34,6 +34,7 @@ export default async function HomeTemplate1() {
       <>
         {page.hero && (
           <HomeJsonLd
+            locale={locale}
             applicationCategory="DesignApplication"
             description={page.hero.description || ""}
             name={page.hero.title || "Nano Banana 2"}
@@ -50,7 +51,7 @@ export default async function HomeTemplate1() {
 
         {page.testimonial && <Testimonial section={page.testimonial} />}
         {page.faq && <FAQ section={page.faq} />}
-        {page.faq && <HomeStructuredRating className="my-6" />}
+        {page.faq && <HomeStructuredRating className="my-6" locale={locale} />}
         {page.cta && <CTA section={page.cta} />}
       </>
   );

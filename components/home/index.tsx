@@ -10,12 +10,13 @@ import { PricingByGroup } from "@/components/pricing";
 import { BG1 } from "@/components/shared/BGs";
 import { getMessages } from "next-intl/server";
 
-export default async function HomeComponent() {
-  const messages = await getMessages();
+export default async function HomeComponent({ locale }: { locale: string }) {
+  const messages = await getMessages({ locale });
 
   return (
     <div className="w-full">
       <HomeJsonLd
+        locale={locale}
         description={messages.Landing.Hero.description}
         name={`${messages.Landing.Hero.title} AI Video Generator`}
       />
@@ -27,12 +28,14 @@ export default async function HomeComponent() {
 
       {messages.Landing.UseCases && <UseCases />}
 
-      {messages.Pricing && <PricingByGroup />}
+      {messages.Pricing && <PricingByGroup locale={locale} />}
 
       {messages.Landing.Testimonials && <Testimonials />}
 
       {messages.Landing.FAQ && <FAQ />}
-      {messages.Landing.FAQ && <HomeStructuredRating className="my-6" />}
+      {messages.Landing.FAQ && (
+        <HomeStructuredRating className="my-6" locale={locale} />
+      )}
 
       {messages.Landing.CTA && <CTA />}
     </div>

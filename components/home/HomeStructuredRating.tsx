@@ -1,5 +1,5 @@
 import { Star } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 type StructuredDataRating = {
   count: string;
@@ -9,10 +9,13 @@ type StructuredDataRating = {
 
 export default async function HomeStructuredRating({
   className = "",
+  locale: providedLocale,
 }: {
   className?: string;
+  locale?: string;
 }) {
-  const t = await getTranslations("StructuredData");
+  const locale = providedLocale ?? (await getLocale());
+  const t = await getTranslations({ locale, namespace: "StructuredData" });
   const rating = t.raw("rating") as StructuredDataRating;
 
   return (

@@ -24,20 +24,21 @@ type PricingPlan = typeof pricingPlansSchema.$inferSelect;
 
 interface PricingByGroupProps {
   checkoutMode?: "default" | "nowpayments";
+  locale?: string;
 }
 
 export default async function PricingByGroup({
   checkoutMode = "default",
+  locale: providedLocale,
 }: PricingByGroupProps = {}) {
-  const t = await getTranslations("PricingPlans");
+  const locale = providedLocale ?? (await getLocale());
+  const t = await getTranslations({ locale, namespace: "PricingPlans" });
   const checkoutAvailabilityEnv = {
     creemEnabled: Boolean(process.env.CREEM_API_KEY),
     nowpaymentsEnabled: Boolean(process.env.NOWPAYMENTS_API_KEY),
     paypalEnabled: isPayPalEnabled,
     stripeEnabled: Boolean(process.env.STRIPE_SECRET_KEY),
   };
-
-  const locale = await getLocale();
 
   let allPlans: PricingPlan[] = [];
   const result = await getPublicPricingPlans();

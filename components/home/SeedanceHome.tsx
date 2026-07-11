@@ -11,12 +11,13 @@ import UseCases from "./seedance/UseCases";
 import VideoShowcase from "./seedance/VideoShowcase";
 import { getTranslations } from "next-intl/server";
 
-export default async function SeedanceHome() {
-  const t = await getTranslations("Landing.Hero");
+export default async function SeedanceHome({ locale }: { locale: string }) {
+  const t = await getTranslations({ locale, namespace: "Landing.Hero" });
 
   return (
     <div className="min-h-screen bg-background flex flex-col w-full">
       <HomeJsonLd
+        locale={locale}
         description={t("description")}
         name={`${t("title")} AI Video Generator`}
       />
@@ -24,16 +25,10 @@ export default async function SeedanceHome() {
         <div className="container px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl text-center">
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50">
-              Seedance 2.0
+              {t("title")}
             </h1>
             <p className="mt-8 text-xl md:text-2xl leading-relaxed text-slate-700 dark:text-slate-300">
-              Experience{" "}
-              <span className="text-blue-600 dark:text-blue-400">
-                true multi-modal AI video creation.
-              </span>{" "}
-              Combine images, videos, audio, and text to generate cinematic
-              content with precise reference capabilities, seamless video
-              extension, and natural language control.
+              {t("description")}
             </p>
           </div>
         </div>
@@ -44,9 +39,9 @@ export default async function SeedanceHome() {
       <UseCases />
       <HowItWorks />
       {/*<Testimonials />*/}
-      <PricingByGroup />
+      <PricingByGroup locale={locale} />
       <FAQ />
-      <HomeStructuredRating className="my-6" />
+      <HomeStructuredRating className="my-6" locale={locale} />
       <CTA />
     </div>
   );

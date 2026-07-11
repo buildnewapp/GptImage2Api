@@ -10,12 +10,13 @@ import Seedance15Overview from "./seedance15/Overview";
 import Seedance15UseCases from "./seedance15/UseCases";
 import { getTranslations } from "next-intl/server";
 
-export default async function Seedance15Home() {
-  const t = await getTranslations("Seedance15.Hero");
+export default async function Seedance15Home({ locale }: { locale: string }) {
+  const t = await getTranslations({ locale, namespace: "Seedance15.Hero" });
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-slate-50 via-sky-50 to-cyan-50 dark:from-[#01030a] dark:via-[#040815] dark:to-[#02050f]">
       <HomeJsonLd
+        locale={locale}
         description={t("description")}
         name="SdanceAI AI Video Studio"
       />
@@ -32,8 +33,8 @@ export default async function Seedance15Home() {
         <Seedance15Capabilities />
         <Seedance15UseCases />
         <Seedance15FAQ />
-        <HomeStructuredRating className="my-6" />
-        <PricingByGroup />
+        <HomeStructuredRating className="my-6" locale={locale} />
+        <PricingByGroup locale={locale} />
         <Seedance15CTA />
       </div>
     </div>

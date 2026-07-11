@@ -150,6 +150,13 @@
       "apiFieldDocMaximum": "最大值"
     }
   },
+  "VideoShowcase": {
+    "badge": "作品展示",
+    "titlePrefix": "获取",
+    "titleHighlight": "灵感",
+    "description": "浏览使用 Seedance 2.0 多模态能力创作的视频示例。",
+    "viewMore": "查看更多作品"
+  },
   "Features": {
     "badge": {
       "label": "核心能力",
