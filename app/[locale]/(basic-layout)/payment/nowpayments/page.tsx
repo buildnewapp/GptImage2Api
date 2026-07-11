@@ -1,5 +1,6 @@
 import PricingByGroup from "@/components/pricing/PricingByGroup";
 import { constructMetadata } from "@/lib/metadata";
+import { Suspense } from "react";
 import NowpaymentsStatusBanner from "./NowpaymentsStatusBanner";
 
 type PageProps = {
@@ -37,7 +38,9 @@ export default async function NowpaymentsPage({ params }: PageProps) {
             page creates a one-time payment only and does not enable auto-renewal.
           </p>
         </div>
-        <NowpaymentsStatusBanner locale={locale} />
+        <Suspense fallback={null}>
+          <NowpaymentsStatusBanner locale={locale} />
+        </Suspense>
       </div>
       <PricingByGroup checkoutMode="nowpayments" />
     </div>
