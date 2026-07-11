@@ -17,7 +17,7 @@ const englishPage = JSON.parse(
 ) as VideoTemplatePage;
 
 async function renderVideoTemplate() {
-  return renderToStaticMarkup(await VideoTemplate());
+  return renderToStaticMarkup(await VideoTemplate({ locale: "en" }));
 }
 
 test("renders the key Seedance 2.0 homepage sections and media urls", async () => {

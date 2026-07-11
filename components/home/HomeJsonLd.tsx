@@ -7,6 +7,7 @@ import { buildSoftwareApplicationJsonLd } from "@/lib/seo/jsonld";
 type HomeJsonLdProps = {
   applicationCategory?: string;
   description: string;
+  locale?: string;
   name: string;
 };
 
@@ -20,10 +21,11 @@ type StructuredDataRating = {
 export default async function HomeJsonLd({
   applicationCategory = "MultimediaApplication",
   description,
+  locale: providedLocale,
   name,
 }: HomeJsonLdProps) {
-  const locale = await getLocale();
-  const t = await getTranslations("StructuredData");
+  const locale = providedLocale ?? (await getLocale());
+  const t = await getTranslations({ locale, namespace: "StructuredData" });
   const canonicalUrl = buildCanonicalUrl({
     locale,
     path: "/",

@@ -10,6 +10,13 @@
     "getStarted": "Get Started",
     "getStartedLink": "/#pricing"
   },
+  "VideoShowcase": {
+    "badge": "Showcase",
+    "titlePrefix": "Get ",
+    "titleHighlight": "Inspired",
+    "description": "Explore video examples created with Seedance 2.0's multi-modal capabilities.",
+    "viewMore": "View More Showcases"
+  },
   "Features": {
     "badge": {
       "label": "Capabilities",

@@ -35,11 +35,11 @@ test("wires the homepage to a standalone ImageTemplate with dedicated translatio
   const homePageSource = readFileSync(homePagePath, "utf8");
   const requestSource = readFileSync(requestPath, "utf8");
 
-  assert.match(componentSource, /getTranslations/);
-  assert.match(componentSource, /getTranslations\("ImageTemplate"\)/);
+  assert.match(componentSource, /locale:\s*string/);
+  assert.match(componentSource, /getTranslations\(\{[\s\S]*locale,[\s\S]*namespace:\s*"ImageTemplate"[\s\S]*\}\)/);
   assert.doesNotMatch(componentSource, /@\/components\/home\/video\/VideoTemplate/);
   assert.match(homePageSource, /@\/components\/home\/image\/ImageTemplate/);
-  assert.match(homePageSource, /return <ImageTemplate \/>/);
+  assert.match(homePageSource, /return <ImageTemplate locale=\{locale\} \/>/);
   assert.doesNotMatch(homePageSource, /import VideoTemplate from/);
   assert.match(requestSource, /ImageTemplate:\s*\(await import\(`\.\/messages\/\$\{locale\}\/ImageTemplate\.json`\)\)\.default/);
 });

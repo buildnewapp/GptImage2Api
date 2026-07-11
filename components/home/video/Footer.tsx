@@ -3,7 +3,7 @@ import { Link as I18nLink } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import type { FooterLink } from "@/types/common";
 import { GithubIcon, InstagramIcon, MailIcon, Youtube } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Image from "next/image";
 import Link from "next/link";
 import { SiDiscord, SiTiktok } from "react-icons/si";
@@ -12,9 +12,14 @@ import { TwitterX } from "@/components/social-icons/icons";
 import { studioPanelClass } from "@/components/home/video/constants";
 import { getPartnerSnippetsForPlacement } from "@/lib/partners/partner-snippets";
 
-export default async function VideoFooter() {
-  const t = await getTranslations("Home");
-  const tFooter = await getTranslations("Footer");
+export default async function VideoFooter({
+  locale: providedLocale,
+}: {
+  locale?: string;
+}) {
+  const locale = providedLocale ?? (await getLocale());
+  const t = await getTranslations({ locale, namespace: "Home" });
+  const tFooter = await getTranslations({ locale, namespace: "Footer" });
   const partnerSnippets = await getPartnerSnippetsForPlacement("home");
   const footerLinks = tFooter.raw("Links.groups") as FooterLink[];
 
