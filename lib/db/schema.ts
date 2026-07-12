@@ -450,7 +450,7 @@ export const taskRewardClaims = pgTable(
       .references(() => user.id, { onDelete: "cascade" })
       .notNull(),
     taskKey: varchar("task_key", { length: 50 }).notNull(),
-    claimKey: varchar("claim_key", { length: 120 }).notNull().unique(),
+    claimKey: varchar("claim_key", { length: 120 }).notNull(),
     creditAmount: integer("credit_amount").notNull(),
     metadata: jsonb("metadata").default("{}").notNull(),
     claimedAt: timestamp("claimed_at", { withTimezone: true })
@@ -461,6 +461,9 @@ export const taskRewardClaims = pgTable(
       .notNull(),
   },
   (table) => ({
+    userClaimKeyUnique: unique(
+      "task_reward_claims_user_id_claim_key_unique",
+    ).on(table.userId, table.claimKey),
     userIdIdx: index("idx_task_reward_claims_user_id").on(table.userId),
     taskKeyIdx: index("idx_task_reward_claims_task_key").on(table.taskKey),
     claimedAtIdx: index("idx_task_reward_claims_claimed_at").on(

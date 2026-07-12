@@ -1,0 +1,2 @@
+ALTER TABLE "task_reward_claims" DROP CONSTRAINT "task_reward_claims_claim_key_unique";--> statement-breakpoint
+ALTER TABLE "task_reward_claims" ADD CONSTRAINT "task_reward_claims_user_id_claim_key_unique" UNIQUE("user_id","claim_key");
