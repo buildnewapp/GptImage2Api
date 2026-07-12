@@ -88,6 +88,7 @@ export async function getAdminAiStudioGenerations({
       total: 0,
       totalPages: 1,
       page: 1,
+      pageSize: 20,
       availableCategories: [...ADMIN_AI_STUDIO_CATEGORIES],
       summary: buildAiStudioAdminSummary([]),
     };
@@ -171,6 +172,7 @@ export async function getAdminAiStudioGenerations({
     total,
     totalPages,
     page: safePage,
+    pageSize: safeLimit,
     availableCategories: [...ADMIN_AI_STUDIO_CATEGORIES],
     summary: summaryRow
       ? {

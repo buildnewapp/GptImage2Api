@@ -35,11 +35,17 @@ test("renders an edit entry for admin generation updates", () => {
   assert.match(source, /userDeletedAt/);
 });
 
-test("renders all result urls as direct preview links in the admin table", () => {
+test("renders request input and result output resources in separate columns", () => {
   const source = readFileSync(aiStudioAdminClientPath, "utf8");
 
-  assert.match(source, /<TableHead>Preview<\/TableHead>/);
+  assert.doesNotMatch(source, /<TableHead>Preview<\/TableHead>/);
+  assert.match(source, /<TableHead>Input<\/TableHead>/);
+  assert.match(source, /<TableHead>Output<\/TableHead>/);
+  assert.match(source, /colSpan=\{9\}/);
+  assert.match(source, /getRequestPayloadResources\(record\.requestPayload\)/);
+  assert.match(source, /inputResources\.map/);
   assert.match(source, /record\.resultUrls\.map/);
+  assert.equal(source.match(/grid min-w-\[80px\] grid-cols-2/g)?.length, 2);
   assert.match(source, /target="_blank"/);
   assert.match(source, /rel="noreferrer"/);
 });

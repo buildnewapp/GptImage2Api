@@ -4,6 +4,7 @@ import {
   markAiStudioGenerationFailedByAdmin,
   updateAiStudioGenerationByAdmin,
 } from "@/actions/ai-studio/admin";
+import { AdminPagination } from "@/components/shared/AdminPagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -49,8 +50,6 @@ import {
 import { canAdminMarkGenerationFailed } from "@/lib/ai-studio/admin";
 import { cn } from "@/lib/utils";
 import {
-  ChevronLeft,
-  ChevronRight,
   LoaderCircle,
   MoreHorizontal,
   Search,
@@ -92,6 +91,7 @@ type AdminData = {
   total: number;
   totalPages: number;
   page: number;
+  pageSize: number;
   availableCategories: string[];
   summary: {
     total: number;
@@ -151,6 +151,66 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 type AdminRecord = AdminData["records"][number];
+
+type PreviewResource = {
+  url: string;
+  kind: "image" | "video" | "audio";
+};
+
+const RESOURCE_FIELD_PATTERN =
+  /(image|video|audio|media|asset|file|source|reference|frame|url)/i;
+const NON_RESOURCE_FIELD_PATTERN =
+  /(callback|webhook|endpoint|status|cancel|request|response)/i;
+
+function getResourceKind(fieldName: string, url: string): PreviewResource["kind"] | null {
+  const value = `${fieldName} ${url}`.toLowerCase();
+
+  if (/audio|music|\.mp3(?:$|[?#])|\.wav(?:$|[?#])|\.m4a(?:$|[?#])/.test(value)) {
+    return "audio";
+  }
+  if (/video|\.mp4(?:$|[?#])|\.webm(?:$|[?#])|\.mov(?:$|[?#])/.test(value)) {
+    return "video";
+  }
+  if (/image|frame|\.png(?:$|[?#])|\.jpe?g(?:$|[?#])|\.webp(?:$|[?#])|\.gif(?:$|[?#])/.test(value)) {
+    return "image";
+  }
+
+  return null;
+}
+
+function getRequestPayloadResources(payload: unknown): PreviewResource[] {
+  const root = payload && typeof payload === "object" ? payload as Record<string, unknown> : {};
+  const input = root.input && typeof root.input === "object" ? root.input : root;
+  const resources = new Map<string, PreviewResource>();
+
+  function visit(value: unknown, fieldName: string) {
+    if (typeof value === "string") {
+      if (
+        !NON_RESOURCE_FIELD_PATTERN.test(fieldName) &&
+        RESOURCE_FIELD_PATTERN.test(fieldName) &&
+        /^(https?:\/\/|data:)/i.test(value)
+      ) {
+        const kind = getResourceKind(fieldName, value);
+        if (kind && !resources.has(value)) {
+          resources.set(value, { url: value, kind });
+        }
+      }
+      return;
+    }
+
+    if (Array.isArray(value)) {
+      value.forEach((item) => visit(item, fieldName));
+      return;
+    }
+
+    if (value && typeof value === "object") {
+      Object.entries(value).forEach(([key, item]) => visit(item, `${fieldName}.${key}`));
+    }
+  }
+
+  visit(input, "input");
+  return [...resources.values()];
+}
 
 type EditFormState = {
   catalogModelId: string;
@@ -664,7 +724,8 @@ export default function AiStudioAdminClient({
                 <TableRow>
                   <TableHead>User</TableHead>
                   <TableHead>Model</TableHead>
-                  <TableHead>Preview</TableHead>
+                  <TableHead>Input</TableHead>
+                  <TableHead>Output</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Credits</TableHead>
                   <TableHead>Provider Task</TableHead>
@@ -675,13 +736,16 @@ export default function AiStudioAdminClient({
               <TableBody>
                 {initialData.records.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="py-10 text-center text-muted-foreground">
+                    <TableCell colSpan={9} className="py-10 text-center text-muted-foreground">
                       No AI Studio records found.
                     </TableCell>
                   </TableRow>
                 ) : (
-                  initialData.records.map((record) => (
-                    <TableRow key={record.id}>
+                  initialData.records.map((record) => {
+                    const inputResources = getRequestPayloadResources(record.requestPayload);
+
+                    return (
+                      <TableRow key={record.id}>
                       <TableCell>
                         <div className="flex flex-col">
                           <span className="font-medium">{record.userName || "—"}</span>
@@ -700,11 +764,46 @@ export default function AiStudioAdminClient({
                         </div>
                       </TableCell>
                       <TableCell>
+                        {inputResources.length > 0 ? (
+                          <div className="grid min-w-[80px] grid-cols-2 gap-1.5">
+                            {inputResources.map((resource, index) => (
+                              <a
+                                key={`${record.id}-input-${index}`}
+                                href={resource.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="block overflow-hidden rounded-md border bg-muted transition-opacity hover:opacity-80"
+                              >
+                                {resource.kind === "image" ? (
+                                  <img
+                                    src={resource.url}
+                                    alt={`${record.title} input ${index + 1}`}
+                                    className="h-8 w-12 object-cover"
+                                  />
+                                ) : resource.kind === "video" ? (
+                                  <video
+                                    src={resource.url}
+                                    className="h-8 w-12 object-cover"
+                                    muted
+                                    playsInline
+                                    preload="metadata"
+                                  />
+                                ) : (
+                                  <span className="flex h-8 w-12 items-center justify-center text-[10px]">Audio</span>
+                                )}
+                              </a>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">—</span>
+                        )}
+                      </TableCell>
+                      <TableCell>
                         {record.resultUrls.length > 0 ? (
-                          <div className="flex flex-wrap gap-2">
+                          <div className="grid min-w-[80px] grid-cols-2 gap-1.5">
                             {record.resultUrls.map((url, index) => (
                               <a
-                                key={`${record.id}-${index}`}
+                                key={`${record.id}-output-${index}`}
                                 href={url}
                                 target="_blank"
                                 rel="noreferrer"
@@ -713,9 +812,11 @@ export default function AiStudioAdminClient({
                                 {record.category === "image" ? (
                                   <img
                                     src={url}
-                                    alt={`${record.title} preview ${index + 1}`}
+                                    alt={`${record.title} output ${index + 1}`}
                                     className="h-8 w-12 object-cover"
                                   />
+                                ) : record.category === "music" ? (
+                                  <span className="flex h-8 w-12 items-center justify-center text-[10px]">Audio</span>
                                 ) : (
                                   <video
                                     src={url}
@@ -852,44 +953,27 @@ export default function AiStudioAdminClient({
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
-                    </TableRow>
-                  ))
+                      </TableRow>
+                    );
+                  })
                 )}
               </TableBody>
             </Table>
           </div>
 
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">
-              Page {initialData.page} of {initialData.totalPages} · {initialData.total} records
-            </span>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                disabled={initialData.page <= 1}
-                onClick={() =>
-                  updateParams({
-                    page: String(Math.max(1, initialData.page - 1)),
-                  })
-                }
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                disabled={initialData.page >= initialData.totalPages}
-                onClick={() =>
-                  updateParams({
-                    page: String(Math.min(initialData.totalPages, initialData.page + 1)),
-                  })
-                }
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+          <AdminPagination
+            pageIndex={initialData.page - 1}
+            pageSize={initialData.pageSize}
+            totalCount={initialData.total}
+            pageCount={initialData.totalPages}
+            pageSizeOptions={[10, 20, 100]}
+            onPageIndexChange={(pageIndex) =>
+              updateParams({ page: String(pageIndex + 1) })
+            }
+            onPageSizeChange={(pageSize) =>
+              updateParams({ page: "1", pageSize: String(pageSize) })
+            }
+          />
         </CardContent>
       </Card>
     </div>
