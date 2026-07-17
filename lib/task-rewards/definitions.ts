@@ -22,6 +22,7 @@ export interface TaskDefinitionContext {
   calendarDate: string;
   now: Date;
   externalTaskStartedAt?: string;
+  countDailyCheckins(): Promise<number>;
   getClaimedDailyCheckinDates(calendarDates: string[]): Promise<Set<string>>;
   hasSuccessfulPublicGeneration(): Promise<boolean>;
   hasSuccessfulPurchase(): Promise<boolean>;
@@ -50,7 +51,19 @@ export const taskDefinitions: Record<ClaimableTaskKey, TaskDefinition> = {
     claimKey(calendarDate) {
       return buildDailyClaimKey("daily_checkin", calendarDate);
     },
-    async evaluate() {
+    async evaluate(context) {
+      const dailyCheckinCount = await context.countDailyCheckins();
+      if (dailyCheckinCount >= 3 && !(await context.hasSuccessfulPurchase())) {
+        return {
+          completed: false,
+          reason: "requirements",
+          progress: {
+            current: 0,
+            required: 1,
+          },
+        };
+      }
+
       return { completed: true };
     },
   },

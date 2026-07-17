@@ -40,6 +40,83 @@ test("daily check-in can only be claimed once per calendar date", async () => {
   assert.equal(second.status, "already_claimed");
 });
 
+test("fourth daily check-in requires a successful purchase", async () => {
+  const store = createMemoryTaskRewardStore({
+    claimedDailyCheckinDates: ["2026-03-04", "2026-03-05", "2026-03-06"],
+    hasSuccessfulPurchase: false,
+  });
+
+  const result = await claimTaskReward({
+    store,
+    userId: "user-1",
+    taskKey: "daily_checkin",
+    now: new Date("2026-03-07T08:00:00.000Z"),
+    config: enabledConfig,
+  });
+
+  assert.equal(result.status, "not_completed");
+  assert.equal(result.reason, "requirements");
+  assert.equal(store.claims.length, 0);
+});
+
+test("daily check-in starts requiring a purchase after three successful claims", async () => {
+  const store = createMemoryTaskRewardStore({
+    hasSuccessfulPurchase: false,
+  });
+
+  const results = [];
+  for (const date of ["2026-03-04", "2026-03-05", "2026-03-06", "2026-03-07"]) {
+    results.push(
+      await claimTaskReward({
+        store,
+        userId: "user-1",
+        taskKey: "daily_checkin",
+        now: new Date(`${date}T08:00:00.000Z`),
+        config: enabledConfig,
+      }),
+    );
+  }
+
+  assert.deepEqual(
+    results.map((result) => result.status),
+    ["claimed", "claimed", "claimed", "not_completed"],
+  );
+});
+
+test("third daily check-in does not require a purchase", async () => {
+  const store = createMemoryTaskRewardStore({
+    claimedDailyCheckinDates: ["2026-03-05", "2026-03-06"],
+    hasSuccessfulPurchase: false,
+  });
+
+  const result = await claimTaskReward({
+    store,
+    userId: "user-1",
+    taskKey: "daily_checkin",
+    now: new Date("2026-03-07T08:00:00.000Z"),
+    config: enabledConfig,
+  });
+
+  assert.equal(result.status, "claimed");
+});
+
+test("fourth daily check-in succeeds after a successful purchase", async () => {
+  const store = createMemoryTaskRewardStore({
+    claimedDailyCheckinDates: ["2026-03-04", "2026-03-05", "2026-03-06"],
+    hasSuccessfulPurchase: true,
+  });
+
+  const result = await claimTaskReward({
+    store,
+    userId: "user-1",
+    taskKey: "daily_checkin",
+    now: new Date("2026-03-07T08:00:00.000Z"),
+    config: enabledConfig,
+  });
+
+  assert.equal(result.status, "claimed");
+});
+
 test("public video reward can only be claimed once", async () => {
   const store = createMemoryTaskRewardStore({
     hasSuccessfulPublicGeneration: true,
