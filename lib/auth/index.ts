@@ -73,7 +73,6 @@ function createAuthConfig(databaseInstance: ReturnType<typeof getDb>): BetterAut
     emailAndPassword: {
       enabled: process.env.NODE_ENV === 'development',
     },
-    user: { deleteUser: { enabled: true } },
     database: drizzleAdapter(databaseInstance, {
       provider: "pg",
       schema: { user, session, account, verification },
