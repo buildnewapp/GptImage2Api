@@ -14,6 +14,10 @@ export interface MemoryTaskRewardStoreOptions {
 export class MemoryTaskRewardStore implements TaskRewardStore {
   private readonly claimKeys = new Map<string, Set<string>>();
   private readonly claimedDailyCheckinDates: Set<string>;
+  private readonly claimedDailyCheckinDatesByUser = new Map<
+    string,
+    Set<string>
+  >();
   private readonly successfulPublicGeneration: boolean;
   private readonly successfulPurchase: boolean;
   private readonly referralInviteCount: number;
@@ -35,14 +39,24 @@ export class MemoryTaskRewardStore implements TaskRewardStore {
     return this.claimKeys.get(userId)?.has(claimKey) ?? false;
   }
 
+  async countDailyCheckins(userId: string): Promise<number> {
+    return new Set([
+      ...this.claimedDailyCheckinDates,
+      ...(this.claimedDailyCheckinDatesByUser.get(userId) ?? []),
+    ]).size;
+  }
+
   async getClaimedDailyCheckinDates(
-    _userId: string,
+    userId: string,
     calendarDates: string[],
   ): Promise<Set<string>> {
+    const claimedDates = new Set([
+      ...this.claimedDailyCheckinDates,
+      ...(this.claimedDailyCheckinDatesByUser.get(userId) ?? []),
+    ]);
+
     return new Set(
-      calendarDates.filter((calendarDate) =>
-        this.claimedDailyCheckinDates.has(calendarDate),
-      ),
+      calendarDates.filter((calendarDate) => claimedDates.has(calendarDate)),
     );
   }
 
@@ -72,6 +86,17 @@ export class MemoryTaskRewardStore implements TaskRewardStore {
     }
 
     this.claimKeys.get(record.userId)!.add(record.claimKey);
+    if (record.taskKey === "daily_checkin") {
+      const calendarDate = record.claimKey.split(":")[1];
+      if (calendarDate) {
+        if (!this.claimedDailyCheckinDatesByUser.has(record.userId)) {
+          this.claimedDailyCheckinDatesByUser.set(record.userId, new Set());
+        }
+        this.claimedDailyCheckinDatesByUser
+          .get(record.userId)!
+          .add(calendarDate);
+      }
+    }
     this.claims.push(record);
     return true;
   }

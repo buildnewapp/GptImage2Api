@@ -201,13 +201,9 @@ export async function GET(req: NextRequest) {
 
     const session = await getSession();
     const sessionUserId = session?.user?.id;
-    if (sessionUserId && sessionUserId !== user.id) {
-      return apiResponse.forbidden("Payment handoff user mismatch");
-    }
-
-    const loginCookies = sessionUserId
-      ? null
-      : await createHandoffLoginCookies(user.id, req);
+    const loginCookies = sessionUserId !== user.id
+      ? await createHandoffLoginCookies(user.id, req)
+      : null;
 
     const response = createAutoCheckoutResponse(payload.checkout);
     if (loginCookies) {

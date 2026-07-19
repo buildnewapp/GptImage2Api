@@ -36,6 +36,10 @@ export function createDrizzleTaskRewardStore(
       return existing.length > 0;
     },
 
+    async countDailyCheckins(userId) {
+      return countDailyCheckinsForUser(tx, userId);
+    },
+
     async getClaimedDailyCheckinDates(userId, calendarDates) {
       return getClaimedDailyCheckinDatesForUser(tx, userId, calendarDates);
     },
@@ -154,6 +158,23 @@ export async function getClaimedDailyCheckinDatesForUser(
     );
 
   return new Set(rows.map((row) => row.claimKey.split(":")[1] ?? ""));
+}
+
+export async function countDailyCheckinsForUser(
+  db: DbTransaction | DbClient,
+  userId: string,
+): Promise<number> {
+  const result = await db
+    .select({ value: count() })
+    .from(taskRewardClaimsSchema)
+    .where(
+      and(
+        eq(taskRewardClaimsSchema.userId, userId),
+        eq(taskRewardClaimsSchema.taskKey, "daily_checkin"),
+      ),
+    );
+
+  return result[0]?.value ?? 0;
 }
 
 export async function hasSuccessfulPublicGenerationForUser(

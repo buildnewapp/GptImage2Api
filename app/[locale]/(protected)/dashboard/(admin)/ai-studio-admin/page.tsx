@@ -11,6 +11,7 @@ export default async function AiStudioAdminPage({
 }: {
   searchParams: Promise<{
     page?: string;
+    pageSize?: string;
     status?: string;
     category?: string;
     search?: string;
@@ -19,10 +20,14 @@ export default async function AiStudioAdminPage({
 }) {
   const params = await searchParams;
   const page = Number(params.page) || 1;
+  const requestedPageSize = Number(params.pageSize);
+  const pageSize = [10, 20, 100].includes(requestedPageSize)
+    ? requestedPageSize
+    : 20;
 
   const data = await getAdminAiStudioGenerations({
     page,
-    limit: 20,
+    limit: pageSize,
     status: params.status,
     category: params.category,
     search: params.search,

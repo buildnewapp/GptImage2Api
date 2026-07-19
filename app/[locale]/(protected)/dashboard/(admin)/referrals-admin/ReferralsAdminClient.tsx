@@ -13,6 +13,7 @@ import {
   type ReferralAdminSummaryData,
   type ReferralAdminWithdrawalRow,
 } from "@/actions/referrals/admin";
+import { AdminPagination } from "@/components/shared/AdminPagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -60,16 +61,6 @@ const formatEnumLabel = (value: string) =>
 
 const formatDateTime = (value: string | null) =>
   value ? dayjs(value).format("YYYY-MM-DD HH:mm") : "-";
-
-function getRangeLabel(totalCount: number, pageIndex: number, pageSize: number) {
-  if (totalCount === 0) {
-    return "0-0";
-  }
-
-  const start = pageIndex * pageSize + 1;
-  const end = Math.min(totalCount, (pageIndex + 1) * pageSize);
-  return `${start}-${end}`;
-}
 
 function SummaryCard({
   icon,
@@ -138,64 +129,26 @@ function TablePagination({
   pageSize,
   isLoading,
   onPageSizeChange,
-  onPrevious,
-  onNext,
+  onPageIndexChange,
 }: {
   totalCount: number;
   pageIndex: number;
   pageSize: number;
   isLoading: boolean;
   onPageSizeChange: (value: number) => void;
-  onPrevious: () => void;
-  onNext: () => void;
+  onPageIndexChange: (value: number) => void;
 }) {
-  const t = useTranslations("AdminReferrals");
-  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
-
   return (
-    <div className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="text-sm text-muted-foreground">
-        {t("pagination.summary", {
-          range: getRangeLabel(totalCount, pageIndex, pageSize),
-          total: totalCount,
-          page: pageIndex + 1,
-          pages: totalPages,
-        })}
-      </div>
-      <div className="flex flex-wrap items-center gap-2">
-        <Select
-          value={String(pageSize)}
-          onValueChange={(value) => onPageSizeChange(Number(value))}
-        >
-          <SelectTrigger className="w-[110px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {REFERRAL_ADMIN_PAGE_SIZE_OPTIONS.map((option) => (
-              <SelectItem key={option} value={String(option)}>
-                {t("pagination.pageSizeOption", { count: option })}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Button
-          variant="outline"
-          size="sm"
-          disabled={pageIndex === 0 || isLoading}
-          onClick={onPrevious}
-        >
-          {t("pagination.previous")}
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          disabled={(pageIndex + 1) * pageSize >= totalCount || isLoading}
-          onClick={onNext}
-        >
-          {t("pagination.next")}
-        </Button>
-      </div>
-    </div>
+    <AdminPagination
+      pageIndex={pageIndex}
+      pageSize={pageSize}
+      totalCount={totalCount}
+      disabled={isLoading}
+      pageSizeOptions={[...REFERRAL_ADMIN_PAGE_SIZE_OPTIONS]}
+      className="border-t"
+      onPageIndexChange={onPageIndexChange}
+      onPageSizeChange={onPageSizeChange}
+    />
   );
 }
 
@@ -346,8 +299,7 @@ function InvitesTab({ active }: { active: boolean }) {
           pageSize={pageSize}
           isLoading={isLoading}
           onPageSizeChange={setPageSize}
-          onPrevious={() => setPageIndex((value) => Math.max(0, value - 1))}
-          onNext={() => setPageIndex((value) => value + 1)}
+          onPageIndexChange={setPageIndex}
         />
       </CardContent>
     </Card>
@@ -527,8 +479,7 @@ function RewardsTab({ active }: { active: boolean }) {
           pageSize={pageSize}
           isLoading={isLoading}
           onPageSizeChange={setPageSize}
-          onPrevious={() => setPageIndex((value) => Math.max(0, value - 1))}
-          onNext={() => setPageIndex((value) => value + 1)}
+          onPageIndexChange={setPageIndex}
         />
       </CardContent>
     </Card>
@@ -741,8 +692,7 @@ function WithdrawalsTab({
           pageSize={pageSize}
           isLoading={isLoading}
           onPageSizeChange={setPageSize}
-          onPrevious={() => setPageIndex((value) => Math.max(0, value - 1))}
-          onNext={() => setPageIndex((value) => value + 1)}
+          onPageIndexChange={setPageIndex}
         />
       </CardContent>
     </Card>

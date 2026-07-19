@@ -5,7 +5,7 @@ set -e
 # ==============================
 # 配置区
 # ==============================
-TEMPLATE_REPO="git@github.com:buildnewapp/nexty-cf-template.git"
+TEMPLATE_REPO="git@github.com:buildnewapp/tikdek-web.git"
 GITHUB_OWNER="buildnewapp"
 
 # ==============================

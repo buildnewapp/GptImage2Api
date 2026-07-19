@@ -1,5 +1,6 @@
 "use client";
 
+import { clearFrontendCacheAction } from "@/actions/cache/admin";
 import { updateAdminPartnerSnippetsAction } from "@/actions/partners/admin";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +16,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import type { PartnerSnippet } from "@/lib/partners/partner-snippets";
-import { Plus, Save, Trash2 } from "lucide-react";
+import { Plus, RefreshCw, Save, Trash2 } from "lucide-react";
 import { useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
 
@@ -42,7 +43,8 @@ export default function ConfigAdminClient({
   initialError,
 }: ConfigAdminClientProps) {
   const [items, setItems] = useState<PartnerSnippet[]>(sortItems(initialItems));
-  const [isPending, startTransition] = useTransition();
+  const [isSavePending, startSaveTransition] = useTransition();
+  const [isCachePending, startCacheTransition] = useTransition();
 
   const nextIndex = useMemo(() => items.length + 1, [items.length]);
 
@@ -63,7 +65,7 @@ export default function ConfigAdminClient({
   }
 
   function saveItems() {
-    startTransition(async () => {
+    startSaveTransition(async () => {
       const result = await updateAdminPartnerSnippetsAction(items);
 
       if (!result.success) {
@@ -75,6 +77,21 @@ export default function ConfigAdminClient({
 
       setItems(sortItems(result.data ?? []));
       toast.success("友链配置已保存");
+    });
+  }
+
+  function clearFrontendCache() {
+    startCacheTransition(async () => {
+      const result = await clearFrontendCacheAction();
+
+      if (!result.success) {
+        toast.error("缓存清理失败", {
+          description: result.error,
+        });
+        return;
+      }
+
+      toast.success("前台缓存已清理");
     });
   }
 
@@ -96,6 +113,7 @@ export default function ConfigAdminClient({
       <Tabs defaultValue="partners" className="w-full">
         <TabsList>
           <TabsTrigger value="partners">友链管理</TabsTrigger>
+          <TabsTrigger value="cache">缓存管理</TabsTrigger>
         </TabsList>
         <TabsContent value="partners" className="mt-4">
           <Card>
@@ -111,9 +129,13 @@ export default function ConfigAdminClient({
                   <Plus className="mr-2 h-4 w-4" />
                   添加
                 </Button>
-                <Button type="button" onClick={saveItems} disabled={isPending}>
+                <Button
+                  type="button"
+                  onClick={saveItems}
+                  disabled={isSavePending}
+                >
                   <Save className="mr-2 h-4 w-4" />
-                  {isPending ? "保存中" : "保存"}
+                  {isSavePending ? "保存中" : "保存"}
                 </Button>
               </div>
             </CardHeader>
@@ -207,6 +229,28 @@ export default function ConfigAdminClient({
                   </div>
                 ))
               )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="cache" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>缓存管理</CardTitle>
+              <CardDescription>
+                清理全部前台页面和公共数据缓存。下次访问时会重新生成页面并读取最新数据。
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button
+                type="button"
+                onClick={clearFrontendCache}
+                disabled={isCachePending}
+              >
+                <RefreshCw
+                  className={`mr-2 h-4 w-4 ${isCachePending ? "animate-spin" : ""}`}
+                />
+                {isCachePending ? "清理中" : "清理全部前台缓存"}
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>

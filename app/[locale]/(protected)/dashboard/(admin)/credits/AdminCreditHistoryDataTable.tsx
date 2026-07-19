@@ -4,7 +4,7 @@ import {
   type AdminCreditHistoryRecord,
   getAdminCreditHistory,
 } from "@/actions/usage/admin";
-import { Button } from "@/components/ui/button";
+import { AdminPagination } from "@/components/shared/AdminPagination";
 import {
   Table,
   TableBody,
@@ -50,7 +50,7 @@ export function AdminCreditHistoryDataTable({
   );
 
   useEffect(() => {
-    if (pagination.pageIndex === 0) {
+    if (pagination.pageIndex === 0 && pagination.pageSize === pageSize) {
       setData(initialData);
       setTotalCount(initialTotalCount);
       return;
@@ -161,29 +161,19 @@ export function AdminCreditHistoryDataTable({
         </Table>
       </div>
 
-      <div className="flex items-center justify-between">
-        <div className="text-sm text-muted-foreground">
-          Page {table.getState().pagination.pageIndex + 1} of {Math.max(table.getPageCount(), 1)} ({totalCount} Logs)
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage() || isLoading}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage() || isLoading}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      <AdminPagination
+        pageIndex={pagination.pageIndex}
+        pageSize={pagination.pageSize}
+        totalCount={totalCount}
+        pageCount={pageCount}
+        disabled={isLoading}
+        onPageIndexChange={(pageIndex) =>
+          setPagination((current) => ({ ...current, pageIndex }))
+        }
+        onPageSizeChange={(nextPageSize) =>
+          setPagination({ pageIndex: 0, pageSize: nextPageSize })
+        }
+      />
     </div>
   );
 }

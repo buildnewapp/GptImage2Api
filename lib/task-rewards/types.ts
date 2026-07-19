@@ -50,6 +50,7 @@ export interface TaskRewardClaimRecord {
 
 export interface TaskRewardStore {
   hasClaim(userId: string, claimKey: string): Promise<boolean>;
+  countDailyCheckins(userId: string): Promise<number>;
   getClaimedDailyCheckinDates(
     userId: string,
     calendarDates: string[],

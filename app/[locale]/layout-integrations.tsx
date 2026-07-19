@@ -56,6 +56,9 @@ async function getLayoutIntegrations() {
   const UmamiScriptComponent = umamiEnabled
     ? (await import("@/components/tracking/UmamiScript")).default
     : null;
+  const SiteTrackingComponent = isProduction
+    ? (await import("@/components/tracking/SiteTracking")).default
+    : null;
   const ToltScriptComponent = toltEnabled
     ? (await import("@/components/tracking/ToltScript")).default
     : null;
@@ -76,6 +79,7 @@ async function getLayoutIntegrations() {
     PlausibleAnalyticsComponent,
     RybbitScriptComponent,
     UmamiScriptComponent,
+    SiteTrackingComponent,
     ToltScriptComponent,
     AnalyticsComponent,
   };
@@ -99,6 +103,7 @@ export async function LayoutIntegrationScripts() {
     RybbitScriptComponent,
     ToltScriptComponent,
     UmamiScriptComponent,
+    SiteTrackingComponent,
     AnalyticsComponent,
   } = integrations;
 
@@ -106,6 +111,7 @@ export async function LayoutIntegrationScripts() {
     <>
       {ToltScriptComponent ? <ToltScriptComponent /> : null}
       {CrispChatComponent ? <CrispChatComponent /> : null}
+      {SiteTrackingComponent ? <SiteTrackingComponent /> : null}
       {COOKIE_CONSENT_ENABLED ? (
         <>
           {isProduction ? (

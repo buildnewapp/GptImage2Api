@@ -309,6 +309,13 @@
       "when": 1777722201050,
       "tag": "0043_wandering_santa_claus",
       "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1783860416663,
+      "tag": "0044_luxuriant_lady_deathstrike",
+      "breakpoints": true
     }
   ]
 }

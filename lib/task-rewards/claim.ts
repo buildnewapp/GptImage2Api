@@ -38,6 +38,7 @@ export async function claimTaskReward({
       calendarDate: toCalendarDate(now),
       now,
       externalTaskStartedAt,
+      countDailyCheckins: () => store.countDailyCheckins(userId),
       getClaimedDailyCheckinDates: (calendarDates) =>
         store.getClaimedDailyCheckinDates(userId, calendarDates),
       hasSuccessfulPublicGeneration: () =>
