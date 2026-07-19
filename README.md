@@ -25,12 +25,29 @@ git commit -m "update from upstream"
 /Users/syx/WebstormProjects/Spicy/spicy-image-web
 /Users/syx/WebstormProjects/Spicy/spicy-chat-web
 /Users/syx/WebstormProjects/GptApi/GptApi-web
+/Users/syx/WebstormProjects/aimodels/aiexplainervideo-web
+/Users/syx/WebstormProjects/aimodels/aiugcvideo-web
+/Users/syx/WebstormProjects/aimodels/audiotovideoai-web
+/Users/syx/WebstormProjects/aimodels/fluxlora-web
+/Users/syx/WebstormProjects/aimodels/hailuoaivideo-web
+/Users/syx/WebstormProjects/aimodels/happyhorseaistudio-web
+/Users/syx/WebstormProjects/aimodels/ideogramstudio-web
+/Users/syx/WebstormProjects/aimodels/ltx23free-web
+/Users/syx/WebstormProjects/aimodels/motioncontrolai-web
+/Users/syx/WebstormProjects/aimodels/qwenimageedit-web
+/Users/syx/WebstormProjects/aimodels/runwayai-web
+/Users/syx/WebstormProjects/aimodels/seedream-web
+/Users/syx/WebstormProjects/aimodels/trygrokimagine-web
+/Users/syx/WebstormProjects/aimodels/tryklingai-web
+/Users/syx/WebstormProjects/aimodels/viduai-web
+/Users/syx/WebstormProjects/aimodels/wanvideo-web
+/Users/syx/WebstormProjects/aimodels/zimage-web
 
 # 应用更新：
 ## Sdance AI
 cd /Users/syx/WebstormProjects/sdanceai/sdanceai
-git fetch template
-git merge --no-ff --no-commit template/main
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
 open -na "WebStorm" --args "./"
 
 ## tikdek-web
@@ -47,26 +64,26 @@ open -na "WebStorm" --args "./"
 
 ## gptimage2-web
 cd /Users/syx/WebstormProjects/GptImage2Api/gptimage2-web
-git fetch template
-git merge --no-ff --no-commit template/main
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
 open -na "WebStorm" --args "./"
 
 ## GptImage4
 cd /Users/syx/WebstormProjects/GptImage2Api/GptImage4
-git fetch template
-git merge --no-ff --no-commit template/main
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
 open -na "WebStorm" --args "./"
 
 ## GptImage5
 cd /Users/syx/WebstormProjects/GptImage2Api/GptImage5
-git fetch template
-git merge --no-ff --no-commit template/main
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
 open -na "WebStorm" --args "./"
 
 ## GptImage6
 cd /Users/syx/WebstormProjects/GptImage2Api/GptImage6
-git fetch template
-git merge --no-ff --no-commit template/main
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
 open -na "WebStorm" --args "./"
 
 ## FreeOmni-web
@@ -135,4 +152,104 @@ git fetch upstream
 git merge --no-ff --no-commit upstream/main
 open -na "WebStorm" --args "./"
 
+## aiexplainervideo-web
+cd /Users/syx/WebstormProjects/aimodels/aiexplainervideo-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
 
+## aiugcvideo-web
+cd /Users/syx/WebstormProjects/aimodels/aiugcvideo-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
+## audiotovideoai-web
+cd /Users/syx/WebstormProjects/aimodels/audiotovideoai-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
+## fluxlora-web
+cd /Users/syx/WebstormProjects/aimodels/fluxlora-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
+## hailuoaivideo-web
+cd /Users/syx/WebstormProjects/aimodels/hailuoaivideo-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
+## happyhorseaistudio-web
+cd /Users/syx/WebstormProjects/aimodels/happyhorseaistudio-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
+## ideogramstudio-web
+cd /Users/syx/WebstormProjects/aimodels/ideogramstudio-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
+## ltx23free-web
+cd /Users/syx/WebstormProjects/aimodels/ltx23free-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
+## motioncontrolai-web
+cd /Users/syx/WebstormProjects/aimodels/motioncontrolai-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
+## qwenimageedit-web
+cd /Users/syx/WebstormProjects/aimodels/qwenimageedit-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
+## runwayai-web
+cd /Users/syx/WebstormProjects/aimodels/runwayai-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
+## seedream-web
+cd /Users/syx/WebstormProjects/aimodels/seedream-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
+## trygrokimagine-web
+cd /Users/syx/WebstormProjects/aimodels/trygrokimagine-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
+## tryklingai-web
+cd /Users/syx/WebstormProjects/aimodels/tryklingai-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
+## viduai-web
+cd /Users/syx/WebstormProjects/aimodels/viduai-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
+## wanvideo-web
+cd /Users/syx/WebstormProjects/aimodels/wanvideo-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
+
+## zimage-web
+cd /Users/syx/WebstormProjects/aimodels/zimage-web
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+open -na "WebStorm" --args "./"
