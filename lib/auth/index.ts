@@ -1,11 +1,11 @@
 import { sendEmail } from "@/actions/resend";
 import { grantConfiguredSignupBonusCredits } from "@/lib/credits/signup-bonus";
 import { siteConfig } from "@/config/site";
-import MagicLinkEmail from '@/emails/magic-link-email';
-import OTPCodeEmail from '@/emails/otp-code-email';
+import MagicLinkEmail from "@/emails/magic-link-email";
+import OTPCodeEmail from "@/emails/otp-code-email";
 import { UserWelcomeEmail } from "@/emails/user-welcome";
 import { assertAllowedSignupEmail } from "@/lib/auth/email-domain";
-import { getDb } from '@/lib/db';
+import { getDb } from "@/lib/db";
 import { account, session, user, verification } from "@/lib/db/schema";
 import { resolveSocialProviders } from "@/lib/auth/social-providers";
 import {
@@ -19,29 +19,77 @@ import { redis } from "@/lib/upstash";
 import { betterAuth, BetterAuthOptions } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
-import { admin, anonymous, captcha, emailOTP, lastLoginMethod, magicLink, oneTap } from "better-auth/plugins";
+import {
+  admin,
+  anonymous,
+  captcha,
+  emailOTP,
+  lastLoginMethod,
+  magicLink,
+  oneTap,
+} from "better-auth/plugins";
 import { cookies, headers } from "next/headers";
+import { createHmac, randomUUID } from "node:crypto";
 import { cache } from "react";
+
+const SIGNUP_BONUS_DEVICE_COOKIE_NAME = "signup_bonus_device_id";
+const SIGNUP_BONUS_DEVICE_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+function hashSignupBonusIdentifier(
+  kind: "ip" | "device",
+  value: string | null | undefined,
+): string | null {
+  const normalizedValue = value?.trim();
+  if (!normalizedValue || normalizedValue === "unknown") {
+    return null;
+  }
+
+  const secret =
+    process.env.SIGNUP_BONUS_HASH_SECRET?.trim() ||
+    process.env.BETTER_AUTH_SECRET?.trim();
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        "Signup bonus identifier hashing secret is not configured",
+      );
+    }
+    return createHmac("sha256", "signup-bonus-development-only")
+      .update(`${kind}:${normalizedValue}`)
+      .digest("hex");
+  }
+
+  return createHmac("sha256", secret)
+    .update(`${kind}:${normalizedValue}`)
+    .digest("hex");
+}
 
 /**
  * Create Better Auth configuration options
  */
-function createAuthConfig(databaseInstance: ReturnType<typeof getDb>): BetterAuthOptions {
+function createAuthConfig(
+  databaseInstance: ReturnType<typeof getDb>,
+): BetterAuthOptions {
   return {
     appName: siteConfig.name,
-    baseURL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL || process.env.NEXT_PUBLIC_SITE_URL,
+    baseURL:
+      process.env.NEXT_PUBLIC_BETTER_AUTH_URL ||
+      process.env.NEXT_PUBLIC_SITE_URL,
     secret: process.env.BETTER_AUTH_SECRET,
     advanced: {
       database: {
         // Use string 'uuid' instead of function for better edge runtime compatibility
-        generateId: 'uuid'
+        generateId: "uuid",
       },
       ipAddress: {
         ipAddressHeaders: ["cf-connecting-ip", "x-forwarded-for", "x-real-ip"],
       },
     },
     rateLimit: {
-      enabled: process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_RATE_LIMIT_ENABLED === 'true',
+      enabled:
+        process.env.NODE_ENV === "production" &&
+        process.env.NEXT_PUBLIC_RATE_LIMIT_ENABLED === "true",
       window: 60,
       max: 100,
       customRules: {
@@ -53,10 +101,17 @@ function createAuthConfig(databaseInstance: ReturnType<typeof getDb>): BetterAut
       ...(redis && {
         customStorage: {
           get: async (key: string) => {
-            const data = await redis!.get<{ key: string; count: number; lastRequest: number }>(key);
+            const data = await redis!.get<{
+              key: string;
+              count: number;
+              lastRequest: number;
+            }>(key);
             return data || undefined;
           },
-          set: async (key: string, value: { key: string; count: number; lastRequest: number }) => {
+          set: async (
+            key: string,
+            value: { key: string; count: number; lastRequest: number },
+          ) => {
             await redis!.set(key, value, { ex: 120 });
           },
         },
@@ -68,10 +123,10 @@ function createAuthConfig(databaseInstance: ReturnType<typeof getDb>): BetterAut
       updateAge: 60 * 60 * 24,
     },
     account: {
-      accountLinking: { enabled: true, trustedProviders: ['google', 'github'] },
+      accountLinking: { enabled: true, trustedProviders: ["google", "github"] },
     },
     emailAndPassword: {
-      enabled: process.env.NODE_ENV === 'development',
+      enabled: process.env.NODE_ENV === "development",
     },
     database: drizzleAdapter(databaseInstance, {
       provider: "pg",
@@ -86,41 +141,76 @@ function createAuthConfig(databaseInstance: ReturnType<typeof getDb>): BetterAut
           },
           after: async (createdUser) => {
             const cookieStore = await cookies();
-            const isTrackingEnabledValue = await isTrackingEnabled()
+            const isTrackingEnabledValue = await isTrackingEnabled();
             if (isTrackingEnabledValue) {
               try {
                 const trackingCookie = cookieStore.get(TRACKING_COOKIE_NAME);
                 const clientData = parseTrackingCookie(trackingCookie?.value);
-                const sourceData = await buildUserSourceData(createdUser.id, clientData || undefined);
+                const sourceData = await buildUserSourceData(
+                  createdUser.id,
+                  clientData || undefined,
+                );
                 await saveUserSource(sourceData);
                 cookieStore.delete(TRACKING_COOKIE_NAME);
               } catch (error) {
-                console.error('Failed to save user source data:', error);
+                console.error("Failed to save user source data:", error);
               }
             }
             try {
               const headerStore = await headers();
-              await grantConfiguredSignupBonusCredits(
-                createdUser.id,
-                headerStore.get("cf-ipcountry")
-              );
+              const forwarded = headerStore.get("x-forwarded-for");
+              const clientIp =
+                headerStore.get("cf-connecting-ip") ||
+                headerStore.get("x-real-ip") ||
+                forwarded?.split(",")[0]?.trim() ||
+                null;
+              const existingDeviceId = cookieStore.get(
+                SIGNUP_BONUS_DEVICE_COOKIE_NAME,
+              )?.value;
+              const deviceId =
+                existingDeviceId && UUID_PATTERN.test(existingDeviceId)
+                  ? existingDeviceId
+                  : randomUUID();
+
+              if (deviceId !== existingDeviceId) {
+                cookieStore.set(SIGNUP_BONUS_DEVICE_COOKIE_NAME, deviceId, {
+                  httpOnly: true,
+                  secure: process.env.NODE_ENV === "production",
+                  sameSite: "lax",
+                  path: "/",
+                  maxAge: SIGNUP_BONUS_DEVICE_COOKIE_MAX_AGE,
+                });
+              }
+
+              await grantConfiguredSignupBonusCredits(createdUser.id, {
+                email: createdUser.email,
+                countryCode: headerStore.get("cf-ipcountry"),
+                ipHash: hashSignupBonusIdentifier("ip", clientIp),
+                deviceHash: hashSignupBonusIdentifier("device", deviceId),
+              });
             } catch (error) {
-              console.error('Failed to grant signup bonus credits:', error);
+              console.error("Failed to grant signup bonus credits:", error);
             }
             if (createdUser.email) {
               try {
-                const unsubscribeToken = Buffer.from(createdUser.email).toString('base64');
+                const unsubscribeToken = Buffer.from(
+                  createdUser.email,
+                ).toString("base64");
                 const unsubscribeLink = `${process.env.NEXT_PUBLIC_SITE_URL}/unsubscribe/newsletter?token=${unsubscribeToken}`;
                 await sendEmail({
                   email: createdUser.email,
                   subject: `Welcome to ${siteConfig.name}!`,
                   react: UserWelcomeEmail,
-                  reactProps: { name: createdUser.name, email: createdUser.email, unsubscribeLink },
-                  isAddContacts: true
+                  reactProps: {
+                    name: createdUser.name,
+                    email: createdUser.email,
+                    unsubscribeLink,
+                  },
+                  isAddContacts: true,
                 });
                 console.log(`Welcome email sent to ${createdUser.email}`);
               } catch (error) {
-                console.error('Failed to send welcome email:', error);
+                console.error("Failed to send welcome email:", error);
               }
             }
           },
@@ -141,23 +231,33 @@ function createAuthConfig(databaseInstance: ReturnType<typeof getDb>): BetterAut
         },
       },
     },
-    trustedOrigins: process.env.NODE_ENV === 'development'
-      ? [
-        process.env.NEXT_PUBLIC_SITE_URL,
-        'http://localhost:*',
-        'http://127.0.0.1:*',
-        'http://[::1]:*',
-      ].filter((origin): origin is string => Boolean(origin))
-      : [process.env.NEXT_PUBLIC_SITE_URL!],
+    trustedOrigins:
+      process.env.NODE_ENV === "development"
+        ? [
+            process.env.NEXT_PUBLIC_SITE_URL,
+            "http://localhost:*",
+            "http://127.0.0.1:*",
+            "http://[::1]:*",
+          ].filter((origin): origin is string => Boolean(origin))
+        : [process.env.NEXT_PUBLIC_SITE_URL!],
     plugins: [
       ...(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ? [oneTap()] : []),
-      ...(process.env.TURNSTILE_SECRET_KEY ? [captcha({
-        provider: "cloudflare-turnstile",
-        secretKey: process.env.TURNSTILE_SECRET_KEY,
-      })] : []),
+      ...(process.env.TURNSTILE_SECRET_KEY
+        ? [
+            captcha({
+              provider: "cloudflare-turnstile",
+              secretKey: process.env.TURNSTILE_SECRET_KEY,
+            }),
+          ]
+        : []),
       magicLink({
         sendMagicLink: async ({ email, url }) => {
-          await sendEmail({ email, subject: `Sign in to ${siteConfig.name}`, react: MagicLinkEmail, reactProps: { url } })
+          await sendEmail({
+            email,
+            subject: `Sign in to ${siteConfig.name}`,
+            react: MagicLinkEmail,
+            reactProps: { url },
+          });
         },
         expiresIn: 60 * 5,
       }),
@@ -165,27 +265,32 @@ function createAuthConfig(databaseInstance: ReturnType<typeof getDb>): BetterAut
         otpLength: 6,
         expiresIn: 60 * 10,
         sendVerificationOTP: async ({ email, otp, type }) => {
-          await sendEmail({ email, subject: `Your ${siteConfig.name} verification code: ${otp}`, react: OTPCodeEmail, reactProps: { otp, type } })
+          await sendEmail({
+            email,
+            subject: `Your ${siteConfig.name} verification code: ${otp}`,
+            react: OTPCodeEmail,
+            reactProps: { otp, type },
+          });
         },
       }),
       lastLoginMethod(),
       admin(),
       anonymous(),
-      nextCookies()
-    ]
+      nextCookies(),
+    ],
   };
 }
 
 /**
  * Get Better Auth instance with fresh database connection
- * 
+ *
  * Use this in Cloudflare Workers to ensure the database connection
  * is resolved within the current request context.
- * 
+ *
  * @example
  * ```typescript
  * import { getAuth } from '@/lib/auth';
- * 
+ *
  * export async function handler() {
  *   const auth = getAuth(); // Creates new instance with getDb()
  *   const session = await auth.api.getSession(...);

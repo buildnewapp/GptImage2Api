@@ -61,20 +61,20 @@ export function createDrizzleTaskRewardStore(
     },
 
     async createClaim(record) {
-      try {
-        await tx.insert(taskRewardClaimsSchema).values({
+      const inserted = await tx
+        .insert(taskRewardClaimsSchema)
+        .values({
           userId: record.userId,
           taskKey: record.taskKey,
           claimKey: record.claimKey,
           creditAmount: record.creditAmount,
           metadata: record.metadata ?? {},
-        });
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        if (message.toLowerCase().includes("unique")) {
-          return false;
-        }
-        throw error;
+        })
+        .onConflictDoNothing()
+        .returning({ id: taskRewardClaimsSchema.id });
+
+      if (!inserted[0]) {
+        return false;
       }
 
       const updatedUsage = await tx

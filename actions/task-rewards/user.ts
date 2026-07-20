@@ -5,11 +5,16 @@ import { getSession } from "@/lib/auth/server";
 import { getDb } from "@/lib/db";
 import { getErrorMessage } from "@/lib/error-utils";
 import {
+  MANUAL_REVIEW_TASK_KEYS,
   buildDailyClaimKey,
   buildOnceClaimKey,
+  manualReviewTasks,
   taskRewardsConfig,
 } from "@/config/task-rewards";
-import { claimTaskReward } from "@/lib/task-rewards/claim";
+import {
+  claimTaskReward,
+  isAutomaticClaimableTaskKey,
+} from "@/lib/task-rewards/claim";
 import {
   buildTaskRewardItems,
   type TaskRewardsDashboardData,
@@ -23,7 +28,8 @@ import {
   hasSuccessfulPublicGenerationForUser,
   hasSuccessfulPurchaseForUser,
 } from "@/lib/task-rewards/drizzle-store";
-import type { ClaimableTaskKey } from "@/lib/task-rewards/types";
+import type { AutomaticClaimableTaskKey } from "@/lib/task-rewards/types";
+import { getLatestManualApplicationsForUser } from "@/lib/task-rewards/drizzle-application-store";
 
 function getTodayClaimKey(now: Date): string {
   return buildDailyClaimKey("daily_checkin", now.toISOString().slice(0, 10));
@@ -49,6 +55,16 @@ export async function getTaskRewardsDashboardData(
       date.setUTCDate(date.getUTCDate() - offset);
       return date.toISOString().slice(0, 10);
     });
+    const enabledManualTaskKeys = MANUAL_REVIEW_TASK_KEYS.filter(
+      (taskKey) => manualReviewTasks[taskKey].enabled,
+    );
+    const claimKeys = [
+      dailyClaimKey,
+      buildOnceClaimKey("checkin_3_days"),
+      buildOnceClaimKey("first_public_generation"),
+      buildOnceClaimKey("first_purchase"),
+      ...enabledManualTaskKeys.map(buildOnceClaimKey),
+    ];
 
     const [
       claimLookup,
@@ -57,20 +73,15 @@ export async function getTaskRewardsDashboardData(
       hasPurchase,
       inviteCount,
       hasInviteFirstPurchase,
+      latestManualApplications,
     ] = await Promise.all([
-      getTaskClaimLookup(db, user.id, [
-        dailyClaimKey,
-        buildOnceClaimKey("checkin_3_days"),
-        buildOnceClaimKey("first_public_generation"),
-        buildOnceClaimKey("first_purchase"),
-        buildOnceClaimKey("github_star"),
-        buildOnceClaimKey("huggingface_like"),
-      ]),
+      getTaskClaimLookup(db, user.id, claimKeys),
       getClaimedDailyCheckinDatesForUser(db, user.id, streakDates),
       hasSuccessfulPublicGenerationForUser(db, user.id),
       hasSuccessfulPurchaseForUser(db, user.id),
       countReferralInvitesForUser(db, user.id),
       hasReferralFirstPurchaseForUser(db, user.id),
+      getLatestManualApplicationsForUser(db, user.id, enabledManualTaskKeys),
     ]);
     const tasks = buildTaskRewardItems({
       now,
@@ -80,6 +91,7 @@ export async function getTaskRewardsDashboardData(
       hasPurchase,
       inviteCount,
       hasInviteFirstPurchase,
+      latestManualApplications,
     });
 
     return actionResponse.success({ userId: user.id, tasks });
@@ -90,11 +102,19 @@ export async function getTaskRewardsDashboardData(
 }
 
 export async function claimTaskRewardAction(
-  taskKey: ClaimableTaskKey,
-  options?: { externalTaskStartedAt?: string },
-): Promise<ActionResult<{ taskKey: ClaimableTaskKey; creditAmount: number }>> {
+  taskKey: AutomaticClaimableTaskKey,
+): Promise<
+  ActionResult<{ taskKey: AutomaticClaimableTaskKey; creditAmount: number }>
+> {
   if (!taskRewardsConfig.enabled) {
     return actionResponse.forbidden("Task rewards are currently disabled.");
+  }
+
+  if (!isAutomaticClaimableTaskKey(taskKey)) {
+    return actionResponse.forbidden(
+      "This task cannot be claimed automatically.",
+      "manual_review_required",
+    );
   }
 
   const session = await getSession();
@@ -110,7 +130,6 @@ export async function claimTaskRewardAction(
         userId: user.id,
         taskKey,
         config: taskRewardsConfig,
-        externalTaskStartedAt: options?.externalTaskStartedAt,
       }),
     );
 
@@ -129,13 +148,9 @@ export async function claimTaskRewardAction(
     }
 
     if (result.status === "not_completed") {
-      const customCode =
-        result.reason === "cooldown" ? "syncing" : "not_completed";
       return actionResponse.error(
-        result.reason === "cooldown"
-          ? "Task progress is still syncing."
-          : "Task requirements are not completed yet.",
-        customCode,
+        "Task requirements are not completed yet.",
+        "not_completed",
       );
     }
 

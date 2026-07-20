@@ -316,6 +316,13 @@
       "when": 1783860416663,
       "tag": "0044_luxuriant_lady_deathstrike",
       "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "7",
+      "when": 1784518194458,
+      "tag": "0045_vengeful_northstar",
+      "breakpoints": true
     }
   ]
 }

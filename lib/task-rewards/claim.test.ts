@@ -5,15 +5,13 @@ import { taskRewardsConfig } from "@/config/task-rewards";
 import {
   claimTaskReward,
   createMemoryTaskRewardStore,
+  isAutomaticClaimableTaskKey,
 } from "@/lib/task-rewards/claim";
+import type { AutomaticClaimableTaskKey } from "@/lib/task-rewards/types";
 
 const enabledConfig = {
   ...taskRewardsConfig,
   enabled: true,
-  huggingFaceLike: {
-    ...taskRewardsConfig.huggingFaceLike,
-    targetUrl: "https://huggingface.co/spaces/example/example",
-  },
 };
 
 test("daily check-in can only be claimed once per calendar date", async () => {
@@ -215,38 +213,49 @@ test("first purchase reward requires at least one successful order", async () =>
   });
 });
 
-test("github star reward returns syncing while the cooldown window is still active", async () => {
-  const store = createMemoryTaskRewardStore();
+test("only automatic task keys pass the runtime claim whitelist", () => {
+  for (const taskKey of [
+    "daily_checkin",
+    "checkin_3_days",
+    "first_public_generation",
+    "first_purchase",
+  ]) {
+    assert.equal(isAutomaticClaimableTaskKey(taskKey), true);
+  }
 
-  const result = await claimTaskReward({
-    store,
-    userId: "user-1",
-    taskKey: "github_star",
-    now: new Date("2026-03-07T08:00:10.000Z"),
-    externalTaskStartedAt: "2026-03-07T08:00:00.000Z",
-    config: enabledConfig,
-  });
-
-  assert.equal(result.status, "not_completed");
-  assert.equal(result.reason, "cooldown");
-  assert.deepEqual(result.progress, {
-    current: 10,
-    required: 15,
-  });
+  for (const taskKey of [
+    "github_star",
+    "huggingface_like",
+    "share_twitter",
+    "share_facebook",
+    "share_tiktok",
+    "share_instagram",
+    "invite_signup",
+    "invite_first_purchase",
+    "forged_task",
+  ]) {
+    assert.equal(isAutomaticClaimableTaskKey(taskKey), false);
+  }
 });
 
-test("hugging face like reward can be claimed after the cooldown window passes", async () => {
-  const store = createMemoryTaskRewardStore();
+test("manual-review task keys cannot reach the automatic award path", async () => {
+  for (const taskKey of [
+    "github_star",
+    "huggingface_like",
+    "share_twitter",
+    "share_facebook",
+    "share_tiktok",
+    "share_instagram",
+  ]) {
+    const store = createMemoryTaskRewardStore();
+    const result = await claimTaskReward({
+      store,
+      userId: "user-1",
+      taskKey: taskKey as AutomaticClaimableTaskKey,
+      config: enabledConfig,
+    });
 
-  const result = await claimTaskReward({
-    store,
-    userId: "user-1",
-    taskKey: "huggingface_like",
-    now: new Date("2026-03-07T08:00:16.000Z"),
-    externalTaskStartedAt: "2026-03-07T08:00:00.000Z",
-    config: enabledConfig,
-  });
-
-  assert.equal(result.status, "claimed");
-  assert.equal(result.claimKey, "huggingface_like:once");
+    assert.equal(result.status, "disabled");
+    assert.equal(store.claims.length, 0);
+  }
 });

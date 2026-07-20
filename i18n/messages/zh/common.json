@@ -166,6 +166,11 @@
         "icon": "Gift"
       },
       {
+        "name": "任务奖励审核",
+        "href": "/dashboard/task-rewards-admin",
+        "icon": "ClipboardCheck"
+      },
+      {
         "name": "定价管理",
         "href": "/dashboard/prices",
         "icon": "DollarSign"
@@ -643,57 +648,34 @@
       "standard": {
         "name": "标准包",
         "desc": "适合尝鲜。",
-        "features": [
-          "1,000 积分",
-          "永不过期"
-        ]
+        "features": ["1,000 积分", "永不过期"]
       },
       "pro": {
         "name": "专业包",
         "desc": "最受欢迎的选择。",
-        "features": [
-          "3,750 积分",
-          "永不过期",
-          "优先生成"
-        ]
+        "features": ["3,750 积分", "永不过期", "优先生成"]
       },
       "max": {
         "name": "至尊包",
         "desc": "适合重度用户。",
-        "features": [
-          "12,000 积分",
-          "永不过期",
-          "优先生成"
-        ]
+        "features": ["12,000 积分", "永不过期", "优先生成"]
       }
     },
     "plans": {
       "standard": {
         "name": "标准版",
         "desc": "适合刚入门的个人。",
-        "features": [
-          "{credits} 积分 / 月",
-          "标准排队",
-          "商业授权"
-        ]
+        "features": ["{credits} 积分 / 月", "标准排队", "商业授权"]
       },
       "pro": {
         "name": "专业版",
         "desc": "适合需要更强能力的创作者。",
-        "features": [
-          "{credits} 积分 / 月",
-          "快速生成队列",
-          "优先支持"
-        ]
+        "features": ["{credits} 积分 / 月", "快速生成队列", "优先支持"]
       },
       "max": {
         "name": "至尊版",
         "desc": "适合工作室和专业人士。",
-        "features": [
-          "{credits} 积分 / 月",
-          "即时队列",
-          "API 访问"
-        ]
+        "features": ["{credits} 积分 / 月", "即时队列", "API 访问"]
       }
     }
   },

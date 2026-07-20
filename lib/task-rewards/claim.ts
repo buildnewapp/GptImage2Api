@@ -2,9 +2,26 @@ import { taskRewardsConfig } from "@/config/task-rewards";
 import { getTaskDefinition } from "@/lib/task-rewards/definitions";
 import { createMemoryTaskRewardStore } from "@/lib/task-rewards/store";
 import type {
+  AutomaticClaimableTaskKey,
   ClaimTaskRewardParams,
   TaskRewardClaimResult,
 } from "@/lib/task-rewards/types";
+
+const automaticClaimableTaskKeys = new Set<AutomaticClaimableTaskKey>([
+  "daily_checkin",
+  "checkin_3_days",
+  "first_public_generation",
+  "first_purchase",
+]);
+
+export function isAutomaticClaimableTaskKey(
+  taskKey: unknown,
+): taskKey is AutomaticClaimableTaskKey {
+  return (
+    typeof taskKey === "string" &&
+    automaticClaimableTaskKeys.has(taskKey as AutomaticClaimableTaskKey)
+  );
+}
 
 function toCalendarDate(value: Date): string {
   return value.toISOString().slice(0, 10);
@@ -16,8 +33,11 @@ export async function claimTaskReward({
   taskKey,
   config = taskRewardsConfig,
   now = new Date(),
-  externalTaskStartedAt,
 }: ClaimTaskRewardParams): Promise<TaskRewardClaimResult> {
+  if (!isAutomaticClaimableTaskKey(taskKey)) {
+    return { status: "disabled" };
+  }
+
   const definition = getTaskDefinition(taskKey);
   if (!definition.isEnabled(config)) {
     return { status: "disabled" };
@@ -37,7 +57,6 @@ export async function claimTaskReward({
       userId,
       calendarDate: toCalendarDate(now),
       now,
-      externalTaskStartedAt,
       countDailyCheckins: () => store.countDailyCheckins(userId),
       getClaimedDailyCheckinDates: (calendarDates) =>
         store.getClaimedDailyCheckinDates(userId, calendarDates),
@@ -65,7 +84,7 @@ export async function claimTaskReward({
     taskKey,
     claimKey,
     creditAmount,
-    metadata: externalTaskStartedAt ? { externalTaskStartedAt } : {},
+    metadata: {},
   });
 
   if (!created) {

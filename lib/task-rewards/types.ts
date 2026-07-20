@@ -1,12 +1,10 @@
-import type { TaskRewardsConfig } from "@/config/task-rewards";
+import type {
+  AutomaticClaimableTaskKey,
+  ManualReviewTaskKey,
+  TaskRewardsConfig,
+} from "@/config/task-rewards";
 
-export type ClaimableTaskKey =
-  | "daily_checkin"
-  | "checkin_3_days"
-  | "first_public_generation"
-  | "first_purchase"
-  | "github_star"
-  | "huggingface_like";
+export type { AutomaticClaimableTaskKey, ManualReviewTaskKey };
 
 export interface TaskRewardProgress {
   current: number;
@@ -28,7 +26,7 @@ export type TaskRewardClaimResult =
     }
   | {
       status: "not_completed";
-      reason: "requirements" | "cooldown";
+      reason: "requirements";
       claimKey: string;
       creditAmount?: undefined;
       progress: TaskRewardProgress;
@@ -42,7 +40,7 @@ export type TaskRewardClaimResult =
 
 export interface TaskRewardClaimRecord {
   userId: string;
-  taskKey: ClaimableTaskKey;
+  taskKey: AutomaticClaimableTaskKey | ManualReviewTaskKey;
   claimKey: string;
   creditAmount: number;
   metadata?: Record<string, unknown>;
@@ -65,8 +63,7 @@ export interface TaskRewardStore {
 export interface ClaimTaskRewardParams {
   store: TaskRewardStore;
   userId: string;
-  taskKey: ClaimableTaskKey;
+  taskKey: AutomaticClaimableTaskKey;
   config?: TaskRewardsConfig;
   now?: Date;
-  externalTaskStartedAt?: string;
 }

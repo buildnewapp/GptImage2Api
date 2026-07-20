@@ -1,14 +1,27 @@
 import { siteConfig } from "@/config/site";
 
-export type TaskRewardKey =
+export type AutomaticClaimableTaskKey =
   | "daily_checkin"
   | "checkin_3_days"
   | "first_public_generation"
-  | "first_purchase"
+  | "first_purchase";
+
+export const MANUAL_REVIEW_TASK_KEYS = [
+  "github_star",
+  "huggingface_like",
+  "share_twitter",
+  "share_facebook",
+  "share_tiktok",
+  "share_instagram",
+] as const;
+
+export type ManualReviewTaskKey = (typeof MANUAL_REVIEW_TASK_KEYS)[number];
+
+export type TaskRewardKey =
+  | AutomaticClaimableTaskKey
   | "invite_signup"
   | "invite_first_purchase"
-  | "github_star"
-  | "huggingface_like";
+  | ManualReviewTaskKey;
 
 export interface TaskRewardsConfig {
   enabled: boolean;
@@ -36,18 +49,12 @@ export interface TaskRewardsConfig {
     enabled: boolean;
     credits: number;
   };
-  githubStar: {
-    enabled: boolean;
-    credits: number;
-    cooldownSeconds: number;
-    targetUrl: string;
-  };
-  huggingFaceLike: {
-    enabled: boolean;
-    credits: number;
-    cooldownSeconds: number;
-    targetUrl: string;
-  };
+}
+
+export interface ManualReviewTaskDefinition {
+  enabled: boolean;
+  credits: number;
+  targetUrl: string;
 }
 
 export const taskRewardsConfig = {
@@ -76,19 +83,46 @@ export const taskRewardsConfig = {
     enabled: true,
     credits: 20,
   },
-  githubStar: {
-    enabled: true,
-    credits: 10,
-    cooldownSeconds: 15,
-    targetUrl: siteConfig.socialLinks?.github ?? "",
-  },
-  huggingFaceLike: {
-    enabled: true,
-    credits: 10,
-    cooldownSeconds: 15,
-    targetUrl: siteConfig.socialLinks?.huggingface ?? "",
-  },
 } satisfies TaskRewardsConfig;
+
+const encodedSiteUrl = encodeURIComponent(siteConfig.url);
+
+export const manualReviewTasks: Record<
+  ManualReviewTaskKey,
+  ManualReviewTaskDefinition
+> = {
+  github_star: {
+    enabled: false,
+    credits: 10,
+    targetUrl: siteConfig.socialLinks?.github || "https://github.com/",
+  },
+  huggingface_like: {
+    enabled: false,
+    credits: 10,
+    targetUrl: siteConfig.socialLinks?.huggingface || "https://huggingface.co/",
+  },
+  share_twitter: {
+    enabled: false,
+    credits: 10,
+    targetUrl: `https://twitter.com/intent/tweet?url=${encodedSiteUrl}`,
+  },
+  share_facebook: {
+    enabled: false,
+    credits: 10,
+    targetUrl: `https://www.facebook.com/sharer/sharer.php?u=${encodedSiteUrl}`,
+  },
+  share_tiktok: {
+    enabled: false,
+    credits: 10,
+    targetUrl: siteConfig.socialLinks?.tiktok || "https://www.tiktok.com/",
+  },
+  share_instagram: {
+    enabled: false,
+    credits: 10,
+    targetUrl:
+      siteConfig.socialLinks?.instagram || "https://www.instagram.com/",
+  },
+};
 
 export function buildDailyClaimKey(
   taskKey: "daily_checkin",

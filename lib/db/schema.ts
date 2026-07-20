@@ -11,9 +11,11 @@ import {
   text,
   timestamp,
   unique,
+  uniqueIndex,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
 
@@ -400,7 +402,9 @@ export const subscriptionCreditBuckets = pgTable(
       .$onUpdate(() => new Date()),
   },
   (table) => ({
-    userIdIdx: index("idx_subscription_credit_buckets_user_id").on(table.userId),
+    userIdIdx: index("idx_subscription_credit_buckets_user_id").on(
+      table.userId,
+    ),
     expiresAtIdx: index("idx_subscription_credit_buckets_expires_at").on(
       table.expiresAt,
     ),
@@ -440,6 +444,81 @@ export const creditLogs = pgTable(
       ),
     };
   },
+);
+
+export const rewardApplicationSourceEnum = pgEnum("reward_application_source", [
+  "system",
+  "user",
+]);
+
+export const rewardApplicationStatusEnum = pgEnum("reward_application_status", [
+  "pending",
+  "approved",
+  "rejected",
+]);
+
+export const rewardApplications = pgTable(
+  "reward_applications",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
+    taskKey: varchar("task_key", { length: 64 }).notNull(),
+    source: rewardApplicationSourceEnum("source").notNull(),
+    status: rewardApplicationStatusEnum("status").notNull(),
+    creditAmount: integer("credit_amount").notNull(),
+    evidenceUrls: jsonb("evidence_urls")
+      .$type<string[]>()
+      .default([])
+      .notNull(),
+    submissionText: text("submission_text"),
+    ipHash: varchar("ip_hash", { length: 64 }),
+    deviceHash: varchar("device_hash", { length: 64 }),
+    riskSnapshot: jsonb("risk_snapshot").default({}).notNull(),
+    reviewNote: text("review_note"),
+    reviewedByUserId: uuid("reviewed_by_user_id").references(() => user.id, {
+      onDelete: "set null",
+    }),
+    submittedAt: timestamp("submitted_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    userTaskIdx: index("idx_reward_applications_user_task").on(
+      table.userId,
+      table.taskKey,
+    ),
+    userSourceTaskSubmittedAtIdx: index(
+      "idx_reward_applications_user_source_task_submitted_at",
+    ).on(table.userId, table.source, table.taskKey, table.submittedAt),
+    taskStatusSubmittedAtIdx: index(
+      "idx_reward_applications_task_status_submitted_at",
+    ).on(table.taskKey, table.status, table.submittedAt),
+    ipSubmittedAtIdx: index("idx_reward_applications_ip_submitted_at")
+      .on(table.ipHash, table.submittedAt)
+      .where(
+        sql`${table.taskKey} = 'signup_bonus' and ${table.status} = 'approved' and ${table.ipHash} is not null`,
+      ),
+    deviceSubmittedAtIdx: index("idx_reward_applications_device_submitted_at")
+      .on(table.deviceHash, table.submittedAt)
+      .where(
+        sql`${table.taskKey} = 'signup_bonus' and ${table.status} = 'approved' and ${table.deviceHash} is not null`,
+      ),
+    userTaskActiveUnique: uniqueIndex(
+      "reward_applications_user_task_active_unique",
+    )
+      .on(table.userId, table.taskKey)
+      .where(sql`${table.status} in ('pending', 'approved')`),
+  }),
 );
 
 export const taskRewardClaims = pgTable(
@@ -787,14 +866,10 @@ export const apikeys = pgTable(
   }),
 );
 
-export const aiStudioGenerationStatusEnum = pgEnum("ai_studio_generation_status", [
-  "created",
-  "submitted",
-  "queued",
-  "running",
-  "succeeded",
-  "failed",
-]);
+export const aiStudioGenerationStatusEnum = pgEnum(
+  "ai_studio_generation_status",
+  ["created", "submitted", "queued", "running", "succeeded", "failed"],
+);
 
 export const promptGalleryStatusEnum = pgEnum("prompt_gallery_status", [
   "draft",
@@ -844,9 +919,9 @@ export const promptGalleryItems = pgTable(
     featuredIdx: index("idx_prompt_gallery_items_featured").on(table.featured),
     sortIdx: index("idx_prompt_gallery_items_sort").on(table.sort),
     statusIdx: index("idx_prompt_gallery_items_status").on(table.status),
-    sourcePublishedAtIdx: index("idx_prompt_gallery_items_source_published_at").on(
-      table.sourcePublishedAt,
-    ),
+    sourcePublishedAtIdx: index(
+      "idx_prompt_gallery_items_source_published_at",
+    ).on(table.sourcePublishedAt),
   }),
 );
 

@@ -1,12 +1,24 @@
 "use client";
 
-import {
-  claimTaskRewardAction,
-} from "@/actions/task-rewards/user";
+import { claimTaskRewardAction } from "@/actions/task-rewards/user";
 import { referralConfig } from "@/config/referral";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  MANUAL_REVIEW_TASK_KEYS,
+  type ManualReviewTaskKey,
+} from "@/config/task-rewards";
+import { isAutomaticClaimableTaskKey } from "@/lib/task-rewards/claim";
+import type {
+  TaskRewardItemData,
+  TaskRewardsDashboardData,
+} from "@/lib/task-rewards/dashboard-data";
+import {
+  getMetricToneClasses,
+  getTaskIconToneClasses,
+  getTaskStatusToneClasses,
+} from "@/lib/task-rewards/theme";
 import {
   ArrowRight,
   CheckCircle2,
@@ -19,32 +31,9 @@ import {
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { startTransition, useEffect, useMemo, useState } from "react";
+import { startTransition, useMemo, useState } from "react";
 import { toast } from "sonner";
-import type {
-  TaskRewardItemData,
-  TaskRewardsDashboardData,
-} from "@/lib/task-rewards/dashboard-data";
-import {
-  getMetricToneClasses,
-  getTaskIconToneClasses,
-  getTaskStatusToneClasses,
-} from "@/lib/task-rewards/theme";
-
-type ClaimableTaskKey =
-  | "daily_checkin"
-  | "checkin_3_days"
-  | "first_public_generation"
-  | "first_purchase"
-  | "github_star"
-  | "huggingface_like";
-
-type ExternalTaskKey = Extract<
-  ClaimableTaskKey,
-  "github_star" | "huggingface_like"
->;
-
-type ExternalTaskStarts = Partial<Record<ExternalTaskKey, string>>;
+import ManualTaskSubmissionDialog from "./ManualTaskSubmissionDialog";
 
 function getTaskIcon(taskKey: TaskRewardItemData["taskKey"]) {
   switch (taskKey) {
@@ -59,6 +48,10 @@ function getTaskIcon(taskKey: TaskRewardItemData["taskKey"]) {
     case "invite_first_purchase":
     case "github_star":
     case "huggingface_like":
+    case "share_twitter":
+    case "share_facebook":
+    case "share_tiktok":
+    case "share_instagram":
       return <Gift className="h-4.5 w-4.5" />;
   }
 }
@@ -67,8 +60,16 @@ function isTaskDone(task: TaskRewardItemData): boolean {
   return task.status === "claimed" || task.status === "completed";
 }
 
-function getExternalTaskStartsStorageKey(userId: string): string {
-  return `task-rewards:external-starts:${userId}`;
+function isManualReviewTask(
+  task: TaskRewardItemData,
+): task is TaskRewardItemData & {
+  taskKey: ManualReviewTaskKey;
+  targetUrl: string;
+} {
+  return (
+    typeof task.targetUrl === "string" &&
+    MANUAL_REVIEW_TASK_KEYS.some((taskKey) => taskKey === task.taskKey)
+  );
 }
 
 export default function TasksClient({
@@ -79,55 +80,18 @@ export default function TasksClient({
   const t = useTranslations("DashboardUserTasks");
   const router = useRouter();
   const [pendingTaskKey, setPendingTaskKey] = useState<string | null>(null);
-  const [externalTaskStarts, setExternalTaskStarts] =
-    useState<ExternalTaskStarts>({});
 
   const refresh = () => startTransition(() => router.refresh());
-
-  useEffect(() => {
-    const storageKey = getExternalTaskStartsStorageKey(data.userId);
-
-    try {
-      const rawValue = window.localStorage.getItem(storageKey);
-      if (!rawValue) return;
-      setExternalTaskStarts(JSON.parse(rawValue) as ExternalTaskStarts);
-    } catch {
-      setExternalTaskStarts({});
-    }
-  }, [data.userId]);
-
-  const persistExternalTaskStarts = (nextValue: ExternalTaskStarts) => {
-    setExternalTaskStarts(nextValue);
-    window.localStorage.setItem(
-      getExternalTaskStartsStorageKey(data.userId),
-      JSON.stringify(nextValue),
-    );
-  };
 
   const summary = useMemo(() => {
     const totalTasks = data.tasks.length;
     const completedTasks = data.tasks.filter(isTaskDone).length;
-    const now = Date.now();
 
-    const claimableCredits = data.tasks.reduce((sum, task) => {
-      if (task.status === "claimable") {
-        return sum + (task.creditAmount ?? 0);
-      }
-
-      const startedAt = externalTaskStarts[task.taskKey as ExternalTaskKey];
-      const cooldownSeconds = task.cooldownSeconds ?? 0;
-      if (!task.targetUrl || !startedAt || cooldownSeconds <= 0) {
-        return sum;
-      }
-
-      const elapsedSeconds = Math.floor(
-        (now - new Date(startedAt).getTime()) / 1000,
-      );
-
-      return elapsedSeconds >= cooldownSeconds
-        ? sum + (task.creditAmount ?? 0)
-        : sum;
-    }, 0);
+    const claimableCredits = data.tasks.reduce(
+      (sum, task) =>
+        task.status === "claimable" ? sum + (task.creditAmount ?? 0) : sum,
+      0,
+    );
 
     return {
       totalTasks,
@@ -136,7 +100,7 @@ export default function TasksClient({
       progressPercent:
         totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100),
     };
-  }, [data.tasks, externalTaskStarts]);
+  }, [data.tasks]);
 
   const firstOrderReward =
     referralConfig.firstOrderRewardMode === "fixed"
@@ -144,22 +108,19 @@ export default function TasksClient({
       : `${referralConfig.firstOrderRewardPercent}%`;
 
   const handleClaim = async (
-    taskKey: ClaimableTaskKey,
-    options?: { externalTaskStartedAt?: string },
+    taskKey: Parameters<typeof claimTaskRewardAction>[0],
   ) => {
     setPendingTaskKey(taskKey);
-    const result = await claimTaskRewardAction(taskKey, options);
+    const result = await claimTaskRewardAction(taskKey);
     setPendingTaskKey(null);
 
     if (!result.success) {
       const errorKey =
         result.customCode === "already_claimed"
           ? "alreadyClaimed"
-          : result.customCode === "syncing"
-            ? "syncing"
-            : result.customCode === "not_completed"
-              ? "notCompleted"
-              : "claimFailed";
+          : result.customCode === "not_completed"
+            ? "notCompleted"
+            : "claimFailed";
       toast.error(t(`toast.${errorKey}`));
       refresh();
       return;
@@ -171,20 +132,6 @@ export default function TasksClient({
       }),
     );
     refresh();
-  };
-
-  const handleExternalTaskStart = (task: TaskRewardItemData) => {
-    if (!task.targetUrl) return;
-
-    const startedAt = new Date().toISOString();
-    const nextStarts: ExternalTaskStarts = {
-      ...externalTaskStarts,
-      [task.taskKey as ExternalTaskKey]: startedAt,
-    };
-    persistExternalTaskStarts(nextStarts);
-
-    window.open(task.targetUrl, "_blank", "noopener,noreferrer");
-    toast.success(t("toast.externalStarted"));
   };
 
   const quickLinks = [
@@ -275,7 +222,14 @@ export default function TasksClient({
                     </div>
                   </div>
                 </div>
-                <div className="h-2 overflow-hidden rounded-full bg-slate-900 dark:bg-slate-800">
+                <div
+                  className="h-2 overflow-hidden rounded-full bg-slate-900 dark:bg-slate-800"
+                  role="progressbar"
+                  aria-label={t("summary.progressPercent")}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={summary.progressPercent}
+                >
                   <div
                     className="h-full rounded-full bg-[linear-gradient(90deg,#111827_0%,#16a34a_100%)] transition-all dark:bg-[linear-gradient(90deg,#94a3b8_0%,#22c55e_100%)]"
                     style={{ width: `${summary.progressPercent}%` }}
@@ -288,30 +242,11 @@ export default function TasksClient({
           <div className="space-y-2.5">
             {data.tasks.map((task) => {
               const completed = isTaskDone(task);
-              const startedAt =
-                externalTaskStarts[task.taskKey as ExternalTaskKey];
-              const elapsedSeconds = startedAt
-                ? Math.max(
-                    0,
-                    Math.floor(
-                      (Date.now() - new Date(startedAt).getTime()) / 1000,
-                    ),
-                  )
-                : 0;
-              const isExternalTask = Boolean(
-                task.targetUrl && task.cooldownSeconds,
-              );
-              const externalReady =
-                isExternalTask &&
-                Boolean(startedAt) &&
-                elapsedSeconds >= (task.cooldownSeconds ?? 0);
-              const progress =
-                isExternalTask && task.cooldownSeconds
-                  ? {
-                      current: Math.min(elapsedSeconds, task.cooldownSeconds),
-                      required: task.cooldownSeconds,
-                    }
-                  : task.progress;
+              const manualTask = isManualReviewTask(task);
+              const automaticTaskKey = isAutomaticClaimableTaskKey(task.taskKey)
+                ? task.taskKey
+                : null;
+              const progress = task.progress;
               const description =
                 task.taskKey === "invite_signup"
                   ? t("tasks.invite_signup.description", {
@@ -336,9 +271,7 @@ export default function TasksClient({
                       : t("actions.goComplete");
               const statusLabel = completed
                 ? t("status.done")
-                : externalReady
-                  ? t("status.readyToCheck")
-                  : t(`status.${task.status}`);
+                : t(`status.${task.status}`);
 
               return (
                 <Card
@@ -348,10 +281,12 @@ export default function TasksClient({
                   <CardContent className="flex flex-col gap-3 p-3.5 lg:flex-row lg:items-center lg:justify-between">
                     <div className="flex items-start gap-2.5">
                       <div
-                        className={`mt-0.5 flex h-9 w-9 items-center justify-center rounded-2xl ${getTaskIconToneClasses({
-                          completed,
-                          claimable: task.status === "claimable" || externalReady,
-                        })}`}
+                        className={`mt-0.5 flex h-9 w-9 items-center justify-center rounded-2xl ${getTaskIconToneClasses(
+                          {
+                            completed,
+                            claimable: task.status === "claimable",
+                          },
+                        )}`}
                       >
                         {completed ? (
                           <CheckCircle2 className="h-4.5 w-4.5" />
@@ -397,11 +332,41 @@ export default function TasksClient({
                             </span>
                           ) : null}
                         </div>
+                        {task.status === "rejected" && task.reviewNote ? (
+                          <div className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs leading-5 text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/30 dark:text-rose-300">
+                            <span className="font-semibold">
+                              {t("reviewReason")}
+                            </span>{" "}
+                            {task.reviewNote}
+                          </div>
+                        ) : null}
                       </div>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2 lg:min-w-[144px] lg:justify-end">
-                      {completed ? (
+                      {manualTask && task.status === "pending" ? (
+                        <Button
+                          variant="outline"
+                          disabled
+                          className="h-9 min-w-[104px] whitespace-nowrap px-3"
+                        >
+                          {t("actions.pending")}
+                        </Button>
+                      ) : manualTask &&
+                        (task.status === "available" ||
+                          task.status === "rejected") ? (
+                        <ManualTaskSubmissionDialog
+                          taskKey={task.taskKey}
+                          targetUrl={task.targetUrl}
+                          title={t(`tasks.${task.taskKey}.title`)}
+                          description={description}
+                          triggerLabel={
+                            task.status === "rejected"
+                              ? t("actions.resubmit")
+                              : t("actions.submit")
+                          }
+                        />
+                      ) : completed ? (
                         task.href && task.status === "completed" ? (
                           <Button
                             asChild
@@ -422,42 +387,14 @@ export default function TasksClient({
                             {t("actions.claimed")}
                           </Button>
                         )
-                      ) : task.status === "claimable" || externalReady ? (
+                      ) : task.status === "claimable" && automaticTaskKey ? (
                         <Button
                           className="h-9 min-w-[104px] px-3"
-                          onClick={() =>
-                            handleClaim(task.taskKey as ClaimableTaskKey, {
-                              externalTaskStartedAt: startedAt,
-                            })
-                          }
+                          onClick={() => handleClaim(automaticTaskKey)}
                           disabled={pendingTaskKey === task.taskKey}
                         >
-                          {externalReady ? (
-                            <>
-                              <CheckCircle2 className="mr-2 h-4 w-4" />
-                              {t("actions.check")}
-                            </>
-                          ) : (
-                            <>
-                              <Coins className="mr-2 h-4 w-4" />
-                              {t("actions.claim")}
-                            </>
-                          )}
-                        </Button>
-                      ) : isExternalTask ? (
-                        <Button
-                          className="h-9 min-w-[104px] px-3"
-                          variant={startedAt ? "outline" : "default"}
-                          onClick={() =>
-                            startedAt
-                              ? handleClaim(task.taskKey as ClaimableTaskKey, {
-                                  externalTaskStartedAt: startedAt,
-                                })
-                              : handleExternalTaskStart(task)
-                          }
-                          disabled={pendingTaskKey === task.taskKey}
-                        >
-                          {startedAt ? t("actions.check") : t("actions.start")}
+                          <Coins className="mr-2 h-4 w-4" />
+                          {t("actions.claim")}
                         </Button>
                       ) : task.href ? (
                         <Button asChild className="h-9 min-w-[104px] px-3">

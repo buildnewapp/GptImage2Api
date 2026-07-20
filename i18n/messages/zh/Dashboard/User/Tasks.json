@@ -24,8 +24,10 @@
     "claimable": "可领取",
     "claimed": "已领取",
     "incomplete": "未完成",
-    "done": "已完成",
-    "readyToCheck": "可检查"
+    "available": "可提交",
+    "pending": "审核中",
+    "rejected": "需重新提交",
+    "done": "已完成"
   },
   "actions": {
     "claim": "领取积分",
@@ -35,8 +37,9 @@
     "goPurchase": "去购买",
     "inviteNow": "去邀请",
     "viewReferral": "查看邀请",
-    "start": "开始",
-    "check": "Check"
+    "submit": "提交凭证",
+    "resubmit": "重新提交",
+    "pending": "审核中"
   },
   "tasks": {
     "daily_checkin": {
@@ -65,12 +68,59 @@
     },
     "github_star": {
       "title": "GitHub Star 项目",
-      "description": "前往 GitHub 为项目点亮 Star，返回后点击 Check 领取奖励。"
+      "description": "在 GitHub 为项目添加 Star，然后提交截图和文字说明等待审核。"
     },
     "huggingface_like": {
       "title": "Hugging Face Like Space",
-      "description": "前往 Hugging Face 为 Space 点赞，返回后点击 Check 领取奖励。"
+      "description": "在 Hugging Face 为 Space 点赞，然后提交截图和文字说明等待审核。"
+    },
+    "share_twitter": {
+      "title": "分享到 Twitter / X",
+      "description": "将网站分享到 Twitter / X，然后提交截图和文字说明等待审核。"
+    },
+    "share_facebook": {
+      "title": "分享到 Facebook",
+      "description": "将网站分享到 Facebook，然后提交截图和文字说明等待审核。"
+    },
+    "share_tiktok": {
+      "title": "分享到 TikTok",
+      "description": "将网站分享到 TikTok，然后提交截图和文字说明等待审核。"
+    },
+    "share_instagram": {
+      "title": "分享到 Instagram",
+      "description": "将网站分享到 Instagram，然后提交截图和文字说明等待审核。"
     }
+  },
+  "reviewReason": "审核意见：",
+  "manualSubmission": {
+    "description": "请先前往任务页面完成操作，再提交凭证等待审核。",
+    "openTarget": "打开任务页面",
+    "screenshotLabel": "任务截图",
+    "screenshotHint": "仅上传 1 张 JPEG、PNG 或 WebP 图片，大小不超过 5 MB。",
+    "screenshotAlt": "{title} 的任务凭证截图预览",
+    "textLabel": "文字说明",
+    "textPlaceholder": "请简要说明你完成了什么，以及截图中可核对的位置。",
+    "characterCount": "{current} / {maximum}",
+    "cancel": "取消",
+    "submit": "提交审核",
+    "submitting": "正在提交...",
+    "validation": {
+      "screenshotRequired": "提交前请选择 1 张任务截图。",
+      "screenshotType": "仅支持 JPEG、PNG 或 WebP 图片。",
+      "screenshotSize": "截图大小不能超过 5 MB。",
+      "textRequired": "请填写文字说明。",
+      "textLength": "文字说明需要在 1 到 500 个字符之间。"
+    },
+    "errors": {
+      "upload": "截图上传失败，已保留表单内容，请重试。",
+      "submit": "审核申请提交失败，已保留表单内容，请重试。",
+      "taskDisabled": "该任务当前已停止接收新申请。",
+      "alreadyClaimed": "你已经领取过该任务奖励。",
+      "pending": "该任务已有一条申请正在审核。",
+      "invalidEvidence": "无法验证已上传的截图，请重新选择。",
+      "validation": "请检查截图和文字说明后重新提交。"
+    },
+    "success": "凭证提交成功，已进入审核。"
   },
   "faq": {
     "eyebrow": "常见问题",
@@ -98,8 +148,6 @@
     "claimed": "已领取 {credits} 积分。",
     "alreadyClaimed": "该奖励已经领取过了。",
     "notCompleted": "任务条件还未完成。",
-    "syncing": "数据同步中，请稍后再试。",
-    "externalStarted": "已为你打开页面，完成后回来点击 Check。",
     "claimFailed": "领取任务奖励失败。"
   }
 }

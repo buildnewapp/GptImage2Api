@@ -1,3 +1,7 @@
+# 人工任务审核
+
+启用人工任务前，必须配置 `R2_TASK_EVIDENCE_BUCKET_NAME` 指向私有 bucket，并为站点来源配置允许 `PUT` 方法及 `Content-Type` 请求头的 CORS 规则。
+
 # 日常更新
 git fetch upstream
 git merge --no-ff --no-commit upstream/main
@@ -12,6 +16,7 @@ git commit -m "update from upstream"
 
 /Users/syx/WebstormProjects/sdanceai/sdanceai
 /Users/syx/WebstormProjects/tikdek/tikdek-web
+/Users/syx/idea/FreeSoraGenerator/fsg-web
 /Users/syx/WebstormProjects/autogeo/autogeo-v2
 /Users/syx/WebstormProjects/GptImage2Api/gptimage2-web
 /Users/syx/WebstormProjects/GptImage2Api/GptImage4
@@ -42,6 +47,11 @@ git commit -m "update from upstream"
 /Users/syx/WebstormProjects/aimodels/viduai-web
 /Users/syx/WebstormProjects/aimodels/wanvideo-web
 /Users/syx/WebstormProjects/aimodels/zimage-web
+
+这些地址，每个帮我 进入目录，执行合并：
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
 
 # 应用更新：
 ## Sdance AI
