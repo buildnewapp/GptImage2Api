@@ -327,3 +327,49 @@ test("manual task setup documents the private bucket upload CORS requirement", (
   assert.match(readme, /PUT/);
   assert.match(readme, /Content-Type/);
 });
+
+test("task reward review is linked from referral admin instead of the sidebar", () => {
+  const referralsAdminSource = readFileSync(
+    new URL(
+      "../../app/[locale]/(protected)/dashboard/(admin)/referrals-admin/ReferralsAdminClient.tsx",
+      import.meta.url,
+    ),
+    "utf8",
+  );
+
+  assert.match(referralsAdminSource, /href="\/dashboard\/task-rewards-admin"/);
+  assert.match(referralsAdminSource, /t\("actions\.reviewTaskRewards"\)/);
+
+  for (const locale of locales) {
+    const common = JSON.parse(
+      readFileSync(
+        new URL(`../../i18n/messages/${locale}/common.json`, import.meta.url),
+        "utf8",
+      ),
+    ) as Record<string, any>;
+    const referrals = JSON.parse(
+      readFileSync(
+        new URL(
+          `../../i18n/messages/${locale}/Dashboard/Admin/Referrals.json`,
+          import.meta.url,
+        ),
+        "utf8",
+      ),
+    ) as Record<string, any>;
+    const sidebarItems = common.Login?.AdminMenus ?? [];
+
+    assert.equal(
+      sidebarItems.some(
+        (item: Record<string, any>) =>
+          item.href === "/dashboard/task-rewards-admin",
+      ),
+      false,
+      `${locale} sidebar should not expose task reward reviews`,
+    );
+    assert.equal(
+      typeof referrals.actions?.reviewTaskRewards,
+      "string",
+      `${locale}.actions.reviewTaskRewards`,
+    );
+  }
+});

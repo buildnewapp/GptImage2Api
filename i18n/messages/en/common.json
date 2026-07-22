@@ -166,11 +166,6 @@
         "icon": "Gift"
       },
       {
-        "name": "Task Reward Reviews",
-        "href": "/dashboard/task-rewards-admin",
-        "icon": "ClipboardCheck"
-      },
-      {
         "name": "Prices",
         "href": "/dashboard/prices",
         "icon": "DollarSign"

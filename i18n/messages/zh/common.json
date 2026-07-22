@@ -166,11 +166,6 @@
         "icon": "Gift"
       },
       {
-        "name": "任务奖励审核",
-        "href": "/dashboard/task-rewards-admin",
-        "icon": "ClipboardCheck"
-      },
-      {
         "name": "定价管理",
         "href": "/dashboard/prices",
         "icon": "DollarSign"

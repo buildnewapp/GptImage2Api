@@ -17,7 +17,8 @@
   },
   "actions": {
     "refresh": "更新",
-    "refreshOverview": "概要を更新"
+    "refreshOverview": "概要を更新",
+    "reviewTaskRewards": "タスク報酬を審査"
   },
   "filters": {
     "status": "状態",

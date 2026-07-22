@@ -17,7 +17,8 @@
   },
   "actions": {
     "refresh": "刷新",
-    "refreshOverview": "刷新概览"
+    "refreshOverview": "刷新概览",
+    "reviewTaskRewards": "审核任务奖励"
   },
   "filters": {
     "status": "状态",

@@ -166,11 +166,6 @@
         "icon": "Gift"
       },
       {
-        "name": "タスク報酬審査",
-        "href": "/dashboard/task-rewards-admin",
-        "icon": "ClipboardCheck"
-      },
-      {
         "name": "料金プラン管理",
         "href": "/dashboard/prices",
         "icon": "DollarSign"
