@@ -1,0 +1,69 @@
+{
+  "title": "Task reward reviews",
+  "description": "Review screenshot evidence for one-time manual task rewards.",
+  "loading": "Loading task reward applications",
+  "filters": {
+    "email": "Search by user email",
+    "status": "Filter by review status",
+    "task": "Filter by task",
+    "allTasks": "All manual tasks"
+  },
+  "status": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected"
+  },
+  "tasks": {
+    "github_star": "GitHub Star",
+    "huggingface_like": "Hugging Face Like",
+    "share_twitter": "Share on X / Twitter",
+    "share_facebook": "Share on Facebook",
+    "share_tiktok": "Share on TikTok",
+    "share_instagram": "Share on Instagram"
+  },
+  "table": {
+    "user": "User",
+    "task": "Task",
+    "credits": "Credits",
+    "status": "Status",
+    "submittedAt": "Submitted at",
+    "actions": "Actions",
+    "empty": "No matching applications."
+  },
+  "actions": {
+    "refresh": "Refresh",
+    "view": "View",
+    "approve": "Approve and grant 10 credits",
+    "reject": "Reject",
+    "close": "Close"
+  },
+  "dialog": {
+    "title": "Review application",
+    "screenshot": "Screenshot evidence",
+    "screenshotAlt": "Task completion evidence",
+    "submissionText": "User statement",
+    "rejectionReason": "Rejection reason",
+    "rejectionPlaceholder": "Required when rejecting (up to 500 characters)",
+    "reviewer": "Reviewer",
+    "reviewedAt": "Reviewed at",
+    "reviewNote": "Review note"
+  },
+  "pagination": {
+    "total": "{count} applications",
+    "first": "First",
+    "previous": "Previous",
+    "next": "Next",
+    "last": "Last",
+    "perPage": "Applications per page",
+    "range": "Page {page} of {pageCount}, {count} applications"
+  },
+  "errors": {
+    "load": "Unable to load applications.",
+    "evidence": "Unable to load the screenshot evidence.",
+    "reasonRequired": "A rejection reason is required."
+  },
+  "success": {
+    "approved": "Application approved and 10 credits granted.",
+    "rejected": "Application rejected."
+  }
+}

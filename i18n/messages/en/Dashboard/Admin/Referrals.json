@@ -17,7 +17,8 @@
   },
   "actions": {
     "refresh": "Refresh",
-    "refreshOverview": "Refresh overview"
+    "refreshOverview": "Refresh overview",
+    "reviewTaskRewards": "Review task rewards"
   },
   "filters": {
     "status": "Status",

@@ -145,28 +145,22 @@ export default function HeaderShell({
       <nav className="container mx-auto flex h-20 items-center justify-between px-4">
         <div className="flex items-center gap-4 lg:gap-8">
           <I18nLink
-            href="/"
-            title={t("title")}
-            prefetch={false}
-            className="flex items-center gap-3"
+              href="/"
+              title={t("title")}
+              prefetch={false}
+              className="flex items-center gap-3 group"
           >
+            <div
+                className="relative w-8 h-8 sm:w-8 sm:h-8 shrink-0 rounded-[10px] border-[1px] border-primary shadow-[0_0_20px_-4px_rgba(150,28,251,0.55),0_4px_14px_-4px_rgba(150,28,251,0.4)] ring-1 ring-[#961cfb]/45 transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_28px_-2px_rgba(150,28,251,0.7)]">
+              <div className="overflow-hidden rounded-[9px]">
+                <img src="/logo.png" alt={t("title")} className="w-full h-full object-cover"/>
+              </div>
+            </div>
             <span
-              className={cn(
-                "flex h-10 w-10 items-center justify-center rounded-full border transition-colors duration-300",
-                overlay
-                  ? "border-white/20 bg-white/10 shadow-[0_18px_40px_-28px_rgba(15,23,42,0.9)]"
-                  : "border-border/75 bg-background/70 backdrop-blur-md",
-              )}
-            >
-              <Image src="/logo.png" alt="Logo" width={28} height={28} />
-            </span>
-            <span
-              className={cn(
-                "[font-family:var(--font-instrument-serif),serif] text-[clamp(1.38rem,1.18rem+0.62vw,1.56rem)] leading-[1.08] tracking-[-0.01em] whitespace-nowrap transition-colors duration-300",
-                overlay
-                  ? "text-white drop-shadow-[0_1px_18px_rgba(15,23,42,0.55)]"
-                  : "text-foreground",
-              )}
+                className={cn(
+                    " truncate text-base 2xl:text-lg font-bold whitespace-nowrap transition-colors duration-300 group-hover:text-[#961cfb]",
+                    overlay ? "text-white drop-shadow-[0_1px_18px_rgba(15,23,42,0.55)]" : "text-foreground",
+                )}
             >
               {t("title")}
             </span>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DEFAULT_LOCALE } from "@/i18n/routing";
 import { authClient } from "@/lib/auth/auth-client";
+import { ensureSignupBonusFingerprint } from "@/lib/auth/signup-bonus-fingerprint";
 import { normalizeEmail } from "@/lib/email";
 import { initializeTracking } from "@/lib/tracking/client";
 import { Turnstile } from "@marsidev/react-turnstile";
@@ -58,6 +59,7 @@ export default function LoginForm({
 
   useEffect(() => {
     setLastMethod(authClient.getLastUsedLoginMethod());
+    void ensureSignupBonusFingerprint();
   }, []);
 
   // Initialize user tracking on component mount
@@ -88,6 +90,7 @@ export default function LoginForm({
     setIsLoading(true);
 
     try {
+      await ensureSignupBonusFingerprint();
       const { error } = await authClient.signIn.magicLink({
         email: normalizeEmail(email),
         name: "my-name",
@@ -131,6 +134,7 @@ export default function LoginForm({
     setIsOtpLoading(true);
 
     try {
+      await ensureSignupBonusFingerprint();
       const { error } = await authClient.emailOtp.sendVerificationOtp({
         email: normalizeEmail(email),
         type: "sign-in",
@@ -179,6 +183,7 @@ export default function LoginForm({
     setIsOtpLoading(true);
 
     try {
+      await ensureSignupBonusFingerprint();
       const { error } = await authClient.signIn.emailOtp({
         email: normalizeEmail(email),
         otp: otpCode,
@@ -225,6 +230,7 @@ export default function LoginForm({
     setIsLoading(true);
 
     try {
+      await ensureSignupBonusFingerprint();
       const { error } = await authClient.signIn.email({
         email: normalizeEmail(email),
         password,
@@ -253,6 +259,7 @@ export default function LoginForm({
   };
 
   const signInSocial = async (provider: string) => {
+    await ensureSignupBonusFingerprint();
     const callback = new URL(
       next || locale === DEFAULT_LOCALE ? "" : `/${locale}`,
       window.location.origin

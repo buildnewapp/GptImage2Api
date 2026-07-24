@@ -10,6 +10,15 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
+type AdminPaginationLabels = {
+  first: string;
+  previous: string;
+  next: string;
+  last: string;
+  perPage: string;
+  range: string;
+};
+
 type AdminPaginationProps = {
   pageIndex: number;
   pageSize: number;
@@ -20,6 +29,7 @@ type AdminPaginationProps = {
   canGoPrevious?: boolean;
   disabled?: boolean;
   pageSizeOptions?: number[];
+  labels?: AdminPaginationLabels;
   className?: string;
   onPageIndexChange: (pageIndex: number) => void;
   onPageSizeChange: (pageSize: number) => void;
@@ -35,6 +45,7 @@ export function AdminPagination({
   canGoPrevious,
   disabled = false,
   pageSizeOptions = [10, 20, 100],
+  labels,
   className,
   onPageIndexChange,
   onPageSizeChange,
@@ -66,10 +77,11 @@ export function AdminPagination({
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted-foreground">
         <span>
           {totalLabel ??
+            labels?.range ??
             `第 ${currentPageIndex + 1} / ${pageCount} 页，共 ${totalCount} 条`}
         </span>
         <div className="flex items-center gap-2">
-          <span>每页</span>
+          <span>{labels?.perPage ?? "每页"}</span>
           <Select
             value={String(safePageSize)}
             onValueChange={(value) => onPageSizeChange(Number(value))}
@@ -86,7 +98,7 @@ export function AdminPagination({
               ))}
             </SelectContent>
           </Select>
-          <span>条</span>
+          {labels ? null : <span>条</span>}
         </div>
       </div>
 
@@ -97,7 +109,7 @@ export function AdminPagination({
           onClick={() => onPageIndexChange(0)}
           disabled={!hasPreviousPage || disabled}
         >
-          首页
+          {labels?.first ?? "首页"}
         </Button>
         <Button
           variant="outline"
@@ -105,7 +117,7 @@ export function AdminPagination({
           onClick={() => onPageIndexChange(Math.max(0, currentPageIndex - 1))}
           disabled={!hasPreviousPage || disabled}
         >
-          上一页
+          {labels?.previous ?? "上一页"}
         </Button>
         {pageNumbers.map((pageNumber) => (
           <Button
@@ -127,7 +139,7 @@ export function AdminPagination({
           }
           disabled={!hasNextPage || disabled}
         >
-          下一页
+          {labels?.next ?? "下一页"}
         </Button>
         <Button
           variant="outline"
@@ -135,7 +147,7 @@ export function AdminPagination({
           onClick={() => onPageIndexChange(pageCount - 1)}
           disabled={!hasNextPage || disabled}
         >
-          尾页
+          {labels?.last ?? "尾页"}
         </Button>
       </div>
     </div>

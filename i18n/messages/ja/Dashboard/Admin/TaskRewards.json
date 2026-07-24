@@ -1,0 +1,69 @@
+{
+  "title": "タスク報酬の審査",
+  "description": "1回限りの手動タスクについて、スクリーンショットを確認してクレジットを付与します。",
+  "loading": "タスク報酬の申請を読み込み中",
+  "filters": {
+    "email": "ユーザーのメールで検索",
+    "status": "審査ステータスで絞り込み",
+    "task": "タスクで絞り込み",
+    "allTasks": "すべての手動タスク"
+  },
+  "status": {
+    "pending": "審査待ち",
+    "approved": "承認済み",
+    "rejected": "却下済み"
+  },
+  "tasks": {
+    "github_star": "GitHub Star",
+    "huggingface_like": "Hugging Face Like",
+    "share_twitter": "X / Twitter で共有",
+    "share_facebook": "Facebook で共有",
+    "share_tiktok": "TikTok で共有",
+    "share_instagram": "Instagram で共有"
+  },
+  "table": {
+    "user": "ユーザー",
+    "task": "タスク",
+    "credits": "クレジット",
+    "status": "ステータス",
+    "submittedAt": "申請日時",
+    "actions": "操作",
+    "empty": "該当する申請はありません。"
+  },
+  "actions": {
+    "refresh": "更新",
+    "view": "確認",
+    "approve": "承認して10クレジット付与",
+    "reject": "却下",
+    "close": "閉じる"
+  },
+  "dialog": {
+    "title": "タスク申請を審査",
+    "screenshot": "スクリーンショット証拠",
+    "screenshotAlt": "タスク完了の証拠",
+    "submissionText": "ユーザーの説明",
+    "rejectionReason": "却下理由",
+    "rejectionPlaceholder": "却下時は必須（500文字以内）",
+    "reviewer": "審査担当者",
+    "reviewedAt": "審査日時",
+    "reviewNote": "審査記録"
+  },
+  "pagination": {
+    "total": "全 {count} 件",
+    "first": "最初",
+    "previous": "前へ",
+    "next": "次へ",
+    "last": "最後",
+    "perPage": "1ページの表示件数",
+    "range": "{page} / {pageCount} ページ（全 {count} 件）"
+  },
+  "errors": {
+    "load": "申請を読み込めませんでした。",
+    "evidence": "スクリーンショットを読み込めませんでした。",
+    "reasonRequired": "却下理由を入力してください。"
+  },
+  "success": {
+    "approved": "承認し、10クレジットを付与しました。",
+    "rejected": "申請を却下しました。"
+  }
+}

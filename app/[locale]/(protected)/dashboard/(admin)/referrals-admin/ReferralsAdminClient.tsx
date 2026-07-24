@@ -16,7 +16,13 @@ import {
 import { AdminPagination } from "@/components/shared/AdminPagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -43,8 +49,17 @@ import {
   REFERRAL_ADMIN_WITHDRAW_STATUSES,
 } from "@/lib/referrals/admin-lists";
 import dayjs from "dayjs";
-import { DollarSign, Gift, Loader2, RefreshCw, Users, Wallet } from "lucide-react";
+import {
+  ClipboardCheck,
+  DollarSign,
+  Gift,
+  Loader2,
+  RefreshCw,
+  Users,
+  Wallet,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 import { startTransition, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
@@ -78,13 +93,19 @@ function SummaryCard({
           <p className="text-sm text-muted-foreground">{label}</p>
           <p className="text-2xl font-semibold">{value}</p>
         </div>
-        <div className="rounded-full bg-muted p-3 text-muted-foreground">{icon}</div>
+        <div className="rounded-full bg-muted p-3 text-muted-foreground">
+          {icon}
+        </div>
       </CardContent>
     </Card>
   );
 }
 
-function ReferralOverviewTab({ summary }: { summary: ReferralAdminSummaryData }) {
+function ReferralOverviewTab({
+  summary,
+}: {
+  summary: ReferralAdminSummaryData;
+}) {
   const t = useTranslations("AdminReferrals");
 
   return (
@@ -271,7 +292,10 @@ function InvitesTab({ active }: { active: boolean }) {
             <TableBody>
               {rows.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={6}
+                    className="h-24 text-center text-muted-foreground"
+                  >
                     {isLoading ? t("table.loading") : t("invites.empty")}
                   </TableCell>
                 </TableRow>
@@ -280,9 +304,13 @@ function InvitesTab({ active }: { active: boolean }) {
                   <TableRow key={row.id}>
                     <TableCell>{row.inviterEmail}</TableCell>
                     <TableCell>{row.inviteeEmail}</TableCell>
-                    <TableCell className="font-mono text-xs">{row.inviteCode ?? "-"}</TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {row.inviteCode ?? "-"}
+                    </TableCell>
                     <TableCell>
-                      <Badge variant="outline">{formatEnumLabel(row.status)}</Badge>
+                      <Badge variant="outline">
+                        {formatEnumLabel(row.status)}
+                      </Badge>
                     </TableCell>
                     <TableCell>{formatDateTime(row.registeredAt)}</TableCell>
                     <TableCell>{formatDateTime(row.qualifiedAt)}</TableCell>
@@ -362,7 +390,16 @@ function RewardsTab({ active }: { active: boolean }) {
     return () => {
       cancelled = true;
     };
-  }, [active, debouncedQuery, pageIndex, pageSize, reloadToken, rewardType, status, t]);
+  }, [
+    active,
+    debouncedQuery,
+    pageIndex,
+    pageSize,
+    reloadToken,
+    rewardType,
+    status,
+    t,
+  ]);
 
   return (
     <Card>
@@ -381,13 +418,17 @@ function RewardsTab({ active }: { active: boolean }) {
             />
             <Select
               value={rewardType || "all"}
-              onValueChange={(value) => setRewardType(value === "all" ? "" : value)}
+              onValueChange={(value) =>
+                setRewardType(value === "all" ? "" : value)
+              }
             >
               <SelectTrigger className="w-full xl:w-[220px]">
                 <SelectValue placeholder={t("filters.rewardType")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{t("filters.allRewardTypes")}</SelectItem>
+                <SelectItem value="all">
+                  {t("filters.allRewardTypes")}
+                </SelectItem>
                 {REFERRAL_ADMIN_REWARD_TYPES.map((rewardTypeOption) => (
                   <SelectItem key={rewardTypeOption} value={rewardTypeOption}>
                     {formatEnumLabel(rewardTypeOption)}
@@ -444,7 +485,10 @@ function RewardsTab({ active }: { active: boolean }) {
             <TableBody>
               {rows.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={7}
+                    className="h-24 text-center text-muted-foreground"
+                  >
                     {isLoading ? t("table.loading") : t("rewards.empty")}
                   </TableCell>
                 </TableRow>
@@ -462,7 +506,9 @@ function RewardsTab({ active }: { active: boolean }) {
                           : "-"}
                     </TableCell>
                     <TableCell>
-                      <Badge variant="secondary">{formatEnumLabel(row.status)}</Badge>
+                      <Badge variant="secondary">
+                        {formatEnumLabel(row.status)}
+                      </Badge>
                     </TableCell>
                     <TableCell>{formatDateTime(row.createdAt)}</TableCell>
                     <TableCell>{formatDateTime(row.availableAt)}</TableCell>
@@ -501,7 +547,9 @@ function WithdrawalsTab({
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [processingRequestId, setProcessingRequestId] = useState<string | null>(null);
+  const [processingRequestId, setProcessingRequestId] = useState<string | null>(
+    null,
+  );
   const [reloadToken, setReloadToken] = useState(0);
   const [debouncedQuery] = useDebounce(query, 400);
 
@@ -551,7 +599,7 @@ function WithdrawalsTab({
 
   const handleProcessWithdrawal = async (
     requestId: string,
-    action: "paid" | "rejected"
+    action: "paid" | "rejected",
   ) => {
     setProcessingRequestId(requestId);
     const result =
@@ -566,7 +614,9 @@ function WithdrawalsTab({
     }
 
     toast.success(
-      action === "paid" ? t("toasts.markPaidSuccess") : t("toasts.rejectSuccess")
+      action === "paid"
+        ? t("toasts.markPaidSuccess")
+        : t("toasts.rejectSuccess"),
     );
     await onOverviewChanged();
     startTransition(() => {
@@ -632,13 +682,18 @@ function WithdrawalsTab({
                 <TableHead>{t("withdrawals.columns.requestedAt")}</TableHead>
                 <TableHead>{t("withdrawals.columns.processedAt")}</TableHead>
                 <TableHead>{t("withdrawals.columns.notes")}</TableHead>
-                <TableHead className="text-right">{t("withdrawals.columns.actions")}</TableHead>
+                <TableHead className="text-right">
+                  {t("withdrawals.columns.actions")}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {rows.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={7}
+                    className="h-24 text-center text-muted-foreground"
+                  >
                     {isLoading ? t("table.loading") : t("withdrawals.empty")}
                   </TableCell>
                 </TableRow>
@@ -664,7 +719,9 @@ function WithdrawalsTab({
                           <Button
                             size="sm"
                             disabled={!isPending || isProcessing}
-                            onClick={() => handleProcessWithdrawal(row.id, "paid")}
+                            onClick={() =>
+                              handleProcessWithdrawal(row.id, "paid")
+                            }
                           >
                             {t("withdrawals.actions.markPaid")}
                           </Button>
@@ -672,7 +729,9 @@ function WithdrawalsTab({
                             size="sm"
                             variant="destructive"
                             disabled={!isPending || isProcessing}
-                            onClick={() => handleProcessWithdrawal(row.id, "rejected")}
+                            onClick={() =>
+                              handleProcessWithdrawal(row.id, "rejected")
+                            }
                           >
                             {t("withdrawals.actions.reject")}
                           </Button>
@@ -729,10 +788,22 @@ export default function ReferralsAdminClient({
           <h1 className="text-2xl font-semibold">{t("title")}</h1>
           <p className="text-muted-foreground">{t("description")}</p>
         </div>
-        <Button variant="outline" disabled={isRefreshingOverview} onClick={refreshOverview}>
-          <RefreshCw className="mr-2 h-4 w-4" />
-          {t("actions.refreshOverview")}
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button asChild variant="outline">
+            <Link href="/dashboard/task-rewards-admin">
+              <ClipboardCheck className="mr-2 h-4 w-4" />
+              {t("actions.reviewTaskRewards")}
+            </Link>
+          </Button>
+          <Button
+            variant="outline"
+            disabled={isRefreshingOverview}
+            onClick={refreshOverview}
+          >
+            <RefreshCw className="mr-2 h-4 w-4" />
+            {t("actions.refreshOverview")}
+          </Button>
+        </div>
       </div>
 
       <Tabs
@@ -747,13 +818,25 @@ export default function ReferralsAdminClient({
           <TabsTrigger value="withdrawals">{t("tabs.withdrawals")}</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" forceMount hidden={activeTab !== "overview"}>
+        <TabsContent
+          value="overview"
+          forceMount
+          hidden={activeTab !== "overview"}
+        >
           <ReferralOverviewTab summary={overview} />
         </TabsContent>
-        <TabsContent value="invites" forceMount hidden={activeTab !== "invites"}>
+        <TabsContent
+          value="invites"
+          forceMount
+          hidden={activeTab !== "invites"}
+        >
           <InvitesTab active={activeTab === "invites"} />
         </TabsContent>
-        <TabsContent value="rewards" forceMount hidden={activeTab !== "rewards"}>
+        <TabsContent
+          value="rewards"
+          forceMount
+          hidden={activeTab !== "rewards"}
+        >
           <RewardsTab active={activeTab === "rewards"} />
         </TabsContent>
         <TabsContent

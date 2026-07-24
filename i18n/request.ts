@@ -17,29 +17,46 @@ export default getRequestConfig(async ({ requestLocale }) => {
       ...common,
 
       Landing: (await import(`./messages/${locale}/Landing.json`)).default,
-      Seedance15: (await import(`./messages/${locale}/Seedance15.json`)).default,
+      Seedance15: (await import(`./messages/${locale}/Seedance15.json`))
+        .default,
       Pricing: (await import(`./messages/${locale}/Pricing.json`)).default,
       NotFound: (await import(`./messages/${locale}/NotFound.json`)).default,
       Glossary: (await import(`./messages/${locale}/Glossary.json`)).default,
       Prompts: (await import(`./messages/${locale}/Prompts.json`)).default,
       Showcase: (await import(`./messages/${locale}/Showcase.json`)).default,
       Partners: (await import(`./messages/${locale}/Partners.json`)).default,
-      SeoContent: (await import(`./messages/${locale}/SeoContent.json`)).default,
-      HomeTemplate1: (await import(`./messages/${locale}/HomeTemplate1.json`)).default,
-      VideoTemplate: (await import(`./messages/${locale}/VideoTemplate.json`)).default,
+      SeoContent: (await import(`./messages/${locale}/SeoContent.json`))
+        .default,
+      HomeTemplate1: (await import(`./messages/${locale}/HomeTemplate1.json`))
+        .default,
+      VideoTemplate: (await import(`./messages/${locale}/VideoTemplate.json`))
+        .default,
+      // prettier-ignore
       ImageTemplate: (await import(`./messages/${locale}/ImageTemplate.json`)).default,
-      SvgTemplate: (await import(`./messages/${locale}/SvgTemplate.json`)).default,
+      SvgTemplate: (await import(`./messages/${locale}/SvgTemplate.json`))
+        .default,
       ToolHome: (await import(`./messages/${locale}/ToolHome.json`)).default,
       ApiDoc: (await import(`./messages/${locale}/ApiDoc.json`)).default,
       ModelApi: {
-        seedance2: (await import(`./messages/${locale}/ModelApi/seedance2.json`)).default,
-        seedance15: (await import(`./messages/${locale}/ModelApi/seedance15.json`)).default,
-        gptImage2: (await import(`./messages/${locale}/ModelApi/gptImage2.json`)).default,
-        grokVideo: (await import(`./messages/${locale}/ModelApi/grokVideo.json`)).default,
+        seedance2: (
+          await import(`./messages/${locale}/ModelApi/seedance2.json`)
+        ).default,
+        seedance15: (
+          await import(`./messages/${locale}/ModelApi/seedance15.json`)
+        ).default,
+        gptImage2: (
+          await import(`./messages/${locale}/ModelApi/gptImage2.json`)
+        ).default,
+        grokVideo: (
+          await import(`./messages/${locale}/ModelApi/grokVideo.json`)
+        ).default,
         wan: (await import(`./messages/${locale}/ModelApi/wan.json`)).default,
-        veo31: (await import(`./messages/${locale}/ModelApi/veo31.json`)).default,
-        sora2: (await import(`./messages/${locale}/ModelApi/sora2.json`)).default,
-        kling: (await import(`./messages/${locale}/ModelApi/kling.json`)).default,
+        veo31: (await import(`./messages/${locale}/ModelApi/veo31.json`))
+          .default,
+        sora2: (await import(`./messages/${locale}/ModelApi/sora2.json`))
+          .default,
+        kling: (await import(`./messages/${locale}/ModelApi/kling.json`))
+          .default,
       },
 
       // Dashboard - User
@@ -81,6 +98,9 @@ export default getRequestConfig(async ({ requestLocale }) => {
         .default,
       AdminReferrals: (
         await import(`./messages/${locale}/Dashboard/Admin/Referrals.json`)
+      ).default,
+      AdminTaskRewards: (
+        await import(`./messages/${locale}/Dashboard/Admin/TaskRewards.json`)
       ).default,
       R2Files: (
         await import(`./messages/${locale}/Dashboard/Admin/R2Files.json`)

@@ -611,28 +611,17 @@
       "standard": {
         "name": "Standard Pack",
         "desc": "Perfect for trying out.",
-        "features": [
-          "1,000 Credits",
-          "Never expire"
-        ]
+        "features": ["1,000 Credits", "Never expire"]
       },
       "pro": {
         "name": "Pro Pack",
         "desc": "Most popular choice.",
-        "features": [
-          "3,750 Credits",
-          "Never expire",
-          "Priority Generation"
-        ]
+        "features": ["3,750 Credits", "Never expire", "Priority Generation"]
       },
       "max": {
         "name": "Max Pack",
         "desc": "For heavy users.",
-        "features": [
-          "12,000 Credits",
-          "Never expire",
-          "Priority Generation"
-        ]
+        "features": ["12,000 Credits", "Never expire", "Priority Generation"]
       }
     },
     "plans": {
@@ -657,11 +646,7 @@
       "max": {
         "name": "Max",
         "desc": "For studios and professionals.",
-        "features": [
-          "{credits} Credits / month",
-          "Instant Queue",
-          "API Access"
-        ]
+        "features": ["{credits} Credits / month", "Instant Queue", "API Access"]
       }
     }
   },

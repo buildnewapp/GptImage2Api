@@ -5,7 +5,7 @@ import {
   type TaskRewardsConfig,
 } from "@/config/task-rewards";
 import type {
-  ClaimableTaskKey,
+  AutomaticClaimableTaskKey,
   TaskRewardProgress,
 } from "@/lib/task-rewards/types";
 
@@ -13,7 +13,7 @@ type CompletionResult =
   | { completed: true; progress?: undefined }
   | {
       completed: false;
-      reason: "requirements" | "cooldown";
+      reason: "requirements";
       progress: TaskRewardProgress;
     };
 
@@ -21,7 +21,6 @@ export interface TaskDefinitionContext {
   userId: string;
   calendarDate: string;
   now: Date;
-  externalTaskStartedAt?: string;
   countDailyCheckins(): Promise<number>;
   getClaimedDailyCheckinDates(calendarDates: string[]): Promise<Set<string>>;
   hasSuccessfulPublicGeneration(): Promise<boolean>;
@@ -40,7 +39,10 @@ export interface TaskDefinition {
   ): Promise<CompletionResult>;
 }
 
-export const taskDefinitions: Record<ClaimableTaskKey, TaskDefinition> = {
+export const taskDefinitions: Record<
+  AutomaticClaimableTaskKey,
+  TaskDefinition
+> = {
   daily_checkin: {
     isEnabled(config) {
       return config.enabled && config.dailyCheckin.enabled;
@@ -155,80 +157,11 @@ export const taskDefinitions: Record<ClaimableTaskKey, TaskDefinition> = {
       };
     },
   },
-  github_star: createTimedExternalTaskDefinition({
-    isEnabled: (config) =>
-      config.enabled &&
-      config.githubStar.enabled &&
-      Boolean(config.githubStar.targetUrl),
-    getCredits: (config) => config.githubStar.credits,
-    getCooldownSeconds: (config) => config.githubStar.cooldownSeconds,
-    taskKey: "github_star",
-  }),
-  huggingface_like: createTimedExternalTaskDefinition({
-    isEnabled: (config) =>
-      config.enabled &&
-      config.huggingFaceLike.enabled &&
-      Boolean(config.huggingFaceLike.targetUrl),
-    getCredits: (config) => config.huggingFaceLike.credits,
-    getCooldownSeconds: (config) => config.huggingFaceLike.cooldownSeconds,
-    taskKey: "huggingface_like",
-  }),
 };
 
-function createTimedExternalTaskDefinition({
-  isEnabled,
-  getCredits,
-  getCooldownSeconds,
-  taskKey,
-}: {
-  isEnabled(config: TaskRewardsConfig): boolean;
-  getCredits(config: TaskRewardsConfig): number;
-  getCooldownSeconds(config: TaskRewardsConfig): number;
-  taskKey: Extract<ClaimableTaskKey, "github_star" | "huggingface_like">;
-}): TaskDefinition {
-  return {
-    isEnabled,
-    creditAmount: getCredits,
-    claimKey() {
-      return buildOnceClaimKey(taskKey);
-    },
-    async evaluate(context, config) {
-      const startedAt = context.externalTaskStartedAt
-        ? new Date(context.externalTaskStartedAt)
-        : null;
-      const cooldownSeconds = getCooldownSeconds(config);
-      if (!startedAt || Number.isNaN(startedAt.getTime())) {
-        return {
-          completed: false,
-          reason: "requirements",
-          progress: {
-            current: 0,
-            required: cooldownSeconds,
-          },
-        };
-      }
-
-      const elapsedSeconds = Math.max(
-        0,
-        Math.floor((context.now.getTime() - startedAt.getTime()) / 1000),
-      );
-      if (elapsedSeconds >= cooldownSeconds) {
-        return { completed: true };
-      }
-
-      return {
-        completed: false,
-        reason: "cooldown",
-        progress: {
-          current: elapsedSeconds,
-          required: cooldownSeconds,
-        },
-      };
-    },
-  };
-}
-
-export function getTaskDefinition(taskKey: ClaimableTaskKey): TaskDefinition {
+export function getTaskDefinition(
+  taskKey: AutomaticClaimableTaskKey,
+): TaskDefinition {
   return taskDefinitions[taskKey];
 }
 

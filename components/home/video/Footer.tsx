@@ -75,17 +75,17 @@ export default async function VideoFooter({
         >
           <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-[1.45fr_repeat(3,minmax(0,1fr))]">
             <div className="space-y-4">
-              <div  className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-full border border-border/75 bg-background/72">
+              <div  className="flex items-center gap-3 group transition-transform duration-300">
+                <span className="flex h-11 w-11 items-center justify-center rounded-[10px] border-[#961cfb] overflow-hidden border bg-background/72 group-hover:border-2 group-hover:ring-[#961cfb]">
                   <Image
                     src="/logo.png"
                     alt={t("title")}
                     width={20}
                     height={20}
-                    className="h-5 w-5"
+                    className="w-full h-full object-cover"
                   />
                 </span>
-                <span className="[font-family:var(--font-instrument-serif),serif] text-[clamp(1.38rem,1.18rem+0.62vw,1.56rem)] leading-[1.08] tracking-[-0.01em] text-foreground">
+                <span className=" text-base 2xl:text-lg font-bold whitespace-nowrap transition-colors duration-300 text-foreground group-hover:text-[#961cfb]">
                   {t("title")}
                 </span>
               </div>

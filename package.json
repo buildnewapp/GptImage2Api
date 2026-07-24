@@ -46,6 +46,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@fal-ai/client": "^1.9.1",
+    "@fingerprintjs/fingerprintjs": "^5.2.0",
     "@fontsource/science-gothic": "^5.2.1",
     "@hookform/resolvers": "^5.0.1",
     "@lobehub/icons": "^5.4.0",

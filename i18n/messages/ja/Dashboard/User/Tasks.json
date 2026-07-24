@@ -24,8 +24,10 @@
     "claimable": "受け取り可能",
     "claimed": "受け取り済み",
     "incomplete": "未達成",
-    "done": "完了",
-    "readyToCheck": "確認可能"
+    "available": "提出可能",
+    "pending": "審査中",
+    "rejected": "再提出が必要",
+    "done": "完了"
   },
   "actions": {
     "claim": "クレジットを受け取る",
@@ -35,8 +37,9 @@
     "goPurchase": "購入する",
     "inviteNow": "招待する",
     "viewReferral": "紹介を見る",
-    "start": "開始",
-    "check": "Check"
+    "submit": "証明を提出",
+    "resubmit": "再提出",
+    "pending": "審査中"
   },
   "tasks": {
     "daily_checkin": {
@@ -65,12 +68,59 @@
     },
     "github_star": {
       "title": "GitHub プロジェクトに Star",
-      "description": "GitHub プロジェクトを開いて Star を付け、戻って Check を押すと報酬を受け取れます。"
+      "description": "GitHub でプロジェクトに Star を付け、スクリーンショットと説明を提出して審査を受けます。"
     },
     "huggingface_like": {
       "title": "Hugging Face Space に Like",
-      "description": "Hugging Face Space を開いて Like を付け、戻って Check を押すと報酬を受け取れます。"
+      "description": "Hugging Face で Space に Like を付け、スクリーンショットと説明を提出して審査を受けます。"
+    },
+    "share_twitter": {
+      "title": "X でウェブサイトをシェア",
+      "description": "X でウェブサイトをシェアし、スクリーンショットと説明を提出して審査を受けます。"
+    },
+    "share_facebook": {
+      "title": "Facebook でウェブサイトをシェア",
+      "description": "Facebook でウェブサイトをシェアし、スクリーンショットと説明を提出して審査を受けます。"
+    },
+    "share_tiktok": {
+      "title": "TikTok でウェブサイトをシェア",
+      "description": "TikTok でウェブサイトをシェアし、スクリーンショットと説明を提出して審査を受けます。"
+    },
+    "share_instagram": {
+      "title": "Instagram でウェブサイトをシェア",
+      "description": "Instagram でウェブサイトをシェアし、スクリーンショットと説明を提出して審査を受けます。"
     }
+  },
+  "reviewReason": "審査コメント：",
+  "manualSubmission": {
+    "description": "リンク先でタスクを完了し、証明を提出して審査を受けてください。",
+    "openTarget": "タスクページを開く",
+    "screenshotLabel": "スクリーンショット",
+    "screenshotHint": "JPEG、PNG、WebP のいずれか 1 枚（5 MB 以下）をアップロードしてください。",
+    "screenshotAlt": "{title} の証明スクリーンショットのプレビュー",
+    "textLabel": "提出内容の説明",
+    "textPlaceholder": "完了した内容と、スクリーンショットで確認できる場所を簡潔に記入してください。",
+    "characterCount": "{current} / {maximum}",
+    "cancel": "キャンセル",
+    "submit": "審査に提出",
+    "submitting": "提出中...",
+    "validation": {
+      "screenshotRequired": "提出前にスクリーンショットを 1 枚選択してください。",
+      "screenshotType": "JPEG、PNG、WebP の画像を使用してください。",
+      "screenshotSize": "スクリーンショットは 5 MB 以下にしてください。",
+      "textRequired": "提出内容の説明を入力してください。",
+      "textLength": "説明は 1〜500 文字で入力してください。"
+    },
+    "errors": {
+      "upload": "スクリーンショットをアップロードできませんでした。入力内容は保持されています。もう一度お試しください。",
+      "submit": "申請を提出できませんでした。入力内容は保持されています。もう一度お試しください。",
+      "taskDisabled": "このタスクは現在、新しい申請を受け付けていません。",
+      "alreadyClaimed": "このタスクの報酬はすでに受け取り済みです。",
+      "pending": "このタスクには審査中の申請があります。",
+      "invalidEvidence": "アップロードしたスクリーンショットを確認できませんでした。もう一度選択してください。",
+      "validation": "スクリーンショットと説明を確認して、もう一度提出してください。"
+    },
+    "success": "証明を提出しました。現在審査中です。"
   },
   "faq": {
     "eyebrow": "よくある質問",
@@ -98,8 +148,6 @@
     "claimed": "{credits} クレジットを受け取りました。",
     "alreadyClaimed": "この報酬はすでに受け取り済みです。",
     "notCompleted": "タスク条件がまだ満たされていません。",
-    "syncing": "進捗を同期中です。少し待ってからもう一度お試しください。",
-    "externalStarted": "ページを開きました。完了したら戻って Check を押してください。",
     "claimFailed": "タスク報酬の受け取りに失敗しました。"
   }
 }

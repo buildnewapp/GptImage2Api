@@ -24,8 +24,10 @@
     "claimable": "Claimable",
     "claimed": "Claimed",
     "incomplete": "Incomplete",
-    "done": "Done",
-    "readyToCheck": "Ready to Check"
+    "available": "Available",
+    "pending": "Under Review",
+    "rejected": "Changes Requested",
+    "done": "Done"
   },
   "actions": {
     "claim": "Claim Credits",
@@ -35,8 +37,9 @@
     "goPurchase": "Buy Now",
     "inviteNow": "Invite Now",
     "viewReferral": "View Referral",
-    "start": "Start",
-    "check": "Check"
+    "submit": "Submit Proof",
+    "resubmit": "Submit Again",
+    "pending": "Under Review"
   },
   "tasks": {
     "daily_checkin": {
@@ -65,12 +68,59 @@
     },
     "github_star": {
       "title": "Star the GitHub Project",
-      "description": "Open the GitHub project, leave a star, then come back and click Check to claim your reward."
+      "description": "Star the project on GitHub, then submit a screenshot and note for review."
     },
     "huggingface_like": {
       "title": "Like the Hugging Face Space",
-      "description": "Open the Hugging Face Space, leave a like, then come back and click Check to claim your reward."
+      "description": "Like the Space on Hugging Face, then submit a screenshot and note for review."
+    },
+    "share_twitter": {
+      "title": "Share the Website on X",
+      "description": "Share the website on X, then submit a screenshot and note for review."
+    },
+    "share_facebook": {
+      "title": "Share the Website on Facebook",
+      "description": "Share the website on Facebook, then submit a screenshot and note for review."
+    },
+    "share_tiktok": {
+      "title": "Share the Website on TikTok",
+      "description": "Share the website on TikTok, then submit a screenshot and note for review."
+    },
+    "share_instagram": {
+      "title": "Share the Website on Instagram",
+      "description": "Share the website on Instagram, then submit a screenshot and note for review."
     }
+  },
+  "reviewReason": "Review note:",
+  "manualSubmission": {
+    "description": "Complete the task at the linked page, then send your proof for review.",
+    "openTarget": "Open Task Page",
+    "screenshotLabel": "Screenshot",
+    "screenshotHint": "Upload exactly one JPEG, PNG, or WebP image up to 5 MB.",
+    "screenshotAlt": "Preview of the proof screenshot for {title}",
+    "textLabel": "Submission note",
+    "textPlaceholder": "Briefly describe what you completed and where it appears in the screenshot.",
+    "characterCount": "{current} / {maximum}",
+    "cancel": "Cancel",
+    "submit": "Submit for Review",
+    "submitting": "Submitting...",
+    "validation": {
+      "screenshotRequired": "Choose one screenshot before submitting.",
+      "screenshotType": "Use a JPEG, PNG, or WebP image.",
+      "screenshotSize": "The screenshot must be no larger than 5 MB.",
+      "textRequired": "Enter a submission note.",
+      "textLength": "The submission note must be between 1 and 500 characters."
+    },
+    "errors": {
+      "upload": "The screenshot could not be uploaded. Your form has been kept; please try again.",
+      "submit": "The application could not be submitted. Your form has been kept; please try again.",
+      "taskDisabled": "This task is no longer accepting submissions.",
+      "alreadyClaimed": "You have already received this task reward.",
+      "pending": "This task already has an application under review.",
+      "invalidEvidence": "The uploaded screenshot could not be verified. Please choose it again.",
+      "validation": "Check the screenshot and note, then submit again."
+    },
+    "success": "Your proof was submitted and is now under review."
   },
   "faq": {
     "eyebrow": "Common Questions",
@@ -98,8 +148,6 @@
     "claimed": "Claimed {credits} credits.",
     "alreadyClaimed": "This reward has already been claimed.",
     "notCompleted": "Task requirements are not completed yet.",
-    "syncing": "Progress is still syncing. Please try again in a moment.",
-    "externalStarted": "The page has been opened. Come back and click Check when you are done.",
     "claimFailed": "Failed to claim task reward."
   }
 }

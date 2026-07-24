@@ -1,30 +1,31 @@
 import {
+  MANUAL_REVIEW_TASK_KEYS,
   buildDailyClaimKey,
   buildOnceClaimKey,
+  manualReviewTasks,
   taskRewardsConfig,
+  type ManualReviewTaskKey,
+  type TaskRewardKey,
 } from "@/config/task-rewards";
+import type { RewardApplicationRecord } from "@/lib/task-rewards/application-store";
 
 export type TaskRewardStatus =
   | "claimable"
   | "claimed"
   | "completed"
-  | "incomplete";
+  | "incomplete"
+  | "available"
+  | "pending"
+  | "rejected";
 
 export interface TaskRewardItemData {
-  taskKey:
-    | "daily_checkin"
-    | "checkin_3_days"
-    | "first_public_generation"
-    | "first_purchase"
-    | "invite_signup"
-    | "invite_first_purchase"
-    | "github_star"
-    | "huggingface_like";
+  taskKey: TaskRewardKey;
   creditAmount: number | null;
   status: TaskRewardStatus;
   href?: string;
   targetUrl?: string;
-  cooldownSeconds?: number;
+  canSubmit?: boolean;
+  reviewNote?: string;
   progress?: {
     current: number;
     required: number;
@@ -48,6 +49,38 @@ function getLastThreeCalendarDates(now: Date): string[] {
   });
 }
 
+export function buildLatestManualApplicationLookup(
+  applications: RewardApplicationRecord[],
+): Map<ManualReviewTaskKey, RewardApplicationRecord> {
+  const lookup = new Map<ManualReviewTaskKey, RewardApplicationRecord>();
+
+  for (const application of applications) {
+    if (
+      application.source !== "user" ||
+      !MANUAL_REVIEW_TASK_KEYS.includes(
+        application.taskKey as ManualReviewTaskKey,
+      )
+    ) {
+      continue;
+    }
+
+    const taskKey = application.taskKey as ManualReviewTaskKey;
+    const current = lookup.get(taskKey);
+    const isLater =
+      !current ||
+      application.submittedAt > current.submittedAt ||
+      (application.submittedAt.getTime() === current.submittedAt.getTime() &&
+        (application.createdAt > current.createdAt ||
+          (application.createdAt.getTime() === current.createdAt.getTime() &&
+            application.id > current.id)));
+    if (isLater) {
+      lookup.set(taskKey, application);
+    }
+  }
+
+  return lookup;
+}
+
 export function buildTaskRewardItems({
   now,
   claimLookup,
@@ -56,6 +89,7 @@ export function buildTaskRewardItems({
   hasPurchase,
   inviteCount,
   hasInviteFirstPurchase,
+  latestManualApplications = new Map(),
 }: {
   now: Date;
   claimLookup: Set<string>;
@@ -64,6 +98,7 @@ export function buildTaskRewardItems({
   hasPurchase: boolean;
   inviteCount: number;
   hasInviteFirstPurchase: boolean;
+  latestManualApplications?: Map<ManualReviewTaskKey, RewardApplicationRecord>;
 }): TaskRewardItemData[] {
   const tasks: TaskRewardItemData[] = [];
   const dailyClaimKey = getTodayClaimKey(now);
@@ -72,8 +107,6 @@ export function buildTaskRewardItems({
     "first_public_generation",
   );
   const firstPurchaseClaimKey = buildOnceClaimKey("first_purchase");
-  const githubStarClaimKey = buildOnceClaimKey("github_star");
-  const huggingFaceLikeClaimKey = buildOnceClaimKey("huggingface_like");
   const streakDates = getLastThreeCalendarDates(now);
   const streakProgress = streakDates.filter((date) =>
     claimedStreakDates.has(date),
@@ -109,7 +142,11 @@ export function buildTaskRewardItems({
     tasks.push({
       taskKey: "first_public_generation",
       creditAmount: taskRewardsConfig.firstPublicGeneration.credits,
-      status: claimed ? "claimed" : hasPublicGeneration ? "claimable" : "incomplete",
+      status: claimed
+        ? "claimed"
+        : hasPublicGeneration
+          ? "claimable"
+          : "incomplete",
       href: "/dashboard/videos",
       progress: {
         current: claimed || hasPublicGeneration ? 1 : 0,
@@ -158,34 +195,31 @@ export function buildTaskRewardItems({
     });
   }
 
-  if (taskRewardsConfig.githubStar.enabled && taskRewardsConfig.githubStar.targetUrl) {
-    tasks.push({
-      taskKey: "github_star",
-      creditAmount: taskRewardsConfig.githubStar.credits,
-      status: claimLookup.has(githubStarClaimKey) ? "claimed" : "incomplete",
-      targetUrl: taskRewardsConfig.githubStar.targetUrl,
-      cooldownSeconds: taskRewardsConfig.githubStar.cooldownSeconds,
-      progress: {
-        current: 0,
-        required: taskRewardsConfig.githubStar.cooldownSeconds,
-      },
-    });
-  }
+  for (const taskKey of MANUAL_REVIEW_TASK_KEYS) {
+    const definition = manualReviewTasks[taskKey];
+    if (!definition.enabled) continue;
 
-  if (
-    taskRewardsConfig.huggingFaceLike.enabled &&
-    taskRewardsConfig.huggingFaceLike.targetUrl
-  ) {
+    const claimed = claimLookup.has(buildOnceClaimKey(taskKey));
+    const latestApplication = latestManualApplications.get(taskKey);
+    const applicationStatus = latestApplication?.status;
+    const status: TaskRewardStatus =
+      claimed || applicationStatus === "approved"
+        ? "claimed"
+        : applicationStatus === "pending"
+          ? "pending"
+          : applicationStatus === "rejected"
+            ? "rejected"
+            : "available";
+
     tasks.push({
-      taskKey: "huggingface_like",
-      creditAmount: taskRewardsConfig.huggingFaceLike.credits,
-      status: claimLookup.has(huggingFaceLikeClaimKey) ? "claimed" : "incomplete",
-      targetUrl: taskRewardsConfig.huggingFaceLike.targetUrl,
-      cooldownSeconds: taskRewardsConfig.huggingFaceLike.cooldownSeconds,
-      progress: {
-        current: 0,
-        required: taskRewardsConfig.huggingFaceLike.cooldownSeconds,
-      },
+      taskKey,
+      creditAmount: definition.credits,
+      status,
+      targetUrl: definition.targetUrl,
+      canSubmit: status === "available" || status === "rejected",
+      ...(status === "rejected" && latestApplication?.reviewNote
+        ? { reviewNote: latestApplication.reviewNote }
+        : {}),
     });
   }
 
