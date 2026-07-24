@@ -1,6 +1,7 @@
 "use client";
 
 import { authClient } from "@/lib/auth/auth-client";
+import { ensureSignupBonusFingerprint } from "@/lib/auth/signup-bonus-fingerprint";
 import { useCallback, useEffect } from "react";
 
 export function GoogleOneTap() {
@@ -8,6 +9,7 @@ export function GoogleOneTap() {
 
   const initializeOneTap = useCallback(async () => {
     try {
+      await ensureSignupBonusFingerprint();
       await authClient.oneTap({
         fetchOptions: {
           onSuccess: () => {

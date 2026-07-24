@@ -5,6 +5,10 @@ import MagicLinkEmail from "@/emails/magic-link-email";
 import OTPCodeEmail from "@/emails/otp-code-email";
 import { UserWelcomeEmail } from "@/emails/user-welcome";
 import { assertAllowedSignupEmail } from "@/lib/auth/email-domain";
+import {
+  parseSignupBonusFingerprint,
+  resolveSignupBonusClientIp,
+} from "@/lib/auth/signup-bonus-identifiers";
 import { getDb } from "@/lib/db";
 import { account, session, user, verification } from "@/lib/db/schema";
 import { resolveSocialProviders } from "@/lib/auth/social-providers";
@@ -29,16 +33,13 @@ import {
   oneTap,
 } from "better-auth/plugins";
 import { cookies, headers } from "next/headers";
-import { createHmac, randomUUID } from "node:crypto";
+import { createHmac } from "node:crypto";
 import { cache } from "react";
 
-const SIGNUP_BONUS_DEVICE_COOKIE_NAME = "signup_bonus_device_id";
-const SIGNUP_BONUS_DEVICE_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
-const UUID_PATTERN =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const SIGNUP_BONUS_FINGERPRINT_COOKIE_NAME = "signup_bonus_fingerprint";
 
 function hashSignupBonusIdentifier(
-  kind: "ip" | "device",
+  kind: "ip" | "fingerprint",
   value: string | null | undefined,
 ): string | null {
   const normalizedValue = value?.trim();
@@ -83,7 +84,7 @@ function createAuthConfig(
         generateId: "uuid",
       },
       ipAddress: {
-        ipAddressHeaders: ["cf-connecting-ip", "x-forwarded-for", "x-real-ip"],
+        ipAddressHeaders: ["cf-connecting-ip"],
       },
     },
     rateLimit: {
@@ -158,35 +159,21 @@ function createAuthConfig(
             }
             try {
               const headerStore = await headers();
-              const forwarded = headerStore.get("x-forwarded-for");
-              const clientIp =
-                headerStore.get("cf-connecting-ip") ||
-                headerStore.get("x-real-ip") ||
-                forwarded?.split(",")[0]?.trim() ||
-                null;
-              const existingDeviceId = cookieStore.get(
-                SIGNUP_BONUS_DEVICE_COOKIE_NAME,
-              )?.value;
-              const deviceId =
-                existingDeviceId && UUID_PATTERN.test(existingDeviceId)
-                  ? existingDeviceId
-                  : randomUUID();
-
-              if (deviceId !== existingDeviceId) {
-                cookieStore.set(SIGNUP_BONUS_DEVICE_COOKIE_NAME, deviceId, {
-                  httpOnly: true,
-                  secure: process.env.NODE_ENV === "production",
-                  sameSite: "lax",
-                  path: "/",
-                  maxAge: SIGNUP_BONUS_DEVICE_COOKIE_MAX_AGE,
-                });
-              }
+              const clientIp = resolveSignupBonusClientIp(headerStore);
+              const fingerprint = parseSignupBonusFingerprint(
+                cookieStore.get(
+                  SIGNUP_BONUS_FINGERPRINT_COOKIE_NAME,
+                )?.value,
+              );
 
               await grantConfiguredSignupBonusCredits(createdUser.id, {
                 email: createdUser.email,
                 countryCode: headerStore.get("cf-ipcountry"),
                 ipHash: hashSignupBonusIdentifier("ip", clientIp),
-                deviceHash: hashSignupBonusIdentifier("device", deviceId),
+                deviceHash: hashSignupBonusIdentifier(
+                  "fingerprint",
+                  fingerprint,
+                ),
               });
             } catch (error) {
               console.error("Failed to grant signup bonus credits:", error);

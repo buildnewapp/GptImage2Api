@@ -174,6 +174,10 @@ export async function grantSignupBonusCredits({
     return false;
   }
 
+  if (!deviceHash) {
+    return false;
+  }
+
   await store.lockUser(userId);
 
   if (await store.hasSignupBonusLog(userId)) {

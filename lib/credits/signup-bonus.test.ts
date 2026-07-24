@@ -79,6 +79,7 @@ test("grants half signup bonus credits for limited countries", async () => {
     userId: "user-1",
     amount: 30,
     countryCode: "PK",
+    deviceHash: "fingerprint-hash",
   });
 
   assert.equal(granted, true);
@@ -120,37 +121,69 @@ test("skips signup bonus when the email contains a blocked keyword", async () =>
   assert.deepEqual(store.appliedCredits, []);
 });
 
-test("allows at most two signup bonuses from one IP in 24 hours", async () => {
+test("skips signup bonus when the browser fingerprint is missing", async () => {
   const store = new FakeSignupBonusStore();
-  store.eligibilityCounts.ip24Hours = 2;
+
+  const granted = await grantSignupBonusCredits({
+    store,
+    userId: "user-2",
+    amount: 10,
+  });
+
+  assert.equal(granted, false);
+  assert.deepEqual(store.appliedCredits, []);
+});
+
+test("allows signup bonus below the high shared IP thresholds", async () => {
+  const store = new FakeSignupBonusStore();
+  store.eligibilityCounts.ip24Hours = 9;
+  store.eligibilityCounts.ip7Days = 19;
 
   const granted = await grantSignupBonusCredits({
     store,
     userId: "user-3",
     amount: 10,
     ipHash: "ip-hash",
+    deviceHash: "fingerprint-hash",
   });
 
-  assert.equal(granted, false);
-  assert.deepEqual(store.appliedCredits, []);
+  assert.equal(granted, true);
+  assert.deepEqual(store.appliedCredits, [10]);
 });
 
-test("allows at most three signup bonuses from one IP in seven days", async () => {
+test("allows at most ten signup bonuses from one IP in 24 hours", async () => {
   const store = new FakeSignupBonusStore();
-  store.eligibilityCounts.ip7Days = 3;
+  store.eligibilityCounts.ip24Hours = 10;
 
   const granted = await grantSignupBonusCredits({
     store,
     userId: "user-4",
     amount: 10,
     ipHash: "ip-hash",
+    deviceHash: "fingerprint-hash",
   });
 
   assert.equal(granted, false);
   assert.deepEqual(store.appliedCredits, []);
 });
 
-test("allows only one signup bonus per device in 30 days", async () => {
+test("allows at most twenty signup bonuses from one IP in seven days", async () => {
+  const store = new FakeSignupBonusStore();
+  store.eligibilityCounts.ip7Days = 20;
+
+  const granted = await grantSignupBonusCredits({
+    store,
+    userId: "user-5",
+    amount: 10,
+    ipHash: "ip-hash",
+    deviceHash: "fingerprint-hash",
+  });
+
+  assert.equal(granted, false);
+  assert.deepEqual(store.appliedCredits, []);
+});
+
+test("allows only one signup bonus per fingerprint in 30 days", async () => {
   const store = new FakeSignupBonusStore();
   store.eligibilityCounts.device30Days = 1;
 

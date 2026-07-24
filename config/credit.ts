@@ -3,8 +3,8 @@ export const creditConfig = {
   signupBonusCredits: 10,
   signupBonusPolicy: {
     blockedEmailKeywords: ["valwagten"],
-    maxPerIp24Hours: 2,
-    maxPerIp7Days: 3,
+    maxPerIp24Hours: 10,
+    maxPerIp7Days: 20,
     maxPerDevice30Days: 1,
   },
 } as const;
