@@ -6,6 +6,7 @@ import ImageTemplate from "@/components/home/image/ImageTemplate";
 import ToolHomeComponent from "@/components/home/ToolHomeComponent";
 import { routing } from "@/i18n/routing";
 import { setRequestLocale } from "next-intl/server";
+import SvgTemplate from "@/components/home/svg/SvgTemplate";
 
 export const revalidate = 300;
 export const dynamic = "force-static";
@@ -29,4 +30,5 @@ export default async function Home({
   return <ImageTemplate locale={locale} />;
   // return <HomeComponent locale={locale} />;
   // return <ToolHomeComponent locale={locale} />;
+  // return <SvgTemplate locale={locale} />;
 }

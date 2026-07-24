@@ -1,11 +1,11 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
+import {
+  CompareSlider,
+  SvgHeroPreview,
+} from "@/components/home/svg/SvgTemplateClient";
 import {
   ArrowRight,
   Check,
-  ChevronsLeftRight,
   CirclePlay,
   CloudUpload,
   Crown,
@@ -15,7 +15,6 @@ import {
   Image as ImageIcon,
   Layers,
   MousePointer2,
-  RotateCcw,
   ShieldCheck,
   SlidersHorizontal,
   Sparkles,
@@ -175,188 +174,29 @@ const workflowCards = [
 const resources = [
   {
     href: "/guides/image-to-svg-best-practices",
-    image: "https://file.tikdek.com/temp/svg/resources/image-to-svg-best-practices-thumbnail.png",
+    image:
+      "https://file.tikdek.com/temp/svg/resources/image-to-svg-best-practices-thumbnail.png",
     icon: Crown,
   },
   {
     href: "/guides/svg-vs-png",
-    image: "https://file.tikdek.com/temp/svg/resources/svg-vs-png-comparison-thumbnail.png",
+    image:
+      "https://file.tikdek.com/temp/svg/resources/svg-vs-png-comparison-thumbnail.png",
     icon: FileImage,
   },
   {
     href: "/guides/logo-to-svg",
-    image: "https://file.tikdek.com/temp/svg/resources/logo-to-svg-conversion-thumbnail.png",
+    image:
+      "https://file.tikdek.com/temp/svg/resources/logo-to-svg-conversion-thumbnail.png",
     icon: SlidersHorizontal,
   },
   {
     href: "/guides/svg-for-cricut-laser-cutting",
-    image: "https://file.tikdek.com/temp/svg/resources/svg-for-cricut-cutting-thumbnail.png",
+    image:
+      "https://file.tikdek.com/temp/svg/resources/svg-for-cricut-cutting-thumbnail.png",
     icon: FileText,
   },
 ];
-
-interface CompareSliderProps {
-  after: string;
-  afterAlt: string;
-  before: string;
-  beforeAlt: string;
-  className?: string;
-  imageClassName?: string;
-  initial?: number;
-  compareLabel: string;
-  replayLabel?: string;
-  withReplay?: boolean;
-}
-
-function CompareSlider({
-  after,
-  afterAlt,
-  before,
-  beforeAlt,
-  className = "",
-  compareLabel,
-  imageClassName = "object-contain",
-  initial = 50,
-  replayLabel = "",
-  withReplay = false,
-}: CompareSliderProps) {
-  const [position, setPosition] = useState(initial);
-  const [isReplaying, setIsReplaying] = useState(false);
-  const replayFrameRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (replayFrameRef.current !== null) {
-        cancelAnimationFrame(replayFrameRef.current);
-      }
-    };
-  }, []);
-
-  return (
-    <div
-      className={`group/preview relative overflow-hidden bg-white ${className}`}
-    >
-      <img
-        alt={afterAlt}
-        className={`absolute inset-0 h-full w-full ${imageClassName}`}
-        draggable={false}
-        src={asset(after)}
-      />
-      <div
-        className="absolute inset-0 overflow-hidden bg-white"
-        style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
-      >
-        <img
-          alt={beforeAlt}
-          className={`absolute inset-0 h-full w-full ${imageClassName}`}
-          draggable={false}
-          src={asset(before)}
-        />
-      </div>
-      <div
-        className="pointer-events-none absolute inset-y-0 z-20 w-7 -translate-x-1/2"
-        style={{ left: `${position}%` }}
-      >
-        <span
-          className={`absolute inset-y-0 left-1/2 w-5 -translate-x-1/2 rounded-full bg-[linear-gradient(180deg,rgba(236,72,153,0.2),rgba(56,189,248,0.18))] blur-md transition-opacity duration-300 ${
-            isReplaying ? "opacity-100" : "opacity-75"
-          }`}
-        />
-        <span
-          className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 rounded-full bg-gradient-to-b from-slate-900/70 via-pink-500/85 to-sky-400/80 shadow-[0_0_16px_rgba(236,72,153,0.55),0_0_26px_rgba(56,189,248,0.35)]"
-        />
-      </div>
-      <div
-        className="pointer-events-none absolute top-1/2 z-30 grid h-11 w-11 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-slate-200/95 bg-white text-slate-600 shadow-[0_10px_26px_rgba(15,23,42,0.08)] transition group-hover/preview:scale-105"
-        style={{ left: `${position}%` }}
-      >
-        <ChevronsLeftRight className="h-5 w-5" />
-      </div>
-      {withReplay ? (
-        <button
-          className="absolute bottom-2 right-2 z-50 inline-flex h-8 items-center gap-1.5 rounded-full border border-slate-200/80 bg-white/75 px-3 text-xs font-semibold text-slate-500 shadow-[0_8px_18px_rgba(15,23,42,0.06)] backdrop-blur transition hover:bg-white hover:text-pink-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2"
-          onClick={() => {
-            if (replayFrameRef.current !== null) {
-              cancelAnimationFrame(replayFrameRef.current);
-            }
-
-            if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-              setPosition(50);
-              setIsReplaying(false);
-              return;
-            }
-
-            const sequence = [
-              { from: 0, to: 100, duration: 1150 },
-              { from: 100, to: 0, duration: 1150 },
-              { from: 0, to: 50, duration: 850 },
-            ];
-            const startTime = Date.now();
-
-            setIsReplaying(true);
-            setPosition(0);
-
-            const animate = () => {
-              const elapsed = Date.now() - startTime;
-              let cursor = 0;
-
-              for (const step of sequence) {
-                if (elapsed <= cursor + step.duration) {
-                  const localProgress = (elapsed - cursor) / step.duration;
-                  const eased =
-                    localProgress < 0.5
-                      ? 4 * localProgress * localProgress * localProgress
-                      : 1 - Math.pow(-2 * localProgress + 2, 3) / 2;
-
-                  setPosition(step.from + (step.to - step.from) * eased);
-                  replayFrameRef.current = requestAnimationFrame(animate);
-                  return;
-                }
-
-                cursor += step.duration;
-              }
-
-              setPosition(50);
-              setIsReplaying(false);
-              replayFrameRef.current = null;
-            };
-
-            replayFrameRef.current = requestAnimationFrame(animate);
-          }}
-          type="button"
-        >
-          <RotateCcw className="h-3.5 w-3.5" />
-          {replayLabel}
-        </button>
-      ) : null}
-      <input
-        aria-label={compareLabel}
-        className="absolute inset-0 z-40 h-full w-full cursor-ew-resize opacity-0"
-        max={100}
-        min={0}
-        onChange={(event) => setPosition(Number(event.target.value))}
-        onInput={(event) => {
-          if (replayFrameRef.current !== null) {
-            cancelAnimationFrame(replayFrameRef.current);
-            replayFrameRef.current = null;
-            setIsReplaying(false);
-          }
-
-          setPosition(Number(event.currentTarget.value));
-        }}
-        onPointerDown={() => {
-          if (replayFrameRef.current !== null) {
-            cancelAnimationFrame(replayFrameRef.current);
-            replayFrameRef.current = null;
-            setIsReplaying(false);
-          }
-        }}
-        type="range"
-        value={position}
-      />
-    </div>
-  );
-}
 
 function FormatFileIcon({ format }: { format: string }) {
   const settings =
@@ -411,9 +251,8 @@ function FormatFlowIcon({ from, to }: { from: string; to: string }) {
   );
 }
 
-export default function SvgTemplate() {
-  const t = useTranslations("SvgTemplate");
-  const [activeSample, setActiveSample] = useState(1);
+export default async function SvgTemplate({ locale }: { locale: string }) {
+  const t = await getTranslations({ locale, namespace: "SvgTemplate" });
   const heroSampleCopy = t.raw("hero.samples") as Array<{
     label: string;
     title: string;
@@ -442,10 +281,17 @@ export default function SvgTemplate() {
     description: string;
     title: string;
   }>;
-  const localizedHeroSamples = heroSamples.map((sample, index) => ({
-    ...sample,
-    ...heroSampleCopy[index],
-  }));
+  const localizedHeroSamples = heroSamples.map((sample, index) => {
+    const copy = heroSampleCopy[index];
+
+    return {
+      ...sample,
+      ...copy,
+      afterAlt: t("compare.afterAlt", { title: copy.title }),
+      beforeAlt: t("compare.beforeAlt", { title: copy.title }),
+      showPreviewLabel: t("hero.showPreview", { title: copy.title }),
+    };
+  });
   const localizedUseCases = useCases.map((item, index) => ({
     ...item,
     ...useCaseCopy[index],
@@ -483,8 +329,6 @@ export default function SvgTemplate() {
     label: string;
     value: string;
   };
-  const sample = localizedHeroSamples[activeSample];
-
   return (
     <>
       <script type="application/ld+json">
@@ -523,58 +367,11 @@ export default function SvgTemplate() {
 
             <div className="mx-auto mt-7 grid max-w-[1080px] items-stretch gap-6 lg:mt-8 lg:grid-cols-[1.12fr_0.88fr] lg:gap-8">
               <div className="order-2 lg:order-1 lg:flex">
-                <div className="relative mx-auto flex h-full w-full max-w-xl flex-col lg:max-w-none">
-                  <div className="flex min-h-[340px] w-full items-center justify-center lg:min-h-[430px]">
-                    <CompareSlider
-                      after={sample.after}
-                      afterAlt={t("compare.afterAlt", { title: sample.title })}
-                      before={sample.before}
-                      beforeAlt={t("compare.beforeAlt", { title: sample.title })}
-                      className="aspect-square w-full max-w-[380px] overflow-visible lg:max-w-[430px]"
-                      compareLabel={t("compare.ariaLabel")}
-                      imageClassName="object-contain"
-                      replayLabel={t("compare.replay")}
-                      withReplay
-                    />
-                  </div>
-                  <div className="relative mt-4 grid grid-cols-5 gap-2 lg:gap-2.5">
-                    {heroSamples.map((item, index) => {
-                      const active = index === activeSample;
-                      const localizedItem = localizedHeroSamples[index];
-
-                      return (
-                        <button
-                          aria-label={t("hero.showPreview", {
-                            title: localizedItem.title,
-                          })}
-                          aria-pressed={active}
-                          className={
-                            "flex min-h-[70px] min-w-0 flex-col items-center justify-center gap-1.5 rounded-lg bg-white/86 px-1.5 py-2 text-[10px] font-extrabold leading-none ring-1 backdrop-blur transition hover:-translate-y-0.5 hover:text-slate-900 hover:ring-pink-100 " +
-                            (active
-                              ? "text-slate-950 ring-pink-200 shadow-[0_16px_38px_rgba(236,72,153,0.1)]"
-                              : "text-slate-500 ring-slate-100/90 shadow-[0_12px_34px_rgba(15,23,42,0.035)]")
-                          }
-                          key={item.before}
-                          onClick={() => setActiveSample(index)}
-                          type="button"
-                        >
-                          <span
-                            className={`relative grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-md ${item.iconClass}`}
-                          >
-                            <img
-                              alt=""
-                              className="h-full w-full object-contain p-1"
-                              src={asset(item.before)}
-                            />
-                          </span>
-                          <span className="w-full truncate text-center">
-                            {localizedItem.label}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+                <SvgHeroPreview
+                  compareLabel={t("compare.ariaLabel")}
+                  replayLabel={t("compare.replay")}
+                  samples={localizedHeroSamples}
+                />
               </div>
 
               <div className="order-1 lg:order-2 lg:flex">
@@ -625,13 +422,9 @@ export default function SvgTemplate() {
           <div className="mx-auto mb-8 max-w-6xl text-center">
             <h2 className="text-balance text-[28px] font-extrabold tracking-normal text-slate-950 md:text-[34px] lg:whitespace-nowrap">
               {t("useCases.titlePrefix")}{" "}
-              <span className="text-pink-500">
-                {t("useCases.titleAccent")}
-              </span>
+              <span className="text-pink-500">{t("useCases.titleAccent")}</span>
             </h2>
-            <p className="mt-3 text-slate-500">
-              {t("useCases.description")}
-            </p>
+            <p className="mt-3 text-slate-500">{t("useCases.description")}</p>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
@@ -712,52 +505,54 @@ export default function SvgTemplate() {
 
           <div className="grid gap-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_0.72fr]">
-              {localizedConversionGroups.slice(0, 2).map((group, groupIndex) => (
-                <div
-                  className="rounded-xl border border-slate-100 bg-white/80 p-5 shadow-[0_18px_48px_rgba(15,23,42,0.05)]"
-                  key={group.title}
-                >
-                  <div className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-normal text-pink-500">
-                    {groupIndex === 1 ? (
-                      <Download className="h-3.5 w-3.5" />
-                    ) : (
-                      <FileImage className="h-3.5 w-3.5" />
-                    )}
-                    {group.eyebrow}
-                  </div>
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                    <div>
-                      <h3 className="text-base font-extrabold text-slate-950">
-                        {group.title}
-                      </h3>
-                      <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-500">
-                        {group.description}
-                      </p>
+              {localizedConversionGroups
+                .slice(0, 2)
+                .map((group, groupIndex) => (
+                  <div
+                    className="rounded-xl border border-slate-100 bg-white/80 p-5 shadow-[0_18px_48px_rgba(15,23,42,0.05)]"
+                    key={group.title}
+                  >
+                    <div className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-normal text-pink-500">
+                      {groupIndex === 1 ? (
+                        <Download className="h-3.5 w-3.5" />
+                      ) : (
+                        <FileImage className="h-3.5 w-3.5" />
+                      )}
+                      {group.eyebrow}
+                    </div>
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                      <div>
+                        <h3 className="text-base font-extrabold text-slate-950">
+                          {group.title}
+                        </h3>
+                        <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-500">
+                          {group.description}
+                        </p>
+                      </div>
+                    </div>
+                    <div className={`mt-4 grid gap-4 ${group.columns}`}>
+                      {group.items.map((item) => (
+                        <a
+                          className="group rounded-lg border border-slate-100 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-pink-100 hover:shadow-[0_18px_42px_rgba(236,72,153,0.10)]"
+                          href={item.href}
+                          key={item.title}
+                        >
+                          <FormatFlowIcon from={item.from} to={item.to} />
+                          <h4 className="text-base font-bold text-slate-950">
+                            {item.title}
+                          </h4>
+                          <p className="mt-2 min-h-10 text-sm leading-5 text-slate-500">
+                            {item.description}
+                          </p>
+                          <span className="mt-4 inline-flex items-center text-xs font-bold text-pink-500">
+                            {item.title}
+                            <ArrowRight className="ml-1.5 h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
+                          </span>
+                        </a>
+                      ))}
                     </div>
                   </div>
-                  <div className={`mt-4 grid gap-4 ${group.columns}`}>
-                    {group.items.map((item) => (
-                      <a
-                        className="group rounded-lg border border-slate-100 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-pink-100 hover:shadow-[0_18px_42px_rgba(236,72,153,0.10)]"
-                        href={item.href}
-                        key={item.title}
-                      >
-                        <FormatFlowIcon from={item.from} to={item.to} />
-                        <h4 className="text-base font-bold text-slate-950">
-                          {item.title}
-                        </h4>
-                        <p className="mt-2 min-h-10 text-sm leading-5 text-slate-500">
-                          {item.description}
-                        </p>
-                        <span className="mt-4 inline-flex items-center text-xs font-bold text-pink-500">
-                          {item.title}
-                          <ArrowRight className="ml-1.5 h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
-                        </span>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
 
             {localizedConversionGroups.slice(2).map((group) => (
@@ -926,9 +721,7 @@ export default function SvgTemplate() {
               {t("steps.titlePrefix")}{" "}
               <span className="text-pink-500">{t("steps.titleAccent")}</span>
             </h2>
-            <p className="mt-3 text-slate-500">
-              {t("steps.description")}
-            </p>
+            <p className="mt-3 text-slate-500">{t("steps.description")}</p>
           </div>
           <div className="grid gap-5 lg:grid-cols-3">
             {localizedSteps.map((step, index) => {
@@ -962,9 +755,7 @@ export default function SvgTemplate() {
             <h2 className="text-balance text-[28px] font-extrabold tracking-normal text-slate-950 md:text-[34px]">
               {t("resources.title")}
             </h2>
-            <p className="mt-3 text-slate-500">
-              {t("resources.description")}
-            </p>
+            <p className="mt-3 text-slate-500">{t("resources.description")}</p>
           </div>
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {localizedResources.map((resource) => {
@@ -1033,9 +824,7 @@ export default function SvgTemplate() {
             <h2 className="text-balance text-[28px] font-extrabold tracking-normal text-slate-950 md:text-[34px]">
               {t("faq.title")}
             </h2>
-            <p className="mt-3 text-slate-500">
-              {t("faq.description")}
-            </p>
+            <p className="mt-3 text-slate-500">{t("faq.description")}</p>
           </div>
           <div className="mx-auto max-w-3xl">
             <div className="divide-y divide-border rounded-lg border bg-card">

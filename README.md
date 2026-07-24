@@ -30,6 +30,7 @@ git commit -m "update from upstream"
 /Users/syx/WebstormProjects/Spicy/spicy-image-web
 /Users/syx/WebstormProjects/Spicy/spicy-chat-web
 /Users/syx/WebstormProjects/GptApi/GptApi-web
+
 /Users/syx/WebstormProjects/aimodels/aiexplainervideo-web
 /Users/syx/WebstormProjects/aimodels/aiugcvideo-web
 /Users/syx/WebstormProjects/aimodels/audiotovideoai-web
@@ -47,6 +48,8 @@ git commit -m "update from upstream"
 /Users/syx/WebstormProjects/aimodels/viduai-web
 /Users/syx/WebstormProjects/aimodels/wanvideo-web
 /Users/syx/WebstormProjects/aimodels/zimage-web
+
+/Users/syx/WebstormProjects/aitools/textlogo-web
 
 这些地址，每个帮我 进入目录，执行合并：
 git fetch upstream
