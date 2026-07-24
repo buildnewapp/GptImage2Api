@@ -9,7 +9,7 @@ import {
 test("manual application action input accepts only the fixed task, evidence, and trimmed text", () => {
   const parsed = parseManualTaskApplicationInput({
     taskKey: "github_star",
-    evidenceKey: "  task-evidence/user-1/github.png  ",
+    evidenceKey: "  task/2026/07/20/upload/user-1/github.png  ",
     submissionText: "  I starred the repository.  ",
   });
 
@@ -17,7 +17,7 @@ test("manual application action input accepts only the fixed task, evidence, and
     success: true,
     data: {
       taskKey: "github_star",
-      evidenceKey: "task-evidence/user-1/github.png",
+      evidenceKey: "task/2026/07/20/upload/user-1/github.png",
       submissionText: "I starred the repository.",
     },
   });
@@ -27,7 +27,7 @@ test("manual application action input rejects client-controlled reward fields", 
   for (const forbiddenField of ["userId", "creditAmount", "status"]) {
     const parsed = parseManualTaskApplicationInput({
       taskKey: "github_star",
-      evidenceKey: "task-evidence/user-1/github.png",
+      evidenceKey: "task/2026/07/20/upload/user-1/github.png",
       submissionText: "I starred the repository.",
       [forbiddenField]: forbiddenField === "creditAmount" ? 999 : "forged",
     });
@@ -43,7 +43,7 @@ test("manual application action input rejects unknown tasks, blank evidence, and
   const invalidInputs = [
     {
       taskKey: "forged_task",
-      evidenceKey: "task-evidence/user-1/github.png",
+      evidenceKey: "task/2026/07/20/upload/user-1/github.png",
       submissionText: "Done.",
     },
     {
@@ -53,12 +53,12 @@ test("manual application action input rejects unknown tasks, blank evidence, and
     },
     {
       taskKey: "github_star",
-      evidenceKey: "task-evidence/user-1/github.png",
+      evidenceKey: "task/2026/07/20/upload/user-1/github.png",
       submissionText: "   ",
     },
     {
       taskKey: "github_star",
-      evidenceKey: "task-evidence/user-1/github.png",
+      evidenceKey: "task/2026/07/20/upload/user-1/github.png",
       submissionText: "x".repeat(501),
     },
   ];

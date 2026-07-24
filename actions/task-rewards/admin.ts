@@ -6,7 +6,7 @@ import {
 } from "@/config/task-rewards";
 import { actionResponse, type ActionResult } from "@/lib/action-response";
 import { getSession, isAdmin } from "@/lib/auth/server";
-import { createTaskEvidencePresignedDownloadUrl } from "@/lib/cloudflare/task-evidence-r2";
+import { createTaskEvidencePublicUrl } from "@/lib/cloudflare/task-evidence-r2";
 import { getDb } from "@/lib/db";
 import {
   rewardApplications as rewardApplicationsSchema,
@@ -227,9 +227,7 @@ export async function getAdminRewardApplicationEvidence(
       );
     }
 
-    const presignedUrl = await createTaskEvidencePresignedDownloadUrl({
-      key: evidenceKey,
-    });
+    const presignedUrl = createTaskEvidencePublicUrl(evidenceKey);
     return actionResponse.success({
       applicationId: application.id,
       presignedUrl,

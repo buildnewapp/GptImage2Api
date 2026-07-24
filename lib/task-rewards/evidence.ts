@@ -100,11 +100,13 @@ export async function prepareTaskEvidenceUpload({
   userId,
   input,
   randomUUID,
+  now,
   createPresignedUploadUrl,
 }: {
   userId: string;
   input: TaskEvidenceUploadInput;
   randomUUID?: () => string;
+  now?: () => Date;
   createPresignedUploadUrl: (input: {
     key: string;
     contentType: string;
@@ -117,6 +119,7 @@ export async function prepareTaskEvidenceUpload({
     taskKey: validated.taskKey,
     contentType: validated.contentType,
     randomUUID,
+    now,
   });
   const presignedUrl = await createPresignedUploadUrl({
     key,
@@ -132,11 +135,13 @@ export function buildTaskEvidenceKey({
   taskKey,
   contentType,
   randomUUID = () => crypto.randomUUID(),
+  now = () => new Date(),
 }: {
   userId: string;
   taskKey: ManualReviewTaskKey;
   contentType: TaskEvidenceContentType;
   randomUUID?: () => string;
+  now?: () => Date;
 }): string {
   if (!safePathSegmentPattern.test(userId)) {
     throw new Error("Authenticated user id is not safe for an object key.");
@@ -155,7 +160,12 @@ export function buildTaskEvidenceKey({
     throw new Error("Evidence content type is invalid.");
   }
 
-  return `task-evidence/${userId}/${taskKey}/${uuid}.${extension}`;
+  const date = now();
+  const year = date.getUTCFullYear().toString().padStart(4, "0");
+  const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
+  const day = date.getUTCDate().toString().padStart(2, "0");
+
+  return `task/${year}/${month}/${day}/upload/${userId}/${taskKey}/${uuid}.${extension}`;
 }
 
 export function buildSealedTaskEvidenceKey({
@@ -163,35 +173,45 @@ export function buildSealedTaskEvidenceKey({
   taskKey,
   contentType,
   randomUUID = () => crypto.randomUUID(),
+  now = () => new Date(),
 }: {
   userId: string;
   taskKey: ManualReviewTaskKey;
   contentType: TaskEvidenceContentType;
   randomUUID?: () => string;
+  now?: () => Date;
 }): string {
   const uploadKey = buildTaskEvidenceKey({
     userId,
     taskKey,
     contentType,
     randomUUID,
+    now,
   });
-  return uploadKey.replace("task-evidence/", "task-evidence-sealed/");
+  return uploadKey.replace("/upload/", "/sealed/");
 }
 
 function parseTaskEvidenceKey(
   key: string,
-  namespace: "task-evidence" | "task-evidence-sealed" = "task-evidence",
+  namespace: "upload" | "sealed" = "upload",
 ): {
   userId: string;
   taskKey: ManualReviewTaskKey;
   contentType: TaskEvidenceContentType;
 } | null {
   const parts = key.split("/");
-  if (parts.length !== 4 || parts[0] !== namespace) {
+  if (
+    parts.length !== 8 ||
+    parts[0] !== "task" ||
+    !/^\d{4}$/.test(parts[1]) ||
+    !/^(0[1-9]|1[0-2])$/.test(parts[2]) ||
+    !/^(0[1-9]|[12]\d|3[01])$/.test(parts[3]) ||
+    parts[4] !== namespace
+  ) {
     return null;
   }
 
-  const [, userId, rawTaskKey, fileName] = parts;
+  const [, , , , , userId, rawTaskKey, fileName] = parts;
   if (!safePathSegmentPattern.test(userId)) {
     return null;
   }
@@ -236,7 +256,7 @@ export function isSealedTaskEvidenceKeyOwnedBy({
   taskKey: ManualReviewTaskKey;
   key: string;
 }): boolean {
-  const parsed = parseTaskEvidenceKey(key, "task-evidence-sealed");
+  const parsed = parseTaskEvidenceKey(key, "sealed");
   return parsed?.userId === userId && parsed.taskKey === taskKey;
 }
 
@@ -299,8 +319,8 @@ export async function verifyAndSealTaskEvidence({
   headObject,
   readHeader,
   copyObject,
-  deleteObject,
   randomUUID,
+  now,
 }: {
   userId: string;
   taskKey: ManualReviewTaskKey;
@@ -312,8 +332,8 @@ export async function verifyAndSealTaskEvidence({
     destinationKey: string;
     sourceETag: string;
   }) => Promise<void>;
-  deleteObject: (key: string) => Promise<void>;
   randomUUID?: () => string;
+  now?: () => Date;
 }): Promise<string | null> {
   const parsed = parseTaskEvidenceKey(uploadKey);
   if (!parsed || parsed.userId !== userId || parsed.taskKey !== taskKey) {
@@ -344,13 +364,13 @@ export async function verifyAndSealTaskEvidence({
       taskKey,
       contentType: parsed.contentType,
       randomUUID,
+      now,
     });
     await copyObject({
       sourceKey: uploadKey,
       destinationKey,
       sourceETag: object.eTag,
     });
-    await deleteObject(uploadKey);
     return destinationKey;
   } catch {
     return null;

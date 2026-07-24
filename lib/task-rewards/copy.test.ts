@@ -309,7 +309,7 @@ test("task reward pagination supplies localized labels without changing defaults
   }
 });
 
-test("manual task setup documents the private bucket upload CORS requirement", () => {
+test("manual task setup documents the shared R2 bucket upload CORS requirement", () => {
   const envExample = readFileSync(
     new URL("../../.env.example", import.meta.url),
     "utf8",
@@ -319,13 +319,24 @@ test("manual task setup documents the private bucket upload CORS requirement", (
     "utf8",
   );
 
-  assert.match(envExample, /R2_TASK_EVIDENCE_BUCKET_NAME/);
-  assert.match(envExample, /private bucket/i);
+  assert.doesNotMatch(envExample, /R2_TASK_EVIDENCE_BUCKET_NAME/);
+  assert.match(envExample, /R2_BUCKET_NAME/);
   assert.match(readme, /manual task|人工任务/i);
-  assert.match(readme, /private bucket|私有 bucket/i);
+  assert.match(readme, /R2_BUCKET_NAME/);
+  assert.match(readme, /task\/YYYY\/MM\/DD/);
   assert.match(readme, /CORS/i);
   assert.match(readme, /PUT/);
   assert.match(readme, /Content-Type/);
+});
+
+test("admin task evidence preview uses the configured public R2 URL", () => {
+  const source = readFileSync(
+    new URL("../../actions/task-rewards/admin.ts", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(source, /createTaskEvidencePublicUrl/);
+  assert.doesNotMatch(source, /createTaskEvidencePresignedDownloadUrl/);
 });
 
 test("task reward review is linked from referral admin instead of the sidebar", () => {

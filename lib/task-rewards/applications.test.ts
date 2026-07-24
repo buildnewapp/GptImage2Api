@@ -14,9 +14,9 @@ import {
 const userId = "user-1";
 const reviewerUserId = "reviewer-1";
 const evidenceKey =
-  "task-evidence/user-1/github_star/123e4567-e89b-42d3-a456-426614174000.png";
+  "task/2026/07/20/upload/user-1/github_star/123e4567-e89b-42d3-a456-426614174000.png";
 const sealedEvidenceKey =
-  "task-evidence-sealed/user-1/github_star/223e4567-e89b-42d3-a456-426614174000.png";
+  "task/2026/07/20/sealed/user-1/github_star/223e4567-e89b-42d3-a456-426614174000.png";
 const now = new Date("2026-07-20T08:00:00.000Z");
 
 async function withEnabledGithubTask<T>(run: () => Promise<T>): Promise<T> {
@@ -114,7 +114,8 @@ test("a screenshot is required and must belong to the submitting user", async ()
       store,
       userId,
       taskKey: "github_star",
-      evidenceKey: "task-evidence/other-user/github.png",
+      evidenceKey:
+        "task/2026/07/20/upload/other-user/github_star/123e4567-e89b-42d3-a456-426614174000.png",
       submissionText: "I starred the repository.",
       now,
     });
@@ -229,21 +230,21 @@ test("a second pending application for the same task is rejected", async () => {
   });
 });
 
-test("submission checks claims and applications only while the user task lock is held", async () => {
+test("submission prepares evidence outside the task lock and keeps database checks inside it", async () => {
   await withEnabledGithubTask(async () => {
     const memoryStore = createStore();
     const events: string[] = [];
     let taskLockHeld = false;
+    const prepareEvidence = async (
+      lockedUserId: string,
+      taskKey: "github_star",
+      key: string,
+    ) => {
+        assert.equal(taskLockHeld, false);
+        events.push("prepare_evidence");
+        return memoryStore.prepareEvidence(lockedUserId, taskKey, key);
+    };
     const lockedMethods = {
-      verifyAndSealEvidence: async (
-        lockedUserId: string,
-        taskKey: "github_star",
-        key: string,
-      ) => {
-        assert.equal(taskLockHeld, true);
-        events.push("seal_evidence");
-        return memoryStore.verifyAndSealEvidence(lockedUserId, taskKey, key);
-      },
       hasClaim: async (lockedUserId: string, claimKey: string) => {
         assert.equal(taskLockHeld, true);
         events.push("has_claim");
@@ -269,6 +270,11 @@ test("submission checks claims and applications only while the user task lock is
       },
     };
     const store = {
+      prepareEvidence,
+      deleteEvidence: async (key: string) => {
+        assert.equal(taskLockHeld, false);
+        events.push(`delete:${key}`);
+      },
       async withTaskLock(
         _lockedUserId: string,
         _taskKey: "github_star",
@@ -301,14 +307,102 @@ test("submission checks claims and applications only while the user task lock is
 
     assert.equal(result.status, "submitted");
     assert.deepEqual(events, [
+      "prepare_evidence",
       "lock",
       "has_claim",
       "has_approved",
       "has_pending",
-      "seal_evidence",
       "insert_pending",
       "unlock",
+      `delete:${evidenceKey}`,
     ]);
+  });
+});
+
+test("successful submission stays successful when upload cleanup fails", async () => {
+  await withEnabledGithubTask(async () => {
+    const memoryStore = createStore();
+    const deleted: string[] = [];
+    const store = Object.assign(memoryStore, {
+      prepareEvidence: memoryStore.prepareEvidence.bind(memoryStore),
+      deleteEvidence: async (key: string) => {
+        deleted.push(key);
+        throw new Error("R2 cleanup failed");
+      },
+    });
+
+    const result = await submitManualRewardApplication({
+      store: store as any,
+      userId,
+      taskKey: "github_star",
+      evidenceKey,
+      submissionText: "I starred the repository.",
+      now,
+    });
+
+    assert.equal(result.status, "submitted");
+    assert.deepEqual(deleted, [evidenceKey]);
+  });
+});
+
+test("submission conflict cleans both upload and newly sealed evidence", async () => {
+  await withEnabledGithubTask(async () => {
+    const memoryStore = createStore({
+      applications: [pendingApplication()],
+    });
+    const deleted: string[] = [];
+    const store = Object.assign(memoryStore, {
+      prepareEvidence: memoryStore.prepareEvidence.bind(memoryStore),
+      deleteEvidence: async (key: string) => {
+        deleted.push(key);
+      },
+    });
+
+    const result = await submitManualRewardApplication({
+      store: store as any,
+      userId,
+      taskKey: "github_star",
+      evidenceKey,
+      submissionText: "A duplicate submission.",
+      now,
+    });
+
+    assert.deepEqual(result, {
+      status: "error",
+      errorCode: "pending_application_exists",
+    });
+    assert.deepEqual(deleted, [evidenceKey, sealedEvidenceKey]);
+  });
+});
+
+test("database failure cleans both upload and newly sealed evidence", async () => {
+  await withEnabledGithubTask(async () => {
+    const memoryStore = createStore();
+    const deleted: string[] = [];
+    const store = {
+      prepareEvidence: memoryStore.prepareEvidence.bind(memoryStore),
+      deleteEvidence: async (key: string) => {
+        deleted.push(key);
+      },
+      async withTaskLock() {
+        throw new Error("database unavailable");
+      },
+      withLockedApplication:
+        memoryStore.withLockedApplication.bind(memoryStore),
+    };
+
+    await assert.rejects(
+      submitManualRewardApplication({
+        store: store as any,
+        userId,
+        taskKey: "github_star",
+        evidenceKey,
+        submissionText: "I starred the repository.",
+        now,
+      }),
+      /database unavailable/,
+    );
+    assert.deepEqual(deleted, [evidenceKey, sealedEvidenceKey]);
   });
 });
 

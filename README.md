@@ -1,7 +1,3 @@
-# 人工任务审核
-
-启用人工任务前，必须配置 `R2_TASK_EVIDENCE_BUCKET_NAME` 指向私有 bucket，并为站点来源配置允许 `PUT` 方法及 `Content-Type` 请求头的 CORS 规则。
-
 # 日常更新
 git fetch upstream
 git merge --no-ff --no-commit upstream/main

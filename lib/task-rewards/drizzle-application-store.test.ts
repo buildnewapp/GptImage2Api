@@ -13,9 +13,9 @@ const {
 } = applicationStoreModule;
 
 const validEvidenceKey =
-  "task-evidence/user-1/github_star/123e4567-e89b-42d3-a456-426614174000.png";
+  "task/2026/07/20/upload/user-1/github_star/123e4567-e89b-42d3-a456-426614174000.png";
 const sealedEvidenceKey =
-  "task-evidence-sealed/user-1/github_star/223e4567-e89b-42d3-a456-426614174000.png";
+  "task/2026/07/20/sealed/user-1/github_star/223e4567-e89b-42d3-a456-426614174000.png";
 
 const applicationRow = {
   id: "application-1",
@@ -114,20 +114,16 @@ test("compiles one deterministic DISTINCT ON row per manual task", () => {
   ]);
 });
 
-test("verifies and seals evidence before returning a different server-only key", async () => {
+test("prepares evidence without opening a database transaction", async () => {
   const sealedKeys: string[] = [];
-  const finalKey = validEvidenceKey.replace(
-    "task-evidence/",
-    "task-evidence-sealed/",
-  );
-  const fakeTx = { async execute() {} };
+  const finalKey = validEvidenceKey.replace("/upload/", "/sealed/");
   const store = createDrizzleRewardApplicationStore({
     db: {
-      async transaction<T>(operation: (tx: typeof fakeTx) => Promise<T>) {
-        return operation(fakeTx);
+      async transaction() {
+        throw new Error("evidence preparation must not open a transaction");
       },
     } as any,
-    sealEvidenceObject: async (input) => {
+    prepareEvidenceObject: async (input) => {
       sealedKeys.push(input.uploadKey);
       return input.userId === "user-1" && input.taskKey === "github_star"
         ? finalKey
@@ -136,17 +132,28 @@ test("verifies and seals evidence before returning a different server-only key",
   });
 
   assert.equal(
-    await store.withTaskLock("user-1", "github_star", (lockedStore) =>
-      lockedStore.verifyAndSealEvidence(
-        "user-1",
-        "github_star",
-        validEvidenceKey,
-      ),
-    ),
+    await store.prepareEvidence("user-1", "github_star", validEvidenceKey),
     finalKey,
   );
   assert.notEqual(finalKey, validEvidenceKey);
   assert.deepEqual(sealedKeys, [validEvidenceKey]);
+});
+
+test("deletes evidence without opening a database transaction", async () => {
+  const deletedKeys: string[] = [];
+  const store = createDrizzleRewardApplicationStore({
+    db: {
+      async transaction() {
+        throw new Error("evidence cleanup must not open a transaction");
+      },
+    } as any,
+    deleteEvidenceObject: async (key) => {
+      deletedKeys.push(key);
+    },
+  });
+
+  await store.deleteEvidence(validEvidenceKey);
+  assert.deepEqual(deletedKeys, [validEvidenceKey]);
 });
 
 test("submission and review acquire the same user-task advisory lock before row locking", async () => {
@@ -171,7 +178,7 @@ test("submission and review acquire the same user-task advisory lock before row 
   };
   const submissionStore = createDrizzleRewardApplicationStore({
     db: submissionDb as any,
-    sealEvidenceObject: async () => sealedEvidenceKey,
+    prepareEvidenceObject: async () => sealedEvidenceKey,
   });
 
   await submissionStore.withTaskLock("user-1", "github_star", async () => {
@@ -233,7 +240,7 @@ test("submission and review acquire the same user-task advisory lock before row 
   };
   const reviewStore = createDrizzleRewardApplicationStore({
     db: reviewDb as any,
-    sealEvidenceObject: async () => sealedEvidenceKey,
+    prepareEvidenceObject: async () => sealedEvidenceKey,
   });
 
   await reviewStore.withLockedApplication(
@@ -290,7 +297,7 @@ test("creates a pending application with exactly one evidence key", async () => 
   };
   const store = createDrizzleRewardApplicationStore({
     db: db as any,
-    sealEvidenceObject: async () => sealedEvidenceKey,
+    prepareEvidenceObject: async () => sealedEvidenceKey,
   });
 
   const result = await store.withTaskLock(
@@ -351,7 +358,7 @@ test("rechecks claims and active applications to classify insert conflicts", asy
     };
     const store = createDrizzleRewardApplicationStore({
       db: db as any,
-      sealEvidenceObject: async () => sealedEvidenceKey,
+      prepareEvidenceObject: async () => sealedEvidenceKey,
     });
 
     return store.withTaskLock("user-1", "github_star", (lockedStore) =>

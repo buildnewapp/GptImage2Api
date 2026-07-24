@@ -18,7 +18,7 @@ type TaskEvidenceCommandClient = {
 };
 
 function getTaskEvidenceBucketName(bucketName?: string): string {
-  const resolved = bucketName ?? process.env.R2_TASK_EVIDENCE_BUCKET_NAME;
+  const resolved = bucketName ?? process.env.R2_BUCKET_NAME;
   if (!resolved) {
     throw new Error("Task evidence storage is not configured");
   }
@@ -57,22 +57,12 @@ export async function createTaskEvidencePresignedUploadUrl({
   });
 }
 
-export async function createTaskEvidencePresignedDownloadUrl({
-  key,
-  expiresIn = TASK_EVIDENCE_URL_TTL_SECONDS,
-  bucketName,
-  client = createR2Client(),
-}: {
-  key: string;
-  expiresIn?: number;
-  bucketName?: string;
-  client?: S3Client;
-}): Promise<string> {
-  const command = new GetObjectCommand({
-    Bucket: getTaskEvidenceBucketName(bucketName),
-    Key: key,
-  });
-  return getSignedUrl(client, command, { expiresIn });
+export function createTaskEvidencePublicUrl(key: string): string {
+  const publicUrl = process.env.R2_PUBLIC_URL?.trim();
+  if (!publicUrl) {
+    throw new Error("R2 public URL is not configured");
+  }
+  return `${publicUrl.replace(/\/$/, "")}/${key}`;
 }
 
 export async function headTaskEvidenceObject({
@@ -173,31 +163,4 @@ export async function deleteTaskEvidenceObject({
       Key: key,
     }),
   );
-}
-
-export async function sealTaskEvidenceObject({
-  sourceKey,
-  destinationKey,
-  sourceETag,
-  bucketName,
-  client = createR2Client(),
-}: {
-  sourceKey: string;
-  destinationKey: string;
-  sourceETag: string;
-  bucketName?: string;
-  client?: TaskEvidenceCommandClient;
-}): Promise<void> {
-  await copyTaskEvidenceObject({
-    sourceKey,
-    destinationKey,
-    sourceETag,
-    bucketName,
-    client,
-  });
-  await deleteTaskEvidenceObject({
-    key: sourceKey,
-    bucketName,
-    client,
-  });
 }

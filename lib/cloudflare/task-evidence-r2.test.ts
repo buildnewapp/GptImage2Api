@@ -3,9 +3,8 @@ import test from "node:test";
 
 import { S3Client } from "@aws-sdk/client-s3";
 import {
-  createTaskEvidencePresignedDownloadUrl,
+  copyTaskEvidenceObject,
   createTaskEvidencePresignedUploadUrl,
-  sealTaskEvidenceObject,
 } from "@/lib/cloudflare/task-evidence-r2";
 
 function createSigningClient() {
@@ -21,7 +20,7 @@ function createSigningClient() {
 
 test("presigns a private size-bound upload for about five minutes", async () => {
   const presignedUrl = await createTaskEvidencePresignedUploadUrl({
-    key: "task-evidence/user-1/github_star/proof.png",
+    key: "task/2026/07/24/upload/user-1/github_star/proof.png",
     contentType: "image/png",
     contentLength: 2048,
     bucketName: "private-task-evidence",
@@ -36,37 +35,28 @@ test("presigns a private size-bound upload for about five minutes", async () => 
   assert.equal(url.href.includes("public"), false);
 });
 
-test("never falls back to the public bucket for task evidence", async () => {
-  const previousPrivateBucket = process.env.R2_TASK_EVIDENCE_BUCKET_NAME;
-  const previousPublicBucket = process.env.R2_BUCKET_NAME;
-  delete process.env.R2_TASK_EVIDENCE_BUCKET_NAME;
-  process.env.R2_BUCKET_NAME = "public-bucket-must-not-be-used";
+test("uses the shared R2 bucket for task evidence", async () => {
+  const previousBucket = process.env.R2_BUCKET_NAME;
+  process.env.R2_BUCKET_NAME = "shared-r2-bucket";
 
   try {
-    await assert.rejects(
-      createTaskEvidencePresignedUploadUrl({
-        key: "task-evidence/user-1/github_star/proof.png",
-        contentType: "image/png",
-        contentLength: 2048,
-        client: createSigningClient(),
-      }),
-      /Task evidence storage is not configured/,
-    );
+    const presignedUrl = await createTaskEvidencePresignedUploadUrl({
+      key: "task/2026/07/24/upload/user-1/github_star/proof.png",
+      contentType: "image/png",
+      contentLength: 2048,
+      client: createSigningClient(),
+    });
+    assert.match(presignedUrl, /shared-r2-bucket/);
   } finally {
-    if (previousPrivateBucket === undefined) {
-      delete process.env.R2_TASK_EVIDENCE_BUCKET_NAME;
-    } else {
-      process.env.R2_TASK_EVIDENCE_BUCKET_NAME = previousPrivateBucket;
-    }
-    if (previousPublicBucket === undefined) {
+    if (previousBucket === undefined) {
       delete process.env.R2_BUCKET_NAME;
     } else {
-      process.env.R2_BUCKET_NAME = previousPublicBucket;
+      process.env.R2_BUCKET_NAME = previousBucket;
     }
   }
 });
 
-test("seals evidence in the private bucket with the source ETag condition before deleting temp", async () => {
+test("copies evidence in the shared bucket with the source ETag condition", async () => {
   const commands: Array<{ name: string; input: Record<string, unknown> }> = [];
   const client = {
     async send(command: {
@@ -78,9 +68,9 @@ test("seals evidence in the private bucket with the source ETag condition before
     },
   };
 
-  await sealTaskEvidenceObject({
-    sourceKey: "task-evidence/user-1/github_star/upload.png",
-    destinationKey: "task-evidence-sealed/user-1/github_star/final.png",
+  await copyTaskEvidenceObject({
+    sourceKey: "task/2026/07/24/upload/user-1/github_star/upload.png",
+    destinationKey: "task/2026/07/24/sealed/user-1/github_star/final.png",
     sourceETag: '"etag-1"',
     bucketName: "private-task-evidence",
     client,
@@ -89,24 +79,38 @@ test("seals evidence in the private bucket with the source ETag condition before
   assert.equal(commands[0]?.name, "CopyObjectCommand");
   assert.deepEqual(commands[0]?.input, {
     Bucket: "private-task-evidence",
-    Key: "task-evidence-sealed/user-1/github_star/final.png",
+    Key: "task/2026/07/24/sealed/user-1/github_star/final.png",
     CopySource:
-      "private-task-evidence/task-evidence/user-1/github_star/upload.png",
+      "private-task-evidence/task/2026/07/24/upload/user-1/github_star/upload.png",
     CopySourceIfMatch: '"etag-1"',
   });
-  assert.equal(commands[1]?.name, "DeleteObjectCommand");
-  assert.deepEqual(commands[1]?.input, {
-    Bucket: "private-task-evidence",
-    Key: "task-evidence/user-1/github_star/upload.png",
-  });
+  assert.equal(commands.length, 1);
 });
 
-test("creates a dedicated private signed GET for later authorized previews", async () => {
-  const url = await createTaskEvidencePresignedDownloadUrl({
-    key: "task-evidence-sealed/user-1/github_star/final.png",
-    bucketName: "private-task-evidence",
-    client: createSigningClient(),
-  });
+test("builds a public evidence URL from the configured R2 host", async () => {
+  const module = await import("@/lib/cloudflare/task-evidence-r2");
+  const buildPublicUrl = (
+    module as unknown as {
+      createTaskEvidencePublicUrl?: (key: string) => string;
+    }
+  ).createTaskEvidencePublicUrl;
+  const previousPublicUrl = process.env.R2_PUBLIC_URL;
+  process.env.R2_PUBLIC_URL = "https://cdn.example.com/";
 
-  assert.equal(new URL(url).searchParams.get("X-Amz-Expires"), "300");
+  try {
+    assert.equal(typeof buildPublicUrl, "function");
+    if (!buildPublicUrl) return;
+    assert.equal(
+      buildPublicUrl(
+        "task/2026/07/24/sealed/user-1/github_star/final.png",
+      ),
+      "https://cdn.example.com/task/2026/07/24/sealed/user-1/github_star/final.png",
+    );
+  } finally {
+    if (previousPublicUrl === undefined) {
+      delete process.env.R2_PUBLIC_URL;
+    } else {
+      process.env.R2_PUBLIC_URL = previousPublicUrl;
+    }
+  }
 });

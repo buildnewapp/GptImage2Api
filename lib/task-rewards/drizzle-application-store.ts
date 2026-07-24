@@ -35,14 +35,15 @@ export const TASK_REWARD_ADVISORY_LOCK_NAMESPACE = 20260720;
 
 export interface CreateDrizzleRewardApplicationStoreOptions {
   db?: DbClient;
-  sealEvidenceObject?: (input: {
+  prepareEvidenceObject?: (input: {
     userId: string;
     taskKey: ManualReviewTaskKey;
     uploadKey: string;
   }) => Promise<string | null>;
+  deleteEvidenceObject?: (key: string) => Promise<void>;
 }
 
-async function sealEvidenceObjectWithR2({
+async function prepareEvidenceObjectWithR2({
   userId,
   taskKey,
   uploadKey,
@@ -58,7 +59,6 @@ async function sealEvidenceObjectWithR2({
     headObject: (key) => headTaskEvidenceObject({ key }),
     readHeader: (key) => readTaskEvidenceHeader({ key }),
     copyObject: (input) => copyTaskEvidenceObject(input),
-    deleteObject: (key) => deleteTaskEvidenceObject({ key }),
   });
 }
 
@@ -179,9 +179,17 @@ async function hasApplicationStatus(
 
 export function createDrizzleRewardApplicationStore({
   db = getDb(),
-  sealEvidenceObject = sealEvidenceObjectWithR2,
+  prepareEvidenceObject = prepareEvidenceObjectWithR2,
+  deleteEvidenceObject = (key) => deleteTaskEvidenceObject({ key }),
 }: CreateDrizzleRewardApplicationStoreOptions = {}): RewardApplicationStore {
   return {
+    prepareEvidence: (userId, taskKey, evidenceKey) =>
+      prepareEvidenceObject({
+        userId,
+        taskKey,
+        uploadKey: evidenceKey,
+      }),
+    deleteEvidence: deleteEvidenceObject,
     async withTaskLock<T>(
       userId: string,
       taskKey: ManualReviewTaskKey,
@@ -191,12 +199,6 @@ export function createDrizzleRewardApplicationStore({
         await acquireUserTaskLock(tx, userId, taskKey);
 
         return operation({
-          verifyAndSealEvidence: (lockedUserId, lockedTaskKey, evidenceKey) =>
-            sealEvidenceObject({
-              userId: lockedUserId,
-              taskKey: lockedTaskKey,
-              uploadKey: evidenceKey,
-            }),
           hasClaim: (lockedUserId, claimKey) =>
             hasClaim(tx, lockedUserId, claimKey),
           hasApprovedApplication: (lockedUserId, lockedTaskKey) =>

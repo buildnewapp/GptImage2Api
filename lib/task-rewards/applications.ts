@@ -120,47 +120,66 @@ export async function submitManualRewardApplication({
   }
 
   const claimKey = buildOnceClaimKey(taskKey);
-  return store.withTaskLock(userId, taskKey, async (lockedStore) => {
-    if (await lockedStore.hasClaim(userId, claimKey)) {
-      return { status: "error", errorCode: "already_claimed" };
-    }
+  const sealedEvidenceKey = await store.prepareEvidence(
+    userId,
+    taskKey,
+    normalizedEvidenceKey,
+  );
+  if (!sealedEvidenceKey) {
+    return { status: "error", errorCode: "evidence_not_owned" };
+  }
 
-    if (await lockedStore.hasApprovedApplication(userId, taskKey)) {
-      return { status: "error", errorCode: "already_claimed" };
-    }
+  let result: SubmitRewardApplicationResult;
+  try {
+    result = await store.withTaskLock(userId, taskKey, async (lockedStore) => {
+      if (await lockedStore.hasClaim(userId, claimKey)) {
+        return { status: "error", errorCode: "already_claimed" };
+      }
 
-    if (await lockedStore.hasPendingApplication(userId, taskKey)) {
-      return { status: "error", errorCode: "pending_application_exists" };
-    }
+      if (await lockedStore.hasApprovedApplication(userId, taskKey)) {
+        return { status: "error", errorCode: "already_claimed" };
+      }
 
-    const sealedEvidenceKey = await lockedStore.verifyAndSealEvidence(
-      userId,
-      taskKey,
-      normalizedEvidenceKey,
-    );
-    if (!sealedEvidenceKey) {
-      return { status: "error", errorCode: "evidence_not_owned" };
-    }
+      if (await lockedStore.hasPendingApplication(userId, taskKey)) {
+        return { status: "error", errorCode: "pending_application_exists" };
+      }
 
-    const created = await lockedStore.createPendingApplication({
-      userId,
-      taskKey,
-      creditAmount: definition.credits,
-      evidenceKey: sealedEvidenceKey,
-      submissionText: normalizedSubmissionText,
-      now,
+      const created = await lockedStore.createPendingApplication({
+        userId,
+        taskKey,
+        creditAmount: definition.credits,
+        evidenceKey: sealedEvidenceKey,
+        submissionText: normalizedSubmissionText,
+        now,
+      });
+
+      if (created.status === "conflict") {
+        return { status: "error", errorCode: created.reason };
+      }
+
+      return {
+        status: "submitted",
+        applicationId: created.application.id,
+        creditAmount: definition.credits,
+      };
     });
+  } catch (error) {
+    await Promise.allSettled([
+      store.deleteEvidence(normalizedEvidenceKey),
+      store.deleteEvidence(sealedEvidenceKey),
+    ]);
+    throw error;
+  }
 
-    if (created.status === "conflict") {
-      return { status: "error", errorCode: created.reason };
-    }
-
-    return {
-      status: "submitted",
-      applicationId: created.application.id,
-      creditAmount: definition.credits,
-    };
-  });
+  await Promise.allSettled(
+    result.status === "submitted"
+      ? [store.deleteEvidence(normalizedEvidenceKey)]
+      : [
+          store.deleteEvidence(normalizedEvidenceKey),
+          store.deleteEvidence(sealedEvidenceKey),
+        ],
+  );
+  return result;
 }
 
 export async function reviewRewardApplication({

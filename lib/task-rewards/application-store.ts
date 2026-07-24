@@ -54,11 +54,6 @@ export interface LockedRewardApplicationStore {
 }
 
 export interface LockedRewardSubmissionStore {
-  verifyAndSealEvidence(
-    userId: string,
-    taskKey: ManualReviewTaskKey,
-    evidenceKey: string,
-  ): Promise<string | null>;
   hasClaim(userId: string, claimKey: string): Promise<boolean>;
   hasApprovedApplication(
     userId: string,
@@ -74,6 +69,12 @@ export interface LockedRewardSubmissionStore {
 }
 
 export interface RewardApplicationStore {
+  prepareEvidence(
+    userId: string,
+    taskKey: ManualReviewTaskKey,
+    evidenceKey: string,
+  ): Promise<string | null>;
+  deleteEvidence(evidenceKey: string): Promise<void>;
   withTaskLock<T>(
     userId: string,
     taskKey: ManualReviewTaskKey,
@@ -127,7 +128,7 @@ export class MemoryRewardApplicationStore implements RewardApplicationStore {
     this.failClaimCreation = options.failClaimCreation ?? false;
   }
 
-  async verifyAndSealEvidence(
+  async prepareEvidence(
     userId: string,
     taskKey: ManualReviewTaskKey,
     evidenceKey: string,
@@ -138,6 +139,8 @@ export class MemoryRewardApplicationStore implements RewardApplicationStore {
     if (!ownsUpload) return null;
     return this.sealedEvidenceByUploadKey.get(evidenceKey) ?? null;
   }
+
+  async deleteEvidence(): Promise<void> {}
 
   async hasClaim(userId: string, claimKey: string): Promise<boolean> {
     return this.claims.some(
@@ -212,8 +215,6 @@ export class MemoryRewardApplicationStore implements RewardApplicationStore {
     operation: (store: LockedRewardSubmissionStore) => Promise<T>,
   ): Promise<T> {
     return operation({
-      verifyAndSealEvidence: (userId, taskKey, evidenceKey) =>
-        this.verifyAndSealEvidence(userId, taskKey, evidenceKey),
       hasClaim: (userId, claimKey) => this.hasClaim(userId, claimKey),
       hasApprovedApplication: (userId, taskKey) =>
         this.hasApprovedApplication(userId, taskKey),

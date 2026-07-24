@@ -15,6 +15,9 @@ import {
 import { REDIS_RATE_LIMIT_CONFIGS } from "@/lib/upstash/redis-rate-limit-configs";
 
 const uuid = "123e4567-e89b-42d3-a456-426614174000";
+const fixedDate = new Date("2026-07-24T12:00:00.000Z");
+const uploadPrefix = "task/2026/07/24/upload";
+const sealedPrefix = "task/2026/07/24/sealed";
 
 test("accepts only supported image names, content types, and sizes", () => {
   for (const input of [
@@ -114,8 +117,9 @@ test("builds server-owned keys with the authenticated user and validated task", 
       taskKey: "github_star",
       contentType: "image/jpeg",
       randomUUID: () => uuid,
+      now: () => fixedDate,
     }),
-    `task-evidence/user-1/github_star/${uuid}.jpg`,
+    `${uploadPrefix}/user-1/github_star/${uuid}.jpg`,
   );
 });
 
@@ -134,6 +138,7 @@ test("prepares a size-bound presigned PUT without exposing a public object URL",
       fileSize: 2048,
     },
     randomUUID: () => uuid,
+    now: () => fixedDate,
     createPresignedUploadUrl: async (input) => {
       presignInputs.push(input);
       return "https://r2.example/presigned-put";
@@ -142,13 +147,13 @@ test("prepares a size-bound presigned PUT without exposing a public object URL",
 
   assert.deepEqual(presignInputs, [
     {
-      key: `task-evidence/user-1/github_star/${uuid}.png`,
+      key: `${uploadPrefix}/user-1/github_star/${uuid}.png`,
       contentType: "image/png",
       contentLength: 2048,
     },
   ]);
   assert.deepEqual(result, {
-    key: `task-evidence/user-1/github_star/${uuid}.png`,
+    key: `${uploadPrefix}/user-1/github_star/${uuid}.png`,
     presignedUrl: "https://r2.example/presigned-put",
   });
   assert.equal("publicObjectUrl" in result, false);
@@ -161,14 +166,15 @@ test("builds a different server-only key for sealed evidence", () => {
     taskKey: "github_star",
     contentType: "image/png",
     randomUUID: () => finalUuid,
+    now: () => fixedDate,
   });
 
-  assert.equal(key, `task-evidence-sealed/user-1/github_star/${finalUuid}.png`);
-  assert.notEqual(key, `task-evidence/user-1/github_star/${uuid}.png`);
+  assert.equal(key, `${sealedPrefix}/user-1/github_star/${finalUuid}.png`);
+  assert.notEqual(key, `${uploadPrefix}/user-1/github_star/${uuid}.png`);
 });
 
 test("sealed evidence validation accepts only the exact application owner and manual task", () => {
-  const key = `task-evidence-sealed/user-1/github_star/${uuid}.png`;
+  const key = `${sealedPrefix}/user-1/github_star/${uuid}.png`;
 
   assert.equal(
     isSealedTaskEvidenceKeyOwnedBy({
@@ -198,14 +204,14 @@ test("sealed evidence validation accepts only the exact application owner and ma
     isSealedTaskEvidenceKeyOwnedBy({
       userId: "user-1",
       taskKey: "github_star",
-      key: key.replace("task-evidence-sealed", "task-evidence"),
+      key: key.replace("/sealed/", "/upload/"),
     }),
     false,
   );
 });
 
 test("ownership requires the exact user, task, UUID filename, and safe fixed path", () => {
-  const key = `task-evidence/user-1/github_star/${uuid}.png`;
+  const key = `${uploadPrefix}/user-1/github_star/${uuid}.png`;
 
   assert.equal(
     isTaskEvidenceKeyOwnedBy({ userId: "user-1", taskKey: "github_star", key }),
@@ -226,11 +232,13 @@ test("ownership requires the exact user, task, UUID filename, and safe fixed pat
 
   for (const unsafeKey of [
     "https://cdn.example.com/proof.png",
-    "task-evidence/user-1/github_star/../../admin.png",
-    "task-evidence/user-1/github_star/not-a-uuid.png",
-    `task-evidence/user-1/github_star/${uuid}.svg`,
-    `task-evidence/user-1/github_star/${uuid}.gif`,
-    `/task-evidence/user-1/github_star/${uuid}.png`,
+    "task/2026/07/24/upload/user-1/github_star/../../admin.png",
+    "task/2026/07/24/upload/user-1/github_star/not-a-uuid.png",
+    `task/2026/07/24/upload/user-1/github_star/${uuid}.svg`,
+    `task/2026/07/24/upload/user-1/github_star/${uuid}.gif`,
+    `/task/2026/07/24/upload/user-1/github_star/${uuid}.png`,
+    `task/2026/7/24/upload/user-1/github_star/${uuid}.png`,
+    `task/2026/13/24/upload/user-1/github_star/${uuid}.png`,
   ]) {
     assert.equal(
       isTaskEvidenceKeyOwnedBy({
@@ -244,7 +252,7 @@ test("ownership requires the exact user, task, UUID filename, and safe fixed pat
 });
 
 test("validates real object metadata instead of trusting upload request metadata", () => {
-  const key = `task-evidence/user-1/github_star/${uuid}.webp`;
+  const key = `${uploadPrefix}/user-1/github_star/${uuid}.webp`;
   const base = {
     userId: "user-1",
     taskKey: "github_star" as const,
@@ -290,7 +298,7 @@ test("rejects evidence whose bytes do not match its declared image type", async 
   const result = await verifyAndSealTaskEvidence({
     userId: "user-1",
     taskKey: "github_star",
-    uploadKey: `task-evidence/user-1/github_star/${uuid}.png`,
+    uploadKey: `${uploadPrefix}/user-1/github_star/${uuid}.png`,
     headObject: async () => ({
       contentType: "image/png",
       contentLength: 1024,
@@ -300,28 +308,26 @@ test("rejects evidence whose bytes do not match its declared image type", async 
     copyObject: async () => {
       copied = true;
     },
-    deleteObject: async () => {},
   });
 
   assert.equal(result, null);
   assert.equal(copied, false);
 });
 
-test("seals verified magic bytes with an ETag-conditional copy and returns only the final key", async () => {
+test("copies verified evidence without deleting the upload and returns only the final key", async () => {
   const finalUuid = "223e4567-e89b-42d3-a456-426614174000";
-  const uploadKey = `task-evidence/user-1/github_star/${uuid}.jpg`;
+  const uploadKey = `${uploadPrefix}/user-1/github_star/${uuid}.jpg`;
   const copies: Array<{
     sourceKey: string;
     destinationKey: string;
     sourceETag: string;
   }> = [];
-  const deleted: string[] = [];
-
   const result = await verifyAndSealTaskEvidence({
     userId: "user-1",
     taskKey: "github_star",
     uploadKey,
     randomUUID: () => finalUuid,
+    now: () => fixedDate,
     headObject: async () => ({
       contentType: "image/jpeg",
       contentLength: 2048,
@@ -331,12 +337,9 @@ test("seals verified magic bytes with an ETag-conditional copy and returns only 
     copyObject: async (input) => {
       copies.push(input);
     },
-    deleteObject: async (key) => {
-      deleted.push(key);
-    },
   });
 
-  const sealedKey = `task-evidence-sealed/user-1/github_star/${finalUuid}.jpg`;
+  const sealedKey = `${sealedPrefix}/user-1/github_star/${finalUuid}.jpg`;
   assert.equal(result, sealedKey);
   assert.notEqual(result, uploadKey);
   assert.deepEqual(copies, [
@@ -346,12 +349,10 @@ test("seals verified magic bytes with an ETag-conditional copy and returns only 
       sourceETag: '"etag-1"',
     },
   ]);
-  assert.deepEqual(deleted, [uploadKey]);
 });
 
 test("treats an ETag-conditional copy failure as invalid evidence", async () => {
-  const uploadKey = `task-evidence/user-1/github_star/${uuid}.jpg`;
-  let deleted = false;
+  const uploadKey = `${uploadPrefix}/user-1/github_star/${uuid}.jpg`;
   const result = await verifyAndSealTaskEvidence({
     userId: "user-1",
     taskKey: "github_star",
@@ -365,13 +366,9 @@ test("treats an ETag-conditional copy failure as invalid evidence", async () => 
     copyObject: async () => {
       throw new Error("precondition failed");
     },
-    deleteObject: async () => {
-      deleted = true;
-    },
   });
 
   assert.equal(result, null);
-  assert.equal(deleted, false);
 });
 
 test("task evidence uploads are limited per authenticated user", () => {
