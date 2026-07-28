@@ -4,6 +4,7 @@ export type PaymentHandoffCheckoutRequest = {
   provider?: string;
   stripePriceId?: string;
   creemProductId?: string;
+  subotizPriceId?: string;
   planId?: string;
   couponCode?: string;
   referral?: string;

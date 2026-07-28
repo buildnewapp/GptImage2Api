@@ -14,7 +14,14 @@ import {
   type CheckoutProvider,
   getAvailableCheckoutProviders,
 } from "@/lib/payments/checkout-availability";
-import { Bitcoin, CreditCard, Loader2, MousePointerClick, Wallet } from "lucide-react";
+import {
+  Bitcoin,
+  CreditCard,
+  Loader2,
+  MousePointerClick,
+  Wallet,
+  WalletCards,
+} from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useState } from "react";
@@ -31,6 +38,7 @@ type Params = {
     nowpaymentsEnabled?: boolean;
     paypalEnabled?: boolean;
     stripeEnabled?: boolean;
+    subotizEnabled?: boolean;
   };
   plan: PricingPlan;
   localizedPlan: any;
@@ -60,6 +68,11 @@ const PAYMENT_METHODS: Record<
     icon: CreditCard,
     labelKey: "paymentMethods.creem.label",
   },
+  subotiz: {
+    descriptionKey: "paymentMethods.subotiz.description",
+    icon: WalletCards,
+    labelKey: "paymentMethods.subotiz.label",
+  },
   nowpayments: {
     descriptionKey: "paymentMethods.nowpayments.description",
     icon: Bitcoin,
@@ -75,7 +88,8 @@ export default function PricingCTA({
   theme = "default",
 }: Params) {
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingProvider, setLoadingProvider] = useState<CheckoutProvider | null>(null);
+  const [loadingProvider, setLoadingProvider] =
+    useState<CheckoutProvider | null>(null);
   const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
   const router = useRouter();
   const locale = useLocale();
@@ -97,6 +111,7 @@ export default function PricingCTA({
       price: plan.price,
       provider: plan.provider,
       stripePriceId: plan.stripePriceId,
+      subotizPriceId: plan.subotizPriceId,
     },
     checkoutAvailabilityEnv,
   );
@@ -114,8 +129,8 @@ export default function PricingCTA({
   };
 
   const handleCheckout = async (
-    selectedProvider: CheckoutProvider =
-      (provider || "stripe") as CheckoutProvider,
+    selectedProvider: CheckoutProvider = (provider ||
+      "stripe") as CheckoutProvider,
     applyCoupon = true,
   ) => {
     if (isNowpaymentsMode || selectedProvider === "nowpayments") {
@@ -143,9 +158,12 @@ export default function PricingCTA({
             return;
           }
 
-          throw new Error(result.error || t("errors.httpStatus", {
-            status: response.status,
-          }));
+          throw new Error(
+            result.error ||
+              t("errors.httpStatus", {
+                status: response.status,
+              }),
+          );
         }
 
         if (!result.success) {
@@ -180,6 +198,11 @@ export default function PricingCTA({
       toast.error(t("errors.creemProductMissing"));
       return;
     }
+    const subotizPriceId = plan.subotizPriceId ?? null;
+    if (selectedProvider === "subotiz" && !subotizPriceId) {
+      toast.error(t("errors.subotizPriceMissing"));
+      return;
+    }
     if (selectedProvider === "paypal" && !plan.id) {
       toast.error(t("errors.paypalPlanMissing"));
       return;
@@ -198,6 +221,7 @@ export default function PricingCTA({
         // Creem
         creemProductId?: string;
         planId?: string;
+        subotizPriceId?: string;
       } = {
         provider: selectedProvider,
       };
@@ -216,6 +240,9 @@ export default function PricingCTA({
           applyCoupon && plan.creemDiscountCode
             ? plan.creemDiscountCode
             : undefined;
+      }
+      if (selectedProvider === "subotiz") {
+        requestBody.subotizPriceId = subotizPriceId!;
       }
       if (selectedProvider === "paypal") {
         requestBody.planId = plan.id;
@@ -238,9 +265,12 @@ export default function PricingCTA({
           toast.error(t("errors.loginRequired"));
           return;
         }
-        throw new Error(result.error || t("errors.httpStatus", {
-          status: response.status,
-        }));
+        throw new Error(
+          result.error ||
+            t("errors.httpStatus", {
+              status: response.status,
+            }),
+        );
       }
 
       if (!result.success) {

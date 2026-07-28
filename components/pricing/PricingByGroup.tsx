@@ -38,6 +38,11 @@ export default async function PricingByGroup({
     nowpaymentsEnabled: Boolean(process.env.NOWPAYMENTS_API_KEY),
     paypalEnabled: isPayPalEnabled,
     stripeEnabled: Boolean(process.env.STRIPE_SECRET_KEY),
+    subotizEnabled: Boolean(
+      process.env.SUBOTIZ_API_KEY &&
+      process.env.SUBOTIZ_ACCESS_NO &&
+      process.env.SUBOTIZ_MERCHANT_ID
+    ),
   };
 
   let allPlans: PricingPlan[] = [];

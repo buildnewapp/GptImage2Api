@@ -26,12 +26,14 @@ const buildVerifySuccessUrl = ({
   checkoutId,
   token,
   subscriptionId,
+  orderId,
   provider,
 }: {
   sessionId: string;
   checkoutId: string;
   token: string;
   subscriptionId: string;
+  orderId: string;
   provider: string;
 }) => {
   const baseUrl = "/api/payment/verify-success";
@@ -42,6 +44,8 @@ const buildVerifySuccessUrl = ({
     params.append("session_id", sessionId);
   } else if (provider === "creem") {
     params.append("checkout_id", checkoutId);
+  } else if (provider === "subotiz") {
+    params.append("order_id", orderId);
   } else if (provider === "paypal") {
     if (subscriptionId) {
       params.append("subscription_id", subscriptionId);
@@ -65,10 +69,11 @@ function SuccessContent() {
   const checkoutId = searchParams.get("checkout_id");
   const token = searchParams.get("token");
   const subscriptionId = searchParams.get("subscription_id");
+  const orderId = searchParams.get("order_id");
   const provider = searchParams.get("provider");
 
   const [status, setStatus] = useState<"verifying" | "success" | "error">(
-    "verifying"
+    "verifying",
   );
   const [paymentData, setPaymentData] = useState<{
     message: string;
@@ -94,6 +99,13 @@ function SuccessContent() {
       });
       return;
     }
+    if (provider === "subotiz" && !orderId) {
+      setStatus("error");
+      setPaymentData({
+        message: t("errors.missingSubotizOrder"),
+      });
+      return;
+    }
     if (provider === "paypal" && !token && !subscriptionId) {
       setStatus("error");
       setPaymentData({
@@ -109,6 +121,7 @@ function SuccessContent() {
           checkoutId: checkoutId ?? "",
           token: token ?? "",
           subscriptionId: subscriptionId ?? "",
+          orderId: orderId ?? "",
           provider: provider ?? "",
         });
         const response = await fetch(url, {
@@ -134,9 +147,7 @@ function SuccessContent() {
 
         setStatus("success");
         setPaymentData({
-          message:
-            result.data.message ||
-            t("success.message"),
+          message: result.data.message || t("success.message"),
           orderId: result.data.orderId,
           subscriptionId: result.data.subscriptionId,
           planName: result.data.planName,
@@ -159,6 +170,7 @@ function SuccessContent() {
     checkoutId,
     token,
     subscriptionId,
+    orderId,
     provider,
     locale,
     revalidateBenefits,

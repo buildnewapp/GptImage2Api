@@ -448,6 +448,7 @@
     "errors": {
       "missingStripeSession": "Checkout Session ID が不足しているため、支払いを確認できません。",
       "missingCreemCheckout": "Checkout ID が不足しているため、支払いを確認できません。",
+      "missingSubotizOrder": "Subotiz の注文 ID が不足しているため、支払いを確認できません。",
       "missingPaypalParams": "PayPal の token または subscription ID が不足しているため、支払いを確認できません。",
       "verificationFailed": "確認に失敗しました。",
       "unknownVerificationError": "確認中にエラーが発生しました。"

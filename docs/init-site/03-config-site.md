@@ -84,9 +84,7 @@ config/ai-video-studio.ts
 
 
 ### paypal
-统一使用 `PAY_ENV` 控制支付环境：
-- `PAY_ENV=test`：PayPal Sandbox
-- `PAY_ENV=live`：PayPal Live
+产品同步必须传入 `env`：`test` 加载 `.env.local`，`live` 加载 `.env`。
 
 #### 测试环境
 1 新建测试应用，登录主账户
@@ -107,9 +105,8 @@ https://www.sandbox.paypal.com/billing/overview
 
 3 自动创建订阅产品
 提供PAYPAL_CLIENT_ID、PAYPAL_CLIENT_SECRET 让 ai 使用脚本创建产品+订阅计划，获取计划 id
-pnpm db:sync-paypal-products
-PAY_ENV=test pnpm db:sync-paypal-products -- --force
-PAY_ENV=live pnpm db:sync-paypal-products -- --force
+pnpm db:sync-paypal-products -- env=test --force
+pnpm db:sync-paypal-products -- env=live --force
 pnpm db:seed
 
 #### 真实环境
@@ -121,7 +118,7 @@ create app → name + Merchant + Sandbox Account → get Client ID + Secret key 
 添加 webhook → 填写 回调地址 + all events → save
 3 自动创建订阅产品
 提供PAYPAL_CLIENT_ID、PAYPAL_CLIENT_SECRET 让 ai 使用脚本创建产品+订阅计划，获取计划 id
-pnpm db:sync-paypal-products
+pnpm db:sync-paypal-products -- env=live
 查看创建成功：https://www.paypal.com/billing/plans
 查看 plan id 回写
 4 测试账户
@@ -133,13 +130,47 @@ pnpm db:sync-paypal-products
 https://many-fine-bullfrog.ngrok-free.app/api/creem/webhook
 https://xxxx/api/creem/webhook
 *修改 .env 配置*
-把 test 环境 CREEM_API_BASE_URL 、 CREEM_API_KEY 临时拷贝到 .env中
-PAY_ENV=test pnpm db:sync-creem-products -- --force
-PAY_ENV=live pnpm db:sync-creem-products -- --force
+测试环境配置放在 `.env.local`，正式环境配置放在 `.env`。
+pnpm db:sync-creem-products -- env=test --force
+pnpm db:sync-creem-products -- env=live --force
 pnpm db:seed
 # moderation provider: none | creem
 MODERATION=creem
 MODERATION_API_KEY=
+
+### subotiz
+API Docs: https://docs.subotiz.com/zh/quick-start/quick-start
+Sandbox API: https://api.sandbox.subotiz.com
+Production API: https://api.subotiz.com
+Webhook URL: {NEXT_PUBLIC_SITE_URL}/api/subotiz/webhook
+1 测试环境
+https://admin.sandbox.subotiz.com/
+菜单 开发者：
+SUBOTIZ_API_BASE_URL=https://api.sandbox.subotiz.com
+SUBOTIZ_API_KEY=sk_cztHfUpNUk89e1NVVnF7P3VmKWZXXk43L1kkeSIrb0lAQjg+LzgpNCFLUC9Yaipu
+SUBOTIZ_ACCESS_NO=95111ac4f401151
+SUBOTIZ_MERCHANT_ID=671337251707303881
+
+ngrok http --domain=many-fine-bullfrog.ngrok-free.app 3000
+Webhook URL: https://many-fine-bullfrog.ngrok-free.app/api/subotiz/webhook
+2 真实环境
+https://admin.subotiz.com/
+菜单 开发者：
+SUBOTIZ_API_BASE_URL=https://api.subotiz.com
+SUBOTIZ_API_KEY=sk_PTNzUHcsJjlOYytCXS4sS1gnQ1BWIzM4ayk9eyxbdjdeMXojPHRwNE9ZK05dSTlQ
+SUBOTIZ_ACCESS_NO=9428b770b801353
+SUBOTIZ_MERCHANT_ID=667249039162490822
+
+Webhook URL: {NEXT_PUBLIC_SITE_URL}/api/subotiz/webhook
+
+3 产品同步
+# 测试产品，加载 .env.local
+pnpm db:sync-subotiz-products -- env=test
+
+# 正式产品，加载 .env
+pnpm db:sync-subotiz-products -- env=live
+
+pnpm db:seed
 
 ### 定时任务
 GET /api/ai-studio/archive-r2?secret=YOUR_SECRET&limit=10

@@ -1,8 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { Bitcoin, CreditCard, Loader2, Wallet } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Bitcoin,
+  CreditCard,
+  Loader2,
+  Wallet,
+  WalletCards,
+} from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import type { CheckoutProvider } from "@/lib/payments/checkout-availability";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
@@ -36,6 +48,11 @@ const PAYMENT_METHODS: Record<
     icon: CreditCard,
     labelKey: "paymentMethods.creem.label",
   },
+  subotiz: {
+    descriptionKey: "paymentMethods.subotiz.description",
+    icon: WalletCards,
+    labelKey: "paymentMethods.subotiz.label",
+  },
   nowpayments: {
     descriptionKey: "paymentMethods.nowpayments.description",
     icon: Bitcoin,
@@ -57,7 +74,8 @@ export default function VideoPricingAction({
   plan,
 }: VideoPricingActionProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingProvider, setLoadingProvider] = useState<CheckoutProvider | null>(null);
+  const [loadingProvider, setLoadingProvider] =
+    useState<CheckoutProvider | null>(null);
   const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
   const t = useTranslations("Pricing");
 
@@ -65,13 +83,16 @@ export default function VideoPricingAction({
   const isProviderChoice = provider === "all";
   const availableProviders = (plan.providerOptions ?? []) as CheckoutProvider[];
 
-  const defaultCouponCode = provider === "creem"
-    ? plan.creemDiscountCode
-    : provider === "stripe"
-      ? plan.stripeCouponId
-      : null;
+  const defaultCouponCode =
+    provider === "creem"
+      ? plan.creemDiscountCode
+      : provider === "stripe"
+        ? plan.stripeCouponId
+        : null;
   const allowManualCoupon =
-    !isProviderChoice && Boolean(defaultCouponCode) && plan.enableManualInputCoupon;
+    !isProviderChoice &&
+    Boolean(defaultCouponCode) &&
+    plan.enableManualInputCoupon;
 
   const getCheckoutErrorMessage = (error: unknown) => {
     if (!(error instanceof Error)) {
@@ -86,7 +107,8 @@ export default function VideoPricingAction({
   };
 
   const handleCheckout = async (
-    selectedProvider: CheckoutProvider = (provider || "stripe") as CheckoutProvider,
+    selectedProvider: CheckoutProvider = (provider ||
+      "stripe") as CheckoutProvider,
     applyCoupon = true,
   ) => {
     if (selectedProvider === "nowpayments") {
@@ -99,7 +121,8 @@ export default function VideoPricingAction({
             planId: plan.planId,
           }),
           headers: {
-            "Accept-Language": document.documentElement.lang || navigator.language || "en",
+            "Accept-Language":
+              document.documentElement.lang || navigator.language || "en",
             "Content-Type": "application/json",
           },
           method: "POST",
@@ -147,6 +170,10 @@ export default function VideoPricingAction({
       toast.error(t("errors.creemProductMissing"));
       return;
     }
+    if (selectedProvider === "subotiz" && !plan.subotizPriceId) {
+      toast.error(t("errors.subotizPriceMissing"));
+      return;
+    }
     if (selectedProvider === "paypal" && !plan.planId) {
       toast.error(t("errors.paypalPlanMissing"));
       return;
@@ -163,19 +190,29 @@ export default function VideoPricingAction({
         provider: string;
         referral?: string;
         stripePriceId?: string;
+        subotizPriceId?: string;
       } = {
         provider: selectedProvider,
       };
 
       if (selectedProvider === "stripe") {
         requestBody.stripePriceId = plan.stripePriceId ?? undefined;
-        requestBody.couponCode = applyCoupon ? plan.stripeCouponId ?? undefined : undefined;
-        requestBody.referral = (window as { tolt_referral?: string }).tolt_referral;
+        requestBody.couponCode = applyCoupon
+          ? (plan.stripeCouponId ?? undefined)
+          : undefined;
+        requestBody.referral = (
+          window as { tolt_referral?: string }
+        ).tolt_referral;
       }
 
       if (selectedProvider === "creem") {
         requestBody.creemProductId = plan.creemProductId ?? undefined;
-        requestBody.couponCode = applyCoupon ? plan.creemDiscountCode ?? undefined : undefined;
+        requestBody.couponCode = applyCoupon
+          ? (plan.creemDiscountCode ?? undefined)
+          : undefined;
+      }
+      if (selectedProvider === "subotiz") {
+        requestBody.subotizPriceId = plan.subotizPriceId ?? undefined;
       }
       if (selectedProvider === "paypal") {
         requestBody.planId = plan.planId ?? undefined;
@@ -184,7 +221,8 @@ export default function VideoPricingAction({
       const response = await fetch("/api/payment/checkout-session", {
         body: JSON.stringify(requestBody),
         headers: {
-          "Accept-Language": document.documentElement.lang || navigator.language || "en",
+          "Accept-Language":
+            document.documentElement.lang || navigator.language || "en",
           "Content-Type": "application/json",
         },
         method: "POST",
@@ -273,7 +311,10 @@ export default function VideoPricingAction({
             )}
             disabled={isLoading}
             onClick={() =>
-              void handleCheckout((provider || "stripe") as CheckoutProvider, false)
+              void handleCheckout(
+                (provider || "stripe") as CheckoutProvider,
+                false,
+              )
             }
             type="button"
           >

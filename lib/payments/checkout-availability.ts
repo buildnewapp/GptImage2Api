@@ -3,7 +3,12 @@ import {
   isRecurringPaymentType,
 } from "@/lib/payments/provider-utils";
 
-export type CheckoutProvider = "stripe" | "paypal" | "creem" | "nowpayments";
+export type CheckoutProvider =
+  | "stripe"
+  | "paypal"
+  | "creem"
+  | "subotiz"
+  | "nowpayments";
 
 export type CheckoutAvailabilityPlan = {
   creemProductId?: string | null;
@@ -13,6 +18,7 @@ export type CheckoutAvailabilityPlan = {
   price?: string | number | null;
   provider?: string | null;
   stripePriceId?: string | null;
+  subotizPriceId?: string | null;
 };
 
 export type CheckoutAvailabilityEnv = {
@@ -20,6 +26,7 @@ export type CheckoutAvailabilityEnv = {
   nowpaymentsEnabled?: boolean;
   paypalEnabled?: boolean;
   stripeEnabled?: boolean;
+  subotizEnabled?: boolean;
 };
 
 const TODO_VALUE_PREFIX = "TODO_";
@@ -54,6 +61,13 @@ export function getAvailableCheckoutProviders(
 
   if (creemEnabled && hasUsableProviderId(plan.creemProductId)) {
     providers.push("creem");
+  }
+
+  if (
+    (env.subotizEnabled ?? true) &&
+    hasUsableProviderId(plan.subotizPriceId)
+  ) {
+    providers.push("subotiz");
   }
 
   if (env.paypalEnabled) {

@@ -44,6 +44,10 @@
       "label": "Creem",
       "description": "使用信用卡或借记卡安全支付。"
     },
+    "subotiz": {
+      "label": "Subotiz",
+      "description": "支持信用卡、Apple Pay 和 Google Pay 安全支付。"
+    },
     "nowpayments": {
       "label": "虚拟币",
       "description": "通过 NOWPayments 使用虚拟币支付。"
@@ -58,6 +62,7 @@
     "unexpected": "发生了意外错误。",
     "stripePriceMissing": "当前套餐缺少 Stripe 价格 ID。",
     "creemProductMissing": "当前套餐缺少 Creem 商品 ID。",
+    "subotizPriceMissing": "当前套餐缺少 Subotiz 定价 ID。",
     "paypalPlanMissing": "当前套餐缺少 PayPal 套餐 ID。",
     "noPaymentMethods": "当前套餐没有可用的支付方式。",
     "recurringHigherTierRequired": "你已有更高或同级的订阅，重复购买订阅时只能购买价格更高的套餐。"

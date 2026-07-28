@@ -76,6 +76,7 @@ export type VideoPricingSourcePlan = {
   provider?: string | null;
   stripeCouponId?: string | null;
   stripePriceId?: string | null;
+  subotizPriceId?: string | null;
 };
 
 const accentByOrder = ["foreground", "primary", "accent"] as const;
@@ -85,7 +86,9 @@ const iconByAccent = {
   primary: "crown",
 } as const;
 
-function resolvePricingEnvironment(environment?: PricingEnvironment): PricingEnvironment {
+function resolvePricingEnvironment(
+  environment?: PricingEnvironment,
+): PricingEnvironment {
   if (environment) {
     return environment;
   }
@@ -116,7 +119,10 @@ function getLocalizedPlanContent(
   plan: VideoPricingSourcePlan,
   locale: string,
 ): LocalizedPricingContent {
-  const content = (plan.langJsonb ?? {}) as Record<string, LocalizedPricingContent>;
+  const content = (plan.langJsonb ?? {}) as Record<
+    string,
+    LocalizedPricingContent
+  >;
   return content[locale] ?? content[DEFAULT_LOCALE] ?? {};
 }
 
@@ -179,7 +185,9 @@ function formatBilled(
   return undefined;
 }
 
-function mapFeatures(features: PricingFeature[] | undefined): VideoTemplatePricingFeature[] {
+function mapFeatures(
+  features: PricingFeature[] | undefined,
+): VideoTemplatePricingFeature[] {
   return (features ?? [])
     .filter((feature) => feature.included)
     .map((feature) => ({
@@ -188,7 +196,9 @@ function mapFeatures(features: PricingFeature[] | undefined): VideoTemplatePrici
     }));
 }
 
-function buildCheckoutPlan(plan: VideoPricingSourcePlan): VideoTemplateCheckoutPlan {
+function buildCheckoutPlan(
+  plan: VideoPricingSourcePlan,
+): VideoTemplateCheckoutPlan {
   return {
     buttonLink: plan.buttonLink ?? null,
     creemDiscountCode: plan.creemDiscountCode ?? null,
@@ -204,9 +214,15 @@ function buildCheckoutPlan(plan: VideoPricingSourcePlan): VideoTemplateCheckoutP
         process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET,
       ),
       stripeEnabled: Boolean(process.env.STRIPE_SECRET_KEY),
+      subotizEnabled: Boolean(
+        process.env.SUBOTIZ_API_KEY &&
+          process.env.SUBOTIZ_ACCESS_NO &&
+          process.env.SUBOTIZ_MERCHANT_ID,
+      ),
     }),
     stripeCouponId: plan.stripeCouponId ?? null,
     stripePriceId: plan.stripePriceId ?? null,
+    subotizPriceId: plan.subotizPriceId ?? null,
   };
 }
 
@@ -218,11 +234,18 @@ function buildSavingsLabel(
 ): string {
   const savings = annualPlans
     .map((annualPlan) => {
-      const monthlyPlan = monthlyPlans.find((candidate) => candidate.cardTitle === annualPlan.cardTitle);
+      const monthlyPlan = monthlyPlans.find(
+        (candidate) => candidate.cardTitle === annualPlan.cardTitle,
+      );
       const annualPrice = Number(annualPlan.price);
       const monthlyPrice = Number(monthlyPlan?.price);
 
-      if (!monthlyPlan || !Number.isFinite(annualPrice) || !Number.isFinite(monthlyPrice) || monthlyPrice <= 0) {
+      if (
+        !monthlyPlan ||
+        !Number.isFinite(annualPrice) ||
+        !Number.isFinite(monthlyPrice) ||
+        monthlyPrice <= 0
+      ) {
         return null;
       }
 
@@ -251,12 +274,14 @@ function mapRecurringPlan(
   const matchingMonthlyLocalizedPlan = matchingMonthlyPlan
     ? getLocalizedPlanContent(matchingMonthlyPlan, locale)
     : undefined;
-  const accent =
-    plan.isHighlighted
-      ? "primary"
-      : accentByOrder[
-          Math.min(Math.max((plan.displayOrder ?? 1) - 1, 0), accentByOrder.length - 1)
-        ] ?? "foreground";
+  const accent = plan.isHighlighted
+    ? "primary"
+    : (accentByOrder[
+        Math.min(
+          Math.max((plan.displayOrder ?? 1) - 1, 0),
+          accentByOrder.length - 1,
+        )
+      ] ?? "foreground");
 
   return {
     accent,
@@ -268,16 +293,24 @@ function mapRecurringPlan(
       copy,
     ),
     cta: localizedPlan.buttonText ?? plan.buttonText ?? "Subscribe",
-    description: localizedPlan.cardDescription ?? plan.cardDescription ?? undefined,
+    description:
+      localizedPlan.cardDescription ?? plan.cardDescription ?? undefined,
     featured: plan.isHighlighted,
-    features: mapFeatures((localizedPlan.features as PricingFeature[] | undefined) ?? (plan.features as PricingFeature[] | undefined)),
-    highlightText: localizedPlan.highlightText ?? plan.highlightText ?? undefined,
+    features: mapFeatures(
+      (localizedPlan.features as PricingFeature[] | undefined) ??
+        (plan.features as PricingFeature[] | undefined),
+    ),
+    highlightText:
+      localizedPlan.highlightText ?? plan.highlightText ?? undefined,
     icon: iconByAccent[accent],
     name: localizedPlan.cardTitle ?? plan.cardTitle,
     originalPrice:
       plan.groupSlug === "annual"
-        ? matchingMonthlyLocalizedPlan?.displayPrice ?? matchingMonthlyPlan?.displayPrice ?? plan.originalPrice ?? undefined
-        : plan.originalPrice ?? undefined,
+        ? (matchingMonthlyLocalizedPlan?.displayPrice ??
+          matchingMonthlyPlan?.displayPrice ??
+          plan.originalPrice ??
+          undefined)
+        : (plan.originalPrice ?? undefined),
     price: localizedPlan.displayPrice ?? plan.displayPrice ?? "",
     priceSuffix: localizedPlan.priceSuffix ?? plan.priceSuffix ?? undefined,
   };
@@ -294,15 +327,19 @@ function mapOneTimePlan(
     typeof benefits?.oneTimeCredits === "number"
       ? formatTemplate(
           copy.creditPackTitle ?? defaultDynamicCopy.creditPackTitle,
-          { credits: formatNumber(benefits.oneTimeCredits, locale) },
+          {
+            credits: formatNumber(benefits.oneTimeCredits, locale),
+          },
         )
       : undefined;
 
   return {
     checkoutPlan: buildCheckoutPlan(plan),
     cta: localizedPlan.buttonText ?? plan.buttonText ?? "Buy Now",
-    description: localizedPlan.cardDescription ?? plan.cardDescription ?? undefined,
-    highlightText: localizedPlan.highlightText ?? plan.highlightText ?? undefined,
+    description:
+      localizedPlan.cardDescription ?? plan.cardDescription ?? undefined,
+    highlightText:
+      localizedPlan.highlightText ?? plan.highlightText ?? undefined,
     price: localizedPlan.displayPrice ?? plan.displayPrice ?? "",
     title: creditTitle ?? localizedPlan.cardTitle ?? plan.cardTitle,
   };
@@ -324,18 +361,28 @@ export function buildVideoTemplatePricingSection({
   const pricingEnvironment = resolvePricingEnvironment(environment);
   const activePlans = plans
     .filter((plan) => plan.environment === pricingEnvironment && plan.isActive)
-    .sort((left, right) => (left.displayOrder ?? 0) - (right.displayOrder ?? 0));
+    .sort(
+      (left, right) => (left.displayOrder ?? 0) - (right.displayOrder ?? 0),
+    );
 
-  const annualSourcePlans = activePlans.filter((plan) => plan.groupSlug === "annual");
-  const monthlySourcePlans = activePlans.filter((plan) => plan.groupSlug === "monthly");
-  const oneTimeSourcePlans = activePlans.filter((plan) => plan.groupSlug === "onetime");
+  const annualSourcePlans = activePlans.filter(
+    (plan) => plan.groupSlug === "annual",
+  );
+  const monthlySourcePlans = activePlans.filter(
+    (plan) => plan.groupSlug === "monthly",
+  );
+  const oneTimeSourcePlans = activePlans.filter(
+    (plan) => plan.groupSlug === "onetime",
+  );
 
   const yearlyPlans = annualSourcePlans.map((plan) =>
     mapRecurringPlan(
       plan,
       locale,
       copy,
-      monthlySourcePlans.find((candidate) => candidate.cardTitle === plan.cardTitle),
+      monthlySourcePlans.find(
+        (candidate) => candidate.cardTitle === plan.cardTitle,
+      ),
     ),
   );
   const monthlyPlans = monthlySourcePlans.map((plan) =>

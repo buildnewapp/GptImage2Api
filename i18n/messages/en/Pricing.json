@@ -44,6 +44,10 @@
       "label": "Creem",
       "description": "Pay securely with credit or debit card."
     },
+    "subotiz": {
+      "label": "Subotiz",
+      "description": "Pay securely with credit card, Apple Pay, or Google Pay."
+    },
     "nowpayments": {
       "label": "Crypto",
       "description": "Pay with cryptocurrency through NOWPayments."
@@ -58,6 +62,7 @@
     "unexpected": "An unexpected error occurred.",
     "stripePriceMissing": "Stripe price ID is missing for this plan.",
     "creemProductMissing": "Creem product ID is missing for this plan.",
+    "subotizPriceMissing": "Subotiz price ID is missing for this plan.",
     "paypalPlanMissing": "PayPal plan ID is missing for this plan.",
     "noPaymentMethods": "No payment methods are available for this plan.",
     "recurringHigherTierRequired": "You already have an equal or higher subscription. Repeat purchases must be for a higher-priced plan."

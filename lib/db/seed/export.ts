@@ -105,6 +105,11 @@ function convertPlanToConfig(plan: DbPricingPlan): string {
     lines.push(`${indent}creemDiscountCode: '${plan.creemDiscountCode}',`)
   }
 
+  // Subotiz fields
+  if (plan.subotizPriceId) {
+    lines.push(`${indent}subotizPriceId: '${plan.subotizPriceId}',`)
+  }
+
   // PayPal fields
   if (plan.paypalProductId) {
     lines.push(`${indent}paypalProductId: '${plan.paypalProductId}',`)

@@ -179,6 +179,7 @@ export const providerEnum = pgEnum("provider", [
   "all", // let users choose from configured payment methods
   "stripe",
   "creem",
+  "subotiz",
   "paypal",
 ]);
 export type PaymentProvider = (typeof providerEnum.enumValues)[number];
@@ -224,6 +225,7 @@ export const pricingPlans = pgTable("pricing_plans", {
   stripeCouponId: varchar("stripe_coupon_id", { length: 255 }),
   creemProductId: varchar("creem_product_id", { length: 255 }),
   creemDiscountCode: varchar("creem_discount_code", { length: 255 }),
+  subotizPriceId: varchar("subotiz_price_id", { length: 255 }),
   paypalProductId: varchar("paypal_product_id", { length: 255 }),
   paypalPlanId: varchar("paypal_plan_id", { length: 255 }),
   enableManualInputCoupon: boolean("enable_manual_input_coupon")

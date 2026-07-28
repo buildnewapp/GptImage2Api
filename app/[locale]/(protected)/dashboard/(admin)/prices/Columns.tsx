@@ -104,6 +104,7 @@ export const columns: ColumnDef<PricingPlan>[] = [
       const provider = plan.provider;
       const stripePriceId = plan.stripePriceId;
       const creemProductId = plan.creemProductId;
+      const subotizPriceId = plan.subotizPriceId;
       const paypalPlanId = plan.paypalPlanId;
       const environment = plan.environment;
 
@@ -121,6 +122,12 @@ export const columns: ColumnDef<PricingPlan>[] = [
       const creemLink =
         provider === "creem" && creemProductId
           ? `https://www.creem.io/dashboard/products`
+          : null;
+      const subotizLink =
+        provider === "subotiz" && subotizPriceId
+          ? environment === "live"
+            ? "https://admin.subotiz.com"
+            : "https://admin.sandbox.subotiz.com"
           : null;
 
       return (
@@ -144,6 +151,17 @@ export const columns: ColumnDef<PricingPlan>[] = [
               className="flex items-center gap-1 text-xs"
             >
               {creemProductId}{" "}
+              <ExternalLink className="h-3 w-3 text-muted-foreground hover:text-primary" />
+            </Link>
+          )}
+          {subotizLink && (
+            <Link
+              href={subotizLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-xs"
+            >
+              {subotizPriceId}{" "}
               <ExternalLink className="h-3 w-3 text-muted-foreground hover:text-primary" />
             </Link>
           )}

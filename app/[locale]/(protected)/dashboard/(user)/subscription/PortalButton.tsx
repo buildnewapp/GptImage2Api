@@ -17,7 +17,9 @@ function SubmitButton({ provider }: PortalButtonProps) {
       ? "Manage Subscription (Stripe)"
       : provider === "creem"
         ? "Manage Subscription (Creem)"
-        : "Manage Subscription (PayPal)";
+        : provider === "subotiz"
+          ? "Manage Subscription (Subotiz)"
+          : "Manage Subscription (PayPal)";
 
   return (
     <Button type="submit" variant="outline" disabled={pending}>

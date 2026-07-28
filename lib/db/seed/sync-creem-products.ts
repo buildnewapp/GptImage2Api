@@ -2,17 +2,15 @@
  * Creem Product Sync Script
  * Creem 产品同步脚本
  *
- * Creates Creem products for current PAY_ENV plans and writes product ids back
- * to pricing-config.ts.
+ * Creates Creem products for the selected environment and writes product ids
+ * back to pricing-config.ts.
  *
  * Usage:
- *   pnpm db:sync-creem-products -- --dry-run
- *   pnpm db:sync-creem-products
- *   pnpm db:sync-creem-products -- --force
+ *   pnpm db:sync-creem-products -- env=test --dry-run
+ *   pnpm db:sync-creem-products -- env=test
+ *   pnpm db:sync-creem-products -- env=live --force
  */
 
-import { loadEnvConfig } from '@next/env'
-import 'dotenv/config'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -20,12 +18,12 @@ import type { CreemProductCreateParams } from '../../creem/types'
 import {
   applyCreemProductIdUpdates,
   buildCreemProductPayload,
-  normalizePayEnvironment,
+  loadProductSyncEnvironmentFile,
+  parseProductSyncEnvironmentArgument,
 } from './creem-product-sync'
 import { pricingPlans } from './pricing-config'
 
 const projectDir = process.cwd()
-loadEnvConfig(projectDir)
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -79,10 +77,11 @@ function buildCreateParamsFromPlan(plan: (typeof pricingPlans)[number]): CreemPr
 }
 
 async function main() {
-  const { createCreemProduct } = await import('../../creem/client')
   const dryRun = process.argv.includes('--dry-run')
   const force = process.argv.includes('--force')
-  const payEnv = normalizePayEnvironment(process.env.PAY_ENV)
+  const payEnv = parseProductSyncEnvironmentArgument(process.argv.slice(2))
+  const environmentFile = loadProductSyncEnvironmentFile(payEnv, projectDir)
+  const { createCreemProduct } = await import('../../creem/client')
   const creemApiBaseUrl = process.env.CREEM_API_BASE_URL ?? 'https://api.creem.io/v1'
 
   if (!dryRun && !process.env.CREEM_API_KEY) {
@@ -90,15 +89,19 @@ async function main() {
   }
 
   if (payEnv === 'test' && !creemApiBaseUrl.includes('test-api')) {
-    console.warn(
-      `[warn] PAY_ENV=test but CREEM_API_BASE_URL is ${creemApiBaseUrl}. Creem test environment usually uses test-api domain.`
-    )
+    const message = `env=test loaded ${environmentFile}, but CREEM_API_BASE_URL is ${creemApiBaseUrl}.`
+    if (!dryRun) {
+      throw new Error(`${message} Refusing to write test products to the live API.`)
+    }
+    console.warn(`[warn] ${message}`)
   }
 
   if (payEnv === 'live' && creemApiBaseUrl.includes('test-api')) {
-    console.warn(
-      `[warn] PAY_ENV=live but CREEM_API_BASE_URL is ${creemApiBaseUrl}. Please verify environment settings before proceeding.`
-    )
+    const message = `env=live loaded ${environmentFile}, but CREEM_API_BASE_URL is ${creemApiBaseUrl}.`
+    if (!dryRun) {
+      throw new Error(`${message} Refusing to write live products to the test API.`)
+    }
+    console.warn(`[warn] ${message}`)
   }
 
   const targetPlans = pricingPlans.filter(
@@ -106,11 +109,12 @@ async function main() {
   )
 
   if (targetPlans.length === 0) {
-    console.log(`No Creem plans found for PAY_ENV=${payEnv}.`)
+    console.log(`No Creem plans found for env=${payEnv}.`)
     return
   }
 
-  console.log(`[sync] PAY_ENV=${payEnv}`)
+  console.log(`[sync] env=${payEnv}`)
+  console.log(`[sync] Loaded configuration from ${environmentFile}`)
   console.log(`[sync] Found ${targetPlans.length} Creem plan(s) in pricing-config.ts`)
   if (dryRun) {
     console.log('[dry-run] No API writes and no file changes.')

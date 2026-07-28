@@ -17,7 +17,13 @@
 /**
  * Payment provider constants
  */
-export const ORDER_PROVIDERS = ["stripe", "creem", "paypal", "nowpayments"] as const;
+export const ORDER_PROVIDERS = [
+  "stripe",
+  "creem",
+  "subotiz",
+  "paypal",
+  "nowpayments",
+] as const;
 
 // ============================================================================
 // Payment Type Utilities

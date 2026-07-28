@@ -1,28 +1,26 @@
 'use server'
 
-import { DEFAULT_LOCALE } from '@/i18n/routing';
-import { actionResponse, ActionResult } from '@/lib/action-response';
-import { isAdmin } from '@/lib/auth/server';
-import { getDb } from '@/lib/db';
-import { pricingPlans as pricingPlansSchema } from '@/lib/db/schema';
-import { getErrorMessage } from '@/lib/error-utils';
-import { asc, eq } from 'drizzle-orm';
-import { getTranslations } from 'next-intl/server';
-import 'server-only';
+import { DEFAULT_LOCALE } from '@/i18n/routing'
+import { actionResponse, ActionResult } from '@/lib/action-response'
+import { isAdmin } from '@/lib/auth/server'
+import { getDb } from '@/lib/db'
+import { pricingPlans as pricingPlansSchema } from '@/lib/db/schema'
+import { getErrorMessage } from '@/lib/error-utils'
+import { asc, eq } from 'drizzle-orm'
+import { getTranslations } from 'next-intl/server'
+import 'server-only'
 
 type PricingPlan = typeof pricingPlansSchema.$inferSelect
 
 /**
  * Admin List
  */
-export async function getAdminPricingPlans(): Promise<
-  ActionResult<PricingPlan[]>
-> {
+export async function getAdminPricingPlans(): Promise<ActionResult<PricingPlan[]>> {
   if (!(await isAdmin())) {
     return actionResponse.forbidden('Admin privileges required.')
   }
 
-  const db = getDb();
+  const db = getDb()
 
   try {
     const plans = await db
@@ -40,9 +38,7 @@ export async function getAdminPricingPlans(): Promise<
 /**
  * Admin Get By ID
  */
-export async function getPricingPlanById(
-  planId: string
-): Promise<ActionResult<PricingPlan | null>> {
+export async function getPricingPlanById(planId: string): Promise<ActionResult<PricingPlan | null>> {
   if (!planId) {
     return actionResponse.badRequest('Plan ID is required.')
   }
@@ -50,14 +46,10 @@ export async function getPricingPlanById(
     return actionResponse.forbidden('Admin privileges required.')
   }
 
-  const db = getDb();
+  const db = getDb()
 
   try {
-    const result = await db
-      .select()
-      .from(pricingPlansSchema)
-      .where(eq(pricingPlansSchema.id, planId))
-      .limit(1)
+    const result = await db.select().from(pricingPlansSchema).where(eq(pricingPlansSchema.id, planId)).limit(1)
 
     const plan = result[0]
 
@@ -67,10 +59,7 @@ export async function getPricingPlanById(
 
     return actionResponse.success((plan as unknown as PricingPlan) || null)
   } catch (error) {
-    console.error(
-      `Unexpected error in getPricingPlanById for ID ${planId}:`,
-      error
-    )
+    console.error(`Unexpected error in getPricingPlanById for ID ${planId}:`, error)
     return actionResponse.error(getErrorMessage(error))
   }
 }
@@ -83,11 +72,8 @@ interface CreatePricingPlanParams {
   locale?: string
 }
 
-export async function createPricingPlanAction({
-  planData,
-  locale = DEFAULT_LOCALE,
-}: CreatePricingPlanParams) {
-  const db = getDb();
+export async function createPricingPlanAction({ planData, locale = DEFAULT_LOCALE }: CreatePricingPlanParams) {
+  const db = getDb()
   if (!(await isAdmin())) {
     return actionResponse.forbidden('Admin privileges required.')
   }
@@ -129,12 +115,23 @@ export async function createPricingPlanAction({
   if (planData.provider === 'stripe') {
     planData.creemProductId = null
     planData.creemDiscountCode = null
+    planData.subotizPriceId = null
     planData.paypalProductId = null
     planData.paypalPlanId = null
   } else if (planData.provider === 'creem') {
     planData.stripePriceId = null
     planData.stripeProductId = null
     planData.stripeCouponId = null
+    planData.subotizPriceId = null
+    planData.paypalProductId = null
+    planData.paypalPlanId = null
+    planData.enableManualInputCoupon = false
+  } else if (planData.provider === 'subotiz') {
+    planData.stripePriceId = null
+    planData.stripeProductId = null
+    planData.stripeCouponId = null
+    planData.creemProductId = null
+    planData.creemDiscountCode = null
     planData.paypalProductId = null
     planData.paypalPlanId = null
     planData.enableManualInputCoupon = false
@@ -144,6 +141,7 @@ export async function createPricingPlanAction({
     planData.stripeCouponId = null
     planData.creemProductId = null
     planData.creemDiscountCode = null
+    planData.subotizPriceId = null
     planData.enableManualInputCoupon = false
   } else if (planData.provider === 'all') {
     // Keep all provider IDs so the public pricing card can offer choices.
@@ -153,6 +151,7 @@ export async function createPricingPlanAction({
     planData.stripeCouponId = null
     planData.creemProductId = null
     planData.creemDiscountCode = null
+    planData.subotizPriceId = null
     planData.paypalProductId = null
     planData.paypalPlanId = null
     planData.enableManualInputCoupon = false
@@ -174,10 +173,10 @@ export async function createPricingPlanAction({
         stripeCouponId: planData.stripeCouponId,
         creemProductId: planData.creemProductId,
         creemDiscountCode: planData.creemDiscountCode,
+        subotizPriceId: planData.subotizPriceId,
         paypalProductId: planData.paypalProductId,
         paypalPlanId: planData.paypalPlanId,
-        enableManualInputCoupon:
-          planData.enableManualInputCoupon ?? false,
+        enableManualInputCoupon: planData.enableManualInputCoupon ?? false,
         paymentType: planData.paymentType || null,
         recurringInterval: planData.recurringInterval || null,
         price: planData.price?.toString() || null,
@@ -191,9 +190,9 @@ export async function createPricingPlanAction({
         buttonLink: planData.buttonLink,
         displayOrder: planData.displayOrder ?? 0,
         isActive: planData.isActive ?? true,
-        features: (planData.features || []),
-        langJsonb: (planData.langJsonb || {}),
-        benefitsJsonb: (planData.benefitsJsonb || {}),
+        features: planData.features || [],
+        langJsonb: planData.langJsonb || {},
+        benefitsJsonb: planData.benefitsJsonb || {},
       })
       .returning()
 
@@ -202,9 +201,7 @@ export async function createPricingPlanAction({
     console.error('Unexpected error creating pricing plan:', err)
     const errorMessage = getErrorMessage(err)
     if (errorMessage.includes('duplicate key value violates unique constraint')) {
-      return actionResponse.conflict(
-        t('createPlanConflict', { message: errorMessage })
-      )
+      return actionResponse.conflict(t('createPlanConflict', { message: errorMessage }))
     }
     return actionResponse.error(errorMessage || t('createPlanServerError'))
   }
@@ -218,12 +215,8 @@ interface UpdatePricingPlanParams {
   planData: Partial<PricingPlan>
   locale?: string
 }
-export async function updatePricingPlanAction({
-  id,
-  planData,
-  locale = DEFAULT_LOCALE,
-}: UpdatePricingPlanParams) {
-  const db = getDb();
+export async function updatePricingPlanAction({ id, planData, locale = DEFAULT_LOCALE }: UpdatePricingPlanParams) {
+  const db = getDb()
   if (!(await isAdmin())) {
     return actionResponse.forbidden('Admin privileges required.')
   }
@@ -243,11 +236,7 @@ export async function updatePricingPlanAction({
     } catch (e) {
       return actionResponse.badRequest(t('invalidJsonFormatInLangJsonbString'))
     }
-  } else if (
-    planData.langJsonb &&
-    typeof planData.langJsonb !== 'object' &&
-    planData.langJsonb !== null
-  ) {
+  } else if (planData.langJsonb && typeof planData.langJsonb !== 'object' && planData.langJsonb !== null) {
     return actionResponse.badRequest(t('invalidLangJsonbFormat'))
   }
 
@@ -257,11 +246,7 @@ export async function updatePricingPlanAction({
     } catch (e) {
       return actionResponse.badRequest(t('invalidJsonFormatInBenefitsString'))
     }
-  } else if (
-    planData.benefitsJsonb &&
-    typeof planData.benefitsJsonb !== 'object' &&
-    planData.benefitsJsonb !== null
-  ) {
+  } else if (planData.benefitsJsonb && typeof planData.benefitsJsonb !== 'object' && planData.benefitsJsonb !== null) {
     return actionResponse.badRequest(t('invalidBenefitsJsonFormat'))
   }
 
@@ -269,12 +254,23 @@ export async function updatePricingPlanAction({
   if (planData.provider === 'stripe') {
     planData.creemProductId = null
     planData.creemDiscountCode = null
+    planData.subotizPriceId = null
     planData.paypalProductId = null
     planData.paypalPlanId = null
   } else if (planData.provider === 'creem') {
     planData.stripePriceId = null
     planData.stripeProductId = null
     planData.stripeCouponId = null
+    planData.subotizPriceId = null
+    planData.paypalProductId = null
+    planData.paypalPlanId = null
+    planData.enableManualInputCoupon = false
+  } else if (planData.provider === 'subotiz') {
+    planData.stripePriceId = null
+    planData.stripeProductId = null
+    planData.stripeCouponId = null
+    planData.creemProductId = null
+    planData.creemDiscountCode = null
     planData.paypalProductId = null
     planData.paypalPlanId = null
     planData.enableManualInputCoupon = false
@@ -284,6 +280,7 @@ export async function updatePricingPlanAction({
     planData.stripeCouponId = null
     planData.creemProductId = null
     planData.creemDiscountCode = null
+    planData.subotizPriceId = null
     planData.enableManualInputCoupon = false
   } else if (planData.provider === 'all') {
     // Keep all provider IDs so the public pricing card can offer choices.
@@ -293,6 +290,7 @@ export async function updatePricingPlanAction({
     planData.stripeCouponId = null
     planData.creemProductId = null
     planData.creemDiscountCode = null
+    planData.subotizPriceId = null
     planData.paypalProductId = null
     planData.paypalPlanId = null
     planData.enableManualInputCoupon = false
@@ -325,13 +323,16 @@ export async function updatePricingPlanAction({
     }
 
     if (planData.features !== undefined) {
-      dataToUpdate.features = (planData.features || [])
+      dataToUpdate.features = planData.features || []
     }
     if (planData.creemProductId !== undefined) {
       dataToUpdate.creemProductId = planData.creemProductId || null
     }
     if (planData.creemDiscountCode !== undefined) {
       dataToUpdate.creemDiscountCode = planData.creemDiscountCode || null
+    }
+    if (planData.subotizPriceId !== undefined) {
+      dataToUpdate.subotizPriceId = planData.subotizPriceId || null
     }
     if (planData.paypalProductId !== undefined) {
       dataToUpdate.paypalProductId = planData.paypalProductId || null
@@ -340,11 +341,10 @@ export async function updatePricingPlanAction({
       dataToUpdate.paypalPlanId = planData.paypalPlanId || null
     }
     if (planData.langJsonb !== undefined) {
-      dataToUpdate.langJsonb = (planData.langJsonb || {})
+      dataToUpdate.langJsonb = planData.langJsonb || {}
     }
     if (planData.benefitsJsonb !== undefined) {
-      dataToUpdate.benefitsJsonb =
-        (planData.benefitsJsonb || {})
+      dataToUpdate.benefitsJsonb = planData.benefitsJsonb || {}
     }
     if (planData.groupSlug !== undefined) {
       dataToUpdate.groupSlug = planData.groupSlug || 'default'
@@ -360,13 +360,10 @@ export async function updatePricingPlanAction({
       return actionResponse.notFound(t('updatePlanNotFound', { id }))
     }
 
-
     return actionResponse.success(updatedPlan)
   } catch (err) {
     console.error(`Unexpected error updating pricing plan ${id}:`, err)
-    return actionResponse.error(
-      getErrorMessage(err) || t('updatePlanServerError')
-    )
+    return actionResponse.error(getErrorMessage(err) || t('updatePlanServerError'))
   }
 }
 
@@ -378,11 +375,8 @@ interface DeletePricingPlanParams {
   locale?: string
 }
 
-export async function deletePricingPlanAction({
-  id,
-  locale = DEFAULT_LOCALE,
-}: DeletePricingPlanParams) {
-  const db = getDb();
+export async function deletePricingPlanAction({ id, locale = DEFAULT_LOCALE }: DeletePricingPlanParams) {
+  const db = getDb()
   if (!(await isAdmin())) {
     return actionResponse.forbidden('Admin privileges required.')
   }
@@ -406,12 +400,9 @@ export async function deletePricingPlanAction({
       return actionResponse.notFound(t('deletePlanNotFound', { id }))
     }
 
-
     return actionResponse.success({ message: t('deletePlanSuccess', { id }) })
   } catch (err) {
     console.error(`Unexpected error deleting pricing plan ${id}:`, err)
-    return actionResponse.error(
-      getErrorMessage(err) || t('deletePlanServerError')
-    )
+    return actionResponse.error(getErrorMessage(err) || t('deletePlanServerError'))
   }
 }

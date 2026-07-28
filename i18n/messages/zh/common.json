@@ -448,6 +448,7 @@
     "errors": {
       "missingStripeSession": "缺少 Checkout Session ID，无法验证支付。",
       "missingCreemCheckout": "缺少 Checkout ID，无法验证支付。",
+      "missingSubotizOrder": "缺少 Subotiz 订单 ID，无法验证支付。",
       "missingPaypalParams": "缺少 PayPal token 或 subscription ID，无法验证支付。",
       "verificationFailed": "验证失败。",
       "unknownVerificationError": "验证过程中发生错误。"

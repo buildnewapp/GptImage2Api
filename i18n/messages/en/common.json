@@ -448,6 +448,7 @@
     "errors": {
       "missingStripeSession": "Checkout session ID missing. Payment cannot be verified.",
       "missingCreemCheckout": "Checkout ID missing. Payment cannot be verified.",
+      "missingSubotizOrder": "Subotiz order ID missing. Payment cannot be verified.",
       "missingPaypalParams": "PayPal token or subscription ID missing. Payment cannot be verified.",
       "verificationFailed": "Verification failed.",
       "unknownVerificationError": "An error occurred during verification."

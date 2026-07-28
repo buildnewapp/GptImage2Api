@@ -1,4 +1,5 @@
 import { createCreemPortalSession } from "@/actions/creem/portal";
+import { createSubotizPortalSession } from "@/actions/subotiz/portal";
 import { createStripePortalSession } from "@/actions/stripe";
 import { getUserBenefits } from "@/actions/usage/benefits";
 import CurrentUserBenefitsDisplay from "@/components/layout/CurrentUserBenefitsDisplay";
@@ -71,6 +72,18 @@ export default async function SubscriptionPage() {
                 />
                 <p className="text-xs text-muted-foreground">
                   You will be redirected to manage your subscription details.
+                </p>
+              </>
+            )}
+            {subscriptionProvider === "subotiz" && (
+              <>
+                <PortalButton
+                  provider="subotiz"
+                  action={createSubotizPortalSession}
+                />
+                <p className="text-xs text-muted-foreground">
+                  You will be redirected to Subotiz to manage your subscription
+                  details.
                 </p>
               </>
             )}

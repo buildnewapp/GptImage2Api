@@ -44,6 +44,10 @@
       "label": "Creem",
       "description": "クレジットカードまたはデビットカードで安全に支払います。"
     },
+    "subotiz": {
+      "label": "Subotiz",
+      "description": "クレジットカード、Apple Pay、Google Pay で安全に支払えます。"
+    },
     "nowpayments": {
       "label": "暗号資産",
       "description": "NOWPayments 経由で暗号資産決済を行います。"
@@ -58,6 +62,7 @@
     "unexpected": "予期しないエラーが発生しました。",
     "stripePriceMissing": "このプランには Stripe の価格 ID がありません。",
     "creemProductMissing": "このプランには Creem の商品 ID がありません。",
+    "subotizPriceMissing": "このプランには Subotiz の価格 ID がありません。",
     "paypalPlanMissing": "このプランには PayPal のプラン ID がありません。",
     "noPaymentMethods": "このプランで利用できる支払い方法がありません。",
     "recurringHigherTierRequired": "すでに同等または上位のサブスクリプションがあります。再購入できるのは、より高額なプランのみです。"
