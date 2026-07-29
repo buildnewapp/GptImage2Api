@@ -33,7 +33,7 @@
   },
   "paymentMethods": {
     "stripe": {
-      "label": "Card",
+      "label": "Stripe",
       "description": "Pay securely with credit or debit card."
     },
     "paypal": {
