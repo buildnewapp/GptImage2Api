@@ -243,7 +243,7 @@ test("builds the IP eligibility query with indexable predicates in the top-level
   assert.match(topLevelWhere, /ip_hash/);
   assert.match(topLevelWhere, /submitted_at/);
   assert.deepEqual(compiled.params, [
-    oneDayAgo,
+    oneDayAgo.toISOString(),
     "signup_bonus",
     "approved",
     "ip-hash",

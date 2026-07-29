@@ -219,11 +219,11 @@ export default function HeroPhotoWall({ images }: HeroPhotoWallProps) {
                                             />
                                         )}
                                         {isVideoCard ? (
-                                            <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center opacity-100 transition-opacity duration-200 ease-out group-hover:opacity-0">
-                                                <span className="flex size-9 items-center justify-center rounded-full border border-white/35 bg-black/35 text-white shadow-[0_10px_24px_-12px_rgba(0,0,0,0.75)] sm:size-10">
+                                            <div className="pointer-events-none absolute bottom-2 right-2 z-10 opacity-100 transition-opacity duration-200 ease-out group-hover:opacity-0 sm:bottom-3 sm:right-3">
+                                                <span className="flex size-6 items-center justify-center rounded-full border border-white/35 bg-black/35 text-white shadow-[0_10px_24px_-12px_rgba(0,0,0,0.75)] sm:size-7">
                                                     <Play
                                                         aria-hidden="true"
-                                                        className="ml-0.5 size-4 fill-current"
+                                                        className="ml-0.5 size-2.5 fill-current sm:size-3"
                                                     />
                                                 </span>
                                             </div>

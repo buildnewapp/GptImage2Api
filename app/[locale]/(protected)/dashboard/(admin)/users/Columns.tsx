@@ -213,7 +213,8 @@ const ArchiveDeletedUserDialog = ({
           <AlertDialogTitle>删除用户</AlertDialogTitle>
           <AlertDialogDescription>
             这会把 {user.email || user.id} 的邮箱改为 del_时间戳@gmail.com，
-            并封禁账号、清除登录会话。订单、积分和生成记录会保留，方便后续追踪。
+            归档旧账号并清除登录会话及所有认证绑定。订单、积分和生成记录会保留，
+            原邮箱之后再次登录时会创建一个全新的用户。
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -226,7 +227,7 @@ const ArchiveDeletedUserDialog = ({
                 const res = await archiveDeletedUser({ userId: user.id });
                 if (res.success) {
                   toast.success("用户已删除", {
-                    description: `邮箱已修改为 ${res.data?.archivedEmail}`,
+                    description: `旧账号已归档为 ${res.data?.archivedEmail}，原邮箱可重新登录`,
                   });
                   onOpenChange(false);
                   router.refresh();

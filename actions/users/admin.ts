@@ -21,6 +21,7 @@ import {
   usage as usageSchema,
   user as userSchema,
   userSource as userSourceSchema,
+  verification as verificationSchema,
 } from "@/lib/db/schema";
 import { getErrorMessage } from "@/lib/error-utils";
 import { hashPassword } from "better-auth/crypto";
@@ -594,9 +595,20 @@ export async function archiveDeletedUser({
         })
         .where(eq(userSchema.id, parsed.data.userId));
 
+      // Remove every Better Auth identity linked to the archived user.
+      // Keeping these rows would make a future social login resolve back to
+      // this banned user instead of creating a new user for the freed email.
+      await tx
+        .delete(accountSchema)
+        .where(eq(accountSchema.userId, parsed.data.userId));
+
       await tx
         .delete(sessionSchema)
         .where(eq(sessionSchema.userId, parsed.data.userId));
+
+      await tx
+        .delete(verificationSchema)
+        .where(eq(verificationSchema.identifier, target[0].email));
     });
 
     return actionResponse.success({ archivedEmail });
