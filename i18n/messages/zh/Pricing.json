@@ -33,7 +33,7 @@
   },
   "paymentMethods": {
     "stripe": {
-      "label": "银行卡",
+      "label": "Stripe",
       "description": "使用信用卡或借记卡安全支付。"
     },
     "paypal": {

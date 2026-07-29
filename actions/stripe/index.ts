@@ -48,9 +48,22 @@ export async function getOrCreateStripeCustomer(
   }
 
   if (userProfile?.stripeCustomerId) {
-    const customer = await stripe.customers.retrieve(userProfile.stripeCustomerId);
-    if (customer && !customer.deleted) {
-      return userProfile.stripeCustomerId;
+    try {
+      const customer = await stripe.customers.retrieve(userProfile.stripeCustomerId);
+      if (customer && !customer.deleted) {
+        return userProfile.stripeCustomerId;
+      }
+    } catch (error) {
+      if (
+        error instanceof Stripe.errors.StripeInvalidRequestError &&
+        error.code === 'resource_missing'
+      ) {
+        console.warn(
+          `Stripe customer ${userProfile.stripeCustomerId} no longer exists; creating a new customer.`
+        );
+      } else {
+        throw error;
+      }
     }
   }
 

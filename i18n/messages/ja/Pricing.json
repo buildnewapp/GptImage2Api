@@ -33,7 +33,7 @@
   },
   "paymentMethods": {
     "stripe": {
-      "label": "カード",
+      "label": "Stripe",
       "description": "クレジットカードまたはデビットカードで安全に支払います。"
     },
     "paypal": {
