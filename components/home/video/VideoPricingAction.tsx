@@ -8,6 +8,8 @@ import {
   Wallet,
   WalletCards,
 } from "lucide-react";
+import type { ComponentType } from "react";
+import { SiStripe } from "react-icons/si";
 import {
   Dialog,
   DialogContent,
@@ -29,13 +31,13 @@ const PAYMENT_METHODS: Record<
   CheckoutProvider,
   {
     descriptionKey: string;
-    icon: typeof CreditCard;
+    icon: ComponentType<{ className?: string }>;
     labelKey: string;
   }
 > = {
   stripe: {
     descriptionKey: "paymentMethods.stripe.description",
-    icon: CreditCard,
+    icon: SiStripe,
     labelKey: "paymentMethods.stripe.label",
   },
   paypal: {

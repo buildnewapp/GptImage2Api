@@ -59,15 +59,12 @@ export function getAvailableCheckoutProviders(
   const creemEnabled = env.creemEnabled ?? true;
   const stripeEnabled = env.stripeEnabled ?? true;
 
-  if (creemEnabled && hasUsableProviderId(plan.creemProductId)) {
-    providers.push("creem");
+  if (stripeEnabled && hasUsableProviderId(plan.stripePriceId)) {
+    providers.push("stripe");
   }
 
-  if (
-    (env.subotizEnabled ?? true) &&
-    hasUsableProviderId(plan.subotizPriceId)
-  ) {
-    providers.push("subotiz");
+  if (creemEnabled && hasUsableProviderId(plan.creemProductId)) {
+    providers.push("creem");
   }
 
   if (env.paypalEnabled) {
@@ -85,15 +82,18 @@ export function getAvailableCheckoutProviders(
   }
 
   if (
+    (env.subotizEnabled ?? true) &&
+    hasUsableProviderId(plan.subotizPriceId)
+  ) {
+    providers.push("subotiz");
+  }
+
+  if (
     env.nowpaymentsEnabled &&
     hasUsablePriceAndCurrency(plan) &&
     isUsdCurrency(plan.currency)
   ) {
     providers.push("nowpayments");
-  }
-
-  if (stripeEnabled && hasUsableProviderId(plan.stripePriceId)) {
-    providers.push("stripe");
   }
 
   return providers;

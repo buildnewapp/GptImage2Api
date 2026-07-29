@@ -33,11 +33,11 @@ test("returns all configured one-time checkout providers", () => {
   );
 
   assert.deepEqual(providers, [
-    "creem",
-    "subotiz",
-    "paypal",
-    "nowpayments",
     "stripe",
+    "creem",
+    "paypal",
+    "subotiz",
+    "nowpayments",
   ]);
 });
 
@@ -72,7 +72,7 @@ test("does not expose creem when creem checkout is disabled", () => {
     },
   );
 
-  assert.deepEqual(providers, ["paypal", "nowpayments", "stripe"]);
+  assert.deepEqual(providers, ["stripe", "paypal", "nowpayments"]);
 });
 
 test("does not expose stripe when stripe checkout is disabled", () => {

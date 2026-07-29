@@ -24,7 +24,9 @@ import {
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
+import type { ComponentType } from "react";
 import { useState } from "react";
+import { SiStripe } from "react-icons/si";
 import { toast } from "sonner";
 
 type PricingPlan = typeof pricingPlansSchema.$inferSelect;
@@ -49,13 +51,13 @@ const PAYMENT_METHODS: Record<
   CheckoutProvider,
   {
     descriptionKey: string;
-    icon: typeof CreditCard;
+    icon: ComponentType<{ className?: string }>;
     labelKey: string;
   }
 > = {
   stripe: {
     descriptionKey: "paymentMethods.stripe.description",
-    icon: CreditCard,
+    icon: SiStripe,
     labelKey: "paymentMethods.stripe.label",
   },
   paypal: {
