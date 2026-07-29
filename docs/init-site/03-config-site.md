@@ -83,6 +83,53 @@ https://nexty.dev/zh/docs/integration/cloudflare-r2
 config/ai-video-studio.ts
 
 
+### stripe
+1 测试环境
+https://dashboard.stripe.com/acct_1TyTfw5RIwEG87IR/test/dashboard
+Developers -> Overview：
+STRIPE_SECRET_KEY=sk_test_51TyTfw5RIwEG87IRyfd15tOl2au206c8ZgNDMvtZDcYnziHEUGkicCrjsc0Td40hGMza91JncdfgqIg94wAOKeol00YJAzkSS4
+STRIPE_PUBLISHABLE_KEY=pk_test_51TyTfw5RIwEG87IRpah0YimUlN4WBOpWjX7ZNM8SPgjSgpa3yLDC1GJyQsFzTzXuHlqUKdAmJPRu29K5ofP95mZS00M65KO8jg
+STRIPE_WEBHOOK_SECRET=whsec_61DN2JUWWWHryzqhNEzrNWkhhWcr5I2O
+
+charge.refunded
+checkout.session.completed
+customer.subscription.created
+customer.subscription.updated
+customer.subscription.deleted
+invoice.paid
+invoice.payment_failed
+radar.early_fraud_warning.created
+
+ngrok http --domain=many-fine-bullfrog.ngrok-free.app 3000
+Webhook URL: https://many-fine-bullfrog.ngrok-free.app/api/stripe/webhook
+
+2 真实环境
+Developers -> Overview：
+STRIPE_SECRET_KEY=sk_test_51TyTfw5RIwEG87IRyfd15tOl2au206c8ZgNDMvtZDcYnziHEUGkicCrjsc0Td40hGMza91JncdfgqIg94wAOKeol00YJAzkSS4
+STRIPE_PUBLISHABLE_KEY=pk_test_51TyTfw5RIwEG87IRpah0YimUlN4WBOpWjX7ZNM8SPgjSgpa3yLDC1GJyQsFzTzXuHlqUKdAmJPRu29K5ofP95mZS00M65KO8jg
+STRIPE_WEBHOOK_SECRET=whsec_61DN2JUWWWHryzqhNEzrNWkhhWcr5I2O
+
+charge.refunded
+checkout.session.completed
+customer.subscription.created
+customer.subscription.updated
+customer.subscription.deleted
+invoice.paid
+invoice.payment_failed
+radar.early_fraud_warning.created
+
+Webhook URL: {NEXT_PUBLIC_SITE_URL}/api/stripe/webhook
+
+3 产品同步
+# 测试产品，加载 .env.local
+pnpm db:sync-stripe-products -- env=test
+
+# 正式产品，加载 .env
+pnpm db:sync-stripe-products -- env=live
+
+pnpm db:seed
+
+
 ### paypal
 产品同步必须传入 `env`：`test` 加载 `.env.local`，`live` 加载 `.env`。
 
