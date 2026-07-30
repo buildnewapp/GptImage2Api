@@ -105,18 +105,10 @@ Webhook URL: https://many-fine-bullfrog.ngrok-free.app/api/stripe/webhook
 
 2 真实环境
 Developers -> Overview：
-STRIPE_SECRET_KEY=[REDACTED]
-STRIPE_PUBLISHABLE_KEY=[REDACTED]
-STRIPE_WEBHOOK_SECRET=[REDACTED]
+STRIPE_SECRET_KEY=
+STRIPE_PUBLISHABLE_KEY=
+STRIPE_WEBHOOK_SECRET=
 
-charge.refunded
-checkout.session.completed
-customer.subscription.created
-customer.subscription.updated
-customer.subscription.deleted
-invoice.paid
-invoice.payment_failed
-radar.early_fraud_warning.created
 
 Webhook URL: {NEXT_PUBLIC_SITE_URL}/api/stripe/webhook
 
@@ -128,6 +120,25 @@ pnpm db:sync-stripe-products -- env=test
 pnpm db:sync-stripe-products -- env=live
 
 pnpm db:seed
+
+4 开启防欺诈雷达
+a 开启所有能开启的 rule
+b 再加上 request 3DS rule：
+:risk_score: >= 40
+c 添加以下 block rules：
+一周内创建的新用户使用超过5张卡
+:card_count_for_customer_weekly: > 5 and :hours_since_customer_was_created: <= 168
+
+一周内同一客户使用超过4张信用卡
+:card_count_for_customer_weekly: > 4 and :card_funding: = 'credit'
+
+一周尝试高风险卡数量大于3
+:card_count_for_customer_weekly: > 3 and :risk_score: > 50
+
+一天同一IP地址进行大量高风险尝试
+:total_charges_per_ip_address_daily: > 10 and :risk_score: > 40
+d Risk controls开启最大
+
 
 
 ### paypal
