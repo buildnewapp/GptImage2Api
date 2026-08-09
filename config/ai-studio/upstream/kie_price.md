@@ -234,3 +234,64 @@ Pricing: 28 credits/s ($0.14) for 720 p or 48 credits/s ($0.24) for 1080 p
 
 happyhorse/reference-to-video
 Pricing: 28 credits/s ($0.14) for 720 p or 48 credits/s ($0.24) for 1080 p
+
+qwen3/text-to-image
+Pricing: 4.8 credits per image ($0.024) for either 1K or 2K output.
+Source: https://kie.ai/qwen-image-3?model=qwen3%2Ftext-to-image
+
+qwen3/image-to-image
+Pricing: 4.8 credits per image ($0.024) for either 1K or 2K output.
+Source: https://kie.ai/qwen-image-3?model=qwen3%2Fimage-to-image
+
+qwen3/pro-text-to-image
+Pricing: 6.4 credits per image ($0.032) for 1K output and 12 credits per image ($0.06) for 2K output.
+Source: https://kie.ai/qwen-image-3?model=qwen3%2Fpro-text-to-image
+
+qwen3/pro-image-to-image
+Pricing: 6.4 credits per output image ($0.032) for 1K and 12 credits per output image ($0.06) for 2K. Input images cost an additional 0.5 credits ($0.0025) each.
+Source: https://kie.ai/qwen-image-3?model=qwen3%2Fpro-image-to-image
+
+seedream/5-pro-layer-decomposition
+Pricing: Layer decomposition is billed by the number of output images, including the base image. 1K/1.5K costs 7 credits per image ($0.035); 2K costs 14 credits per image ($0.07).
+Source: https://kie.ai/seedream-5-0-pro?model=seedream%2F5-pro-layer-decomposition
+
+google/gemini-3-1-flash-tts
+Pricing: Input costs 140 credits per 1M tokens ($0.70); audio output costs 2,800 credits per 1M tokens ($14.00).
+Source: https://kie.ai/gemini-3-1-flash-tts
+
+bytedance/seedance-2-5
+Pricing: 480P: 17 credits/s ($0.085/s) with video input or 28 credits/s ($0.14/s) without video input; 720P: 38 credits/s ($0.19/s) with video input or 63 credits/s ($0.315/s) without video input.
+No video input = Price × output duration. With video input = Price × (input video duration + output duration).
+Source: https://kie.ai/seedance-2-5
+
+minimax-h3/text-to-video
+Pricing: 768P costs 18 credits/s ($0.09/s); 2K costs 29 credits/s ($0.145/s).
+Source: https://kie.ai/minimax-h3
+
+minimax-h3/image-to-video
+Pricing: 768P costs 18 credits/s ($0.09/s); 2K costs 29 credits/s ($0.145/s).
+Source: https://kie.ai/minimax-h3
+
+minimax-h3/reference-to-video
+Pricing: Video generation and video input cost 18 credits/s ($0.09/s) at 768P and 29 credits/s ($0.145/s) at 2K. Total Cost = Unit Price × (generated video duration + input video duration) + additional image cost. The first 5 input images are free; each additional image costs 9 credits ($0.045). Input audio is free.
+Source: https://kie.ai/minimax-h3
+
+pixverse-v6/text-to-video
+Pricing: 360P: 4 credits/s ($0.02/s) without audio or 5.6 credits/s ($0.028/s) with audio; 540P: 5.6 ($0.028/s) or 7.2 ($0.036/s); 720P: 7.2 ($0.036/s) or 9.6 ($0.048/s); 1080P: 14.4 ($0.072/s) or 18.4 ($0.092/s).
+Source: https://kie.ai/pixverse-v6
+
+pixverse-v6/image-to-video
+Pricing: 360P: 4 credits/s ($0.02/s) without audio or 5.6 credits/s ($0.028/s) with audio; 540P: 5.6 ($0.028/s) or 7.2 ($0.036/s); 720P: 7.2 ($0.036/s) or 9.6 ($0.048/s); 1080P: 14.4 ($0.072/s) or 18.4 ($0.092/s).
+Source: https://kie.ai/pixverse-v6
+
+pixverse-v6/transition
+Pricing: 360P: 4 credits/s ($0.02/s) without audio or 5.6 credits/s ($0.028/s) with audio; 540P: 5.6 ($0.028/s) or 7.2 ($0.036/s); 720P: 7.2 ($0.036/s) or 9.6 ($0.048/s); 1080P: 14.4 ($0.072/s) or 18.4 ($0.092/s).
+Source: https://kie.ai/pixverse-v6
+
+pixverse-v6/reference-to-video
+Pricing: 360P: 4 credits/s ($0.02/s) without audio or 5.6 credits/s ($0.028/s) with audio; 540P: 5.6 ($0.028/s) or 7.2 ($0.036/s); 720P: 7.2 ($0.036/s) or 9.6 ($0.048/s); 1080P: 14.4 ($0.072/s) or 18.4 ($0.092/s).
+Source: https://kie.ai/pixverse-v6
+
+pixverse-v6/extend
+Pricing: 360P: 4 credits/s ($0.02/s) without audio or 5.6 credits/s ($0.028/s) with audio; 540P: 5.6 ($0.028/s) or 7.2 ($0.036/s); 720P: 7.2 ($0.036/s) or 9.6 ($0.048/s); 1080P: 14.4 ($0.072/s) or 18.4 ($0.092/s).
+Source: https://kie.ai/pixverse-v6
