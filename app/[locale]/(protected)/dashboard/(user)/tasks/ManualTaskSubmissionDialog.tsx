@@ -15,7 +15,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import type { ManualReviewTaskKey } from "@/config/task-rewards";
+import {
+  isRedditManualReviewTaskKey,
+  type ManualReviewTaskKey,
+} from "@/config/task-rewards";
+import { Link } from "@/i18n/routing";
 import { ExternalLink, ImagePlus, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -59,6 +63,7 @@ export default function ManualTaskSubmissionDialog({
   const [textError, setTextError] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isRedditTask = isRedditManualReviewTaskKey(taskKey);
 
   const releasePreview = () => {
     if (previewUrlRef.current) {
@@ -130,7 +135,13 @@ export default function ManualTaskSubmissionDialog({
   const validateText = (): string | null => {
     const trimmedText = submissionText.trim();
     if (!trimmedText) {
-      setTextError(t("manualSubmission.validation.textRequired"));
+      setTextError(
+        t(
+          isRedditTask
+            ? "manualSubmission.validation.redditLinkRequired"
+            : "manualSubmission.validation.textRequired",
+        ),
+      );
       return null;
     }
     if (trimmedText.length > 500) {
@@ -149,6 +160,8 @@ export default function ManualTaskSubmissionDialog({
         return t("manualSubmission.errors.alreadyClaimed");
       case "pending_application_exists":
         return t("manualSubmission.errors.pending");
+      case "prerequisite_required":
+        return t("manualSubmission.errors.prerequisiteRequired");
       case "invalid_evidence":
       case "invalid_evidence_file":
         return t("manualSubmission.errors.invalidEvidence");
@@ -267,7 +280,12 @@ export default function ManualTaskSubmissionDialog({
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
-            {description} {t("manualSubmission.description")}
+            {description}{" "}
+            {t(
+              isRedditTask
+                ? "manualSubmission.redditDescription"
+                : "manualSubmission.description",
+            )}
           </DialogDescription>
         </DialogHeader>
 
@@ -278,10 +296,17 @@ export default function ManualTaskSubmissionDialog({
             variant="outline"
             className="w-full whitespace-nowrap"
           >
-            <a href={targetUrl} target="_blank" rel="noopener noreferrer">
-              {t("manualSubmission.openTarget")}
-              <ExternalLink className="ml-2 h-4 w-4" aria-hidden="true" />
-            </a>
+            {isRedditTask && targetUrl.startsWith("/") ? (
+              <Link href={targetUrl} target="_blank" rel="noopener noreferrer">
+                {t("manualSubmission.viewActivity")}
+                <ExternalLink className="ml-2 h-4 w-4" aria-hidden="true" />
+              </Link>
+            ) : (
+              <a href={targetUrl} target="_blank" rel="noopener noreferrer">
+                {t("manualSubmission.openTarget")}
+                <ExternalLink className="ml-2 h-4 w-4" aria-hidden="true" />
+              </a>
+            )}
           </Button>
 
           <div className="space-y-2">
@@ -332,7 +357,11 @@ export default function ManualTaskSubmissionDialog({
           <div className="space-y-2">
             <div className="flex items-center justify-between gap-3">
               <Label htmlFor={`${taskKey}-submission-text`}>
-                {t("manualSubmission.textLabel")}
+                {t(
+                  isRedditTask
+                    ? "manualSubmission.redditLinkLabel"
+                    : "manualSubmission.textLabel",
+                )}
               </Label>
               <span className="shrink-0 text-xs text-muted-foreground">
                 {t("manualSubmission.characterCount", {
@@ -350,7 +379,11 @@ export default function ManualTaskSubmissionDialog({
               disabled={isSubmitting}
               aria-invalid={Boolean(textError)}
               aria-describedby={textError ? textErrorId : undefined}
-              placeholder={t("manualSubmission.textPlaceholder")}
+              placeholder={t(
+                isRedditTask
+                  ? "manualSubmission.redditLinkPlaceholder"
+                  : "manualSubmission.textPlaceholder",
+              )}
               onChange={(event) => {
                 setSubmissionText(event.target.value);
                 setTextError(null);

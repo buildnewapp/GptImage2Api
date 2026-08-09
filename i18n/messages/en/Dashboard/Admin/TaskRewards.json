@@ -3,7 +3,7 @@
   "description": "Review screenshot evidence for one-time manual task rewards.",
   "loading": "Loading task reward applications",
   "filters": {
-    "email": "Search by user email",
+    "email": "Search by user email or Reddit link",
     "status": "Filter by review status",
     "task": "Filter by task",
     "allTasks": "All manual tasks"
@@ -19,7 +19,10 @@
     "share_twitter": "Share on X / Twitter",
     "share_facebook": "Share on Facebook",
     "share_tiktok": "Share on TikTok",
-    "share_instagram": "Share on Instagram"
+    "share_instagram": "Share on Instagram",
+    "share_reddit_website": "Share the Website on Reddit",
+    "share_reddit_work": "Share Work on Reddit",
+    "reddit_post_popular": "Reach Reddit Popularity Targets"
   },
   "table": {
     "user": "User",
@@ -33,7 +36,7 @@
   "actions": {
     "refresh": "Refresh",
     "view": "View",
-    "approve": "Approve and grant 10 credits",
+    "approve": "Approve and grant {credits} credits",
     "reject": "Reject",
     "close": "Close"
   },
@@ -42,6 +45,7 @@
     "screenshot": "Screenshot evidence",
     "screenshotAlt": "Task completion evidence",
     "submissionText": "User statement",
+    "redditLink": "Reddit post link",
     "rejectionReason": "Rejection reason",
     "rejectionPlaceholder": "Required when rejecting (up to 500 characters)",
     "reviewer": "Reviewer",
@@ -63,7 +67,7 @@
     "reasonRequired": "A rejection reason is required."
   },
   "success": {
-    "approved": "Application approved and 10 credits granted.",
+    "approved": "Application approved and {credits} credits granted.",
     "rejected": "Application rejected."
   }
 }

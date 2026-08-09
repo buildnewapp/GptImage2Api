@@ -23,6 +23,24 @@ test("manual application action input accepts only the fixed task, evidence, and
   });
 });
 
+test("manual application action input accepts a Reddit link as plain submission text", () => {
+  const parsed = parseManualTaskApplicationInput({
+    taskKey: "share_reddit_website",
+    evidenceKey: "task/2026/07/20/upload/user-1/share_reddit_website/proof.png",
+    submissionText:
+      "  https://www.reddit.com/r/example/comments/post/example/  ",
+  });
+
+  assert.equal(parsed.success, true);
+  if (parsed.success) {
+    assert.equal(parsed.data.taskKey, "share_reddit_website");
+    assert.equal(
+      parsed.data.submissionText,
+      "https://www.reddit.com/r/example/comments/post/example/",
+    );
+  }
+});
+
 test("manual application action input rejects client-controlled reward fields", () => {
   for (const forbiddenField of ["userId", "creditAmount", "status"]) {
     const parsed = parseManualTaskApplicationInput({
@@ -95,6 +113,7 @@ test("manual application domain outcomes map to stable action custom codes", () 
     task_disabled: "task_disabled",
     already_claimed: "already_claimed",
     pending_application_exists: "pending_application_exists",
+    prerequisite_required: "prerequisite_required",
     evidence_required: "invalid_evidence",
     evidence_not_owned: "invalid_evidence",
     invalid_task: "validation",

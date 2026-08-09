@@ -40,7 +40,7 @@ test("normalizes pagination and trims the email query", () => {
   assert.equal(toTaskRewardAdminListOffset(2, 50), 100);
 });
 
-test("allows only the three application statuses and six manual task keys", () => {
+test("allows only the three application statuses and fixed manual task keys", () => {
   for (const status of ["pending", "approved", "rejected"] as const) {
     assert.equal(normalizeTaskRewardAdminListQuery({ status }).status, status);
   }
@@ -52,6 +52,9 @@ test("allows only the three application statuses and six manual task keys", () =
     "share_facebook",
     "share_tiktok",
     "share_instagram",
+    "share_reddit_website",
+    "share_reddit_work",
+    "reddit_post_popular",
   ] as const) {
     assert.equal(
       normalizeTaskRewardAdminListQuery({ taskKey }).taskKey,

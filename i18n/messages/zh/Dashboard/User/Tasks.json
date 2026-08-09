@@ -39,7 +39,8 @@
     "viewReferral": "查看邀请",
     "submit": "提交凭证",
     "resubmit": "重新提交",
-    "pending": "审核中"
+    "pending": "审核中",
+    "completeRedditShareFirst": "先完成 Reddit 分享"
   },
   "tasks": {
     "daily_checkin": {
@@ -89,17 +90,33 @@
     "share_instagram": {
       "title": "分享到 Instagram",
       "description": "将网站分享到 Instagram，然后提交截图和文字说明等待审核。"
+    },
+    "share_reddit_website": {
+      "title": "在 Reddit 分享网站",
+      "description": "在允许相关内容的 Reddit 社区发布包含 {siteName} 网站链接的原创帖子，然后提交帖子链接和截图等待审核。"
+    },
+    "share_reddit_work": {
+      "title": "在 Reddit 分享作品",
+      "description": "将你本人成功且公开的 {siteName} 作品分享到允许相关内容的 Reddit 社区，然后提交帖子链接和截图等待审核。"
+    },
+    "reddit_post_popular": {
+      "title": "Reddit 帖子达到热门指标",
+      "description": "已通过的网站或作品分享帖子同时达到 1000 次浏览、20 条评论和 10 个赞后，提交帖子链接和 Post Insights 截图等待审核。"
     }
   },
   "reviewReason": "审核意见：",
   "manualSubmission": {
     "description": "请先前往任务页面完成操作，再提交凭证等待审核。",
+    "redditDescription": "请提交完整的 Reddit 帖子链接和可核验的截图等待人工审核。",
     "openTarget": "打开任务页面",
+    "viewActivity": "查看 Reddit 活动规则",
     "screenshotLabel": "任务截图",
     "screenshotHint": "仅上传 1 张 JPEG、PNG 或 WebP 图片，大小不超过 5 MB。",
     "screenshotAlt": "{title} 的任务凭证截图预览",
     "textLabel": "文字说明",
     "textPlaceholder": "请简要说明你完成了什么，以及截图中可核对的位置。",
+    "redditLinkLabel": "Reddit 帖子链接",
+    "redditLinkPlaceholder": "请粘贴完整的 Reddit 帖子链接，例如 https://www.reddit.com/r/.../comments/...",
     "characterCount": "{current} / {maximum}",
     "cancel": "取消",
     "submit": "提交审核",
@@ -109,6 +126,7 @@
       "screenshotType": "仅支持 JPEG、PNG 或 WebP 图片。",
       "screenshotSize": "截图大小不能超过 5 MB。",
       "textRequired": "请填写文字说明。",
+      "redditLinkRequired": "请填写 Reddit 帖子链接。",
       "textLength": "文字说明需要在 1 到 500 个字符之间。"
     },
     "errors": {
@@ -117,6 +135,7 @@
       "taskDisabled": "该任务当前已停止接收新申请。",
       "alreadyClaimed": "你已经领取过该任务奖励。",
       "pending": "该任务已有一条申请正在审核。",
+      "prerequisiteRequired": "请先完成并领取一个 Reddit 分享任务奖励。",
       "invalidEvidence": "无法验证已上传的截图，请重新选择。",
       "validation": "请检查截图和文字说明后重新提交。"
     },

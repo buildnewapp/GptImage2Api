@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { buildOnceClaimKey, manualReviewTasks } from "@/config/task-rewards";
+import {
+  buildOnceClaimKey,
+  manualReviewTasks,
+  type ManualReviewTaskKey,
+} from "@/config/task-rewards";
 import {
   createMemoryRewardApplicationStore,
   type RewardApplicationRecord,
@@ -27,6 +31,43 @@ async function withEnabledGithubTask<T>(run: () => Promise<T>): Promise<T> {
   } finally {
     manualReviewTasks.github_star.enabled = previous;
   }
+}
+
+async function withEnabledRedditTasks<T>(run: () => Promise<T>): Promise<T> {
+  const previous = {
+    website: manualReviewTasks.share_reddit_website.enabled,
+    work: manualReviewTasks.share_reddit_work.enabled,
+    popular: manualReviewTasks.reddit_post_popular.enabled,
+  };
+  manualReviewTasks.share_reddit_website.enabled = true;
+  manualReviewTasks.share_reddit_work.enabled = true;
+  manualReviewTasks.reddit_post_popular.enabled = true;
+  try {
+    return await run();
+  } finally {
+    manualReviewTasks.share_reddit_website.enabled = previous.website;
+    manualReviewTasks.share_reddit_work.enabled = previous.work;
+    manualReviewTasks.reddit_post_popular.enabled = previous.popular;
+  }
+}
+
+function createRedditStore(
+  taskKey: Extract<
+    ManualReviewTaskKey,
+    "share_reddit_website" | "share_reddit_work" | "reddit_post_popular"
+  >,
+  options: Parameters<typeof createMemoryRewardApplicationStore>[0] = {},
+) {
+  const uploadKey = `task/2026/07/20/upload/${userId}/${taskKey}/123e4567-e89b-42d3-a456-426614174000.png`;
+  const sealedKey = `task/2026/07/20/sealed/${userId}/${taskKey}/223e4567-e89b-42d3-a456-426614174000.png`;
+  return {
+    uploadKey,
+    store: createMemoryRewardApplicationStore({
+      evidenceByUser: { [userId]: [uploadKey] },
+      sealedEvidenceByUploadKey: { [uploadKey]: sealedKey },
+      ...options,
+    }),
+  };
 }
 
 function createStore(
@@ -179,6 +220,73 @@ test("submission text is trimmed and must contain between 1 and 500 characters",
   });
 });
 
+test("Reddit applications use server-side rewards and popularity requires an approved share", async () => {
+  await withEnabledRedditTasks(async () => {
+    for (const [taskKey, creditAmount] of [
+      ["share_reddit_website", 100],
+      ["share_reddit_work", 200],
+    ] as const) {
+      const { store, uploadKey } = createRedditStore(taskKey);
+      const result = await submitManualRewardApplication({
+        store,
+        userId,
+        taskKey,
+        evidenceKey: uploadKey,
+        submissionText:
+          "https://www.reddit.com/r/example/comments/post/example/",
+        now,
+      });
+
+      assert.equal(result.status, "submitted");
+      if (result.status === "submitted") {
+        assert.equal(result.creditAmount, creditAmount);
+      }
+      assert.equal(store.applications[0]?.creditAmount, creditAmount);
+    }
+
+    const locked = createRedditStore("reddit_post_popular");
+    const lockedResult = await submitManualRewardApplication({
+      store: locked.store,
+      userId,
+      taskKey: "reddit_post_popular",
+      evidenceKey: locked.uploadKey,
+      submissionText: "https://www.reddit.com/r/example/comments/post/example/",
+      now,
+    });
+
+    assert.deepEqual(lockedResult, {
+      status: "error",
+      errorCode: "prerequisite_required",
+    });
+    assert.equal(locked.store.applications.length, 0);
+
+    const unlocked = createRedditStore("reddit_post_popular", {
+      claims: [
+        {
+          userId,
+          taskKey: "share_reddit_website",
+          claimKey: buildOnceClaimKey("share_reddit_website"),
+          creditAmount: 100,
+        },
+      ],
+    });
+    const unlockedResult = await submitManualRewardApplication({
+      store: unlocked.store,
+      userId,
+      taskKey: "reddit_post_popular",
+      evidenceKey: unlocked.uploadKey,
+      submissionText: "https://www.reddit.com/r/example/comments/post/example/",
+      now,
+    });
+
+    assert.equal(unlockedResult.status, "submitted");
+    if (unlockedResult.status === "submitted") {
+      assert.equal(unlockedResult.creditAmount, 1000);
+    }
+    assert.equal(unlocked.store.applications[0]?.creditAmount, 1000);
+  });
+});
+
 test("an already claimed task cannot be submitted", async () => {
   await withEnabledGithubTask(async () => {
     const store = createStore({
@@ -240,9 +348,9 @@ test("submission prepares evidence outside the task lock and keeps database chec
       taskKey: "github_star",
       key: string,
     ) => {
-        assert.equal(taskLockHeld, false);
-        events.push("prepare_evidence");
-        return memoryStore.prepareEvidence(lockedUserId, taskKey, key);
+      assert.equal(taskLockHeld, false);
+      events.push("prepare_evidence");
+      return memoryStore.prepareEvidence(lockedUserId, taskKey, key);
     };
     const lockedMethods = {
       hasClaim: async (lockedUserId: string, claimKey: string) => {

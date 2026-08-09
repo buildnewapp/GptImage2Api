@@ -14,6 +14,18 @@ function readTasksMessages(locale: "zh" | "en" | "ja") {
   ) as Record<string, any>;
 }
 
+function readShareToRedditMessages(locale: "zh" | "en" | "ja") {
+  return JSON.parse(
+    readFileSync(
+      new URL(
+        `../../i18n/messages/${locale}/ShareToReddit.json`,
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ) as Record<string, any>;
+}
+
 test("removes developer-facing subtitle copy from task center", () => {
   const zh = readTasksMessages("zh");
 
@@ -41,7 +53,23 @@ const manualTaskKeys = [
   "share_facebook",
   "share_tiktok",
   "share_instagram",
+  "share_reddit_website",
+  "share_reddit_work",
+  "reddit_post_popular",
 ] as const;
+
+test("Reddit campaign copy keeps the site name and URL configuration-driven", () => {
+  for (const locale of locales) {
+    const campaignCopy = JSON.stringify(readShareToRedditMessages(locale));
+    const taskCopy = JSON.stringify(readTasksMessages(locale).tasks);
+
+    assert.doesNotMatch(campaignCopy, /Tikdek|tikdek\.com/i, locale);
+    assert.doesNotMatch(taskCopy, /Tikdek|tikdek\.com/i, locale);
+    assert.match(campaignCopy, /\{siteName\}/, locale);
+    assert.match(campaignCopy, /\{siteUrl\}/, locale);
+    assert.match(taskCopy, /\{siteName\}/, locale);
+  }
+});
 
 function getNestedValue(
   source: Record<string, any>,
@@ -89,12 +117,16 @@ test("all locales contain the complete manual submission flow copy", () => {
     ["actions", "resubmit"],
     ["actions", "pending"],
     ["manualSubmission", "description"],
+    ["manualSubmission", "redditDescription"],
     ["manualSubmission", "openTarget"],
+    ["manualSubmission", "viewActivity"],
     ["manualSubmission", "screenshotLabel"],
     ["manualSubmission", "screenshotHint"],
     ["manualSubmission", "screenshotAlt"],
     ["manualSubmission", "textLabel"],
     ["manualSubmission", "textPlaceholder"],
+    ["manualSubmission", "redditLinkLabel"],
+    ["manualSubmission", "redditLinkPlaceholder"],
     ["manualSubmission", "characterCount"],
     ["manualSubmission", "cancel"],
     ["manualSubmission", "submit"],
@@ -103,9 +135,11 @@ test("all locales contain the complete manual submission flow copy", () => {
     ["manualSubmission", "validation", "screenshotType"],
     ["manualSubmission", "validation", "screenshotSize"],
     ["manualSubmission", "validation", "textRequired"],
+    ["manualSubmission", "validation", "redditLinkRequired"],
     ["manualSubmission", "validation", "textLength"],
     ["manualSubmission", "errors", "upload"],
     ["manualSubmission", "errors", "submit"],
+    ["manualSubmission", "errors", "prerequisiteRequired"],
     ["manualSubmission", "success"],
     ["reviewReason"],
   ] as const;
@@ -238,6 +272,33 @@ test("admin task review client exposes accessible controls and loading status", 
   assert.match(source, /aria-label=\{t\("filters\.task"\)\}/);
   assert.match(source, /role="status"/);
   assert.match(source, /aria-live="polite"/);
+});
+
+test("admin task review displays the application credit amount dynamically", () => {
+  const source = readFileSync(
+    new URL(
+      "../../app/[locale]/(protected)/dashboard/(admin)/task-rewards-admin/TaskRewardReviewClient.tsx",
+      import.meta.url,
+    ),
+    "utf8",
+  );
+
+  assert.match(source, /credits: selected\.creditAmount/);
+  assert.match(source, /credits: approvedCredits/);
+
+  for (const locale of locales) {
+    const messages = JSON.parse(
+      readFileSync(
+        new URL(
+          `../../i18n/messages/${locale}/Dashboard/Admin/TaskRewards.json`,
+          import.meta.url,
+        ),
+        "utf8",
+      ),
+    ) as Record<string, any>;
+    assert.match(messages.actions.approve, /\{credits\}/);
+    assert.match(messages.success.approved, /\{credits\}/);
+  }
 });
 
 test("admin task review uses a synchronous in-flight guard", () => {

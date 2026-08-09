@@ -230,6 +230,9 @@ test("only automatic task keys pass the runtime claim whitelist", () => {
     "share_facebook",
     "share_tiktok",
     "share_instagram",
+    "share_reddit_website",
+    "share_reddit_work",
+    "reddit_post_popular",
     "invite_signup",
     "invite_first_purchase",
     "forged_task",
@@ -246,6 +249,9 @@ test("manual-review task keys cannot reach the automatic award path", async () =
     "share_facebook",
     "share_tiktok",
     "share_instagram",
+    "share_reddit_website",
+    "share_reddit_work",
+    "reddit_post_popular",
   ]) {
     const store = createMemoryTaskRewardStore();
     const result = await claimTaskReward({

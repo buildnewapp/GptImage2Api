@@ -26,7 +26,16 @@ import {
 import { reviewRewardApplication } from "@/lib/task-rewards/applications";
 import { createDrizzleRewardApplicationStore } from "@/lib/task-rewards/drizzle-application-store";
 import { isSealedTaskEvidenceKeyOwnedBy } from "@/lib/task-rewards/evidence";
-import { and, count, desc, eq, ilike, inArray, type SQL } from "drizzle-orm";
+import {
+  and,
+  count,
+  desc,
+  eq,
+  ilike,
+  inArray,
+  or,
+  type SQL,
+} from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
@@ -100,7 +109,13 @@ export async function getAdminRewardApplications(
     conditions.push(eq(rewardApplicationsSchema.taskKey, query.taskKey));
   }
   if (query.query) {
-    conditions.push(ilike(submittingUserSchema.email, `%${query.query}%`));
+    const searchPattern = `%${query.query}%`;
+    conditions.push(
+      or(
+        ilike(submittingUserSchema.email, searchPattern),
+        ilike(rewardApplicationsSchema.submissionText, searchPattern),
+      )!,
+    );
   }
 
   const whereClause = and(...conditions);
