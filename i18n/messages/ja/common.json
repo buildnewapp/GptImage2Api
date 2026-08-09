@@ -11,11 +11,20 @@
     "mobileMenuLabel": "メニューを開く"
   },
   "BannerAd": {
-    "title": "Gemini Omni Flash リリース",
-    "badge": "40%オフ",
-    "description": "年間プランの期間限定オファー",
-    "href": "/pricing?billing=yearly",
-    "cta": "オファーを受け取る",
+    "reddit": {
+      "title": "Reddit でシェア",
+      "badge": "最大 1,300 クレジット",
+      "description": "サイトや作品を共有してクリエイター報酬を獲得",
+      "href": "/share-to-reddit",
+      "cta": "キャンペーンを見る"
+    },
+    "discount": {
+      "title": "Gemini Omni Flash リリース",
+      "badge": "40%オフ",
+      "description": "年間プランの期間限定オファー",
+      "href": "/pricing?billing=yearly",
+      "cta": "オファーを受け取る"
+    },
     "closeLabel": "プロモーションバナーを閉じる"
   },
   "Login": {

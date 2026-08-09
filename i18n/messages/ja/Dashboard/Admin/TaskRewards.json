@@ -3,7 +3,7 @@
   "description": "1回限りの手動タスクについて、スクリーンショットを確認してクレジットを付与します。",
   "loading": "タスク報酬の申請を読み込み中",
   "filters": {
-    "email": "ユーザーのメールで検索",
+    "email": "ユーザーのメールまたは Reddit リンクで検索",
     "status": "審査ステータスで絞り込み",
     "task": "タスクで絞り込み",
     "allTasks": "すべての手動タスク"
@@ -19,7 +19,10 @@
     "share_twitter": "X / Twitter で共有",
     "share_facebook": "Facebook で共有",
     "share_tiktok": "TikTok で共有",
-    "share_instagram": "Instagram で共有"
+    "share_instagram": "Instagram で共有",
+    "share_reddit_website": "Reddit でサイトを共有",
+    "share_reddit_work": "Reddit で作品を共有",
+    "reddit_post_popular": "Reddit 投稿の人気条件を達成"
   },
   "table": {
     "user": "ユーザー",
@@ -33,7 +36,7 @@
   "actions": {
     "refresh": "更新",
     "view": "確認",
-    "approve": "承認して10クレジット付与",
+    "approve": "承認して {credits} クレジット付与",
     "reject": "却下",
     "close": "閉じる"
   },
@@ -42,6 +45,7 @@
     "screenshot": "スクリーンショット証拠",
     "screenshotAlt": "タスク完了の証拠",
     "submissionText": "ユーザーの説明",
+    "redditLink": "Reddit 投稿リンク",
     "rejectionReason": "却下理由",
     "rejectionPlaceholder": "却下時は必須（500文字以内）",
     "reviewer": "審査担当者",
@@ -63,7 +67,7 @@
     "reasonRequired": "却下理由を入力してください。"
   },
   "success": {
-    "approved": "承認し、10クレジットを付与しました。",
+    "approved": "承認し、{credits} クレジットを付与しました。",
     "rejected": "申請を却下しました。"
   }
 }

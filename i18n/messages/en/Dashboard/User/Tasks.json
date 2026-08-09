@@ -39,7 +39,8 @@
     "viewReferral": "View Referral",
     "submit": "Submit Proof",
     "resubmit": "Submit Again",
-    "pending": "Under Review"
+    "pending": "Under Review",
+    "completeRedditShareFirst": "Complete a Reddit share first"
   },
   "tasks": {
     "daily_checkin": {
@@ -89,17 +90,33 @@
     "share_instagram": {
       "title": "Share the Website on Instagram",
       "description": "Share the website on Instagram, then submit a screenshot and note for review."
+    },
+    "share_reddit_website": {
+      "title": "Share the Website on Reddit",
+      "description": "Post an original Reddit submission containing the {siteName} website link in a relevant community that allows it, then submit the post link and a screenshot for review."
+    },
+    "share_reddit_work": {
+      "title": "Share Your Work on Reddit",
+      "description": "Share your own successful, public {siteName} creation in a relevant Reddit community that allows it, then submit the post link and a screenshot for review."
+    },
+    "reddit_post_popular": {
+      "title": "Reach the Reddit Popularity Targets",
+      "description": "After an approved website or work post reaches 1,000 views, 20 comments, and 10 upvotes at the same time, submit the post link and a Post Insights screenshot for review."
     }
   },
   "reviewReason": "Review note:",
   "manualSubmission": {
     "description": "Complete the task at the linked page, then send your proof for review.",
+    "redditDescription": "Submit the complete Reddit post link and a verifiable screenshot for manual review.",
     "openTarget": "Open Task Page",
+    "viewActivity": "View Reddit Campaign Rules",
     "screenshotLabel": "Screenshot",
     "screenshotHint": "Upload exactly one JPEG, PNG, or WebP image up to 5 MB.",
     "screenshotAlt": "Preview of the proof screenshot for {title}",
     "textLabel": "Submission note",
     "textPlaceholder": "Briefly describe what you completed and where it appears in the screenshot.",
+    "redditLinkLabel": "Reddit post link",
+    "redditLinkPlaceholder": "Paste the complete Reddit post link, for example https://www.reddit.com/r/.../comments/...",
     "characterCount": "{current} / {maximum}",
     "cancel": "Cancel",
     "submit": "Submit for Review",
@@ -109,6 +126,7 @@
       "screenshotType": "Use a JPEG, PNG, or WebP image.",
       "screenshotSize": "The screenshot must be no larger than 5 MB.",
       "textRequired": "Enter a submission note.",
+      "redditLinkRequired": "Enter the Reddit post link.",
       "textLength": "The submission note must be between 1 and 500 characters."
     },
     "errors": {
@@ -117,6 +135,7 @@
       "taskDisabled": "This task is no longer accepting submissions.",
       "alreadyClaimed": "You have already received this task reward.",
       "pending": "This task already has an application under review.",
+      "prerequisiteRequired": "Complete and claim a Reddit sharing reward first.",
       "invalidEvidence": "The uploaded screenshot could not be verified. Please choose it again.",
       "validation": "Check the screenshot and note, then submit again."
     },

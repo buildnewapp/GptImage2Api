@@ -35,7 +35,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
-import { MANUAL_REVIEW_TASK_KEYS } from "@/config/task-rewards";
+import {
+  MANUAL_REVIEW_TASK_KEYS,
+  isRedditManualReviewTaskKey,
+} from "@/config/task-rewards";
 import {
   MANUAL_TASK_REWARD_ADMIN_PAGE_SIZE_OPTIONS,
   TASK_REWARD_ADMIN_APPLICATION_STATUSES,
@@ -51,6 +54,27 @@ import { useDebounce } from "use-debounce";
 
 function formatDate(value: string | null): string {
   return value ? dayjs(value).format("YYYY-MM-DD HH:mm:ss") : "-";
+}
+
+function getRedditSubmissionUrl(value: string | null): string | null {
+  if (!value) return null;
+
+  try {
+    const url = new URL(value.trim());
+    const hostname = url.hostname.toLowerCase();
+    if (
+      url.protocol === "https:" &&
+      (hostname === "reddit.com" ||
+        hostname.endsWith(".reddit.com") ||
+        hostname === "redd.it")
+    ) {
+      return url.toString();
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
 }
 
 export default function TaskRewardReviewClient({
@@ -81,6 +105,9 @@ export default function TaskRewardReviewClient({
   const evidenceRequestTokenRef = useRef(0);
   const selectedApplicationIdRef = useRef<string | null>(null);
   const reviewInFlightRef = useRef(false);
+  const selectedRedditSubmissionUrl = getRedditSubmissionUrl(
+    selected?.submissionText ?? null,
+  );
 
   useEffect(() => {
     setPageIndex(0);
@@ -187,8 +214,14 @@ export default function TaskRewardReviewClient({
         return;
       }
 
+      const approvedCredits =
+        result.data?.status === "approved"
+          ? result.data.creditAmount
+          : selected.creditAmount;
       toast.success(
-        decision === "approved" ? t("success.approved") : t("success.rejected"),
+        decision === "approved"
+          ? t("success.approved", { credits: approvedCredits })
+          : t("success.rejected"),
       );
       closeApplication();
       setReloadToken((value) => value + 1);
@@ -402,11 +435,26 @@ export default function TaskRewardReviewClient({
 
               <div className="space-y-2">
                 <p className="text-sm font-medium">
-                  {t("dialog.submissionText")}
+                  {t(
+                    isRedditManualReviewTaskKey(selected.taskKey)
+                      ? "dialog.redditLink"
+                      : "dialog.submissionText",
+                  )}
                 </p>
-                <p className="whitespace-pre-wrap rounded-md border bg-muted/30 p-3 text-sm">
-                  {selected.submissionText || "-"}
-                </p>
+                {selectedRedditSubmissionUrl ? (
+                  <a
+                    href={selectedRedditSubmissionUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block break-all rounded-md border bg-muted/30 p-3 text-sm text-primary underline-offset-4 hover:underline"
+                  >
+                    {selected.submissionText}
+                  </a>
+                ) : (
+                  <p className="whitespace-pre-wrap rounded-md border bg-muted/30 p-3 text-sm">
+                    {selected.submissionText || "-"}
+                  </p>
+                )}
               </div>
 
               {selected.status === "pending" ? (
@@ -469,7 +517,9 @@ export default function TaskRewardReviewClient({
                   {processing && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  {t("actions.approve")}
+                  {t("actions.approve", {
+                    credits: selected.creditAmount,
+                  })}
                 </Button>
               </>
             ) : (
