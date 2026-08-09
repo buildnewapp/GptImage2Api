@@ -6,6 +6,8 @@ import { getDb } from "@/lib/db";
 import { getErrorMessage } from "@/lib/error-utils";
 import {
   MANUAL_REVIEW_TASK_KEYS,
+  REDDIT_POPULAR_TASK_KEY,
+  REDDIT_SHARE_TASK_KEYS,
   buildDailyClaimKey,
   buildOnceClaimKey,
   manualReviewTasks,
@@ -58,13 +60,18 @@ export async function getTaskRewardsDashboardData(
     const enabledManualTaskKeys = MANUAL_REVIEW_TASK_KEYS.filter(
       (taskKey) => manualReviewTasks[taskKey].enabled,
     );
-    const claimKeys = [
-      dailyClaimKey,
-      buildOnceClaimKey("checkin_3_days"),
-      buildOnceClaimKey("first_public_generation"),
-      buildOnceClaimKey("first_purchase"),
-      ...enabledManualTaskKeys.map(buildOnceClaimKey),
-    ];
+    const claimKeys = Array.from(
+      new Set([
+        dailyClaimKey,
+        buildOnceClaimKey("checkin_3_days"),
+        buildOnceClaimKey("first_public_generation"),
+        buildOnceClaimKey("first_purchase"),
+        ...enabledManualTaskKeys.map(buildOnceClaimKey),
+        ...(manualReviewTasks[REDDIT_POPULAR_TASK_KEY].enabled
+          ? REDDIT_SHARE_TASK_KEYS.map(buildOnceClaimKey)
+          : []),
+      ]),
+    );
 
     const [
       claimLookup,

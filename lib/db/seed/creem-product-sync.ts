@@ -1,4 +1,7 @@
 import { siteConfig } from '@/config/site'
+import { config as loadDotenvFile } from 'dotenv'
+import * as fs from 'node:fs'
+import * as path from 'node:path'
 
 export type BillingType = 'recurring' | 'onetime'
 export type BillingPeriod = 'every-month' | 'every-year'
@@ -40,6 +43,66 @@ export interface BuildCreemProductPayloadResult extends DeriveCreemBillingResult
   price: number
   currency: string
   taxMode: 'exclusive'
+}
+
+export type ProductSyncEnvironment = 'test' | 'live'
+
+export function parseProductSyncEnvironmentArgument(
+  args: string[]
+): ProductSyncEnvironment {
+  const values: string[] = []
+
+  for (let index = 0; index < args.length; index += 1) {
+    const argument = args[index]
+    const inlineMatch = argument.match(/^(?:--)?env=(.*)$/)
+    if (inlineMatch) {
+      values.push(inlineMatch[1])
+      continue
+    }
+
+    if (argument === 'env' || argument === '--env') {
+      values.push(args[index + 1] ?? '')
+      index += 1
+    }
+  }
+
+  if (values.length !== 1) {
+    throw new Error(
+      'A single environment argument is required. Use "env=test" or "env=live".'
+    )
+  }
+
+  const environment = values[0].toLowerCase().trim()
+  if (environment !== 'test' && environment !== 'live') {
+    throw new Error(
+      `Invalid environment "${values[0]}". Use "env=test" or "env=live".`
+    )
+  }
+
+  return environment
+}
+
+export function loadProductSyncEnvironmentFile(
+  environment: ProductSyncEnvironment,
+  projectDir = process.cwd()
+) {
+  const filename = environment === 'test' ? '.env.local' : '.env'
+  const filepath = path.join(projectDir, filename)
+
+  if (!fs.existsSync(filepath)) {
+    throw new Error(`Required environment file not found: ${filepath}`)
+  }
+
+  const result = loadDotenvFile({
+    path: filepath,
+    override: true,
+    quiet: true,
+  })
+  if (result.error) {
+    throw new Error(`Failed to load ${filename}: ${result.error.message}`)
+  }
+
+  return filename
 }
 
 function normalizePaymentType(paymentType: string | null | undefined) {

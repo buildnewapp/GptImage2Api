@@ -108,6 +108,9 @@ function buildGeoApiUrl(
 async function fetchGeoApi<TData>(
   path: string,
   params?: Record<string, string | number | boolean | undefined | null>,
+  options?: {
+    returnNullOnNotFound?: boolean;
+  },
 ): Promise<TData | null> {
   const { token } = getGeoApiConfig();
   const response = await fetch(buildGeoApiUrl(path, params), {
@@ -116,6 +119,10 @@ async function fetchGeoApi<TData>(
       Accept: "application/json",
     },
   });
+
+  if (response.status === 404 && options?.returnNullOnNotFound) {
+    return null;
+  }
 
   if (!response.ok) {
     throw new Error(`GeoFlow API request failed: ${response.status}`);
@@ -254,12 +261,28 @@ export async function getGeoBlogPostBySlug(
   slug: string,
   locale: string = DEFAULT_LOCALE,
 ): Promise<GeoBlogDetailResult> {
-  const article = await fetchGeoApi<GeoBlogArticle>(
-    `/api/v1/blog/articles/${encodeURIComponent(slug)}`,
+  const path = `/api/v1/blog/articles/${encodeURIComponent(slug)}`;
+  let article = await fetchGeoApi<GeoBlogArticle>(
+    path,
     {
       language_code: getGeoLanguageCode(locale),
     },
+    {
+      returnNullOnNotFound: true,
+    },
   );
+
+  if (!article && locale !== DEFAULT_LOCALE) {
+    article = await fetchGeoApi<GeoBlogArticle>(
+      path,
+      {
+        language_code: DEFAULT_LOCALE,
+      },
+      {
+        returnNullOnNotFound: true,
+      },
+    );
+  }
 
   return {
     post: article ? mapGeoArticleToPostBase(article, locale) : null,

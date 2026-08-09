@@ -1,4 +1,7 @@
 import {
+  MANUAL_REVIEW_TASK_KEYS,
+  REDDIT_POPULAR_TASK_KEY,
+  REDDIT_SHARE_TASK_KEYS,
   buildOnceClaimKey,
   manualReviewTasks,
   taskRewardsConfig,
@@ -6,14 +9,9 @@ import {
 } from "@/config/task-rewards";
 import type { RewardApplicationStore } from "@/lib/task-rewards/application-store";
 
-const manualReviewTaskKeys = new Set<ManualReviewTaskKey>([
-  "github_star",
-  "huggingface_like",
-  "share_twitter",
-  "share_facebook",
-  "share_tiktok",
-  "share_instagram",
-]);
+const manualReviewTaskKeys = new Set<ManualReviewTaskKey>(
+  MANUAL_REVIEW_TASK_KEYS,
+);
 
 export type SubmitRewardApplicationErrorCode =
   | "invalid_task"
@@ -23,7 +21,8 @@ export type SubmitRewardApplicationErrorCode =
   | "submission_text_required"
   | "submission_text_too_long"
   | "already_claimed"
-  | "pending_application_exists";
+  | "pending_application_exists"
+  | "prerequisite_required";
 
 export type SubmitRewardApplicationResult =
   | {
@@ -134,6 +133,17 @@ export async function submitManualRewardApplication({
     result = await store.withTaskLock(userId, taskKey, async (lockedStore) => {
       if (await lockedStore.hasClaim(userId, claimKey)) {
         return { status: "error", errorCode: "already_claimed" };
+      }
+
+      if (taskKey === REDDIT_POPULAR_TASK_KEY) {
+        const hasCompletedRedditShare = await Promise.all(
+          REDDIT_SHARE_TASK_KEYS.map((shareTaskKey) =>
+            lockedStore.hasClaim(userId, buildOnceClaimKey(shareTaskKey)),
+          ),
+        );
+        if (!hasCompletedRedditShare.some(Boolean)) {
+          return { status: "error", errorCode: "prerequisite_required" };
+        }
       }
 
       if (await lockedStore.hasApprovedApplication(userId, taskKey)) {

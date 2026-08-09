@@ -136,6 +136,7 @@ export function PricesDataTable<TData extends PricingPlan, TValue>({
               <SelectItem value="all">All Payment Methods</SelectItem>
               <SelectItem value="stripe">Stripe</SelectItem>
               <SelectItem value="creem">Creem</SelectItem>
+              <SelectItem value="subotiz">Subotiz</SelectItem>
               <SelectItem value="paypal">PayPal</SelectItem>
               <SelectItem value="none">None</SelectItem>
             </SelectContent>

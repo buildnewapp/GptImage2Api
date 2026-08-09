@@ -42,14 +42,15 @@ type StaticPageConfig = {
 
 // 只维护这个配置即可新增/删除 sitemap 中的静态页面
 const STATIC_PAGE_CONFIG: StaticPageConfig[] = [
-  { path: '/', priority: 1.0, changeFrequency: 'daily' },
-  { path: '/blog', priority: 0.8, changeFrequency: 'daily' },
-  { path: '/showcase', priority: 0.85, changeFrequency: 'weekly' },
-  { path: '/prompts', priority: 0.8, changeFrequency: 'weekly' },
-  { path: '/pricing', priority: 0.8, changeFrequency: 'weekly' },
-  { path: '/apidoc', priority: 0.8, changeFrequency: 'weekly' },
-  { path: '/gpt-image-2-api', priority: 0.6, changeFrequency: 'monthly' },
-]
+  { path: "/", priority: 1.0, changeFrequency: "daily" },
+  { path: "/blog", priority: 0.8, changeFrequency: "daily" },
+  { path: "/showcase", priority: 0.85, changeFrequency: "weekly" },
+  { path: "/prompts", priority: 0.8, changeFrequency: "weekly" },
+  { path: "/pricing", priority: 0.8, changeFrequency: "weekly" },
+  { path: "/share-to-reddit", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/apidoc", priority: 0.8, changeFrequency: "weekly" },
+  { path: "/gpt-image-2-api", priority: 0.6, changeFrequency: "monthly" },
+];
 
 const CMS_MODULES = {
   blog: blogCms,

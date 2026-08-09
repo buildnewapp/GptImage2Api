@@ -1,0 +1,230 @@
+{
+  "seo": {
+    "title": "Share on Reddit and Earn Up to 1,300 Credits",
+    "description": "Join {siteName}'s Reddit sharing campaign: earn 100 credits for sharing the website, 200 for sharing a public creation, and 1,000 more when one approved post reaches all popularity targets."
+  },
+  "common": {
+    "credits": "{credits} credits"
+  },
+  "hero": {
+    "eyebrow": "{siteName} × Reddit creator campaign",
+    "title": "Bring great work to Reddit and earn up to {credits} credits",
+    "description": "Share {siteName} or one of your public creations thoughtfully in a relevant Reddit community. Submit the post link and screenshot for manual review, then unlock an additional 1,000-credit reward if an approved post reaches every popularity target.",
+    "primaryCta": "Go to Task Center",
+    "secondaryCta": "View My Creations",
+    "emailCta": "Join by Email",
+    "emailSubject": "{siteName} Reddit Campaign Submission",
+    "emailBody": "Please include the task type and Reddit post link, and attach the review screenshot to this email.",
+    "maxLabel": "Maximum for all three tasks",
+    "chips": {
+      "manual": "Reviewed by a person",
+      "once": "One reward per task",
+      "organic": "Organic engagement only"
+    },
+    "mock": {
+      "community": "r/RelevantCreatorCommunity",
+      "author": "Posted by the original creator · Example",
+      "approved": "Base task eligible",
+      "title": "I made this AI video with {siteName} — here is what I learned",
+      "body": "Add your creative idea, honest experience, and useful process notes so the post provides value to the community itself.",
+      "link": "{siteUrl} · Website or public creation link",
+      "metricLabel": "Popularity task requires all three"
+    }
+  },
+  "rewards": {
+    "eyebrow": "Three campaign rewards",
+    "title": "One campaign, three ways to earn",
+    "description": "Website sharing and creation sharing are separate base tasks. Once either base post is approved, it can also qualify for the popularity reward.",
+    "items": {
+      "website": {
+        "label": "Base task 01",
+        "title": "Share the {siteName} website",
+        "description": "Introduce {siteName} to Reddit users who may genuinely benefit from an AI creation tool instead of dropping a link without context.",
+        "requirements": [
+          "Publish an original Reddit post containing the {siteName} website link",
+          "Choose a relevant community that permits this kind of content",
+          "Submit the full post permalink and a clear screenshot"
+        ]
+      },
+      "work": {
+        "label": "Base task 02",
+        "title": "Share your public creation",
+        "description": "Show work you successfully generated and published on {siteName}, along with the idea or process behind it.",
+        "requirements": [
+          "The creation must be yours, successfully generated, and public",
+          "The post must display or clearly link to that creation",
+          "Submit the full post permalink and a clear screenshot"
+        ]
+      },
+      "popular": {
+        "label": "Advanced task 03",
+        "title": "Reach the popularity targets",
+        "description": "Earn genuine attention on an approved website or creation post. All three metrics must qualify on the same post.",
+        "requirements": [
+          "The post must have already passed a base-task review",
+          "The same post must reach 1,000 views, 20 comments, and 10 upvotes",
+          "Submit the post permalink and a Post Insights screenshot"
+        ]
+      }
+    },
+    "note": "Use different Reddit posts for the website and creation base tasks. The popularity task may reuse one of those approved posts. Each user can receive each task reward only once."
+  },
+  "steps": {
+    "eyebrow": "How to participate",
+    "title": "Four steps from posting to reward",
+    "description": "Read the community rules first, then publish something useful and properly contextualized. Once your permalink and evidence are ready, submit them in the Task Center.",
+    "items": {
+      "choose": {
+        "title": "Choose a task",
+        "description": "Decide whether to share the website or a creation, and confirm you have not already claimed that task reward."
+      },
+      "publish": {
+        "title": "Publish on Reddit",
+        "description": "Choose a relevant community that permits sharing, follow its rules, and add honest, useful context."
+      },
+      "capture": {
+        "title": "Save your evidence",
+        "description": "Copy the full post permalink and capture a screenshot that clearly shows the post status and key details."
+      },
+      "submit": {
+        "title": "Submit for review",
+        "description": "Enter the Reddit post link, upload the screenshot in the Task Center, and then follow the review status."
+      }
+    }
+  },
+  "threshold": {
+    "eyebrow": "1,000-credit popularity reward",
+    "title": "Three numbers. Every one required.",
+    "description": "The popularity task is not an either-or requirement. At review time, one approved Reddit post must meet all of the following thresholds.",
+    "stats": {
+      "views": "Post views",
+      "comments": "Comments",
+      "upvotes": "Upvotes"
+    },
+    "note": "Submit a Post Insights screenshot that proves all three metrics at the same review point. Meeting only one target or combining metrics from multiple posts does not qualify."
+  },
+  "proof": {
+    "eyebrow": "Evidence guide",
+    "title": "Clear evidence means a smoother review",
+    "description": "No structured data is required. Submit the Reddit post link and the matching screenshot; a reviewer will manually verify the post, creation, and engagement metrics.",
+    "cards": {
+      "base": {
+        "label": "Website / creation share",
+        "title": "Base-task evidence",
+        "description": "Your screenshot should help the reviewer confirm that you published the post, that it remains available, and that it actually shares {siteName} or your public creation.",
+        "items": [
+          "The full Reddit post permalink, not a community or profile page",
+          "A screenshot showing the title, community, posting account, and key post content",
+          "A visible {siteName} website link or enough information to identify the public creation"
+        ]
+      },
+      "popular": {
+        "label": "Popularity task",
+        "title": "Post Insights evidence",
+        "description": "The popularity submission must show that all metrics belong to the same previously approved post and qualify at the time of submission.",
+        "items": [
+          "The same Reddit post permalink that passed the base-task review",
+          "Preferably a complete screenshot of the author's Post Insights view",
+          "Views, comments, and upvotes all clearly visible in the evidence"
+        ]
+      }
+    },
+    "tips": {
+      "link": {
+        "title": "Use the permalink",
+        "description": "Copy the link from the post's share menu so the reviewer lands directly on the correct post."
+      },
+      "screenshot": {
+        "title": "Keep the full context",
+        "description": "Do not crop down to one number; retain the post identity, account, and metric context."
+      },
+      "context": {
+        "title": "Add a helpful note",
+        "description": "If the creation or account is not obvious, add a short submission note to help manual verification."
+      }
+    }
+  },
+  "review": {
+    "eyebrow": "Manual review standards",
+    "title": "Authentic, useful, and verifiable",
+    "description": "We look beyond whether a link exists. The review also considers community fit, clear ownership of the creation, and whether engagement appears organic.",
+    "approvedTitle": "A qualifying submission usually has",
+    "items": [
+      "Original content published by the person submitting it",
+      "A relevant community that permits this kind of post",
+      "A post that is still public, accessible, and not removed at review time",
+      "A verifiable {siteName} link or public creation",
+      "A screenshot that matches the submitted post link",
+      "Popularity metrics produced by genuine community engagement"
+    ],
+    "rejectedTitle": "These submissions will not qualify",
+    "rejectedItems": [
+      "Deleted, moderator-removed, private, or inaccessible posts",
+      "Community pages, profile pages, or incorrect links instead of a post permalink",
+      "Mass posting, context-free links, or obvious promotional spam",
+      "Someone else's work or a creation that is not successfully public",
+      "Purchased, automated, coordinated, or otherwise manipulated engagement",
+      "Over-cropped, incomplete, or mismatched screenshots"
+    ],
+    "timeline": {
+      "title": "Where can I follow the review?",
+      "description": "Submissions are manually processed in order. Check the Task Center for pending, approved, or rejected status. If evidence is incomplete, you can correct it and submit again."
+    }
+  },
+  "community": {
+    "eyebrow": "Respect the community first",
+    "title": "Make the share valuable to Reddit users",
+    "description": "Each subreddit has its own rules for self-promotion, links, AI content, and posting frequency. Read those rules before posting. Honest experience, a creative process, or a useful takeaway is generally more valuable than a stand-alone advertisement.",
+    "items": {
+      "relevant": "Choose a community genuinely related to AI creation, video, design, or the subject of your work.",
+      "transparent": "If disclosure is required, state clearly that you are participating in a {siteName} reward campaign.",
+      "respectful": "Do not repost repeatedly, send unwanted messages, solicit votes, or ask others to inflate engagement."
+    },
+    "disclaimer": "This campaign is independently operated by {siteName} and is not sponsored, endorsed, administered by, or affiliated with Reddit, Inc. Reddit and individual community rules always take priority, and participants are responsible for complying with them."
+  },
+  "faq": {
+    "eyebrow": "Frequently asked questions",
+    "title": "One last check before you submit",
+    "description": "These answers cover the details most likely to affect a review decision.",
+    "items": [
+      {
+        "question": "Can one Reddit post claim both the website and creation rewards?",
+        "answer": "No. Website sharing and creation sharing are separate base tasks and require different Reddit posts. This keeps the review scope clear and prevents duplicate base rewards for the same content."
+      },
+      {
+        "question": "Can the popularity task use a post that already earned a base reward?",
+        "answer": "Yes—and it must. The popularity task must build on a post already approved for website or creation sharing. Submit that same post link with its Post Insights screenshot."
+      },
+      {
+        "question": "Must the post reach 1,000 views, 20 comments, and 10 upvotes?",
+        "answer": "Yes. All three must be reached by the same post at the same review point. Reaching only one target, or adding together numbers from several posts, does not qualify."
+      },
+      {
+        "question": "Where can I see a Reddit post's view count?",
+        "answer": "Authors can generally view Post Insights from their own post. Prefer a complete screenshot that includes the post identity, views, comments, and upvotes. The exact entry point depends on Reddit's current interface."
+      },
+      {
+        "question": "Can a deleted or moderator-removed post receive a reward?",
+        "answer": "No. The post must remain public, accessible, and not removed when it is manually reviewed so the reviewer can verify its content and evidence."
+      },
+      {
+        "question": "How long does manual review take?",
+        "answer": "Submissions are handled in order and there is no guaranteed turnaround time. Follow the latest status in the Task Center and avoid repeatedly submitting identical evidence for the same task."
+      },
+      {
+        "question": "Can I submit again after a rejection?",
+        "answer": "Yes. Read the rejection reason in the Task Center, correct the content or provide complete evidence, and submit again. A task reward cannot be claimed again after it has already been received."
+      },
+      {
+        "question": "Can I buy views, comments, or upvotes for the popularity task?",
+        "answer": "No. Purchased engagement, bots, coordinated exchanges, vote solicitation, or any other metric manipulation is ineligible and may also violate Reddit's rules."
+      }
+    ]
+  },
+  "final": {
+    "title": "Ready to put your work in front of a new community?",
+    "description": "Choose a task in the Task Center, then use this page to check the posting, screenshot, and review requirements. One thoughtful share can help more people discover your work.",
+    "primaryCta": "Join the Campaign",
+    "secondaryCta": "Choose a Creation First"
+  }
+}

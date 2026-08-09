@@ -1,5 +1,7 @@
 import {
   MANUAL_REVIEW_TASK_KEYS,
+  REDDIT_POPULAR_TASK_KEY,
+  REDDIT_SHARE_TASK_KEYS,
   buildDailyClaimKey,
   buildOnceClaimKey,
   manualReviewTasks,
@@ -200,6 +202,9 @@ export function buildTaskRewardItems({
     if (!definition.enabled) continue;
 
     const claimed = claimLookup.has(buildOnceClaimKey(taskKey));
+    const hasCompletedRedditShare = REDDIT_SHARE_TASK_KEYS.some(
+      (shareTaskKey) => claimLookup.has(buildOnceClaimKey(shareTaskKey)),
+    );
     const latestApplication = latestManualApplications.get(taskKey);
     const applicationStatus = latestApplication?.status;
     const status: TaskRewardStatus =
@@ -209,7 +214,9 @@ export function buildTaskRewardItems({
           ? "pending"
           : applicationStatus === "rejected"
             ? "rejected"
-            : "available";
+            : taskKey === REDDIT_POPULAR_TASK_KEY && !hasCompletedRedditShare
+              ? "incomplete"
+              : "available";
 
     tasks.push({
       taskKey,

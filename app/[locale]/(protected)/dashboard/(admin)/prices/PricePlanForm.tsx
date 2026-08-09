@@ -94,13 +94,14 @@ const pricingPlanFormSchema = z.object({
   groupSlug: z.string().optional(),
   cardTitle: z.string().min(1, "Card title is required."),
   cardDescription: z.string().optional().nullable(),
-  provider: z.enum(["none", "all", "stripe", "creem", "paypal"]),
+  provider: z.enum(["none", "all", "stripe", "creem", "subotiz", "paypal"]),
   stripePriceId: z.string().optional().nullable(),
   stripeProductId: z.string().optional().nullable(),
   stripeCouponId: z.string().optional().nullable(),
   enableManualInputCoupon: z.boolean().optional().nullable(),
   creemProductId: z.string().optional().nullable(),
   creemDiscountCode: z.string().optional().nullable(),
+  subotizPriceId: z.string().optional().nullable(),
   paypalProductId: z.string().optional().nullable(),
   paypalPlanId: z.string().optional().nullable(),
   paymentType: z.string().optional().nullable(),
@@ -171,6 +172,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
       enableManualInputCoupon: initialData?.enableManualInputCoupon ?? false,
       creemProductId: initialData?.creemProductId ?? "",
       creemDiscountCode: initialData?.creemDiscountCode ?? "",
+      subotizPriceId: initialData?.subotizPriceId ?? "",
       paypalProductId: initialData?.paypalProductId ?? "",
       paypalPlanId: initialData?.paypalPlanId ?? "",
       paymentType: initialData?.paymentType ?? null,
@@ -217,7 +219,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -243,6 +245,10 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
   const watchEnvironment = form.watch("environment");
   const watchIsHighlighted = form.watch("isHighlighted");
   const watchStripeCouponId = form.watch("stripeCouponId");
+  const providerUsesManualPricing =
+    watchProvider === "paypal" ||
+    watchProvider === "subotiz" ||
+    watchProvider === "all";
 
   // useEffect(() => {
   //   if (watchStripePriceId !== initialData?.stripePriceId) {
@@ -329,7 +335,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
         result.data.recurring?.interval || null,
         {
           shouldValidate: true,
-        }
+        },
       );
 
       // Price from Stripe is usually in cents, adjust if your DB expects dollars
@@ -466,7 +472,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
 
       if (!result.success) {
         throw new Error(
-          result.error || "Creem discount code verification failed"
+          result.error || "Creem discount code verification failed",
         );
       }
 
@@ -544,7 +550,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
   };
 
   const translateLangTemplate = async (
-    e: React.MouseEvent<HTMLButtonElement>
+    e: React.MouseEvent<HTMLButtonElement>,
   ) => {
     e.preventDefault();
     const template = await getLangTemplate();
@@ -553,7 +559,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
     const prompt = `This is the multilingual configuration for a SaaS product's pricing card. The copy for the default language (${DEFAULT_LOCALE}) is provided below. Acting as a translation expert, please complete the copy for the other languages within the JSON structure, prices and currency units must remain untouched. Ensure all translations are natural and idiomatic, suitable for native speakers. Here is the template: ${JSON.stringify(
       template,
       null,
-      2
+      2,
     )}. Important: Return ONLY the completed JSON, without any explanations or surrounding text. Don't provide JSON markers, only the curly braces and their contents.`;
 
     await complete(prompt);
@@ -579,7 +585,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
       } else {
         console.warn("AI response does not contain valid JSON:", completion);
         toast.error(
-          "Translation completed but the response is not valid JSON. Please check and correct manually."
+          "Translation completed but the response is not valid JSON. Please check and correct manually.",
         );
         form.setValue("langJsonb", completion, { shouldValidate: false });
       }
@@ -632,7 +638,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
       } catch (error) {
         console.error(
           `Failed to format extracted JSON in ${fieldName}:`,
-          error
+          error,
         );
         toast.error(`Failed to format extracted JSON in ${fieldName}`);
         form.trigger(fieldName);
@@ -664,6 +670,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
         // Remove Creem fields when provider is Stripe
         payload.creemProductId = null;
         payload.creemDiscountCode = null;
+        payload.subotizPriceId = null;
         payload.paypalProductId = null;
         payload.paypalPlanId = null;
       } else if (payload.provider === "creem") {
@@ -671,6 +678,16 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
         payload.stripePriceId = null;
         payload.stripeProductId = null;
         payload.stripeCouponId = null;
+        payload.subotizPriceId = null;
+        payload.paypalProductId = null;
+        payload.paypalPlanId = null;
+        payload.enableManualInputCoupon = false;
+      } else if (payload.provider === "subotiz") {
+        payload.stripePriceId = null;
+        payload.stripeProductId = null;
+        payload.stripeCouponId = null;
+        payload.creemProductId = null;
+        payload.creemDiscountCode = null;
         payload.paypalProductId = null;
         payload.paypalPlanId = null;
         payload.enableManualInputCoupon = false;
@@ -680,6 +697,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
         payload.stripeCouponId = null;
         payload.creemProductId = null;
         payload.creemDiscountCode = null;
+        payload.subotizPriceId = null;
         payload.enableManualInputCoupon = false;
       } else if (payload.provider === "all") {
         // Keep all provider IDs so users can choose at checkout.
@@ -690,6 +708,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
         payload.stripeCouponId = null;
         payload.creemProductId = null;
         payload.creemDiscountCode = null;
+        payload.subotizPriceId = null;
         payload.paypalProductId = null;
         payload.paypalPlanId = null;
         payload.enableManualInputCoupon = false;
@@ -714,13 +733,13 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
       }
 
       toast.success(
-        t("createUpdateSuccess", { mode: isEditMode ? "update" : "create" })
+        t("createUpdateSuccess", { mode: isEditMode ? "update" : "create" }),
       );
       router.push("/dashboard/prices");
     } catch (error: any) {
       console.error(
         `Failed to ${isEditMode ? "update" : "create"} plan:`,
-        error
+        error,
       );
       toast.error(`Error: ${error.message}`);
     } finally {
@@ -856,6 +875,10 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                             />
                             <ChoiceboxGroup.Item value="creem" title="Creem" />
                             <ChoiceboxGroup.Item
+                              value="subotiz"
+                              title="Subotiz"
+                            />
+                            <ChoiceboxGroup.Item
                               value="paypal"
                               title="PayPal"
                             />
@@ -869,7 +892,8 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
 
                 {watchProvider !== "none" && (
                   <>
-                    {(watchProvider === "stripe" || watchProvider === "all") && (
+                    {(watchProvider === "stripe" ||
+                      watchProvider === "all") && (
                       <>
                         <FormField
                           control={form.control}
@@ -973,7 +997,32 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                         )}
                       />
                     )}
-                    {(watchProvider === "paypal" || watchProvider === "all") && (
+                    {(watchProvider === "subotiz" ||
+                      watchProvider === "all") && (
+                      <FormField
+                        control={form.control}
+                        name="subotizPriceId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Subotiz Price ID</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Subotiz price_id"
+                                {...field}
+                                value={field.value ?? ""}
+                                disabled={isLoading}
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              {`Enter the Subotiz price_id for ${watchEnvironment} environment`}
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+                    {(watchProvider === "paypal" ||
+                      watchProvider === "all") && (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <FormField
                           control={form.control}
@@ -1027,7 +1076,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Payment Type</FormLabel>
-                            {watchProvider === "paypal" || watchProvider === "all" ? (
+                            {providerUsesManualPricing ? (
                               <Select
                                 onValueChange={field.onChange}
                                 value={field.value ?? ""}
@@ -1068,7 +1117,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Recurring Interval</FormLabel>
-                            {watchProvider === "paypal" || watchProvider === "all" ? (
+                            {providerUsesManualPricing ? (
                               <Select
                                 onValueChange={field.onChange}
                                 value={field.value ?? ""}
@@ -1122,21 +1171,15 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                                   field.onChange(
                                     event.target.value === ""
                                       ? null
-                                      : Number(event.target.value)
+                                      : Number(event.target.value),
                                   )
                                 }
-                                readOnly={
-                                  watchProvider !== "paypal" &&
-                                  watchProvider !== "all"
-                                }
+                                readOnly={!providerUsesManualPricing}
                                 disabled={
-                                  (watchProvider !== "paypal" &&
-                                    watchProvider !== "all") ||
-                                  isLoading
+                                  !providerUsesManualPricing || isLoading
                                 }
                                 placeholder={
-                                  watchProvider === "paypal" ||
-                                  watchProvider === "all"
+                                  providerUsesManualPricing
                                     ? "Enter plan price"
                                     : "Fetched from provider"
                                 }
@@ -1156,18 +1199,12 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                               <Input
                                 {...field}
                                 value={field.value ?? ""}
-                                readOnly={
-                                  watchProvider !== "paypal" &&
-                                  watchProvider !== "all"
-                                }
+                                readOnly={!providerUsesManualPricing}
                                 disabled={
-                                  (watchProvider !== "paypal" &&
-                                    watchProvider !== "all") ||
-                                  isLoading
+                                  !providerUsesManualPricing || isLoading
                                 }
                                 placeholder={
-                                  watchProvider === "paypal" ||
-                                  watchProvider === "all"
+                                  providerUsesManualPricing
                                     ? "USD"
                                     : "Fetched from provider"
                                 }
@@ -1179,7 +1216,8 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                       />
                     </div>
 
-                    {(watchProvider === "stripe" || watchProvider === "all") && (
+                    {(watchProvider === "stripe" ||
+                      watchProvider === "all") && (
                       <>
                         <FormField
                           control={form.control}
@@ -1306,7 +1344,7 @@ export function PricePlanForm({ initialData, planId }: PricePlanFormProps) {
                                     onChange={(e) => {
                                       // Auto-convert to uppercase
                                       field.onChange(
-                                        e.target.value.toUpperCase()
+                                        e.target.value.toUpperCase(),
                                       );
                                     }}
                                     disabled={

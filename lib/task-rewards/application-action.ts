@@ -35,6 +35,7 @@ export type ManualTaskApplicationActionCustomCode =
   | "task_disabled"
   | "already_claimed"
   | "pending_application_exists"
+  | "prerequisite_required"
   | "invalid_evidence";
 
 export type ManualTaskApplicationActionResult =
@@ -57,6 +58,7 @@ const errorMessages: Record<ManualTaskApplicationActionCustomCode, string> = {
   task_disabled: "This task is currently disabled.",
   already_claimed: "This task reward has already been claimed.",
   pending_application_exists: "This task already has a pending application.",
+  prerequisite_required: "Complete a Reddit sharing task first.",
   invalid_evidence: "The submitted evidence is invalid.",
 };
 
@@ -80,10 +82,12 @@ export function mapManualTaskApplicationResult(
     result.errorCode === "already_claimed" ||
     result.errorCode === "pending_application_exists"
       ? result.errorCode
-      : result.errorCode === "evidence_required" ||
-          result.errorCode === "evidence_not_owned"
-        ? "invalid_evidence"
-        : "validation";
+      : result.errorCode === "prerequisite_required"
+        ? "prerequisite_required"
+        : result.errorCode === "evidence_required" ||
+            result.errorCode === "evidence_not_owned"
+          ? "invalid_evidence"
+          : "validation";
 
   return {
     success: false,

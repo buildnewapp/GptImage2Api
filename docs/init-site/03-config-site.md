@@ -82,10 +82,66 @@ https://nexty.dev/zh/docs/integration/cloudflare-r2
 config/ai-video-studio.ts
 
 
+### stripe
+1 测试环境
+https://dashboard.stripe.com/acct_1TyTfw5RIwEG87IR/test/dashboard
+Developers -> Overview：
+STRIPE_SECRET_KEY=REDACTED_STRIPE_SECRET_KEY
+STRIPE_PUBLISHABLE_KEY=pk_test_51TyTfw5RIwEG87IRpah0YimUlN4WBOpWjX7ZNM8SPgjSgpa3yLDC1GJyQsFzTzXuHlqUKdAmJPRu29K5ofP95mZS00M65KO8jg
+STRIPE_WEBHOOK_SECRET=whsec_61DN2JUWWWHryzqhNEzrNWkhhWcr5I2O
+
+charge.refunded
+checkout.session.completed
+customer.subscription.created
+customer.subscription.updated
+customer.subscription.deleted
+invoice.paid
+invoice.payment_failed
+radar.early_fraud_warning.created
+
+ngrok http --domain=many-fine-bullfrog.ngrok-free.app 3000
+Webhook URL: https://many-fine-bullfrog.ngrok-free.app/api/stripe/webhook
+
+2 真实环境
+Developers -> Overview：
+STRIPE_SECRET_KEY=
+STRIPE_PUBLISHABLE_KEY=
+STRIPE_WEBHOOK_SECRET=
+
+
+Webhook URL: {NEXT_PUBLIC_SITE_URL}/api/stripe/webhook
+
+3 产品同步
+# 测试产品，加载 .env.local
+pnpm db:sync-stripe-products -- env=test
+
+# 正式产品，加载 .env
+pnpm db:sync-stripe-products -- env=live
+
+pnpm db:seed
+
+4 开启防欺诈雷达
+a 开启所有能开启的 rule
+b 再加上 request 3DS rule：
+:risk_score: >= 40
+c 添加以下 block rules：
+一周内创建的新用户使用超过5张卡
+:card_count_for_customer_weekly: > 5 and :hours_since_customer_was_created: <= 168
+
+一周内同一客户使用超过4张信用卡
+:card_count_for_customer_weekly: > 4 and :card_funding: = 'credit'
+
+一周尝试高风险卡数量大于3
+:card_count_for_customer_weekly: > 3 and :risk_score: > 50
+
+一天同一IP地址进行大量高风险尝试
+:total_charges_per_ip_address_daily: > 10 and :risk_score: > 40
+d Risk controls开启最大
+
+
+
 ### paypal
-统一使用 `PAY_ENV` 控制支付环境：
-- `PAY_ENV=test`：PayPal Sandbox
-- `PAY_ENV=live`：PayPal Live
+产品同步必须传入 `env`：`test` 加载 `.env.local`，`live` 加载 `.env`。
 
 #### 测试环境
 1 新建测试应用，登录主账户
@@ -106,10 +162,9 @@ https://www.sandbox.paypal.com/billing/overview
 
 3 自动创建订阅产品
 提供PAYPAL_CLIENT_ID、PAYPAL_CLIENT_SECRET 让 ai 使用脚本创建产品+订阅计划，获取计划 id
-pnpm db:sync-paypal-products
-PAY_ENV=test pnpm db:sync-paypal-products -- --force
-PAY_ENV=live pnpm db:sync-paypal-products -- --force
-
+pnpm db:sync-paypal-products -- env=test --force
+pnpm db:sync-paypal-products -- env=live --force
+pnpm db:seed
 
 #### 真实环境
 1 新建应用，登录主账户
@@ -120,7 +175,7 @@ create app → name + Merchant + Sandbox Account → get Client ID + Secret key 
 添加 webhook → 填写 回调地址 + all events → save
 3 自动创建订阅产品
 提供PAYPAL_CLIENT_ID、PAYPAL_CLIENT_SECRET 让 ai 使用脚本创建产品+订阅计划，获取计划 id
-pnpm db:sync-paypal-products
+pnpm db:sync-paypal-products -- env=live
 查看创建成功：https://www.paypal.com/billing/plans
 查看 plan id 回写
 4 测试账户
@@ -131,11 +186,48 @@ pnpm db:sync-paypal-products
 回调地址
 https://many-fine-bullfrog.ngrok-free.app/api/creem/webhook
 https://xxxx/api/creem/webhook
-PAY_ENV=test pnpm db:sync-creem-products -- --force
-PAY_ENV=live pnpm db:sync-creem-products -- --force
+*修改 .env 配置*
+测试环境配置放在 `.env.local`，正式环境配置放在 `.env`。
+pnpm db:sync-creem-products -- env=test --force
+pnpm db:sync-creem-products -- env=live --force
+pnpm db:seed
 # moderation provider: none | creem
 MODERATION=creem
 MODERATION_API_KEY=
+
+### subotiz
+API Docs: https://docs.subotiz.com/zh/quick-start/quick-start
+Sandbox API: https://api.sandbox.subotiz.com
+Production API: https://api.subotiz.com
+Webhook URL: {NEXT_PUBLIC_SITE_URL}/api/subotiz/webhook
+1 测试环境
+https://admin.sandbox.subotiz.com/
+菜单 开发者：
+SUBOTIZ_API_BASE_URL=https://api.sandbox.subotiz.com
+SUBOTIZ_API_KEY=sk_cztHfUpNUk89e1NVVnF7P3VmKWZXXk43L1kkeSIrb0lAQjg+LzgpNCFLUC9Yaipu
+SUBOTIZ_ACCESS_NO=95111ac4f401151
+SUBOTIZ_MERCHANT_ID=671337251707303881
+
+ngrok http --domain=many-fine-bullfrog.ngrok-free.app 3000
+Webhook URL: https://many-fine-bullfrog.ngrok-free.app/api/subotiz/webhook
+2 真实环境
+https://admin.subotiz.com/
+菜单 开发者：
+SUBOTIZ_API_BASE_URL=https://api.subotiz.com
+SUBOTIZ_API_KEY=sk_PTNzUHcsJjlOYytCXS4sS1gnQ1BWIzM4ayk9eyxbdjdeMXojPHRwNE9ZK05dSTlQ
+SUBOTIZ_ACCESS_NO=9428b770b801353
+SUBOTIZ_MERCHANT_ID=667249039162490822
+
+Webhook URL: {NEXT_PUBLIC_SITE_URL}/api/subotiz/webhook
+
+3 产品同步
+# 测试产品，加载 .env.local
+pnpm db:sync-subotiz-products -- env=test
+
+# 正式产品，加载 .env
+pnpm db:sync-subotiz-products -- env=live
+
+pnpm db:seed
 
 ### 定时任务
 GET /api/ai-studio/archive-r2?secret=YOUR_SECRET&limit=10

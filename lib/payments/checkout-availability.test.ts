@@ -21,16 +21,38 @@ test("returns all configured one-time checkout providers", () => {
       paymentType: "one_time",
       price: "12.00",
       stripePriceId: "price_123",
+      subotizPriceId: "price_subotiz_123",
     },
     {
       creemEnabled: true,
       nowpaymentsEnabled: true,
       paypalEnabled: true,
       stripeEnabled: true,
+      subotizEnabled: true,
     },
   );
 
-  assert.deepEqual(providers, ["creem", "paypal", "nowpayments", "stripe"]);
+  assert.deepEqual(providers, [
+    "stripe",
+    "creem",
+    "paypal",
+    "subotiz",
+    "nowpayments",
+  ]);
+});
+
+test("does not expose subotiz when Subotiz checkout is disabled", () => {
+  const providers = getAvailableCheckoutProviders(
+    {
+      provider: "all",
+      subotizPriceId: "price_subotiz_123",
+    },
+    {
+      subotizEnabled: false,
+    },
+  );
+
+  assert.deepEqual(providers, []);
 });
 
 test("does not expose creem when creem checkout is disabled", () => {
@@ -50,7 +72,7 @@ test("does not expose creem when creem checkout is disabled", () => {
     },
   );
 
-  assert.deepEqual(providers, ["paypal", "nowpayments", "stripe"]);
+  assert.deepEqual(providers, ["stripe", "paypal", "nowpayments"]);
 });
 
 test("does not expose stripe when stripe checkout is disabled", () => {

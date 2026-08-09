@@ -6,49 +6,41 @@
  * writes paypalProductId / paypalPlanId back to pricing-config.ts.
  *
  * Usage:
- *   pnpm db:sync-paypal-products -- --dry-run
- *   pnpm db:sync-paypal-products
- *   pnpm db:sync-paypal-products -- --force
+ *   pnpm db:sync-paypal-products -- env=test --dry-run
+ *   pnpm db:sync-paypal-products -- env=test
+ *   pnpm db:sync-paypal-products -- env=live --force
  */
 
-import { loadEnvConfig } from '@next/env'
-import 'dotenv/config'
 import { randomUUID } from 'node:crypto'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { siteConfig } from '@/config/site'
-import { PayPalClient, isPayPalEnabled } from '@/lib/paypal/client'
-import { applyPricingConfigFieldUpdates } from './creem-product-sync'
+import {
+  applyPricingConfigFieldUpdates,
+  loadProductSyncEnvironmentFile,
+  parseProductSyncEnvironmentArgument,
+} from './creem-product-sync'
 import { pricingPlans } from './pricing-config'
 
 const projectDir = process.cwd()
-loadEnvConfig(projectDir)
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const pricingConfigPath = path.join(__dirname, 'pricing-config.ts')
 
-function normalizePayPalEnvironment(rawValue: string | null | undefined) {
-  const normalized = (rawValue ?? 'test').toLowerCase().trim()
-
-  if (normalized === 'test') {
+function getPayPalEnvironment(environment: 'test' | 'live') {
+  if (environment === 'test') {
     return {
       apiEnvironment: 'sandbox' as const,
       pricingEnvironment: 'test' as const,
     }
   }
 
-  if (normalized === 'live') {
-    return {
-      apiEnvironment: 'production' as const,
-      pricingEnvironment: 'live' as const,
-    }
+  return {
+    apiEnvironment: 'production' as const,
+    pricingEnvironment: 'live' as const,
   }
-
-  throw new Error(
-    `PAY_ENV must be "test" or "live", received: ${rawValue ?? 'undefined'}`
-  )
 }
 
 function hasUsableValue(value: string | null | undefined) {
@@ -151,7 +143,16 @@ function buildPayPalPlanPayload(
 async function main() {
   const dryRun = process.argv.includes('--dry-run')
   const force = process.argv.includes('--force')
-  const environment = normalizePayPalEnvironment(process.env.PAY_ENV)
+  const selectedEnvironment = parseProductSyncEnvironmentArgument(
+    process.argv.slice(2)
+  )
+  const environmentFile = loadProductSyncEnvironmentFile(
+    selectedEnvironment,
+    projectDir
+  )
+  process.env.PAY_ENV = selectedEnvironment
+  const { PayPalClient, isPayPalEnabled } = await import('@/lib/paypal/client')
+  const environment = getPayPalEnvironment(selectedEnvironment)
 
   if (!dryRun && !isPayPalEnabled) {
     throw new Error(
@@ -164,13 +165,12 @@ async function main() {
   )
 
   if (targetPlans.length === 0) {
-    console.log(`No PayPal recurring plans found for PAY_ENV=${environment.pricingEnvironment}.`)
+    console.log(`No PayPal recurring plans found for env=${environment.pricingEnvironment}.`)
     return
   }
 
-  console.log(`[sync] config: .env`)
-  console.log(`[sync] PAY_ENV=${environment.pricingEnvironment}`)
-  console.log(`[sync] PAYPAL_CLIENT_ID=${process.env.PAYPAL_CLIENT_ID}`)
+  console.log(`[sync] env=${environment.pricingEnvironment}`)
+  console.log(`[sync] Loaded configuration from ${environmentFile}`)
   console.log(`[sync] Found ${targetPlans.length} PayPal recurring plan(s) in pricing-config.ts`)
   if (dryRun) {
     console.log('[dry-run] No API writes and no file changes.')

@@ -11,11 +11,20 @@
     "mobileMenuLabel": "メニューを開く"
   },
   "BannerAd": {
-    "title": "Gpt image 2 特別価格",
-    "badge": "200%お得",
-    "description": "期間限定：1クレジット/枚、最低$0.05/枚",
-    "href": "/pricing?billing=yearly",
-    "cta": "オファーを受け取る",
+    "reddit": {
+      "title": "Reddit でシェア",
+      "badge": "最大 1,300 クレジット",
+      "description": "サイトや作品を共有してクリエイター報酬を獲得",
+      "href": "/share-to-reddit",
+      "cta": "キャンペーンを見る"
+    },
+    "discount": {
+      "title": "Gpt image 2 特別価格",
+      "badge": "200%お得",
+      "description": "期間限定：1クレジット/枚、最低$0.05/枚",
+      "href": "/pricing?billing=yearly",
+      "cta": "オファーを受け取る"
+    },
     "closeLabel": "プロモーションバナーを閉じる"
   },
   "Login": {
@@ -448,6 +457,7 @@
     "errors": {
       "missingStripeSession": "Checkout Session ID が不足しているため、支払いを確認できません。",
       "missingCreemCheckout": "Checkout ID が不足しているため、支払いを確認できません。",
+      "missingSubotizOrder": "Subotiz の注文 ID が不足しているため、支払いを確認できません。",
       "missingPaypalParams": "PayPal の token または subscription ID が不足しているため、支払いを確認できません。",
       "verificationFailed": "確認に失敗しました。",
       "unknownVerificationError": "確認中にエラーが発生しました。"

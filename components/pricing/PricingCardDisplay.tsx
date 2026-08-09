@@ -12,6 +12,7 @@ interface PricingCardDisplayProps {
     nowpaymentsEnabled?: boolean;
     paypalEnabled?: boolean;
     stripeEnabled?: boolean;
+    subotizEnabled?: boolean;
   };
   checkoutMode?: "default" | "nowpayments";
   id?: string;

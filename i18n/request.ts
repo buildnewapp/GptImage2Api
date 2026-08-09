@@ -25,6 +25,8 @@ export default getRequestConfig(async ({ requestLocale }) => {
       Prompts: (await import(`./messages/${locale}/Prompts.json`)).default,
       Showcase: (await import(`./messages/${locale}/Showcase.json`)).default,
       Partners: (await import(`./messages/${locale}/Partners.json`)).default,
+      ShareToReddit: (await import(`./messages/${locale}/ShareToReddit.json`))
+        .default,
       SeoContent: (await import(`./messages/${locale}/SeoContent.json`))
         .default,
       HomeTemplate1: (await import(`./messages/${locale}/HomeTemplate1.json`))

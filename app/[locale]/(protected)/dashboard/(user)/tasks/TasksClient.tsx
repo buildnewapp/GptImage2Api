@@ -2,11 +2,13 @@
 
 import { claimTaskRewardAction } from "@/actions/task-rewards/user";
 import { referralConfig } from "@/config/referral";
+import { siteConfig } from "@/config/site";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   MANUAL_REVIEW_TASK_KEYS,
+  isRedditManualReviewTaskKey,
   type ManualReviewTaskKey,
 } from "@/config/task-rewards";
 import { isAutomaticClaimableTaskKey } from "@/lib/task-rewards/claim";
@@ -52,6 +54,9 @@ function getTaskIcon(taskKey: TaskRewardItemData["taskKey"]) {
     case "share_facebook":
     case "share_tiktok":
     case "share_instagram":
+    case "share_reddit_website":
+    case "share_reddit_work":
+    case "reddit_post_popular":
       return <Gift className="h-4.5 w-4.5" />;
   }
 }
@@ -257,7 +262,11 @@ export default function TasksClient({
                     ? t("tasks.invite_first_purchase.description", {
                         firstOrderReward,
                       })
-                    : t(`tasks.${task.taskKey}.description`);
+                    : isRedditManualReviewTaskKey(task.taskKey)
+                      ? t(`tasks.${task.taskKey}.description`, {
+                          siteName: siteConfig.name,
+                        })
+                      : t(`tasks.${task.taskKey}.description`);
               const actionLabel =
                 task.taskKey === "invite_signup" ||
                 task.taskKey === "invite_first_purchase"
@@ -366,6 +375,14 @@ export default function TasksClient({
                               : t("actions.submit")
                           }
                         />
+                      ) : manualTask && task.status === "incomplete" ? (
+                        <Button
+                          variant="outline"
+                          disabled
+                          className="h-9 min-w-[104px] whitespace-nowrap px-3"
+                        >
+                          {t("actions.completeRedditShareFirst")}
+                        </Button>
                       ) : completed ? (
                         task.href && task.status === "completed" ? (
                           <Button

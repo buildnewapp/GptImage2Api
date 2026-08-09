@@ -11,11 +11,20 @@
     "mobileMenuLabel": "Open menu"
   },
   "BannerAd": {
-    "title": "Gpt image 2 Special Offer",
-    "badge": "Save 200%",
-    "description": "Limited time: 1 credit/image, from $0.05/image",
-    "href": "/pricing?billing=yearly",
-    "cta": "Claim Offer",
+    "reddit": {
+      "title": "Share on Reddit",
+      "badge": "Up to 1,300 credits",
+      "description": "Share the website or your work and earn creator rewards",
+      "href": "/share-to-reddit",
+      "cta": "View Campaign"
+    },
+    "discount": {
+      "title": "Gpt image 2 Special Offer",
+      "badge": "Save 200%",
+      "description": "Limited time: 1 credit/image, from $0.05/image",
+      "href": "/pricing?billing=yearly",
+      "cta": "Claim Offer"
+    },
     "closeLabel": "Close promotion banner"
   },
   "Login": {
@@ -448,6 +457,7 @@
     "errors": {
       "missingStripeSession": "Checkout session ID missing. Payment cannot be verified.",
       "missingCreemCheckout": "Checkout ID missing. Payment cannot be verified.",
+      "missingSubotizOrder": "Subotiz order ID missing. Payment cannot be verified.",
       "missingPaypalParams": "PayPal token or subscription ID missing. Payment cannot be verified.",
       "verificationFailed": "Verification failed.",
       "unknownVerificationError": "An error occurred during verification."

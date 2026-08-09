@@ -42,7 +42,7 @@ type ReserveInput = {
 
 type ReservedBucketAllocation = {
   bucketId: string;
-  provider: "stripe" | "creem" | "paypal";
+  provider: "stripe" | "creem" | "subotiz" | "paypal";
   subscriptionId: string;
   periodStart: string;
   periodEnd: string;
@@ -174,7 +174,11 @@ export async function reserveAiStudioGeneration(input: ReserveInput) {
         if (deduction > 0) {
           bucketAllocations.push({
             bucketId: bucket.id,
-            provider: bucket.provider as "stripe" | "creem" | "paypal",
+            provider: bucket.provider as
+              | "stripe"
+              | "creem"
+              | "subotiz"
+              | "paypal",
             subscriptionId: bucket.subscriptionId,
             periodStart: bucket.periodStart.toISOString(),
             periodEnd: bucket.periodEnd.toISOString(),
@@ -340,7 +344,10 @@ async function refundReservedCredits(
     const relatedOrderId = (allocation as any).relatedOrderId ?? null;
 
     if (
-      (provider !== "stripe" && provider !== "creem" && provider !== "paypal") ||
+      (provider !== "stripe" &&
+        provider !== "creem" &&
+        provider !== "subotiz" &&
+        provider !== "paypal") ||
       !subscriptionId ||
       !amount ||
       amount <= 0

@@ -1,9 +1,8 @@
 import { createStripeCheckoutSession } from '@/actions/stripe';
+import { siteConfig } from '@/config/site';
 import { apiResponse } from '@/lib/api-response';
 import { getSession } from '@/lib/auth/server';
-import {
-  createCreemCheckoutSession
-} from '@/lib/creem/client';
+import { createCreemCheckoutSession } from '@/lib/creem/client';
 import { getDb } from '@/lib/db';
 import { pricingPlans as pricingPlansSchema } from '@/lib/db/schema';
 import { getErrorMessage } from '@/lib/error-utils';
@@ -15,25 +14,34 @@ import {
   hasUsablePriceAndCurrency,
 } from '@/lib/payments/checkout-availability';
 import { signPaymentHandoffToken } from '@/lib/payments/handoff';
-import {
-  getPaymentPayUrl,
-  getPaymentRequestHost,
-  isMainPaymentSite,
-} from '@/lib/payments/main-site';
+import { getPaymentPayUrl, getPaymentRequestHost, isMainPaymentSite } from '@/lib/payments/main-site';
 import { isRecurringPaymentType } from '@/lib/payments/provider-utils';
 import { assertRecurringPurchaseIsHigherTier } from '@/lib/payments/subscription-purchase';
+import { createSubotizCheckoutSession } from '@/lib/subotiz/client';
 import { getURL } from '@/lib/url';
 import { eq } from 'drizzle-orm';
-import { siteConfig } from '@/config/site';
+import { randomUUID } from 'node:crypto';
 
 type RequestData = {
   provider?: string;
   stripePriceId?: string;
   creemProductId?: string;
+  subotizPriceId?: string;
   planId?: string;
   couponCode?: string;
   referral?: string;
 };
+
+function getSubotizLocale(acceptLanguage: string | null): string {
+  const locale = acceptLanguage?.split(',')[0]?.trim().toLowerCase();
+  if (locale?.startsWith('zh')) {
+    return locale.includes('tw') || locale.includes('hk') ? 'zh-TW' : 'zh-CN';
+  }
+  if (locale?.startsWith('ja')) {
+    return 'ja-JP';
+  }
+  return 'en-US';
+}
 
 export async function POST(req: Request) {
   const db = getDb();
@@ -125,9 +133,7 @@ export async function POST(req: Request) {
           // id: customerId,
           email: user.email,
         },
-        success_url: getURL(
-          'payment/success?provider=creem'
-        ),
+        success_url: getURL('payment/success?provider=creem'),
         metadata: {
           userId: user.id,
           userEmail: user.email,
@@ -135,7 +141,7 @@ export async function POST(req: Request) {
           planName: plan.cardTitle,
           productId: plan.creemProductId,
         },
-      }
+      };
 
       const sessionPayload = await createCreemCheckoutSession(sessionParams);
 
@@ -146,6 +152,70 @@ export async function POST(req: Request) {
       return apiResponse.success({
         sessionId: sessionPayload.id,
         url: sessionPayload.checkout_url,
+      });
+    }
+
+    if (provider === 'subotiz') {
+      const subotizPriceId = requestData.subotizPriceId?.trim();
+      if (!hasUsableProviderId(subotizPriceId)) {
+        return apiResponse.badRequest('Missing subotizPriceId');
+      }
+
+      const [plan] = await db
+        .select({
+          id: pricingPlansSchema.id,
+          cardTitle: pricingPlansSchema.cardTitle,
+          paymentType: pricingPlansSchema.paymentType,
+          subotizPriceId: pricingPlansSchema.subotizPriceId,
+        })
+        .from(pricingPlansSchema)
+        .where(eq(pricingPlansSchema.subotizPriceId, subotizPriceId!))
+        .limit(1);
+
+      if (!plan) {
+        return apiResponse.notFound('Plan not found for Subotiz price ID');
+      }
+
+      const isRecurring = isRecurringPaymentType(plan.paymentType);
+      if (isRecurring) {
+        await assertRecurringPurchaseIsHigherTier(user.id, plan.id);
+      }
+
+      const orderId = randomUUID();
+      const metadata = {
+        planId: plan.id,
+        planName: plan.cardTitle,
+        priceId: subotizPriceId!,
+        userEmail: user.email,
+        userId: user.id,
+      };
+      const checkout = await createSubotizCheckoutSession({
+        order_id: orderId,
+        line_items: [
+          {
+            price_id: subotizPriceId!,
+            quantity: '1',
+          },
+        ],
+        email: user.email,
+        payer_id: user.id,
+        return_url: getURL(`payment/success?provider=subotiz&order_id=${encodeURIComponent(orderId)}`),
+        cancel_url: getURL(process.env.NEXT_PUBLIC_PRICING_PATH ?? 'pricing'),
+        locale: getSubotizLocale(req.headers.get('accept-language')),
+        mode: 'checkout',
+        integration_method: 'hosted',
+        payment_mode: isRecurring ? 'subscription' : 'onetime_payment',
+        metadata,
+        ...(isRecurring
+          ? {
+              subscription_data: { metadata },
+            }
+          : {}),
+      });
+
+      return apiResponse.success({
+        sessionId: checkout.session_id,
+        url: checkout.session_url,
       });
     }
 
@@ -287,6 +357,7 @@ export async function POST(req: Request) {
           price: pricingPlansSchema.price,
           provider: pricingPlansSchema.provider,
           stripePriceId: pricingPlansSchema.stripePriceId,
+          subotizPriceId: pricingPlansSchema.subotizPriceId,
         })
         .from(pricingPlansSchema)
         .where(eq(pricingPlansSchema.id, planId))
@@ -297,6 +368,9 @@ export async function POST(req: Request) {
       }
 
       const availableProviders = getAvailableCheckoutProviders(plan, {
+        subotizEnabled: Boolean(
+          process.env.SUBOTIZ_API_KEY && process.env.SUBOTIZ_ACCESS_NO && process.env.SUBOTIZ_MERCHANT_ID,
+        ),
         nowpaymentsEnabled,
         paypalEnabled: isPayPalEnabled,
       });
@@ -304,14 +378,9 @@ export async function POST(req: Request) {
       return apiResponse.success({ providers: availableProviders });
     }
 
-    return apiResponse.badRequest(
-      `Unsupported payment provider: ${provider}`
-    );
+    return apiResponse.badRequest(`Unsupported payment provider: ${provider}`);
   } catch (error) {
-    console.error(
-      `Error creating ${provider} checkout session:`,
-      error
-    );
+    console.error(`Error creating ${provider} checkout session:`, error);
     const errorMessage = getErrorMessage(error);
     return apiResponse.serverError(errorMessage);
   }

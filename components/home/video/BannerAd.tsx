@@ -1,4 +1,6 @@
-import BannerAdClient from "@/components/home/video/BannerAdClient";
+import BannerAdClient, {
+  type BannerAdItem,
+} from "@/components/home/video/BannerAdClient";
 import { getTranslations } from "next-intl/server";
 
 export default async function BannerAd({ locale }: { locale: string }) {
@@ -7,15 +9,24 @@ export default async function BannerAd({ locale }: { locale: string }) {
   }
 
   const t = await getTranslations({ locale, namespace: "BannerAd" });
+  const banners: BannerAdItem[] = [
+    {
+      id: "discount",
+      href: t("discount.href"),
+      title: t("discount.title"),
+      badge: t("discount.badge"),
+      description: t("discount.description"),
+      cta: t("discount.cta"),
+    },
+    {
+      id: "reddit",
+      href: t("reddit.href"),
+      title: t("reddit.title"),
+      badge: t("reddit.badge"),
+      description: t("reddit.description"),
+      cta: t("reddit.cta"),
+    },
+  ];
 
-  return (
-    <BannerAdClient
-      href={t("href")}
-      title={t("title")}
-      badge={t("badge")}
-      description={t("description")}
-      cta={t("cta")}
-      closeLabel={t("closeLabel")}
-    />
-  );
+  return <BannerAdClient banners={banners} closeLabel={t("closeLabel")} />;
 }

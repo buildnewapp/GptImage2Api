@@ -287,7 +287,10 @@ async function processYearlySubscriptionCatchUp(
         const provider = order?.provider;
         if (
           !order?.subscriptionId ||
-          (provider !== 'stripe' && provider !== 'creem' && provider !== 'paypal')
+          (provider !== 'stripe' &&
+            provider !== 'creem' &&
+            provider !== 'subotiz' &&
+            provider !== 'paypal')
         ) {
           continue;
         }

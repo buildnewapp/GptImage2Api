@@ -100,7 +100,10 @@ export function buildSignupBonusIpEligibilityQuery(
 ) {
   return db
     .select({
-      ip24Hours: sql<number>`count(*) filter (where ${rewardApplicationsSchema.submittedAt} >= ${input.oneDayAgo})::int`,
+      ip24Hours: sql<number>`count(*) filter (where ${gte(
+        rewardApplicationsSchema.submittedAt,
+        input.oneDayAgo,
+      )})::int`,
       ip7Days: sql<number>`count(*)::int`,
     })
     .from(rewardApplicationsSchema)
