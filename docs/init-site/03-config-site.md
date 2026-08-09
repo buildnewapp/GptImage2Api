@@ -87,9 +87,9 @@ config/ai-video-studio.ts
 1 测试环境
 https://dashboard.stripe.com/acct_1TyTfw5RIwEG87IR/test/dashboard
 Developers -> Overview：
-STRIPE_SECRET_KEY=sk_test_51TyTfw5RIwEG87IRyfd15tOl2au206c8ZgNDMvtZDcYnziHEUGkicCrjsc0Td40hGMza91JncdfgqIg94wAOKeol00YJAzkSS4
-STRIPE_PUBLISHABLE_KEY=pk_test_51TyTfw5RIwEG87IRpah0YimUlN4WBOpWjX7ZNM8SPgjSgpa3yLDC1GJyQsFzTzXuHlqUKdAmJPRu29K5ofP95mZS00M65KO8jg
-STRIPE_WEBHOOK_SECRET=whsec_61DN2JUWWWHryzqhNEzrNWkhhWcr5I2O
+STRIPE_SECRET_KEY=
+STRIPE_PUBLISHABLE_KEY=
+STRIPE_WEBHOOK_SECRET=
 
 charge.refunded
 checkout.session.completed

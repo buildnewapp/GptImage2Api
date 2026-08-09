@@ -12,10 +12,10 @@ git commit -m "update from upstream"
 
 /Users/syx/WebstormProjects/sdanceai/sdanceai
 /Users/syx/WebstormProjects/tikdek/tikdek-web
-/Users/syx/idea/FreeSoraGenerator/fsg-web
 /Users/syx/WebstormProjects/GptImage2Api/gptimage2-web
 /Users/syx/WebstormProjects/Spicy/spicy-video-web
 
+/Users/syx/idea/FreeSoraGenerator/fsg-web
 /Users/syx/WebstormProjects/autogeo/autogeo-v2
 /Users/syx/WebstormProjects/GptImage2Api/GptImage4
 /Users/syx/WebstormProjects/GptImage2Api/GptImage5
