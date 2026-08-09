@@ -87,9 +87,9 @@ config/ai-video-studio.ts
 1 测试环境
 https://dashboard.stripe.com/acct_1TyTfw5RIwEG87IR/test/dashboard
 Developers -> Overview：
-STRIPE_SECRET_KEY=[REDACTED]
-STRIPE_PUBLISHABLE_KEY=[REDACTED]
-STRIPE_WEBHOOK_SECRET=[REDACTED]
+STRIPE_SECRET_KEY=
+STRIPE_PUBLISHABLE_KEY=
+STRIPE_WEBHOOK_SECRET=
 
 charge.refunded
 checkout.session.completed
