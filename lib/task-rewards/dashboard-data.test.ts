@@ -66,6 +66,26 @@ async function withEnabledGithubTask<T>(run: () => T | Promise<T>): Promise<T> {
   }
 }
 
+async function withEnabledRedditTasks<T>(
+  run: () => T | Promise<T>,
+): Promise<T> {
+  const previous = {
+    website: manualReviewTasks.share_reddit_website.enabled,
+    work: manualReviewTasks.share_reddit_work.enabled,
+    popular: manualReviewTasks.reddit_post_popular.enabled,
+  };
+  manualReviewTasks.share_reddit_website.enabled = true;
+  manualReviewTasks.share_reddit_work.enabled = true;
+  manualReviewTasks.reddit_post_popular.enabled = true;
+  try {
+    return await run();
+  } finally {
+    manualReviewTasks.share_reddit_website.enabled = previous.website;
+    manualReviewTasks.share_reddit_work.enabled = previous.work;
+    manualReviewTasks.reddit_post_popular.enabled = previous.popular;
+  }
+}
+
 test("three-day check-in shows full progress after the streak reward has already been claimed", () => {
   const tasks = buildTaskRewardItems({
     now: new Date("2026-03-07T08:00:00.000Z"),
@@ -156,7 +176,7 @@ test("disabled manual-review tasks are hidden", () => {
   });
 
   const taskKeys = new Set(tasks.map((task) => task.taskKey));
-  const manualTaskKeys: ManualReviewTaskKey[] = [
+  const disabledManualTaskKeys: ManualReviewTaskKey[] = [
     "github_star",
     "huggingface_like",
     "share_twitter",
@@ -164,9 +184,42 @@ test("disabled manual-review tasks are hidden", () => {
     "share_tiktok",
     "share_instagram",
   ];
-  for (const taskKey of manualTaskKeys) {
+  for (const taskKey of disabledManualTaskKeys) {
     assert.equal(taskKeys.has(taskKey), false);
   }
+});
+
+test("Reddit rewards use the configured credits and lock popularity until a share is claimed", async () => {
+  await withEnabledRedditTasks(() => {
+    const lockedTasks = buildDashboardItems();
+    const website = lockedTasks.find(
+      (task) => task.taskKey === "share_reddit_website",
+    );
+    const work = lockedTasks.find(
+      (task) => task.taskKey === "share_reddit_work",
+    );
+    const lockedPopular = lockedTasks.find(
+      (task) => task.taskKey === "reddit_post_popular",
+    );
+
+    assert.equal(website?.creditAmount, 100);
+    assert.equal(website?.status, "available");
+    assert.equal(work?.creditAmount, 200);
+    assert.equal(work?.status, "available");
+    assert.equal(lockedPopular?.creditAmount, 1000);
+    assert.equal(lockedPopular?.status, "incomplete");
+    assert.equal(lockedPopular?.canSubmit, false);
+
+    const unlockedTasks = buildDashboardItems({
+      claimLookup: new Set([buildOnceClaimKey("share_reddit_website")]),
+    });
+    const unlockedPopular = unlockedTasks.find(
+      (task) => task.taskKey === "reddit_post_popular",
+    );
+
+    assert.equal(unlockedPopular?.status, "available");
+    assert.equal(unlockedPopular?.canSubmit, true);
+  });
 });
 
 test("enabling one manual-review task adds exactly one available 10-credit task", async () => {

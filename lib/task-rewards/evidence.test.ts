@@ -39,6 +39,12 @@ test("accepts only supported image names, content types, and sizes", () => {
       contentType: "image/webp",
       fileSize: 1024,
     },
+    {
+      taskKey: "reddit_post_popular",
+      fileName: "insights.png",
+      contentType: "image/png",
+      fileSize: 1024,
+    },
   ]) {
     assert.equal(taskEvidenceUploadInputSchema.safeParse(input).success, true);
   }

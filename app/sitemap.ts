@@ -47,6 +47,7 @@ const STATIC_PAGE_CONFIG: StaticPageConfig[] = [
   { path: "/showcase", priority: 0.85, changeFrequency: "weekly" },
   { path: "/prompts", priority: 0.8, changeFrequency: "weekly" },
   { path: "/pricing", priority: 0.8, changeFrequency: "weekly" },
+  { path: "/share-to-reddit", priority: 0.7, changeFrequency: "monthly" },
   { path: "/apidoc", priority: 0.8, changeFrequency: "weekly" },
   { path: "/seedance-2-0-api", priority: 0.6, changeFrequency: "monthly" },
   { path: "/gpt-image-2-api", priority: 0.6, changeFrequency: "monthly" },

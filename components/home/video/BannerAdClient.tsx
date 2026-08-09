@@ -1,37 +1,62 @@
 "use client";
 
 import { Link as I18nLink } from "@/i18n/routing";
+import { cn } from "@/lib/utils";
+import { ArrowRight, Gift, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { SiReddit } from "react-icons/si";
 
-const DISMISSED_STORAGE_KEY = "promo-banner-dismissed";
+const BANNER_HEIGHT_PX = 40;
 const PROMO_COUNTDOWN_DECISECONDS = 30 * 60 * 10;
 
-interface BannerAdClientProps {
+export type BannerAdItem = {
+  id: "reddit" | "discount";
   href: string;
   title: string;
   badge: string;
   description: string;
   cta: string;
+};
+
+interface BannerAdClientProps {
+  banners: BannerAdItem[];
   closeLabel: string;
 }
 
+function getDismissedStorageKey(id: BannerAdItem["id"]) {
+  return id === "discount"
+    ? "gemini-omni-flash-banner-dismissed"
+    : "reddit-campaign-banner-dismissed";
+}
+
 export default function BannerAdClient({
-  href,
-  title,
-  badge,
-  description,
-  cta,
+  banners,
   closeLabel,
 }: BannerAdClientProps) {
-  const [visible, setVisible] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [dismissedIds, setDismissedIds] = useState<BannerAdItem["id"][]>([]);
   const [timeLeft, setTimeLeft] = useState(PROMO_COUNTDOWN_DECISECONDS);
 
   useEffect(() => {
-    setVisible(window.localStorage.getItem(DISMISSED_STORAGE_KEY) !== "true");
-  }, []);
+    setDismissedIds(
+      banners
+        .filter(
+          (banner) =>
+            window.localStorage.getItem(getDismissedStorageKey(banner.id)) ===
+            "true",
+        )
+        .map((banner) => banner.id),
+    );
+    setReady(true);
+  }, [banners]);
+
+  const discountVisible =
+    ready &&
+    !dismissedIds.includes("discount") &&
+    banners.some((banner) => banner.id === "discount");
 
   useEffect(() => {
-    if (!visible) {
+    if (!discountVisible) {
       return undefined;
     }
 
@@ -40,15 +65,25 @@ export default function BannerAdClient({
     }, 100);
 
     return () => window.clearInterval(timer);
-  }, [visible]);
+  }, [discountVisible]);
 
-  if (!visible) {
+  if (!ready) {
     return null;
   }
 
-  const handleClose = () => {
-    window.localStorage.setItem(DISMISSED_STORAGE_KEY, "true");
-    setVisible(false);
+  const visibleBanners = banners.filter(
+    (banner) => !dismissedIds.includes(banner.id),
+  );
+
+  if (visibleBanners.length === 0) {
+    return null;
+  }
+
+  const handleClose = (id: BannerAdItem["id"]) => {
+    window.localStorage.setItem(getDismissedStorageKey(id), "true");
+    setDismissedIds((current) =>
+      current.includes(id) ? current : [...current, id],
+    );
   };
 
   const segments = [
@@ -62,7 +97,7 @@ export default function BannerAdClient({
       <style>
         {`
           :root {
-            --promo-banner-height: 40px;
+            --promo-banner-height: ${visibleBanners.length * BANNER_HEIGHT_PX}px;
           }
 
           [data-video-header-shell] {
@@ -81,62 +116,116 @@ export default function BannerAdClient({
               transform: translateX(300%);
             }
           }
+
+          @media (prefers-reduced-motion: reduce) {
+            .promo-light-sweep {
+              animation: none;
+            }
+          }
         `}
       </style>
-      <div className="fixed left-0 right-0 top-0 z-[60] h-10 overflow-hidden border-b border-purple-400/50 bg-gradient-to-r from-purple-600 via-indigo-500 to-purple-700">
-        <div
-          aria-hidden="true"
-          className="promo-light-sweep pointer-events-none absolute inset-y-0 -left-1/2 z-10 w-1/2 bg-gradient-to-r from-transparent via-white/55 to-transparent mix-blend-screen blur-sm"
-        />
-        <div className="relative z-20 mx-auto h-full max-w-7xl px-3 md:px-4">
-          <button
-            type="button"
-            aria-label={closeLabel}
-            className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 text-xl leading-none text-white/80 hover:text-white md:right-3"
-            onClick={handleClose}
-          >
-            ×
-          </button>
 
-          <div className="hidden h-full items-center justify-center gap-2.5 pr-10 text-sm md:flex lg:gap-3">
-            <span className="text-lg leading-none">🎁</span>
-            <div className="flex items-center gap-1 font-mono">
-              {segments.map((segment, index) => (
-                <div key={index} className="flex items-center gap-0.5">
-                  <span className="rounded bg-black/80 px-2 py-1 text-sm font-bold tabular-nums text-white shadow-lg backdrop-blur-sm">
-                    {segment}
-                  </span>
-                  {index < segments.length - 1 ? (
-                    <span className="text-sm font-bold text-white/60">:</span>
-                  ) : null}
-                </div>
-              ))}
-            </div>
-            <span className="flex items-center gap-1 whitespace-nowrap text-sm font-semibold text-white">
-              🎉 {title}
-            </span>
-            <span className="whitespace-nowrap rounded-md bg-white px-2.5 py-1 text-xs font-bold text-purple-900 shadow-md ring-1 ring-white/40">
-              {badge}
-            </span>
-            <span className="hidden whitespace-nowrap text-xs font-medium text-white/90 lg:inline">
-              {description}
-            </span>
-            <I18nLink
-              href={href}
-              className="whitespace-nowrap rounded-full bg-[#F6C453] px-4 py-1.5 text-xs font-bold text-[#3B2200] shadow-lg transition-all hover:scale-105 hover:bg-[#FFD56E]"
+      <div className="fixed inset-x-0 top-0 z-[60]">
+        {visibleBanners.map((banner) => {
+          const isDiscount = banner.id === "discount";
+
+          return (
+            <div
+              key={banner.id}
+              className={cn(
+                "relative h-10 overflow-hidden border-b text-white",
+                isDiscount
+                  ? "border-purple-400/50 bg-gradient-to-r from-purple-600 via-indigo-500 to-purple-700"
+                  : "border-orange-400/40 bg-slate-950",
+              )}
             >
-              {cta}
-            </I18nLink>
-          </div>
+              {isDiscount ? (
+                <div
+                  aria-hidden="true"
+                  className="promo-light-sweep pointer-events-none absolute inset-y-0 -left-1/2 z-10 w-1/2 bg-gradient-to-r from-transparent via-white/55 to-transparent mix-blend-screen blur-sm"
+                />
+              ) : (
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-y-0 left-0 w-1 bg-[#ff4500]"
+                />
+              )}
 
-          <div className="flex h-full items-center justify-center gap-2 pr-8 text-xs font-medium text-white md:hidden">
-            <span>🎁</span>
-            <span className="whitespace-nowrap font-semibold">{title}</span>
-            <span className="rounded bg-white px-2 py-0.5 text-[10px] font-bold text-purple-900">
-              {badge}
-            </span>
-          </div>
-        </div>
+              <div className="relative z-20 mx-auto h-full max-w-7xl px-3 md:px-4">
+                <I18nLink
+                  href={banner.href}
+                  aria-label={`${banner.title}: ${banner.cta}`}
+                  className="group flex h-full cursor-pointer items-center justify-center gap-2 pr-10 text-xs outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/80 md:gap-2.5 md:text-sm lg:gap-3"
+                >
+                  <span
+                    className={cn(
+                      "flex size-6 shrink-0 items-center justify-center rounded-full",
+                      isDiscount ? "bg-white/15" : "bg-[#ff4500]",
+                    )}
+                  >
+                    {isDiscount ? (
+                      <Gift className="size-3.5" />
+                    ) : (
+                      <SiReddit className="size-3.5" />
+                    )}
+                  </span>
+
+                  {isDiscount ? (
+                    <div className="hidden items-center gap-1 font-mono md:flex">
+                      {segments.map((segment, index) => (
+                        <div key={index} className="flex items-center gap-0.5">
+                          <span className="rounded bg-black/80 px-2 py-1 text-xs font-bold tabular-nums text-white backdrop-blur-sm">
+                            {segment}
+                          </span>
+                          {index < segments.length - 1 ? (
+                            <span className="font-bold text-white/60">:</span>
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  <span className="max-w-[9rem] truncate whitespace-nowrap font-semibold text-white sm:max-w-none">
+                    {banner.title}
+                  </span>
+                  <span
+                    className={cn(
+                      "whitespace-nowrap rounded-md px-2 py-0.5 text-[10px] font-bold ring-1 md:px-2.5 md:py-1 md:text-xs",
+                      isDiscount
+                        ? "bg-white text-purple-900 ring-white/40"
+                        : "bg-orange-400/15 text-orange-100 ring-orange-300/30",
+                    )}
+                  >
+                    {banner.badge}
+                  </span>
+                  <span className="hidden whitespace-nowrap text-xs font-medium text-white/80 xl:inline">
+                    {banner.description}
+                  </span>
+                  <span
+                    className={cn(
+                      "hidden items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-bold transition-colors duration-200 lg:inline-flex",
+                      isDiscount
+                        ? "bg-[#F6C453] text-[#3B2200] group-hover:bg-[#FFD56E]"
+                        : "bg-[#c93600] text-white group-hover:bg-[#aa2e00]",
+                    )}
+                  >
+                    {banner.cta}
+                    <ArrowRight className="size-3.5" />
+                  </span>
+                </I18nLink>
+
+                <button
+                  type="button"
+                  aria-label={`${closeLabel}: ${banner.title}`}
+                  className="absolute right-0 top-0 flex size-10 cursor-pointer items-center justify-center text-white/75 transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white md:right-1"
+                  onClick={() => handleClose(banner.id)}
+                >
+                  <X className="size-4" />
+                </button>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </>
   );

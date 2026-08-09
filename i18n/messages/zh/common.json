@@ -11,11 +11,20 @@
     "mobileMenuLabel": "打开菜单"
   },
   "BannerAd": {
-    "title": "Gemini Omni Flash 上线",
-    "badge": "立省 40%",
-    "description": "年度套餐限时优惠",
-    "href": "/pricing?billing=yearly",
-    "cta": "领取优惠",
+    "reddit": {
+      "title": "分享到 Reddit",
+      "badge": "最高 1,300 积分",
+      "description": "分享网站或作品，领取创作者活动奖励",
+      "href": "/share-to-reddit",
+      "cta": "查看活动"
+    },
+    "discount": {
+      "title": "Gemini Omni Flash 上线",
+      "badge": "立省 40%",
+      "description": "年度套餐限时优惠",
+      "href": "/pricing?billing=yearly",
+      "cta": "领取优惠"
+    },
     "closeLabel": "关闭促销横幅"
   },
   "Login": {

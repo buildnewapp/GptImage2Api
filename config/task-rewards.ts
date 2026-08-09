@@ -6,6 +6,13 @@ export type AutomaticClaimableTaskKey =
   | "first_public_generation"
   | "first_purchase";
 
+export const REDDIT_SHARE_TASK_KEYS = [
+  "share_reddit_website",
+  "share_reddit_work",
+] as const;
+
+export const REDDIT_POPULAR_TASK_KEY = "reddit_post_popular" as const;
+
 export const MANUAL_REVIEW_TASK_KEYS = [
   "github_star",
   "huggingface_like",
@@ -13,6 +20,8 @@ export const MANUAL_REVIEW_TASK_KEYS = [
   "share_facebook",
   "share_tiktok",
   "share_instagram",
+  ...REDDIT_SHARE_TASK_KEYS,
+  REDDIT_POPULAR_TASK_KEY,
 ] as const;
 
 export type ManualReviewTaskKey = (typeof MANUAL_REVIEW_TASK_KEYS)[number];
@@ -122,7 +131,34 @@ export const manualReviewTasks: Record<
     targetUrl:
       siteConfig.socialLinks?.instagram || "https://www.instagram.com/",
   },
+  share_reddit_website: {
+    enabled: true,
+    credits: 100,
+    targetUrl: "/share-to-reddit",
+  },
+  share_reddit_work: {
+    enabled: true,
+    credits: 200,
+    targetUrl: "/share-to-reddit",
+  },
+  reddit_post_popular: {
+    enabled: true,
+    credits: 1000,
+    targetUrl: "/share-to-reddit",
+  },
 };
+
+export function isRedditManualReviewTaskKey(
+  taskKey: unknown,
+): taskKey is
+  | (typeof REDDIT_SHARE_TASK_KEYS)[number]
+  | typeof REDDIT_POPULAR_TASK_KEY {
+  return (
+    typeof taskKey === "string" &&
+    (REDDIT_SHARE_TASK_KEYS.some((key) => key === taskKey) ||
+      taskKey === REDDIT_POPULAR_TASK_KEY)
+  );
+}
 
 export function buildDailyClaimKey(
   taskKey: "daily_checkin",

@@ -3,7 +3,7 @@
   "description": "审核一次性人工任务的截图凭证并发放积分。",
   "loading": "正在加载任务奖励申请",
   "filters": {
-    "email": "按用户邮箱搜索",
+    "email": "按用户邮箱或 Reddit 链接搜索",
     "status": "按审核状态筛选",
     "task": "按任务筛选",
     "allTasks": "全部人工任务"
@@ -19,7 +19,10 @@
     "share_twitter": "分享到 X / Twitter",
     "share_facebook": "分享到 Facebook",
     "share_tiktok": "分享到 TikTok",
-    "share_instagram": "分享到 Instagram"
+    "share_instagram": "分享到 Instagram",
+    "share_reddit_website": "在 Reddit 分享网站",
+    "share_reddit_work": "在 Reddit 分享作品",
+    "reddit_post_popular": "Reddit 帖子达到热门指标"
   },
   "table": {
     "user": "用户",
@@ -33,7 +36,7 @@
   "actions": {
     "refresh": "刷新",
     "view": "查看",
-    "approve": "通过并发放 10 积分",
+    "approve": "通过并发放 {credits} 积分",
     "reject": "驳回",
     "close": "关闭"
   },
@@ -42,6 +45,7 @@
     "screenshot": "截图凭证",
     "screenshotAlt": "任务完成凭证",
     "submissionText": "用户说明",
+    "redditLink": "Reddit 帖子链接",
     "rejectionReason": "驳回理由",
     "rejectionPlaceholder": "驳回时必填，最多 500 字",
     "reviewer": "审核人",
@@ -63,7 +67,7 @@
     "reasonRequired": "驳回时必须填写理由。"
   },
   "success": {
-    "approved": "审核通过，已发放 10 积分。",
+    "approved": "审核通过，已发放 {credits} 积分。",
     "rejected": "申请已驳回。"
   }
 }

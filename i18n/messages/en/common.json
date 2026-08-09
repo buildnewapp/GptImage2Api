@@ -11,11 +11,20 @@
     "mobileMenuLabel": "Open menu"
   },
   "BannerAd": {
-    "title": "Gemini Omni Flash Launch",
-    "badge": "40% OFF",
-    "description": "Limited-time annual plan offer",
-    "href": "/pricing?billing=yearly",
-    "cta": "Claim Offer",
+    "reddit": {
+      "title": "Share on Reddit",
+      "badge": "Up to 1,300 credits",
+      "description": "Share the website or your work and earn creator rewards",
+      "href": "/share-to-reddit",
+      "cta": "View Campaign"
+    },
+    "discount": {
+      "title": "Gemini Omni Flash Launch",
+      "badge": "40% OFF",
+      "description": "Limited-time annual plan offer",
+      "href": "/pricing?billing=yearly",
+      "cta": "Claim Offer"
+    },
     "closeLabel": "Close promotion banner"
   },
   "Login": {
