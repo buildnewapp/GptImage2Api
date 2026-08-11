@@ -476,6 +476,19 @@
         "href": "/generator"
       },
       {
+        "name": "作品展示",
+        "href": "/showcase"
+      },
+      {
+        "name": "提示词",
+        "href": "/prompts"
+      },
+      {
+        "id": "pricing",
+        "name": "定价",
+        "href": "/#pricing"
+      },
+      {
         "name": "工具",
         "href": "#",
         "items": [
@@ -512,19 +525,6 @@
             "href": "/seedance-15"
           }
         ]
-      },
-      {
-        "name": "作品展示",
-        "href": "/showcase"
-      },
-      {
-        "name": "提示词",
-        "href": "/prompts"
-      },
-      {
-        "id": "pricing",
-        "name": "定价",
-        "href": "/#pricing"
       },
       {
         "name": "博客",

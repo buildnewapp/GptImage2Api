@@ -476,6 +476,19 @@
         "href": "/generator"
       },
       {
+        "name": "ショーケース",
+        "href": "/showcase"
+      },
+      {
+        "name": "プロンプト",
+        "href": "/prompts"
+      },
+      {
+        "id": "pricing",
+        "name": "料金プラン",
+        "href": "/#pricing"
+      },
+      {
         "name": "ツール",
         "href": "#",
         "items": [
@@ -512,19 +525,6 @@
             "href": "/seedance-15"
           }
         ]
-      },
-      {
-        "name": "ショーケース",
-        "href": "/showcase"
-      },
-      {
-        "name": "プロンプト",
-        "href": "/prompts"
-      },
-      {
-        "id": "pricing",
-        "name": "料金プラン",
-        "href": "/#pricing"
       },
       {
         "name": "ブログ",

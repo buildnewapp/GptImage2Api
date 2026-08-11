@@ -476,6 +476,19 @@
         "href": "/generator"
       },
       {
+        "name": "Showcase",
+        "href": "/showcase"
+      },
+      {
+        "name": "Prompts",
+        "href": "/prompts"
+      },
+      {
+        "id": "pricing",
+        "name": "Pricing",
+        "href": "/#pricing"
+      },
+      {
         "name": "Tools",
         "href": "#",
         "items": [
@@ -512,19 +525,6 @@
             "href": "/seedance-15"
           }
         ]
-      },
-      {
-        "name": "Showcase",
-        "href": "/showcase"
-      },
-      {
-        "name": "Prompts",
-        "href": "/prompts"
-      },
-      {
-        "id": "pricing",
-        "name": "Pricing",
-        "href": "/#pricing"
       },
       {
         "name": "Blog",
