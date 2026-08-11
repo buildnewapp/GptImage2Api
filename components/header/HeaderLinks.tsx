@@ -34,7 +34,7 @@ const HeaderLinks = () => {
                 <NavigationMenuTrigger className="bg-transparent rounded-xl px-4 py-2 flex items-center gap-x-1 hover:bg-accent-foreground/10 hover:text-accent-foreground text-sm font-normal text-muted-foreground">
                   {link.name}
                 </NavigationMenuTrigger>
-                <NavigationMenuContent>
+                <NavigationMenuContent className="z-50 border-slate-200 group-data-[viewport=false]/navigation-menu:bg-white group-data-[viewport=false]/navigation-menu:text-slate-900 shadow-xl dark:border-white/10 dark:group-data-[viewport=false]/navigation-menu:bg-slate-950 dark:group-data-[viewport=false]/navigation-menu:text-slate-100">
                   <ul className="w-[250px] gap-1">
                     {link.items.map((child) => (
                       <li

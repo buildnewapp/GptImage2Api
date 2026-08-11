@@ -68,12 +68,12 @@ export default function VideoHeaderLinks({
                     {link.name}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent
-                    className={cn(
-                      "rounded-[1.5rem] p-2 backdrop-blur-xl",
-                      overlay
-                        ? "border border-white/12 bg-slate-950/88 text-white shadow-[0_26px_60px_-36px_rgba(2,8,23,0.86)]"
-                        : "border border-border/70 bg-background/95 shadow-[0_26px_60px_-36px_rgba(15,23,42,0.58)]"
-                    )}
+                      className={cn(
+                          "z-50 rounded-[1.5rem] p-2",
+                          overlay
+                              ? "border border-white/12 group-data-[viewport=false]/navigation-menu:bg-slate-950 group-data-[viewport=false]/navigation-menu:text-white shadow-[0_26px_60px_-36px_rgba(2,8,23,0.86)]"
+                              : "border border-slate-200 group-data-[viewport=false]/navigation-menu:bg-white group-data-[viewport=false]/navigation-menu:text-slate-900 shadow-[0_26px_60px_-36px_rgba(15,23,42,0.58)] dark:border-white/10 dark:group-data-[viewport=false]/navigation-menu:bg-slate-950 dark:group-data-[viewport=false]/navigation-menu:text-slate-100"
+                      )}
                   >
                     <ul className="grid min-w-[15rem] gap-1">
                       {link.items.map((child) => {
