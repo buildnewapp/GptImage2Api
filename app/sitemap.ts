@@ -1,3 +1,4 @@
+import { DOCS_SLUGS } from "@/components/docs/docs-config";
 import { siteConfig } from "@/config/site";
 import { DEFAULT_LOCALE, LOCALES } from "@/i18n/routing";
 import { getBlogDataSource } from "@/lib/blog-source";
@@ -49,6 +50,12 @@ const STATIC_PAGE_CONFIG: StaticPageConfig[] = [
   { path: "/pricing", priority: 0.8, changeFrequency: "weekly" },
   { path: "/share-to-reddit", priority: 0.7, changeFrequency: "monthly" },
   { path: "/apidoc", priority: 0.8, changeFrequency: "weekly" },
+  { path: "/docs", priority: 0.8, changeFrequency: "weekly" },
+  ...DOCS_SLUGS.map((slug) => ({
+    path: `/docs/${slug}`,
+    priority: slug.startsWith("api-") ? 0.8 : 0.7,
+    changeFrequency: "weekly" as const,
+  })),
   { path: "/seedance-2-5", priority: 0.7, changeFrequency: "weekly" },
   { path: "/seedance-2-5-api", priority: 0.7, changeFrequency: "weekly" },
   { path: "/seedance-2-0-api", priority: 0.6, changeFrequency: "monthly" },

@@ -1,10 +1,13 @@
 import DocsShell from "@/components/docs/DocsShell";
+import ApiDocsArticle from "@/components/docs/api/ApiDocsArticle";
 import {
   DOCS_SLUGS,
   getDocsItem,
+  isApiDocsSlug,
   isDocsSlug,
 } from "@/components/docs/docs-config";
 import MDXComponents from "@/components/mdx/MDXComponents";
+import { siteConfig } from "@/config/site";
 import {
   DEFAULT_LOCALE,
   LOCALES,
@@ -24,6 +27,11 @@ const options = {
     remarkPlugins: [remarkGfm],
     rehypePlugins: [],
   },
+};
+
+const docsMdxComponents = {
+  ...MDXComponents,
+  SiteName: () => <>{siteConfig.name}</>,
 };
 
 async function getDocsContent(slug: string, locale: string) {
@@ -85,6 +93,14 @@ export default async function DocsPage({ params }: { params: Params }) {
     notFound();
   }
 
+  if (isApiDocsSlug(slug)) {
+    return (
+      <DocsShell locale={locale} currentSlug={slug}>
+        <ApiDocsArticle locale={locale} slug={slug} />
+      </DocsShell>
+    );
+  }
+
   const content = await getDocsContent(slug, locale);
 
   if (!content) {
@@ -96,7 +112,7 @@ export default async function DocsPage({ params }: { params: Params }) {
       <article className="max-w-3xl overflow-hidden [&_a]:break-words [&_blockquote]:border-primary/50 [&_blockquote]:text-muted-foreground [&_h1]:mb-5 [&_h1]:mt-1 [&_h1]:text-4xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h2]:scroll-mt-28 [&_h2]:border-border [&_h2]:border-b [&_h2]:pb-3 [&_h2]:text-2xl [&_h2]:tracking-tight [&_h3]:scroll-mt-28 [&_h3]:text-xl [&_h3]:tracking-tight [&_hr]:border-border [&_img]:border-border [&_img]:shadow-lg [&_li]:!text-muted-foreground [&_p]:!text-muted-foreground [&_strong]:text-foreground [&_table]:rounded-xl">
         <MDXRemote
           source={content}
-          components={MDXComponents}
+          components={docsMdxComponents}
           options={options}
         />
       </article>
