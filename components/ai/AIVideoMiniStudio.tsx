@@ -228,8 +228,11 @@ function MiniModelVersionSelector({
   selectedFamilyKey,
   selectedVersionKey,
   onSelect,
+  onBrowseAllModels,
   searchPlaceholder,
-  allModelsLabel,
+  featuredModelsLabel,
+  featuredVersionsLabel,
+  browseAllModelsLabel,
 }: {
   models: MiniModelSelectorItem[];
   versionsByFamily: Record<string, MiniVersionSelectorItem[]>;
@@ -239,24 +242,28 @@ function MiniModelVersionSelector({
     familyKey: AiVideoStudioFamilyKey;
     versionKey: AiVideoStudioVersionKey;
   }) => void;
+  onBrowseAllModels: () => void;
   searchPlaceholder: string;
-  allModelsLabel: string;
+  featuredModelsLabel: string;
+  featuredVersionsLabel: string;
+  browseAllModelsLabel: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [mobileView, setMobileView] = useState<"models" | "versions">("models");
   const [activeFamilyKey, setActiveFamilyKey] =
     useState<AiVideoStudioFamilyKey>(selectedFamilyKey);
-  const [activeFeaturedFamilyKey, setActiveFeaturedFamilyKey] =
-    useState<AiVideoStudioFamilyKey | null>(null);
 
   useEffect(() => {
     if (isOpen) {
-      setActiveFamilyKey(selectedFamilyKey);
-      setActiveFeaturedFamilyKey(null);
+      setActiveFamilyKey(
+        models.some((model) => model.id === selectedFamilyKey)
+          ? selectedFamilyKey
+          : models[0]?.id ?? selectedFamilyKey,
+      );
       setMobileView("models");
     }
-  }, [isOpen, selectedFamilyKey]);
+  }, [isOpen, models, selectedFamilyKey]);
 
   const selectedModel =
     models.find((model) => model.id === selectedFamilyKey) ?? models[0] ?? null;
@@ -274,21 +281,13 @@ function MiniModelVersionSelector({
           model.description.toLowerCase().includes(normalizedSearch),
       )
     : models;
-  const featuredModels = normalizedSearch
-    ? []
-    : models.filter((model) =>
-        (versionsByFamily[model.id] ?? []).some(
-          (version) => version.isHot === true,
-        ),
-      );
   const activeFamilyVersions =
     versionsByFamily[activeFamilyKey] ??
     versionsByFamily[selectedFamilyKey] ??
     [];
-  const activeVersions =
-    activeFeaturedFamilyKey === activeFamilyKey
-      ? activeFamilyVersions.filter((version) => version.isHot === true)
-      : activeFamilyVersions;
+  const activeVersions = activeFamilyVersions.filter(
+    (version) => version.isHot === true,
+  );
   const activeModel =
     models.find((model) => model.id === activeFamilyKey) ?? selectedModel;
   const isActiveFamilySelectable = activeModel?.selectable !== false;
@@ -297,13 +296,13 @@ function MiniModelVersionSelector({
     <div className="relative">
       <button
         type="button"
-        aria-label={allModelsLabel}
+        aria-label={featuredModelsLabel}
         aria-expanded={isOpen}
         onClick={() => setIsOpen((value) => !value)}
         className="h-9 w-[120px] rounded-full border border-white/12 bg-white/6 px-2 py-2 text-[12px] font-medium text-white/80 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] transition hover:border-white/20 hover:bg-white/10"
       >
         <span className="block truncate">
-          {selectedVersion?.name ?? selectedModel?.name ?? allModelsLabel}
+          {selectedVersion?.name ?? selectedModel?.name ?? featuredModelsLabel}
         </span>
       </button>
 
@@ -342,12 +341,10 @@ function MiniModelVersionSelector({
                   </button>
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-sm font-semibold text-white">
-                      {activeModel?.name ?? allModelsLabel}
+                      {activeModel?.name ?? featuredModelsLabel}
                     </div>
                     <div className="truncate text-xs text-white/45">
-                      {activeFeaturedFamilyKey === activeFamilyKey
-                        ? "Featured versions"
-                        : "Versions"}
+                      {featuredVersionsLabel}
                     </div>
                   </div>
                   <button
@@ -364,14 +361,14 @@ function MiniModelVersionSelector({
               <div className="min-h-0 flex-1 overflow-y-auto px-3 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-3 [scrollbar-color:rgba(255,255,255,0.18)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20">
                 {mobileView === "models" ? (
                   <>
-                    {featuredModels.length > 0 ? (
+                    {filteredModels.length > 0 ? (
                       <div className="pb-3">
                         <div className="mb-2 flex items-center gap-2 px-2 text-sm font-medium text-white/45">
                           <Sparkles className="h-4 w-4" />
-                          Featured models
+                          {featuredModelsLabel}
                         </div>
                         <div className="space-y-1">
-                          {featuredModels.map((model) => {
+                          {filteredModels.map((model) => {
                             const isSelected = model.id === selectedFamilyKey;
 
                             return (
@@ -381,7 +378,6 @@ function MiniModelVersionSelector({
                                 aria-disabled={model.selectable === false}
                                 onClick={() => {
                                   setActiveFamilyKey(model.id);
-                                  setActiveFeaturedFamilyKey(model.id);
                                   setMobileView("versions");
                                 }}
                                 className={cn(
@@ -423,60 +419,17 @@ function MiniModelVersionSelector({
                         </div>
                       </div>
                     ) : null}
-
-                    <div className="flex items-center gap-2 px-2 py-3 text-sm text-white/45">
-                      <span className="h-2 w-2 rounded-full bg-white/45" />
-                      {allModelsLabel}
-                    </div>
-                    {filteredModels.map((model) => {
-                      const isSelected = model.id === selectedFamilyKey;
-
-                      return (
-                        <button
-                          key={`mobile-${model.id}`}
-                          type="button"
-                          aria-disabled={model.selectable === false}
-                          onClick={() => {
-                            setActiveFamilyKey(model.id);
-                            setActiveFeaturedFamilyKey(null);
-                            setMobileView("versions");
-                          }}
-                          className={cn(
-                            "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition",
-                            model.selectable === false &&
-                              "cursor-not-allowed opacity-50",
-                            isSelected ? "bg-white/8" : "hover:bg-white/6",
-                          )}
-                        >
-                          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/8">
-                            <AiVideoStudioFamilyIcon icon={model.icon} size={28} />
-                          </span>
-                          <span className="min-w-0 flex-1">
-                            <span
-                              className={cn(
-                                "flex min-w-0 items-center gap-2",
-                                model.selectable === false && "flex-col items-start gap-1",
-                              )}
-                            >
-                              <span className="max-w-full truncate text-base font-semibold text-white">
-                                {model.name}
-                              </span>
-                              {model.tags?.map((tag) => (
-                                <MiniSelectorBadge
-                                  key={`mobile-${model.id}-${tag.text}`}
-                                  type={tag.type}
-                                  text={tag.text}
-                                />
-                              ))}
-                            </span>
-                            <span className="mt-1 line-clamp-2 text-[10px] leading-snug text-white/45">
-                              {model.description}
-                            </span>
-                          </span>
-                          <ChevronRight className="h-5 w-5 shrink-0 text-white/45" />
-                        </button>
-                      );
-                    })}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsOpen(false);
+                        onBrowseAllModels();
+                      }}
+                      className="flex min-h-11 w-full cursor-pointer items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-left text-sm font-medium text-white/75 transition-colors duration-200 hover:border-white/20 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+                    >
+                      {browseAllModelsLabel}
+                      <ChevronRight className="h-4 w-4 shrink-0" />
+                    </button>
                   </>
                 ) : (
                   <div className="space-y-1">
@@ -548,17 +501,15 @@ function MiniModelVersionSelector({
                 />
               </div>
               <div className="overflow-y-auto space-y-1 px-3 pb-3 [scrollbar-color:rgba(255,255,255,0.18)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20 hover:[&::-webkit-scrollbar-thumb]:bg-white/30">
-                {featuredModels.length > 0 ? (
+                {filteredModels.length > 0 ? (
                   <div className="px-2 py-3">
                     <div className="mb-2 flex items-center gap-2 text-sm font-medium text-white/45">
                       <Sparkles className="h-4 w-4" />
-                      Featured models
+                      {featuredModelsLabel}
                     </div>
                     <div className="space-y-1">
-                      {featuredModels.map((model) => {
-                        const isActive =
-                          model.id === activeFamilyKey &&
-                          activeFeaturedFamilyKey === model.id;
+                      {filteredModels.map((model) => {
+                        const isActive = model.id === activeFamilyKey;
                         const isSelected = model.id === selectedFamilyKey;
 
                         return (
@@ -568,11 +519,9 @@ function MiniModelVersionSelector({
                             aria-disabled={model.selectable === false}
                             onClick={() => {
                               setActiveFamilyKey(model.id);
-                              setActiveFeaturedFamilyKey(model.id);
                             }}
                             onMouseEnter={() => {
                               setActiveFamilyKey(model.id);
-                              setActiveFeaturedFamilyKey(model.id);
                             }}
                             className={cn(
                               "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition",
@@ -619,66 +568,17 @@ function MiniModelVersionSelector({
                     </div>
                   </div>
                 ) : null}
-
-                <div className="flex items-center gap-2 px-2 py-3 text-sm text-white/45">
-                  <span className="h-2 w-2 rounded-full bg-white/45" />
-                  {allModelsLabel}
-                </div>
-                {filteredModels.map((model) => {
-                  const isActive = model.id === activeFamilyKey;
-                  const isSelected = model.id === selectedFamilyKey;
-
-                  return (
-                    <button
-                      key={model.id}
-                      type="button"
-                      aria-disabled={model.selectable === false}
-                      onClick={() => {
-                        setActiveFamilyKey(model.id);
-                        setActiveFeaturedFamilyKey(null);
-                      }}
-                      onMouseEnter={() => {
-                        setActiveFamilyKey(model.id);
-                        setActiveFeaturedFamilyKey(null);
-                      }}
-                      className={cn(
-                        "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition",
-                        model.selectable === false &&
-                          "cursor-not-allowed opacity-50",
-                        isActive || isSelected
-                          ? "bg-white/8"
-                          : "hover:bg-white/6",
-                      )}
-                    >
-                      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/8">
-                        <AiVideoStudioFamilyIcon icon={model.icon} size={28} />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span
-                          className={cn(
-                            "flex min-w-0 items-center gap-2",
-                            model.selectable === false && "flex-col items-start gap-1",
-                          )}
-                        >
-                          <span className="max-w-full truncate text-base font-semibold text-white">
-                            {model.name}
-                          </span>
-                          {model.tags?.map((tag) => (
-                            <MiniSelectorBadge
-                              key={`${model.id}-${tag.text}`}
-                              type={tag.type}
-                              text={tag.text}
-                            />
-                          ))}
-                        </span>
-                        <span className="mt-1 line-clamp-2 text-[10px] leading-snug text-white/45">
-                          {model.description}
-                        </span>
-                      </span>
-                      <ChevronRight className="h-5 w-5 shrink-0 text-white/45" />
-                    </button>
-                  );
-                })}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsOpen(false);
+                    onBrowseAllModels();
+                  }}
+                  className="flex min-h-11 w-full cursor-pointer items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-left text-sm font-medium text-white/75 transition-colors duration-200 hover:border-white/20 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+                >
+                  {browseAllModelsLabel}
+                  <ChevronRight className="h-4 w-4 shrink-0" />
+                </button>
               </div>
             </div>
 
@@ -849,6 +749,11 @@ export default function AIVideoMiniStudio({
   const modelOptions = useMemo<MiniModelSelectorItem[]>(
     () =>
       AI_VIDEO_STUDIO_FAMILIES
+        .filter(
+          (family) =>
+            family.selectable !== false &&
+            family.versions.some((version) => version.isHot === true),
+        )
         .map((family) => ({
           id: family.key,
           name: family.label,
@@ -1459,8 +1364,11 @@ export default function AIVideoMiniStudio({
               setSelectedFamilyKey(familyKey);
               setSelectedVersionKey(versionKey);
             }}
-            searchPlaceholder="Search..."
-            allModelsLabel="All models"
+            onBrowseAllModels={() => router.push("/generator")}
+            searchPlaceholder={t("form.searchFeaturedModels")}
+            featuredModelsLabel={t("form.featuredModels")}
+            featuredVersionsLabel={t("form.featuredVersions")}
+            browseAllModelsLabel={t("form.browseAllModels")}
           />
         </div>
 

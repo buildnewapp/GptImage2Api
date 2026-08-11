@@ -56,6 +56,14 @@ test("exposes the Sora2 family for AI Video Studio", () => {
     true,
   );
   assert.equal(
+    AI_VIDEO_STUDIO_FAMILIES.some((family) => family.key === "minimax-h3"),
+    true,
+  );
+  assert.equal(
+    AI_VIDEO_STUDIO_FAMILIES.some((family) => family.key === "pixverse-v6"),
+    true,
+  );
+  assert.equal(
     AI_VIDEO_STUDIO_FAMILIES.some((family) => family.key === "nano-banana"),
     true,
   );
@@ -69,6 +77,10 @@ test("exposes the Sora2 family for AI Video Studio", () => {
   );
   assert.equal(
     AI_VIDEO_STUDIO_FAMILIES.some((family) => family.key === "qwen2-image"),
+    true,
+  );
+  assert.equal(
+    AI_VIDEO_STUDIO_FAMILIES.some((family) => family.key === "qwen3-image"),
     true,
   );
   assert.equal(
@@ -104,7 +116,6 @@ test("shows Meta Muse video and image models as coming soon", () => {
         modelId: "video:meta-muse-text-to-video",
         description: "Create video from a text prompt.",
         isSpecial: true,
-        isHot: true,
       },
       {
         key: "meta-muse-image-to-video",
@@ -113,7 +124,6 @@ test("shows Meta Muse video and image models as coming soon", () => {
         modelId: "video:meta-muse-image-to-video",
         description: "Animate a source image into video.",
         isSpecial: true,
-        isHot: true,
       },
       {
         key: "meta-muse-reference-to-video",
@@ -122,7 +132,6 @@ test("shows Meta Muse video and image models as coming soon", () => {
         modelId: "video:meta-muse-reference-to-video",
         description: "Create video guided by reference images.",
         isSpecial: true,
-        isHot: true,
       },
     ],
   });
@@ -141,7 +150,6 @@ test("shows Meta Muse video and image models as coming soon", () => {
         modelId: "image:meta-muse-text-to-image",
         description: "Create an image from a text prompt.",
         isSpecial: true,
-        isHot: true,
       },
       {
         key: "meta-muse-image-edit",
@@ -150,7 +158,6 @@ test("shows Meta Muse video and image models as coming soon", () => {
         modelId: "image:meta-muse-image-edit",
         description: "Edit an image with precise instructions.",
         isSpecial: true,
-        isHot: true,
       },
       {
         key: "meta-muse-multi-reference-image",
@@ -159,22 +166,25 @@ test("shows Meta Muse video and image models as coming soon", () => {
         modelId: "image:meta-muse-multi-reference-image",
         description: "Create an image from multiple reference images.",
         isSpecial: true,
-        isHot: true,
       },
     ],
   });
 
   const familyKeys = AI_VIDEO_STUDIO_FAMILIES.map((family) => family.key);
   assert.equal(
-    familyKeys.indexOf("meta-muse-video") < familyKeys.indexOf("grok-imagine"),
+    familyKeys.at(-1),
+    "meta-muse-image",
+  );
+  assert.equal(
+    familyKeys.indexOf("runway") < familyKeys.indexOf("pixverse-v6"),
     true,
   );
   assert.equal(
-    familyKeys.indexOf("runway") < familyKeys.indexOf("meta-muse-image"),
+    familyKeys.indexOf("pixverse-v6") < familyKeys.indexOf("meta-muse-video"),
     true,
   );
   assert.equal(
-    familyKeys.indexOf("meta-muse-image") < familyKeys.indexOf("nano-banana"),
+    familyKeys.indexOf("meta-muse-video") < familyKeys.indexOf("qwen3-image"),
     true,
   );
 });
@@ -188,6 +198,56 @@ test("uses the LobeHub Meta icon for the Meta Muse family", () => {
   assert.match(iconSource, /\bMeta,/);
   assert.match(iconSource, /case "meta-muse":\s*return <Meta\.Color/);
   assert.doesNotMatch(iconSource, /src="\/logo\.png"/);
+});
+
+test("derives featured families from isHot in configured order", () => {
+  const featuredKeys = AI_VIDEO_STUDIO_FAMILIES
+    .filter((family) => family.versions.some((version) => version.isHot === true))
+    .map((family) => family.key);
+
+  assert.deepEqual(featuredKeys, [
+    "gpt-image-2",
+    "nano-banana",
+    "seedream-image",
+    "grok-imagine-image",
+    "seedance-2.0",
+    "seedance-2.5",
+    "minimax-h3",
+    "grok-imagine",
+    "gemini-omni",
+  ]);
+});
+
+test("keeps the configured all-model order", () => {
+  assert.deepEqual(
+    AI_VIDEO_STUDIO_FAMILIES.map((family) => family.key),
+    [
+      "gpt-image-2",
+      "nano-banana",
+      "seedream-image",
+      "qwen2-image",
+      "grok-imagine-image",
+      "wan-image",
+      "seedance-2.0",
+      "seedance-1.5",
+      "seedance-1.0",
+      "veo-3.1",
+      "sora2",
+      "kling",
+      "wan",
+      "happyhorse",
+      "hailuo",
+      "runway",
+      "seedance-2.5",
+      "minimax-h3",
+      "grok-imagine",
+      "gemini-omni",
+      "pixverse-v6",
+      "meta-muse-video",
+      "qwen3-image",
+      "meta-muse-image",
+    ],
+  );
 });
 
 test("keeps fal upstream model allowlist as valid endpoint configurations", () => {
@@ -337,6 +397,24 @@ test("exposes broader KIE video families with older supported variants", () => {
     ["runway-generate-ai-video", "runway-generate-aleph-video"],
   );
   assert.deepEqual(
+    getAiVideoStudioVersions("minimax-h3").map((version) => version.key),
+    [
+      "minimax-h3-text-to-video",
+      "minimax-h3-image-to-video",
+      "minimax-h3-reference-to-video",
+    ],
+  );
+  assert.deepEqual(
+    getAiVideoStudioVersions("pixverse-v6").map((version) => version.key),
+    [
+      "pixverse-v6-text-to-video",
+      "pixverse-v6-image-to-video",
+      "pixverse-v6-first-last-frame-transition",
+      "pixverse-v6-fusion-reference-to-video",
+      "pixverse-v6-video-extension",
+    ],
+  );
+  assert.deepEqual(
     getAiVideoStudioVersions("nano-banana").map((version) => version.key),
     [
       "nano-banana-pro",
@@ -370,6 +448,7 @@ test("exposes broader KIE video families with older supported variants", () => {
       "seedream-5-lite-image-to-image",
       "seedream-5-pro-text-to-image",
       "seedream-5-pro-image-to-image",
+      "seedream-5-pro-layer-decomposition",
       "seedream-4.5-text-to-image",
       "seedream-4.5-edit",
       "seedream-5-lite-text-to-image-fal",
@@ -378,6 +457,15 @@ test("exposes broader KIE video families with older supported variants", () => {
       "seedream-5-pro-edit-fal",
       "seedream-4.5-text-to-image-fal",
       "seedream-4.5-edit-fal",
+    ],
+  );
+  assert.deepEqual(
+    getAiVideoStudioVersions("qwen3-image").map((version) => version.key),
+    [
+      "qwen3-text-to-image",
+      "qwen3-image-to-image",
+      "qwen3-pro-text-to-image",
+      "qwen3-pro-image-to-image",
     ],
   );
   assert.deepEqual(
@@ -505,42 +593,24 @@ test("exposes Seedance 2.0 as a selectable family with KIE VIP variants", () => 
   );
 });
 
-test("exposes Seedance 2.5 as a coming-soon family", () => {
+test("exposes Seedance 2.5 as a selectable family", () => {
   const family = AI_VIDEO_STUDIO_FAMILIES.find((item) => item.key === "seedance-2.5");
 
-  assert.equal(AI_VIDEO_STUDIO_FAMILIES[0]?.key, "seedance-2.5");
+  assert.equal(AI_VIDEO_STUDIO_FAMILIES[0]?.key, "gpt-image-2");
   assert.deepEqual(family, {
     key: "seedance-2.5",
     label: "Seedance 2.5",
-    description: "Seedance 2.5 video generation with text, image, and reference inputs",
+    description: "Seedance 2.5 video generation with text, image, video, and audio references",
     icon: "bytedance",
-    tags: [{ text: "Coming Soon", type: "coming-soon" }],
-    selectable: false,
+    tags: [{ text: "HOT", type: "hot" }],
+    selectable: true,
     versions: [
       {
-        key: "seedance-2-5-text-to-video",
-        label: "Text to Video",
+        key: "seedance-2-5",
+        label: "Seedance 2.5",
         familyKey: "seedance-2.5",
-        modelId: "video:seedance-2-5-text-to-video",
-        description: "Create video from a text prompt.",
-        isSpecial: true,
-        isHot: true,
-      },
-      {
-        key: "seedance-2-5-image-to-video",
-        label: "Image to Video",
-        familyKey: "seedance-2.5",
-        modelId: "video:seedance-2-5-image-to-video",
-        description: "Animate a source image into video.",
-        isSpecial: true,
-        isHot: true,
-      },
-      {
-        key: "seedance-2-5-reference-to-video",
-        label: "Reference to Video",
-        familyKey: "seedance-2.5",
-        modelId: "video:seedance-2-5-reference-to-video",
-        description: "Create video guided by reference assets.",
+        modelId: "video:bytedance-seedance-2-5",
+        description: "Create or edit video with multimodal reference assets.",
         isSpecial: true,
         isHot: true,
       },

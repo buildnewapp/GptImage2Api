@@ -18,7 +18,7 @@ test("mini studio reads shared AI Studio form copy through common translations",
   assert.match(source, /t\("form\.reference"\)/);
 });
 
-test("mini studio lets users browse non-selectable family versions without selecting them", () => {
+test("mini studio limits the homepage selector to featured models", () => {
   const source = readFileSync(
     path.join(projectRoot, "components/ai/AIVideoMiniStudio.tsx"),
     "utf8",
@@ -26,30 +26,15 @@ test("mini studio lets users browse non-selectable family versions without selec
 
   assert.match(
     source,
-    /AI_VIDEO_STUDIO_FAMILIES\s*\.map\(\(family\) => \(\{/,
+    /family\.selectable !== false &&\s*family\.versions\.some\(\(version\) => version\.isHot === true\)/,
   );
-  assert.equal(
-    source.match(/aria-disabled=\{model\.selectable === false\}/g)?.length,
-    4,
+  assert.match(
+    source,
+    /activeFamilyVersions\.filter\(\s*\(version\) => version\.isHot === true,/,
   );
-  assert.equal(
-    source.match(/activeModel\?\.selectable !== false/g)?.length,
-    1,
+  assert.match(
+    source,
+    /onBrowseAllModels=\{\(\) => router\.push\("\/generator"\)\}/,
   );
-  assert.equal(
-    source.match(/disabled=\{!isActiveFamilySelectable\}/g)?.length,
-    2,
-  );
-  assert.equal(
-    source.match(/if \(!isActiveFamilySelectable\) \{/g)?.length,
-    2,
-  );
-  assert.equal(
-    source.match(
-      /model\.selectable === false && "flex-col items-start gap-1"/g,
-    )?.length,
-    4,
-  );
-  assert.doesNotMatch(source, /const versionName =/);
-  assert.doesNotMatch(source, /Version ·/);
+  assert.doesNotMatch(source, /allModelsLabel/);
 });

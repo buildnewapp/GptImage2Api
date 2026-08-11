@@ -22,3 +22,9 @@ export const authClient = createAuthClient({
     lastLoginMethodClient()
   ]
 })
+
+if (typeof window !== "undefined") {
+  // Keep the global session atom alive while React retries suspended trees.
+  // Otherwise each temporary unmount can trigger another initial session fetch.
+  authClient.$store.atoms.session.listen(() => {});
+}

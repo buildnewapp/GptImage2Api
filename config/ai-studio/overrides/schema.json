@@ -399,6 +399,20 @@
         "properties.input.properties.duration.maximum": 15
       }
     },
+    "video:bytedance-seedance-2-5": {
+      "set": {
+        "properties.input.properties.duration": {
+          "type": "integer",
+          "minimum": 4,
+          "maximum": 30,
+          "default": 5,
+          "examples": [
+            5
+          ],
+          "description": "Video duration in seconds, from 4 to 30."
+        }
+      }
+    },
     "video:kling-v3-turbo-text-to-video": {
       "set": {
         "properties.input.properties.duration": {

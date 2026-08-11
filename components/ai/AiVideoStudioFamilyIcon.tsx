@@ -9,6 +9,7 @@ import {
   Kling,
   Meta,
   NanoBanana,
+  PixVerse,
   Qwen,
   Runway,
   Sora,
@@ -47,6 +48,8 @@ export function AiVideoStudioFamilyIcon({
       return <Meta.Color className={className} size={size} />;
     case "nano-banana":
       return <NanoBanana.Color className={className} size={size} />;
+    case "pixverse":
+      return <PixVerse.Color className={className} size={size} />;
     case "qwen":
       return <Qwen.Color className={className} size={size} />;
     case "runway":

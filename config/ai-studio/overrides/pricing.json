@@ -1883,6 +1883,191 @@
       "price_final": "{$price}+0.5*({$input.image_urls && $input.image_urls.length || 1}-1)",
       "docUrl": "https://docs.kie.ai/market/seedream/5-pro-image-to-image.md"
     },
+    "image:qwen3-text-to-image": {
+      "price_txt": "Qwen Image 3.0 Text to Image, 1K/2K: 4.8 credits per image.",
+      "price_key": "default",
+      "price_map": {
+        "default": 4.8
+      },
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/qwen3/text-to-image.md"
+    },
+    "image:qwen3-image-to-image": {
+      "price_txt": "Qwen Image 3.0 Image to Image, 1K/2K: 4.8 credits per image.",
+      "price_key": "default",
+      "price_map": {
+        "default": 4.8
+      },
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/qwen3/image-to-image.md"
+    },
+    "image:qwen3-pro-text-to-image": {
+      "price_txt": "Qwen Image 3.0 Pro Text to Image, 1K: 6.4 credits per image | 2K: 12 credits per image.",
+      "price_key": "{$input.resolution || '1K'}",
+      "price_map": {
+        "1K": 6.4,
+        "2K": 12
+      },
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/qwen3-pro/text-to-image.md"
+    },
+    "image:qwen3-pro-image-to-image": {
+      "price_txt": "Qwen Image 3.0 Pro Image to Image, 1K: 6.4 credits per output image | 2K: 12 credits per output image; input images cost 0.5 credits each.",
+      "price_key": "{$input.resolution || '1K'}",
+      "price_map": {
+        "1K": 6.4,
+        "2K": 12
+      },
+      "price_final": "{$price}+0.5*({$input.image_urls && $input.image_urls.length || 1})",
+      "docUrl": "https://docs.kie.ai/market/qwen3-pro/image-to-image.md"
+    },
+    "image:seedream-5-0-pro-layer-decomposition": {
+      "price_txt": "Seedream 5.0 Pro Layer Decomposition, 1K/1.5K: 7 credits per output image | 2K: 14 credits per output image; the base image and every returned layer are each billed as one output image.",
+      "price_key": "{$input.size || 'auto'}",
+      "price_map": {
+        "auto": 14,
+        "1K": 7,
+        "1.5K": 7,
+        "2K": 14
+      },
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/seedream/5-pro-layer-decomposition.md",
+      "notes": "Auto is conservatively reserved at the 2K rate. The provider bills every returned image, but the final layer count is unavailable before generation, so the current runtime reserves one output-image unit."
+    },
+    "music:gemini-3-1-flash-text-to-speech": {
+      "price_txt": "Gemini 3.1 Flash TTS, input: 140 credits per 1M tokens | audio output: 2800 credits per 1M tokens.",
+      "price_key": "minimum",
+      "price_map": {
+        "minimum": 1
+      },
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/google/gemini-3-1-flash-tts.md",
+      "notes": "The exact audio-output token count is only known after generation. The current pre-submit pricing runtime cannot reconcile token usage, so it reserves the minimum billable 1 credit while retaining the official unit rates in price_txt."
+    },
+    "video:bytedance-seedance-2-5": {
+      "price_txt": "Seedance 2.5, 480p: 17 credits/s with video input or 28 credits/s without video input | 720p: 38 credits/s with video input or 63 credits/s without video input. With video = Price × (Input + Output); no video = Price × Output.",
+      "billing_adapter": "kie_seedance_2",
+      "price_key": "{$input.resolution || '720p'}|{$billing.has_video_input ? 'with_video':'no_video'}",
+      "price_map": {
+        "480p|with_video": 17,
+        "480p|no_video": 28,
+        "720p|with_video": 38,
+        "720p|no_video": 63
+      },
+      "price_final": "{$price}*({$billing.has_video_input ? ($billing.input_video_duration + $input.duration) : $input.duration})",
+      "docUrl": "https://docs.kie.ai/market/bytedance/seedance-2-5.md"
+    },
+    "video:minimax-h3-text-to-video": {
+      "price_txt": "MiniMax H3 Text to Video, 768P: 18 credits/s | 2K: 29 credits/s.",
+      "price_key": "{$input.resolution || '2K'}",
+      "price_map": {
+        "768P": 18,
+        "2K": 29
+      },
+      "price_final": "{$price}*{$input.duration}",
+      "docUrl": "https://docs.kie.ai/market/minimax-h3/text-to-video.md"
+    },
+    "video:minimax-h3-image-to-video": {
+      "price_txt": "MiniMax H3 Image to Video, 768P: 18 credits/s | 2K: 29 credits/s.",
+      "price_key": "{$input.resolution || '2K'}",
+      "price_map": {
+        "768P": 18,
+        "2K": 29
+      },
+      "price_final": "{$price}*{$input.duration}",
+      "docUrl": "https://docs.kie.ai/market/minimax-h3/image-to-video.md"
+    },
+    "video:minimax-h3-reference-to-video": {
+      "price_txt": "MiniMax H3 Reference to Video, 768P: 18 credits/s | 2K: 29 credits/s for generated and input video duration; first 5 input images are free, then 9 credits per additional image; input audio is free.",
+      "billing_adapter": "kie_seedance_2",
+      "price_key": "{$input.resolution || '2K'}",
+      "price_map": {
+        "768P": 18,
+        "2K": 29
+      },
+      "price_final": "{$price*(($input.duration || $duration)+$billing.input_video_duration)+9*($input.reference_image_urls && $input.reference_image_urls.length>5 ? $input.reference_image_urls.length-5 : 0)}",
+      "docUrl": "https://docs.kie.ai/market/minimax-h3/reference-to-video.md"
+    },
+    "video:pixverse-v6-text-to-video": {
+      "price_txt": "PixVerse V6 Text to Video, 360p: 4 credits/s no audio or 5.6 with audio | 540p: 5.6 or 7.2 | 720p: 7.2 or 9.6 | 1080p: 14.4 or 18.4.",
+      "price_key": "{$input.quality || '720p'}|{$input.generate_audio_switch ? 'with_audio':'no_audio'}",
+      "price_map": {
+        "360p|no_audio": 4,
+        "360p|with_audio": 5.6,
+        "540p|no_audio": 5.6,
+        "540p|with_audio": 7.2,
+        "720p|no_audio": 7.2,
+        "720p|with_audio": 9.6,
+        "1080p|no_audio": 14.4,
+        "1080p|with_audio": 18.4
+      },
+      "price_final": "{$price}*{$input.duration}",
+      "docUrl": "https://docs.kie.ai/market/pixverse/text-to-video.md"
+    },
+    "video:pixverse-v6-image-to-video": {
+      "price_txt": "PixVerse V6 Image to Video, 360p: 4 credits/s no audio or 5.6 with audio | 540p: 5.6 or 7.2 | 720p: 7.2 or 9.6 | 1080p: 14.4 or 18.4.",
+      "price_key": "{$input.quality || '720p'}|{$input.generate_audio_switch ? 'with_audio':'no_audio'}",
+      "price_map": {
+        "360p|no_audio": 4,
+        "360p|with_audio": 5.6,
+        "540p|no_audio": 5.6,
+        "540p|with_audio": 7.2,
+        "720p|no_audio": 7.2,
+        "720p|with_audio": 9.6,
+        "1080p|no_audio": 14.4,
+        "1080p|with_audio": 18.4
+      },
+      "price_final": "{$price}*{$input.duration}",
+      "docUrl": "https://docs.kie.ai/market/pixverse/image-to-video.md"
+    },
+    "video:pixverse-v6-first-last-frame-transition": {
+      "price_txt": "PixVerse V6 Transition, 360p: 4 credits/s no audio or 5.6 with audio | 540p: 5.6 or 7.2 | 720p: 7.2 or 9.6 | 1080p: 14.4 or 18.4.",
+      "price_key": "{$input.quality || '720p'}|{$input.generate_audio_switch ? 'with_audio':'no_audio'}",
+      "price_map": {
+        "360p|no_audio": 4,
+        "360p|with_audio": 5.6,
+        "540p|no_audio": 5.6,
+        "540p|with_audio": 7.2,
+        "720p|no_audio": 7.2,
+        "720p|with_audio": 9.6,
+        "1080p|no_audio": 14.4,
+        "1080p|with_audio": 18.4
+      },
+      "price_final": "{$price}*{$input.duration}",
+      "docUrl": "https://docs.kie.ai/market/pixverse/transition.md"
+    },
+    "video:pixverse-v6-fusion-reference-to-video": {
+      "price_txt": "PixVerse V6 Reference to Video, 360p: 4 credits/s no audio or 5.6 with audio | 540p: 5.6 or 7.2 | 720p: 7.2 or 9.6 | 1080p: 14.4 or 18.4.",
+      "price_key": "{$input.quality || '720p'}|{$input.generate_audio_switch ? 'with_audio':'no_audio'}",
+      "price_map": {
+        "360p|no_audio": 4,
+        "360p|with_audio": 5.6,
+        "540p|no_audio": 5.6,
+        "540p|with_audio": 7.2,
+        "720p|no_audio": 7.2,
+        "720p|with_audio": 9.6,
+        "1080p|no_audio": 14.4,
+        "1080p|with_audio": 18.4
+      },
+      "price_final": "{$price}*{$input.duration}",
+      "docUrl": "https://docs.kie.ai/market/pixverse/reference-to-video.md"
+    },
+    "video:pixverse-v6-video-extension": {
+      "price_txt": "PixVerse V6 Extend, 360p: 4 credits/s no audio or 5.6 with audio | 540p: 5.6 or 7.2 | 720p: 7.2 or 9.6 | 1080p: 14.4 or 18.4.",
+      "price_key": "{$input.quality || '720p'}|{$input.generate_audio_switch ? 'with_audio':'no_audio'}",
+      "price_map": {
+        "360p|no_audio": 4,
+        "360p|with_audio": 5.6,
+        "540p|no_audio": 5.6,
+        "540p|with_audio": 7.2,
+        "720p|no_audio": 7.2,
+        "720p|with_audio": 9.6,
+        "1080p|no_audio": 14.4,
+        "1080p|with_audio": 18.4
+      },
+      "price_final": "{$price}*{$input.duration}",
+      "docUrl": "https://docs.kie.ai/market/pixverse/extend.md"
+    },
     "video:fal-bytedance-seedance-2-0-mini-text-to-video": {
       "price_txt": "Seedance 2.0 Mini Text to Video, 480p: 14.42 credits/s | 720p: 30.94 credits/s.",
       "price_key": "{$input.resolution || $resolution || '720p'}",
