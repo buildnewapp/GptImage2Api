@@ -64,7 +64,34 @@ const AI_VIDEO_STUDIO_LEVEL_LIMIT_RANK: Record<AiVideoStudioLevelLimit, number> 
   max: 3,
 };
 
-export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
+const AI_VIDEO_STUDIO_FAMILY_ORDER: AiVideoStudioFamilyKey[] = [
+  "seedance-2.5",
+  "minimax-h3",
+  "veo-3.1",
+  "sora2",
+  "kling",
+  "grok-imagine",
+  "gemini-omni",
+  "seedance-2.0",
+  "wan",
+  "hailuo",
+  "happyhorse",
+  "runway",
+  "pixverse-v6",
+  "seedance-1.5",
+  "seedance-1.0",
+  "meta-muse-video",
+  "nano-banana",
+  "gpt-image-2",
+  "qwen3-image",
+  "seedream-image",
+  "grok-imagine-image",
+  "wan-image",
+  "qwen2-image",
+  "meta-muse-image",
+];
+
+export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
   {
     key: "seedance-2.5",
     label: "Seedance 2.5",
@@ -452,14 +479,12 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         label: "Veo 3.1",
         familyKey: "veo-3.1",
         modelId: "video:fal-fal-ai-veo3-1",
-        isHot: true
       },
       {
         key: "fal-veo-3.1-fast",
         label: "Veo 3.1 Fast",
         familyKey: "veo-3.1",
         modelId: "video:fal-fal-ai-veo3-1-fast",
-        isHot: true
       },
       {
         key: "fal-veo-3.1-image-to-video",
@@ -1418,7 +1443,6 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         familyKey: "qwen3-image",
         modelId: "image:qwen3-text-to-image",
         isSpecial: true,
-        isHot: true,
       },
       {
         key: "qwen3-image-to-image",
@@ -1426,7 +1450,6 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         familyKey: "qwen3-image",
         modelId: "image:qwen3-image-to-image",
         isSpecial: true,
-        isHot: true,
       },
       {
         key: "qwen3-pro-text-to-image",
@@ -1569,7 +1592,6 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
         modelId: "image:fal-fal-ai-wan-v2-7-pro-text-to-image",
         levelLimit: "pro",
         isSpecial: true,
-        isHot: true,
       },
       {
         key: "fal-wan-2.7-pro-edit",
@@ -1613,7 +1635,11 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = [
       },
     ],
   },
-];
+] satisfies AiVideoStudioFamily[]).sort(
+  (left, right) =>
+    AI_VIDEO_STUDIO_FAMILY_ORDER.indexOf(left.key) -
+    AI_VIDEO_STUDIO_FAMILY_ORDER.indexOf(right.key),
+);
 
 export function getAiVideoStudioSelectionFromModelId(modelId: string) {
   for (const family of AI_VIDEO_STUDIO_FAMILIES) {

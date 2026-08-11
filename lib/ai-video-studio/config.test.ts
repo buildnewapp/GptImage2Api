@@ -200,6 +200,56 @@ test("uses the LobeHub Meta icon for the Meta Muse family", () => {
   assert.doesNotMatch(iconSource, /src="\/logo\.png"/);
 });
 
+test("derives featured families from isHot in configured order", () => {
+  const featuredKeys = AI_VIDEO_STUDIO_FAMILIES
+    .filter((family) => family.versions.some((version) => version.isHot === true))
+    .map((family) => family.key);
+
+  assert.deepEqual(featuredKeys, [
+    "seedance-2.5",
+    "minimax-h3",
+    "grok-imagine",
+    "gemini-omni",
+    "seedance-2.0",
+    "nano-banana",
+    "gpt-image-2",
+    "seedream-image",
+    "grok-imagine-image",
+  ]);
+});
+
+test("keeps the configured all-model order", () => {
+  assert.deepEqual(
+    AI_VIDEO_STUDIO_FAMILIES.map((family) => family.key),
+    [
+      "seedance-2.5",
+      "minimax-h3",
+      "veo-3.1",
+      "sora2",
+      "kling",
+      "grok-imagine",
+      "gemini-omni",
+      "seedance-2.0",
+      "wan",
+      "hailuo",
+      "happyhorse",
+      "runway",
+      "pixverse-v6",
+      "seedance-1.5",
+      "seedance-1.0",
+      "meta-muse-video",
+      "nano-banana",
+      "gpt-image-2",
+      "qwen3-image",
+      "seedream-image",
+      "grok-imagine-image",
+      "wan-image",
+      "qwen2-image",
+      "meta-muse-image",
+    ],
+  );
+});
+
 test("keeps fal upstream model allowlist as valid endpoint configurations", () => {
   const modelConfigs = loadFalModelIds();
 
