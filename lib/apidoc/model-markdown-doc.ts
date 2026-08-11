@@ -232,7 +232,18 @@ function buildMarkdown({
 }) {
   const copy = getCopy(locale);
   const primary = doc.details[0];
-  const primaryPayload = primary.detail.examplePayload ?? {};
+  const primaryPayload =
+    primary.detail.examplePayload &&
+    typeof primary.detail.examplePayload === "object" &&
+    Object.keys(primary.detail.examplePayload).length > 0
+      ? primary.detail.examplePayload
+      : {
+          model: primary.detail.modelKeys[0] ?? primary.version.key,
+          input: {
+            prompt:
+              "A cinematic product reveal with smooth orbit camera movement",
+          },
+        };
   const executePayload = {
     modelId: primary.version.modelId,
     isPublic: true,

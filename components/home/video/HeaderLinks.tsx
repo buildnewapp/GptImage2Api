@@ -118,17 +118,17 @@ export default function VideoHeaderLinks({
                                     target={child.target || "_self"}
                                     rel={child.rel || undefined}
                                     className={cn(
-                                      "group/link rounded-xl px-2 py-1.5 text-[13px] transition-[background-color,color,transform,box-shadow] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-ring motion-safe:hover:translate-x-0.5 hover:shadow-sm motion-reduce:transition-none",
+                                      "group/link rounded-xl border border-transparent px-2 py-1.5 text-[13px] transition-[background-color,border-color,color,box-shadow,backdrop-filter] duration-200 ease-out hover:backdrop-blur-md hover:shadow-sm focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none",
                                       overlay
-                                        ? "text-white/72 hover:bg-white/8 hover:text-white"
-                                        : "text-muted-foreground hover:bg-card/80 hover:text-foreground",
+                                        ? "text-white/72 hover:border-white/10 hover:bg-white/10 hover:text-white"
+                                        : "text-muted-foreground hover:border-border/70 hover:bg-background/70 hover:text-foreground dark:hover:border-white/10 dark:hover:bg-white/[0.06]",
                                     )}
                                   >
                                     <div className="flex min-w-0 items-center gap-2.5">
                                       {child.icon && (
                                         <span
                                           className={cn(
-                                            "flex size-8 shrink-0 items-center justify-center rounded-lg transition-[background-color,color,transform] duration-200 ease-out motion-safe:group-hover/link:scale-105 motion-reduce:transition-none",
+                                            "flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors duration-200",
                                             overlay
                                               ? "bg-white/8 text-white group-hover/link:bg-white/12"
                                               : "bg-muted text-foreground group-hover/link:bg-background",

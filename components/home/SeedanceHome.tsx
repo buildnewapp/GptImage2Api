@@ -12,8 +12,23 @@ import UseCases from "./seedance/UseCases";
 import VideoShowcase from "./seedance/VideoShowcase";
 import { getTranslations } from "next-intl/server";
 
-export default async function SeedanceHome({ locale }: { locale: string }) {
-  const t = await getTranslations({ locale, namespace: "Landing.Hero" });
+type SeedanceHomeNamespace = "Landing" | "Seedance25";
+
+export default async function SeedanceHome({
+  locale,
+  namespace = "Landing",
+  initialModelId,
+  pageHref = "/seedance2",
+}: {
+  locale: string;
+  namespace?: SeedanceHomeNamespace;
+  initialModelId?: string;
+  pageHref?: string;
+}) {
+  const t = await getTranslations({
+    locale,
+    namespace: `${namespace}.Hero`,
+  });
 
   return (
     <div className="min-h-screen bg-background flex flex-col w-full">
@@ -35,16 +50,19 @@ export default async function SeedanceHome({ locale }: { locale: string }) {
           </div>
         </div>
       </section>
-      <AIVideoStudio />
-      <VideoShowcase />
-      <Features />
-      <UseCases />
-      <HowItWorks />
+      <AIVideoStudio initialModelId={initialModelId} />
+      <VideoShowcase namespace={`${namespace}.VideoShowcase`} />
+      <Features namespace={`${namespace}.Features`} />
+      <UseCases namespace={`${namespace}.UseCases`} pageHref={pageHref} />
+      <HowItWorks
+        namespace={`${namespace}.HowItWorks`}
+        pageHref={pageHref}
+      />
       {/*<Testimonials />*/}
       <PricingByGroup locale={locale} />
-      <FAQ />
+      <FAQ namespace={`${namespace}.FAQ`} />
       <HomeStructuredRating className="my-6" locale={locale} />
-      <CTA />
+      <CTA namespace={`${namespace}.CTA`} pageHref={pageHref} />
     </div>
   );
 }

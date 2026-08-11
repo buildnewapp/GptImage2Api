@@ -67,11 +67,11 @@ const HeaderLinks = () => {
                                   prefetch={false}
                                   target={child.target || "_self"}
                                   rel={child.rel || undefined}
-                                  className="group/link rounded-lg px-2 py-1.5 text-[13px] text-muted-foreground transition-[background-color,color,transform,box-shadow] duration-200 ease-out hover:bg-muted hover:text-foreground hover:shadow-sm focus-visible:ring-2 focus-visible:ring-ring motion-safe:hover:translate-x-0.5 motion-reduce:transition-none"
+                                  className="group/link rounded-lg border border-transparent px-2 py-1.5 text-[13px] text-muted-foreground transition-[background-color,border-color,color,box-shadow,backdrop-filter] duration-200 ease-out hover:border-border/70 hover:bg-background/70 hover:text-foreground hover:shadow-sm hover:backdrop-blur-md focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none dark:hover:border-white/10 dark:hover:bg-white/[0.06]"
                                 >
                                   <div className="flex min-w-0 items-center gap-2.5">
                                     {child.icon && (
-                                      <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-foreground transition-[background-color,color,transform] duration-200 ease-out group-hover/link:bg-background motion-safe:group-hover/link:scale-105 motion-reduce:transition-none">
+                                      <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-foreground transition-colors duration-200 group-hover/link:bg-background">
                                         <DynamicIcon
                                           name={child.icon}
                                           className="size-4"

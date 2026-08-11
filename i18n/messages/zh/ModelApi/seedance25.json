@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "title": "Seedance 2.5 API",
+    "description": "在线测试并接入 Seedance 2.5 API，支持 4–30 秒多模态 AI 视频生成、编辑和原生音频。"
+  },
+  "title": "Seedance 2.5 API",
+  "badge": "多模态视频 API",
+  "description": [
+    "Seedance 2.5 是字节跳动推出的统一多模态视频模型，可通过文本、图片、视频和音频参考创建或重塑 4–30 秒视频。",
+    "在本页 Playground 中验证提示词、参考素材、原生音频、时长、分辨率和实际请求 payload，再把同一套工作流接入你的产品。"
+  ],
+  "monitor": {
+    "label": "24 小时状态监控"
+  },
+  "pricingNote": "美元估算按最佳年付套餐 $0.005/积分计算；使用视频参考时，计费时长包含输入视频和输出视频。",
+  "labels": {
+    "apiDocs": "API 文档",
+    "apiDocsDetail": "查看 API 详细文档",
+    "apiDocsDetailDescription": "打开完整文档，查看鉴权、请求字段、任务轮询、价格和响应 payload。",
+    "apiInputDescription": "从应用发送请求前，先检查当前 Seedance 2.5 模型的实际 schema。",
+    "apiInputKicker": "API 输入",
+    "apiInputTitle": "Seedance 2.5 请求字段",
+    "descriptionColumn": "说明",
+    "fieldColumn": "字段",
+    "lowestCostPrefix": "最低成本从",
+    "modelType": "模型类型：",
+    "pricingTitle": "价格",
+    "requestJson": "请求 JSON",
+    "runWithApi": "使用 API 运行",
+    "selectedModel": "当前模型",
+    "selectedModelNote": "本页的 Playground、请求示例、字段和价格都会跟随当前 Seedance 2.5 模型。",
+    "typeColumn": "类型",
+    "useModelForGeneration": "使用 {model} 生成"
+  },
+  "featuresKicker": "核心能力",
+  "featuresTitle": "用一个 Seedance 2.5 API 完成生成与编辑",
+  "featuresDescription": "通过兼容的参考素材控制主体、动作、镜头、节奏和声音，再通过异步任务工作流获取最终视频。",
+  "capabilities": [
+    {
+      "icon": "layers",
+      "title": "最多 50 个参考素材",
+      "description": "在兼容的多模态参考工作流中，最多可使用 30 张图片、10 段视频和 10 段音频。"
+    },
+    {
+      "icon": "video",
+      "title": "4–30 秒输出",
+      "description": "精确设置视频时长，适用于广告、社媒故事、产品演示和电影概念片。"
+    },
+    {
+      "icon": "sparkles",
+      "title": "参考驱动编辑",
+      "description": "用已有视频引导新的动作、表演、镜头处理、节奏或视觉方向。"
+    },
+    {
+      "icon": "music",
+      "title": "原生音频",
+      "description": "生成同步对白、环境声、音效和音乐，也可以通过音频参考引导结果。"
+    }
+  ],
+  "quickStartKicker": "快速开始",
+  "quickStartTitle": "从模型测试到生产请求",
+  "quickStartDescription": "先用三步验证 Seedance 2.5 工作流，再接入自己的应用。",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. 组织 payload",
+      "description": "填写提示词，选择首尾帧或兼容的多模态参考，并配置时长、比例、分辨率和音频。"
+    },
+    {
+      "icon": "key",
+      "title": "2. 创建任务",
+      "description": "携带 SdanceAI API Key，把模型 ID 和 payload 发送到生成接口。"
+    },
+    {
+      "icon": "play",
+      "title": "3. 轮询结果",
+      "description": "跟踪异步任务直到成功，然后保存或展示返回的 MP4 或 MOV 地址。"
+    }
+  ],
+  "useCasesKicker": "应用场景",
+  "useCasesTitle": "用 Seedance 2.5 API 构建什么",
+  "useCasesDescription": "在可重复的产品工作流中，用同一个模型完成原创生成、参考变体和视频重塑。",
+  "useCases": [
+    "产品发布和效果广告变体",
+    "对白驱动的创作者与虚拟角色短片",
+    "保持品牌一致的社媒内容生产",
+    "影视、游戏和分镜预演",
+    "音乐视频与节奏引导序列",
+    "参考驱动的视频编辑与续写"
+  ],
+  "communityShowcase": {
+    "kicker": "社区案例",
+    "title": "社区公开的 Seedance 2.5 成功案例",
+    "description": "浏览已成功完成的公开 Seedance 2.5 作品，并查看每个案例的提示词、设置和结果。",
+    "viewAll": "查看更多",
+    "viewDetails": "查看详情"
+  },
+  "productionKicker": "生产说明",
+  "productionTitle": "面向真实应用工作流设计",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "账户与积分控制",
+      "body": "任务沿用现有 SdanceAI 账户、API Key、积分余额、可见性设置和生成历史。"
+    },
+    {
+      "icon": "image",
+      "title": "两种参考模式",
+      "body": "可以同时使用首帧和尾帧，或使用兼容的图片、视频和音频参考数组；两种模式不能在同一次请求中混用。"
+    },
+    {
+      "icon": "zap",
+      "title": "按用量计费",
+      "body": "积分取决于分辨率、输出时长以及是否包含视频输入；视频参考请求还会计入输入视频时长。"
+    }
+  ],
+  "faqKicker": "常见问题",
+  "faqTitle": "Seedance 2.5 API 常见问题",
+  "faqs": [
+    {
+      "question": "Seedance 2.5 API 最适合什么？",
+      "answer": "适合需要稳定控制主体、动作、镜头语言、节奏和原生音频的多模态视频生成与编辑产品。"
+    },
+    {
+      "question": "可以使用哪些输入类型？",
+      "answer": "可以发送提示词、可选的首尾帧，或兼容的图片、视频和音频参考数组。首尾帧模式不能与多模态参考数组混用。"
+    },
+    {
+      "question": "最多支持多少参考素材？",
+      "answer": "当前 Seedance 2.5 schema 在兼容的参考工作流中最多支持 30 张参考图片、10 段参考视频和 10 段参考音频。"
+    },
+    {
+      "question": "可以请求哪些时长和分辨率？",
+      "answer": "输出时长可设置为 4–30 秒。当前模型支持 480p 和 720p，并提供常见横屏、竖屏、方形、超宽屏和自适应比例。"
+    },
+    {
+      "question": "Seedance 2.5 可以生成音频吗？",
+      "answer": "可以。开启原生音频后可生成同步对白、环境声、音效和音乐，也能在兼容工作流中加入音频参考。"
+    },
+    {
+      "question": "可以编辑已有视频吗？",
+      "answer": "可以。加入参考视频，并描述希望新结果遵循的表演、动作、镜头、节奏或视觉处理方式。"
+    },
+    {
+      "question": "如何获取生成完成的视频？",
+      "answer": "先创建异步任务，再使用返回的任务 ID 轮询任务接口。任务成功后，响应会包含生成媒体地址。"
+    },
+    {
+      "question": "Seedance 2.5 API 可以商用吗？",
+      "answer": "页面支持商用工作流。你仍需确保拥有提示词和参考素材的相应权利，并在生产使用前查看套餐和内容政策条款。"
+    }
+  ],
+  "cta": {
+    "kicker": "开始接入",
+    "title": "把 Seedance 2.5 接入你的视频工作流",
+    "description": "先在 Playground 测试提示词和参考素材，检查生成的请求，再通过 API 接入同一模型。",
+    "primaryLabel": "打开 Seedance 2.5",
+    "secondaryLabel": "查看 API 能力",
+    "stats": [
+      {
+        "value": "API 就绪",
+        "label": "工作流"
+      },
+      {
+        "value": "4–30 秒",
+        "label": "输出时长"
+      },
+      {
+        "value": "50 个",
+        "label": "参考素材上限"
+      }
+    ]
+  }
+}

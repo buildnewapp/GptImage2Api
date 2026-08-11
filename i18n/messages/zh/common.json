@@ -496,6 +496,11 @@
             "title": "产品",
             "items": [
               {
+                "name": "Seedance 2.5",
+                "href": "/seedance-2-5",
+                "icon": "Sparkles"
+              },
+              {
                 "name": "Seedance 2",
                 "href": "/seedance2",
                 "icon": "Sparkles"
@@ -510,6 +515,11 @@
           {
             "title": "模型 API",
             "items": [
+              {
+                "name": "Seedance 2.5 API",
+                "href": "/seedance-2-5-api",
+                "icon": "Braces"
+              },
               {
                 "name": "Seedance 2 API",
                 "href": "/seedance-2-0-api",
@@ -565,6 +575,14 @@
             {
               "href": "/#features",
               "name": "功能特性"
+            },
+            {
+              "href": "/seedance-2-5",
+              "name": "Seedance 2.5"
+            },
+            {
+              "href": "/seedance-2-5-api",
+              "name": "Seedance 2.5 API"
             },
             {
               "href": "/seedance2",

@@ -1,0 +1,169 @@
+{
+  "Metadata": {
+    "title": "Seedance 2.5 AI Video Generator — 30s Audio-Video Storytelling",
+    "description": "Create synchronized AI videos with Seedance 2.5 from text, images, video, and audio references. Generate 4–30 second clips with native audio and API support."
+  },
+  "Hero": {
+    "badge": {
+      "label": "NEW",
+      "text": "Next-generation audio-video creation",
+      "href": "/seedance-2-5"
+    },
+    "title": "Seedance 2.5",
+    "description": "Create longer, more coherent stories with synchronized audio and precise multimodal reference control. Direct the subject, camera, performance, pacing, and sound in one generation workflow.",
+    "getStarted": "Get Started",
+    "getStartedLink": "/seedance-2-5"
+  },
+  "VideoShowcase": {
+    "badge": "Seedance 2.5 Showcase",
+    "titlePrefix": "See stories in ",
+    "titleHighlight": "motion",
+    "description": "Explore cinematic AI video examples and imagine how Seedance 2.5 can turn your references into coherent scenes.",
+    "viewMore": "View More Showcases"
+  },
+  "Features": {
+    "badge": {
+      "label": "Capabilities",
+      "text": "What makes Seedance 2.5 different"
+    },
+    "title": "Key Capabilities of Seedance 2.5",
+    "titlePrefix": "Key Capabilities of ",
+    "titleSuffix": "Seedance 2.5",
+    "description": "Move from short visual ideas to longer, production-aware scenes with stronger reference understanding and synchronized audio.",
+    "items": [
+      {
+        "title": "Up to 30-Second Storytelling",
+        "description": "Develop action and emotion across a longer narrative beat while maintaining smoother movement, visual consistency, and believable physical behavior."
+      },
+      {
+        "title": "Up to 50 Reference Assets",
+        "description": "Combine as many as 30 images, 10 videos, and 10 audio files in the current SdanceAI workflow to guide one generation."
+      },
+      {
+        "title": "Stronger Subject Consistency",
+        "description": "Keep characters, products, environments, and visual details more stable as the scene, camera, and performance evolve."
+      },
+      {
+        "title": "Camera and Performance Control",
+        "description": "Use reference footage to communicate camera movement, blocking, action timing, performance, transitions, and cinematic rhythm."
+      },
+      {
+        "title": "Native Audio Generation",
+        "description": "Generate dialogue intent, ambience, sound effects, and musical pacing in coordination with the visual scene."
+      },
+      {
+        "title": "Reference-Aware Editing",
+        "description": "Express targeted visual changes and production intent through natural language and multimodal reference material."
+      }
+    ]
+  },
+  "UseCases": {
+    "badge": {
+      "label": "Use Cases",
+      "text": "Built for creative production"
+    },
+    "title": "Seedance 2.5 for Every Creative Workflow",
+    "titlePrefix": "Seedance 2.5 for ",
+    "titleSuffix": "Every Creative Workflow",
+    "description": "Use longer narrative generation, consistent subjects, and coordinated sound wherever a complete moving story matters.",
+    "button": "Start Creating Now",
+    "items": [
+      {
+        "title": "Cinematic Shorts",
+        "description": "Develop dialogue, action, atmosphere, and transitions across a longer scene without assembling every shot manually.",
+        "tags": ["Short Films", "Story Scenes", "Previsualization", "Concept Films"]
+      },
+      {
+        "title": "Advertising & Marketing",
+        "description": "Anchor product identity with images, then direct setting, camera movement, pacing, and sound around it.",
+        "tags": ["Product Videos", "Commercials", "Brand Content", "Campaigns"]
+      },
+      {
+        "title": "Character Performance",
+        "description": "Use appearance, voice, and movement references to guide expressive performances with stronger continuity.",
+        "tags": ["Virtual Characters", "Dialogue", "Performance", "Storytelling"]
+      },
+      {
+        "title": "Social Video",
+        "description": "Produce attention-grabbing vertical or horizontal videos with coordinated visual rhythm and sound.",
+        "tags": ["Reels", "TikTok", "Shorts", "Social Campaigns"]
+      },
+      {
+        "title": "Music & Audio Visuals",
+        "description": "Use audio references to guide mood, beats, pacing, movement, and audiovisual atmosphere.",
+        "tags": ["Music Videos", "Beat Sync", "Sound Design", "Visualizers"]
+      },
+      {
+        "title": "Previsualization & Editing",
+        "description": "Test blocking, shot language, visual changes, and creative alternatives before full production.",
+        "tags": ["Storyboards", "Shot Planning", "Creative Tests", "Editing"]
+      }
+    ]
+  },
+  "HowItWorks": {
+    "titlePrefix": "How to Create with ",
+    "titleSuffix": "Seedance 2.5",
+    "button": "Start Creating Now",
+    "items": [
+      {
+        "title": "Describe Your Scene",
+        "description": "Write the subject, action, environment, camera, lighting, pacing, and sound you want."
+      },
+      {
+        "title": "Add Reference Assets",
+        "description": "Upload images, videos, or audio to guide identity, motion, visual language, voice, and atmosphere."
+      },
+      {
+        "title": "Set and Generate",
+        "description": "Choose a 4–30 second duration, 480p or 720p resolution, aspect ratio, and output format, then generate."
+      }
+    ]
+  },
+  "FAQ": {
+    "title": "Frequently Asked Questions",
+    "titlePrefix": "Seedance 2.5 ",
+    "titleSuffix": "Questions",
+    "description": "Everything you need to know about the model and the current SdanceAI integration.",
+    "items": [
+      {
+        "question": "What is Seedance 2.5?",
+        "answer": "Seedance 2.5 is ByteDance Seed's next-generation audio-video joint generation model for longer storytelling, multimodal reference control, and production-aware video creation and editing."
+      },
+      {
+        "question": "How long can a Seedance 2.5 video be?",
+        "answer": "The model supports up to 30 seconds in one generation. SdanceAI currently exposes a duration control from 4 to 30 seconds."
+      },
+      {
+        "question": "Which reference formats can I use?",
+        "answer": "The current SdanceAI integration supports image, video, and audio references: up to 30 images, 10 videos, and 10 audio files."
+      },
+      {
+        "question": "Does Seedance 2.5 generate audio?",
+        "answer": "Yes. Native audio allows sound, ambience, and speech intent to be generated in coordination with the visual scene."
+      },
+      {
+        "question": "Which resolutions are currently available?",
+        "answer": "SdanceAI currently supports 480p and 720p Seedance 2.5 output in MP4 or MOV format."
+      },
+      {
+        "question": "Can I use Seedance 2.5 through an API?",
+        "answer": "Yes. The dedicated Seedance 2.5 API page includes request fields, examples, authentication guidance, and response details."
+      }
+    ]
+  },
+  "CTA": {
+    "title": "Ready to Create with Seedance 2.5?",
+    "description": "Turn text and multimodal references into a longer, synchronized AI video from one creative workspace.",
+    "button": "Start Creating Now",
+    "trustText": "Current SdanceAI capabilities are shown in the generator.",
+    "features": {
+      "deploy": "Multimodal workflows",
+      "production": "Production-ready output",
+      "updates": "Fast model updates",
+      "i18n": "Multi-language support",
+      "multimodal": "Up to 50 reference assets",
+      "watermark": "Native audio generation",
+      "reference": "4–30 second output"
+    }
+  }
+}

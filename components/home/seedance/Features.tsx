@@ -3,8 +3,14 @@
 import { Activity, Aperture, ArrowRight, Camera, Files, Film, Heart, Mic, Palette, Scissors, UserCheck, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-const Features = () => {
-  const t = useTranslations("Landing.Features");
+type FeaturesNamespace = "Landing.Features" | "Seedance25.Features";
+
+const Features = ({
+  namespace = "Landing.Features",
+}: {
+  namespace?: FeaturesNamespace;
+}) => {
+  const t = useTranslations(namespace);
 
   const staticFeatures = [
     {

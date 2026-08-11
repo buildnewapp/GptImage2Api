@@ -4,8 +4,18 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Fragment } from "react";
 
-const HowItWorks = () => {
-  const t = useTranslations("Landing.HowItWorks");
+type HowItWorksNamespace =
+  | "Landing.HowItWorks"
+  | "Seedance25.HowItWorks";
+
+const HowItWorks = ({
+  namespace = "Landing.HowItWorks",
+  pageHref = "/seedance2",
+}: {
+  namespace?: HowItWorksNamespace;
+  pageHref?: string;
+}) => {
+  const t = useTranslations(namespace);
   const items = (t.raw("items") as any[]) || [];
 
   return (
@@ -52,7 +62,7 @@ const HowItWorks = () => {
         </div>
 
         <div className="text-center mt-16">
-          <Link href="/seedance2" className="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-full hover:shadow-xl hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 cursor-pointer inline-block">
+          <Link href={pageHref} className="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-full hover:shadow-xl hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 cursor-pointer inline-block">
             {t("button")}
           </Link>
         </div>

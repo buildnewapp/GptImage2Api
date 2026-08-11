@@ -1,0 +1,169 @@
+{
+  "Metadata": {
+    "title": "Seedance 2.5 AI 视频生成器 — 30 秒音视频叙事",
+    "description": "使用 Seedance 2.5，通过文本、图片、视频和音频参考创作音画同步的 AI 视频，支持 4–30 秒生成和 API 接入。"
+  },
+  "Hero": {
+    "badge": {
+      "label": "全新",
+      "text": "新一代音视频联合生成",
+      "href": "/seedance-2-5"
+    },
+    "title": "Seedance 2.5",
+    "description": "通过音画同步和精准的多模态参考控制，创作更长、更连贯的故事。在同一个生成流程中导演主体、镜头、表演、节奏与声音。",
+    "getStarted": "开始使用",
+    "getStartedLink": "/seedance-2-5"
+  },
+  "VideoShowcase": {
+    "badge": "Seedance 2.5 作品展示",
+    "titlePrefix": "让故事真正 ",
+    "titleHighlight": "动起来",
+    "description": "浏览电影感 AI 视频案例，了解 Seedance 2.5 如何把参考素材转化为连贯的动态场景。",
+    "viewMore": "查看更多案例"
+  },
+  "Features": {
+    "badge": {
+      "label": "核心能力",
+      "text": "Seedance 2.5 的主要升级"
+    },
+    "title": "Seedance 2.5 核心能力",
+    "titlePrefix": "Seedance 2.5 ",
+    "titleSuffix": "核心能力",
+    "description": "从短暂的视觉灵感走向更长、更贴近制作流程的完整场景，并获得更强的参考理解和同步音频能力。",
+    "items": [
+      {
+        "title": "最长 30 秒叙事",
+        "description": "在更长的叙事节拍中发展动作与情绪，同时保持更顺滑的运动、更稳定的视觉一致性和更自然的物理表现。"
+      },
+      {
+        "title": "最多 50 个参考素材",
+        "description": "SdanceAI 当前支持在一次生成中组合最多 30 张图片、10 个视频和 10 个音频文件。"
+      },
+      {
+        "title": "更强的主体一致性",
+        "description": "当场景、镜头和表演不断变化时，角色、产品、环境与视觉细节依然保持稳定。"
+      },
+      {
+        "title": "镜头与表演控制",
+        "description": "通过参考视频传达镜头运动、人物调度、动作时机、表演、转场与电影节奏。"
+      },
+      {
+        "title": "原生音频生成",
+        "description": "让对白意图、环境氛围、音效和音乐节奏与视觉场景协调生成。"
+      },
+      {
+        "title": "理解参考的编辑能力",
+        "description": "通过自然语言与多模态参考素材表达局部视觉调整和专业制作意图。"
+      }
+    ]
+  },
+  "UseCases": {
+    "badge": {
+      "label": "应用场景",
+      "text": "为创意制作而生"
+    },
+    "title": "Seedance 2.5 适用于各种创作流程",
+    "titlePrefix": "Seedance 2.5 适用于 ",
+    "titleSuffix": "各种创作流程",
+    "description": "凡是需要完整动态叙事、稳定主体与协调声音的场景，都可以使用 Seedance 2.5。",
+    "button": "立即开始创作",
+    "items": [
+      {
+        "title": "电影感短片",
+        "description": "在更长场景中展开对白、动作、氛围与转场，无需手工拼接每一个镜头。",
+        "tags": ["短片", "故事场景", "预演", "概念影片"]
+      },
+      {
+        "title": "广告与营销",
+        "description": "用图片固定产品形象，再围绕产品导演场景、镜头运动、节奏与声音。",
+        "tags": ["产品视频", "商业广告", "品牌内容", "营销活动"]
+      },
+      {
+        "title": "角色表演",
+        "description": "通过外观、声音与动作参考，引导更有表现力且连续性更强的角色演出。",
+        "tags": ["虚拟角色", "对白", "表演", "故事创作"]
+      },
+      {
+        "title": "社交媒体视频",
+        "description": "制作画面节奏和声音相互配合的竖屏或横屏短视频。",
+        "tags": ["Reels", "抖音", "Shorts", "社媒营销"]
+      },
+      {
+        "title": "音乐与音频视觉",
+        "description": "通过音频参考控制情绪、节拍、节奏、动作以及整体视听氛围。",
+        "tags": ["音乐视频", "节拍同步", "声音设计", "视觉化"]
+      },
+      {
+        "title": "预演与编辑",
+        "description": "在完整制作前快速测试人物调度、镜头语言、视觉变化与不同创意方案。",
+        "tags": ["分镜", "镜头规划", "创意测试", "视频编辑"]
+      }
+    ]
+  },
+  "HowItWorks": {
+    "titlePrefix": "如何使用 ",
+    "titleSuffix": "Seedance 2.5",
+    "button": "立即开始创作",
+    "items": [
+      {
+        "title": "描述场景",
+        "description": "写清主体、动作、环境、镜头、光线、节奏，以及你希望出现的声音。"
+      },
+      {
+        "title": "添加参考素材",
+        "description": "上传图片、视频或音频，为角色身份、运动、影像语言、声音与氛围提供参考。"
+      },
+      {
+        "title": "设置并生成",
+        "description": "选择 4–30 秒时长、480p 或 720p 分辨率、画幅和输出格式，然后生成视频。"
+      }
+    ]
+  },
+  "FAQ": {
+    "title": "常见问题",
+    "titlePrefix": "Seedance 2.5 ",
+    "titleSuffix": "常见问题",
+    "description": "快速了解模型能力以及 SdanceAI 当前的接入范围。",
+    "items": [
+      {
+        "question": "Seedance 2.5 是什么？",
+        "answer": "Seedance 2.5 是字节跳动 Seed 推出的新一代音视频联合生成模型，面向更长时长叙事、多模态参考控制，以及更贴近专业制作的视频生成与编辑。"
+      },
+      {
+        "question": "Seedance 2.5 最长可以生成多长的视频？",
+        "answer": "模型单次生成最长支持 30 秒；SdanceAI 当前开放 4 到 30 秒的视频时长设置。"
+      },
+      {
+        "question": "可以使用哪些参考素材？",
+        "answer": "SdanceAI 当前支持图片、视频与音频参考，最多可添加 30 张图片、10 个视频和 10 个音频文件。"
+      },
+      {
+        "question": "Seedance 2.5 会生成声音吗？",
+        "answer": "会。原生音频可以让声音、环境氛围与语音意图和视觉场景协调生成。"
+      },
+      {
+        "question": "当前支持哪些分辨率？",
+        "answer": "SdanceAI 当前支持 480p 和 720p，可输出 MP4 或 MOV 格式。"
+      },
+      {
+        "question": "可以通过 API 使用 Seedance 2.5 吗？",
+        "answer": "可以。独立的 Seedance 2.5 API 页面提供请求参数、代码示例、认证方式与响应说明。"
+      }
+    ]
+  },
+  "CTA": {
+    "title": "准备好使用 Seedance 2.5 创作了吗？",
+    "description": "在同一个创作工作区中，把文本和多模态参考素材转化为更长、音画同步的 AI 视频。",
+    "button": "立即开始创作",
+    "trustText": "具体能力以当前生成器显示为准。",
+    "features": {
+      "deploy": "多模态工作流",
+      "production": "可用于制作的输出",
+      "updates": "快速模型更新",
+      "i18n": "多语言支持",
+      "multimodal": "最多 50 个参考素材",
+      "watermark": "原生音频生成",
+      "reference": "4–30 秒输出"
+    }
+  }
+}

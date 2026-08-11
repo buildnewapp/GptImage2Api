@@ -7,8 +7,14 @@ import {
 } from "@/components/ui/accordion";
 import { useTranslations } from "next-intl";
 
-const FAQ = () => {
-  const t = useTranslations("Landing.FAQ");
+type FAQNamespace = "Landing.FAQ" | "Seedance25.FAQ";
+
+const FAQ = ({
+  namespace = "Landing.FAQ",
+}: {
+  namespace?: FAQNamespace;
+}) => {
+  const t = useTranslations(namespace);
   const faqs = (t.raw("items") as any[]) || [];
 
   return (
