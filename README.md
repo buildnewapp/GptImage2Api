@@ -55,28 +55,40 @@ git merge --no-ff --no-commit upstream/main
 
 # 应用更新：
 ## Sdance AI
-cd /Users/syx/WebstormProjects/sdanceai/sdanceai
+/Users/syx/WebstormProjects/sdanceai/sdanceai
+进入目录，执行合并：
 git fetch upstream
 git merge --no-ff --no-commit upstream/main
-open -na "WebStorm" --args "./"
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
+最后 通过 open -na "WebStorm" --args "./" 打开
 
 ## tikdek-web
-cd /Users/syx/WebstormProjects/tikdek/tikdek-web
+/Users/syx/WebstormProjects/tikdek/tikdek-web
+进入目录，执行合并：
 git fetch upstream
 git merge --no-ff --no-commit upstream/main
-open -na "WebStorm" --args "./"
-
-## autogeo
-cd /Users/syx/WebstormProjects/autogeo/autogeo-v2
-git fetch upstream
-git merge --no-ff --no-commit upstream/main
-open -na "WebStorm" --args "./"
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
 
 ## gptimage2-web
-cd /Users/syx/WebstormProjects/GptImage2Api/gptimage2-web
+/Users/syx/WebstormProjects/GptImage2Api/gptimage2-web
+进入目录，执行合并：
 git fetch upstream
 git merge --no-ff --no-commit upstream/main
-open -na "WebStorm" --args "./"
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
+
+## spicy-video
+/Users/syx/WebstormProjects/Spicy/spicy-video-web
+进入目录，执行合并：
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
+
+## autogeo
+/Users/syx/WebstormProjects/autogeo/autogeo-v2
+进入目录，执行合并：
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
 
 ## GptImage4
 cd /Users/syx/WebstormProjects/GptImage2Api/GptImage4

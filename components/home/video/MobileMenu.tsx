@@ -224,7 +224,7 @@ export default function VideoMobileMenu({
         >
           <div className="container mx-auto space-y-4 px-4 py-5">
             {topLinks.map((link, index) =>
-              link.items?.length ? (
+              link.items?.length || link.groups?.length ? (
                 <div key={link.name}>
                   <button
                     type="button"
@@ -251,29 +251,63 @@ export default function VideoMobileMenu({
                   </button>
 
                   {expandedLink === link.name ? (
-                    <div
-                      className={cn(
-                        "mt-1 grid gap-1 border-l pl-4",
-                        overlay ? "border-white/16" : "border-border/70"
-                      )}
-                    >
-                      {link.items.map((child) => (
-                        <I18nLink
-                          key={child.href}
+                    <div className="mt-2 grid gap-3">
+                      {(link.groups?.length
+                        ? link.groups
+                        : [{ title: "", items: link.items ?? [] }]
+                      ).map((group, groupIndex) => (
+                        <div
+                          key={group.title || groupIndex}
                           className={cn(
-                            "flex min-h-10 items-center text-sm font-medium transition-colors",
-                            overlay
-                              ? "text-white/68 hover:text-white"
-                              : "text-muted-foreground hover:text-primary"
+                            "grid gap-1 border-l pl-4",
+                            overlay ? "border-white/16" : "border-border/70"
                           )}
-                          href={child.href}
-                          prefetch={false}
-                          target={child.target || "_self"}
-                          rel={child.rel || undefined}
-                          onClick={() => setOpen(false)}
                         >
-                          {child.name}
-                        </I18nLink>
+                          {group.title && (
+                            <p
+                              className={cn(
+                                "pb-1 text-xs font-medium uppercase tracking-[0.14em]",
+                                overlay ? "text-white/44" : "text-muted-foreground"
+                              )}
+                            >
+                              {group.title}
+                            </p>
+                          )}
+                          {group.items.map((child) => (
+                            <I18nLink
+                              key={child.href}
+                              className={cn(
+                                "flex min-h-11 items-center gap-3 rounded-xl px-2 text-sm font-medium transition-colors",
+                                overlay
+                                  ? "text-white/68 hover:bg-white/8 hover:text-white"
+                                  : "text-muted-foreground hover:bg-muted/60 hover:text-primary"
+                              )}
+                              href={child.href}
+                              prefetch={false}
+                              target={child.target || "_self"}
+                              rel={child.rel || undefined}
+                              onClick={() => setOpen(false)}
+                            >
+                              {child.icon && (
+                                <span
+                                  className={cn(
+                                    "flex size-8 shrink-0 items-center justify-center rounded-lg",
+                                    overlay
+                                      ? "bg-white/8 text-white"
+                                      : "bg-muted text-foreground"
+                                  )}
+                                >
+                                  <DynamicIcon
+                                    name={child.icon}
+                                    className="size-4"
+                                    aria-hidden="true"
+                                  />
+                                </span>
+                              )}
+                              <span>{child.name}</span>
+                            </I18nLink>
+                          ))}
+                        </div>
                       ))}
                     </div>
                   ) : null}
