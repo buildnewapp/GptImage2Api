@@ -210,11 +210,6 @@ test("derives featured families from isHot in configured order", () => {
     "nano-banana",
     "seedream-image",
     "grok-imagine-image",
-    "seedance-2.0",
-    "seedance-2.5",
-    "minimax-h3",
-    "grok-imagine",
-    "gemini-omni",
   ]);
 });
 
@@ -612,7 +607,6 @@ test("exposes Seedance 2.5 as a selectable family", () => {
         modelId: "video:bytedance-seedance-2-5",
         description: "Create or edit video with multimodal reference assets.",
         isSpecial: true,
-        isHot: true,
       },
     ],
   });

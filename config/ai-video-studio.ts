@@ -107,7 +107,6 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         modelId: "video:bytedance-seedance-2-5",
         description: "Create or edit video with multimodal reference assets.",
         isSpecial: true,
-        isHot: true,
       },
     ],
   },
@@ -125,7 +124,6 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "minimax-h3",
         modelId: "video:minimax-h3-text-to-video",
         isSpecial: true,
-        isHot: true,
       },
       {
         key: "minimax-h3-image-to-video",
@@ -133,7 +131,6 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "minimax-h3",
         modelId: "video:minimax-h3-image-to-video",
         isSpecial: true,
-        isHot: true,
       },
       {
         key: "minimax-h3-reference-to-video",
@@ -141,7 +138,6 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "minimax-h3",
         modelId: "video:minimax-h3-reference-to-video",
         isSpecial: true,
-        isHot: true,
       },
     ],
   },
@@ -193,21 +189,18 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         label: "Grok Imagine Text to Video",
         familyKey: "grok-imagine",
         modelId: "video:fal-xai-grok-imagine-video-text-to-video",
-        isHot: true
       },
       {
         key: "fal-grok-imagine-image-to-video",
         label: "Grok Imagine Image to Video",
         familyKey: "grok-imagine",
         modelId: "video:fal-xai-grok-imagine-video-image-to-video",
-        isHot: true
       },
       {
         key: "fal-grok-imagine-1.5-image-to-video",
         label: "Grok Imagine 1.5 Image to Video",
         familyKey: "grok-imagine",
         modelId: "video:fal-xai-grok-imagine-video-v1-5-image-to-video",
-        isHot: true
       },
       {
         key: "fal-grok-imagine-reference-to-video",
@@ -244,7 +237,6 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "gemini-omni",
         modelId: "video:gemini-omni-video",
         isSpecial: true,
-        isHot: true
       },
       {
         key: "gemini-omni-character",
@@ -297,14 +289,12 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "seedance-2.0",
         modelId: "video:fal-bytedance-seedance-2-0-text-to-video",
         levelLimit: "pro",
-        isHot: true
       },
       {
         key: "fal-seedance-2.0-fast-text-to-video",
         label: "Seedance 2.0 Fast Text to Video",
         familyKey: "seedance-2.0",
         modelId: "video:fal-bytedance-seedance-2-0-fast-text-to-video",
-        isHot: true
       },
       {
         key: "fal-seedance-2.0-image-to-video",
