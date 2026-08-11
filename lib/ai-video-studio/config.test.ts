@@ -116,7 +116,6 @@ test("shows Meta Muse video and image models as coming soon", () => {
         modelId: "video:meta-muse-text-to-video",
         description: "Create video from a text prompt.",
         isSpecial: true,
-        isHot: true,
       },
       {
         key: "meta-muse-image-to-video",
@@ -125,7 +124,6 @@ test("shows Meta Muse video and image models as coming soon", () => {
         modelId: "video:meta-muse-image-to-video",
         description: "Animate a source image into video.",
         isSpecial: true,
-        isHot: true,
       },
       {
         key: "meta-muse-reference-to-video",
@@ -134,7 +132,6 @@ test("shows Meta Muse video and image models as coming soon", () => {
         modelId: "video:meta-muse-reference-to-video",
         description: "Create video guided by reference images.",
         isSpecial: true,
-        isHot: true,
       },
     ],
   });
@@ -153,7 +150,6 @@ test("shows Meta Muse video and image models as coming soon", () => {
         modelId: "image:meta-muse-text-to-image",
         description: "Create an image from a text prompt.",
         isSpecial: true,
-        isHot: true,
       },
       {
         key: "meta-muse-image-edit",
@@ -162,7 +158,6 @@ test("shows Meta Muse video and image models as coming soon", () => {
         modelId: "image:meta-muse-image-edit",
         description: "Edit an image with precise instructions.",
         isSpecial: true,
-        isHot: true,
       },
       {
         key: "meta-muse-multi-reference-image",
@@ -171,22 +166,25 @@ test("shows Meta Muse video and image models as coming soon", () => {
         modelId: "image:meta-muse-multi-reference-image",
         description: "Create an image from multiple reference images.",
         isSpecial: true,
-        isHot: true,
       },
     ],
   });
 
   const familyKeys = AI_VIDEO_STUDIO_FAMILIES.map((family) => family.key);
   assert.equal(
-    familyKeys.indexOf("meta-muse-video") < familyKeys.indexOf("grok-imagine"),
+    familyKeys.at(-1),
+    "meta-muse-image",
+  );
+  assert.equal(
+    familyKeys.indexOf("runway") < familyKeys.indexOf("pixverse-v6"),
     true,
   );
   assert.equal(
-    familyKeys.indexOf("runway") < familyKeys.indexOf("meta-muse-image"),
+    familyKeys.indexOf("pixverse-v6") < familyKeys.indexOf("meta-muse-video"),
     true,
   );
   assert.equal(
-    familyKeys.indexOf("meta-muse-image") < familyKeys.indexOf("nano-banana"),
+    familyKeys.indexOf("meta-muse-video") < familyKeys.indexOf("nano-banana"),
     true,
   );
 });

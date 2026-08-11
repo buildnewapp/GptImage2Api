@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-09T14:51:39.041Z",
+  "generatedAt": "2026-08-11T04:44:45.203Z",
   "items": [
     {
       "id": "chat:claude-fable-5",
@@ -18681,11 +18681,13 @@
               },
               "duration": {
                 "type": "integer",
-                "description": "Video duration in 4-30 seconds.\nSpecial values -1:\n Pass -1 for automatic duration selection — the model picks a suitable duration itself (for video-editing tasks, it matches the input video's length; for other task types, it selects within the valid range), instead of you specifying an exact value.",
+                "minimum": 4,
+                "maximum": 30,
                 "default": 5,
                 "examples": [
                   5
-                ]
+                ],
+                "description": "Video duration in seconds, from 4 to 30."
               },
               "output_format": {
                 "type": "string",
