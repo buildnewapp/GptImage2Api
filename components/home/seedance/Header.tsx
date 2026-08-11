@@ -44,7 +44,10 @@ const Header = () => {
   }, []);
 
   return (
-    <header className={cn("py-2 px-6 sticky top-0 z-50 transition-all duration-300", isScrolled ? "backdrop-blur-md bg-background/80" : "bg-transparent")}>
+    <header
+      data-site-header
+      className={cn("py-2 px-6 sticky top-0 z-50 transition-all duration-300", isScrolled ? "backdrop-blur-md bg-background/80" : "bg-transparent")}
+    >
       <nav className="flex justify-between items-center max-w-7xl mx-auto">
         <div className="flex items-center space-x-6 md:space-x-12">
           <Link href="/" className="flex items-center space-x-1" title="Seedance 2">

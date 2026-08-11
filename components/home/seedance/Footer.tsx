@@ -1,5 +1,4 @@
-
-
+import PartnerMarquee from "@/components/footer/PartnerMarquee";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
@@ -60,6 +59,7 @@ const Footer = () => {
             <div className="w-5 h-5 bg-gray-400 rounded-full opacity-50"></div>
           </div>
         </div>
+        <PartnerMarquee />
       </div>
     </footer>
   )

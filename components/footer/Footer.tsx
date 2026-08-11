@@ -1,5 +1,6 @@
 import BuiltWithButton from "@/components/BuiltWithButton";
 import { Newsletter } from "@/components/footer/Newsletter";
+import PartnerMarquee from "@/components/footer/PartnerMarquee";
 import { TwitterX } from "@/components/social-icons/icons";
 import { siteConfig } from "@/config/site";
 import { Link as I18nLink } from "@/i18n/routing";
@@ -221,6 +222,7 @@ export default async function Footer() {
               </Link>
             </div>
           </div>
+          <PartnerMarquee />
         </div>
       </footer>
     </div>

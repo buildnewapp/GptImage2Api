@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import BannerAd from "@/components/home/video/BannerAd";
 import {
   CompareSlider,
   SvgHeroPreview,
@@ -334,6 +335,7 @@ export default async function SvgTemplate({ locale }: { locale: string }) {
       <script type="application/ld+json">
         {JSON.stringify(t.raw("jsonLd"))}
       </script>
+      <BannerAd locale={locale} />
       <div className="min-h-screen w-full bg-white text-slate-950">
         <section className="relative overflow-hidden bg-white">
           <div className="pointer-events-none absolute inset-x-0 top-0 h-[520px] bg-[linear-gradient(180deg,#fff7fb_0%,rgba(255,255,255,0)_74%)]" />

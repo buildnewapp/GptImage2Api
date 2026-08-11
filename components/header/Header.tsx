@@ -19,7 +19,10 @@ const Header = async () => {
   const benefits = user ? await getUserBenefits(user.id) : null;
 
   return (
-    <header className="py-2 backdrop-blur-md sticky top-0 z-50">
+    <header
+      data-site-header
+      className="py-2 backdrop-blur-md sticky top-0 z-50"
+    >
       <nav className="flex justify-between items-center container max-w-8xl mx-auto">
         <div className="flex items-center space-x-6 md:space-x-12">
           <I18nLink

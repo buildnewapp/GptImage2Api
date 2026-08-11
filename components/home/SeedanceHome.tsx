@@ -4,6 +4,7 @@ import Features from "./seedance/Features";
 import AIVideoStudio from "@/components/ai/AIVideoStudio";
 import HomeJsonLd from "@/components/home/HomeJsonLd";
 import HomeStructuredRating from "@/components/home/HomeStructuredRating";
+import BannerAd from "@/components/home/video/BannerAd";
 import HowItWorks from "./seedance/HowItWorks";
 import { PricingByGroup } from "@/components/pricing";
 import Testimonials from "./seedance/Testimonials";
@@ -21,6 +22,7 @@ export default async function SeedanceHome({ locale }: { locale: string }) {
         description={t("description")}
         name={`${t("title")} AI Video Generator`}
       />
+      <BannerAd locale={locale} />
       <section className="w-full bg-slate-100 dark:bg-slate-900 py-16 md:py-20">
         <div className="container px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl text-center">

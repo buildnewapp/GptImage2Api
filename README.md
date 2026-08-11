@@ -29,6 +29,7 @@ git commit -m "update from upstream"
 /Users/syx/WebstormProjects/GptApi/GptApi-web
 /Users/syx/WebstormProjects/aitools/textlogo-web
 
+/Users/syx/WebstormProjects/sdanceai/seedance25-web
 /Users/syx/WebstormProjects/aimodels/aiexplainervideo-web
 /Users/syx/WebstormProjects/aimodels/aiugcvideo-web
 /Users/syx/WebstormProjects/aimodels/audiotovideoai-web

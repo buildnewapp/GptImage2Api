@@ -10,6 +10,7 @@ import FAQ from "@/components/home/template1/faq";
 import CTA from "@/components/home/template1/cta";
 import HomeJsonLd from "@/components/home/HomeJsonLd";
 import HomeStructuredRating from "@/components/home/HomeStructuredRating";
+import BannerAd from "@/components/home/video/BannerAd";
 import {LandingPage} from "@/types/template1";
 import {getTranslations} from "next-intl/server";
 
@@ -40,6 +41,7 @@ export default async function HomeTemplate1({ locale }: { locale: string }) {
             name={page.hero.title || "Nano Banana 2"}
           />
         )}
+        <BannerAd locale={locale} />
         {page.hero && <Hero hero={page.hero} />}
         {page.branding && <Branding section={page.branding} />}
         {page.introduce && <Feature1 section={page.introduce} />}
