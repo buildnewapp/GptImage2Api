@@ -3,8 +3,16 @@ import { ArrowRight, Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 
-const CTA = () => {
-  const t = useTranslations("Landing.CTA");
+type CTANamespace = "Landing.CTA" | "Seedance25.CTA";
+
+const CTA = ({
+  namespace = "Landing.CTA",
+  pageHref = "/seedance2",
+}: {
+  namespace?: CTANamespace;
+  pageHref?: string;
+}) => {
+  const t = useTranslations(namespace);
 
   return (
     <section className="py-20 relative overflow-hidden bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600">
@@ -20,7 +28,7 @@ const CTA = () => {
         </p>
         <div className="flex justify-center mb-12">
           <Link
-            href="/seedance2"
+            href={pageHref}
             className="group px-10 py-5 bg-white text-purple-600 font-bold rounded-full hover:bg-gray-50 transition-all duration-300 hover:scale-105 shadow-2xl hover:shadow-white/50 flex items-center gap-2 text-lg"
           >
             {t("button")}

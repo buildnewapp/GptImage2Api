@@ -100,7 +100,7 @@ export default function BannerAdClient({
             --promo-banner-height: ${visibleBanners.length * BANNER_HEIGHT_PX}px;
           }
 
-          [data-video-header-shell] {
+          [data-site-header] {
             top: var(--promo-banner-height);
           }
 

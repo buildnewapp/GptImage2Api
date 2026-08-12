@@ -15,16 +15,16 @@ import {
 } from "@/lib/seo/jsonld";
 
 test("builds canonical urls for default and non-default locales", () => {
-  assert.equal(buildCanonicalUrl({ locale: "en", path: "/templates/demo" }), "https://sdanceai.com/templates/demo");
-  assert.equal(buildCanonicalUrl({ locale: "zh", path: "/templates/demo" }), "https://sdanceai.com/zh/templates/demo");
+  assert.equal(buildCanonicalUrl({ locale: "en", path: "/templates/demo" }), "https://gptimage2api.net/templates/demo");
+  assert.equal(buildCanonicalUrl({ locale: "zh", path: "/templates/demo" }), "https://gptimage2api.net/zh/templates/demo");
 });
 
 test("builds alternate language urls with default locale as x-default", () => {
-  assert.deepEqual(buildAlternateLanguageUrls("/apidoc", ["en", "zh", "ja"]), {
-    "en-US": "https://sdanceai.com/apidoc",
-    "zh-CN": "https://sdanceai.com/zh/apidoc",
-    "ja-JP": "https://sdanceai.com/ja/apidoc",
-    "x-default": "https://sdanceai.com/apidoc",
+  assert.deepEqual(buildAlternateLanguageUrls("/docs/api", ["en", "zh", "ja"]), {
+    "en-US": "https://gptimage2api.net/docs/api",
+    "zh-CN": "https://gptimage2api.net/zh/docs/api",
+    "ja-JP": "https://gptimage2api.net/ja/docs/api",
+    "x-default": "https://gptimage2api.net/docs/api",
   });
 });
 

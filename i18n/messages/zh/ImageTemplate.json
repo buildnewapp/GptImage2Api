@@ -168,7 +168,7 @@
   "apiWorkflow": {
     "actions": [
       {
-        "href": "/apidoc",
+        "href": "/docs/api",
         "label": "查看 API 文档",
         "variant": "primary"
       },

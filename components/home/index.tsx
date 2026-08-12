@@ -4,6 +4,7 @@ import Features from "@/components/home/Features";
 import Hero from "@/components/home/Hero";
 import HomeJsonLd from "@/components/home/HomeJsonLd";
 import HomeStructuredRating from "@/components/home/HomeStructuredRating";
+import BannerAd from "@/components/home/video/BannerAd";
 import Testimonials from "@/components/home/Testimonials";
 import UseCases from "@/components/home/UseCases";
 import { PricingByGroup } from "@/components/pricing";
@@ -20,6 +21,7 @@ export default async function HomeComponent({ locale }: { locale: string }) {
         description={messages.Landing.Hero.description}
         name={`${messages.Landing.Hero.title} AI Video Generator`}
       />
+      <BannerAd locale={locale} />
       <BG1 />
 
       {messages.Landing.Hero && <Hero />}

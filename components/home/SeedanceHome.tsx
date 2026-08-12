@@ -4,6 +4,7 @@ import Features from "./seedance/Features";
 import AIVideoStudio from "@/components/ai/AIVideoStudio";
 import HomeJsonLd from "@/components/home/HomeJsonLd";
 import HomeStructuredRating from "@/components/home/HomeStructuredRating";
+import BannerAd from "@/components/home/video/BannerAd";
 import HowItWorks from "./seedance/HowItWorks";
 import { PricingByGroup } from "@/components/pricing";
 import Testimonials from "./seedance/Testimonials";
@@ -11,8 +12,23 @@ import UseCases from "./seedance/UseCases";
 import VideoShowcase from "./seedance/VideoShowcase";
 import { getTranslations } from "next-intl/server";
 
-export default async function SeedanceHome({ locale }: { locale: string }) {
-  const t = await getTranslations({ locale, namespace: "Landing.Hero" });
+type SeedanceHomeNamespace = "Landing" | "Seedance25";
+
+export default async function SeedanceHome({
+  locale,
+  namespace = "Landing",
+  initialModelId,
+  pageHref = "/seedance2",
+}: {
+  locale: string;
+  namespace?: SeedanceHomeNamespace;
+  initialModelId?: string;
+  pageHref?: string;
+}) {
+  const t = await getTranslations({
+    locale,
+    namespace: `${namespace}.Hero`,
+  });
 
   return (
     <div className="min-h-screen bg-background flex flex-col w-full">
@@ -21,6 +37,7 @@ export default async function SeedanceHome({ locale }: { locale: string }) {
         description={t("description")}
         name={`${t("title")} AI Video Generator`}
       />
+      <BannerAd locale={locale} />
       <section className="w-full bg-slate-100 dark:bg-slate-900 py-16 md:py-20">
         <div className="container px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl text-center">
@@ -33,16 +50,19 @@ export default async function SeedanceHome({ locale }: { locale: string }) {
           </div>
         </div>
       </section>
-      <AIVideoStudio />
-      <VideoShowcase />
-      <Features />
-      <UseCases />
-      <HowItWorks />
+      <AIVideoStudio initialModelId={initialModelId} />
+      <VideoShowcase namespace={`${namespace}.VideoShowcase`} />
+      <Features namespace={`${namespace}.Features`} />
+      <UseCases namespace={`${namespace}.UseCases`} pageHref={pageHref} />
+      <HowItWorks
+        namespace={`${namespace}.HowItWorks`}
+        pageHref={pageHref}
+      />
       {/*<Testimonials />*/}
       <PricingByGroup locale={locale} />
-      <FAQ />
+      <FAQ namespace={`${namespace}.FAQ`} />
       <HomeStructuredRating className="my-6" locale={locale} />
-      <CTA />
+      <CTA namespace={`${namespace}.CTA`} pageHref={pageHref} />
     </div>
   );
 }

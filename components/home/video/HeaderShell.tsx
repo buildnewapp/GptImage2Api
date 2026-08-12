@@ -132,6 +132,7 @@ export default function HeaderShell({
 
   return (
     <header
+      data-site-header
       data-video-header-shell
       data-header-contrast-mode={overlay ? "overlay" : "default"}
       className={cn(

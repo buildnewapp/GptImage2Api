@@ -168,7 +168,7 @@
   "apiWorkflow": {
     "actions": [
       {
-        "href": "/apidoc",
+        "href": "/docs/api",
         "label": "API ドキュメントを見る",
         "variant": "primary"
       },

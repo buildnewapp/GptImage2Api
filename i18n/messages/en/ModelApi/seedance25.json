@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "title": "Seedance 2.5 API",
+    "description": "Test and integrate Seedance 2.5 API for 4–30 second multimodal AI video generation and editing with native audio."
+  },
+  "title": "Seedance 2.5 API",
+  "badge": "Multimodal video API",
+  "description": [
+    "Seedance 2.5 is ByteDance's unified multimodal video model for creating or reshaping 4–30 second clips from text, images, video, and audio references.",
+    "Use the live playground to validate prompts, reference assets, native audio, duration, resolution, and the exact request payload before integrating the same workflow into your product."
+  ],
+  "monitor": {
+    "label": "24h Status Monitor"
+  },
+  "pricingNote": "USD estimates use $0.005/credit with the best annual plan. Video-reference requests include both input and output duration in billing.",
+  "labels": {
+    "apiDocs": "API docs",
+    "apiDocsDetail": "View detailed API docs",
+    "apiDocsDetailDescription": "Open the complete documentation for authentication, request fields, task polling, pricing, and response payloads.",
+    "apiInputDescription": "Review the active Seedance 2.5 schema before sending the same payload from your application.",
+    "apiInputKicker": "API Input",
+    "apiInputTitle": "Seedance 2.5 request fields",
+    "descriptionColumn": "Description",
+    "fieldColumn": "Field",
+    "lowestCostPrefix": "Lowest cost starts at",
+    "modelType": "Model Type:",
+    "pricingTitle": "Pricing",
+    "requestJson": "Request JSON",
+    "runWithApi": "Run with API",
+    "selectedModel": "Selected model",
+    "selectedModelNote": "The playground, sample request, fields, and pricing on this page follow the selected Seedance 2.5 model.",
+    "typeColumn": "Type",
+    "useModelForGeneration": "Use {model} for generation"
+  },
+  "featuresKicker": "Capabilities",
+  "featuresTitle": "Create and edit with one Seedance 2.5 API",
+  "featuresDescription": "Direct the subject, movement, camera, timing, and sound with compatible reference assets, then retrieve the finished render through an asynchronous task workflow.",
+  "capabilities": [
+    {
+      "icon": "layers",
+      "title": "Up to 50 references",
+      "description": "Use up to 30 images, 10 video clips, and 10 audio files in a compatible multimodal reference workflow."
+    },
+    {
+      "icon": "video",
+      "title": "4–30 second output",
+      "description": "Choose a precise output duration for short ads, social stories, product sequences, and cinematic concepts."
+    },
+    {
+      "icon": "sparkles",
+      "title": "Reference-led editing",
+      "description": "Guide an existing clip toward new motion, performance, camera treatment, pacing, or visual direction."
+    },
+    {
+      "icon": "music",
+      "title": "Native audio",
+      "description": "Generate synchronized dialogue, ambience, effects, and music, or guide the result with audio references."
+    }
+  ],
+  "quickStartKicker": "Quick Start",
+  "quickStartTitle": "From model test to production request",
+  "quickStartDescription": "Validate the exact Seedance 2.5 workflow in three steps before moving it into your application.",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. Build the payload",
+      "description": "Add a prompt, choose first/last frames or compatible multimodal references, then set duration, ratio, resolution, and audio."
+    },
+    {
+      "icon": "key",
+      "title": "2. Create the task",
+      "description": "Send the model ID and payload to the generation endpoint with your SdanceAI API key."
+    },
+    {
+      "icon": "play",
+      "title": "3. Poll the result",
+      "description": "Track the asynchronous task until it succeeds, then save or display the returned MP4 or MOV URL."
+    }
+  ],
+  "useCasesKicker": "Use Cases",
+  "useCasesTitle": "What to build with Seedance 2.5 API",
+  "useCasesDescription": "Use one model for original generation, reference-driven variation, and video reshaping across repeatable product workflows.",
+  "useCases": [
+    "Product launches and performance ad variations",
+    "Dialogue-led creator and virtual character clips",
+    "Brand-consistent social campaign production",
+    "Storyboard, film, and game pre-visualization",
+    "Music videos and beat-directed sequences",
+    "Reference-led video editing and continuation"
+  ],
+  "communityShowcase": {
+    "kicker": "Community Showcase",
+    "title": "Successful Seedance 2.5 generations from the community",
+    "description": "Browse public Seedance 2.5 outputs that completed successfully, then inspect the prompt, settings, and result for each case.",
+    "viewAll": "View more",
+    "viewDetails": "View details"
+  },
+  "productionKicker": "Production Notes",
+  "productionTitle": "Designed for real application workflows",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "Account and credit controls",
+      "body": "Tasks use your existing SdanceAI account, API key, credit balance, visibility settings, and generation history."
+    },
+    {
+      "icon": "image",
+      "title": "Two reference modes",
+      "body": "Use first and last frames together, or use compatible image, video, and audio reference arrays; these modes cannot be combined in one request."
+    },
+    {
+      "icon": "zap",
+      "title": "Usage-based pricing",
+      "body": "Credits depend on resolution, output duration, and whether video input is present; video-reference billing includes input duration."
+    }
+  ],
+  "faqKicker": "FAQ",
+  "faqTitle": "Seedance 2.5 API questions",
+  "faqs": [
+    {
+      "question": "What is Seedance 2.5 API best for?",
+      "answer": "It is best for multimodal video creation and editing where a product needs repeatable control over subjects, motion, camera language, timing, and native audio."
+    },
+    {
+      "question": "Which input types can I use?",
+      "answer": "You can send a prompt, optional first and last frames, or compatible arrays of image, video, and audio references. First/last-frame mode cannot be combined with the multimodal reference arrays."
+    },
+    {
+      "question": "How many reference assets are supported?",
+      "answer": "The current Seedance 2.5 schema supports up to 30 reference images, 10 reference videos, and 10 reference audio files in the compatible reference workflow."
+    },
+    {
+      "question": "What duration and resolution can I request?",
+      "answer": "Output duration can be set from 4 to 30 seconds. The current model supports 480p and 720p output with common landscape, portrait, square, ultrawide, and adaptive aspect ratios."
+    },
+    {
+      "question": "Can Seedance 2.5 generate audio?",
+      "answer": "Yes. Enable native audio for synchronized dialogue, ambience, sound effects, and music. Compatible audio files can also be included as references."
+    },
+    {
+      "question": "Can I edit an existing video?",
+      "answer": "Yes. Add a reference video and describe the performance, motion, camera, timing, or visual treatment you want the new render to follow."
+    },
+    {
+      "question": "How do I receive the finished video?",
+      "answer": "Create an asynchronous task, then poll the task endpoint using the returned task ID. A successful response includes the generated media URL."
+    },
+    {
+      "question": "Can I use Seedance 2.5 API commercially?",
+      "answer": "The page supports commercial workflows. You remain responsible for your rights to prompts and reference media and should review the applicable plan and content-policy terms before production use."
+    }
+  ],
+  "cta": {
+    "kicker": "Start building",
+    "title": "Add Seedance 2.5 to your video workflow",
+    "description": "Test a prompt and references in the playground, inspect the generated request, then integrate the same model through the API.",
+    "primaryLabel": "Open Seedance 2.5",
+    "secondaryLabel": "Review API features",
+    "stats": [
+      {
+        "value": "API-ready",
+        "label": "workflow"
+      },
+      {
+        "value": "4–30s",
+        "label": "output duration"
+      },
+      {
+        "value": "50",
+        "label": "maximum references"
+      }
+    ]
+  }
+}

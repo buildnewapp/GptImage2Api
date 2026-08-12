@@ -69,6 +69,7 @@ type ModelApiSwitcherProps = {
     label: string;
   };
   pricingNote: string;
+  title: string;
   versions: ModelApiVersionPanel[];
 };
 
@@ -124,6 +125,7 @@ export function ModelApiSwitcher({
   labels,
   monitor,
   pricingNote,
+  title,
   versions,
 }: ModelApiSwitcherProps) {
   const [selectedVersionKey, setSelectedVersionKey] = useState(
@@ -153,7 +155,7 @@ export function ModelApiSwitcher({
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
                     <h1 className="break-words text-[clamp(2rem,4vw,3.35rem)] font-bold leading-tight tracking-normal text-foreground">
-                      <span className="whitespace-nowrap">{family.key}</span>
+                      <span>{title}</span>
                     </h1>
                     <span className="inline-flex rounded-full border border-primary/24 bg-primary/8 px-4 py-2 text-sm font-medium text-primary">
                       {badge}

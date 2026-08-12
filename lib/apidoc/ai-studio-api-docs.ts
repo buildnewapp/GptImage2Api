@@ -24,9 +24,7 @@ export type ApiDocEndpoint = {
 };
 
 export type AiVideoStudioModelOption = {
-  familyKey: string;
   familyLabel: string;
-  versionKey: string;
   versionLabel: string;
   modelId: string;
 };
@@ -34,15 +32,13 @@ export type AiVideoStudioModelOption = {
 export const aiVideoStudioModelOptions: AiVideoStudioModelOption[] = AI_VIDEO_STUDIO_FAMILIES.flatMap(
   (family) =>
     family.versions.map((version) => ({
-      familyKey: family.key,
       familyLabel: family.label,
-      versionKey: version.key,
       versionLabel: version.label,
       modelId: version.modelId,
     })),
 );
 
-export const aiVideoStudioModelIds = aiVideoStudioModelOptions.map(
+const aiVideoStudioModelIds = aiVideoStudioModelOptions.map(
   (model) => model.modelId,
 );
 

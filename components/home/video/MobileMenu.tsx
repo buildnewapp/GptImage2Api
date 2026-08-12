@@ -12,7 +12,17 @@ import { authClient } from "@/lib/auth/auth-client";
 import { user as userSchema } from "@/lib/db/schema";
 import { cn } from "@/lib/utils";
 import type { HeaderLink } from "@/types/common";
-import { BookOpen, Gift, GraduationCap, LogOut, Menu, Newspaper, Sparkles, X } from "lucide-react";
+import {
+  BookOpen,
+  ChevronDown,
+  Gift,
+  GraduationCap,
+  LogOut,
+  Menu,
+  Newspaper,
+  Sparkles,
+  X,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -169,6 +179,7 @@ export default function VideoMobileMenu({
   user,
 }: VideoMobileMenuProps) {
   const [open, setOpen] = useState(false);
+  const [expandedLink, setExpandedLink] = useState<string | null>(null);
   const router = useRouter();
   const tHome = useTranslations("Home");
   const tHeader = useTranslations("Header");
@@ -205,35 +216,125 @@ export default function VideoMobileMenu({
       {open ? (
         <div
           className={cn(
-            "fixed inset-x-0 top-20 z-40 w-full border-t shadow-[0_28px_42px_-34px_rgba(15,23,42,0.65)] backdrop-blur-xl md:hidden",
+            "fixed inset-x-0 top-20 z-40 max-h-[calc(100dvh-5rem)] w-full overflow-y-auto border-t shadow-[0_28px_42px_-34px_rgba(15,23,42,0.65)] backdrop-blur-xl md:hidden",
             overlay
               ? "border-white/12 bg-[rgba(2,8,23,0.92)] text-white"
               : "border-border/70 bg-white dark:bg-[#0c0a08]"
           )}
         >
           <div className="container mx-auto space-y-4 px-4 py-5">
-            {topLinks.map((link, index) => (
-              <I18nLink
-                key={link.href}
-                className={cn(
-                  "block text-sm font-semibold uppercase tracking-[0.16em] transition-colors",
-                  index === 0
-                    ? overlay
-                      ? "text-white"
-                      : "text-primary hover:text-primary"
-                    : overlay
-                      ? "text-white/68 hover:text-white"
-                      : "text-muted-foreground hover:text-primary"
-                )}
-                href={link.href}
-                prefetch={false}
-                target={link.target || "_self"}
-                rel={link.rel || undefined}
-                onClick={() => setOpen(false)}
-              >
-                {link.name}
-              </I18nLink>
-            ))}
+            {topLinks.map((link, index) =>
+              link.items?.length || link.groups?.length ? (
+                <div key={link.name}>
+                  <button
+                    type="button"
+                    className={cn(
+                      "flex w-full items-center gap-2 text-left text-sm font-semibold uppercase tracking-[0.16em] transition-colors",
+                      overlay
+                        ? "text-white/68 hover:text-white"
+                        : "text-muted-foreground hover:text-primary"
+                    )}
+                    aria-expanded={expandedLink === link.name}
+                    onClick={() =>
+                      setExpandedLink((current) =>
+                        current === link.name ? null : link.name
+                      )
+                    }
+                  >
+                    <span>{link.name}</span>
+                    <ChevronDown
+                      className={cn(
+                        "h-4 w-4 transition-transform duration-200",
+                        expandedLink === link.name && "rotate-180"
+                      )}
+                    />
+                  </button>
+
+                  {expandedLink === link.name ? (
+                    <div className="mt-2 grid gap-3">
+                      {(link.groups?.length
+                        ? link.groups
+                        : [{ title: "", items: link.items ?? [] }]
+                      ).map((group, groupIndex) => (
+                        <div
+                          key={group.title || groupIndex}
+                          className={cn(
+                            "grid gap-1 border-l pl-4",
+                            overlay ? "border-white/16" : "border-border/70"
+                          )}
+                        >
+                          {group.title && (
+                            <p
+                              className={cn(
+                                "pb-1 text-xs font-medium uppercase tracking-[0.14em]",
+                                overlay ? "text-white/44" : "text-muted-foreground"
+                              )}
+                            >
+                              {group.title}
+                            </p>
+                          )}
+                          {group.items.map((child) => (
+                            <I18nLink
+                              key={child.href}
+                              className={cn(
+                                "flex min-h-11 items-center gap-3 rounded-xl px-2 text-sm font-medium transition-colors",
+                                overlay
+                                  ? "text-white/68 hover:bg-white/8 hover:text-white"
+                                  : "text-muted-foreground hover:bg-muted/60 hover:text-primary"
+                              )}
+                              href={child.href}
+                              prefetch={false}
+                              target={child.target || "_self"}
+                              rel={child.rel || undefined}
+                              onClick={() => setOpen(false)}
+                            >
+                              {child.icon && (
+                                <span
+                                  className={cn(
+                                    "flex size-8 shrink-0 items-center justify-center rounded-lg",
+                                    overlay
+                                      ? "bg-white/8 text-white"
+                                      : "bg-muted text-foreground"
+                                  )}
+                                >
+                                  <DynamicIcon
+                                    name={child.icon}
+                                    className="size-4"
+                                    aria-hidden="true"
+                                  />
+                                </span>
+                              )}
+                              <span>{child.name}</span>
+                            </I18nLink>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              ) : (
+                <I18nLink
+                  key={link.href}
+                  className={cn(
+                    "block text-sm font-semibold uppercase tracking-[0.16em] transition-colors",
+                    index === 0
+                      ? overlay
+                        ? "text-white"
+                        : "text-primary hover:text-primary"
+                      : overlay
+                        ? "text-white/68 hover:text-white"
+                        : "text-muted-foreground hover:text-primary"
+                  )}
+                  href={link.href}
+                  prefetch={false}
+                  target={link.target || "_self"}
+                  rel={link.rel || undefined}
+                  onClick={() => setOpen(false)}
+                >
+                  {link.name}
+                </I18nLink>
+              )
+            )}
 
             <div className="flex gap-2">
               <VideoLocaleSwitcher

@@ -249,7 +249,11 @@ function buildRequestExample(
   detail: RuntimeCatalogItem | null | undefined,
   version: AiVideoStudioVersion,
 ) {
-  if (detail?.examplePayload) {
+  if (
+    detail?.examplePayload &&
+    typeof detail.examplePayload === "object" &&
+    Object.keys(detail.examplePayload).length > 0
+  ) {
     return JSON.stringify(omitCallbackUrl(detail.examplePayload), null, 2);
   }
 
@@ -261,7 +265,7 @@ function buildRequestExample(
       input: {
         prompt: "A cinematic product reveal with smooth orbit camera movement",
         reference_image_urls: ["https://example.com/product.png"],
-        "reference_video_urls ": [],
+        reference_video_urls: [],
         reference_audio_urls: [],
         generate_audio: true,
         resolution: "720p",
@@ -457,6 +461,7 @@ export async function ModelApiPage({
         labels={content.labels}
         monitor={content.monitor}
         pricingNote={content.pricingNote}
+        title={content.title}
         versions={versions}
       />
 

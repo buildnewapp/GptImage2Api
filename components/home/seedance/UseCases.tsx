@@ -4,8 +4,16 @@ import { Layers, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 
-const UseCases = () => {
-  const t = useTranslations("Landing.UseCases");
+type UseCasesNamespace = "Landing.UseCases" | "Seedance25.UseCases";
+
+const UseCases = ({
+  namespace = "Landing.UseCases",
+  pageHref = "/seedance2",
+}: {
+  namespace?: UseCasesNamespace;
+  pageHref?: string;
+}) => {
+  const t = useTranslations(namespace);
 
   const staticCases = [
     {
@@ -113,7 +121,7 @@ const UseCases = () => {
 
         <div className="text-center mt-16">
           <p className="text-gray-600 dark:text-slate-400 mb-6 text-lg">Ready to explore your use case?</p>
-          <Link href="/seedance2" className="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-full hover:shadow-xl hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 cursor-pointer inline-block">
+          <Link href={pageHref} className="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-full hover:shadow-xl hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 cursor-pointer inline-block">
             {t("button")}
           </Link>
         </div>

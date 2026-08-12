@@ -33,6 +33,8 @@ export default getRequestConfig(async ({ requestLocale }) => {
         .default,
       VideoTemplate: (await import(`./messages/${locale}/VideoTemplate.json`))
         .default,
+      Seedance25: (await import(`./messages/${locale}/Seedance25.json`))
+        .default,
       // prettier-ignore
       ImageTemplate: (await import(`./messages/${locale}/ImageTemplate.json`)).default,
       SvgTemplate: (await import(`./messages/${locale}/SvgTemplate.json`))
@@ -40,6 +42,9 @@ export default getRequestConfig(async ({ requestLocale }) => {
       ToolHome: (await import(`./messages/${locale}/ToolHome.json`)).default,
       ApiDoc: (await import(`./messages/${locale}/ApiDoc.json`)).default,
       ModelApi: {
+        seedance25: (
+          await import(`./messages/${locale}/ModelApi/seedance25.json`)
+        ).default,
         seedance2: (
           await import(`./messages/${locale}/ModelApi/seedance2.json`)
         ).default,

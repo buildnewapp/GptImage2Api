@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "title": "Seedance 2.5 API",
+    "description": "4〜30 秒のマルチモーダル AI 動画生成・編集とネイティブ音声に対応した Seedance 2.5 API をテストして統合できます。"
+  },
+  "title": "Seedance 2.5 API",
+  "badge": "マルチモーダル動画 API",
+  "description": [
+    "Seedance 2.5 は ByteDance の統合マルチモーダル動画モデルです。テキスト、画像、動画、音声を参照し、4〜30 秒の動画を生成・再構成できます。",
+    "このページの Playground でプロンプト、参照素材、ネイティブ音声、尺、解像度、実際の payload を確認してから、同じワークフローを製品に統合できます。"
+  ],
+  "monitor": {
+    "label": "24時間ステータス"
+  },
+  "pricingNote": "USD 見積もりは最適な年額プランの $0.005/クレジットで計算します。動画参照では入力と出力の両方の尺が課金対象です。",
+  "labels": {
+    "apiDocs": "API ドキュメント",
+    "apiDocsDetail": "API 詳細ドキュメントを見る",
+    "apiDocsDetailDescription": "認証、リクエストフィールド、タスクのポーリング、料金、レスポンス payload の完全な仕様を確認できます。",
+    "apiInputDescription": "アプリから送信する前に、現在の Seedance 2.5 schema を確認できます。",
+    "apiInputKicker": "API 入力",
+    "apiInputTitle": "Seedance 2.5 リクエストフィールド",
+    "descriptionColumn": "説明",
+    "fieldColumn": "フィールド",
+    "lowestCostPrefix": "最低コスト",
+    "modelType": "モデルタイプ:",
+    "pricingTitle": "料金",
+    "requestJson": "Request JSON",
+    "runWithApi": "API で実行",
+    "selectedModel": "選択中モデル",
+    "selectedModelNote": "Playground、サンプルリクエスト、フィールド、料金は選択中の Seedance 2.5 モデルに連動します。",
+    "typeColumn": "型",
+    "useModelForGeneration": "{model} で生成"
+  },
+  "featuresKicker": "Capabilities",
+  "featuresTitle": "ひとつの Seedance 2.5 API で生成と編集",
+  "featuresDescription": "対応する参照素材で被写体、動き、カメラ、タイミング、音を演出し、非同期タスクから完成動画を取得します。",
+  "capabilities": [
+    {
+      "icon": "layers",
+      "title": "最大 50 個の参照素材",
+      "description": "対応するマルチモーダル参照では、最大 30 枚の画像、10 本の動画、10 本の音声を利用できます。"
+    },
+    {
+      "icon": "video",
+      "title": "4〜30 秒の出力",
+      "description": "広告、SNS ストーリー、製品動画、シネマティックなコンセプトに合わせて尺を指定できます。"
+    },
+    {
+      "icon": "sparkles",
+      "title": "参照ベースの編集",
+      "description": "既存の動画を使って、動き、演技、カメラ処理、テンポ、ビジュアル方向を新たに導けます。"
+    },
+    {
+      "icon": "music",
+      "title": "ネイティブ音声",
+      "description": "同期した台詞、環境音、効果音、音楽を生成し、音声参照で結果を誘導できます。"
+    }
+  ],
+  "quickStartKicker": "Quick Start",
+  "quickStartTitle": "モデルテストから本番リクエストへ",
+  "quickStartDescription": "Seedance 2.5 のワークフローを 3 ステップで確認してからアプリへ組み込めます。",
+  "workflows": [
+    {
+      "icon": "code",
+      "title": "1. payload を作成",
+      "description": "プロンプト、先頭・末尾フレームまたは対応するマルチモーダル参照を追加し、尺、比率、解像度、音声を設定します。"
+    },
+    {
+      "icon": "key",
+      "title": "2. タスクを作成",
+      "description": "SdanceAI API キーを付け、モデル ID と payload を生成エンドポイントへ送信します。"
+    },
+    {
+      "icon": "play",
+      "title": "3. 結果をポーリング",
+      "description": "非同期タスクを完了まで追跡し、返された MP4 または MOV の URL を保存・表示します。"
+    }
+  ],
+  "useCasesKicker": "Use Cases",
+  "useCasesTitle": "Seedance 2.5 API で構築できるもの",
+  "useCasesDescription": "ひとつのモデルで新規生成、参照ベースのバリエーション、動画の再構成を繰り返し実行できます。",
+  "useCases": [
+    "製品ローンチとパフォーマンス広告のバリエーション",
+    "台詞中心のクリエイター・バーチャルキャラクター動画",
+    "ブランドを統一した SNS キャンペーン制作",
+    "映画、ゲーム、ストーリーボードのプリビズ",
+    "ミュージックビデオとビート主導のシーケンス",
+    "参照ベースの動画編集と続きを描く生成"
+  ],
+  "communityShowcase": {
+    "kicker": "Community Showcase",
+    "title": "コミュニティの Seedance 2.5 成功事例",
+    "description": "正常に完了した公開 Seedance 2.5 出力を確認し、各事例のプロンプト、設定、結果を詳しく見られます。",
+    "viewAll": "もっと見る",
+    "viewDetails": "詳細を見る"
+  },
+  "productionKicker": "Production Notes",
+  "productionTitle": "実際のアプリケーション運用向け",
+  "productionNotes": [
+    {
+      "icon": "shield",
+      "title": "アカウントとクレジット管理",
+      "body": "既存の SdanceAI アカウント、API キー、クレジット残高、公開設定、生成履歴をそのまま利用します。"
+    },
+    {
+      "icon": "image",
+      "title": "2 つの参照モード",
+      "body": "先頭・末尾フレームの組み合わせ、または画像・動画・音声の参照配列を利用できます。この 2 モードは同じリクエストで併用できません。"
+    },
+    {
+      "icon": "zap",
+      "title": "使用量ベースの料金",
+      "body": "クレジットは解像度、出力尺、動画入力の有無で決まり、動画参照では入力動画の尺も含まれます。"
+    }
+  ],
+  "faqKicker": "FAQ",
+  "faqTitle": "Seedance 2.5 API FAQ",
+  "faqs": [
+    {
+      "question": "Seedance 2.5 API は何に向いていますか？",
+      "answer": "被写体、動き、カメラ表現、タイミング、ネイティブ音声を繰り返し制御したいマルチモーダル動画生成・編集に向いています。"
+    },
+    {
+      "question": "どの入力形式を利用できますか？",
+      "answer": "プロンプト、任意の先頭・末尾フレーム、または対応する画像・動画・音声の参照配列を送信できます。先頭・末尾フレームと参照配列は併用できません。"
+    },
+    {
+      "question": "参照素材は最大何個までですか？",
+      "answer": "現在の Seedance 2.5 schema では、対応する参照ワークフローで最大 30 枚の画像、10 本の動画、10 本の音声を利用できます。"
+    },
+    {
+      "question": "指定できる尺と解像度は？",
+      "answer": "出力尺は 4〜30 秒です。現在は 480p と 720p に対応し、横長、縦長、正方形、超横長、自動のアスペクト比を選べます。"
+    },
+    {
+      "question": "Seedance 2.5 は音声も生成できますか？",
+      "answer": "はい。ネイティブ音声を有効にすると、同期した台詞、環境音、効果音、音楽を生成できます。対応する音声ファイルを参照として使うこともできます。"
+    },
+    {
+      "question": "既存の動画を編集できますか？",
+      "answer": "はい。参照動画を追加し、新しい出力で再現したい演技、動き、カメラ、タイミング、ビジュアル処理を説明します。"
+    },
+    {
+      "question": "完成した動画はどう受け取りますか？",
+      "answer": "非同期タスクを作成し、返されたタスク ID でステータスをポーリングします。成功レスポンスに生成メディアの URL が含まれます。"
+    },
+    {
+      "question": "Seedance 2.5 API は商用利用できますか？",
+      "answer": "このページは商用ワークフローに対応しています。プロンプトと参照素材の権利を確認し、本番利用前にプランとコンテンツポリシーの条件をご確認ください。"
+    }
+  ],
+  "cta": {
+    "kicker": "Start building",
+    "title": "Seedance 2.5 を動画ワークフローへ",
+    "description": "Playground でプロンプトと参照素材を試し、生成されたリクエストを確認してから同じモデルを API で統合できます。",
+    "primaryLabel": "Seedance 2.5 を開く",
+    "secondaryLabel": "API 機能を見る",
+    "stats": [
+      {
+        "value": "API ready",
+        "label": "workflow"
+      },
+      {
+        "value": "4〜30秒",
+        "label": "出力尺"
+      },
+      {
+        "value": "50個",
+        "label": "参照素材の上限"
+      }
+    ]
+  }
+}

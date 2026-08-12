@@ -5,13 +5,20 @@ export interface HeaderLink {
   target?: string;
   rel?: string;
   items?: HeaderLink[];
+  groups?: HeaderLinkGroup[];
+  icon?: string;
   description?: string;
+}
+
+export interface HeaderLinkGroup {
+  title: string;
+  items: HeaderLink[];
 }
 
 export interface FooterLink {
   title: string;
   links: Link[];
-};
+}
 
 interface Link {
   id?: string;
@@ -20,4 +27,4 @@ interface Link {
   target?: string;
   rel?: string;
   useA?: boolean;
-};
+}

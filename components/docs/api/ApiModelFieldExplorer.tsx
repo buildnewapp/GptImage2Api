@@ -2,11 +2,6 @@
 
 import { collectApiFieldDocs } from "@/components/ai/AIVideoStudioApiDocs";
 import {
-  moduleCardClass,
-  sectionKickerClass,
-  subsectionTitleClass,
-} from "@/components/home/video/constants";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -16,8 +11,7 @@ import {
 import CopyButton from "@/components/shared/CopyButton";
 import type { AiStudioPublicDocDetail } from "@/lib/ai-studio/public";
 import type { AiVideoStudioModelOption } from "@/lib/apidoc/ai-studio-api-docs";
-import { cn } from "@/lib/utils";
-import { FileJson, Loader2, Sparkles } from "lucide-react";
+import { ChevronDown, FileJson, Loader2, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 
@@ -27,7 +21,7 @@ type DetailResponse = {
   error?: string;
 };
 
-export default function ApiDocModelFieldExplorer({
+export default function ApiModelFieldExplorer({
   modelOptions,
   siteUrl,
   copyLabel,
@@ -135,18 +129,15 @@ export default function ApiDocModelFieldExplorer({
   return (
     <div
       id="dynamic-payload-fields-by-model"
-      className={cn(
-        moduleCardClass,
-        "min-w-0 cursor-default rounded-[1.5rem] p-5 sm:rounded-[2rem] sm:p-6",
-      )}
+      className="min-w-0 rounded-2xl border border-border/70 bg-card/80 p-5 shadow-sm sm:p-6"
     >
-      <div className={cn(sectionKickerClass, "mb-5")}>
+      <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
         <Sparkles className="h-4 w-4" />
         {t("modelSchema.kicker")}
       </div>
-      <h3 className={cn(subsectionTitleClass, "text-[1.6rem]")}>
+      <h2 className="text-xl font-semibold tracking-tight">
         {t("modelSchema.title")}
-      </h3>
+      </h2>
       <p className="mt-3 text-sm leading-6 text-muted-foreground">
         {t("modelSchema.description", {
           modelId: modelIdToken,
@@ -221,16 +212,14 @@ export default function ApiDocModelFieldExplorer({
                   key={field.key}
                   className="group min-w-0 rounded-xl border border-border/60 bg-background/60 px-4 py-3"
                 >
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3">
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                     <span className="break-all font-mono text-xs text-foreground">
                       {field.title}
                     </span>
-                    <span className="text-xs text-muted-foreground group-open:hidden">
-                      +
-                    </span>
-                    <span className="hidden text-xs text-muted-foreground group-open:inline">
-                      -
-                    </span>
+                    <ChevronDown
+                      className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180 motion-reduce:transition-none"
+                      aria-hidden="true"
+                    />
                   </summary>
                   {field.description ? (
                     <div className="mt-1 break-words text-xs leading-5 text-muted-foreground">

@@ -13,8 +13,16 @@ const ASSET_PATH = "/sdanceai";
 // Generate initial pool of 50 IDs
 const ALL_VIDEO_IDS = Array.from({ length: 50 }, (_, i) => i + 1);
 
-const VideoShowcase = () => {
-  const t = useTranslations("Landing.VideoShowcase");
+type VideoShowcaseNamespace =
+  | "Landing.VideoShowcase"
+  | "Seedance25.VideoShowcase";
+
+const VideoShowcase = ({
+  namespace = "Landing.VideoShowcase",
+}: {
+  namespace?: VideoShowcaseNamespace;
+}) => {
+  const t = useTranslations(namespace);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [videos, setVideos] = useState<{ video: string, poster: string }[]>([]);
 
