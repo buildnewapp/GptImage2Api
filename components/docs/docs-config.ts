@@ -15,7 +15,7 @@ export type DocsNavGroup = {
 };
 
 export const API_DOCS_SLUGS = [
-  "api-overview",
+  "api",
   "api-authentication",
   "api-generate",
   "api-models",
@@ -90,7 +90,7 @@ const DOCS_ITEM_COPY: Record<
       description: "最初の AI 動画を作成し、基本的な生成手順を学びます。",
     },
   },
-  "api-overview": {
+  api: {
     en: {
       title: "API overview",
       description:

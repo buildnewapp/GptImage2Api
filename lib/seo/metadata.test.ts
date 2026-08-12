@@ -20,11 +20,11 @@ test("builds canonical urls for default and non-default locales", () => {
 });
 
 test("builds alternate language urls with default locale as x-default", () => {
-  assert.deepEqual(buildAlternateLanguageUrls("/apidoc", ["en", "zh", "ja"]), {
-    "en-US": "https://sdanceai.com/apidoc",
-    "zh-CN": "https://sdanceai.com/zh/apidoc",
-    "ja-JP": "https://sdanceai.com/ja/apidoc",
-    "x-default": "https://sdanceai.com/apidoc",
+  assert.deepEqual(buildAlternateLanguageUrls("/docs/api", ["en", "zh", "ja"]), {
+    "en-US": "https://sdanceai.com/docs/api",
+    "zh-CN": "https://sdanceai.com/zh/docs/api",
+    "ja-JP": "https://sdanceai.com/ja/docs/api",
+    "x-default": "https://sdanceai.com/docs/api",
   });
 });
 

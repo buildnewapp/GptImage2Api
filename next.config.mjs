@@ -8,6 +8,16 @@ const nextConfig = {
   output: "standalone",
   redirects: async () => [
     {
+      source: "/:locale(en)?/apidoc",
+      destination: "/docs/api",
+      statusCode: 301,
+    },
+    {
+      source: "/:locale(zh|ja)/apidoc",
+      destination: "/:locale/docs/api",
+      statusCode: 301,
+    },
+    {
       source: "/dashboard",
       destination: "/dashboard/settings",
       permanent: true,

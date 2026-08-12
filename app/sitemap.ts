@@ -49,11 +49,10 @@ const STATIC_PAGE_CONFIG: StaticPageConfig[] = [
   { path: "/prompts", priority: 0.8, changeFrequency: "weekly" },
   { path: "/pricing", priority: 0.8, changeFrequency: "weekly" },
   { path: "/share-to-reddit", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/apidoc", priority: 0.8, changeFrequency: "weekly" },
   { path: "/docs", priority: 0.8, changeFrequency: "weekly" },
   ...DOCS_SLUGS.map((slug) => ({
     path: `/docs/${slug}`,
-    priority: slug.startsWith("api-") ? 0.8 : 0.7,
+    priority: slug === "api" || slug.startsWith("api-") ? 0.8 : 0.7,
     changeFrequency: "weekly" as const,
   })),
   { path: "/seedance-2-5", priority: 0.7, changeFrequency: "weekly" },

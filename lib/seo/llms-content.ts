@@ -307,7 +307,7 @@ function getKeyPages() {
     },
     {
       name: copy.labels.apiDocs,
-      href: "/apidoc",
+      href: "/docs/api",
       description: copy.descriptions.apiDocs,
     },
     {
@@ -354,7 +354,7 @@ function getLocalizedKeyPages(locale: string) {
     },
     {
       name: copy.labels.apiDocs,
-      href: "/apidoc",
+      href: "/docs/api",
       description: copy.descriptions.apiDocs,
     },
     {

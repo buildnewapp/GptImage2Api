@@ -26,11 +26,73 @@ import ApiEndpointReference, {
   type ApiDocTableCopy,
 } from "./ApiEndpointReference";
 import ApiModelFieldExplorer from "./ApiModelFieldExplorer";
+import ApiPlayground from "./ApiPlayground";
 
 type CtaLink = {
   label: string;
   href: string;
 };
+
+type ApiPlaygroundConfig = {
+  method: "GET" | "POST";
+  initialPath: string;
+  initialBody?: string;
+  consumesCredits?: boolean;
+};
+
+function getPlaygroundConfig(slug: ApiDocsSlug): ApiPlaygroundConfig {
+  if (slug === "api-generate") {
+    return {
+      method: "POST",
+      initialPath: "/api/ai-studio/execute",
+      initialBody: JSON.stringify(
+        {
+          modelId: "video:sora2-text-to-video-standard",
+          isPublic: true,
+          payload: {
+            model: "video:sora2-text-to-video-standard",
+            input: {
+              prompt: "A cinematic video of a cat walking in the rain",
+            },
+          },
+        },
+        null,
+        2,
+      ),
+      consumesCredits: true,
+    };
+  }
+
+  if (slug === "api-models") {
+    const modelId =
+      aiVideoStudioModelOptions[0]?.modelId ??
+      "video:sora2-text-to-video-standard";
+
+    return {
+      method: "GET",
+      initialPath: `/api/ai-studio/models/${encodeURIComponent(modelId)}`,
+    };
+  }
+
+  if (slug === "api-task-status") {
+    return {
+      method: "GET",
+      initialPath: "/api/ai-studio/tasks/{taskId}",
+    };
+  }
+
+  if (slug === "api-history") {
+    return {
+      method: "GET",
+      initialPath: "/api/ai-studio/video-history?page=1&limit=12&status=all",
+    };
+  }
+
+  return {
+    method: "GET",
+    initialPath: "/api/auth/user",
+  };
+}
 
 function PageHeader({
   title,
@@ -99,8 +161,14 @@ export default async function ApiDocsArticle({
     codeLabels,
     t: tr,
   };
+  const playgroundConfig = getPlaygroundConfig(slug);
+  const playground = (
+    <div className="mb-8">
+      <ApiPlayground locale={locale} {...playgroundConfig} />
+    </div>
+  );
 
-  if (slug === "api-overview") {
+  if (slug === "api") {
     const flow = t.raw("flow.steps") as string[];
     const overviewLinks = [
       {
@@ -139,6 +207,7 @@ export default async function ApiDocsArticle({
     return (
       <article className="min-w-0">
         <PageHeader title={item.title} description={item.description} />
+        {playground}
 
         <section className="rounded-2xl border border-border/70 bg-card/80 p-5 shadow-sm sm:p-6">
           <div className="flex items-start gap-3">
@@ -239,6 +308,7 @@ export default async function ApiDocsArticle({
     return (
       <article className="min-w-0">
         <PageHeader title={item.title} description={item.description} />
+        {playground}
         <section className="mb-8 rounded-2xl border border-border/70 bg-card/80 p-5 shadow-sm sm:p-6">
           <div className="flex items-start gap-3">
             <KeyRound
@@ -288,6 +358,7 @@ export default async function ApiDocsArticle({
     return (
       <article className="min-w-0">
         <PageHeader title={item.title} description={item.description} />
+        {playground}
         <ApiEndpointReference endpoint={endpoint} {...endpointProps} />
         <div className="mt-6 rounded-xl border border-primary/25 bg-primary/[0.07] p-4 text-sm leading-6 text-muted-foreground">
           {t("parameters.payload")} {" "}
@@ -306,6 +377,7 @@ export default async function ApiDocsArticle({
     return (
       <article className="min-w-0">
         <PageHeader title={item.title} description={item.description} />
+        {playground}
         <section className="mb-8 rounded-2xl border border-border/70 bg-card/80 p-5 shadow-sm sm:p-6">
           <div className="flex items-center gap-2">
             <FileJson className="h-5 w-5 text-primary" aria-hidden="true" />
@@ -357,6 +429,7 @@ export default async function ApiDocsArticle({
     return (
       <article className="min-w-0">
         <PageHeader title={item.title} description={item.description} />
+        {playground}
         <section className="mb-8 rounded-2xl border border-border/70 bg-card/80 p-5 shadow-sm sm:p-6">
           <h2 className="text-xl font-semibold">{t("statuses.title")}</h2>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -390,6 +463,7 @@ export default async function ApiDocsArticle({
     return (
       <article className="min-w-0">
         <PageHeader title={item.title} description={item.description} />
+        {playground}
         <ApiEndpointReference endpoint={endpoint} {...endpointProps} />
       </article>
     );
@@ -405,6 +479,7 @@ export default async function ApiDocsArticle({
   return (
     <article className="min-w-0">
       <PageHeader title={item.title} description={item.description} />
+      {playground}
       <section className="rounded-2xl border border-border/70 bg-card/80 p-5 shadow-sm sm:p-6">
         <div className="flex items-center gap-2">
           <CircleDollarSign

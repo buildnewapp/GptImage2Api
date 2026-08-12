@@ -498,7 +498,7 @@
               {
                 "name": "Seedance 2.5",
                 "href": "/seedance-2-5",
-                "icon": "Sparkles"
+                "icon": "AudioWaveform"
               },
               {
                 "name": "Seedance 2",
@@ -518,7 +518,7 @@
               {
                 "name": "Seedance 2.5 API",
                 "href": "/seedance-2-5-api",
-                "icon": "Braces"
+                "icon": "Brackets"
               },
               {
                 "name": "Seedance 2 API",
@@ -639,7 +639,7 @@
               "name": "定价"
             },
             {
-              "href": "/apidoc",
+              "href": "/docs/api",
               "name": "API 文档"
             },
             {

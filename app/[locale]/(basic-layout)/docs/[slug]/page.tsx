@@ -17,7 +17,7 @@ import { constructMetadata } from "@/lib/metadata";
 import fs from "fs/promises";
 import type { Metadata } from "next";
 import { MDXRemote } from "next-mdx-remote-client/rsc";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import path from "path";
 import remarkGfm from "remark-gfm";
 
@@ -88,6 +88,11 @@ export async function generateMetadata({
 
 export default async function DocsPage({ params }: { params: Params }) {
   const { locale, slug } = await params;
+
+  if (slug === "api-overview") {
+    const localePrefix = locale === DEFAULT_LOCALE ? "" : `/${locale}`;
+    permanentRedirect(`${localePrefix}/docs/api`);
+  }
 
   if (!isDocsSlug(slug)) {
     notFound();
