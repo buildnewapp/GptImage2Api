@@ -5,11 +5,31 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Locale } from "@/i18n/routing";
+import { constructMetadata } from "@/lib/metadata";
 import { Mail } from "lucide-react";
+import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import UnsubscribeForm from "./UnsubscribeForm";
 
+type Params = Promise<{ locale: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  const { locale } = await params;
+
+  return constructMetadata({
+    title: "Unsubscribe from newsletter",
+    description: "Manage your newsletter subscription.",
+    locale: locale as Locale,
+    path: "/unsubscribe/newsletter",
+    noIndex: true,
+  });
+}
 
 async function validateToken(token: string, locale: string) {
   try {
