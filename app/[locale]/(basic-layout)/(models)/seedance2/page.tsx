@@ -26,5 +26,5 @@ export default async function Seedance2Page({
 }: PageProps) {
   const { locale } = await params;
 
-  return <SeedanceHome locale={locale} />;
+  return <SeedanceHome locale={locale} jsonLdPath="/seedance2" />;
 }

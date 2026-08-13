@@ -29,5 +29,5 @@ export default async function Seedance15Page({
 }: PageProps) {
   const { locale } = await params;
 
-  return <Seedance15Home locale={locale} />;
+  return <Seedance15Home locale={locale} jsonLdPath="/seedance-15" />;
 }
