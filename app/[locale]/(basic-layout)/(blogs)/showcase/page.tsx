@@ -29,6 +29,7 @@ type SearchParams = Promise<{ page?: string | string[] }>;
 
 type MetadataProps = {
   params: Params;
+  searchParams: SearchParams;
 };
 
 function parsePositiveInt(value: string | string[] | undefined, fallback: number) {
@@ -78,15 +79,21 @@ function buildPageHref(page: number) {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: MetadataProps): Promise<Metadata> {
-  const { locale } = await params;
+  const [{ locale }, resolvedSearchParams] = await Promise.all([
+    params,
+    searchParams,
+  ]);
   const t = await getTranslations({ locale, namespace: "Showcase" });
+  const page = parsePositiveInt(resolvedSearchParams.page, 1);
 
   return constructMetadata({
     title: t("list.title"),
     description: t("list.description"),
     locale: locale as Locale,
     path: "/showcase",
+    canonicalUrl: buildPageHref(page),
   });
 }
 
