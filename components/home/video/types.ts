@@ -147,6 +147,7 @@ export interface VideoTemplatePricingPlan {
   approx?: string;
   billed?: string;
   checkoutPlan?: VideoTemplateCheckoutPlan;
+  currency?: string;
   credits?: string;
   cta: string;
   description?: string;
@@ -155,6 +156,7 @@ export interface VideoTemplatePricingPlan {
   highlightText?: string;
   icon: string;
   name: string;
+  offerPrice?: string;
   price: string;
   originalPrice?: string;
   priceSuffix?: string;
@@ -162,9 +164,11 @@ export interface VideoTemplatePricingPlan {
 
 export interface VideoTemplateCreditPack {
   checkoutPlan?: VideoTemplateCheckoutPlan;
+  currency?: string;
   cta: string;
   description?: string;
   highlightText?: string;
+  offerPrice?: string;
   price: string;
   title: string;
 }

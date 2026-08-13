@@ -287,6 +287,7 @@ function mapRecurringPlan(
     accent,
     billed: formatBilled(plan, copy),
     checkoutPlan: buildCheckoutPlan(plan),
+    currency: plan.currency ?? undefined,
     credits: formatCredits(
       plan.benefitsJsonb as PricingBenefits | undefined,
       locale,
@@ -304,6 +305,7 @@ function mapRecurringPlan(
       localizedPlan.highlightText ?? plan.highlightText ?? undefined,
     icon: iconByAccent[accent],
     name: localizedPlan.cardTitle ?? plan.cardTitle,
+    offerPrice: plan.price ?? undefined,
     originalPrice:
       plan.groupSlug === "annual"
         ? (matchingMonthlyLocalizedPlan?.displayPrice ??
@@ -335,11 +337,13 @@ function mapOneTimePlan(
 
   return {
     checkoutPlan: buildCheckoutPlan(plan),
+    currency: plan.currency ?? undefined,
     cta: localizedPlan.buttonText ?? plan.buttonText ?? "Buy Now",
     description:
       localizedPlan.cardDescription ?? plan.cardDescription ?? undefined,
     highlightText:
       localizedPlan.highlightText ?? plan.highlightText ?? undefined,
+    offerPrice: plan.price ?? undefined,
     price: localizedPlan.displayPrice ?? plan.displayPrice ?? "",
     title: creditTitle ?? localizedPlan.cardTitle ?? plan.cardTitle,
   };

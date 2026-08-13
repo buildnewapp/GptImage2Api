@@ -52,7 +52,7 @@ export default async function VideoTemplate({ locale }: { locale: string }) {
     <div className={pageShellClass + " -mt-20 w-full overflow-x-hidden"}>
       <TemplateJsonLd
         locale={locale}
-        pricingNamespace="VideoPricing"
+        pricing={page.pricing}
         templateName="VideoTemplate"
       />
       {/*<Header />*/}
