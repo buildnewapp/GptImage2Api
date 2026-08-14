@@ -34,6 +34,7 @@ export default async function Seedance25Page({ params }: PageProps) {
       locale={locale}
       namespace="Seedance25"
       initialModelId="video:bytedance-seedance-2-5"
+      jsonLdPath="/seedance-2-5"
       pageHref="/seedance-2-5"
     />
   );

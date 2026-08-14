@@ -4,7 +4,6 @@ import type {
   VideoTemplateFaq,
   VideoTemplateHero,
   VideoTemplatePricing,
-  VideoTemplateTestimonials,
 } from "@/components/home/video/types";
 import { siteConfig } from "@/config/site";
 import { buildCanonicalUrl } from "@/lib/seo/metadata";
@@ -15,7 +14,7 @@ import {
 
 interface TemplateJsonLdProps {
   locale?: string;
-  pricingNamespace?: string;
+  pricing: VideoTemplatePricing;
   templateName: string;
 }
 
@@ -26,30 +25,14 @@ function normalizeOfferPrice(price: string) {
 
 export default async function TemplateJsonLd({
   locale: providedLocale,
-  pricingNamespace,
+  pricing,
   templateName,
 }: TemplateJsonLdProps) {
   const locale = providedLocale ?? (await getLocale());
   const t = await getTranslations({ locale, namespace: templateName });
-  const pricingT = pricingNamespace
-    ? await getTranslations({ locale, namespace: pricingNamespace })
-    : null;
-  const structuredData = await getTranslations({
-    locale,
-    namespace: "StructuredData",
-  });
   const hero = t.raw("hero") as VideoTemplateHero;
   const faq = t.raw("faq") as VideoTemplateFaq;
-  const pricing = (
-    pricingT ? pricingT.raw("section") : t.raw("pricing")
-  ) as VideoTemplatePricing;
-  const testimonials = t.raw("testimonials") as VideoTemplateTestimonials;
-  const rating = structuredData.raw("rating") as {
-    bestRating: string;
-    count: string;
-    value: string;
-    worstRating: string;
-  };
+  const rating = siteConfig.structuredData?.rating;
   const canonicalUrl = buildCanonicalUrl({
     locale,
     path: "/",
@@ -59,21 +42,27 @@ export default async function TemplateJsonLd({
     path: "/pricing",
   });
   const faqJsonLd = buildFaqJsonLd(faq.items);
+  const recurringPlans = [
+    ...(pricing.monthlyPlans ?? []),
+    ...(pricing.yearlyPlans?.length ? pricing.yearlyPlans : pricing.plans),
+  ];
   const offerSources = [
-    ...(pricing.plans ?? []),
+    ...recurringPlans,
     ...(pricing.creditPacks ?? []),
   ];
   const offers = offerSources
     .map((offer) => {
-      const price = normalizeOfferPrice(offer.price);
-      if (!price) {
+      const price = normalizeOfferPrice(offer.offerPrice ?? offer.price);
+      const priceCurrency =
+        offer.currency ?? siteConfig.structuredData?.priceCurrency;
+      if (!price || !priceCurrency) {
         return null;
       }
 
       return {
         name: "name" in offer ? offer.name : offer.title,
         price,
-        priceCurrency: "USD",
+        priceCurrency,
         url: pricingUrl,
       };
     })
@@ -87,12 +76,22 @@ export default async function TemplateJsonLd({
     (value): value is string => typeof value === "string" && value.startsWith("http"),
   );
   const supportEmail = siteConfig.socialLinks?.email?.trim();
+  const productName = siteConfig.name.trim() || hero.modelLabel;
+  const productDescription = siteConfig.description?.trim() || hero.description;
+  const configuredImage =
+    siteConfig.structuredData?.image ??
+    siteConfig.icons.apple ??
+    siteConfig.icons.shortcut ??
+    siteConfig.icons.icon;
+  const productImage = configuredImage.startsWith("http")
+    ? configuredImage
+    : `${siteConfig.url}${configuredImage.startsWith("/") ? configuredImage : `/${configuredImage}`}`;
   const organizationJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: siteConfig.name,
     url: siteConfig.url,
-    logo: `${siteConfig.url}/logo.png`,
+    logo: productImage,
     ...(supportEmail ? { email: `mailto:${supportEmail}` } : {}),
     ...(socialLinks.length > 0 ? { sameAs: socialLinks } : {}),
   };
@@ -102,52 +101,70 @@ export default async function TemplateJsonLd({
     name: siteConfig.name,
     url: canonicalUrl,
     inLanguage: locale,
-    description: hero.description,
+    description: productDescription,
   };
   const softwareApplicationJsonLd = buildSoftwareApplicationJsonLd({
-    name: `${hero.modelLabel} AI Video Generator`,
-    description: hero.description,
+    name: productName,
+    description: productDescription,
     url: canonicalUrl,
     inLanguage: locale,
-    logo: `${siteConfig.url}/logo.png`,
+    logo: productImage,
+    applicationCategory:
+      siteConfig.structuredData?.applicationCategory,
+    operatingSystem: siteConfig.structuredData?.operatingSystem,
     offers,
-    aggregateRating: {
-      ratingValue: rating.value,
-      ratingCount: rating.count,
-      bestRating: rating.bestRating,
-      worstRating: rating.worstRating,
-    },
-    reviews: testimonials.items.map((item) => ({
-      authorName: item.name,
-      reviewBody: item.quote,
-      ratingValue: 5,
-      bestRating: 5,
-      worstRating: 1,
-    })),
-  });
-  const productJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: `${hero.modelLabel} AI Video Generator`,
-    description: hero.description,
-    brand: {
-      "@type": "Brand",
-      name: siteConfig.name,
-    },
-    url: canonicalUrl,
-    ...(offers.length > 0
+    aggregateRating: rating
       ? {
-          offers: offers.map((offer) => ({
-            "@type": "Offer",
-            name: offer.name,
-            price: offer.price,
-            priceCurrency: offer.priceCurrency,
-            url: offer.url,
-            availability: "https://schema.org/InStock",
-          })),
+          ratingValue: rating.value,
+          ratingCount: rating.count,
+          bestRating: rating.bestRating,
+          worstRating: rating.worstRating,
         }
-      : {}),
-  };
+      : undefined,
+  });
+  const productJsonLd =
+    offers.length > 0 || rating
+      ? {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "@id": `${canonicalUrl}#product`,
+          name: productName,
+          description: productDescription,
+          image: productImage,
+          brand: {
+            "@type": "Brand",
+            name: siteConfig.name,
+          },
+          url: canonicalUrl,
+          ...(rating
+            ? {
+                aggregateRating: {
+                  "@type": "AggregateRating",
+                  ratingValue: rating.value,
+                  ratingCount: rating.count,
+                  ...(rating.bestRating
+                    ? { bestRating: rating.bestRating }
+                    : {}),
+                  ...(rating.worstRating
+                    ? { worstRating: rating.worstRating }
+                    : {}),
+                },
+              }
+            : {}),
+          ...(offers.length > 0
+            ? {
+                offers: offers.map((offer) => ({
+                  "@type": "Offer",
+                  name: offer.name,
+                  price: offer.price,
+                  priceCurrency: offer.priceCurrency,
+                  url: offer.url,
+                  availability: "https://schema.org/InStock",
+                })),
+              }
+            : {}),
+        }
+      : null;
 
   return (
     <>
@@ -169,12 +186,14 @@ export default async function TemplateJsonLd({
           __html: JSON.stringify(softwareApplicationJsonLd),
         }}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(productJsonLd),
-        }}
-      />
+      {productJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(productJsonLd),
+          }}
+        />
+      )}
       {faqJsonLd && (
         <script
           type="application/ld+json"

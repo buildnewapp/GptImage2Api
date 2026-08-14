@@ -18,11 +18,13 @@ export default async function SeedanceHome({
   locale,
   namespace = "Landing",
   initialModelId,
+  jsonLdPath = "/",
   pageHref = "/seedance2",
 }: {
   locale: string;
   namespace?: SeedanceHomeNamespace;
   initialModelId?: string;
+  jsonLdPath?: string;
   pageHref?: string;
 }) {
   const t = await getTranslations({
@@ -36,6 +38,7 @@ export default async function SeedanceHome({
         locale={locale}
         description={t("description")}
         name={`${t("title")} AI Video Generator`}
+        path={jsonLdPath}
       />
       <BannerAd locale={locale} />
       <section className="w-full bg-slate-100 dark:bg-slate-900 py-16 md:py-20">

@@ -17,6 +17,7 @@ export async function generateMetadata({ params }: PageProps) {
     path: "/payment/nowpayments",
     title: "NOWPayments",
     description: "Choose a plan and pay with crypto through NOWPayments.",
+    noIndex: true,
   });
 }
 

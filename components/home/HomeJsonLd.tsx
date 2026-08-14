@@ -9,6 +9,7 @@ type HomeJsonLdProps = {
   description: string;
   locale?: string;
   name: string;
+  path?: string;
 };
 
 type StructuredDataRating = {
@@ -23,12 +24,13 @@ export default async function HomeJsonLd({
   description,
   locale: providedLocale,
   name,
+  path = "/",
 }: HomeJsonLdProps) {
   const locale = providedLocale ?? (await getLocale());
   const t = await getTranslations({ locale, namespace: "StructuredData" });
   const canonicalUrl = buildCanonicalUrl({
     locale,
-    path: "/",
+    path,
   });
   const rating = t.raw("rating") as StructuredDataRating;
   const organizationJsonLd = {
@@ -77,12 +79,14 @@ export default async function HomeJsonLd({
           __html: JSON.stringify(organizationJsonLd),
         }}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(websiteJsonLd),
-        }}
-      />
+      {path === "/" && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteJsonLd),
+          }}
+        />
+      )}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

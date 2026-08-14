@@ -11,7 +11,13 @@ import Seedance15Overview from "./seedance15/Overview";
 import Seedance15UseCases from "./seedance15/UseCases";
 import { getTranslations } from "next-intl/server";
 
-export default async function Seedance15Home({ locale }: { locale: string }) {
+export default async function Seedance15Home({
+  locale,
+  jsonLdPath = "/",
+}: {
+  locale: string;
+  jsonLdPath?: string;
+}) {
   const t = await getTranslations({ locale, namespace: "Seedance15.Hero" });
 
   return (
@@ -20,6 +26,7 @@ export default async function Seedance15Home({ locale }: { locale: string }) {
         locale={locale}
         description={t("description")}
         name="SdanceAI AI Video Studio"
+        path={jsonLdPath}
       />
       <BannerAd locale={locale} />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.05)_1px,transparent_1px)] [background-size:38px_38px] dark:bg-[linear-gradient(rgba(34,211,238,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.1)_1px,transparent_1px)]" />

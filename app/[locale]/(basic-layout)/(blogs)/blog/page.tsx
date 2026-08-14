@@ -27,19 +27,26 @@ type SearchParams = Promise<{ page?: string | string[] }>;
 
 type MetadataProps = {
   params: Params;
+  searchParams: SearchParams;
 };
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: MetadataProps): Promise<Metadata> {
-  const { locale } = await params;
+  const [{ locale }, resolvedSearchParams] = await Promise.all([
+    params,
+    searchParams,
+  ]);
   const t = await getTranslations({ locale, namespace: "Blogs" });
+  const page = parsePositiveInt(resolvedSearchParams.page, 1);
 
   return constructMetadata({
     title: t("title"),
     description: t("description"),
     locale: locale as Locale,
     path: `/blog`,
+    canonicalUrl: buildBlogPageHref(page),
   });
 }
 

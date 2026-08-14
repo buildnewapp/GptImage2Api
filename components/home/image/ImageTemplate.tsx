@@ -49,7 +49,11 @@ export default async function ImageTemplate({ locale }: { locale: string }) {
 
   return (
     <div className={pageShellClass + " -mt-20 w-full overflow-x-hidden"}>
-      <TemplateJsonLd locale={locale} templateName="ImageTemplate" />
+      <TemplateJsonLd
+        locale={locale}
+        pricing={page.pricing}
+        templateName="ImageTemplate"
+      />
       {/*<Header />*/}
       <BannerAd locale={locale} />
       <Hero hero={page.hero} />

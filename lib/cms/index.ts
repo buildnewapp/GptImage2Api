@@ -114,7 +114,7 @@ export function createCmsModule(postType: PostType) {
       // Dynamic import to avoid loading in non-CF environments during build
       const { getBlogPostBySlug } = await import('./blog-data-loader');
       const post = getBlogPostBySlug(slug, locale);
-      if (post && post.status !== 'draft') {
+      if (post && post.status === 'published') {
         return mapLocalFileToPostBase(post, post.content, locale);
       }
     } catch (error) {
@@ -157,7 +157,7 @@ export function createCmsModule(postType: PostType) {
               const localSlug = (data.slug || '').replace(/^\//, '').replace(/\/$/, '');
               const targetSlug = slug.replace(/^\//, '').replace(/\/$/, '');
 
-              if (localSlug === targetSlug && data.status !== 'draft') {
+              if (localSlug === targetSlug && data.status === 'published') {
                 return {
                   post: mapLocalFileToPostBase(data, content, locale),
                   error: undefined,
@@ -307,7 +307,7 @@ export function createCmsModule(postType: PostType) {
     try {
       const { getBlogPostBySlug } = await import('./blog-data-loader');
       const post = getBlogPostBySlug(slug, locale);
-      if (post && post.status !== 'draft') {
+      if (post && post.status === 'published') {
         return {
           title: post.title,
           description: post.description || null,
@@ -351,7 +351,7 @@ export function createCmsModule(postType: PostType) {
               const localSlug = (data.slug || '').replace(/^\//, '').replace(/\/$/, '');
               const targetSlug = slug.replace(/^\//, '').replace(/\/$/, '');
 
-              if (localSlug === targetSlug && data.status !== 'draft') {
+              if (localSlug === targetSlug && data.status === 'published') {
                 return {
                   metadata: {
                     title: data.title,

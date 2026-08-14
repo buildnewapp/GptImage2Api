@@ -24,17 +24,29 @@ function parsePage(value: string) {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Params;
+  searchParams: SearchParams;
 }): Promise<Metadata> {
-  const { locale } = await params;
+  const [{ locale }, resolvedSearchParams] = await Promise.all([
+    params,
+    searchParams,
+  ]);
   const t = await getTranslations({ locale, namespace: "Prompts" });
+  const q = getSearchParamValue(resolvedSearchParams.q).trim();
+  const category = getSearchParamValue(resolvedSearchParams.category).trim();
+  const model = getSearchParamValue(resolvedSearchParams.model).trim();
+  const page = parsePage(getSearchParamValue(resolvedSearchParams.page));
+  const hasFilters = Boolean(q || category || model);
 
   return constructMetadata({
     title: t("list.title"),
     description: t("list.description"),
     locale: locale as Locale,
     path: "/prompts",
+    canonicalUrl: page > 1 ? `/prompts?page=${page}` : "/prompts",
+    noIndex: hasFilters,
   });
 }
 

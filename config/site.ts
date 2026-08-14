@@ -40,6 +40,18 @@ export const siteConfig: SiteConfig = {
     { media: '(prefers-color-scheme: dark)', color: 'black' },
   ],
   defaultNextTheme: 'light', // next-theme option: system | dark | light
+  structuredData: {
+    applicationCategory: "MultimediaApplication",
+    image: "/logo.png",
+    operatingSystem: "Web",
+    priceCurrency: "USD",
+    rating: {
+      bestRating: 5,
+      count: 76,
+      value: 4.8,
+      worstRating: 1,
+    },
+  },
   icons: {
     icon: "/favicon.ico",
     shortcut: "/logo.png",
