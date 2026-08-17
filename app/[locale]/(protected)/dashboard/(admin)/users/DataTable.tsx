@@ -11,7 +11,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { getUsers, GetUsersResult } from "@/actions/users/admin";
+import {
+  getUsers,
+  type AdminManualBenefitPlan,
+  type GetUsersResult,
+} from "@/actions/users/admin";
 import { AdminPagination } from "@/components/shared/AdminPagination";
 import { Input } from "@/components/ui/input";
 import {
@@ -26,6 +30,7 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
+import { BatchManualBenefitDialog } from "./BatchManualBenefitDialog";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -33,6 +38,7 @@ interface DataTableProps<TData, TValue> {
   initialPageCount: number;
   pageSize: number;
   totalCount: number;
+  manualBenefitPlans: AdminManualBenefitPlan[];
 }
 
 export function DataTable<TData, TValue>({
@@ -41,6 +47,7 @@ export function DataTable<TData, TValue>({
   initialPageCount,
   pageSize,
   totalCount: initialTotalCount,
+  manualBenefitPlans,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -130,13 +137,14 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
         <Input
           placeholder="Search by Email, Name..."
           value={globalFilter ?? ""}
           onChange={(event) => setGlobalFilter(event.target.value)}
           className="max-w-sm"
         />
+        <BatchManualBenefitDialog plans={manualBenefitPlans} />
       </div>
       <div className="relative min-h-[200px] max-h-[calc(100vh-200px)] overflow-auto rounded-md border">
         {isLoading && (
