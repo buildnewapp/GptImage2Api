@@ -1,4 +1,4 @@
-import { getUsers } from "@/actions/users/admin";
+import { getAdminManualBenefitPlans, getUsers } from "@/actions/users/admin";
 import { constructMetadata } from "@/lib/metadata";
 import { Loader2 } from "lucide-react";
 import { Metadata } from "next";
@@ -35,7 +35,10 @@ export async function generateMetadata({
 const PAGE_SIZE = 20;
 
 async function UsersTable() {
-  const initialData = await getUsers({ pageIndex: 0, pageSize: PAGE_SIZE });
+  const [initialData, manualBenefitPlans] = await Promise.all([
+    getUsers({ pageIndex: 0, pageSize: PAGE_SIZE }),
+    getAdminManualBenefitPlans(),
+  ]);
 
   return (
     <DataTable
@@ -46,6 +49,9 @@ async function UsersTable() {
       )}
       pageSize={PAGE_SIZE}
       totalCount={initialData.data?.totalCount || 0}
+      manualBenefitPlans={
+        manualBenefitPlans.success ? manualBenefitPlans.data || [] : []
+      }
     />
   );
 }

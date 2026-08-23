@@ -111,6 +111,12 @@ export type AdminManualBenefitPlan = {
   benefitsJsonb: unknown;
 };
 
+export type AdminManualBenefitRecipient = {
+  id: string;
+  email: string;
+  name: string | null;
+};
+
 const DEFAULT_PAGE_SIZE = 20;
 
 const SetUserPasswordSchema = z.object({
@@ -126,6 +132,89 @@ const UpdateUserRoleSchema = z.object({
 const ArchiveDeletedUserSchema = z.object({
   userId: z.string().uuid(),
 });
+
+const FindManualBenefitRecipientSchema = z.object({
+  email: z.string().trim().email().max(254),
+});
+
+export async function getAdminManualBenefitPlans(): Promise<
+  ActionResult<AdminManualBenefitPlan[]>
+> {
+  if (!(await isAdmin())) {
+    return actionResponse.forbidden("Admin privileges required.");
+  }
+
+  const db = getDb();
+
+  try {
+    const plans = await db
+      .select({
+        id: pricingPlansSchema.id,
+        cardTitle: pricingPlansSchema.cardTitle,
+        provider: pricingPlansSchema.provider,
+        paymentType: pricingPlansSchema.paymentType,
+        recurringInterval: pricingPlansSchema.recurringInterval,
+        price: pricingPlansSchema.price,
+        currency: pricingPlansSchema.currency,
+        displayPrice: pricingPlansSchema.displayPrice,
+        benefitsJsonb: pricingPlansSchema.benefitsJsonb,
+      })
+      .from(pricingPlansSchema)
+      .where(
+        and(
+          eq(pricingPlansSchema.isActive, true),
+          eq(pricingPlansSchema.environment, "live"),
+        ),
+      )
+      .orderBy(
+        asc(pricingPlansSchema.environment),
+        asc(pricingPlansSchema.displayOrder),
+        asc(pricingPlansSchema.cardTitle),
+      );
+
+    return actionResponse.success(plans);
+  } catch (error) {
+    console.error("Error fetching manual benefit plans:", error);
+    return actionResponse.error(getErrorMessage(error));
+  }
+}
+
+export async function findManualBenefitRecipient(input: {
+  email: string;
+}): Promise<ActionResult<AdminManualBenefitRecipient>> {
+  if (!(await isAdmin())) {
+    return actionResponse.forbidden("Admin privileges required.");
+  }
+
+  const parsed = FindManualBenefitRecipientSchema.safeParse(input);
+  if (!parsed.success) {
+    return actionResponse.badRequest("请输入有效的用户邮箱。");
+  }
+
+  const normalizedEmail = parsed.data.email.toLowerCase();
+  const db = getDb();
+
+  try {
+    const [recipient] = await db
+      .select({
+        id: userSchema.id,
+        email: userSchema.email,
+        name: userSchema.name,
+      })
+      .from(userSchema)
+      .where(sql`lower(${userSchema.email}) = ${normalizedEmail}`)
+      .limit(1);
+
+    if (!recipient) {
+      return actionResponse.notFound("该邮箱尚未注册。");
+    }
+
+    return actionResponse.success(recipient);
+  } catch (error) {
+    console.error("Error finding manual benefit recipient:", error);
+    return actionResponse.error(getErrorMessage(error));
+  }
+}
 
 export async function getUsers({
   pageIndex = 0,
@@ -753,6 +842,21 @@ const ManualGrantSchema = z.object({
   notes: z.string().trim().max(500).optional(),
 });
 
+const BatchManualGrantSchema = ManualGrantSchema.omit({
+  userId: true,
+  operation: true,
+}).extend({
+  userIds: z.array(z.string().uuid()).min(1).max(100),
+});
+
+export type BatchManualBenefitResult = {
+  succeededUserIds: string[];
+  failures: Array<{
+    userId: string;
+    error: string;
+  }>;
+};
+
 function parseManualDate(value: string | null | undefined) {
   if (!value) {
     return null;
@@ -1207,4 +1311,47 @@ export async function grantManualUserBenefits(
     console.error("Error granting manual user benefits:", error);
     return actionResponse.error(getErrorMessage(error));
   }
+}
+
+export async function grantManualUserBenefitsBatch(
+  input: z.infer<typeof BatchManualGrantSchema>,
+): Promise<ActionResult<BatchManualBenefitResult>> {
+  if (!(await isAdmin())) {
+    return actionResponse.forbidden("Admin privileges required.");
+  }
+
+  const parsed = BatchManualGrantSchema.safeParse(input);
+  if (!parsed.success) {
+    return actionResponse.badRequest(
+      parsed.error.issues[0]?.message || "Invalid input.",
+    );
+  }
+
+  const userIds = [...new Set(parsed.data.userIds)];
+  const succeededUserIds: string[] = [];
+  const failures: BatchManualBenefitResult["failures"] = [];
+
+  for (const userId of userIds) {
+    const result = await grantManualUserBenefits({
+      userId,
+      operation: "grant",
+      planId: parsed.data.planId,
+      subscriptionPeriodEnd: parsed.data.subscriptionPeriodEnd,
+      creditType: parsed.data.creditType,
+      creditAmount: parsed.data.creditAmount,
+      creditExpiresAt: parsed.data.creditExpiresAt,
+      notes: parsed.data.notes,
+    });
+
+    if (result.success) {
+      succeededUserIds.push(userId);
+    } else {
+      failures.push({ userId, error: result.error });
+    }
+  }
+
+  return actionResponse.success({
+    succeededUserIds,
+    failures,
+  });
 }

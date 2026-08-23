@@ -22,9 +22,15 @@ export type PartnerSnippetsConfig = {
 
 export type PartnerSnippetPlacement = "home" | "partners";
 
+const CACHE_KEY = process.env.CACHE_KEY?.trim();
+
 export const PARTNER_SNIPPETS_NAMESPACE = "site_settings";
-export const PARTNER_SNIPPETS_CACHE_KEY = "partner_snippets";
-export const PARTNER_SNIPPETS_CACHE_TAG = "partner-snippets";
+export const PARTNER_SNIPPETS_CACHE_KEY = CACHE_KEY
+  ? `${CACHE_KEY}:partner_snippets`
+  : "partner_snippets";
+export const PARTNER_SNIPPETS_CACHE_TAG = CACHE_KEY
+  ? `${CACHE_KEY}:partner-snippets`
+  : "partner-snippets";
 
 export const defaultPartnerSnippets: PartnerSnippet[] = [
   // {
