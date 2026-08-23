@@ -16,6 +16,7 @@ git commit -m "update from upstream"
 /Users/syx/WebstormProjects/Spicy/spicy-video-web
 
 /Users/syx/idea/FreeSoraGenerator/fsg-web
+/Users/syx/WebstormProjects/Submify/Submify2-web
 /Users/syx/WebstormProjects/autogeo/autogeo-v2
 /Users/syx/WebstormProjects/GptImage2Api/GptImage4
 /Users/syx/WebstormProjects/GptImage2Api/GptImage5
@@ -30,6 +31,8 @@ git commit -m "update from upstream"
 /Users/syx/WebstormProjects/aitools/textlogo-web
 
 /Users/syx/WebstormProjects/sdanceai/seedance25-web
+/Users/syx/WebstormProjects/freemusevideo/freemusevideo-web
+/Users/syx/WebstormProjects/freemusevideo/metamuse-web
 /Users/syx/WebstormProjects/aimodels/aiexplainervideo-web
 /Users/syx/WebstormProjects/aimodels/aiugcvideo-web
 /Users/syx/WebstormProjects/aimodels/audiotovideoai-web
@@ -60,7 +63,6 @@ git merge --no-ff --no-commit upstream/main
 git fetch upstream
 git merge --no-ff --no-commit upstream/main
 如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
-最后 通过 open -na "WebStorm" --args "./" 打开
 
 ## tikdek-web
 /Users/syx/WebstormProjects/tikdek/tikdek-web
@@ -83,6 +85,37 @@ git fetch upstream
 git merge --no-ff --no-commit upstream/main
 如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
 
+----
+
+## fsg-web
+/Users/syx/idea/FreeSoraGenerator/fsg-web
+进入目录，执行合并：
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
+将 upstream 新增或修改的所有 i18n 文案实际翻译并补齐到当前项目全部语种，禁止复制英文或使用英文回退
+
+## Submify2-web
+/Users/syx/WebstormProjects/Submify/Submify2-web
+进入目录，执行合并：
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
+
+## FreeOmni-web
+/Users/syx/WebstormProjects/Omni/FreeOmni-web
+进入目录，执行合并：
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
+
+## spicy-ai
+/Users/syx/WebstormProjects/Spicy/spicy-ai-web
+进入目录，执行合并：
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
+
 ## autogeo
 /Users/syx/WebstormProjects/autogeo/autogeo-v2
 进入目录，执行合并：
@@ -90,41 +123,68 @@ git fetch upstream
 git merge --no-ff --no-commit upstream/main
 如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
 
-## GptImage4
-cd /Users/syx/WebstormProjects/GptImage2Api/GptImage4
+## Jsontranslate
+cd /Users/syx/WebstormProjects/Jsontranslate/Jsontranslate-new
+进入目录，执行合并：
 git fetch upstream
 git merge --no-ff --no-commit upstream/main
-open -na "WebStorm" --args "./"
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
+
+## GptImage4
+/Users/syx/WebstormProjects/GptImage2Api/GptImage4
+进入目录，执行合并：
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
 
 ## GptImage5
 cd /Users/syx/WebstormProjects/GptImage2Api/GptImage5
+进入目录，执行合并：
 git fetch upstream
 git merge --no-ff --no-commit upstream/main
-open -na "WebStorm" --args "./"
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
 
 ## GptImage6
 cd /Users/syx/WebstormProjects/GptImage2Api/GptImage6
+进入目录，执行合并：
 git fetch upstream
 git merge --no-ff --no-commit upstream/main
-open -na "WebStorm" --args "./"
-
-## FreeOmni-web
-cd /Users/syx/WebstormProjects/Omni/FreeOmni-web
-git fetch upstream
-git merge --no-ff --no-commit upstream/main
-open -na "WebStorm" --args "./"
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
 
 ## Omniink-web
 cd /Users/syx/WebstormProjects/Omni/Omniink-web
+进入目录，执行合并：
 git fetch upstream
 git merge --no-ff --no-commit upstream/main
-open -na "WebStorm" --args "./"
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
 
 ## seedance25-web
 cd /Users/syx/WebstormProjects/sdanceai/seedance25-web
+进入目录，执行合并：
 git fetch upstream
 git merge --no-ff --no-commit upstream/main
-open -na "WebStorm" --args "./"
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
+
+## spicy-image
+cd /Users/syx/WebstormProjects/Spicy/spicy-image-web
+进入目录，执行合并：
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
+
+## spicy-chat
+cd /Users/syx/WebstormProjects/Spicy/spicy-chat-web
+进入目录，执行合并：
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
+
+## GptApi
+cd /Users/syx/WebstormProjects/GptApi/GptApi-web
+进入目录，执行合并：
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
 
 ## freemusevideo-web
 cd /Users/syx/WebstormProjects/freemusevideo/freemusevideo-web
@@ -134,42 +194,6 @@ open -na "WebStorm" --args "./"
 
 ## metamuse-web
 cd /Users/syx/WebstormProjects/freemusevideo/metamuse-web
-git fetch upstream
-git merge --no-ff --no-commit upstream/main
-open -na "WebStorm" --args "./"
-
-## Jsontranslate
-cd /Users/syx/WebstormProjects/Jsontranslate/Jsontranslate-new
-git fetch upstream
-git merge --no-ff --no-commit upstream/main
-open -na "WebStorm" --args "./"
-
-## spicy-video
-cd /Users/syx/WebstormProjects/Spicy/spicy-video-web
-git fetch upstream
-git merge --no-ff --no-commit upstream/main
-open -na "WebStorm" --args "./"
-
-## spicy-ai
-cd /Users/syx/WebstormProjects/Spicy/spicy-ai-web
-git fetch upstream
-git merge --no-ff --no-commit upstream/main
-open -na "WebStorm" --args "./"
-
-## spicy-image
-cd /Users/syx/WebstormProjects/Spicy/spicy-image-web
-git fetch upstream
-git merge --no-ff --no-commit upstream/main
-open -na "WebStorm" --args "./"
-
-## spicy-chat
-cd /Users/syx/WebstormProjects/Spicy/spicy-chat-web
-git fetch upstream
-git merge --no-ff --no-commit upstream/main
-open -na "WebStorm" --args "./"
-
-## GptApi
-cd /Users/syx/WebstormProjects/GptApi/GptApi-web
 git fetch upstream
 git merge --no-ff --no-commit upstream/main
 open -na "WebStorm" --args "./"

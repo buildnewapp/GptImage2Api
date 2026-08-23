@@ -2,6 +2,7 @@
 
 import { actionResponse, type ActionResult } from "@/lib/action-response";
 import { isAdmin } from "@/lib/auth/server";
+import { PARTNER_SNIPPETS_CACHE_TAG } from "@/lib/partners/partner-snippets";
 import { revalidatePath, updateTag } from "next/cache";
 
 export async function clearFrontendCacheAction(): Promise<
@@ -12,7 +13,7 @@ export async function clearFrontendCacheAction(): Promise<
   }
 
   revalidatePath("/", "layout");
-  updateTag("partner-snippets");
+  updateTag(PARTNER_SNIPPETS_CACHE_TAG);
   updateTag("public-pricing-plans");
   updateTag("public-showcase-generations");
   updateTag("public-prompt-gallery-stats");

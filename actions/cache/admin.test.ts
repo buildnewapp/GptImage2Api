@@ -18,9 +18,9 @@ const clientSource = readFileSync(
 test("cache cleanup action is admin-only and clears frontend caches", () => {
   assert.match(actionSource, /await isAdmin\(\)/);
   assert.match(actionSource, /revalidatePath\("\/", "layout"\)/);
+  assert.match(actionSource, /updateTag\(PARTNER_SNIPPETS_CACHE_TAG\)/);
 
   for (const tag of [
-    "partner-snippets",
     "public-pricing-plans",
     "public-showcase-generations",
     "public-prompt-gallery-stats",
