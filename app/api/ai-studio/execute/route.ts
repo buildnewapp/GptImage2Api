@@ -1,3 +1,4 @@
+import { configuredPricingPlans } from "@/lib/pricing";
 import {
   canUseAiVideoStudioModelForMembership,
   getAiVideoStudioLevelLabel,
@@ -24,7 +25,7 @@ import {
 import { apiResponse } from "@/lib/api-response";
 import { getRequestUser } from "@/lib/auth/request-user";
 import { getDb } from "@/lib/db";
-import { orders as ordersSchema, pricingPlans as pricingPlansSchema } from "@/lib/db/schema";
+import { orders as ordersSchema } from "@/lib/db/schema";
 import { assertGenerationPromptAllowed } from "@/lib/moderation";
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { z } from "zod";
@@ -47,9 +48,9 @@ async function getUserMembershipLevel(userId: string): Promise<AiVideoStudioLeve
   const db = getDb();
   const membershipRankExpr = sql<number>`
     case
-      when lower(coalesce(${pricingPlansSchema.cardTitle}, '')) like '%max%' then 3
-      when lower(coalesce(${pricingPlansSchema.cardTitle}, '')) like '%pro%' then 2
-      when lower(coalesce(${pricingPlansSchema.cardTitle}, '')) like '%standard%' then 1
+      when ${inArray(ordersSchema.planId, configuredPricingPlans.filter((plan) => plan.cardTitle.toLowerCase().includes("max")).map((plan) => plan.id))} then 3
+      when ${inArray(ordersSchema.planId, configuredPricingPlans.filter((plan) => plan.cardTitle.toLowerCase().includes("pro")).map((plan) => plan.id))} then 2
+      when ${inArray(ordersSchema.planId, configuredPricingPlans.filter((plan) => plan.cardTitle.toLowerCase().includes("standard")).map((plan) => plan.id))} then 1
       else 0
     end
   `;
@@ -59,7 +60,6 @@ async function getUserMembershipLevel(userId: string): Promise<AiVideoStudioLeve
       rank: membershipRankExpr,
     })
     .from(ordersSchema)
-    .leftJoin(pricingPlansSchema, eq(ordersSchema.planId, pricingPlansSchema.id))
     .where(
       and(
         eq(ordersSchema.userId, userId),

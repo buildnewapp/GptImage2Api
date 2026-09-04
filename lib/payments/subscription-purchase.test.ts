@@ -1,5 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import {
+  configuredPricingPlans,
+  getPricingPlanById,
+  getPricingPlanByProviderId,
+  isActivePricingPlan,
+} from "@/lib/pricing";
 
 import {
   getActiveRecurringPrices,
@@ -57,4 +63,51 @@ test("ignores expired recurring order prices", () => {
     ),
     ["149.90", "89.90"],
   );
+});
+
+test("only permits checkout for active plans in the current payment environment", () => {
+  const originalPayEnv = process.env.PAY_ENV;
+  const testPlan = configuredPricingPlans.find((plan) => plan.environment === "test");
+  const livePlan = configuredPricingPlans.find((plan) => plan.environment === "live");
+  assert.ok(testPlan);
+  assert.ok(livePlan);
+
+  try {
+    process.env.PAY_ENV = "live";
+    assert.equal(isActivePricingPlan(livePlan), true);
+    assert.equal(isActivePricingPlan(testPlan), false);
+    delete process.env.PAY_ENV;
+    assert.equal(isActivePricingPlan(testPlan), true);
+    assert.equal(isActivePricingPlan(livePlan), false);
+    assert.equal(isActivePricingPlan(undefined), false);
+  } finally {
+    if (originalPayEnv === undefined) delete process.env.PAY_ENV;
+    else process.env.PAY_ENV = originalPayEnv;
+  }
+});
+
+test("resolves inactive configured plans for renewals and refunds without enabling checkout", () => {
+  const plan = configuredPricingPlans[0];
+  const wasActive = plan.isActive;
+  assert.ok(plan.stripePriceId);
+
+  try {
+    plan.isActive = false;
+    assert.equal(isActivePricingPlan(plan), false);
+    assert.equal(getPricingPlanById(plan.id), plan);
+    assert.equal(getPricingPlanByProviderId("stripePriceId", plan.stripePriceId), plan);
+  } finally {
+    plan.isActive = wasActive;
+  }
+});
+
+test("resolves PayPal subscriptions on shared-provider plans and rejects missing product IDs", () => {
+  const plan = configuredPricingPlans.find(
+    (item) => item.provider === "all" && item.paypalPlanId,
+  );
+  assert.ok(plan);
+  assert.equal(getPricingPlanByProviderId("paypalPlanId", plan.paypalPlanId), plan);
+  assert.equal(getPricingPlanByProviderId("paypalPlanId", null), undefined);
+  assert.equal(getPricingPlanByProviderId("paypalPlanId", ""), undefined);
+  assert.equal(getPricingPlanById("unknown-plan"), undefined);
 });

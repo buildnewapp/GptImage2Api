@@ -15,7 +15,6 @@ import { PricingCardDisplay } from "@/components/pricing/PricingCardDisplay";
 import FeatureBadge from "@/components/shared/FeatureBadge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DEFAULT_LOCALE } from "@/i18n/routing";
-import { pricingPlans as pricingPlansSchema } from "@/lib/db/schema";
 import {
   isMonthlyInterval,
   isOneTimePaymentType,
@@ -23,11 +22,9 @@ import {
   isYearlyInterval,
 } from "@/lib/payments/provider-utils";
 import { isPayPalEnabled } from "@/lib/paypal/client";
-import { PricingPlanLangJsonb } from "@/types/pricing";
+import type { PricingPlanLangJsonb, PublicPricingPlan as PricingPlan } from "@/types/pricing";
 import { Gift } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
-
-type PricingPlan = typeof pricingPlansSchema.$inferSelect;
 
 export default async function PricingByPaymentType() {
   const t = await getTranslations("Pricing");

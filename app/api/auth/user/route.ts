@@ -1,9 +1,9 @@
+import { configuredPricingPlans, getPricingPlanById } from "@/lib/pricing";
 import { apiResponse } from "@/lib/api-response";
 import { getRequestUser } from "@/lib/auth/request-user";
 import { getDb } from "@/lib/db";
 import {
   orders as ordersSchema,
-  pricingPlans as pricingPlansSchema,
   subscriptionCreditBuckets as subscriptionCreditBucketsSchema,
   usage as usageSchema,
 } from "@/lib/db/schema";
@@ -28,9 +28,9 @@ export async function GET(request: Request) {
     const db = getDb();
     const membershipRankExpr = sql<number>`
       case
-        when lower(coalesce(${pricingPlansSchema.cardTitle}, '')) like '%max%' then 3
-        when lower(coalesce(${pricingPlansSchema.cardTitle}, '')) like '%pro%' then 2
-        when lower(coalesce(${pricingPlansSchema.cardTitle}, '')) like '%standard%' then 1
+        when ${inArray(ordersSchema.planId, configuredPricingPlans.filter((plan) => plan.cardTitle.toLowerCase().includes("max")).map((plan) => plan.id))} then 3
+        when ${inArray(ordersSchema.planId, configuredPricingPlans.filter((plan) => plan.cardTitle.toLowerCase().includes("pro")).map((plan) => plan.id))} then 2
+        when ${inArray(ordersSchema.planId, configuredPricingPlans.filter((plan) => plan.cardTitle.toLowerCase().includes("standard")).map((plan) => plan.id))} then 1
         else 0
       end
     `;
@@ -58,11 +58,10 @@ export async function GET(request: Request) {
         ),
       db
         .select({
-          planTitle: pricingPlansSchema.cardTitle,
+          planId: ordersSchema.planId,
           rank: membershipRankExpr,
         })
         .from(ordersSchema)
-        .leftJoin(pricingPlansSchema, eq(ordersSchema.planId, pricingPlansSchema.id))
         .where(
           and(
             eq(ordersSchema.userId, user.id),
@@ -93,7 +92,7 @@ export async function GET(request: Request) {
       membership: {
         isVip: membershipLevel !== "none",
         level: membershipLevel,
-        planTitle: membershipData?.planTitle ?? null,
+        planTitle: getPricingPlanById(membershipData?.planId)?.cardTitle ?? null,
       },
     });
   } catch (error: any) {

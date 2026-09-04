@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { DEFAULT_LOCALE, useRouter } from "@/i18n/routing";
-import { pricingPlans as pricingPlansSchema } from "@/lib/db/schema";
+import type { PublicPricingPlan as PricingPlan } from "@/types/pricing";
 import {
   type CheckoutProvider,
   getAvailableCheckoutProviders,
@@ -29,7 +29,6 @@ import { useState } from "react";
 import { SiStripe } from "react-icons/si";
 import { toast } from "sonner";
 
-type PricingPlan = typeof pricingPlansSchema.$inferSelect;
 const RECURRING_PURCHASE_REQUIRES_HIGHER_TIER_ERROR =
   "RECURRING_PURCHASE_REQUIRES_HIGHER_TIER";
 

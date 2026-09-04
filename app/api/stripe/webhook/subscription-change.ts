@@ -1,8 +1,4 @@
-import { getDb } from '@/lib/db';
-import {
-  pricingPlans as pricingPlansSchema
-} from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
+import { getPricingPlanByProviderId } from '@/lib/pricing';
 import Stripe from 'stripe';
 
 /**
@@ -56,8 +52,6 @@ export async function detectSubscriptionChange(
   currentPriceId: string,
   previousPriceId: string
 ): Promise<SubscriptionChangeResult> {
-  const db = getDb()
-
   const defaultResult: SubscriptionChangeResult = {
     changeType: 'none',
   };
@@ -66,32 +60,8 @@ export async function detectSubscriptionChange(
     return defaultResult;
   }
 
-  // Fetch plan information from database to compare
-  const [currentPlanResults, previousPlanResults] = await Promise.all([
-    db
-      .select({
-        id: pricingPlansSchema.id,
-        price: pricingPlansSchema.price,
-        recurringInterval: pricingPlansSchema.recurringInterval,
-        benefitsJsonb: pricingPlansSchema.benefitsJsonb,
-      })
-      .from(pricingPlansSchema)
-      .where(eq(pricingPlansSchema.stripePriceId, currentPriceId))
-      .limit(1),
-    db
-      .select({
-        id: pricingPlansSchema.id,
-        price: pricingPlansSchema.price,
-        recurringInterval: pricingPlansSchema.recurringInterval,
-        benefitsJsonb: pricingPlansSchema.benefitsJsonb,
-      })
-      .from(pricingPlansSchema)
-      .where(eq(pricingPlansSchema.stripePriceId, previousPriceId))
-      .limit(1),
-  ]);
-
-  const currentPlan = currentPlanResults[0];
-  const previousPlan = previousPlanResults[0];
+  const currentPlan = getPricingPlanByProviderId('stripePriceId', currentPriceId);
+  const previousPlan = getPricingPlanByProviderId('stripePriceId', previousPriceId);
 
   if (!currentPlan || !previousPlan) {
     console.warn(`Could not find plan data for price comparison. Current: ${currentPriceId}, Previous: ${previousPriceId}`);
@@ -128,8 +98,6 @@ export async function handleSubscriptionChange(
   subscription: Stripe.Subscription,
   changeResult: SubscriptionChangeResult
 ) {
-  const db = getDb();
-
   const userId = subscription.metadata?.userId;
 
   if (!userId) {
@@ -177,8 +145,6 @@ export async function handleMonthlyToMonthlyUpgrade(
   subscription: Stripe.Subscription,
   changeResult: SubscriptionChangeResult
 ) {
-  const db = getDb();
-
   const userId = subscription.metadata?.userId;
   if (!userId) {
     console.error(`Cannot handle monthly-to-monthly upgrade: userId missing`);
@@ -264,8 +230,6 @@ export async function handleMonthlyToMonthlyDowngrade(
   subscription: Stripe.Subscription,
   changeResult: SubscriptionChangeResult
 ) {
-  const db = getDb();
-
   const userId = subscription.metadata?.userId;
   if (!userId) {
     console.error(`Cannot handle monthly-to-monthly downgrade: userId missing`);
@@ -357,8 +321,6 @@ export async function handleYearlyToYearlyUpgrade(
   subscription: Stripe.Subscription,
   changeResult: SubscriptionChangeResult
 ) {
-  const db = getDb();
-
   const userId = subscription.metadata?.userId;
   if (!userId) {
     console.error(`Cannot handle yearly-to-yearly upgrade: userId missing`);
@@ -440,8 +402,6 @@ export async function handleYearlyToYearlyDowngrade(
   subscription: Stripe.Subscription,
   changeResult: SubscriptionChangeResult
 ) {
-  const db = getDb();
-
   const userId = subscription.metadata?.userId;
   if (!userId) {
     console.error(`Cannot handle yearly-to-yearly downgrade: userId missing`);
@@ -533,8 +493,6 @@ export async function handleMonthlyToYearlyChange(
   subscription: Stripe.Subscription,
   changeResult: SubscriptionChangeResult
 ) {
-  const db = getDb();
-
   const userId = subscription.metadata?.userId;
   if (!userId) {
     console.error(`Cannot handle monthly-to-yearly change: userId missing`);
@@ -621,8 +579,6 @@ export async function handleYearlyToMonthlyChange(
   subscription: Stripe.Subscription,
   changeResult: SubscriptionChangeResult
 ) {
-  const db = getDb();
-
   const userId = subscription.metadata?.userId;
   if (!userId) {
     console.error(`Cannot handle yearly-to-monthly change: userId missing`);

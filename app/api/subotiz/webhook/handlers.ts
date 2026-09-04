@@ -1,7 +1,7 @@
+import { getPricingPlanByProviderId } from "@/lib/pricing";
 import { getDb } from "@/lib/db";
 import {
   orders as ordersSchema,
-  pricingPlans as pricingPlansSchema,
   subscriptions as subscriptionsSchema,
 } from "@/lib/db/schema";
 import {
@@ -103,11 +103,7 @@ async function upsertSubotizSubscription(
     String(existingMetadata.planId ?? "");
 
   if (!planId && priceId) {
-    const [plan] = await db
-      .select({ id: pricingPlansSchema.id })
-      .from(pricingPlansSchema)
-      .where(eq(pricingPlansSchema.subotizPriceId, priceId))
-      .limit(1);
+    const plan = getPricingPlanByProviderId('subotizPriceId', priceId);
     planId = plan?.id ?? "";
   }
 

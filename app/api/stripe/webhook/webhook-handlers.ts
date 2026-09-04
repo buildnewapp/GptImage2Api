@@ -1,3 +1,4 @@
+import { getPricingPlanByProviderId } from '@/lib/pricing';
 import {
   sendCreditUpgradeFailedEmail,
   sendFraudRefundUserEmail,
@@ -8,7 +9,6 @@ import {
 import { getDb } from '@/lib/db';
 import {
   orders as ordersSchema,
-  pricingPlans as pricingPlansSchema,
   user as userSchema,
 } from '@/lib/db/schema';
 import {
@@ -174,12 +174,8 @@ export async function handleInvoicePaid(invoice: Stripe.Invoice) {
           : (subscription.items.data[0].price.product as Stripe.Product)?.id;
 
         if (priceId) {
-          const planDataResults = await db
-            .select({ id: pricingPlansSchema.id })
-            .from(pricingPlansSchema)
-            .where(eq(pricingPlansSchema.stripePriceId, priceId))
-            .limit(1);
-          planId = planDataResults[0]?.id ?? null;
+          const planDataResults = getPricingPlanByProviderId('stripePriceId', priceId);
+          planId = planDataResults?.id ?? null;
         }
       }
 

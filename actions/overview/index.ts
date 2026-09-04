@@ -7,13 +7,13 @@ import {
   aiStudioGenerations as aiStudioGenerationsSchema,
   creditLogs as creditLogsSchema,
   orders as ordersSchema,
-  pricingPlans as pricingPlansSchema,
   taskRewardClaims as taskRewardClaimsSchema,
   usage as usageSchema,
   user as userSchema,
 } from '@/lib/db/schema';
+import { configuredPricingPlans } from '@/lib/pricing';
 import { getErrorMessage } from '@/lib/error-utils';
-import { ONE_TIME_ORDER_TYPES, SUBSCRIPTION_ORDER_TYPES } from '@/lib/payments/provider-utils';
+import { ONE_TIME_ORDER_TYPES, SUBSCRIPTION_ORDER_TYPES, isMonthlyInterval, isYearlyInterval } from '@/lib/payments/provider-utils';
 import { and, count, eq, gte, inArray, lt, sql, type SQL } from 'drizzle-orm';
 
 interface IStats {
@@ -164,6 +164,15 @@ export const getOverviewStats = async (): Promise<ActionResult<IOverviewStats>> 
       );
     const yesterdayUsers = yesterdayUsersResult[0].value;
 
+    const monthlyPlanCondition = inArray(
+      ordersSchema.planId,
+      configuredPricingPlans.filter((plan) => isMonthlyInterval(plan.recurringInterval)).map((plan) => plan.id),
+    );
+    const yearlyPlanCondition = inArray(
+      ordersSchema.planId,
+      configuredPricingPlans.filter((plan) => isYearlyInterval(plan.recurringInterval)).map((plan) => plan.id),
+    );
+
     // Order stats
     const getOrderStatsForPeriod = async (
       startDate: Date,
@@ -183,27 +192,26 @@ export const getOverviewStats = async (): Promise<ActionResult<IOverviewStats>> 
           // Order types: subscription_initial, subscription_renewal (Stripe), recurring (Creem)
           // Intervals: month (Stripe), every-month (Creem)
           monthlyCount:
-            sql`COUNT(*) FILTER (WHERE ${ordersSchema.orderType} IN ('subscription_initial', 'subscription_renewal', 'recurring') AND ${pricingPlansSchema.recurringInterval} IN ('month', 'every-month'))`.mapWith(
+            sql`COUNT(*) FILTER (WHERE ${ordersSchema.orderType} IN ('subscription_initial', 'subscription_renewal', 'recurring') AND ${monthlyPlanCondition})`.mapWith(
               Number
             ),
           monthlyRevenue:
-            sql`COALESCE(SUM(${ordersSchema.amountTotal}) FILTER (WHERE ${ordersSchema.orderType} IN ('subscription_initial', 'subscription_renewal', 'recurring') AND ${pricingPlansSchema.recurringInterval} IN ('month', 'every-month')), 0)`.mapWith(
+            sql`COALESCE(SUM(${ordersSchema.amountTotal}) FILTER (WHERE ${ordersSchema.orderType} IN ('subscription_initial', 'subscription_renewal', 'recurring') AND ${monthlyPlanCondition}), 0)`.mapWith(
               Number
             ),
           // Note: Must hardcode in SQL FILTER clause (can't use JS variables in SQL)
           // Order types: subscription_initial, subscription_renewal (Stripe), recurring (Creem)
           // Intervals: year (Stripe), every-year (Creem)
           yearlyCount:
-            sql`COUNT(*) FILTER (WHERE ${ordersSchema.orderType} IN ('subscription_initial', 'subscription_renewal', 'recurring') AND ${pricingPlansSchema.recurringInterval} IN ('year', 'every-year'))`.mapWith(
+            sql`COUNT(*) FILTER (WHERE ${ordersSchema.orderType} IN ('subscription_initial', 'subscription_renewal', 'recurring') AND ${yearlyPlanCondition})`.mapWith(
               Number
             ),
           yearlyRevenue:
-            sql`COALESCE(SUM(${ordersSchema.amountTotal}) FILTER (WHERE ${ordersSchema.orderType} IN ('subscription_initial', 'subscription_renewal', 'recurring') AND ${pricingPlansSchema.recurringInterval} IN ('year', 'every-year')), 0)`.mapWith(
+            sql`COALESCE(SUM(${ordersSchema.amountTotal}) FILTER (WHERE ${ordersSchema.orderType} IN ('subscription_initial', 'subscription_renewal', 'recurring') AND ${yearlyPlanCondition}), 0)`.mapWith(
               Number
             ),
         })
         .from(ordersSchema)
-        .leftJoin(pricingPlansSchema, eq(ordersSchema.planId, pricingPlansSchema.id))
         .where(
           and(
             gte(ordersSchema.createdAt, startDate),

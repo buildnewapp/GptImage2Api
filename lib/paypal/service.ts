@@ -1,7 +1,7 @@
+import { getPricingPlanById, getPricingPlanByProviderId } from "@/lib/pricing";
 import { getDb } from "@/lib/db";
 import {
   orders as ordersSchema,
-  pricingPlans as pricingPlansSchema,
   subscriptions as subscriptionsSchema,
 } from "@/lib/db/schema";
 import {
@@ -56,33 +56,11 @@ async function resolvePayPalPlanId({
     return null;
   }
 
-  const db = getDb();
-  const [plan] = await db
-    .select({ id: pricingPlansSchema.id })
-    .from(pricingPlansSchema)
-    .where(
-      and(
-        eq(pricingPlansSchema.provider, "paypal"),
-        eq(pricingPlansSchema.paypalPlanId, paypalPlanId),
-      ),
-    )
-    .limit(1);
-
-  return plan?.id ?? null;
+  return getPricingPlanByProviderId('paypalPlanId', paypalPlanId)?.id ?? null;
 }
 
 async function resolvePayPalPlanPaymentDetails(planId: string) {
-  const db = getDb();
-  const [plan] = await db
-    .select({
-      currency: pricingPlansSchema.currency,
-      price: pricingPlansSchema.price,
-    })
-    .from(pricingPlansSchema)
-    .where(eq(pricingPlansSchema.id, planId))
-    .limit(1);
-
-  return plan ?? null;
+  return getPricingPlanById(planId) ?? null;
 }
 
 async function resolveExistingSubscriptionContext(subscriptionId: string) {

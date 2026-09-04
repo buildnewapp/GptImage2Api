@@ -10,14 +10,31 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import type { PartnerSnippet } from "@/lib/partners/partner-snippets";
-import { Plus, RefreshCw, Save, Trash2 } from "lucide-react";
-import { useMemo, useState, useTransition } from "react";
+import { Pencil, Plus, RefreshCw, Save, Trash2 } from "lucide-react";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 type ConfigAdminClientProps = {
@@ -43,10 +60,12 @@ export default function ConfigAdminClient({
   initialError,
 }: ConfigAdminClientProps) {
   const [items, setItems] = useState<PartnerSnippet[]>(sortItems(initialItems));
+  const [editingItem, setEditingItem] = useState<{
+    index: number | null;
+    item: PartnerSnippet;
+  } | null>(null);
   const [isSavePending, startSaveTransition] = useTransition();
   const [isCachePending, startCacheTransition] = useTransition();
-
-  const nextIndex = useMemo(() => items.length + 1, [items.length]);
 
   function updateItem(index: number, patch: Partial<PartnerSnippet>) {
     setItems((current) =>
@@ -57,7 +76,11 @@ export default function ConfigAdminClient({
   }
 
   function addItem() {
-    setItems((current) => [...current, emptyItem(nextIndex)]);
+    let nextIndex = items.length + 1;
+    while (items.some((item) => item.key === `partner-${nextIndex}`)) {
+      nextIndex += 1;
+    }
+    setEditingItem({ index: null, item: emptyItem(nextIndex) });
   }
 
   function removeItem(index: number) {
@@ -121,11 +144,16 @@ export default function ConfigAdminClient({
               <div className="space-y-1.5">
                 <CardTitle>友链管理</CardTitle>
                 <CardDescription>
-                  配置 partner snippets 的 HTML、排序和展示位置。
+                  管理友链的排序和展示位置，修改后点击保存生效。
                 </CardDescription>
               </div>
               <div className="flex gap-2">
-                <Button type="button" variant="outline" onClick={addItem}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={addItem}
+                  disabled={isSavePending}
+                >
                   <Plus className="mr-2 h-4 w-4" />
                   添加
                 </Button>
@@ -139,96 +167,127 @@ export default function ConfigAdminClient({
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="space-y-4">
-              {items.length === 0 ? (
-                <div className="rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground">
-                  暂无友链配置。
-                </div>
-              ) : (
-                items.map((item, index) => (
-                  <div
-                    key={`${item.key}-${index}`}
-                    className="rounded-lg border bg-card p-4"
-                  >
-                    <div className="flex flex-wrap items-end gap-3">
-                      <div className="w-full space-y-2 sm:w-56">
-                        <Label htmlFor={`partner-key-${index}`}>Key</Label>
-                        <Input
-                          id={`partner-key-${index}`}
-                          value={item.key}
-                          onChange={(event) =>
-                            updateItem(index, { key: event.target.value })
-                          }
-                          placeholder="product-hunt"
-                        />
-                      </div>
-                      <div className="w-28 space-y-2">
-                        <Label htmlFor={`partner-sort-${index}`}>Sort</Label>
-                        <Input
-                          id={`partner-sort-${index}`}
-                          type="number"
-                          value={item.sort}
-                          onChange={(event) =>
-                            updateItem(index, {
-                              sort: Number(event.target.value) || 0,
-                            })
-                          }
-                        />
-                      </div>
-
-                      <label className="flex h-10 min-w-24 items-center justify-between gap-3 rounded-md border px-3 text-sm">
-                        启用
-                        <Switch
-                          checked={item.enabled}
-                          onCheckedChange={(enabled) =>
-                            updateItem(index, { enabled })
-                          }
-                        />
-                      </label>
-                      <label className="flex h-10 min-w-24 items-center justify-between gap-3 rounded-md border px-3 text-sm">
-                        首页
-                        <Switch
-                          checked={item.home}
-                          onCheckedChange={(home) => updateItem(index, { home })}
-                        />
-                      </label>
-                      <label className="flex h-10 min-w-28 items-center justify-between gap-3 rounded-md border px-3 text-sm">
-                        伙伴页
-                        <Switch
-                          checked={item.partners}
-                          onCheckedChange={(partners) =>
-                            updateItem(index, { partners })
-                          }
-                        />
-                      </label>
-
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        className="h-10 w-10 text-destructive hover:text-destructive"
-                        onClick={() => removeItem(index)}
-                        aria-label="删除友链"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-
-                    <div className="mt-4 space-y-2">
-                      <Label htmlFor={`partner-html-${index}`}>HTML</Label>
-                      <Textarea
-                        id={`partner-html-${index}`}
-                        value={item.html}
-                        onChange={(event) =>
-                          updateItem(index, { html: event.target.value })
-                        }
-                        placeholder="<a ...>Partner</a>"
-                        className="min-h-28 font-mono text-xs"
-                      />
-                    </div>
-                  </div>
-                ))
-              )}
+            <CardContent>
+              <fieldset
+                disabled={isSavePending}
+                className="min-w-0 rounded-lg border"
+              >
+                <Table className="min-w-[760px]">
+                  <TableHeader>
+                    <TableRow className="bg-muted/50">
+                      <TableHead className="w-16 pl-4">序号</TableHead>
+                      <TableHead>key</TableHead>
+                      <TableHead className="min-w-52 text-center">预览</TableHead>
+                      <TableHead className="w-28">sort</TableHead>
+                      <TableHead className="w-20 text-center">启用</TableHead>
+                      <TableHead className="w-20 text-center">首页</TableHead>
+                      <TableHead className="w-20 text-center">伙伴</TableHead>
+                      <TableHead className="w-20 text-center">编辑</TableHead>
+                      <TableHead className="w-20 text-center">删除</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {items.length === 0 ? (
+                      <TableRow>
+                        <TableCell
+                          colSpan={9}
+                          className="h-32 text-center text-muted-foreground"
+                        >
+                          暂无友链配置。
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      items.map((item, index) => (
+                        <TableRow key={`${item.key}-${index}`}>
+                          <TableCell className="pl-4 tabular-nums text-muted-foreground">
+                            {index + 1}
+                          </TableCell>
+                          <TableCell>
+                            <span
+                              className="block max-w-64 truncate font-medium"
+                              title={item.key}
+                            >
+                              {item.key}
+                            </span>
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <div
+                              className="max-h-24 min-w-48 max-w-80 overflow-auto rounded-md border p-2 whitespace-normal [&_img]:max-w-full"
+                              dangerouslySetInnerHTML={{ __html: item.html }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Input
+                              aria-label={`${item.key} sort`}
+                              type="number"
+                              value={item.sort}
+                              onChange={(event) =>
+                                updateItem(index, {
+                                  sort: Number(event.target.value) || 0,
+                                })
+                              }
+                              className="h-8 w-24"
+                            />
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <Switch
+                              aria-label={`${item.key} 启用`}
+                              checked={item.enabled}
+                              onCheckedChange={(enabled) =>
+                                updateItem(index, { enabled })
+                              }
+                            />
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <Switch
+                              aria-label={`${item.key} 首页`}
+                              checked={item.home}
+                              onCheckedChange={(home) =>
+                                updateItem(index, { home })
+                              }
+                            />
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <Switch
+                              aria-label={`${item.key} 伙伴`}
+                              checked={item.partners}
+                              onCheckedChange={(partners) =>
+                                updateItem(index, { partners })
+                              }
+                            />
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8"
+                              aria-label={`编辑 ${item.key}`}
+                              onClick={() =>
+                                setEditingItem({ index, item: { ...item } })
+                              }
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-destructive hover:text-destructive"
+                              aria-label={`删除 ${item.key}`}
+                              onClick={() => removeItem(index)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </fieldset>
             </CardContent>
           </Card>
         </TabsContent>
@@ -255,6 +314,99 @@ export default function ConfigAdminClient({
           </Card>
         </TabsContent>
       </Tabs>
+
+      <Dialog
+        open={editingItem !== null}
+        onOpenChange={(open) => !open && setEditingItem(null)}
+      >
+        <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              {editingItem?.index === null ? "添加友链" : "编辑友链"}
+            </DialogTitle>
+            <DialogDescription>
+              设置 key 和 HTML，确认后点击列表上方的保存生效。
+            </DialogDescription>
+          </DialogHeader>
+          {editingItem && (
+            <form
+              className="space-y-4"
+              onSubmit={(event) => {
+                event.preventDefault();
+                const item = {
+                  ...editingItem.item,
+                  key: editingItem.item.key.trim(),
+                  html: editingItem.item.html.trim(),
+                };
+                if (!item.key || !item.html) {
+                  toast.error("请填写 key 和 HTML");
+                  return;
+                }
+                if (
+                  items.some(
+                    (existing, index) =>
+                      index !== editingItem.index && existing.key === item.key,
+                  )
+                ) {
+                  toast.error("key 已存在，请使用其他 key");
+                  return;
+                }
+                if (editingItem.index === null) {
+                  setItems((current) => [...current, item]);
+                } else {
+                  updateItem(editingItem.index, item);
+                }
+                setEditingItem(null);
+              }}
+            >
+              <div className="space-y-2">
+                <Label htmlFor="partner-key">key</Label>
+                <Input
+                  id="partner-key"
+                  value={editingItem.item.key}
+                  onChange={(event) =>
+                    setEditingItem({
+                      ...editingItem,
+                      item: { ...editingItem.item, key: event.target.value },
+                    })
+                  }
+                  placeholder="product-hunt"
+                  required
+                  maxLength={80}
+                  pattern={"[a-z0-9_\\-]+"}
+                  title="仅支持小写字母、数字、下划线和连字符"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="partner-html">HTML</Label>
+                <Textarea
+                  id="partner-html"
+                  value={editingItem.item.html}
+                  onChange={(event) =>
+                    setEditingItem({
+                      ...editingItem,
+                      item: { ...editingItem.item, html: event.target.value },
+                    })
+                  }
+                  placeholder="<a ...>Partner</a>"
+                  className="min-h-48 font-mono text-xs"
+                  required
+                  maxLength={5000}
+                />
+              </div>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button type="button" variant="outline">
+                    取消
+                  </Button>
+                </DialogClose>
+                <Button type="submit">确认</Button>
+              </DialogFooter>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
+
     </div>
   );
 }

@@ -216,14 +216,16 @@ async function main() {
  * 定价配置文件
  *
  * This file serves as the single source of truth for pricing plans.
- * AI can edit this file directly, then run \`pnpm db:seed\` to sync to database.
+ * Public pricing reads this file directly, including localized plan content.
+ * Payment processing still uses database plans synchronized with \`pnpm db:seed\`.
  *
  * 此文件作为定价计划的单一真相来源。
- * AI 可以直接编辑此文件，然后运行 \`pnpm db:seed\` 同步到数据库。
+ * 前台直接读取此文件中的套餐和多语言文案，发布配置后生效。
+ * 支付流程仍读取数据库；新增套餐或修改金额、权益、支付产品 ID 后需运行 \`pnpm db:seed\`。
  *
  * Usage / 使用方法:
  * 1. Edit this file to add/update/remove pricing plans
- * 2. Run \`pnpm db:seed\` to sync changes to database
+ * 2. Deploy config changes for public pricing; run \`pnpm db:seed\` to sync payment data
  * 3. Run \`pnpm db:export-pricing\` to export current database state back to this file
  *
  * Type Safety / 类型安全:
@@ -235,7 +237,7 @@ async function main() {
  */
 
 import type { InferInsertModel } from 'drizzle-orm'
-import { pricingPlans as pricingPlansTable, pricingPlanGroups as pricingPlanGroupsTable } from '../schema'
+import type { pricingPlans as pricingPlansTable, pricingPlanGroups as pricingPlanGroupsTable } from '../schema'
 
 // ============================================================================
 // Type Definitions - Derived from Schema / 类型定义 - 从 Schema 推导

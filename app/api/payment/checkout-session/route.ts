@@ -1,10 +1,13 @@
+import {
+  getPricingPlanById,
+  getPricingPlanByProviderId,
+  isActivePricingPlan,
+} from '@/lib/pricing';
 import { createStripeCheckoutSession } from '@/actions/stripe';
 import { siteConfig } from '@/config/site';
 import { apiResponse } from '@/lib/api-response';
 import { getSession } from '@/lib/auth/server';
 import { createCreemCheckoutSession } from '@/lib/creem/client';
-import { getDb } from '@/lib/db';
-import { pricingPlans as pricingPlansSchema } from '@/lib/db/schema';
 import { getErrorMessage } from '@/lib/error-utils';
 import { encodePayPalCustomId, getPayPalApprovalUrl } from '@/lib/paypal';
 import { isPayPalEnabled, PayPalClient } from '@/lib/paypal/client';
@@ -19,7 +22,6 @@ import { isRecurringPaymentType } from '@/lib/payments/provider-utils';
 import { assertRecurringPurchaseIsHigherTier } from '@/lib/payments/subscription-purchase';
 import { createSubotizCheckoutSession } from '@/lib/subotiz/client';
 import { getURL } from '@/lib/url';
-import { eq } from 'drizzle-orm';
 import { randomUUID } from 'node:crypto';
 
 type RequestData = {
@@ -44,8 +46,6 @@ function getSubotizLocale(acceptLanguage: string | null): string {
 }
 
 export async function POST(req: Request) {
-  const db = getDb();
-
   const session = await getSession();
   const user = session?.user;
   if (!user) {
@@ -103,21 +103,9 @@ export async function POST(req: Request) {
       }
       const validCreemProductId = creemProductId!;
 
-      const results = await db
-        .select({
-          id: pricingPlansSchema.id,
-          cardTitle: pricingPlansSchema.cardTitle,
-          paymentType: pricingPlansSchema.paymentType,
-          trialPeriodDays: pricingPlansSchema.trialPeriodDays,
-          creemProductId: pricingPlansSchema.creemProductId,
-        })
-        .from(pricingPlansSchema)
-        .where(eq(pricingPlansSchema.creemProductId, validCreemProductId))
-        .limit(1);
+      const plan = getPricingPlanByProviderId('creemProductId', validCreemProductId);
 
-      const plan = results[0];
-
-      if (!plan) {
+      if (!isActivePricingPlan(plan)) {
         return apiResponse.notFound('Plan not found for Creem product ID');
       }
 
@@ -161,18 +149,9 @@ export async function POST(req: Request) {
         return apiResponse.badRequest('Missing subotizPriceId');
       }
 
-      const [plan] = await db
-        .select({
-          id: pricingPlansSchema.id,
-          cardTitle: pricingPlansSchema.cardTitle,
-          paymentType: pricingPlansSchema.paymentType,
-          subotizPriceId: pricingPlansSchema.subotizPriceId,
-        })
-        .from(pricingPlansSchema)
-        .where(eq(pricingPlansSchema.subotizPriceId, subotizPriceId!))
-        .limit(1);
+      const plan = getPricingPlanByProviderId('subotizPriceId', subotizPriceId!);
 
-      if (!plan) {
+      if (!isActivePricingPlan(plan)) {
         return apiResponse.notFound('Plan not found for Subotiz price ID');
       }
 
@@ -225,21 +204,9 @@ export async function POST(req: Request) {
         return apiResponse.badRequest('Missing planId');
       }
 
-      const [plan] = await db
-        .select({
-          id: pricingPlansSchema.id,
-          cardTitle: pricingPlansSchema.cardTitle,
-          paypalPlanId: pricingPlansSchema.paypalPlanId,
-          currency: pricingPlansSchema.currency,
-          paymentType: pricingPlansSchema.paymentType,
-          price: pricingPlansSchema.price,
-          provider: pricingPlansSchema.provider,
-        })
-        .from(pricingPlansSchema)
-        .where(eq(pricingPlansSchema.id, planId))
-        .limit(1);
+      const plan = getPricingPlanById(planId);
 
-      if (!plan || (plan.provider !== 'paypal' && plan.provider !== 'all')) {
+      if (!isActivePricingPlan(plan) || (plan.provider !== 'paypal' && plan.provider !== 'all')) {
         return apiResponse.notFound('Plan not found for PayPal');
       }
 
@@ -347,23 +314,9 @@ export async function POST(req: Request) {
         return apiResponse.badRequest('Missing planId');
       }
 
-      const [plan] = await db
-        .select({
-          id: pricingPlansSchema.id,
-          creemProductId: pricingPlansSchema.creemProductId,
-          currency: pricingPlansSchema.currency,
-          paypalPlanId: pricingPlansSchema.paypalPlanId,
-          paymentType: pricingPlansSchema.paymentType,
-          price: pricingPlansSchema.price,
-          provider: pricingPlansSchema.provider,
-          stripePriceId: pricingPlansSchema.stripePriceId,
-          subotizPriceId: pricingPlansSchema.subotizPriceId,
-        })
-        .from(pricingPlansSchema)
-        .where(eq(pricingPlansSchema.id, planId))
-        .limit(1);
+      const plan = getPricingPlanById(planId);
 
-      if (!plan || plan.provider !== 'all') {
+      if (!isActivePricingPlan(plan) || plan.provider !== 'all') {
         return apiResponse.notFound('Plan not found for payment selection');
       }
 

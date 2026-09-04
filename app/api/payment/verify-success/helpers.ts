@@ -2,11 +2,11 @@
  * Helper functions for database queries, validation, and response building
  */
 
+import { getPricingPlanById } from '@/lib/pricing';
 import { apiResponse } from '@/lib/api-response';
 import { getDb } from '@/lib/db';
 import {
   orders as ordersSchema,
-  pricingPlans as pricingPlansSchema,
   subscriptions as subscriptionsSchema,
 } from '@/lib/db/schema';
 import { and, eq } from 'drizzle-orm';
@@ -54,17 +54,9 @@ export async function getPlanSummaryById(planId: string | null | undefined): Pro
     return null;
   }
 
-  const db = getDb();
-  const [plan] = await db
-    .select({
-      id: pricingPlansSchema.id,
-      name: pricingPlansSchema.cardTitle,
-    })
-    .from(pricingPlansSchema)
-    .where(eq(pricingPlansSchema.id, planId))
-    .limit(1);
+  const plan = getPricingPlanById(planId);
 
-  return plan || null;
+  return plan ? { id: plan.id, name: plan.cardTitle } : null;
 }
 
 /**

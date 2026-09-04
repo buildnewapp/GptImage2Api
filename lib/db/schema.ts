@@ -274,9 +274,7 @@ export const orders = pgTable(
     stripeInvoiceId: text("stripe_invoice_id"),
     stripeChargeId: text("stripe_charge_id"),
     subscriptionId: text("subscription_id"),
-    planId: uuid("plan_id").references(() => pricingPlans.id, {
-      onDelete: "set null",
-    }),
+    planId: uuid("plan_id"),
     productId: text("product_id"),
     priceId: varchar("price_id", { length: 255 }),
     amountSubtotal: numeric("amount_subtotal"),
@@ -317,9 +315,7 @@ export const subscriptions = pgTable(
     userId: uuid("user_id")
       .references(() => user.id, { onDelete: "cascade" })
       .notNull(),
-    planId: uuid("plan_id")
-      .references(() => pricingPlans.id, { onDelete: "restrict" })
-      .notNull(),
+    planId: uuid("plan_id").notNull(),
     provider: providerEnum("provider").notNull(),
     subscriptionId: text("subscription_id").notNull().unique(),
     customerId: text("customer_id").notNull(),
