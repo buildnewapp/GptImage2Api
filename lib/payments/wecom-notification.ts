@@ -1,8 +1,8 @@
+import { getPricingPlanById } from "@/lib/pricing";
 import { siteConfig } from "@/config/site";
 import { getDb } from "@/lib/db";
 import {
   orders as ordersSchema,
-  pricingPlans as pricingPlansSchema,
   user as userSchema,
 } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
@@ -44,11 +44,9 @@ export async function sendPaymentSuccessWeComNotification(orderId: string) {
         userEmail: userSchema.email,
         userName: userSchema.name,
         userCreatedAt: userSchema.createdAt,
-        planTitle: pricingPlansSchema.cardTitle,
       })
       .from(ordersSchema)
       .innerJoin(userSchema, eq(ordersSchema.userId, userSchema.id))
-      .leftJoin(pricingPlansSchema, eq(ordersSchema.planId, pricingPlansSchema.id))
       .where(eq(ordersSchema.id, orderId))
       .limit(1);
 
@@ -62,7 +60,7 @@ export async function sendPaymentSuccessWeComNotification(orderId: string) {
       order.userId,
     ].filter(Boolean).join(" / ");
     const productText =
-      order.planTitle || order.productId || order.priceId || order.planId || "未知产品";
+      getPricingPlanById(order.planId)?.cardTitle || order.productId || order.priceId || order.planId || "未知产品";
     const amountText = `${order.amountTotal} ${order.currency.toUpperCase()}`;
     const content = [
       `${siteConfig.name} 支付成功提醒`,

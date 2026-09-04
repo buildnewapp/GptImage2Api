@@ -1,11 +1,11 @@
 import { getDb } from "@/lib/db";
 import {
   orders as ordersSchema,
-  pricingPlans as pricingPlansSchema,
   subscriptionCreditBuckets as subscriptionCreditBucketsSchema,
   subscriptions as subscriptionsSchema,
 } from "@/lib/db/schema";
 import { isRecurringPaymentType } from "@/lib/payments/provider-utils";
+import { configuredPricingPlans, getPricingPlanById } from "@/lib/pricing";
 import { and, eq, gt, inArray, or } from "drizzle-orm";
 
 export const RECURRING_PURCHASE_REQUIRES_HIGHER_TIER_ERROR =
@@ -64,15 +64,7 @@ export async function assertRecurringPurchaseIsHigherTier(
 ): Promise<void> {
   const now = new Date();
   const db = getDb();
-  const [targetPlan] = await db
-    .select({
-      id: pricingPlansSchema.id,
-      paymentType: pricingPlansSchema.paymentType,
-      price: pricingPlansSchema.price,
-    })
-    .from(pricingPlansSchema)
-    .where(eq(pricingPlansSchema.id, planId))
-    .limit(1);
+  const targetPlan = getPricingPlanById(planId);
 
   if (!targetPlan) {
     throw new Error(`Plan not found for ${planId}`);
@@ -82,12 +74,14 @@ export async function assertRecurringPurchaseIsHigherTier(
     return;
   }
 
+  const recurringPlanIds = configuredPricingPlans
+    .filter((plan) => isRecurringPaymentType(plan.paymentType))
+    .map((plan) => plan.id);
   const existingSubscriptionPlans = await db
     .select({
-      price: pricingPlansSchema.price,
+      planId: subscriptionsSchema.planId,
     })
     .from(subscriptionsSchema)
-    .innerJoin(pricingPlansSchema, eq(subscriptionsSchema.planId, pricingPlansSchema.id))
     .where(
       and(
         eq(subscriptionsSchema.userId, userId),
@@ -98,17 +92,16 @@ export async function assertRecurringPurchaseIsHigherTier(
             gt(subscriptionsSchema.currentPeriodEnd, now),
           ),
         ),
-        eq(pricingPlansSchema.paymentType, "recurring"),
+        inArray(subscriptionsSchema.planId, recurringPlanIds),
       ),
     );
 
   const existingRecurringOrderPlans = await db
     .select({
       expiresAt: subscriptionCreditBucketsSchema.expiresAt,
-      price: pricingPlansSchema.price,
+      planId: ordersSchema.planId,
     })
     .from(ordersSchema)
-    .innerJoin(pricingPlansSchema, eq(ordersSchema.planId, pricingPlansSchema.id))
     .innerJoin(
       subscriptionCreditBucketsSchema,
       eq(subscriptionCreditBucketsSchema.relatedOrderId, ordersSchema.id),
@@ -117,14 +110,19 @@ export async function assertRecurringPurchaseIsHigherTier(
       and(
         eq(ordersSchema.userId, userId),
         eq(ordersSchema.status, "succeeded"),
-        eq(pricingPlansSchema.paymentType, "recurring"),
+        inArray(ordersSchema.planId, recurringPlanIds),
         gt(subscriptionCreditBucketsSchema.expiresAt, now),
       ),
     );
 
   const currentPrices = getActiveRecurringPrices(
-    existingSubscriptionPlans,
-    existingRecurringOrderPlans,
+    existingSubscriptionPlans.map((item) => ({
+      price: getPricingPlanById(item.planId)?.price,
+    })),
+    existingRecurringOrderPlans.map((item) => ({
+      expiresAt: item.expiresAt,
+      price: getPricingPlanById(item.planId)?.price,
+    })),
     now,
   );
 

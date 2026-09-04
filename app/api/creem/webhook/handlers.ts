@@ -1,3 +1,4 @@
+import { getPricingPlanByProviderId } from '@/lib/pricing';
 import { syncCreemSubscriptionData } from '@/actions/creem';
 import {
   CreemCheckoutCompletedEvent,
@@ -12,7 +13,7 @@ import {
 import { getDb } from '@/lib/db';
 import {
   orders as ordersSchema,
-  pricingPlans as pricingPlansSchema, subscriptions as subscriptionsSchema
+  subscriptions as subscriptionsSchema
 } from '@/lib/db/schema';
 import {
   grantConfiguredFirstOrderReward,
@@ -141,11 +142,7 @@ export async function handleCreemInvoicePaid(
   }
 
   if (!planId) {
-    const [plan] = await db
-      .select({ id: pricingPlansSchema.id })
-      .from(pricingPlansSchema)
-      .where(eq(pricingPlansSchema.creemProductId, productId))
-      .limit(1);
+    const plan = getPricingPlanByProviderId('creemProductId', productId);
     planId = plan?.id ?? null;
   }
 

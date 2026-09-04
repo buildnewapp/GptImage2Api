@@ -18,11 +18,11 @@
  * プロバイダーに依存せず、すべての支払いプロバイダー（Stripe、Creem など）で使用されます。
  */
 
+import { getPricingPlanById } from '@/lib/pricing';
 import { getDb } from '@/lib/db';
 import {
   creditLogs as creditLogsSchema,
   PaymentProvider,
-  pricingPlans as pricingPlansSchema,
   subscriptionCreditBuckets as subscriptionCreditBucketsSchema,
   usage as usageSchema,
 } from '@/lib/db/schema';
@@ -68,12 +68,7 @@ export async function upgradeOneTimeCredits(userId: string, planId: string, orde
    * 特典は、料金プランの `benefitsJsonb` フィールド（ダッシュボードの /dashboard/prices でアクセス可能）で定義することをお勧めします。このコードは、定義された特典に基づいて、ユーザーの特典をアップグレードします。
    * 以下のコードは、`oneTimeCredits` を使用した例です。他の特典をアップグレードする必要がある場合は、お客様のビジネスロジックに従って、以下のコードを修正してください。
    */
-  const planDataResults = await db
-    .select({ benefitsJsonb: pricingPlansSchema.benefitsJsonb })
-    .from(pricingPlansSchema)
-    .where(eq(pricingPlansSchema.id, planId))
-    .limit(1);
-  const planData = planDataResults[0];
+  const planData = getPricingPlanById(planId);
 
   if (!planData) {
     throw new Error(`Could not fetch plan benefits for ${planId}`);
@@ -177,12 +172,7 @@ export async function revokeOneTimeCredits(refundAmountCents: number, originalOr
   const isFullRefund = refundAmountCents === Math.round(parseFloat(originalOrder.amountTotal!) * 100);
 
   if (isFullRefund) {
-    const planDataResults = await db
-      .select({ benefitsJsonb: pricingPlansSchema.benefitsJsonb })
-      .from(pricingPlansSchema)
-      .where(eq(pricingPlansSchema.id, planId))
-      .limit(1);
-    const planData = planDataResults[0];
+    const planData = getPricingPlanById(planId);
 
     if (!planData) {
       console.error(`Error fetching plan benefits for planId ${planId} during refund ${refundOrderId}:`);
@@ -340,15 +330,7 @@ export async function upgradeSubscriptionCredits(
    * 以下のコードは、`monthlyCredits` を使用した例です。他の特典をアップグレードする必要がある場合は、お客様のビジネスロジックに従って、以下のコードを修正してください。
    */
   try {
-    const planDataResults = await db
-      .select({
-        recurringInterval: pricingPlansSchema.recurringInterval,
-        benefitsJsonb: pricingPlansSchema.benefitsJsonb,
-      })
-      .from(pricingPlansSchema)
-      .where(eq(pricingPlansSchema.id, planId))
-      .limit(1);
-    const planData = planDataResults[0];
+    const planData = getPricingPlanById(planId);
 
     if (!planData) {
       throw new Error(`Could not fetch plan benefits for ${planId}`);

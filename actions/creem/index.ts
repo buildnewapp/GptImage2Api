@@ -1,10 +1,11 @@
 'use server';
+
+import { getPricingPlanByProviderId } from '@/lib/pricing';
 import {
   retrieveCreemSubscription
 } from '@/lib/creem/client';
 import { getDb } from '@/lib/db';
 import {
-  pricingPlans as pricingPlansSchema,
   subscriptions as subscriptionsSchema
 } from '@/lib/db/schema';
 import { eq, InferInsertModel } from 'drizzle-orm';
@@ -48,11 +49,7 @@ export async function syncCreemSubscriptionData(
   }
 
   if (!planId) {
-    const [planRow] = await db
-      .select({ id: pricingPlansSchema.id })
-      .from(pricingPlansSchema)
-      .where(eq(pricingPlansSchema.creemProductId, productId))
-      .limit(1);
+    const planRow = getPricingPlanByProviderId('creemProductId', productId);
     if (planRow) {
       planId = planRow.id;
     }

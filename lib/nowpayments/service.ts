@@ -1,8 +1,9 @@
+import { getPricingPlanById, isActivePricingPlan } from "@/lib/pricing";
 import { randomUUID } from "node:crypto";
 
 import { DEFAULT_LOCALE } from "@/i18n/routing";
 import { getDb } from "@/lib/db";
-import { orders as ordersSchema, pricingPlans as pricingPlansSchema } from "@/lib/db/schema";
+import { orders as ordersSchema } from "@/lib/db/schema";
 import {
   extractNowpaymentsOrderNo,
   extractNowpaymentsPaymentId,
@@ -128,13 +129,9 @@ export async function createNowpaymentsInvoiceOrder({
   const db = getDb();
   const client = getNowpaymentsClient();
 
-  const [plan] = await db
-    .select()
-    .from(pricingPlansSchema)
-    .where(eq(pricingPlansSchema.id, planId))
-    .limit(1);
+  const plan = getPricingPlanById(planId);
 
-  if (!plan) {
+  if (!isActivePricingPlan(plan)) {
     throw new Error("Plan not found.");
   }
 
@@ -440,14 +437,7 @@ async function grantNowpaymentsBenefits(order: NowpaymentsOrderRow) {
     throw new Error("NOWPayments order planId is missing.");
   }
 
-  const db = getDb();
-  const [plan] = await db
-    .select({
-      paymentType: pricingPlansSchema.paymentType,
-    })
-    .from(pricingPlansSchema)
-    .where(eq(pricingPlansSchema.id, order.planId))
-    .limit(1);
+  const plan = getPricingPlanById(order.planId);
 
   if (plan?.paymentType === "recurring") {
     await upgradeSubscriptionCredits(

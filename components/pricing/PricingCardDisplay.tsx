@@ -1,10 +1,7 @@
 import PricingCTA from "@/components/pricing/PricingCTA";
-import { pricingPlans as pricingPlansSchema } from "@/lib/db/schema";
 import { cn } from "@/lib/utils";
-import { PricingPlanFeature, PricingPlanTranslation } from "@/types/pricing";
+import type { PricingPlanFeature, PricingPlanTranslation, PublicPricingPlan as PricingPlan } from "@/types/pricing";
 import { Check, X } from "lucide-react";
-
-type PricingPlan = typeof pricingPlansSchema.$inferSelect;
 
 interface PricingCardDisplayProps {
   checkoutAvailabilityEnv?: {

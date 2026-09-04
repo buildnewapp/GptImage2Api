@@ -1,5 +1,10 @@
 'use server';
 
+import {
+  getPricingPlanById,
+  getPricingPlanByProviderId,
+  isActivePricingPlan,
+} from '@/lib/pricing';
 import { sendEmail } from '@/actions/resend';
 import { siteConfig } from '@/config/site';
 import { CreditUpgradeFailedEmail } from '@/emails/credit-upgrade-failed';
@@ -9,7 +14,6 @@ import { InvoicePaymentFailedEmail } from '@/emails/invoice-payment-failed';
 import { getSession } from '@/lib/auth/server';
 import { getDb } from '@/lib/db';
 import {
-  pricingPlans as pricingPlansSchema,
   subscriptions as subscriptionsSchema,
   user as userSchema,
 } from '@/lib/db/schema';
@@ -106,26 +110,13 @@ export async function createStripeCheckoutSession(params: {
   couponCode?: string;
   referral?: string;
 }): Promise<{ sessionId: string; url?: string }> {
-  const db = getDb();
-
   const { userId, priceId, couponCode, referral } = params;
 
   const customerId = await getOrCreateStripeCustomer(userId);
 
-  const results = await db
-    .select({
-      id: pricingPlansSchema.id,
-      cardTitle: pricingPlansSchema.cardTitle,
-      paymentType: pricingPlansSchema.paymentType,
-      trialPeriodDays: pricingPlansSchema.trialPeriodDays,
-    })
-    .from(pricingPlansSchema)
-    .where(eq(pricingPlansSchema.stripePriceId, priceId))
-    .limit(1);
+  const plan = getPricingPlanByProviderId('stripePriceId', priceId);
 
-  const plan = results[0];
-
-  if (!plan) {
+  if (!isActivePricingPlan(plan)) {
     console.error(`Plan not found for priceId ${priceId}`);
     throw new Error(`Plan not found for priceId ${priceId}`);
   }
@@ -329,12 +320,7 @@ export async function syncSubscriptionData(
     if (!planId) {
       const priceId = subscription.items.data[0].price.id;
       console.warn(`Plan ID is missing for subscription ${subscriptionId}. Attempting lookup via price ${priceId}.`);
-      const planDataResults = await db
-        .select({ id: pricingPlansSchema.id })
-        .from(pricingPlansSchema)
-        .where(eq(pricingPlansSchema.stripePriceId, priceId))
-        .limit(1);
-      const planData = planDataResults[0];
+      const planData = getPricingPlanByProviderId('stripePriceId', priceId);
 
       if (planData) {
         planId = planData.id;
@@ -501,12 +487,7 @@ export async function sendInvoicePaymentFailedEmail({
 
     const planId = subscription.metadata?.planId;
     if (planId) {
-      const planDataResults = await db
-        .select({ cardTitle: pricingPlansSchema.cardTitle })
-        .from(pricingPlansSchema)
-        .where(eq(pricingPlansSchema.id, planId))
-        .limit(1);
-      const planData = planDataResults[0];
+      const planData = getPricingPlanById(planId);
 
       if (planData && planData.cardTitle) {
         planName = planData.cardTitle;

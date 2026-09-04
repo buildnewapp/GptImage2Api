@@ -14,13 +14,10 @@ import { getPublicPricingPlans } from "@/actions/prices/public";
 import { PricingCardDisplay } from "@/components/pricing/PricingCardDisplay";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DEFAULT_LOCALE } from "@/i18n/routing";
-import { pricingPlans as pricingPlansSchema } from "@/lib/db/schema";
 import { isPayPalEnabled } from "@/lib/paypal/client";
-import { PricingPlanLangJsonb } from "@/types/pricing";
+import type { PricingPlanLangJsonb, PublicPricingPlan as PricingPlan } from "@/types/pricing";
 import { Sparkles } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
-
-type PricingPlan = typeof pricingPlansSchema.$inferSelect;
 
 interface PricingByGroupProps {
   checkoutMode?: "default" | "nowpayments";

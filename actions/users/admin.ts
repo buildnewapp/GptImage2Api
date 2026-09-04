@@ -13,7 +13,6 @@ import {
   aiStudioGenerations as aiStudioGenerationsSchema,
   creditLogs as creditLogsSchema,
   orders as ordersSchema,
-  pricingPlans as pricingPlansSchema,
   session as sessionSchema,
   account as accountSchema,
   subscriptions as subscriptionsSchema,
@@ -23,6 +22,7 @@ import {
   userSource as userSourceSchema,
   verification as verificationSchema,
 } from "@/lib/db/schema";
+import { configuredPricingPlans, getPricingPlanById } from "@/lib/pricing";
 import { getErrorMessage } from "@/lib/error-utils";
 import { hashPassword } from "better-auth/crypto";
 import { randomUUID } from "node:crypto";
@@ -144,32 +144,11 @@ export async function getAdminManualBenefitPlans(): Promise<
     return actionResponse.forbidden("Admin privileges required.");
   }
 
-  const db = getDb();
-
   try {
-    const plans = await db
-      .select({
-        id: pricingPlansSchema.id,
-        cardTitle: pricingPlansSchema.cardTitle,
-        provider: pricingPlansSchema.provider,
-        paymentType: pricingPlansSchema.paymentType,
-        recurringInterval: pricingPlansSchema.recurringInterval,
-        price: pricingPlansSchema.price,
-        currency: pricingPlansSchema.currency,
-        displayPrice: pricingPlansSchema.displayPrice,
-        benefitsJsonb: pricingPlansSchema.benefitsJsonb,
-      })
-      .from(pricingPlansSchema)
-      .where(
-        and(
-          eq(pricingPlansSchema.isActive, true),
-          eq(pricingPlansSchema.environment, "live"),
-        ),
-      )
-      .orderBy(
-        asc(pricingPlansSchema.environment),
-        asc(pricingPlansSchema.displayOrder),
-        asc(pricingPlansSchema.cardTitle),
+    const plans = configuredPricingPlans
+      .filter((plan) => plan.isActive && plan.environment === "live")
+      .sort((left, right) =>
+        left.displayOrder - right.displayOrder || left.cardTitle.localeCompare(right.cardTitle)
       );
 
     return actionResponse.success(plans);
@@ -375,29 +354,10 @@ export async function getUserDetails({
       consumedCreditResults,
       purchasedCreditResults,
     ] = await Promise.all([
-      db
-        .select({
-          id: pricingPlansSchema.id,
-          cardTitle: pricingPlansSchema.cardTitle,
-          provider: pricingPlansSchema.provider,
-          paymentType: pricingPlansSchema.paymentType,
-          recurringInterval: pricingPlansSchema.recurringInterval,
-          price: pricingPlansSchema.price,
-          currency: pricingPlansSchema.currency,
-          displayPrice: pricingPlansSchema.displayPrice,
-          benefitsJsonb: pricingPlansSchema.benefitsJsonb,
-        })
-        .from(pricingPlansSchema)
-        .where(
-          and(
-            eq(pricingPlansSchema.isActive, true),
-            eq(pricingPlansSchema.environment, "live"),
-          ),
-        )
-        .orderBy(
-          asc(pricingPlansSchema.environment),
-          asc(pricingPlansSchema.displayOrder),
-          asc(pricingPlansSchema.cardTitle),
+      configuredPricingPlans
+        .filter((plan) => plan.isActive && plan.environment === "live")
+        .sort((left, right) =>
+          left.displayOrder - right.displayOrder || left.cardTitle.localeCompare(right.cardTitle)
         ),
       db
         .select()
@@ -426,13 +386,8 @@ export async function getUserDetails({
           metadata: subscriptionsSchema.metadata,
           createdAt: subscriptionsSchema.createdAt,
           updatedAt: subscriptionsSchema.updatedAt,
-          planTitle: pricingPlansSchema.cardTitle,
         })
         .from(subscriptionsSchema)
-        .leftJoin(
-          pricingPlansSchema,
-          eq(subscriptionsSchema.planId, pricingPlansSchema.id),
-        )
         .where(eq(subscriptionsSchema.userId, userId))
         .orderBy(desc(subscriptionsSchema.createdAt))
         .limit(5),
@@ -459,13 +414,8 @@ export async function getUserDetails({
           metadata: ordersSchema.metadata,
           createdAt: ordersSchema.createdAt,
           updatedAt: ordersSchema.updatedAt,
-          planTitle: pricingPlansSchema.cardTitle,
         })
         .from(ordersSchema)
-        .leftJoin(
-          pricingPlansSchema,
-          eq(ordersSchema.planId, pricingPlansSchema.id),
-        )
         .where(eq(ordersSchema.userId, userId))
         .orderBy(desc(ordersSchema.createdAt))
         .limit(5),
@@ -525,8 +475,14 @@ export async function getUserDetails({
       user,
       manualBenefitPlans,
       buckets,
-      subscriptions,
-      orders,
+      subscriptions: subscriptions.map((subscription) => ({
+        ...subscription,
+        planTitle: getPricingPlanById(subscription.planId)?.cardTitle ?? null,
+      })),
+      orders: orders.map((order) => ({
+        ...order,
+        planTitle: getPricingPlanById(order.planId)?.cardTitle ?? null,
+      })),
       generationStats,
       creditStats,
     });
@@ -923,14 +879,7 @@ export async function grantManualUserBenefits(
       return actionResponse.notFound("User not found.");
     }
 
-    const planRows = planId
-      ? await db
-          .select()
-          .from(pricingPlansSchema)
-          .where(eq(pricingPlansSchema.id, planId))
-          .limit(1)
-      : [];
-    const plan = planRows[0] ?? null;
+    const plan = getPricingPlanById(planId) ?? null;
 
     if (planId && !plan) {
       return actionResponse.notFound("Pricing plan not found.");

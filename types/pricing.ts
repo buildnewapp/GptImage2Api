@@ -1,6 +1,11 @@
-import { pricingPlanGroups } from '@/lib/db/schema';
+import type { pricingPlanGroups, pricingPlans } from '@/lib/db/schema';
 
 export type PricingPlanGroup = typeof pricingPlanGroups.$inferSelect;
+
+export type PublicPricingPlan = Omit<
+  typeof pricingPlans.$inferSelect,
+  'createdAt' | 'updatedAt'
+>;
 
 export interface PricingPlanFeature {
   description: string;
