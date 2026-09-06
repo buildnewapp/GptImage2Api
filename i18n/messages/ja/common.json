@@ -1094,7 +1094,7 @@
           "price": "$167"
         }
       ],
-      "saveLabel": "17% お得",
+      "saveLabel": "最大40%お得",
       "title": "現在のWebアプリ向け明瞭な料金体系",
       "yearlyLabel": "年額"
     },
@@ -1109,7 +1109,8 @@
           "monthly": "毎月 {credits} クレジット",
           "oneTime": "{credits} クレジット"
         },
-        "savings": "最大{percent}%お得"
+        "pricePer100Credits": "100 クレジット = {amount}",
+        "savings": "最大40%お得"
       },
       "valueComparison": {
         "columns": {

@@ -158,6 +158,7 @@ export interface VideoTemplatePricingPlan {
   offerPrice?: string;
   price: string;
   originalPrice?: string;
+  pricePer100Credits?: string;
   priceSuffix?: string;
 }
 

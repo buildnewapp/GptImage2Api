@@ -1094,7 +1094,7 @@
           "price": "$167"
         }
       ],
-      "saveLabel": "Save 17%",
+      "saveLabel": "Save up to 40%",
       "title": "Transparent Pricing for the Current App",
       "yearlyLabel": "Yearly"
     },
@@ -1109,7 +1109,8 @@
           "monthly": "{credits} credits / month",
           "oneTime": "{credits} credits"
         },
-        "savings": "Save up to {percent}%"
+        "pricePer100Credits": "100 credits = {amount}",
+        "savings": "Save up to 40%"
       },
       "valueComparison": {
         "columns": {

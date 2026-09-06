@@ -21,6 +21,7 @@ export type VideoPricingDynamicCopy = {
     monthly?: string;
     oneTime?: string;
   };
+  pricePer100Credits?: string;
   savings?: string;
 };
 
@@ -105,6 +106,7 @@ const defaultDynamicCopy = {
     monthly: "{credits} credits / month",
     oneTime: "{credits} credits",
   },
+  pricePer100Credits: "100 credits = {amount}",
   savings: "Save up to {percent}%",
 } as const;
 
@@ -257,6 +259,27 @@ function mapRecurringPlan(
   matchingMonthlyPlan?: VideoPricingSourcePlan,
 ): VideoTemplatePricingPlan {
   const localizedPlan = getLocalizedPlanContent(plan, locale);
+  const benefits = plan.benefitsJsonb as PricingBenefits | undefined;
+  const priceNumber = Number(plan.price);
+  const totalMonths =
+    typeof benefits?.totalMonths === "number" && benefits.totalMonths > 0
+      ? benefits.totalMonths
+      : 1;
+  const pricePer100Credits =
+    typeof benefits?.monthlyCredits === "number" &&
+    benefits.monthlyCredits > 0 &&
+    Number.isFinite(priceNumber) &&
+    priceNumber > 0
+      ? formatTemplate(
+          copy.pricePer100Credits ?? defaultDynamicCopy.pricePer100Credits,
+          {
+            amount: `$${(
+              (priceNumber / (benefits.monthlyCredits * totalMonths)) *
+              100
+            ).toFixed(2)}`,
+          },
+        )
+      : undefined;
   const matchingMonthlyLocalizedPlan = matchingMonthlyPlan
     ? getLocalizedPlanContent(matchingMonthlyPlan, locale)
     : undefined;
@@ -274,11 +297,7 @@ function mapRecurringPlan(
     billed: formatBilled(plan, copy),
     checkoutPlan: buildCheckoutPlan(plan),
     currency: plan.currency ?? undefined,
-    credits: formatCredits(
-      plan.benefitsJsonb as PricingBenefits | undefined,
-      locale,
-      copy,
-    ),
+    credits: formatCredits(benefits, locale, copy),
     cta: localizedPlan.buttonText ?? plan.buttonText ?? "Subscribe",
     description:
       localizedPlan.cardDescription ?? plan.cardDescription ?? undefined,
@@ -300,6 +319,7 @@ function mapRecurringPlan(
           undefined)
         : (plan.originalPrice ?? undefined),
     price: localizedPlan.displayPrice ?? plan.displayPrice ?? "",
+    pricePer100Credits,
     priceSuffix: localizedPlan.priceSuffix ?? plan.priceSuffix ?? undefined,
   };
 }

@@ -61,6 +61,7 @@ test("buildVideoTemplatePricingSection formats generated labels from supplied co
         monthly: "{credits} credits each month",
         oneTime: "{credits} credits once",
       },
+      pricePer100Credits: "100 credits = {amount}",
       savings: "Up to {percent}% off",
     },
     environment: "test",
@@ -100,5 +101,6 @@ test("buildVideoTemplatePricingSection formats generated labels from supplied co
 
   assert.equal(section.yearlyPlans?.[0]?.billed, "Annual charge USD 120");
   assert.equal(section.yearlyPlans?.[0]?.credits, "100 credits each month");
+  assert.equal(section.yearlyPlans?.[0]?.pricePer100Credits, "100 credits = $10.00");
   assert.equal(section.saveLabel, "Up to 17% off");
 });
