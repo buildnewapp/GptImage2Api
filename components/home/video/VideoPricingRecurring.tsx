@@ -48,7 +48,7 @@ export default function VideoPricingRecurring({
 }: VideoPricingRecurringProps) {
   const hasYearlyPlans = yearlyPlans.length > 0;
   const hasMonthlyPlans = monthlyPlans.length > 0;
-  const defaultCycle = hasMonthlyPlans ? "monthly" : "annual";
+  const defaultCycle = hasYearlyPlans ? "annual" : "monthly";
   const [billingCycle, setBillingCycle] = useState<"annual" | "monthly">(defaultCycle);
   const plans =
     billingCycle === "monthly" && hasMonthlyPlans ? monthlyPlans : yearlyPlans;
@@ -149,11 +149,16 @@ export default function VideoPricingRecurring({
                     {plan.billed ? (
                       <p className="text-sm text-muted-foreground">{plan.billed}</p>
                     ) : null}
-                    {plan.credits || plan.approx ? (
+                    {plan.credits || plan.pricePer100Credits || plan.approx ? (
                       <div className="mt-3 space-y-1">
                         {plan.credits ? (
                           <p className="text-sm font-medium text-primary">
                             {plan.credits}
+                          </p>
+                        ) : null}
+                        {plan.pricePer100Credits ? (
+                          <p className="text-xs text-muted-foreground">
+                            {plan.pricePer100Credits}
                           </p>
                         ) : null}
                         {plan.approx ? (

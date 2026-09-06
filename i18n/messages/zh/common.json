@@ -980,7 +980,7 @@
           "price": "$167"
         }
       ],
-      "saveLabel": "节省 17%",
+      "saveLabel": "最高省 40%",
       "title": "当前应用的透明定价",
       "yearlyLabel": "年付"
     },
@@ -995,7 +995,8 @@
           "monthly": "每月 {credits} 积分",
           "oneTime": "{credits} 积分"
         },
-        "savings": "最高省 {percent}%"
+        "pricePer100Credits": "100 积分 = {amount}",
+        "savings": "最高省 40%"
       },
       "valueComparison": {
         "columns": {

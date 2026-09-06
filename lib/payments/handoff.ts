@@ -1,12 +1,14 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
 export type PaymentHandoffCheckoutRequest = {
+  applyCoupon?: boolean;
   provider?: string;
   stripePriceId?: string;
   creemProductId?: string;
   subotizPriceId?: string;
   planId?: string;
   couponCode?: string;
+  locale?: string;
   referral?: string;
 };
 

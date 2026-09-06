@@ -136,7 +136,6 @@ export interface VideoTemplateCheckoutPlan {
   isHighlighted?: boolean;
   planId?: string | null;
   provider?: string | null;
-  providerOptions?: string[];
   stripeCouponId?: string | null;
   stripePriceId?: string | null;
   subotizPriceId?: string | null;
@@ -159,6 +158,7 @@ export interface VideoTemplatePricingPlan {
   offerPrice?: string;
   price: string;
   originalPrice?: string;
+  pricePer100Credits?: string;
   priceSuffix?: string;
 }
 

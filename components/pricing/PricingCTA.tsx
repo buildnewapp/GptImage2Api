@@ -10,10 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { DEFAULT_LOCALE, useRouter } from "@/i18n/routing";
 import type { PublicPricingPlan as PricingPlan } from "@/types/pricing";
-import {
-  type CheckoutProvider,
-  getAvailableCheckoutProviders,
-} from "@/lib/payments/checkout-availability";
+import type { CheckoutProvider } from "@/lib/payments/checkout-availability";
 import {
   Bitcoin,
   CreditCard,
@@ -34,13 +31,6 @@ const RECURRING_PURCHASE_REQUIRES_HIGHER_TIER_ERROR =
 
 type Params = {
   checkoutMode?: "default" | "nowpayments";
-  checkoutAvailabilityEnv?: {
-    creemEnabled?: boolean;
-    nowpaymentsEnabled?: boolean;
-    paypalEnabled?: boolean;
-    stripeEnabled?: boolean;
-    subotizEnabled?: boolean;
-  };
   plan: PricingPlan;
   localizedPlan: any;
   theme?: "default" | "seedance";
@@ -83,11 +73,13 @@ const PAYMENT_METHODS: Record<
 
 export default function PricingCTA({
   checkoutMode = "default",
-  checkoutAvailabilityEnv,
   plan,
   localizedPlan,
   theme = "default",
 }: Params) {
+  const [availableProviders, setAvailableProviders] = useState<
+    CheckoutProvider[]
+  >([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingProvider, setLoadingProvider] =
     useState<CheckoutProvider | null>(null);
@@ -103,19 +95,6 @@ export default function PricingCTA({
   const isStripe = provider === "stripe";
   const isNowpaymentsMode = checkoutMode === "nowpayments";
   const isProviderChoice = provider === "all" && !isNowpaymentsMode;
-  const availableProviders = getAvailableCheckoutProviders(
-    {
-      creemProductId: plan.creemProductId,
-      currency: plan.currency,
-      paypalPlanId: plan.paypalPlanId,
-      paymentType: plan.paymentType,
-      price: plan.price,
-      provider: plan.provider,
-      stripePriceId: plan.stripePriceId,
-      subotizPriceId: plan.subotizPriceId,
-    },
-    checkoutAvailabilityEnv,
-  );
 
   const getCheckoutErrorMessage = (error: unknown) => {
     if (!(error instanceof Error)) {
@@ -134,7 +113,7 @@ export default function PricingCTA({
       "stripe") as CheckoutProvider,
     applyCoupon = true,
   ) => {
-    if (isNowpaymentsMode || selectedProvider === "nowpayments") {
+    if (isNowpaymentsMode) {
       setIsLoading(true);
       setLoadingProvider("nowpayments");
       try {
@@ -188,65 +167,25 @@ export default function PricingCTA({
       return;
     }
 
-    const stripePriceId = plan.stripePriceId ?? null;
-    if (selectedProvider === "stripe" && !stripePriceId) {
-      toast.error(t("errors.stripePriceMissing"));
-      return;
-    }
-
-    const creemProductId = plan.creemProductId ?? null;
-    if (selectedProvider === "creem" && !creemProductId) {
-      toast.error(t("errors.creemProductMissing"));
-      return;
-    }
-    const subotizPriceId = plan.subotizPriceId ?? null;
-    if (selectedProvider === "subotiz" && !subotizPriceId) {
-      toast.error(t("errors.subotizPriceMissing"));
-      return;
-    }
-    if (selectedProvider === "paypal" && !plan.id) {
-      toast.error(t("errors.paypalPlanMissing"));
-      return;
-    }
-
     setIsLoading(true);
     setLoadingProvider(selectedProvider);
     try {
       let requestBody: {
+        applyCoupon: boolean;
+        locale: string;
+        planId: string;
         provider: string;
-        couponCode?: string;
-        // Stripe
-        stripePriceId?: string;
         referral?: string;
-
-        // Creem
-        creemProductId?: string;
-        planId?: string;
-        subotizPriceId?: string;
       } = {
+        applyCoupon,
+        locale,
+        planId: plan.id,
         provider: selectedProvider,
       };
 
       if (selectedProvider === "stripe") {
-        requestBody.stripePriceId = stripePriceId!;
-        requestBody.couponCode =
-          applyCoupon && plan.stripeCouponId ? plan.stripeCouponId : undefined;
-
         const toltReferral = (window as any).tolt_referral;
         requestBody.referral = toltReferral ?? undefined;
-      }
-      if (selectedProvider === "creem") {
-        requestBody.creemProductId = creemProductId!;
-        requestBody.couponCode =
-          applyCoupon && plan.creemDiscountCode
-            ? plan.creemDiscountCode
-            : undefined;
-      }
-      if (selectedProvider === "subotiz") {
-        requestBody.subotizPriceId = subotizPriceId!;
-      }
-      if (selectedProvider === "paypal") {
-        requestBody.planId = plan.id;
       }
 
       const response = await fetch("/api/payment/checkout-session", {
@@ -309,23 +248,57 @@ export default function PricingCTA({
   const allowManualCoupon =
     Boolean(defaultCouponCode) && plan.enableManualInputCoupon;
 
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     if (isProviderChoice) {
-      if (availableProviders.length === 0) {
-        toast.error(t("errors.noPaymentMethods"));
-        return;
-      }
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          `/api/payment/options?planId=${encodeURIComponent(plan.id)}`,
+          {
+            cache: "no-store",
+            headers: {
+              "Accept-Language": (locale || DEFAULT_LOCALE) as string,
+            },
+          },
+        );
+        const result = await response.json();
 
-      if (availableProviders.length === 1) {
-        handleCheckout(availableProviders[0]);
-        return;
-      }
+        if (!response.ok || !result.success) {
+          throw new Error(
+            result.error ||
+              t("errors.httpStatus", { status: response.status }),
+          );
+        }
 
-      setIsPaymentDialogOpen(true);
+        const providers = Array.isArray(result.data?.providers)
+          ? (result.data.providers.filter(
+              (item: unknown): item is CheckoutProvider =>
+                typeof item === "string" && item in PAYMENT_METHODS,
+            ) as CheckoutProvider[])
+          : [];
+
+        if (providers.length === 0) {
+          toast.error(t("errors.noPaymentMethods"));
+          return;
+        }
+
+        setAvailableProviders(providers);
+        if (providers.length === 1) {
+          await handleCheckout(providers[0]);
+          return;
+        }
+
+        setIsPaymentDialogOpen(true);
+      } catch (error) {
+        console.error("Payment Options Error:", error);
+        toast.error(getCheckoutErrorMessage(error));
+      } finally {
+        setIsLoading(false);
+      }
       return;
     }
 
-    handleCheckout((provider || "stripe") as CheckoutProvider);
+    await handleCheckout((provider || "stripe") as CheckoutProvider);
   };
 
   return (
@@ -343,7 +316,7 @@ export default function PricingCTA({
               : "bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100"
         } ${allowManualCoupon ? "mb-2" : "mb-6"}`}
         {...(!plan.buttonLink && {
-          onClick: handleButtonClick,
+          onClick: () => void handleButtonClick(),
         })}
       >
         {plan.buttonLink ? (

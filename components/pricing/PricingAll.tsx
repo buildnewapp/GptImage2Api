@@ -13,23 +13,11 @@ import { getPublicPricingPlans } from "@/actions/prices/public";
 import { PricingCardDisplay } from "@/components/pricing/PricingCardDisplay";
 import FeatureBadge from "@/components/shared/FeatureBadge";
 import { DEFAULT_LOCALE } from "@/i18n/routing";
-import { isPayPalEnabled } from "@/lib/paypal/client";
 import type { PricingPlanLangJsonb, PublicPricingPlan as PricingPlan } from "@/types/pricing";
 import { getLocale, getTranslations } from "next-intl/server";
 
 export default async function PricingAll() {
   const t = await getTranslations("Pricing");
-  const checkoutAvailabilityEnv = {
-    creemEnabled: Boolean(process.env.CREEM_API_KEY),
-    nowpaymentsEnabled: Boolean(process.env.NOWPAYMENTS_API_KEY),
-    paypalEnabled: isPayPalEnabled,
-    stripeEnabled: Boolean(process.env.STRIPE_SECRET_KEY),
-    subotizEnabled: Boolean(
-      process.env.SUBOTIZ_API_KEY &&
-      process.env.SUBOTIZ_ACCESS_NO &&
-      process.env.SUBOTIZ_MERCHANT_ID
-    ),
-  };
 
   const locale = await getLocale();
 
@@ -78,7 +66,6 @@ export default async function PricingAll() {
 
             return (
               <PricingCardDisplay
-                checkoutAvailabilityEnv={checkoutAvailabilityEnv}
                 key={plan.id}
                 plan={plan}
                 localizedPlan={localizedPlan}

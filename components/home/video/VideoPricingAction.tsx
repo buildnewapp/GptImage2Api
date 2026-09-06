@@ -75,6 +75,9 @@ export default function VideoPricingAction({
   manualCouponClassName,
   plan,
 }: VideoPricingActionProps) {
+  const [availableProviders, setAvailableProviders] = useState<
+    CheckoutProvider[]
+  >([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingProvider, setLoadingProvider] =
     useState<CheckoutProvider | null>(null);
@@ -83,7 +86,6 @@ export default function VideoPricingAction({
 
   const provider = plan.provider ?? "stripe";
   const isProviderChoice = provider === "all";
-  const availableProviders = (plan.providerOptions ?? []) as CheckoutProvider[];
 
   const defaultCouponCode =
     provider === "creem"
@@ -113,71 +115,8 @@ export default function VideoPricingAction({
       "stripe") as CheckoutProvider,
     applyCoupon = true,
   ) => {
-    if (selectedProvider === "nowpayments") {
-      setIsLoading(true);
-      setLoadingProvider(selectedProvider);
-      try {
-        const response = await fetch("/api/nowpayments/checkout", {
-          body: JSON.stringify({
-            locale: document.documentElement.lang || navigator.language || "en",
-            planId: plan.planId,
-          }),
-          headers: {
-            "Accept-Language":
-              document.documentElement.lang || navigator.language || "en",
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-        });
-        const result = await response.json();
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            toast.error(t("errors.loginRequired"));
-            window.location.assign("/login");
-            return;
-          }
-
-          throw new Error(
-            result.error || t("errors.httpStatus", { status: response.status }),
-          );
-        }
-
-        if (!result.success) {
-          throw new Error(result.error || t("errors.nowpaymentsOrderFailed"));
-        }
-
-        if (!result.data?.url) {
-          throw new Error(t("errors.checkoutUrlMissing"));
-        }
-
-        window.location.assign(result.data.url);
-      } catch (error) {
-        console.error("NOWPayments Checkout Error:", error);
-        toast.error(getCheckoutErrorMessage(error));
-      } finally {
-        setIsLoading(false);
-        setLoadingProvider(null);
-      }
-
-      return;
-    }
-
-    if (selectedProvider === "stripe" && !plan.stripePriceId) {
-      toast.error(t("errors.stripePriceMissing"));
-      return;
-    }
-
-    if (selectedProvider === "creem" && !plan.creemProductId) {
-      toast.error(t("errors.creemProductMissing"));
-      return;
-    }
-    if (selectedProvider === "subotiz" && !plan.subotizPriceId) {
-      toast.error(t("errors.subotizPriceMissing"));
-      return;
-    }
-    if (selectedProvider === "paypal" && !plan.planId) {
-      toast.error(t("errors.paypalPlanMissing"));
+    if (!plan.planId) {
+      toast.error(t("errors.checkoutSessionFailed"));
       return;
     }
 
@@ -186,38 +125,22 @@ export default function VideoPricingAction({
 
     try {
       const requestBody: {
-        couponCode?: string;
-        creemProductId?: string;
-        planId?: string;
+        applyCoupon: boolean;
+        locale: string;
+        planId: string;
         provider: string;
         referral?: string;
-        stripePriceId?: string;
-        subotizPriceId?: string;
       } = {
+        applyCoupon,
+        locale: document.documentElement.lang || navigator.language || "en",
+        planId: plan.planId,
         provider: selectedProvider,
       };
 
       if (selectedProvider === "stripe") {
-        requestBody.stripePriceId = plan.stripePriceId ?? undefined;
-        requestBody.couponCode = applyCoupon
-          ? (plan.stripeCouponId ?? undefined)
-          : undefined;
         requestBody.referral = (
           window as { tolt_referral?: string }
         ).tolt_referral;
-      }
-
-      if (selectedProvider === "creem") {
-        requestBody.creemProductId = plan.creemProductId ?? undefined;
-        requestBody.couponCode = applyCoupon
-          ? (plan.creemDiscountCode ?? undefined)
-          : undefined;
-      }
-      if (selectedProvider === "subotiz") {
-        requestBody.subotizPriceId = plan.subotizPriceId ?? undefined;
-      }
-      if (selectedProvider === "paypal") {
-        requestBody.planId = plan.planId ?? undefined;
       }
 
       const response = await fetch("/api/payment/checkout-session", {
@@ -261,23 +184,63 @@ export default function VideoPricingAction({
     }
   };
 
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     if (isProviderChoice) {
-      if (availableProviders.length === 0) {
-        toast.error(t("errors.noPaymentMethods"));
+      if (!plan.planId) {
+        toast.error(t("errors.checkoutSessionFailed"));
         return;
       }
 
-      if (availableProviders.length === 1) {
-        void handleCheckout(availableProviders[0]);
-        return;
-      }
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          `/api/payment/options?planId=${encodeURIComponent(plan.planId)}`,
+          {
+            cache: "no-store",
+            headers: {
+              "Accept-Language":
+                document.documentElement.lang || navigator.language || "en",
+            },
+          },
+        );
+        const result = await response.json();
 
-      setIsPaymentDialogOpen(true);
+        if (!response.ok || !result.success) {
+          throw new Error(
+            result.error ||
+              t("errors.httpStatus", { status: response.status }),
+          );
+        }
+
+        const providers = Array.isArray(result.data?.providers)
+          ? (result.data.providers.filter(
+              (item: unknown): item is CheckoutProvider =>
+                typeof item === "string" && item in PAYMENT_METHODS,
+            ) as CheckoutProvider[])
+          : [];
+
+        if (providers.length === 0) {
+          toast.error(t("errors.noPaymentMethods"));
+          return;
+        }
+
+        setAvailableProviders(providers);
+        if (providers.length === 1) {
+          await handleCheckout(providers[0]);
+          return;
+        }
+
+        setIsPaymentDialogOpen(true);
+      } catch (error) {
+        console.error("Payment Options Error:", error);
+        toast.error(getCheckoutErrorMessage(error));
+      } finally {
+        setIsLoading(false);
+      }
       return;
     }
 
-    void handleCheckout((provider || "stripe") as CheckoutProvider);
+    await handleCheckout((provider || "stripe") as CheckoutProvider);
   };
 
   if (plan.buttonLink) {
@@ -298,7 +261,7 @@ export default function VideoPricingAction({
       <button
         className={cn(className, isLoading && "cursor-wait")}
         disabled={isLoading}
-        onClick={handleButtonClick}
+        onClick={() => void handleButtonClick()}
         type="button"
       >
         {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}

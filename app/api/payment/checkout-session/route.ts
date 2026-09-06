@@ -15,22 +15,26 @@ import {
   getAvailableCheckoutProviders,
   hasUsableProviderId,
   hasUsablePriceAndCurrency,
+  isUsdCurrency,
 } from '@/lib/payments/checkout-availability';
 import { signPaymentHandoffToken } from '@/lib/payments/handoff';
 import { getPaymentPayUrl, getPaymentRequestHost, isMainPaymentSite } from '@/lib/payments/main-site';
 import { isRecurringPaymentType } from '@/lib/payments/provider-utils';
 import { assertRecurringPurchaseIsHigherTier } from '@/lib/payments/subscription-purchase';
+import { createNowpaymentsInvoiceOrder } from '@/lib/nowpayments/service';
 import { createSubotizCheckoutSession } from '@/lib/subotiz/client';
 import { getURL } from '@/lib/url';
 import { randomUUID } from 'node:crypto';
 
 type RequestData = {
+  applyCoupon?: boolean;
   provider?: string;
   stripePriceId?: string;
   creemProductId?: string;
   subotizPriceId?: string;
   planId?: string;
   couponCode?: string;
+  locale?: string;
   referral?: string;
 };
 
@@ -43,6 +47,40 @@ function getSubotizLocale(acceptLanguage: string | null): string {
     return 'ja-JP';
   }
   return 'en-US';
+}
+
+function getCheckoutPlan(requestData: RequestData) {
+  if (requestData.planId) {
+    return getPricingPlanById(requestData.planId);
+  }
+
+  if (requestData.provider === 'stripe') {
+    return getPricingPlanByProviderId('stripePriceId', requestData.stripePriceId);
+  }
+  if (requestData.provider === 'creem') {
+    return getPricingPlanByProviderId('creemProductId', requestData.creemProductId);
+  }
+  if (requestData.provider === 'subotiz') {
+    return getPricingPlanByProviderId('subotizPriceId', requestData.subotizPriceId);
+  }
+
+  return undefined;
+}
+
+function getCheckoutCoupon(
+  requestData: RequestData,
+  configuredCoupon: string | null | undefined,
+) {
+  const requestedCoupon = requestData.couponCode?.trim();
+  if (requestedCoupon) {
+    return requestedCoupon;
+  }
+
+  if (!requestData.planId || requestData.applyCoupon === false) {
+    return undefined;
+  }
+
+  return configuredCoupon?.trim() || undefined;
 }
 
 export async function POST(req: Request) {
@@ -64,7 +102,7 @@ export async function POST(req: Request) {
   const nowpaymentsEnabled = Boolean(process.env.NOWPAYMENTS_API_KEY);
 
   if (!isMainPaymentSite()) {
-    if (!provider || provider === 'nowpayments') {
+    if (!provider) {
       return apiResponse.badRequest('Unsupported payment handoff provider');
     }
 
@@ -80,8 +118,14 @@ export async function POST(req: Request) {
   }
 
   try {
+    const plan = getCheckoutPlan(requestData);
+
     if (provider === 'stripe') {
-      const stripePriceId = requestData.stripePriceId?.trim();
+      if (!isActivePricingPlan(plan) || (plan.provider !== 'stripe' && plan.provider !== 'all')) {
+        return apiResponse.notFound('Plan not found for Stripe');
+      }
+
+      const stripePriceId = plan.stripePriceId?.trim();
       if (!hasUsableProviderId(stripePriceId)) {
         return apiResponse.badRequest('Missing stripePriceId');
       }
@@ -89,25 +133,23 @@ export async function POST(req: Request) {
       const result = await createStripeCheckoutSession({
         userId: user.id,
         priceId: validStripePriceId,
-        couponCode: requestData.couponCode,
+        couponCode: getCheckoutCoupon(requestData, plan.stripeCouponId),
         referral: requestData.referral,
       });
       return apiResponse.success(result);
     }
 
     if (provider === 'creem') {
-      const creemProductId = requestData.creemProductId?.trim();
-      const { couponCode } = requestData;
+      if (!isActivePricingPlan(plan) || (plan.provider !== 'creem' && plan.provider !== 'all')) {
+        return apiResponse.notFound('Plan not found for Creem');
+      }
+
+      const creemProductId = plan.creemProductId?.trim();
+      const couponCode = getCheckoutCoupon(requestData, plan.creemDiscountCode);
       if (!hasUsableProviderId(creemProductId)) {
         return apiResponse.badRequest('Missing creemProductId');
       }
       const validCreemProductId = creemProductId!;
-
-      const plan = getPricingPlanByProviderId('creemProductId', validCreemProductId);
-
-      if (!isActivePricingPlan(plan)) {
-        return apiResponse.notFound('Plan not found for Creem product ID');
-      }
 
       if (isRecurringPaymentType(plan.paymentType)) {
         await assertRecurringPurchaseIsHigherTier(user.id, plan.id);
@@ -144,15 +186,13 @@ export async function POST(req: Request) {
     }
 
     if (provider === 'subotiz') {
-      const subotizPriceId = requestData.subotizPriceId?.trim();
-      if (!hasUsableProviderId(subotizPriceId)) {
-        return apiResponse.badRequest('Missing subotizPriceId');
+      if (!isActivePricingPlan(plan) || (plan.provider !== 'subotiz' && plan.provider !== 'all')) {
+        return apiResponse.notFound('Plan not found for Subotiz');
       }
 
-      const plan = getPricingPlanByProviderId('subotizPriceId', subotizPriceId!);
-
-      if (!isActivePricingPlan(plan)) {
-        return apiResponse.notFound('Plan not found for Subotiz price ID');
+      const subotizPriceId = plan.subotizPriceId?.trim();
+      if (!hasUsableProviderId(subotizPriceId)) {
+        return apiResponse.badRequest('Missing subotizPriceId');
       }
 
       const isRecurring = isRecurringPaymentType(plan.paymentType);
@@ -198,14 +238,36 @@ export async function POST(req: Request) {
       });
     }
 
-    if (provider === 'paypal') {
-      const { planId } = requestData;
-      if (!planId) {
-        return apiResponse.badRequest('Missing planId');
+    if (provider === 'nowpayments') {
+      if (!isActivePricingPlan(plan) || plan.provider !== 'all') {
+        return apiResponse.notFound('Plan not found for NOWPayments');
+      }
+      if (
+        !nowpaymentsEnabled ||
+        !hasUsablePriceAndCurrency(plan) ||
+        !isUsdCurrency(plan.currency)
+      ) {
+        return apiResponse.badRequest('NOWPayments is not available for this plan');
       }
 
-      const plan = getPricingPlanById(planId);
+      if (isRecurringPaymentType(plan.paymentType)) {
+        await assertRecurringPurchaseIsHigherTier(user.id, plan.id);
+      }
 
+      const result = await createNowpaymentsInvoiceOrder({
+        locale: requestData.locale,
+        planId: plan.id,
+        user,
+      });
+
+      return apiResponse.success({
+        orderNo: result.orderNo,
+        sessionId: result.sessionId,
+        url: result.url,
+      });
+    }
+
+    if (provider === 'paypal') {
       if (!isActivePricingPlan(plan) || (plan.provider !== 'paypal' && plan.provider !== 'all')) {
         return apiResponse.notFound('Plan not found for PayPal');
       }
@@ -309,13 +371,6 @@ export async function POST(req: Request) {
     }
 
     if (provider === 'all') {
-      const { planId } = requestData;
-      if (!planId) {
-        return apiResponse.badRequest('Missing planId');
-      }
-
-      const plan = getPricingPlanById(planId);
-
       if (!isActivePricingPlan(plan) || plan.provider !== 'all') {
         return apiResponse.notFound('Plan not found for payment selection');
       }

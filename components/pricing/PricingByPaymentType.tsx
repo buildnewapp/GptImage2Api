@@ -21,24 +21,12 @@ import {
   isRecurringPaymentType,
   isYearlyInterval,
 } from "@/lib/payments/provider-utils";
-import { isPayPalEnabled } from "@/lib/paypal/client";
 import type { PricingPlanLangJsonb, PublicPricingPlan as PricingPlan } from "@/types/pricing";
 import { Gift } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 
 export default async function PricingByPaymentType() {
   const t = await getTranslations("Pricing");
-  const checkoutAvailabilityEnv = {
-    creemEnabled: Boolean(process.env.CREEM_API_KEY),
-    nowpaymentsEnabled: Boolean(process.env.NOWPAYMENTS_API_KEY),
-    paypalEnabled: isPayPalEnabled,
-    stripeEnabled: Boolean(process.env.STRIPE_SECRET_KEY),
-    subotizEnabled: Boolean(
-      process.env.SUBOTIZ_API_KEY &&
-      process.env.SUBOTIZ_ACCESS_NO &&
-      process.env.SUBOTIZ_MERCHANT_ID
-    ),
-  };
 
   const locale = await getLocale();
 
@@ -123,7 +111,6 @@ export default async function PricingByPaymentType() {
 
           return (
             <PricingCardDisplay
-              checkoutAvailabilityEnv={checkoutAvailabilityEnv}
               id={plan.isHighlighted ? "highlight-card" : undefined}
               key={plan.id}
               plan={plan}

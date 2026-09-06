@@ -13,7 +13,8 @@ test("verifies a valid payment handoff token", () => {
   const token = signPaymentHandoffToken({
     payload: {
       checkout: {
-        creemProductId: "prod_123",
+        applyCoupon: true,
+        planId: "22222222-2222-2222-2222-222222222222",
         provider: "creem",
       },
       sourceHost: "seedance25free.com",
@@ -27,7 +28,11 @@ test("verifies a valid payment handoff token", () => {
 
   assert.equal(payload?.userId, "11111111-1111-1111-1111-111111111111");
   assert.equal(payload?.checkout.provider, "creem");
-  assert.equal(payload?.checkout.creemProductId, "prod_123");
+  assert.equal(
+    payload?.checkout.planId,
+    "22222222-2222-2222-2222-222222222222",
+  );
+  assert.equal(payload?.checkout.applyCoupon, true);
   assert.equal(payload?.sourceHost, "seedance25free.com");
 });
 
