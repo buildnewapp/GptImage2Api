@@ -14,7 +14,6 @@ import { getPublicPricingPlans } from "@/actions/prices/public";
 import { PricingCardDisplay } from "@/components/pricing/PricingCardDisplay";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DEFAULT_LOCALE } from "@/i18n/routing";
-import { isPayPalEnabled } from "@/lib/paypal/client";
 import type { PricingPlanLangJsonb, PublicPricingPlan as PricingPlan } from "@/types/pricing";
 import { Sparkles } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -30,17 +29,6 @@ export default async function PricingByGroup({
 }: PricingByGroupProps = {}) {
   const locale = providedLocale ?? (await getLocale());
   const t = await getTranslations({ locale, namespace: "PricingPlans" });
-  const checkoutAvailabilityEnv = {
-    creemEnabled: Boolean(process.env.CREEM_API_KEY),
-    nowpaymentsEnabled: Boolean(process.env.NOWPAYMENTS_API_KEY),
-    paypalEnabled: isPayPalEnabled,
-    stripeEnabled: Boolean(process.env.STRIPE_SECRET_KEY),
-    subotizEnabled: Boolean(
-      process.env.SUBOTIZ_API_KEY &&
-      process.env.SUBOTIZ_ACCESS_NO &&
-      process.env.SUBOTIZ_MERCHANT_ID
-    ),
-  };
 
   let allPlans: PricingPlan[] = [];
   const result = await getPublicPricingPlans();
@@ -96,7 +84,6 @@ export default async function PricingByGroup({
 
           return (
             <PricingCardDisplay
-              checkoutAvailabilityEnv={checkoutAvailabilityEnv}
               checkoutMode={checkoutMode}
               id={plan.isHighlighted ? "highlight-card" : undefined}
               key={plan.id}

@@ -4,13 +4,6 @@ import type { PricingPlanFeature, PricingPlanTranslation, PublicPricingPlan as P
 import { Check, X } from "lucide-react";
 
 interface PricingCardDisplayProps {
-  checkoutAvailabilityEnv?: {
-    creemEnabled?: boolean;
-    nowpaymentsEnabled?: boolean;
-    paypalEnabled?: boolean;
-    stripeEnabled?: boolean;
-    subotizEnabled?: boolean;
-  };
   checkoutMode?: "default" | "nowpayments";
   id?: string;
   plan: PricingPlan;
@@ -19,7 +12,6 @@ interface PricingCardDisplayProps {
 }
 
 export function PricingCardDisplay({
-  checkoutAvailabilityEnv,
   checkoutMode = "default",
   id,
   plan,
@@ -97,7 +89,6 @@ export function PricingCardDisplay({
       )}
 
       <PricingCTA
-        checkoutAvailabilityEnv={checkoutAvailabilityEnv}
         checkoutMode={checkoutMode}
         plan={plan}
         localizedPlan={localizedPlan}

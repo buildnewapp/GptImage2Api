@@ -1,5 +1,4 @@
 import { DEFAULT_LOCALE } from "@/i18n/routing";
-import { getAvailableCheckoutProviders } from "@/lib/payments/checkout-availability";
 
 import type {
   VideoTemplateCheckoutPlan,
@@ -207,19 +206,6 @@ function buildCheckoutPlan(
     isHighlighted: plan.isHighlighted,
     planId: plan.id ?? null,
     provider: plan.provider ?? null,
-    providerOptions: getAvailableCheckoutProviders(plan, {
-      creemEnabled: Boolean(process.env.CREEM_API_KEY),
-      nowpaymentsEnabled: Boolean(process.env.NOWPAYMENTS_API_KEY),
-      paypalEnabled: Boolean(
-        process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET,
-      ),
-      stripeEnabled: Boolean(process.env.STRIPE_SECRET_KEY),
-      subotizEnabled: Boolean(
-        process.env.SUBOTIZ_API_KEY &&
-          process.env.SUBOTIZ_ACCESS_NO &&
-          process.env.SUBOTIZ_MERCHANT_ID,
-      ),
-    }),
     stripeCouponId: plan.stripeCouponId ?? null,
     stripePriceId: plan.stripePriceId ?? null,
     subotizPriceId: plan.subotizPriceId ?? null,
