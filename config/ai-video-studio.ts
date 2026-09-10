@@ -226,11 +226,18 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
   {
     key: "gemini-omni",
     label: "Gemini Omni",
-    description: "Gemini Omni video generation with text and image variants",
+    description: "Gemini Omni video generation and editing with text, image, and video references",
     icon: "gemini",
     tags: [{ text: "HOT", type: "hot" }],
     selectable: true,
     versions: [
+      {
+        key: "gemini-omni-1.1-flash",
+        label: "Gemini Omni 1.1 Flash",
+        familyKey: "gemini-omni",
+        modelId: "video:gemini-omni-1-1-flash",
+        isSpecial: true,
+      },
       {
         key: "omni-flash-ext",
         label: "Gemini Omni Flash Lite",
@@ -259,7 +266,31 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "gemini-omni",
         modelId: "video:gemini-omni-audio",
         isSpecial: true,
-      }
+      },
+      {
+        key: "fal-gemini-omni-flash-1.1-text-to-video",
+        label: "Gemini Omni Flash 1.1 Text to Video",
+        familyKey: "gemini-omni",
+        modelId: "video:fal-google-gemini-omni-flash-v1-1-text-to-video",
+      },
+      {
+        key: "fal-gemini-omni-flash-1.1-image-to-video",
+        label: "Gemini Omni Flash 1.1 Image to Video",
+        familyKey: "gemini-omni",
+        modelId: "video:fal-google-gemini-omni-flash-v1-1-image-to-video",
+      },
+      {
+        key: "fal-gemini-omni-flash-1.1-reference-to-video",
+        label: "Gemini Omni Flash 1.1 Reference to Video",
+        familyKey: "gemini-omni",
+        modelId: "video:fal-google-gemini-omni-flash-v1-1-reference-to-video",
+      },
+      {
+        key: "fal-gemini-omni-flash-1.1-edit",
+        label: "Gemini Omni Flash 1.1 Video Edit",
+        familyKey: "gemini-omni",
+        modelId: "video:fal-google-gemini-omni-flash-v1-1-edit",
+      },
     ],
   },
   {
@@ -598,10 +629,38 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
   {
     key: "kling",
     label: "Kling",
-    description: "Kling video models across 2.1, 2.5, 2.6, and 3.0 variants",
+    description: "Kling video generation and editing across 2.1, 2.5, 2.6, 3.0, and Omni O3 variants",
     icon: "kling",
     selectable: true,
     versions: [
+      {
+        key: "kling-3.0-omni-text-to-video",
+        label: "Kling 3.0 Omni Text to Video",
+        familyKey: "kling",
+        modelId: "video:kling-3-0-omni-text-to-video",
+        isSpecial: true,
+      },
+      {
+        key: "kling-3.0-omni-image-to-video",
+        label: "Kling 3.0 Omni Image to Video",
+        familyKey: "kling",
+        modelId: "video:kling-3-0-omni-image-to-video",
+        isSpecial: true,
+      },
+      {
+        key: "kling-3.0-omni-reference-to-video",
+        label: "Kling 3.0 Omni Reference to Video",
+        familyKey: "kling",
+        modelId: "video:kling-3-0-omni-reference-to-video",
+        isSpecial: true,
+      },
+      {
+        key: "kling-3.0-omni-transformation",
+        label: "Kling 3.0 Omni Transformation",
+        familyKey: "kling",
+        modelId: "video:kling-3-0-omni-transformation",
+        isSpecial: true,
+      },
       {
         key: "kling-3.0",
         label: "Kling 3.0",
@@ -708,6 +767,54 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         isSpecial: true,
       },
       {
+        key: "fal-kling-o3-pro-text-to-video",
+        label: "Kling O3 Pro Text to Video",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-o3-pro-text-to-video",
+      },
+      {
+        key: "fal-kling-o3-standard-text-to-video",
+        label: "Kling O3 Standard Text to Video",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-o3-standard-text-to-video",
+      },
+      {
+        key: "fal-kling-o3-pro-image-to-video",
+        label: "Kling O3 Pro Image to Video",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-o3-pro-image-to-video",
+      },
+      {
+        key: "fal-kling-o3-standard-image-to-video",
+        label: "Kling O3 Standard Image to Video",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-o3-standard-image-to-video",
+      },
+      {
+        key: "fal-kling-o3-pro-reference-to-video",
+        label: "Kling O3 Pro Reference Video to Video",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-o3-pro-video-to-video-reference",
+      },
+      {
+        key: "fal-kling-o3-standard-reference-to-video",
+        label: "Kling O3 Standard Reference Video to Video",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-o3-standard-video-to-video-reference",
+      },
+      {
+        key: "fal-kling-o3-pro-video-edit",
+        label: "Kling O3 Pro Video Edit",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-o3-pro-video-to-video-edit",
+      },
+      {
+        key: "fal-kling-o3-standard-video-edit",
+        label: "Kling O3 Standard Video Edit",
+        familyKey: "kling",
+        modelId: "video:fal-fal-ai-kling-video-o3-standard-video-to-video-edit",
+      },
+      {
         key: "fal-kling-v3-pro-text-to-video",
         label: "Kling v3 Pro Text to Video",
         familyKey: "kling",
@@ -772,10 +879,24 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
   {
     key: "wan",
     label: "Wan",
-    description: "Wan video models across 2.2, 2.5, 2.6, and 2.7 workflows",
+    description: "Wan video models across 2.2, 2.5, 2.6, 2.7, and 3.0 / Prime workflows",
     icon: "qwen",
     selectable: true,
     versions: [
+      {
+        key: "wan-3.0-video",
+        label: "Wan 3.0 Video",
+        familyKey: "wan",
+        modelId: "video:wan-3-0-video",
+        isSpecial: true,
+      },
+      {
+        key: "wan-3.0-video-prime",
+        label: "Wan 3.0 Video Prime",
+        familyKey: "wan",
+        modelId: "video:wan-3-0-video-prime",
+        isSpecial: true,
+      },
       {
         key: "wan-2.7-text-to-video",
         label: "Wan 2.7 Text to Video",
@@ -848,9 +969,9 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
       },
       {
         key: "wan-image-to-video",
-        label: "Wan Image to Video",
+        label: "Wan 2.2 A14B Image to Video Turbo",
         familyKey: "wan",
-        modelId: "video:wan-image-to-video",
+        modelId: "video:wan-2-2-a14b-image-to-video-turbo",
         isSpecial: true,
       },
       {
@@ -873,6 +994,42 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "wan",
         modelId: "video:wan-animate-replace",
         isSpecial: true,
+      },
+      {
+        key: "fal-wan-3.0-text-to-video",
+        label: "Wan 3.0 Text to Video",
+        familyKey: "wan",
+        modelId: "video:fal-alibaba-wan-3-0-text-to-video",
+      },
+      {
+        key: "fal-wan-3.0-image-to-video",
+        label: "Wan 3.0 Image to Video",
+        familyKey: "wan",
+        modelId: "video:fal-alibaba-wan-3-0-image-to-video",
+      },
+      {
+        key: "fal-wan-3.0-reference-to-video",
+        label: "Wan 3.0 Reference to Video",
+        familyKey: "wan",
+        modelId: "video:fal-alibaba-wan-3-0-reference-to-video",
+      },
+      {
+        key: "fal-wan-3.0-prime-text-to-video",
+        label: "Wan 3.0 Prime Text to Video",
+        familyKey: "wan",
+        modelId: "video:fal-alibaba-wan-3-0-prime-text-to-video",
+      },
+      {
+        key: "fal-wan-3.0-prime-image-to-video",
+        label: "Wan 3.0 Prime Image to Video",
+        familyKey: "wan",
+        modelId: "video:fal-alibaba-wan-3-0-prime-image-to-video",
+      },
+      {
+        key: "fal-wan-3.0-prime-reference-to-video",
+        label: "Wan 3.0 Prime Reference to Video",
+        familyKey: "wan",
+        modelId: "video:fal-alibaba-wan-3-0-prime-reference-to-video",
       },
       {
         key: "fal-wan-2.7-text-to-video",
@@ -1277,15 +1434,43 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
   },
   {
     key: "gpt-image-2",
-    label: "GPT Image 2",
-    description: "OpenAI text-to-image and image-to-image workflows",
+    label: "GPT Image",
+    description: "OpenAI GPT Image 2.5, 2, and 1.5 image generation and editing",
     icon: "sora",
     tags: [{ text: "HOT", type: "hot" }],
     selectable: true,
     versions: [
       {
+        key: "gpt-image-2.5-flare-text-to-image",
+        label: "GPT Image 2.5 Flare Text to Image",
+        familyKey: "gpt-image-2",
+        modelId: "image:gpt-image-2-5-flare-text-to-image",
+        isSpecial: true,
+      },
+      {
+        key: "gpt-image-2.5-flare-image-to-image",
+        label: "GPT Image 2.5 Flare Image to Image",
+        familyKey: "gpt-image-2",
+        modelId: "image:gpt-image-2-5-flare-image-to-image",
+        isSpecial: true,
+      },
+      {
+        key: "gpt-image-2.5-sunburst-text-to-image",
+        label: "GPT Image 2.5 Sunburst Text to Image",
+        familyKey: "gpt-image-2",
+        modelId: "image:gpt-image-2-5-sunburst-text-to-image",
+        isSpecial: true,
+      },
+      {
+        key: "gpt-image-2.5-sunburst-image-to-image",
+        label: "GPT Image 2.5 Sunburst Image to Image",
+        familyKey: "gpt-image-2",
+        modelId: "image:gpt-image-2-5-sunburst-image-to-image",
+        isSpecial: true,
+      },
+      {
         key: "gpt-image-2-text-to-image",
-        label: "Text to Image",
+        label: "GPT Image 2 Text to Image",
         familyKey: "gpt-image-2",
         modelId: "image:gpt-image-2-text-to-image",
         isSpecial: true,
@@ -1293,7 +1478,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
       },
       {
         key: "gpt-image-2-image-to-image",
-        label: "Image to Image",
+        label: "GPT Image 2 Image to Image",
         familyKey: "gpt-image-2",
         modelId: "image:gpt-image-2-image-to-image",
         isSpecial: true,
@@ -1305,6 +1490,30 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         modelId: "image:ama-gpt-image-2",
         isSpecial: true,
         isHot: true
+      },
+      {
+        key: "fal-gpt-image-2.5-flare-text-to-image",
+        label: "GPT Image 2.5 Flare Text to Image",
+        familyKey: "gpt-image-2",
+        modelId: "image:fal-openai-gpt-image-2-5-flare-text-to-image",
+      },
+      {
+        key: "fal-gpt-image-2.5-flare-edit",
+        label: "GPT Image 2.5 Flare Edit",
+        familyKey: "gpt-image-2",
+        modelId: "image:fal-openai-gpt-image-2-5-flare-edit",
+      },
+      {
+        key: "fal-gpt-image-2.5-sunburst-text-to-image",
+        label: "GPT Image 2.5 Sunburst Text to Image",
+        familyKey: "gpt-image-2",
+        modelId: "image:fal-openai-gpt-image-2-5-sunburst-text-to-image",
+      },
+      {
+        key: "fal-gpt-image-2.5-sunburst-edit",
+        label: "GPT Image 2.5 Sunburst Edit",
+        familyKey: "gpt-image-2",
+        modelId: "image:fal-openai-gpt-image-2-5-sunburst-edit",
       },
       {
         key: "fal-openai-gpt-image-2",
@@ -1505,13 +1714,41 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
   {
     key: "grok-imagine-image",
     label: "Grok Imagine",
-    description: "Grok Imagine text-to-image and image-to-image models",
+    description: "Grok Imagine image generation, editing, and Image 2.0 segment workflows",
     icon: "grok",
     tags: [
       { text: "HOT", type: "hot" },
     ],
     selectable: true,
     versions: [
+      {
+        key: "grok-imagine-2.0-text-to-image",
+        label: "Grok Image 2.0 Text to Image",
+        familyKey: "grok-imagine-image",
+        modelId: "image:grok-imagine-image-2-0-text-to-image",
+        isSpecial: true,
+      },
+      {
+        key: "grok-imagine-2.0-image-edit",
+        label: "Grok Image 2.0 Image Edit",
+        familyKey: "grok-imagine-image",
+        modelId: "image:grok-imagine-image-2-0-image-edit",
+        isSpecial: true,
+      },
+      {
+        key: "grok-imagine-2.0-segment-edit",
+        label: "Grok Image 2.0 Segment Edit",
+        familyKey: "grok-imagine-image",
+        modelId: "image:grok-imagine-image-2-0-segment-edit",
+        isSpecial: true,
+      },
+      {
+        key: "grok-imagine-2.0-segment-map",
+        label: "Grok Image 2.0 Segment Map",
+        familyKey: "grok-imagine-image",
+        modelId: "image:grok-imagine-image-2-0-segment-map",
+        isSpecial: true,
+      },
       {
         key: "grok-imagine-text-to-image",
         label: "Grok Imagine - Text to Image",
@@ -1525,6 +1762,18 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "grok-imagine-image",
         modelId: "image:grok-imagine-image-to-image",
         isSpecial: true,
+      },
+      {
+        key: "fal-grok-imagine-2.0-text-to-image",
+        label: "Grok Image 2.0 Text to Image",
+        familyKey: "grok-imagine-image",
+        modelId: "image:fal-xai-grok-imagine-image-v2-0-text-to-image",
+      },
+      {
+        key: "fal-grok-imagine-2.0-image-edit",
+        label: "Grok Image 2.0 Image Edit",
+        familyKey: "grok-imagine-image",
+        modelId: "image:fal-xai-grok-imagine-image-v2-0-edit",
       },
       {
         key: "fal-grok-imagine-text-to-image",

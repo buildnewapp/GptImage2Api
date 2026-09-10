@@ -503,6 +503,7 @@ async function getAudioDurationFromFile(file: File) {
 export function renderReferencePreview(
   kind: ReferenceFieldKind,
   value: string,
+  onVideoDuration?: (duration: number) => void,
 ) {
   if (kind === "image") {
     return (
@@ -521,6 +522,12 @@ export function renderReferencePreview(
         className="h-full w-full bg-black object-cover"
         controls
         preload="metadata"
+        onLoadedMetadata={(event) => {
+          const duration = event.currentTarget.duration;
+          if (Number.isFinite(duration) && duration > 0) {
+            onVideoDuration?.(Math.ceil(duration));
+          }
+        }}
       />
     );
   }
@@ -966,7 +973,9 @@ export default function ReferenceField({
                   </div>
                 ) : (
                   <div className="h-full w-full">
-                    {renderReferencePreview(fieldKind, item)}
+                    {renderReferencePreview(fieldKind, item, (duration) =>
+                      onMetadataChange?.({ videoDurationsByUrl: { [item]: duration } }),
+                    )}
                   </div>
                 )}
                 {fieldKind !== "audio" && fieldKind !== "url" ? (

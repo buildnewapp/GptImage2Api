@@ -10,12 +10,27 @@ open -na "WebStorm" --args "./"
 // :w + :q
 git commit -m "update from upstream"
 
+## step1
 /Users/syx/WebstormProjects/sdanceai/sdanceai
 /Users/syx/WebstormProjects/tikdek/tikdek-web
 /Users/syx/WebstormProjects/GptImage2Api/gptimage2-web
 /Users/syx/WebstormProjects/Spicy/spicy-video-web
 
+这些地址，每个帮我 进入目录，执行合并：
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
+然后提交 git + push
+
+## step2-1
 /Users/syx/idea/FreeSoraGenerator/fsg-web
+进入目录，执行合并：
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
+然后提交 git + push
+
+## step2-2
 /Users/syx/WebstormProjects/Submify/Submify2-web
 /Users/syx/WebstormProjects/autogeo/autogeo-v2
 /Users/syx/WebstormProjects/GptImage2Api/GptImage4
@@ -28,8 +43,14 @@ git commit -m "update from upstream"
 /Users/syx/WebstormProjects/Spicy/spicy-image-web
 /Users/syx/WebstormProjects/Spicy/spicy-chat-web
 /Users/syx/WebstormProjects/GptApi/GptApi-web
-/Users/syx/WebstormProjects/aitools/textlogo-web
 
+每个进入目录，执行合并：
+git fetch upstream
+git merge --no-ff --no-commit upstream/main
+如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
+然后提交 git + push
+
+## step2-3
 /Users/syx/WebstormProjects/sdanceai/seedance25-web
 /Users/syx/WebstormProjects/freemusevideo/freemusevideo-web
 /Users/syx/WebstormProjects/freemusevideo/metamuse-web
@@ -51,7 +72,7 @@ git commit -m "update from upstream"
 /Users/syx/WebstormProjects/aimodels/wanvideo-web
 /Users/syx/WebstormProjects/aimodels/zimage-web
 
-这些地址，每个帮我 进入目录，执行合并：
+每个帮我 进入目录，执行合并：
 git fetch upstream
 git merge --no-ff --no-commit upstream/main
 如果有冲突帮我解决掉，以目录代码为主， upstream为辅助

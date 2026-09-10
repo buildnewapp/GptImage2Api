@@ -724,16 +724,6 @@
       "price_final": "{$price * 5}",
       "docUrl": "https://docs.kie.ai/market/wan/2-2-a14b-text-to-video-turbo.md"
     },
-    "video:wan-image-to-video": {
-      "price_txt": "wan/2-2-a14b-image-to-video-turbo, 480p: 8 per second | wan/2-2-a14b-image-to-video-turbo, 720p: 16 per second",
-      "price_key": "{$input.resolution || $resolution || $input.quality || $quality || $input.image_resolution || $image_resolution || $input.size || $size || $input.mode || $mode}",
-      "price_map": {
-        "480p": 8,
-        "720p": 16
-      },
-      "price_final": "{$price * 5}",
-      "docUrl": "https://docs.kie.ai/market/wan/2-2-a14b-image-to-video-turbo.md"
-    },
     "video:hailuo-2-3-standard-image-to-video": {
       "price_txt": "hailuo/2-3-image-to-video-standard, 768P, 6s: 25 per video | hailuo/2-3-image-to-video-standard, 768P, 10s: 40 per video | hailuo/2-3-image-to-video-standard, 1080P, 6s: 40 per video",
       "price_key": "{$input.resolution || $resolution || $input.quality || $quality || $input.image_resolution || $image_resolution || $input.size || $size || $input.mode || $mode}|{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}",
@@ -910,101 +900,101 @@
       "docUrl": "https://docs.kie.ai/market/grok-imagine/text-to-video.md"
     },
     "video:fal-fal-ai-bytedance-seedance-v1-5-pro-text-to-video": {
-      "price_txt": "Fal Seedance 1.5 Pro Text to Video, 480p with audio: 4.61 credits/s | 480p without audio: 2.31 credits/s | 720p with audio: 10.37 credits/s | 720p without audio: 5.18 credits/s | 1080p with audio: 23.33 credits/s | 1080p without audio: 11.66 credits/s",
+      "price_txt": "Fal Seedance 1.5 Pro Text to Video, 480p with audio: 5 credits/s | 480p without audio: 3 credits/s | 720p with audio: 11 credits/s | 720p without audio: 6 credits/s | 1080p with audio: 24 credits/s | 1080p without audio: 12 credits/s",
       "price_key": "{$input.resolution || $resolution}|{$(($input.generate_audio ?? $generate_audio ?? true) ? 'with_audio':'without_audio')}",
       "price_map": {
         "480p|with_audio": 5,
-        "480p|without_audio": 2,
-        "720p|with_audio": 10,
-        "720p|without_audio": 5,
-        "1080p|with_audio": 23,
+        "480p|without_audio": 3,
+        "720p|with_audio": 11,
+        "720p|without_audio": 6,
+        "1080p|with_audio": 24,
         "1080p|without_audio": 12
       },
       "price_final": "{$price}*{$input.duration || $duration}",
       "docUrl": "https://fal.ai/models/fal-ai/bytedance/seedance/v1.5/pro/text-to-video/api"
     },
     "video:fal-fal-ai-bytedance-seedance-v1-5-pro-image-to-video": {
-      "price_txt": "Fal Seedance 1.5 Pro Image to Video, 480p with audio: 4.61 credits/s | 480p without audio: 2.31 credits/s | 720p with audio: 10.37 credits/s | 720p without audio: 5.18 credits/s | 1080p with audio: 23.33 credits/s | 1080p without audio: 11.66 credits/s",
+      "price_txt": "Fal Seedance 1.5 Pro Image to Video, 480p with audio: 5 credits/s | 480p without audio: 3 credits/s | 720p with audio: 11 credits/s | 720p without audio: 6 credits/s | 1080p with audio: 24 credits/s | 1080p without audio: 12 credits/s",
       "price_key": "{$input.resolution || $resolution}|{$(($input.generate_audio ?? $generate_audio ?? true) ? 'with_audio':'without_audio')}",
       "price_map": {
         "480p|with_audio": 5,
-        "480p|without_audio": 2,
-        "720p|with_audio": 10,
-        "720p|without_audio": 5,
-        "1080p|with_audio": 23,
+        "480p|without_audio": 3,
+        "720p|with_audio": 11,
+        "720p|without_audio": 6,
+        "1080p|with_audio": 24,
         "1080p|without_audio": 12
       },
       "price_final": "{$price}*{$input.duration || $duration}",
       "docUrl": "https://fal.ai/models/fal-ai/bytedance/seedance/v1.5/pro/image-to-video/api"
     },
     "video:fal-bytedance-seedance-2-0-text-to-video": {
-      "price_txt": "Seedance 2.0 Text to Video, 480p: 26.9 per second | Seedance 2.0 Text to Video, 720p: 60.68 per second | Seedance 2.0 Text to Video, 1080p: 136.4 per second | Seedance 2.0 Text to Video, 4k: 311.04 per second",
+      "price_txt": "Seedance 2.0 Text to Video, 480p: 27 per second | Seedance 2.0 Text to Video, 720p: 61 per second | Seedance 2.0 Text to Video, 1080p: 137 per second | Seedance 2.0 Text to Video, 4k: 312 per second",
       "price_key": "{$input.resolution || $resolution || $input.quality || $quality || $input.image_resolution || $image_resolution || $input.size || $size || $input.mode || $mode}",
       "price_map": {
         "480p": 27,
         "720p": 61,
-        "1080p": 136,
-        "4k": 311
+        "1080p": 137,
+        "4k": 312
       },
       "price_final": "{$price}*{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}",
       "docUrl": "https://fal.ai/models/bytedance/seedance-2.0/text-to-video/api"
     },
     "video:fal-bytedance-seedance-2-0-fast-text-to-video": {
-      "price_txt": "Seedance 2.0 Fast Text to Video, 480p: 22.5 per second | Seedance 2.0 Fast Text to Video, 720p: 48.38 per second",
+      "price_txt": "Seedance 2.0 Fast Text to Video, 480p: 23 per second | Seedance 2.0 Fast Text to Video, 720p: 49 per second",
       "price_key": "{$input.resolution || $resolution || $input.quality || $quality || $input.image_resolution || $image_resolution || $input.size || $size || $input.mode || $mode}",
       "price_map": {
         "480p": 23,
-        "720p": 48
+        "720p": 49
       },
       "price_final": "{$price}*{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}",
       "docUrl": "https://fal.ai/models/bytedance/seedance-2.0/fast/text-to-video/api"
     },
     "video:fal-bytedance-seedance-2-0-image-to-video": {
-      "price_txt": "Seedance 2 Image to Video, 480p: 26.9 per second | Seedance 2 Image to Video, 720p: 60.68 per second | Seedance 2 Image to Video, 1080p: 136.4 per second | Seedance 2 Image to Video, 4k: 311.04 per second",
+      "price_txt": "Seedance 2 Image to Video, 480p: 27 per second | Seedance 2 Image to Video, 720p: 61 per second | Seedance 2 Image to Video, 1080p: 137 per second | Seedance 2 Image to Video, 4k: 312 per second",
       "price_key": "{$input.resolution || $resolution || $input.quality || $quality || $input.image_resolution || $image_resolution || $input.size || $size || $input.mode || $mode}",
       "price_map": {
         "480p": 27,
         "720p": 61,
-        "1080p": 136,
-        "4k": 311
+        "1080p": 137,
+        "4k": 312
       },
       "price_final": "{$price}*{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}",
       "docUrl": "https://fal.ai/models/bytedance/seedance-2.0/image-to-video/api"
     },
     "video:fal-bytedance-seedance-2-0-fast-image-to-video": {
-      "price_txt": "Seedance 2.0 Fast Image to Video, 480p: 22.5 per second | Seedance 2.0 Fast Image to Video, 720p: 48.38 per second",
+      "price_txt": "Seedance 2.0 Fast Image to Video, 480p: 23 per second | Seedance 2.0 Fast Image to Video, 720p: 49 per second",
       "price_key": "{$input.resolution || $resolution || $input.quality || $quality || $input.image_resolution || $image_resolution || $input.size || $size || $input.mode || $mode}",
       "price_map": {
         "480p": 23,
-        "720p": 48
+        "720p": 49
       },
       "price_final": "{$price}*{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}",
       "docUrl": "https://fal.ai/models/bytedance/seedance-2.0/fast/image-to-video/api"
     },
     "video:fal-bytedance-seedance-2-0-reference-to-video": {
-      "price_txt": "Seedance 2 Reference to Video, 480p no video input: 26.9 per second | Seedance 2 Reference to Video, 480p with video input: 16.14 per second | Seedance 2 Reference to Video, 720p no video input: 60.68 per second | Seedance 2 Reference to Video, 720p with video input: 36.28 per second | Seedance 2 Reference to Video, 1080p no video input: 136.4 per second | Seedance 2 Reference to Video, 1080p with video input: 81.84 per second | Seedance 2 Reference to Video, 4k no video input: 311.04 per second | Seedance 2 Reference to Video, 4k with video input: 186.62 per second",
+      "price_txt": "Seedance 2 Reference to Video, 480p no video input: 27 per second | Seedance 2 Reference to Video, 480p with video input: 17 per second | Seedance 2 Reference to Video, 720p no video input: 61 per second | Seedance 2 Reference to Video, 720p with video input: 37 per second | Seedance 2 Reference to Video, 1080p no video input: 137 per second | Seedance 2 Reference to Video, 1080p with video input: 82 per second | Seedance 2 Reference to Video, 4k no video input: 312 per second | Seedance 2 Reference to Video, 4k with video input: 187 per second",
       "price_key": "{$input.resolution || $resolution || $input.quality || $quality || $input.image_resolution || $image_resolution || $input.size || $size || $input.mode || $mode}|{$(($video_urls?.length > 0) || ($input.video_urls?.length > 0)) ? 'with_video':'no_video'}",
       "price_map": {
         "480p|no_video": 27,
-        "480p|with_video": 16,
+        "480p|with_video": 17,
         "720p|no_video": 61,
-        "720p|with_video": 36,
-        "1080p|no_video": 136,
+        "720p|with_video": 37,
+        "1080p|no_video": 137,
         "1080p|with_video": 82,
-        "4k|no_video": 311,
+        "4k|no_video": 312,
         "4k|with_video": 187
       },
       "price_final": "{$price}*{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}",
       "docUrl": "https://fal.ai/models/bytedance/seedance-2.0/reference-to-video/api"
     },
     "video:fal-bytedance-seedance-2-0-fast-reference-to-video": {
-      "price_txt": "Seedance 2.0 Fast Reference to Video, 480p no video input: 22.5 per second | Seedance 2.0 Fast Reference to Video, 480p with video input: 13.5 per second | Seedance 2.0 Fast Reference to Video, 720p no video input: 48.38 per second | Seedance 2.0 Fast Reference to Video, 720p with video input: 29.03 per second",
+      "price_txt": "Seedance 2.0 Fast Reference to Video, 480p no video input: 23 per second | Seedance 2.0 Fast Reference to Video, 480p with video input: 14 per second | Seedance 2.0 Fast Reference to Video, 720p no video input: 49 per second | Seedance 2.0 Fast Reference to Video, 720p with video input: 30 per second",
       "price_key": "{$input.resolution || $resolution || $input.quality || $quality || $input.image_resolution || $image_resolution || $input.size || $size || $input.mode || $mode}|{$(($video_urls?.length > 0) || ($input.video_urls?.length > 0)) ? 'with_video':'no_video'}",
       "price_map": {
         "480p|no_video": 23,
         "480p|with_video": 14,
-        "720p|no_video": 48,
-        "720p|with_video": 29
+        "720p|no_video": 49,
+        "720p|with_video": 30
       },
       "price_final": "{$price}*{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}",
       "docUrl": "https://fal.ai/models/bytedance/seedance-2.0/fast/reference-to-video/api"
@@ -1019,10 +1009,10 @@
       "docUrl": "https://fal.ai/models/fal-ai/kling-video/v3/4k/image-to-video/api"
     },
     "video:fal-fal-ai-kling-video-o1-image-to-video": {
-      "price_txt": "Kling O1 First Frame Last Frame to Video [Pro]: 22.4 per second",
+      "price_txt": "Kling O1 First Frame Last Frame to Video [Pro]: 23 per second",
       "price_key": "default",
       "price_map": {
-        "default": 22
+        "default": 23
       },
       "price_final": "{$price}*{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}",
       "docUrl": "https://fal.ai/models/fal-ai/kling-video/o1/image-to-video/api"
@@ -1275,7 +1265,7 @@
       "docUrl": "https://fal.ai/models/alibaba/happy-horse/reference-to-video/api"
     },
     "image:fal-fal-ai-gpt-image-1-5": {
-      "price_txt": "GPT-Image 1.5, high 1024x1024 default: 26.6 per image",
+      "price_txt": "GPT-Image 1.5, high 1024x1024 default: 27 per image",
       "price_key": "default",
       "price_map": {
         "default": 27
@@ -1284,17 +1274,17 @@
       "docUrl": "https://fal.ai/models/fal-ai/gpt-image-1.5/api"
     },
     "image:fal-fal-ai-gpt-image-1-5-edit": {
-      "price_txt": "GPT-Image 1.5 Edit: low 1024x1024: 1.8 per image | low other sizes: 2.6 per image | medium 1024x1024: 6.8 per image | medium 1024x1536: 10.2 per image | medium 1536x1024: 10 per image | high 1024x1024: 26.6 per image | high 1024x1536: 40 per image | high 1536x1024: 39.8 per image",
+      "price_txt": "GPT-Image 1.5 Edit: low 1024x1024: 2 per image | low other sizes: 3 per image | medium 1024x1024: 7 per image | medium 1024x1536: 11 per image | medium 1536x1024: 10 per image | high 1024x1024: 27 per image | high 1024x1536: 40 per image | high 1536x1024: 40 per image",
       "price_key": "{$image_size || $input.image_size || 'auto'}|{$quality || $input.quality || 'high'}",
       "price_map": {
         "auto|low": 3,
-        "auto|medium": 10,
+        "auto|medium": 11,
         "auto|high": 40,
         "1024x1024|low": 2,
         "1024x1024|medium": 7,
         "1024x1024|high": 27,
         "1024x1536|low": 3,
-        "1024x1536|medium": 10,
+        "1024x1536|medium": 11,
         "1024x1536|high": 40,
         "1536x1024|low": 3,
         "1536x1024|medium": 10,
@@ -1350,7 +1340,7 @@
       "docUrl": "https://fal.ai/models/fal-ai/gemini-3-pro-image-preview/edit/api"
     },
     "image:fal-fal-ai-nano-banana": {
-      "price_txt": "Nano Banana: 7.8 per image",
+      "price_txt": "Nano Banana: 8 per image",
       "price_key": "default",
       "price_map": {
         "default": 8
@@ -1359,7 +1349,7 @@
       "docUrl": "https://fal.ai/models/fal-ai/nano-banana/api"
     },
     "image:fal-fal-ai-nano-banana-edit": {
-      "price_txt": "Nano Banana: 7.8 per image",
+      "price_txt": "Nano Banana: 8 per image",
       "price_key": "default",
       "price_map": {
         "default": 8
@@ -1404,7 +1394,7 @@
       "docUrl": "https://fal.ai/models/fal-ai/bytedance/seedream/v4.5/edit/api"
     },
     "image:fal-fal-ai-flux-2-turbo": {
-      "price_txt": "FLUX 2 Turbo: 1.6 per megapixel",
+      "price_txt": "FLUX 2 Turbo: 2 per megapixel",
       "price_key": "default",
       "price_map": {
         "default": 2
@@ -1476,41 +1466,41 @@
       "docUrl": "https://fal.ai/models/ideogram/v4/image-to-image/api"
     },
     "video:fal-fal-ai-kling-video-v3-pro-text-to-video": {
-      "price_txt": "Kling Video v3 Text to Video [Pro], audio off: 22.4 per second | Kling Video v3 Text to Video [Pro], audio on: 33.6 per second",
+      "price_txt": "Kling Video v3 Text to Video [Pro], audio off: 23 per second | Kling Video v3 Text to Video [Pro], audio on: 34 per second",
       "price_key": "{$input.sound ?? $sound ?? $input.audio ?? $audio ?? $input.with_audio ?? $with_audio ?? $input.generate_audio ?? $generate_audio}",
       "price_map": {
-        "false": 22,
+        "false": 23,
         "true": 34
       },
       "price_final": "{$price}*{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}",
       "docUrl": "https://fal.ai/models/fal-ai/kling-video/v3/pro/text-to-video/api"
     },
     "video:fal-fal-ai-kling-video-v3-standard-text-to-video": {
-      "price_txt": "Kling Video v3 Text to Video [Standard], audio off: 16.8 per second | Kling Video v3 Text to Video [Standard], audio on: 25.2 per second",
+      "price_txt": "Kling Video v3 Text to Video [Standard], audio off: 17 per second | Kling Video v3 Text to Video [Standard], audio on: 26 per second",
       "price_key": "{$input.sound ?? $sound ?? $input.audio ?? $audio ?? $input.with_audio ?? $with_audio ?? $input.generate_audio ?? $generate_audio}",
       "price_map": {
         "false": 17,
-        "true": 25
+        "true": 26
       },
       "price_final": "{$price}*{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}",
       "docUrl": "https://fal.ai/models/fal-ai/kling-video/v3/standard/text-to-video/api"
     },
     "video:fal-fal-ai-kling-video-v3-pro-image-to-video": {
-      "price_txt": "Kling Video v3 Image to Video [Pro], audio off: 22.4 per second | Kling Video v3 Image to Video [Pro], audio on: 33.6 per second",
+      "price_txt": "Kling Video v3 Image to Video [Pro], audio off: 23 per second | Kling Video v3 Image to Video [Pro], audio on: 34 per second",
       "price_key": "{$input.sound ?? $sound ?? $input.audio ?? $audio ?? $input.with_audio ?? $with_audio ?? $input.generate_audio ?? $generate_audio}",
       "price_map": {
-        "false": 22,
+        "false": 23,
         "true": 34
       },
       "price_final": "{$price}*{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}",
       "docUrl": "https://fal.ai/models/fal-ai/kling-video/v3/pro/image-to-video/api"
     },
     "video:fal-fal-ai-kling-video-v3-standard-image-to-video": {
-      "price_txt": "Kling Video v3 Image to Video [Standard], audio off: 16.8 per second | Kling Video v3 Image to Video [Standard], audio on: 25.2 per second",
+      "price_txt": "Kling Video v3 Image to Video [Standard], audio off: 17 per second | Kling Video v3 Image to Video [Standard], audio on: 26 per second",
       "price_key": "{$input.sound ?? $sound ?? $input.audio ?? $audio ?? $input.with_audio ?? $with_audio ?? $input.generate_audio ?? $generate_audio}",
       "price_map": {
         "false": 17,
-        "true": 25
+        "true": 26
       },
       "price_final": "{$price}*{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}",
       "docUrl": "https://fal.ai/models/fal-ai/kling-video/v3/standard/image-to-video/api"
@@ -1547,23 +1537,23 @@
       "docUrl": "https://fal.ai/models/xai/grok-imagine-video/edit-video/api"
     },
     "image:fal-openai-gpt-image-2": {
-      "price_txt": "Size / quality pricing: 1024 x 768 costs $0.005 low, $0.037 medium, $0.145 high; 1024 x 1024 costs $0.006 low, $0.053 medium, $0.211 high; 1024 x 1536 costs $0.005 low, $0.042 medium, $0.165 high; 1920 x 1080 costs $0.005 low, $0.040 medium, $0.158 high; 2560 x 1440 costs $0.007 low, $0.056 medium, $0.222 high; 3840 x 2160 costs $0.012 low, $0.101 medium, $0.401 high.",
+      "price_txt": "Size / quality pricing in credits per output image: 1024x768: 1 low, 8 medium, 29 high; 1024x1024: 2 low, 11 medium, 43 high; 1024x1536: 1 low, 9 medium, 33 high; 1920x1080: 1 low, 8 medium, 32 high; 2560x1440: 2 low, 12 medium, 45 high; 3840x2160: 3 low, 21 medium, 81 high. Swapped width and height use the same rates.",
       "price_key": "{$image_size || $input.image_size}|{$quality || $input.quality || 'high'}",
       "price_map": {
         "1024x768|low": 1,
-        "1024x768|medium": 7,
+        "1024x768|medium": 8,
         "1024x768|high": 29,
         "768x1024|low": 1,
-        "768x1024|medium": 7,
+        "768x1024|medium": 8,
         "768x1024|high": 29,
-        "1024x1024|low": 1,
+        "1024x1024|low": 2,
         "1024x1024|medium": 11,
-        "1024x1024|high": 42,
+        "1024x1024|high": 43,
         "1024x1536|low": 1,
-        "1024x1536|medium": 8,
+        "1024x1536|medium": 9,
         "1024x1536|high": 33,
         "1536x1024|low": 1,
-        "1536x1024|medium": 8,
+        "1536x1024|medium": 9,
         "1536x1024|high": 33,
         "1920x1080|low": 1,
         "1920x1080|medium": 8,
@@ -1571,44 +1561,44 @@
         "1080x1920|low": 1,
         "1080x1920|medium": 8,
         "1080x1920|high": 32,
-        "2560x1440|low": 1,
-        "2560x1440|medium": 11,
-        "2560x1440|high": 44,
-        "1440x2560|low": 1,
-        "1440x2560|medium": 11,
-        "1440x2560|high": 44,
-        "3840x2160|low": 2,
-        "3840x2160|medium": 20,
-        "3840x2160|high": 80,
-        "2160x3840|low": 2,
-        "2160x3840|medium": 20,
-        "2160x3840|high": 80
+        "2560x1440|low": 2,
+        "2560x1440|medium": 12,
+        "2560x1440|high": 45,
+        "1440x2560|low": 2,
+        "1440x2560|medium": 12,
+        "1440x2560|high": 45,
+        "3840x2160|low": 3,
+        "3840x2160|medium": 21,
+        "3840x2160|high": 81,
+        "2160x3840|low": 3,
+        "2160x3840|medium": 21,
+        "2160x3840|high": 81
       },
       "price_final": "{$price}*({$num_images || $input.num_images || 1})",
       "docUrl": "https://fal.ai/models/openai/gpt-image-2/api"
     },
     "image:fal-openai-gpt-image-2-edit": {
-      "price_txt": "Size / quality pricing: 1024 x 768 costs $0.005 low, $0.037 medium, $0.145 high; 1024 x 1024 costs $0.006 low, $0.053 medium, $0.211 high; 1024 x 1536 costs $0.005 low, $0.042 medium, $0.165 high; 1920 x 1080 costs $0.005 low, $0.040 medium, $0.158 high; 2560 x 1440 costs $0.007 low, $0.056 medium, $0.222 high; 3840 x 2160 costs $0.012 low, $0.101 medium, $0.401 high.",
+      "price_txt": "Size / quality pricing in credits per output image: 1024x768: 1 low, 8 medium, 29 high; 1024x1024: 2 low, 11 medium, 43 high; 1024x1536: 1 low, 9 medium, 33 high; 1920x1080: 1 low, 8 medium, 32 high; 2560x1440: 2 low, 12 medium, 45 high; 3840x2160: 3 low, 21 medium, 81 high. Swapped width and height use the same rates.",
       "price_key": "{$image_size || $input.image_size}|{$quality || $input.quality || 'high'}",
       "price_map": {
         "1024x768|low": 1,
-        "1024x768|medium": 7,
+        "1024x768|medium": 8,
         "1024x768|high": 29,
-        "1024x1024|low": 1,
+        "1024x1024|low": 2,
         "1024x1024|medium": 11,
-        "1024x1024|high": 42,
+        "1024x1024|high": 43,
         "1024x1536|low": 1,
-        "1024x1536|medium": 8,
+        "1024x1536|medium": 9,
         "1024x1536|high": 33,
         "1920x1080|low": 1,
         "1920x1080|medium": 8,
         "1920x1080|high": 32,
-        "2560x1440|low": 1,
-        "2560x1440|medium": 11,
-        "2560x1440|high": 44,
-        "3840x2160|low": 2,
-        "3840x2160|medium": 20,
-        "3840x2160|high": 80
+        "2560x1440|low": 2,
+        "2560x1440|medium": 12,
+        "2560x1440|high": 45,
+        "3840x2160|low": 3,
+        "3840x2160|medium": 21,
+        "3840x2160|high": 81
       },
       "price_final": "{$price}*({$num_images || $input.num_images || 1})",
       "docUrl": "https://fal.ai/models/openai/gpt-image-2/edit/api"
@@ -1647,10 +1637,10 @@
       "docUrl": "https://fal.ai/models/fal-ai/minimax/hailuo-02/standard/text-to-video/api"
     },
     "video:fal-fal-ai-minimax-hailuo-02-standard-image-to-video": {
-      "price_txt": "Hailuo 02 Standard Image to Video (FAL), 512P 6s: 20.4 per video | 512P 10s: 34 per video | 768P 6s: 54 per video | 768P 10s: 90 per video",
+      "price_txt": "Hailuo 02 Standard Image to Video (FAL), 512P 6s: 21 per video | 512P 10s: 34 per video | 768P 6s: 54 per video | 768P 10s: 90 per video",
       "price_key": "{$input.resolution || $resolution || $input.quality || $quality || $input.image_resolution || $image_resolution || $input.size || $size || $input.mode || $mode}|{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}",
       "price_map": {
-        "512P|6": 20,
+        "512P|6": 21,
         "512P|10": 34,
         "768P|6": 54,
         "768P|10": 90
@@ -1677,10 +1667,10 @@
       "docUrl": "https://fal.ai/models/fal-ai/minimax/hailuo-02/pro/image-to-video/api"
     },
     "video:fal-fal-ai-minimax-hailuo-02-fast-image-to-video": {
-      "price_txt": "Hailuo 02 Fast Image to Video (FAL), 512P 6s: 20.4 per video | 512P 10s: 34 per video",
+      "price_txt": "Hailuo 02 Fast Image to Video (FAL), 512P 6s: 21 per video | 512P 10s: 34 per video",
       "price_key": "{$input.duration || $duration || $input.n_frames || $n_frames || $input.extend_times || $extend_times || $input.video_duration || $video_duration || $input.audio_duration || $audio_duration}",
       "price_map": {
-        "6": 20,
+        "6": 21,
         "10": 34
       },
       "price_final": "{$price}",
@@ -1744,7 +1734,7 @@
       "docUrl": "https://fal.ai/models/fal-ai/minimax/hailuo-2.3-fast/pro/image-to-video/api"
     },
     "image:fal-xai-grok-imagine-image": {
-      "price_txt": "Grok Imagine Image: $0.02 per image",
+      "price_txt": "Grok Imagine Image: 4 credits per image",
       "price_key": "default",
       "price_map": {
         "default": 4
@@ -1753,16 +1743,16 @@
       "docUrl": "https://fal.ai/models/xai/grok-imagine-image/api"
     },
     "image:fal-xai-grok-imagine-image-edit": {
-      "price_txt": "Grok Imagine Image Edit: $0.022 per image ($0.02 output + $0.002 input)",
+      "price_txt": "Grok Imagine Image Edit: 5 credits per output image, including the input-image budget.",
       "price_key": "default",
       "price_map": {
-        "default": 4
+        "default": 5
       },
       "price_final": "{$price}*({$num_images || $input.num_images || 1})",
       "docUrl": "https://fal.ai/models/xai/grok-imagine-image/edit/api"
     },
     "image:fal-xai-grok-imagine-image-quality-text-to-image": {
-      "price_txt": "Grok Imagine Image Quality Text to Image: 1K $0.05 per image | 2K $0.07 per image",
+      "price_txt": "Grok Imagine Image Quality Text to Image: 1K 10 credits per image | 2K 14 credits per image",
       "price_key": "{$resolution || $input.resolution || '1k'}",
       "price_map": {
         "1k": 10,
@@ -1772,7 +1762,7 @@
       "docUrl": "https://fal.ai/models/xai/grok-imagine-image/quality/text-to-image/api"
     },
     "image:fal-xai-grok-imagine-image-quality-edit": {
-      "price_txt": "Grok Imagine Image Quality Edit: 1K $0.05 per output image | 2K $0.07 per output image + $0.01 per input image",
+      "price_txt": "Grok Imagine Image Quality Edit: 1K 10 credits per output image | 2K 14 credits per output image + 2 credits per input image",
       "price_key": "{$resolution || $input.resolution || '1k'}",
       "price_map": {
         "1k": 10,
@@ -1945,17 +1935,20 @@
       "notes": "The exact audio-output token count is only known after generation. The current pre-submit pricing runtime cannot reconcile token usage, so it reserves the minimum billable 1 credit while retaining the official unit rates in price_txt."
     },
     "video:bytedance-seedance-2-5": {
-      "price_txt": "Seedance 2.5, 480p: 17 credits/s with video input or 28 credits/s without video input | 720p: 38 credits/s with video input or 63 credits/s without video input. With video = Price × (Input + Output); no video = Price × Output.",
+      "price_txt": "480P: 17 credits/s with video input or 28 credits/s without video input; 720P: 38 credits/s with video input or 63 credits/s without video input; 1080P: 68.5 credits/s with video input or 114 credits/s without video input.\nNo video input = Price × output duration. With video input = Price × (input video duration + output duration).",
       "billing_adapter": "kie_seedance_2",
       "price_key": "{$input.resolution || '720p'}|{$billing.has_video_input ? 'with_video':'no_video'}",
       "price_map": {
         "480p|with_video": 17,
         "480p|no_video": 28,
         "720p|with_video": 38,
-        "720p|no_video": 63
+        "720p|no_video": 63,
+        "1080p|with_video": 68.5,
+        "1080p|no_video": 114
       },
       "price_final": "{$price}*({$billing.has_video_input ? ($billing.input_video_duration + $input.duration) : $input.duration})",
-      "docUrl": "https://docs.kie.ai/market/bytedance/seedance-2-5.md"
+      "docUrl": "https://docs.kie.ai/market/bytedance/seedance-2-5.md",
+      "notes": "1080P rates include the 28% promotion ending 2026-10-17 06:00 UTC. Prices were checked on 2026-09-10 and are marked beta by KIE. Top-up bonus credits are not applied."
     },
     "video:minimax-h3-text-to-video": {
       "price_txt": "MiniMax H3 Text to Video, 768P: 18 credits/s | 2K: 29 credits/s.",
@@ -2069,7 +2062,7 @@
       "docUrl": "https://docs.kie.ai/market/pixverse/extend.md"
     },
     "video:fal-bytedance-seedance-2-0-mini-text-to-video": {
-      "price_txt": "Seedance 2.0 Mini Text to Video, 480p: 14.42 credits/s | 720p: 30.94 credits/s.",
+      "price_txt": "Seedance 2.0 Mini Text to Video, 480p: 15 credits/s | 720p: 31 credits/s.",
       "price_key": "{$input.resolution || $resolution || '720p'}",
       "price_map": {
         "480p": 15,
@@ -2079,7 +2072,7 @@
       "docUrl": "https://fal.ai/models/bytedance/seedance-2.0/mini/text-to-video/api"
     },
     "video:fal-bytedance-seedance-2-0-mini-image-to-video": {
-      "price_txt": "Seedance 2.0 Mini Image to Video, 480p: 14.42 credits/s | 720p: 30.94 credits/s.",
+      "price_txt": "Seedance 2.0 Mini Image to Video, 480p: 15 credits/s | 720p: 31 credits/s.",
       "price_key": "{$input.resolution || $resolution || '720p'}",
       "price_map": {
         "480p": 15,
@@ -2089,7 +2082,7 @@
       "docUrl": "https://fal.ai/models/bytedance/seedance-2.0/mini/image-to-video/api"
     },
     "video:fal-bytedance-seedance-2-0-mini-reference-to-video": {
-      "price_txt": "Seedance 2.0 Mini Reference to Video, 480p: 14.42 credits/output-second plus 8.652 credits/input-second | 720p: 30.94 credits/output-second plus 18.564 credits/input-second.",
+      "price_txt": "Seedance 2.0 Mini Reference to Video: 480p 15 credits per output second; 720p 31 credits per output second. Input-video duration is weighted at 60% of output duration; the total charge is rounded up to whole credits.",
       "billing_adapter": "kie_seedance_2",
       "price_key": "{$input.resolution || $resolution || '720p'}",
       "price_map": {
@@ -2139,36 +2132,790 @@
       "docUrl": "https://fal.ai/models/fal-ai/kling-video/v3/4k/text-to-video/api"
     },
     "image:fal-bytedance-seedream-v5-pro-text-to-image": {
-      "price_txt": "Seedream 5.0 Pro Text to Image, <=1536x1536: 13.5 credits/image | <=2048x2048: 27 credits/image.",
+      "price_txt": "Seedream 5.0 Pro Text to Image, <=1536x1536: 14 credits/image | <=2048x2048: 27 credits/image.",
       "price_key": "{$input.image_size || $image_size || 'auto_2K'}",
       "price_map": {
-        "square_hd": 13.5,
-        "square": 13.5,
-        "portrait_4_3": 13.5,
-        "portrait_16_9": 13.5,
-        "landscape_4_3": 13.5,
-        "landscape_16_9": 13.5,
-        "auto_1K": 13.5,
+        "square_hd": 14,
+        "square": 14,
+        "portrait_4_3": 14,
+        "portrait_16_9": 14,
+        "landscape_4_3": 14,
+        "landscape_16_9": 14,
+        "auto_1K": 14,
         "auto_2K": 27
       },
       "price_final": "{$price}*({$input.num_images || $num_images || 1})",
       "docUrl": "https://fal.ai/models/bytedance/seedream/v5/pro/text-to-image/api"
     },
     "image:fal-bytedance-seedream-v5-pro-edit": {
-      "price_txt": "Seedream 5.0 Pro Image Editing, <=1536x1536: 13.5 credits/output image | <=2048x2048: 27 credits/output image; each input image after the first adds 0.9 credits per output image.",
+      "price_txt": "Seedream 5.0 Pro Image Editing, <=1536x1536: 14 credits/output image | <=2048x2048: 27 credits/output image; each input image after the first adds 1 credits per output image.",
       "price_key": "{$input.image_size || $image_size || 'auto_2K'}",
       "price_map": {
-        "square_hd": 13.5,
-        "square": 13.5,
-        "portrait_4_3": 13.5,
-        "portrait_16_9": 13.5,
-        "landscape_4_3": 13.5,
-        "landscape_16_9": 13.5,
-        "auto_1K": 13.5,
+        "square_hd": 14,
+        "square": 14,
+        "portrait_4_3": 14,
+        "portrait_16_9": 14,
+        "landscape_4_3": 14,
+        "landscape_16_9": 14,
+        "auto_1K": 14,
         "auto_2K": 27
       },
-      "price_final": "({$price}+0.9*({$input.image_urls && $input.image_urls.length || $image_urls && $image_urls.length || 1}-1))*({$input.num_images || $num_images || 1})",
+      "price_final": "({$price}+1*({$input.image_urls && $input.image_urls.length || $image_urls && $image_urls.length || 1}-1))*({$input.num_images || $num_images || 1})",
       "docUrl": "https://fal.ai/models/bytedance/seedream/v5/pro/edit/api"
+    },
+    "image:gpt-image-2-5-flare-text-to-image": {
+      "price_txt": "1K: 6 credits per image; 2K: 10 credits per image; 4K: 16 credits per image.",
+      "price_key": "{$input.resolution}",
+      "price_map": {
+        "1K": 6,
+        "2K": 10,
+        "4K": 16
+      },
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/gpt/gpt-image-2-5-flare-text-to-image.md"
+    },
+    "image:gpt-image-2-5-flare-image-to-image": {
+      "price_txt": "1K: 6 credits per image; 2K: 10 credits per image; 4K: 16 credits per image.",
+      "price_key": "{$input.resolution}",
+      "price_map": {
+        "1K": 6,
+        "2K": 10,
+        "4K": 16
+      },
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/gpt/gpt-image-2-5-flare-image-to-image.md"
+    },
+    "image:gpt-image-2-5-sunburst-text-to-image": {
+      "price_txt": "1K: 6 credits per image; 2K: 10 credits per image; 4K: 16 credits per image.",
+      "price_key": "{$input.resolution}",
+      "price_map": {
+        "1K": 6,
+        "2K": 10,
+        "4K": 16
+      },
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/gpt/gpt-image-2-5-sunburst-text-to-image.md"
+    },
+    "image:gpt-image-2-5-sunburst-image-to-image": {
+      "price_txt": "1K: 6 credits per image; 2K: 10 credits per image; 4K: 16 credits per image.",
+      "price_key": "{$input.resolution}",
+      "price_map": {
+        "1K": 6,
+        "2K": 10,
+        "4K": 16
+      },
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/gpt/gpt-image-2-5-sunburst-image-to-image.md"
+    },
+    "image:grok-imagine-image-2-0-text-to-image": {
+      "price_txt": "4 credits per image.",
+      "price_key": "default",
+      "price_map": {
+        "default": 4
+      },
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/grok-imagine-image-2-0/text-to-image.md"
+    },
+    "image:grok-imagine-image-2-0-image-edit": {
+      "price_txt": "4 credits per image.",
+      "price_key": "default",
+      "price_map": {
+        "default": 4
+      },
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/grok-imagine-image-2-0/image-to-image.md",
+      "notes": "Price verified against the KIE pricing table because the model page does not show a pricing banner."
+    },
+    "image:grok-imagine-image-2-0-segment-edit": {
+      "price_txt": "4 credits per image.",
+      "price_key": "default",
+      "price_map": {
+        "default": 4
+      },
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/grok-imagine-image-2-0/image-edit.md"
+    },
+    "image:grok-imagine-image-2-0-segment-map": {
+      "price_txt": "1 credit per request.",
+      "price_key": "default",
+      "price_map": {
+        "default": 1
+      },
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/grok-imagine-image-2-0/segment-map.md",
+      "notes": "KIE provides this endpoint for free. The site charges a fixed 1 credit per request."
+    },
+    "video:gemini-omni-1-1-flash": {
+      "price_txt": "Without video input:\n\n- 360P/720P/1080P: 4s: 45 credits; 6s: 60 credits; 8s: 75 credits; 10s: 90 credits.\n- 4K: 4s: 105 credits; 6s: 120 credits; 8s: 135 credits; 10s: 150 credits.\n\nWith video input:\n\n- 360P/720P/1080P: 120 credits per generation.\n- 4K: 180 credits per generation.",
+      "price_key": "{$input.resolution || '720p'}|{$input.video_list?.length > 0 ? 'with_video' : ($input.duration + '|no_video')}",
+      "price_map": {
+        "360p|4|no_video": 45,
+        "360p|6|no_video": 60,
+        "360p|8|no_video": 75,
+        "360p|10|no_video": 90,
+        "360p|with_video": 120,
+        "720p|4|no_video": 45,
+        "720p|6|no_video": 60,
+        "720p|8|no_video": 75,
+        "720p|10|no_video": 90,
+        "720p|with_video": 120,
+        "1080p|4|no_video": 45,
+        "1080p|6|no_video": 60,
+        "1080p|8|no_video": 75,
+        "1080p|10|no_video": 90,
+        "1080p|with_video": 120,
+        "4k|4|no_video": 105,
+        "4k|6|no_video": 120,
+        "4k|8|no_video": 135,
+        "4k|10|no_video": 150,
+        "4k|with_video": 180
+      },
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/google/gemini-omni-flash-1-1.md",
+      "notes": "Requests with video_list are billed per generation; duration is ignored in that branch. Without video input, duration must be 4, 6, 8, or 10 seconds."
+    },
+    "video:wan-3-0-video": {
+      "price_txt": "480P: 8 credits/s; 720P: 16 credits/s; 1080P: 32 credits/s.\nBilling: Unit price × (input video duration + output video duration).",
+      "billing_adapter": "kie_seedance_2",
+      "price_key": "{$input.duration === undefined || $input.duration > 0 ? ($input.resolution || '1080P') : 'unavailable'}",
+      "price_map": {
+        "480P": 8,
+        "720P": 16,
+        "1080P": 32
+      },
+      "price_final": "{$price*(($input.duration === undefined ? 5 : $input.duration)+$billing.input_video_duration)}",
+      "docUrl": "https://docs.kie.ai/market/wan/3-0-video.md",
+      "notes": "Reuse kie_seedance_2 to measure reference_video_urls. Billing includes input and output video duration. Omitted output duration defaults to 5 seconds; automatic duration (-1) is unavailable because its billable duration is unknown before generation."
+    },
+    "video:wan-3-0-video-prime": {
+      "price_txt": "480P: 12.2 credits/s; 720P: 25.2 credits/s; 1080P: 50.4 credits/s.\nBilling: Unit price × (input video duration + output video duration).",
+      "billing_adapter": "kie_seedance_2",
+      "price_key": "{$input.duration === undefined || $input.duration > 0 ? ($input.resolution || '1080P') : 'unavailable'}",
+      "price_map": {
+        "480P": 12.2,
+        "720P": 25.2,
+        "1080P": 50.4
+      },
+      "price_final": "{$price*(($input.duration === undefined ? 5 : $input.duration)+$billing.input_video_duration)}",
+      "docUrl": "https://docs.kie.ai/market/wan/3-0-video-prime.md",
+      "notes": "Reuse kie_seedance_2 to measure reference_video_urls. Billing includes input and output video duration. Omitted output duration defaults to 5 seconds; automatic duration (-1) is unavailable because its billable duration is unknown before generation. Rates use the credits listed by KIE."
+    },
+    "video:kling-3-0-omni-text-to-video": {
+      "price_txt": "720P: 14 credits/s without native audio or 18 credits/s with native audio; 1080P: 18 credits/s without native audio or 23 credits/s with native audio; 4K: 67 credits/s with or without native audio.",
+      "price_key": "{$input.resolution || '720p'}|{$input.audio === true ? 'with_audio':'no_audio'}",
+      "price_map": {
+        "720p|no_audio": 14,
+        "720p|with_audio": 18,
+        "1080p|no_audio": 18,
+        "1080p|with_audio": 23,
+        "4k|no_audio": 67,
+        "4k|with_audio": 67
+      },
+      "price_final": "{$price*($input.duration === undefined ? 5 : $input.duration)}",
+      "docUrl": "https://docs.kie.ai/market/kling/v3-omni-text-to-video.md"
+    },
+    "video:kling-3-0-omni-image-to-video": {
+      "price_txt": "720P: 14 credits/s without native audio or 18 credits/s with native audio; 1080P: 18 credits/s without native audio or 23 credits/s with native audio; 4K: 67 credits/s with or without native audio.",
+      "price_key": "{$input.resolution || '720p'}|{$input.audio === true ? 'with_audio':'no_audio'}",
+      "price_map": {
+        "720p|no_audio": 14,
+        "720p|with_audio": 18,
+        "1080p|no_audio": 18,
+        "1080p|with_audio": 23,
+        "4k|no_audio": 67,
+        "4k|with_audio": 67
+      },
+      "price_final": "{$price*($input.duration === undefined ? 5 : $input.duration)}",
+      "docUrl": "https://docs.kie.ai/market/kling/v3-omni-image-to-video.md"
+    },
+    "video:kling-3-0-omni-reference-to-video": {
+      "price_txt": "720P: 14 credits/s without native audio, 18 credits/s with native audio, or 20 credits/s with video input; 1080P: 18 credits/s without native audio, 23 credits/s with native audio, or 27 credits/s with video input; 4K: 67 credits/s in all three cases.",
+      "billing_adapter": "kie_seedance_2",
+      "price_key": "{$input.resolution || '720p'}|{$billing.has_video_input ? 'with_video' : ($input.audio === true ? 'with_audio':'no_audio')}",
+      "price_map": {
+        "720p|no_audio": 14,
+        "720p|with_audio": 18,
+        "1080p|no_audio": 18,
+        "1080p|with_audio": 23,
+        "4k|no_audio": 67,
+        "4k|with_audio": 67,
+        "720p|with_video": 20,
+        "1080p|with_video": 27,
+        "4k|with_video": 67
+      },
+      "price_final": "{$price*($billing.has_video_input && !($input.image_urls?.length > 0) ? $billing.input_video_duration : ($input.duration === undefined ? 5 : $input.duration))}",
+      "docUrl": "https://docs.kie.ai/market/kling/v3-omni-reference-to-video.md",
+      "notes": "Video-only requests follow the reference video duration; image-plus-video requests use the specified output duration, defaulting to 5 seconds. Input video duration must be available to the existing billing adapter. With-video rates take precedence over audio rates."
+    },
+    "video:kling-3-0-omni-transformation": {
+      "price_txt": "Video input is required. 720P: 20 credits/s; 1080P: 27 credits/s; 4K: 67 credits/s.",
+      "billing_adapter": "kie_seedance_2",
+      "price_key": "{$billing.has_video_input ? ($input.resolution || '720p') : 'unavailable'}",
+      "price_map": {
+        "720p": 20,
+        "1080p": 27,
+        "4k": 67
+      },
+      "price_final": "{$price*($input.image_urls?.length > 0 ? $input.duration : $billing.input_video_duration)}",
+      "docUrl": "https://docs.kie.ai/market/kling/v3-omni-transformation.md",
+      "notes": "Video input is required. Video-only requests use the measured reference video duration. Image-plus-video requests require an explicit output duration for pricing because KIE documents no default; do not assume 5 seconds. Missing duration metadata leaves the price unavailable. Input video duration follows the existing adapter rounding policy."
+    },
+    "chat:gpt-6-astra": {
+      "price_txt": "Per 1M tokens: input: 560 credits; cached input: 56 credits; cache writes: 700 credits; output: 2800 credits.",
+      "price_key": "unavailable",
+      "price_map": {},
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/chat/gpt-6-astra.md",
+      "notes": "Supplier token rates are recorded in price_txt only. The pre-submit pricing runtime cannot calculate token usage. The separate /api/ai-studio/chat route still uses fixed input/output billing rates and does not read this price map, so these quotes are not yet used for chat settlement."
+    },
+    "chat:gemini-3-7-flash": {
+      "price_txt": "Per 1M tokens: input: 45 credits; output: 225 credits.",
+      "price_key": "unavailable",
+      "price_map": {},
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/gemini/gemini-3-7-flash.md",
+      "notes": "Supplier token rates are recorded in price_txt only. The pre-submit pricing runtime cannot calculate token usage. The separate /api/ai-studio/chat route still uses fixed input/output billing rates and does not read this price map, so these quotes are not yet used for chat settlement. Listed prices include a 50% discount until 2026-12-31 06:00 UTC; top-up bonus credits are not applied."
+    },
+    "chat:gemini-3-7-flash-openai": {
+      "price_txt": "Per 1M tokens: input: 45 credits; output: 225 credits.",
+      "price_key": "unavailable",
+      "price_map": {},
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/gemini/gemini-3-7-flash-openai.md",
+      "notes": "Supplier token rates are recorded in price_txt only. The pre-submit pricing runtime cannot calculate token usage. The separate /api/ai-studio/chat route still uses fixed input/output billing rates and does not read this price map, so these quotes are not yet used for chat settlement. Listed prices include a 50% discount until 2026-12-31 06:00 UTC; top-up bonus credits are not applied."
+    },
+    "chat:gemini-3-8-flash": {
+      "price_txt": "Per 1M tokens: input: 45 credits; output: 225 credits.",
+      "price_key": "unavailable",
+      "price_map": {},
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/gemini/gemini-3-8-flash.md",
+      "notes": "Supplier token rates are recorded in price_txt only. The pre-submit pricing runtime cannot calculate token usage. The separate /api/ai-studio/chat route still uses fixed input/output billing rates and does not read this price map, so these quotes are not yet used for chat settlement. Listed prices include a 50% discount until 2026-12-31 06:00 UTC; top-up bonus credits are not applied."
+    },
+    "chat:gemini-3-8-flash-openai": {
+      "price_txt": "Per 1M tokens: input: 45 credits; output: 225 credits.",
+      "price_key": "unavailable",
+      "price_map": {},
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/gemini/gemini-3-8-flash-openai.md",
+      "notes": "Supplier token rates are recorded in price_txt only. The pre-submit pricing runtime cannot calculate token usage. The separate /api/ai-studio/chat route still uses fixed input/output billing rates and does not read this price map, so these quotes are not yet used for chat settlement. Listed prices include a 50% discount until 2026-12-31 06:00 UTC; top-up bonus credits are not applied."
+    },
+    "chat:grok-4-6": {
+      "price_txt": "Per 1M tokens: input: 160 credits; cached input: 40 credits; output: 480 credits.",
+      "price_key": "unavailable",
+      "price_map": {},
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/market/grok/grok-4-6.md",
+      "notes": "Supplier token rates are recorded in price_txt only. The pre-submit pricing runtime cannot calculate token usage. The separate /api/ai-studio/chat route still uses fixed input/output billing rates and does not read this price map, so these quotes are not yet used for chat settlement."
+    },
+    "music:recovery-audio": {
+      "price_txt": "待确认。模型页面和接口文档均未列出价格，总价目表搜索 recovery 无结果，不能按免费或普通音乐生成价格处理。",
+      "price_key": "unavailable",
+      "price_map": {},
+      "price_final": "{$price}",
+      "docUrl": "https://docs.kie.ai/suno-api/recovery-audio.md",
+      "notes": "No price was found on the model page, API documentation, or KIE pricing table as of 2026-09-10. The empty price map keeps execution unavailable; do not assume this endpoint is free or reuse the normal music-generation rate."
+    },
+    "video:wan-2-2-a14b-image-to-video-turbo": {
+      "price_txt": "wan/2-2-a14b-image-to-video-turbo, 480p: 8 per second | wan/2-2-a14b-image-to-video-turbo, 720p: 16 per second",
+      "price_key": "{$input.resolution || $resolution || $input.quality || $quality || $input.image_resolution || $image_resolution || $input.size || $size || $input.mode || $mode}",
+      "price_map": {
+        "480p": 8,
+        "720p": 16
+      },
+      "price_final": "{$price * 5}",
+      "docUrl": "https://docs.kie.ai/market/wan/2-2-a14b-image-to-video-turbo.md"
+    },
+    "video:fal-fal-ai-kling-video-o3-pro-text-to-video": {
+      "docUrl": "https://fal.ai/models/fal-ai/kling-video/o3/pro/text-to-video/api",
+      "price_txt": "Kling O3 Pro: audio off 23 credits/s; audio on 28 credits/s.",
+      "price_key": "{$generate_audio ?? $input.generate_audio ?? false}",
+      "price_map": {
+        "false": 23,
+        "true": 28
+      },
+      "price_final": "{$price}*{$duration ?? $input.duration ?? 5}"
+    },
+    "video:fal-fal-ai-kling-video-o3-standard-text-to-video": {
+      "docUrl": "https://fal.ai/models/fal-ai/kling-video/o3/standard/text-to-video/api",
+      "price_txt": "Kling O3 Standard: audio off 17 credits/s; audio on 23 credits/s.",
+      "price_key": "{$generate_audio ?? $input.generate_audio ?? false}",
+      "price_map": {
+        "false": 17,
+        "true": 23
+      },
+      "price_final": "{$price}*{$duration ?? $input.duration ?? 5}"
+    },
+    "video:fal-fal-ai-kling-video-o3-pro-image-to-video": {
+      "docUrl": "https://fal.ai/models/fal-ai/kling-video/o3/pro/image-to-video/api",
+      "price_txt": "Kling O3 Pro: audio off 23 credits/s; audio on 28 credits/s.",
+      "price_key": "{$generate_audio ?? $input.generate_audio ?? false}",
+      "price_map": {
+        "false": 23,
+        "true": 28
+      },
+      "price_final": "{$price}*{$duration ?? $input.duration ?? 5}"
+    },
+    "video:fal-fal-ai-kling-video-o3-standard-image-to-video": {
+      "docUrl": "https://fal.ai/models/fal-ai/kling-video/o3/standard/image-to-video/api",
+      "price_txt": "Kling O3 Standard: audio off 17 credits/s; audio on 23 credits/s.",
+      "price_key": "{$generate_audio ?? $input.generate_audio ?? false}",
+      "price_map": {
+        "false": 17,
+        "true": 23
+      },
+      "price_final": "{$price}*{$duration ?? $input.duration ?? 5}"
+    },
+    "video:fal-fal-ai-kling-video-o3-pro-video-to-video-reference": {
+      "docUrl": "https://fal.ai/models/fal-ai/kling-video/o3/pro/video-to-video/reference/api",
+      "price_txt": "Kling O3 Pro: 34 credits per output second.",
+      "price_key": "default",
+      "price_map": {
+        "default": 34
+      },
+      "price_final": "{$price}*{$duration ?? $input.duration}"
+    },
+    "video:fal-fal-ai-kling-video-o3-standard-video-to-video-reference": {
+      "docUrl": "https://fal.ai/models/fal-ai/kling-video/o3/standard/video-to-video/reference/api",
+      "price_txt": "Kling O3 Standard: 26 credits per output second.",
+      "price_key": "default",
+      "price_map": {
+        "default": 26
+      },
+      "price_final": "{$price}*{$duration ?? $input.duration}"
+    },
+    "video:fal-fal-ai-kling-video-o3-pro-video-to-video-edit": {
+      "docUrl": "https://fal.ai/models/fal-ai/kling-video/o3/pro/video-to-video/edit/api",
+      "price_txt": "Kling O3 Pro: 34 credits per output second.",
+      "price_key": "default",
+      "price_map": {
+        "default": 34
+      },
+      "price_final": "{$price}*{$__local_reference_metadata?.videoDurationsByUrl?.[$video_url || $input.video_url] ?? $input.__local_reference_metadata?.videoDurationsByUrl?.[$video_url || $input.video_url] ?? 0}",
+      "notes": "Editing preserves the input clip duration. Uses the uploaded video duration in __local_reference_metadata.videoDurationsByUrl; a quote is unavailable until that duration is known."
+    },
+    "video:fal-fal-ai-kling-video-o3-standard-video-to-video-edit": {
+      "docUrl": "https://fal.ai/models/fal-ai/kling-video/o3/standard/video-to-video/edit/api",
+      "price_txt": "Kling O3 Standard: 26 credits per output second.",
+      "price_key": "default",
+      "price_map": {
+        "default": 26
+      },
+      "price_final": "{$price}*{$__local_reference_metadata?.videoDurationsByUrl?.[$video_url || $input.video_url] ?? $input.__local_reference_metadata?.videoDurationsByUrl?.[$video_url || $input.video_url] ?? 0}",
+      "notes": "Editing preserves the input clip duration. Uses the uploaded video duration in __local_reference_metadata.videoDurationsByUrl; a quote is unavailable until that duration is known."
+    },
+    "video:fal-google-gemini-omni-flash-v1-1-text-to-video": {
+      "docUrl": "https://fal.ai/models/google/gemini-omni-flash/v1.1/text-to-video/api",
+      "price_txt": "Gemini Omni Flash 1.1: 360p 6 credits/s; 720p 20 credits/s; 1080p 30 credits/s; 4K 60 credits/s.",
+      "price_key": "{$resolution || $input.resolution || '720p'}",
+      "price_map": {
+        "360p": 6,
+        "720p": 20,
+        "1080p": 30,
+        "4k": 60
+      },
+      "price_final": "{$price}*{$duration ?? $input.duration ?? 8}"
+    },
+    "video:fal-google-gemini-omni-flash-v1-1-image-to-video": {
+      "docUrl": "https://fal.ai/models/google/gemini-omni-flash/v1.1/image-to-video/api",
+      "price_txt": "Gemini Omni Flash 1.1: 360p 6 credits/s; 720p 20 credits/s; 1080p 30 credits/s; 4K 60 credits/s.",
+      "price_key": "{$resolution || $input.resolution || '720p'}",
+      "price_map": {
+        "360p": 6,
+        "720p": 20,
+        "1080p": 30,
+        "4k": 60
+      },
+      "price_final": "{$price}*{$duration ?? $input.duration ?? 8}"
+    },
+    "video:fal-google-gemini-omni-flash-v1-1-reference-to-video": {
+      "docUrl": "https://fal.ai/models/google/gemini-omni-flash/v1.1/reference-to-video/api",
+      "price_txt": "Gemini Omni Flash 1.1: 360p 6 credits/s; 720p 20 credits/s; 1080p 30 credits/s; 4K 60 credits/s.",
+      "price_key": "{$resolution || $input.resolution || '720p'}",
+      "price_map": {
+        "360p": 6,
+        "720p": 20,
+        "1080p": 30,
+        "4k": 60
+      },
+      "price_final": "{$price}*{$duration ?? $input.duration ?? 8}"
+    },
+    "video:fal-google-gemini-omni-flash-v1-1-edit": {
+      "docUrl": "https://fal.ai/models/google/gemini-omni-flash/v1.1/edit/api",
+      "price_txt": "Gemini Omni Flash 1.1: 360p 6 credits/s; 720p 20 credits/s; 1080p 30 credits/s; 4K 60 credits/s.",
+      "price_key": "{$resolution || $input.resolution || '720p'}",
+      "price_map": {
+        "360p": 6,
+        "720p": 20,
+        "1080p": 30,
+        "4k": 60
+      },
+      "price_final": "{$price}*{$__local_reference_metadata?.videoDurationsByUrl?.[$video_url || $input.video_url] ?? $input.__local_reference_metadata?.videoDurationsByUrl?.[$video_url || $input.video_url] ?? 0}",
+      "notes": "Editing uses the uploaded video duration in __local_reference_metadata.videoDurationsByUrl; a quote is unavailable until that duration is known."
+    },
+    "video:fal-alibaba-wan-3-0-text-to-video": {
+      "docUrl": "https://fal.ai/models/alibaba/wan-3.0/text-to-video/api",
+      "price_txt": "Wan 3.0: 480p 10 credits/s; 720p 20 credits/s; 1080p 40 credits/s.",
+      "price_key": "{$resolution || $input.resolution || '1080p'}",
+      "price_map": {
+        "480p": 10,
+        "720p": 20,
+        "1080p": 40
+      },
+      "price_final": "{$price}*{$duration === null || $input.duration === null ? 0 : ($duration ?? $input.duration ?? 5)}",
+      "notes": "Only fixed output durations of 2–30 seconds are offered so the charge can be calculated before submission. Smart duration (null) is not priced."
+    },
+    "video:fal-alibaba-wan-3-0-image-to-video": {
+      "docUrl": "https://fal.ai/models/alibaba/wan-3.0/image-to-video/api",
+      "price_txt": "Wan 3.0: 480p 10 credits/s; 720p 20 credits/s; 1080p 40 credits/s.",
+      "price_key": "{$resolution || $input.resolution || '1080p'}",
+      "price_map": {
+        "480p": 10,
+        "720p": 20,
+        "1080p": 40
+      },
+      "price_final": "{$price}*{$duration === null || $input.duration === null ? 0 : ($duration ?? $input.duration ?? 5)}",
+      "notes": "Only fixed output durations of 2–30 seconds are offered so the charge can be calculated before submission. Smart duration (null) is not priced."
+    },
+    "video:fal-alibaba-wan-3-0-reference-to-video": {
+      "docUrl": "https://fal.ai/models/alibaba/wan-3.0/reference-to-video/api",
+      "price_txt": "Wan 3.0: 480p 10 credits/s; 720p 20 credits/s; 1080p 40 credits/s.",
+      "price_key": "{$resolution || $input.resolution || '1080p'}",
+      "price_map": {
+        "480p": 10,
+        "720p": 20,
+        "1080p": 40
+      },
+      "price_final": "{$price}*{$duration === null || $input.duration === null ? 0 : ($duration ?? $input.duration ?? 5)}",
+      "notes": "Only fixed output durations of 2–30 seconds are offered so the charge can be calculated before submission. Smart duration (null) is not priced."
+    },
+    "video:fal-alibaba-wan-3-0-prime-text-to-video": {
+      "docUrl": "https://fal.ai/models/alibaba/wan-3.0-prime/text-to-video/api",
+      "price_txt": "Wan 3.0 Prime: 480p 14 credits/s; 720p 28 credits/s; 1080p 56 credits/s.",
+      "price_key": "{$resolution || $input.resolution || '1080p'}",
+      "price_map": {
+        "480p": 14,
+        "720p": 28,
+        "1080p": 56
+      },
+      "price_final": "{$price}*{$duration === null || $input.duration === null ? 0 : ($duration ?? $input.duration ?? 5)}",
+      "notes": "Only fixed output durations of 2–30 seconds are offered so the charge can be calculated before submission. Smart duration (null) is not priced."
+    },
+    "video:fal-alibaba-wan-3-0-prime-image-to-video": {
+      "docUrl": "https://fal.ai/models/alibaba/wan-3.0-prime/image-to-video/api",
+      "price_txt": "Wan 3.0 Prime: 480p 14 credits/s; 720p 28 credits/s; 1080p 56 credits/s.",
+      "price_key": "{$resolution || $input.resolution || '1080p'}",
+      "price_map": {
+        "480p": 14,
+        "720p": 28,
+        "1080p": 56
+      },
+      "price_final": "{$price}*{$duration === null || $input.duration === null ? 0 : ($duration ?? $input.duration ?? 5)}",
+      "notes": "Only fixed output durations of 2–30 seconds are offered so the charge can be calculated before submission. Smart duration (null) is not priced."
+    },
+    "video:fal-alibaba-wan-3-0-prime-reference-to-video": {
+      "docUrl": "https://fal.ai/models/alibaba/wan-3.0-prime/reference-to-video/api",
+      "price_txt": "Wan 3.0 Prime: 480p 14 credits/s; 720p 28 credits/s; 1080p 56 credits/s.",
+      "price_key": "{$resolution || $input.resolution || '1080p'}",
+      "price_map": {
+        "480p": 14,
+        "720p": 28,
+        "1080p": 56
+      },
+      "price_final": "{$price}*{$duration === null || $input.duration === null ? 0 : ($duration ?? $input.duration ?? 5)}",
+      "notes": "Only fixed output durations of 2–30 seconds are offered so the charge can be calculated before submission. Smart duration (null) is not priced."
+    },
+    "image:fal-openai-gpt-image-2-5-flare-text-to-image": {
+      "docUrl": "https://fal.ai/models/openai/gpt-image-2.5/flare/text-to-image/api",
+      "price_txt": "GPT Image 2.5: 1–81 credits per output image, depending on size and quality. Low, medium, high, xhigh and max are supported. All credit rates are rounded up to whole credits.",
+      "price_key": "{$image_size || $input.image_size || '1024x768'}|{$quality || $input.quality || 'high'}",
+      "price_map": {
+        "1024x768|low": 1,
+        "1024x768|medium": 2,
+        "1024x768|high": 8,
+        "1024x768|xhigh": 13,
+        "1024x768|max": 29,
+        "768x1024|low": 1,
+        "768x1024|medium": 2,
+        "768x1024|high": 8,
+        "768x1024|xhigh": 13,
+        "768x1024|max": 29,
+        "1024x1024|low": 2,
+        "1024x1024|medium": 3,
+        "1024x1024|high": 11,
+        "1024x1024|xhigh": 19,
+        "1024x1024|max": 43,
+        "1024x1536|low": 1,
+        "1024x1536|medium": 3,
+        "1024x1536|high": 9,
+        "1024x1536|xhigh": 15,
+        "1024x1536|max": 33,
+        "1536x1024|low": 1,
+        "1536x1024|medium": 3,
+        "1536x1024|high": 9,
+        "1536x1024|xhigh": 15,
+        "1536x1024|max": 33,
+        "1920x1080|low": 1,
+        "1920x1080|medium": 3,
+        "1920x1080|high": 8,
+        "1920x1080|xhigh": 15,
+        "1920x1080|max": 32,
+        "1080x1920|low": 1,
+        "1080x1920|medium": 3,
+        "1080x1920|high": 8,
+        "1080x1920|xhigh": 15,
+        "1080x1920|max": 32,
+        "2560x1440|low": 2,
+        "2560x1440|medium": 3,
+        "2560x1440|high": 12,
+        "2560x1440|xhigh": 20,
+        "2560x1440|max": 45,
+        "1440x2560|low": 2,
+        "1440x2560|medium": 3,
+        "1440x2560|high": 12,
+        "1440x2560|xhigh": 20,
+        "1440x2560|max": 45,
+        "3840x2160|low": 3,
+        "3840x2160|medium": 6,
+        "3840x2160|high": 21,
+        "3840x2160|xhigh": 36,
+        "3840x2160|max": 81,
+        "2160x3840|low": 3,
+        "2160x3840|medium": 6,
+        "2160x3840|high": 21,
+        "2160x3840|xhigh": 36,
+        "2160x3840|max": 81
+      },
+      "price_final": "{$price}*({$num_images ?? $input.num_images ?? 1})",
+      "notes": "This is a pre-generation estimate, not exact token settlement. Output rates come from the endpoint pricing table. Text/reasoning token usage varies; cached-token discounts are not estimated."
+    },
+    "image:fal-openai-gpt-image-2-5-flare-edit": {
+      "docUrl": "https://fal.ai/models/openai/gpt-image-2.5/flare/edit/api",
+      "price_txt": "GPT Image 2.5: 1–81 credits per output image, depending on size and quality. Low, medium, high, xhigh and max are supported. All credit rates are rounded up to whole credits. Each reference image adds 2 credits per request.",
+      "price_key": "{$image_size || $input.image_size || '1024x768'}|{$quality || $input.quality || 'high'}",
+      "price_map": {
+        "1024x768|low": 1,
+        "1024x768|medium": 2,
+        "1024x768|high": 8,
+        "1024x768|xhigh": 13,
+        "1024x768|max": 29,
+        "768x1024|low": 1,
+        "768x1024|medium": 2,
+        "768x1024|high": 8,
+        "768x1024|xhigh": 13,
+        "768x1024|max": 29,
+        "1024x1024|low": 2,
+        "1024x1024|medium": 3,
+        "1024x1024|high": 11,
+        "1024x1024|xhigh": 19,
+        "1024x1024|max": 43,
+        "1024x1536|low": 1,
+        "1024x1536|medium": 3,
+        "1024x1536|high": 9,
+        "1024x1536|xhigh": 15,
+        "1024x1536|max": 33,
+        "1536x1024|low": 1,
+        "1536x1024|medium": 3,
+        "1536x1024|high": 9,
+        "1536x1024|xhigh": 15,
+        "1536x1024|max": 33,
+        "1920x1080|low": 1,
+        "1920x1080|medium": 3,
+        "1920x1080|high": 8,
+        "1920x1080|xhigh": 15,
+        "1920x1080|max": 32,
+        "1080x1920|low": 1,
+        "1080x1920|medium": 3,
+        "1080x1920|high": 8,
+        "1080x1920|xhigh": 15,
+        "1080x1920|max": 32,
+        "2560x1440|low": 2,
+        "2560x1440|medium": 3,
+        "2560x1440|high": 12,
+        "2560x1440|xhigh": 20,
+        "2560x1440|max": 45,
+        "1440x2560|low": 2,
+        "1440x2560|medium": 3,
+        "1440x2560|high": 12,
+        "1440x2560|xhigh": 20,
+        "1440x2560|max": 45,
+        "3840x2160|low": 3,
+        "3840x2160|medium": 6,
+        "3840x2160|high": 21,
+        "3840x2160|xhigh": 36,
+        "3840x2160|max": 81,
+        "2160x3840|low": 3,
+        "2160x3840|medium": 6,
+        "2160x3840|high": 21,
+        "2160x3840|xhigh": 36,
+        "2160x3840|max": 81
+      },
+      "price_final": "{$price}*({$num_images ?? $input.num_images ?? 1})+2*{$image_urls?.length ?? $input.image_urls?.length ?? 0}",
+      "notes": "This is a pre-generation estimate, not exact token settlement. Output rates come from the endpoint pricing table. Text/reasoning token usage varies; cached-token discounts are not estimated. The 2-credit/reference input budget is rounded up after conversion from fal’s single-reference benchmark on https://fal.ai/gpt-image-2.5; actual input tokens vary with the reference image."
+    },
+    "image:fal-openai-gpt-image-2-5-sunburst-text-to-image": {
+      "docUrl": "https://fal.ai/models/openai/gpt-image-2.5/sunburst/text-to-image/api",
+      "price_txt": "GPT Image 2.5: 1–81 credits per output image, depending on size and quality. Low, medium, high, xhigh and max are supported. All credit rates are rounded up to whole credits.",
+      "price_key": "{$image_size || $input.image_size || '1024x768'}|{$quality || $input.quality || 'high'}",
+      "price_map": {
+        "1024x768|low": 1,
+        "1024x768|medium": 2,
+        "1024x768|high": 8,
+        "1024x768|xhigh": 13,
+        "1024x768|max": 29,
+        "768x1024|low": 1,
+        "768x1024|medium": 2,
+        "768x1024|high": 8,
+        "768x1024|xhigh": 13,
+        "768x1024|max": 29,
+        "1024x1024|low": 2,
+        "1024x1024|medium": 3,
+        "1024x1024|high": 11,
+        "1024x1024|xhigh": 19,
+        "1024x1024|max": 43,
+        "1024x1536|low": 1,
+        "1024x1536|medium": 3,
+        "1024x1536|high": 9,
+        "1024x1536|xhigh": 15,
+        "1024x1536|max": 33,
+        "1536x1024|low": 1,
+        "1536x1024|medium": 3,
+        "1536x1024|high": 9,
+        "1536x1024|xhigh": 15,
+        "1536x1024|max": 33,
+        "1920x1080|low": 1,
+        "1920x1080|medium": 3,
+        "1920x1080|high": 8,
+        "1920x1080|xhigh": 15,
+        "1920x1080|max": 32,
+        "1080x1920|low": 1,
+        "1080x1920|medium": 3,
+        "1080x1920|high": 8,
+        "1080x1920|xhigh": 15,
+        "1080x1920|max": 32,
+        "2560x1440|low": 2,
+        "2560x1440|medium": 3,
+        "2560x1440|high": 12,
+        "2560x1440|xhigh": 20,
+        "2560x1440|max": 45,
+        "1440x2560|low": 2,
+        "1440x2560|medium": 3,
+        "1440x2560|high": 12,
+        "1440x2560|xhigh": 20,
+        "1440x2560|max": 45,
+        "3840x2160|low": 3,
+        "3840x2160|medium": 6,
+        "3840x2160|high": 21,
+        "3840x2160|xhigh": 36,
+        "3840x2160|max": 81,
+        "2160x3840|low": 3,
+        "2160x3840|medium": 6,
+        "2160x3840|high": 21,
+        "2160x3840|xhigh": 36,
+        "2160x3840|max": 81
+      },
+      "price_final": "{$price}*({$num_images ?? $input.num_images ?? 1})",
+      "notes": "This is a pre-generation estimate, not exact token settlement. Output rates come from the endpoint pricing table. Text/reasoning token usage varies; cached-token discounts are not estimated."
+    },
+    "image:fal-openai-gpt-image-2-5-sunburst-edit": {
+      "docUrl": "https://fal.ai/models/openai/gpt-image-2.5/sunburst/edit/api",
+      "price_txt": "GPT Image 2.5: 1–81 credits per output image, depending on size and quality. Low, medium, high, xhigh and max are supported. All credit rates are rounded up to whole credits. Each reference image adds 2 credits per request.",
+      "price_key": "{$image_size || $input.image_size || '1024x768'}|{$quality || $input.quality || 'high'}",
+      "price_map": {
+        "1024x768|low": 1,
+        "1024x768|medium": 2,
+        "1024x768|high": 8,
+        "1024x768|xhigh": 13,
+        "1024x768|max": 29,
+        "768x1024|low": 1,
+        "768x1024|medium": 2,
+        "768x1024|high": 8,
+        "768x1024|xhigh": 13,
+        "768x1024|max": 29,
+        "1024x1024|low": 2,
+        "1024x1024|medium": 3,
+        "1024x1024|high": 11,
+        "1024x1024|xhigh": 19,
+        "1024x1024|max": 43,
+        "1024x1536|low": 1,
+        "1024x1536|medium": 3,
+        "1024x1536|high": 9,
+        "1024x1536|xhigh": 15,
+        "1024x1536|max": 33,
+        "1536x1024|low": 1,
+        "1536x1024|medium": 3,
+        "1536x1024|high": 9,
+        "1536x1024|xhigh": 15,
+        "1536x1024|max": 33,
+        "1920x1080|low": 1,
+        "1920x1080|medium": 3,
+        "1920x1080|high": 8,
+        "1920x1080|xhigh": 15,
+        "1920x1080|max": 32,
+        "1080x1920|low": 1,
+        "1080x1920|medium": 3,
+        "1080x1920|high": 8,
+        "1080x1920|xhigh": 15,
+        "1080x1920|max": 32,
+        "2560x1440|low": 2,
+        "2560x1440|medium": 3,
+        "2560x1440|high": 12,
+        "2560x1440|xhigh": 20,
+        "2560x1440|max": 45,
+        "1440x2560|low": 2,
+        "1440x2560|medium": 3,
+        "1440x2560|high": 12,
+        "1440x2560|xhigh": 20,
+        "1440x2560|max": 45,
+        "3840x2160|low": 3,
+        "3840x2160|medium": 6,
+        "3840x2160|high": 21,
+        "3840x2160|xhigh": 36,
+        "3840x2160|max": 81,
+        "2160x3840|low": 3,
+        "2160x3840|medium": 6,
+        "2160x3840|high": 21,
+        "2160x3840|xhigh": 36,
+        "2160x3840|max": 81
+      },
+      "price_final": "{$price}*({$num_images ?? $input.num_images ?? 1})+2*{$image_urls?.length ?? $input.image_urls?.length ?? 0}",
+      "notes": "This is a pre-generation estimate, not exact token settlement. Output rates come from the endpoint pricing table. Text/reasoning token usage varies; cached-token discounts are not estimated. The 2-credit/reference input budget is rounded up after conversion from fal’s single-reference benchmark on https://fal.ai/gpt-image-2.5; actual input tokens vary with the reference image."
+    },
+    "image:fal-xai-grok-imagine-image-v2-0-text-to-image": {
+      "docUrl": "https://fal.ai/models/xai/grok-imagine-image/v2.0/text-to-image/api",
+      "price_txt": "Grok Image 2.0: 1K/low 8 credits/image; 1K/medium or 2K/low 12 credits/image; 2K/medium 16 credits/image.",
+      "price_key": "{$resolution || $input.resolution || '1k'}|{$quality || $input.quality || 'medium'}",
+      "price_map": {
+        "1k|low": 8,
+        "1k|medium": 12,
+        "2k|low": 12,
+        "2k|medium": 16
+      },
+      "price_final": "{$price}*({$num_images ?? $input.num_images ?? 1})"
+    },
+    "image:fal-xai-grok-imagine-image-v2-0-edit": {
+      "docUrl": "https://fal.ai/models/xai/grok-imagine-image/v2.0/edit/api",
+      "price_txt": "Grok Image 2.0: 1K/low 8 credits/image; 1K/medium or 2K/low 12 credits/image; 2K/medium 16 credits/image. Add 2 credits per input image.",
+      "price_key": "{$resolution || $input.resolution || '1k'}|{$quality || $input.quality || 'medium'}",
+      "price_map": {
+        "1k|low": 8,
+        "1k|medium": 12,
+        "2k|low": 12,
+        "2k|medium": 16
+      },
+      "price_final": "{$price}*({$num_images ?? $input.num_images ?? 1})+2*{$image_urls?.length ?? $input.image_urls?.length ?? 0}"
+    },
+    "image:fal-ideogram-v4-tiling": {
+      "docUrl": "https://fal.ai/models/ideogram/v4/tiling/api",
+      "price_txt": "Ideogram V4 Tiling: TURBO 6 credits/megapixel; BALANCED 12 credits/megapixel; QUALITY 20 credits/megapixel. Multiply by output megapixels and image count.",
+      "price_key": "{$rendering_speed || $input.rendering_speed || 'BALANCED'}",
+      "price_map": {
+        "TURBO": 6,
+        "BALANCED": 12,
+        "QUALITY": 20
+      },
+      "price_final": "{$price}*{$($image_size || $input.image_size || '1024x1024').split('x')[0]}*{$($image_size || $input.image_size || '1024x1024').split('x')[1]}/1000000*({$num_images ?? $input.num_images ?? 1})",
+      "notes": "Output megapixels are width × height / 1,000,000. Uses the published rendering-speed rates; the public price text does not specify a separate prompt-expansion fee."
     }
   }
 }

@@ -409,7 +409,7 @@ function firstPath(openapiDoc: Record<string, any>) {
 }
 
 function extractYamlCodeBlock(markdown: string): string {
-  const match = markdown.match(/```yaml\s*([\s\S]*?)```/i);
+  const match = markdown.match(/^```yaml[ \t]*\r?\n([\s\S]*?)^```[ \t]*$/im);
   if (!match?.[1]) {
     throw new Error("Unable to locate OpenAPI yaml block");
   }
@@ -425,7 +425,13 @@ function extractRequestSchema(methodDef: Record<string, any>) {
 }
 
 function resolveOpenApiRef(openapiDoc: Record<string, any>, ref: string) {
-  const segments = ref.replace(/^#\//, "").split("/").filter(Boolean);
+  if (!ref.startsWith("#/")) {
+    return null;
+  }
+
+  const segments = ref.slice(2).split("/").map((segment) =>
+    decodeURIComponent(segment).replace(/~1/g, "/").replace(/~0/g, "~"),
+  );
   let current: unknown = openapiDoc;
 
   for (const segment of segments) {
@@ -688,7 +694,12 @@ export function extractFalPricingTextFromLlms(content: string) {
 
 function extractRequestExample(methodDef: Record<string, any>) {
   const content = methodDef.requestBody?.content?.["application/json"];
-  const example = content?.example ?? content?.schema?.example;
+  const namedExample = Object.values(content?.examples ?? {}).find(
+    (item): item is { value: Record<string, any> } =>
+      item !== null && typeof item === "object" && "value" in item,
+  );
+  const example = content?.example ?? namedExample?.value ??
+    content?.schema?.example ?? content?.schema?.examples?.[0];
   if (example && typeof example === "object") {
     return example as Record<string, any>;
   }
@@ -698,6 +709,7 @@ function extractRequestExample(methodDef: Record<string, any>) {
 function extractModelKeysFromSchema(
   schema: Record<string, any> | null,
   endpoint: string,
+  examplePayload: Record<string, any>,
 ): string[] {
   const modelProperty = schema?.properties?.model;
   const enumValues = Array.isArray(modelProperty?.enum)
@@ -712,8 +724,26 @@ function extractModelKeysFromSchema(
     return [modelProperty.default];
   }
 
+  if (typeof examplePayload.model === "string") {
+    return [examplePayload.model];
+  }
+
+  const exampleModel = modelProperty?.examples?.find(
+    (value: unknown): value is string => typeof value === "string",
+  );
+  if (exampleModel) {
+    return [exampleModel];
+  }
+
+  const pathModel = endpoint.match(/\/models\/([^/:]+)/)?.[1];
+  if (pathModel) {
+    return [pathModel];
+  }
+
   const endpointModel = endpoint.match(/^\/([^/]+)\/v\d+\//)?.[1];
-  return endpointModel ? [endpointModel] : [];
+  return endpointModel && !["api", "codex", "grok", "gemini"].includes(endpointModel)
+    ? [endpointModel]
+    : [];
 }
 
 function inferApimartCategory(docUrl: string): AiStudioCategory | null {
@@ -1214,9 +1244,12 @@ export function parseApiDocMarkdown(
 ): AiStudioDocDetail {
   const openapiDoc = YAML.parse(extractYamlCodeBlock(markdown)) as Record<string, any>;
   const { endpoint, method, methodDef } = firstPath(openapiDoc);
-  const schema = extractRequestSchema(methodDef);
+  const schema = dereferenceOpenApiSchema(
+    openapiDoc,
+    extractRequestSchema(methodDef),
+  ) as Record<string, any> | null;
   const examplePayload = extractRequestExample(methodDef);
-  const modelKeys = extractModelKeysFromSchema(schema, endpoint);
+  const modelKeys = extractModelKeysFromSchema(schema, endpoint, examplePayload);
 
   const providerFromTitle = entry.title.split(" - ")[0] || entry.title;
 
@@ -1295,7 +1328,9 @@ export async function getAiStudioCatalogDetail(
   }
 }
 
-export async function buildAiStudioUpstreamCatalog(): Promise<AiStudioUpstreamCatalogFile> {
+export async function buildAiStudioUpstreamCatalog(
+  existing?: AiStudioUpstreamCatalogFile | null,
+): Promise<AiStudioUpstreamCatalogFile> {
   const entries = await getAiStudioCatalog();
   const results = await mapWithConcurrency(
     entries,
@@ -1313,6 +1348,13 @@ export async function buildAiStudioUpstreamCatalog(): Promise<AiStudioUpstreamCa
     }
 
     const entry = entries[index];
+    const previous = entry && existing?.items.find(
+      (item) => item.docUrl === entry.docUrl,
+    );
+    if (previous) {
+      items.push(structuredClone(previous));
+      console.warn(`Retained existing AI Studio catalog model after doc failure: ${previous.id}`);
+    }
     failures.push(
       entry
         ? `${entry.title} (${entry.docUrl}): ${getErrorMessage(result.reason)}`
@@ -1329,7 +1371,7 @@ export async function buildAiStudioUpstreamCatalog(): Promise<AiStudioUpstreamCa
     }
   }
 
-  if (entries.length > 0 && items.length === 0) {
+  if (entries.length > 0 && results.every((result) => result.status === "rejected")) {
     throw new Error("Unable to build AI Studio upstream catalog: all docs failed to parse");
   }
 

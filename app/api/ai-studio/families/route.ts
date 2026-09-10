@@ -11,7 +11,7 @@ function formatRate(value: number) {
 }
 
 function isDurationPricing(priceFinal: string) {
-  return /\b(duration|video_duration|audio_duration|n_frames|extend_times)\b/.test(
+  return /\b(duration|video_duration|input_video_duration|videoDurationsByUrl|audio_duration|n_frames|extend_times)\b/.test(
     priceFinal,
   );
 }

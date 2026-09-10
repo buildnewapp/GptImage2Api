@@ -260,8 +260,9 @@ Pricing: Input costs 140 credits per 1M tokens ($0.70); audio output costs 2,800
 Source: https://kie.ai/gemini-3-1-flash-tts
 
 bytedance/seedance-2-5
-Pricing: 480P: 17 credits/s ($0.085/s) with video input or 28 credits/s ($0.14/s) without video input; 720P: 38 credits/s ($0.19/s) with video input or 63 credits/s ($0.315/s) without video input.
+Pricing: 480P: 17 credits/s with video input or 28 credits/s without video input; 720P: 38 credits/s with video input or 63 credits/s without video input; 1080P: 68.5 credits/s with video input or 114 credits/s without video input.
 No video input = Price × output duration. With video input = Price × (input video duration + output duration).
+Notes: 2026-09-10 核价。1080P 价格已包含限时 28% 折扣，活动截止 2026-10-17 06:00 UTC；页面标注价格处于 beta 阶段，后续可能调整。以上价格未额外折算充值赠送积分。
 Source: https://kie.ai/seedance-2-5
 
 minimax-h3/text-to-video
@@ -295,3 +296,118 @@ Source: https://kie.ai/pixverse-v6
 pixverse-v6/extend
 Pricing: 360P: 4 credits/s ($0.02/s) without audio or 5.6 credits/s ($0.028/s) with audio; 540P: 5.6 ($0.028/s) or 7.2 ($0.036/s); 720P: 7.2 ($0.036/s) or 9.6 ($0.048/s); 1080P: 14.4 ($0.072/s) or 18.4 ($0.092/s).
 Source: https://kie.ai/pixverse-v6
+
+## 2026-09-10 新增模型价格
+
+以下记录 KIE 模型页面及总价目表的列示积分价格，未额外折算充值赠送积分。所有价格以积分为准。限时折扣、免费接口和未公布价格分别注明。
+
+gpt-image-2-5-flare-text-to-image
+Pricing: 1K: 6 credits per image; 2K: 10 credits per image; 4K: 16 credits per image.
+Source: https://kie.ai/gpt-image-2-5?model=gpt-image-2-5-flare-text-to-image
+
+gpt-image-2-5-flare-image-to-image
+Pricing: 1K: 6 credits per image; 2K: 10 credits per image; 4K: 16 credits per image.
+Source: https://kie.ai/gpt-image-2-5?model=gpt-image-2-5-flare-image-to-image
+
+gpt-image-2-5-sunburst-text-to-image
+Pricing: 1K: 6 credits per image; 2K: 10 credits per image; 4K: 16 credits per image.
+Source: https://kie.ai/gpt-image-2-5?model=gpt-image-2-5-sunburst-text-to-image
+
+gpt-image-2-5-sunburst-image-to-image
+Pricing: 1K: 6 credits per image; 2K: 10 credits per image; 4K: 16 credits per image.
+Source: https://kie.ai/gpt-image-2-5?model=gpt-image-2-5-sunburst-image-to-image
+
+grok-imagine-image-2-0/text-to-image
+Pricing: 4 credits per image.
+Source: https://kie.ai/grok-imagine-image-2?model=grok-imagine-image-2-0%2Ftext-to-image
+
+grok-imagine-image-2-0/image-edit
+Pricing: 4 credits per image.
+Notes: 模型详情页未显示 Pricing；价格取自总价目表中的 “grok-imagine-image-2-0, Image Edit”。
+Source: https://kie.ai/pricing
+Model page: https://kie.ai/grok-imagine-image-2?model=grok-imagine-image-2-0%2Fimage-edit
+
+grok-imagine-image-2-0/segment-edit
+Pricing: 4 credits per image.
+Source: https://kie.ai/grok-imagine-image-2?model=grok-imagine-image-2-0%2Fsegment-edit
+
+grok-imagine-image-2-0/segment-map
+Pricing: Free (0 credits). Generate segment map is free.
+Notes: 本项目按 1 积分/次收费，已在 overrides/pricing.json 配置。
+Source: https://kie.ai/grok-imagine-image-2?model=grok-imagine-image-2-0%2Fsegment-map
+
+google/gemini-omni-flash-1-1
+Pricing: Without video input:
+
+- 360P/720P/1080P: 4s: 63 credits; 6s: 84 credits; 8s: 105 credits; 10s: 126 credits.
+- 4K: 4s: 147 credits; 6s: 168 credits; 8s: 189 credits; 10s: 210 credits.
+
+With video input:
+
+- 360P/720P/1080P: 168 credits per generation.
+- 4K: 252 credits per generation.
+
+Source: https://kie.ai/gemini-omni-1-1-flash
+
+wan/3-0-video
+Pricing: 480P: 8 credits/s; 720P: 16 credits/s; 1080P: 32 credits/s.
+Billing: Unit price × (input video duration + output video duration).
+Source: https://kie.ai/wan3.0-video
+
+wan/3-0-video-prime
+Pricing: 480P: 12.2 credits/s; 720P: 25.2 credits/s; 1080P: 50.4 credits/s.
+Billing: Unit price × (input video duration + output video duration).
+Notes: 按 KIE 列示积分计价：480P 为 12.2 积分/秒，720P 为 25.2 积分/秒，1080P 为 50.4 积分/秒。
+Source: https://kie.ai/wan3.0-video-prime
+Cross-check: https://kie.ai/pricing
+
+kling-3.0-omni/text-to-video
+Pricing: 720P: 14 credits/s without native audio or 18 credits/s with native audio; 1080P: 18 credits/s without native audio or 23 credits/s with native audio; 4K: 67 credits/s with or without native audio.
+Source: https://kie.ai/kling-o3?model=kling-3.0-omni%2Ftext-to-video
+
+kling-3.0-omni/image-to-video
+Pricing: 720P: 14 credits/s without native audio or 18 credits/s with native audio; 1080P: 18 credits/s without native audio or 23 credits/s with native audio; 4K: 67 credits/s with or without native audio.
+Source: https://kie.ai/kling-o3?model=kling-3.0-omni%2Fimage-to-video
+
+kling-3.0-omni/reference-to-video
+Pricing: 720P: 14 credits/s without native audio, 18 credits/s with native audio, or 20 credits/s with video input; 1080P: 18 credits/s without native audio, 23 credits/s with native audio, or 27 credits/s with video input; 4K: 67 credits/s in all three cases.
+Source: https://kie.ai/kling-o3?model=kling-3.0-omni%2Freference-to-video
+
+kling-3.0-omni/transformation
+Pricing: Video input is required. 720P: 20 credits/s; 1080P: 27 credits/s; 4K: 67 credits/s.
+Source: https://kie.ai/kling-o3?model=kling-3.0-omni%2Ftransformation
+
+gpt-6-astra
+Pricing: Per 1M tokens: input: 560 credits; cached input: 56 credits; cache writes: 700 credits; output: 2800 credits.
+Source: https://kie.ai/gpt-6-astra
+
+gemini-3-7-flash
+Pricing: Per 1M tokens: input: 45 credits; output: 225 credits.
+Notes: 已包含限时 50% 折扣，活动截止 2026-12-31 06:00 UTC。
+Source: https://kie.ai/gemini-3-7-flash
+
+gemini-3-7-flash-openai
+Pricing: Per 1M tokens: input: 45 credits; output: 225 credits.
+Notes: 已包含限时 50% 折扣，活动截止 2026-12-31 06:00 UTC。
+Source: https://kie.ai/gemini-3-7-flash?model=gemini-3-7-flash-openai
+
+gemini-3-8-flash
+Pricing: Per 1M tokens: input: 45 credits; output: 225 credits.
+Notes: 已包含限时 50% 折扣，活动截止 2026-12-31 06:00 UTC。
+Source: https://kie.ai/gemini-3-8-flash
+
+gemini-3-8-flash-openai
+Pricing: Per 1M tokens: input: 45 credits; output: 225 credits.
+Notes: 已包含限时 50% 折扣，活动截止 2026-12-31 06:00 UTC。
+Source: https://kie.ai/gemini-3-8-flash?model=gemini-3-8-flash-openai
+
+grok-4-6
+Pricing: Per 1M tokens: input: 160 credits; cached input: 40 credits; output: 480 credits.
+Source: https://kie.ai/grok-4-6
+
+music:recovery-audio
+Pricing: 待确认。模型页面和接口文档均未列出价格，总价目表搜索 recovery 无结果，不能按免费或普通音乐生成价格处理。
+Page model: ai-music-api/suno-recovery-audio
+Source: https://kie.ai/suno-api?model=ai-music-api%2Fsuno-recovery-audio
+Cross-check: https://kie.ai/pricing
+API doc: https://docs.kie.ai/suno-api/recovery-audio.md

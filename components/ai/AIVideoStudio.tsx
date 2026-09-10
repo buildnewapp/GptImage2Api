@@ -1,6 +1,7 @@
 "use client";
 
 import AIVideoStudioFields from "@/components/ai/AIVideoStudioFields";
+import { resolveReferenceFieldKind } from "@/components/ai/fields/ReferenceField";
 import AIVideoStudioMediaPreview, {
   type AIVideoStudioPreview,
 } from "@/components/ai/AIVideoStudioMediaPreview";
@@ -1012,6 +1013,21 @@ export default function AIVideoStudio({
   const basePayload = submitMode === "api" ? apiBasePayload : formBasePayload;
   const selectedPricing =
     submitMode === "api" ? apiSelectedPricing : formSelectedPricing;
+  const usesReferenceDurationPricing = /videoDurationsByUrl|input_video_duration/.test(
+    detail?.pricing?.price_final ?? "",
+  );
+  const sourceVideoDuration = useMemo(() => {
+    const durationsByUrl = getValueAtPath(formValues, [LOCAL_REFERENCE_METADATA_KEY, "videoDurationsByUrl"]) as
+      Record<string, number> | undefined;
+    const durations = (normalizedSchema?.fields ?? [])
+      .filter((field) => resolveReferenceFieldKind(field) === "video")
+      .flatMap((field) => getValueAtPath(formValues, field.path) ?? [])
+      .filter((url): url is string => typeof url === "string" && url.length > 0)
+      .map((url) => durationsByUrl?.[url]);
+    return durations.length > 0 && durations.every((duration) => typeof duration === "number" && Number.isFinite(duration) && duration > 0)
+      ? durations.reduce<number>((total, duration) => total + Math.ceil(duration!), 0)
+      : null;
+  }, [formValues, normalizedSchema]);
   const inputPayload = basePayload;
   const apiFieldDocs = useMemo(
     () =>
@@ -1864,6 +1880,13 @@ export default function AIVideoStudio({
               </div>
             ) : null}
 
+            {submitMode === "form" && usesReferenceDurationPricing && !detailLoading && !detailError ? (
+              <div data-ai-video-studio-reference-duration className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">{t("form.referenceVideos")} · {t("form.duration")}</span>
+                <span>{sourceVideoDuration === null ? "--" : `${sourceVideoDuration}s`}</span>
+              </div>
+            ) : null}
+
             {hasSignedInSession ? (
               <div className="rounded-xl border border-border/60 bg-background/40 px-4 py-2.5 flex items-center justify-between">
                 <div className="text-sm text-muted-foreground">
@@ -1900,7 +1923,9 @@ export default function AIVideoStudio({
                           selectedModelMediaKind === "image"
                             ? "form.generateImage"
                             : "form.generate",
-                        )} (${t("form.creditsRequired", { count: estimatedCredits })})`}
+                        )} (${usesReferenceDurationPricing && estimatedCredits <= 0
+                          ? "--"
+                          : t("form.creditsRequired", { count: estimatedCredits })})`}
                   </span>
                 </div>
               </Button>

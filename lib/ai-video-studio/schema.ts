@@ -1,3 +1,5 @@
+import { LOCAL_REFERENCE_METADATA_KEY } from "@/lib/ai-studio/seedance-pricing";
+
 type JsonSchema = Record<string, any>;
 
 type AiVideoStudioFormUiConfig = {
@@ -601,6 +603,26 @@ export function mergeAiVideoStudioFormValues(input: {
         ? normalizedPreviousValue
         : defaultValue,
     );
+  }
+
+  // Keep duration data for references that survived the schema change or restore.
+  const referenceUrls = new Set(
+    input.fields.flatMap((field) => {
+      const value = getValueAtPath(next, field.path);
+      return (Array.isArray(value) ? value : [value]).filter(
+        (item): item is string => typeof item === "string",
+      );
+    }),
+  );
+  const durations = getValueAtPath(input.previousValues, [LOCAL_REFERENCE_METADATA_KEY, "videoDurationsByUrl"]);
+  if (durations && typeof durations === "object" && !Array.isArray(durations)) {
+    const entries = Object.entries(durations).filter(
+      ([url, duration]) => referenceUrls.has(url) &&
+        typeof duration === "number" && Number.isFinite(duration) && duration > 0,
+    );
+    if (entries.length > 0) {
+      next[LOCAL_REFERENCE_METADATA_KEY] = { videoDurationsByUrl: Object.fromEntries(entries) };
+    }
   }
 
   return next;
