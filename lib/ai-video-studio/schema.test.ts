@@ -1,10 +1,74 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
+import { buildAiVideoStudioPayload } from "@/lib/ai-video-studio/adapter";
+import { resolveSelectedPricing } from "@/lib/ai-studio/runtime";
 
 import {
   mergeAiVideoStudioFormValues,
   normalizeAiVideoStudioSchema,
 } from "@/lib/ai-video-studio/schema";
+
+test("restoring reference video forms preserves their quotes across model schemas", () => {
+  const catalog = JSON.parse(readFileSync("config/ai-studio/runtime/catalog.json", "utf8"));
+  const videoUrl = "https://example.com/source.mp4";
+  const cases = [
+    { id: "video:fal-google-gemini-omni-flash-v1-1-edit", values: { video_url: videoUrl, resolution: "720p" } },
+    { id: "video:wan-animate-move", values: { video_url: videoUrl, resolution: "720p" } },
+    { id: "video:kling-3-0-motion-control", values: { video_urls: [videoUrl], resolution: "720p" } },
+    { id: "video:bytedance-seedance-2", values: { reference_video_urls: [videoUrl], resolution: "720p", duration: 5 } },
+    { id: "video:fal-fal-ai-kling-video-o3-pro-video-to-video-edit", values: { video_url: videoUrl } },
+    { id: "video:fal-bytedance-seedance-2-0-mini-reference-to-video", values: { video_urls: [videoUrl], resolution: "720p", duration: "5" } },
+  ];
+  for (const { id, values } of cases) {
+    const detail = catalog.items.find((item: { id: string }) => item.id === id);
+    assert.ok(detail, id);
+    const schema = normalizeAiVideoStudioSchema(detail);
+    const previousValues = {
+      ...schema.defaults,
+      ...values,
+      __local_reference_metadata: { videoDurationsByUrl: { [videoUrl]: 5 } },
+    };
+    const before = resolveSelectedPricing({ modelId: id, pricing: detail.pricing,
+      payload: buildAiVideoStudioPayload({ detail, formValues: previousValues }) });
+    assert.ok(before, id);
+    const restored = mergeAiVideoStudioFormValues({ ...schema, previousValues });
+    const after = resolveSelectedPricing({ modelId: id, pricing: detail.pricing,
+      payload: buildAiVideoStudioPayload({ detail, formValues: restored }) });
+    assert.equal(after?.creditPrice, before.creditPrice, id);
+    assert.notEqual(restored.__local_reference_metadata, previousValues.__local_reference_metadata);
+  }
+});
+
+test("form merging retains only valid duration metadata for current video references", () => {
+  const schema = normalizeAiVideoStudioSchema({
+    requestSchema: { type: "object", properties: {
+      video_url: { type: "string" },
+      video_urls: { type: "array", items: { type: "string" } },
+    } },
+    examplePayload: {},
+  });
+  const previousValues = {
+    video_url: "https://example.com/current.mp4",
+    video_urls: ["https://example.com/second.mp4", "https://example.com/invalid.mp4"],
+    __local_reference_metadata: {
+      videoDurationsByUrl: {
+        "https://example.com/current.mp4": 5,
+        "https://example.com/removed.mp4": 20,
+        "https://example.com/second.mp4": 8,
+        "https://example.com/invalid.mp4": NaN,
+      },
+    },
+  };
+  assert.deepEqual(mergeAiVideoStudioFormValues({ ...schema, previousValues }).__local_reference_metadata, {
+    videoDurationsByUrl: { "https://example.com/current.mp4": 5, "https://example.com/second.mp4": 8 },
+  });
+  const replaced = mergeAiVideoStudioFormValues({ ...schema, previousValues: {
+    ...previousValues, video_url: "https://example.com/new.mp4", video_urls: [],
+  } });
+  assert.equal(replaced.__local_reference_metadata, undefined);
+  assert.equal(previousValues.__local_reference_metadata.videoDurationsByUrl["https://example.com/removed.mp4"], 20);
+});
 
 const textToVideoDetail = {
   requestSchema: {

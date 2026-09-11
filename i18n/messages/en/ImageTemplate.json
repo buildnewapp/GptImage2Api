@@ -1,15 +1,15 @@
 {
   "hero": {
-    "badge": "Gpt Image 2 Api",
+    "badge": "GPT Image 2.5",
     "ctaLabel": "Generate Image",
     "creditCost": "25",
     "description": "Quality-first image generation and editing for posters, product photos, social creatives, and design mockups.",
     "durationLabel": "4s",
     "highlight": "Text, detail, and style stay clear.",
-    "modelLabel": "Gpt Image 2 Api",
+    "modelLabel": "GPT Image 2.5",
     "placeholder": "Describe subject, layout, lens, lighting, and mood. Example: A clean coffee packaging poster with readable headline text, studio light, and realistic texture.",
     "resolutionLabel": "1024x1024",
-    "title": "Create Production-Ready Images with GptImage2Api",
+    "title": "Create Production-Ready Images with GPT Image 2.5",
     "videos": [],
     "images": ["https://file.gptimage2api.net/media/1776756799880_c8u8w7_HGUKjjaasAAvVRa-300x240.jpg","https://file.gptimage2api.net/media/1776668128332_d2wtbo_HGQDh30bMAARz9E-300x300.jpg","https://file.gptimage2api.net/media/1776695123224_6cabrf_HGCZTbKawAAaS5X-300x450.jpg","https://file.gptimage2api.net/media/1776756799069_v5dm3d_HGaEzbEasAAe7sy-300x200.jpg","https://file.gptimage2api.net/media/1776756854427_qzcik2_HGYy_KObcAA66sM-300x200.jpg","https://file.gptimage2api.net/media/1776756858185_6z7569_HGV6FtKbwAAK6L0-300x169.jpg","https://file.gptimage2api.net/media/1776756838105_09bui0_HGWtW5LaEAE1ao5-300x450.jpg","https://file.gptimage2api.net/media/1776756778810_dclrin_HGYS0HYakAAO1Kt-300x200.jpg","https://file.gptimage2api.net/media/1776756845933_k4n9y9_HGXxMxeawAE11LJ-300x200.jpg","https://file.gptimage2api.net/media/1776756852880_v094nl_HGXcdOPbUAA06XY-300x300.jpg","https://file.gptimage2api.net/media/1776756809391_6lhkiq_HGXR9V_bIAARJPu-300x240.jpg","https://file.gptimage2api.net/media/1776756782732_rwl7km_HGXJbgbaAAQQd4O-300x533.jpg","https://file.gptimage2api.net/media/1776756762098_oz5z4c_HGXGwsMagAEYuqa-300x225.jpg","https://file.gptimage2api.net/media/1776756781085_e23ett_HGXBV05XwAA2yU4-300x450.jpg","https://file.gptimage2api.net/media/1776756843035_0y4dr0_HGV2dbja8AA3IvB-300x400.jpg","https://file.gptimage2api.net/media/1776756855692_stwo0a_HGT1-4Bb0AA312i-300x424.jpg","https://file.gptimage2api.net/media/1776756789445_z4tzjp_HGTxSpFaMAAuxns-300x300.jpg","https://file.gptimage2api.net/media/1776668159375_sd2tyn_HGTivWjXkAAt6tk-300x375.jpg","https://file.gptimage2api.net/media/1776661915237_r1emn3_HGRFgTdaEAAt63O-300x450.jpg","https://file.gptimage2api.net/media/1776756775486_4fd52x_HGRomaeboAA-DR6-300x450.jpg","https://file.gptimage2api.net/media/1776662628547_pc62qe_HGRnQTja8AASNom-300x533.jpg","https://file.gptimage2api.net/media/1776668115222_j6vl73_HGQ9NH3bQAAVUT8-300x450.jpg","https://file.gptimage2api.net/media/1776661994608_2lvoxe_HGQ9NKVaMAA-xFS-300x450.jpg","https://file.gptimage2api.net/media/1776658762495_8ewb2m_HGQr7nCa8AAiaSP-300x398.jpg","https://file.gptimage2api.net/media/1776662581155_jmf49d_HGPvP8vacAADS5B-300x300.jpg","https://file.gptimage2api.net/media/1776658759466_0vvd9m_HGPgEzEbUAA6-9s-300x398.jpg","https://file.gptimage2api.net/media/1776662627550_b8twjr_HGNFz2LbkAA1mcT-300x300.jpg","https://file.gptimage2api.net/media/1776699416625_76138j_HGLw5u2aMAIkzeF-300x450.jpg","https://file.gptimage2api.net/media/1776699450623_5ct1le_HGK8gRMX0AATb8O-300x240.jpg","https://file.gptimage2api.net/media/1776699445902_sfhrjh_HGHBOIrb0AAkXJR-300x450.jpg","https://file.gptimage2api.net/media/1776697099289_x4jdgx_HGGQsN5aMAAAjT0-300x532.jpg","https://file.gptimage2api.net/media/1776695089047_tujkw0_HGFn2-NbkAA-tXK-300x450.jpg","https://file.gptimage2api.net/media/1776695086349_pfmtbk_HGFn2-IbsAAWHPw-300x417.jpg","https://file.gptimage2api.net/media/1776697064224_fs22qb_HGE_FK_WwAAOsAo-300x169.jpg","https://file.gptimage2api.net/media/1776695100409_im47dt_HGCY5CSbMAAdw_G-300x533.jpg","https://file.gptimage2api.net/media/1776695097319_qo1ro9_HGCTzyHaQAAyN76-300x533.jpg","https://file.gptimage2api.net/media/1776695112490_phpst3_HGAuWVwaIAECnjY-300x450.jpg","https://file.gptimage2api.net/media/1776695094646_as3wii_HF_Qx-fWAAA--l6-300x450.jpg","https://file.gptimage2api.net/media/1776701503291_06vsnv_HF-1mIabEAMQ5Ej-300x300.jpg","https://file.gptimage2api.net/media/1776701488942_vgrwp4_HF9SpBnbsAAeF4g-300x300.jpg","https://file.gptimage2api.net/media/1776701513937_vtw05u_HF8YsTeaMAAqgex-300x450.jpg"]
   },
@@ -135,9 +135,9 @@
   },
   "benefit": {
     "name": "benefit",
-    "title": "Why teams choose GptImage2Api",
+    "title": "Why teams choose GPT Image 2.5",
     "label": "Benefits",
-    "description": "GptImage2Api helps teams generate and edit production-ready images with readable text, stable style control, and API-friendly output settings.",
+    "description": "GPT Image 2.5 helps teams generate and edit production-ready images with readable text, stable style control, and API-friendly output settings.",
     "items": [
       {
         "title": "Prompt-to-image workflow",
@@ -183,7 +183,7 @@
         "variant": "secondary"
       }
     ],
-    "description": "Build GPT Image 2 generation and editing into your product. Create an API key, send an image task, track progress, and manage credit usage from the existing dashboard.",
+    "description": "Build GPT Image 2.5 generation and editing into your product. Create an API key, send an image task, track progress, and manage credit usage from the existing dashboard.",
     "items": [
       {
         "description": "Create a key in the dashboard and send it with Authorization: Bearer on every request.",
@@ -191,7 +191,7 @@
         "title": "API key auth"
       },
       {
-        "description": "Start image jobs through /api/ai-studio/execute with modelId, visibility, and GPT Image 2 payload fields.",
+        "description": "Start image jobs through /api/ai-studio/execute with modelId, visibility, and GPT Image 2.5 payload fields.",
         "icon": "code",
         "title": "Image endpoint"
       },
@@ -212,19 +212,21 @@
       "  -H \"Authorization: Bearer YOUR_API_KEY\" \\",
       "  -H \"Content-Type: application/json\" \\",
       "  -d '{",
-      "    \"modelId\": \"image:fal-gpt-image-2\",",
+      "    \"modelId\": \"image:gpt-image-2-5-flare-text-to-image\",",
       "    \"isPublic\": false,",
       "    \"payload\": {",
-      "      \"model\": \"gpt-image-2\",",
-      "      \"prompt\": \"A clean coffee packaging poster with readable headline text\",",
-      "      \"size\": \"1:1\",",
-      "      \"resolution\": \"1k\"",
+      "      \"model\": \"gpt-image-2-5-flare-text-to-image\",",
+      "      \"input\": {",
+      "        \"prompt\": \"A clean coffee packaging poster with readable headline text\",",
+      "        \"aspect_ratio\": \"1:1\",",
+      "        \"resolution\": \"1K\"",
+      "      }",
       "    }",
       "  }'"
     ],
     "requestLabel": "API Request",
     "requestTitle": "Create an image generation task",
-    "title": "Add GPT Image 2 Generation to Your App"
+    "title": "Add GPT Image 2.5 Generation to Your App"
   },
   "showcase": {
     "kicker": "Image Showcase",
@@ -397,7 +399,7 @@
     "description": "Key information before you start generating and editing images.",
     "items": [
       {
-        "question": "What can I generate with Gpt Image 2 Api?",
+        "question": "What can I generate with GPT Image 2.5?",
         "answer": "You can create images from text prompts and edit existing images for layout, subject, style, and background updates."
       },
       {

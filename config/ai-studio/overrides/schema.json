@@ -434,6 +434,718 @@
           "description": "Video duration in seconds."
         }
       }
+    },
+    "video:wan-3-0-video": {
+      "set": {
+        "properties.input.properties.first_frame_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of the first-frame image. Up to 1 image, used strictly as the first frame of the video. Used for first-frame-to-video / first-and-last-frame-to-video generation. Cannot be provided together with `reference_*_urls`.\nFormats: JPEG/JPG, PNG (transparency not supported), BMP, WEBP; each side [240, 8000] px; aspect ratio ≤ 8:1; ≤ 20MB."
+        },
+        "properties.input.properties.last_frame_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of the last-frame image. Used with first_frame_url for first-and-last-frame generation; the same image limits apply."
+        },
+        "properties.input.properties.reference_image_urls.items": {
+          "type": "string",
+          "format": "uri"
+        },
+        "properties.input.properties.reference_video_urls.items": {
+          "type": "string",
+          "format": "uri"
+        },
+        "properties.input.properties.reference_audio_urls.items": {
+          "type": "string",
+          "format": "uri"
+        },
+        "properties.input.properties.reference_file_urls.items": {
+          "type": "string",
+          "format": "uri"
+        },
+        "properties.input.properties.reference_link_urls.items": {
+          "type": "string",
+          "format": "uri"
+        },
+        "properties.input.properties.duration": {
+          "type": "integer",
+          "default": 5,
+          "description": "Output video duration in seconds. Default: 5. Without video input, the range is [2, 30]. With reference videos: input video duration + output duration ≤ 30. Pass `-1` to use an intelligent duration determined by the model. This studio requires a fixed duration of 2–30 seconds so the price can be calculated before submission; automatic duration (-1) is disabled.",
+          "examples": [
+            5
+          ],
+          "minimum": 2,
+          "maximum": 30
+        }
+      }
+    },
+    "video:wan-3-0-video-prime": {
+      "set": {
+        "properties.input.properties.first_frame_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of the first-frame image. Up to 1 image, used strictly as the first frame of the video. Used for first-frame-to-video or first-and-last-frame-to-video generation. Cannot be provided together with `reference_*_urls`.\nFormats: JPEG/JPG, PNG (transparency not supported), BMP, WEBP; each side [240, 8000] px; aspect ratio ≤ 8:1; ≤ 20MB."
+        },
+        "properties.input.properties.last_frame_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of the last-frame image. Used with first_frame_url for first-and-last-frame generation; the same image limits apply."
+        },
+        "properties.input.properties.reference_image_urls.items": {
+          "type": "string",
+          "format": "uri"
+        },
+        "properties.input.properties.reference_video_urls.items": {
+          "type": "string",
+          "format": "uri"
+        },
+        "properties.input.properties.reference_audio_urls.items": {
+          "type": "string",
+          "format": "uri"
+        },
+        "properties.input.properties.reference_file_urls.items": {
+          "type": "string",
+          "format": "uri"
+        },
+        "properties.input.properties.reference_link_urls.items": {
+          "type": "string",
+          "format": "uri"
+        },
+        "properties.input.properties.duration": {
+          "type": "integer",
+          "default": 5,
+          "description": "Output video duration in seconds. Default: 5. When there is no video input, the value must be within [2, 30]. When reference videos are provided: input video duration plus output duration ≤ 30. Pass `-1` to use an intelligent duration determined by the model. This studio requires a fixed duration of 2–30 seconds so the price can be calculated before submission; automatic duration (-1) is disabled.",
+          "examples": [
+            5
+          ],
+          "minimum": 2,
+          "maximum": 30
+        }
+      }
+    },
+    "video:fal-fal-ai-kling-video-o3-pro-video-to-video-reference": {
+      "set": {
+        "properties.duration": {
+          "type": "string",
+          "enum": [
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15"
+          ],
+          "default": "5",
+          "title": "Duration",
+          "description": "Output video duration in seconds."
+        },
+        "required": [
+          "prompt",
+          "video_url",
+          "duration"
+        ]
+      }
+    },
+    "video:fal-fal-ai-kling-video-o3-standard-video-to-video-reference": {
+      "set": {
+        "properties.duration": {
+          "type": "string",
+          "enum": [
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15"
+          ],
+          "default": "5",
+          "title": "Duration",
+          "description": "Output video duration in seconds."
+        },
+        "required": [
+          "prompt",
+          "video_url",
+          "duration"
+        ]
+      }
+    },
+    "video:fal-alibaba-wan-3-0-text-to-video": {
+      "set": {
+        "properties.duration": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 30,
+          "default": 5,
+          "title": "Duration",
+          "description": "Output video duration in seconds, from 2 to 30."
+        }
+      }
+    },
+    "video:fal-alibaba-wan-3-0-image-to-video": {
+      "set": {
+        "properties.duration": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 30,
+          "default": 5,
+          "title": "Duration",
+          "description": "Output video duration in seconds, from 2 to 30."
+        }
+      }
+    },
+    "video:fal-alibaba-wan-3-0-reference-to-video": {
+      "set": {
+        "properties.duration": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 30,
+          "default": 5,
+          "title": "Duration",
+          "description": "Output video duration in seconds, from 2 to 30."
+        }
+      }
+    },
+    "video:fal-alibaba-wan-3-0-prime-text-to-video": {
+      "set": {
+        "properties.duration": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 30,
+          "default": 5,
+          "title": "Duration",
+          "description": "Output video duration in seconds, from 2 to 30."
+        }
+      }
+    },
+    "video:fal-alibaba-wan-3-0-prime-image-to-video": {
+      "set": {
+        "properties.duration": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 30,
+          "default": 5,
+          "title": "Duration",
+          "description": "Output video duration in seconds, from 2 to 30."
+        }
+      }
+    },
+    "video:fal-alibaba-wan-3-0-prime-reference-to-video": {
+      "set": {
+        "properties.duration": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 30,
+          "default": 5,
+          "title": "Duration",
+          "description": "Output video duration in seconds, from 2 to 30."
+        }
+      }
+    },
+    "image:fal-openai-gpt-image-2-5-flare-text-to-image": {
+      "set": {
+        "properties.image_size": {
+          "type": "object",
+          "title": "Image Size",
+          "x-ui-control": "image-size",
+          "x-ui-image-size-options": [
+            {
+              "label": "Default",
+              "value": "default",
+              "width": 1024,
+              "height": 768
+            },
+            {
+              "label": "Square HD",
+              "value": "square_hd",
+              "width": 1024,
+              "height": 1024
+            },
+            {
+              "label": "Landscape 4:3",
+              "value": "landscape_4_3",
+              "width": 1024,
+              "height": 768
+            },
+            {
+              "label": "Portrait 3:4",
+              "value": "portrait_3_4",
+              "width": 768,
+              "height": 1024
+            },
+            {
+              "label": "Portrait 2:3",
+              "value": "portrait_2_3",
+              "width": 1024,
+              "height": 1536
+            },
+            {
+              "label": "Landscape 3:2",
+              "value": "landscape_3_2",
+              "width": 1536,
+              "height": 1024
+            },
+            {
+              "label": "Landscape 1080p",
+              "value": "landscape_1080p",
+              "width": 1920,
+              "height": 1080
+            },
+            {
+              "label": "Portrait 1080p",
+              "value": "portrait_1080p",
+              "width": 1080,
+              "height": 1920
+            },
+            {
+              "label": "Landscape 2K",
+              "value": "landscape_2k",
+              "width": 2560,
+              "height": 1440
+            },
+            {
+              "label": "Portrait 2K",
+              "value": "portrait_2k",
+              "width": 1440,
+              "height": 2560
+            },
+            {
+              "label": "Landscape 4K",
+              "value": "landscape_4k",
+              "width": 3840,
+              "height": 2160
+            },
+            {
+              "label": "Portrait 4K",
+              "value": "portrait_4k",
+              "width": 2160,
+              "height": 3840
+            }
+          ],
+          "default": {
+            "width": 1024,
+            "height": 768
+          },
+          "description": "Output image dimensions. Choose one of the supported sizes."
+        },
+        "properties.quality": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "default": "high",
+          "title": "Quality",
+          "description": "Choose the image quality level."
+        }
+      }
+    },
+    "image:fal-openai-gpt-image-2-5-flare-edit": {
+      "set": {
+        "properties.image_size": {
+          "type": "object",
+          "title": "Image Size",
+          "x-ui-control": "image-size",
+          "x-ui-image-size-options": [
+            {
+              "label": "Default",
+              "value": "default",
+              "width": 1024,
+              "height": 768
+            },
+            {
+              "label": "Square HD",
+              "value": "square_hd",
+              "width": 1024,
+              "height": 1024
+            },
+            {
+              "label": "Landscape 4:3",
+              "value": "landscape_4_3",
+              "width": 1024,
+              "height": 768
+            },
+            {
+              "label": "Portrait 3:4",
+              "value": "portrait_3_4",
+              "width": 768,
+              "height": 1024
+            },
+            {
+              "label": "Portrait 2:3",
+              "value": "portrait_2_3",
+              "width": 1024,
+              "height": 1536
+            },
+            {
+              "label": "Landscape 3:2",
+              "value": "landscape_3_2",
+              "width": 1536,
+              "height": 1024
+            },
+            {
+              "label": "Landscape 1080p",
+              "value": "landscape_1080p",
+              "width": 1920,
+              "height": 1080
+            },
+            {
+              "label": "Portrait 1080p",
+              "value": "portrait_1080p",
+              "width": 1080,
+              "height": 1920
+            },
+            {
+              "label": "Landscape 2K",
+              "value": "landscape_2k",
+              "width": 2560,
+              "height": 1440
+            },
+            {
+              "label": "Portrait 2K",
+              "value": "portrait_2k",
+              "width": 1440,
+              "height": 2560
+            },
+            {
+              "label": "Landscape 4K",
+              "value": "landscape_4k",
+              "width": 3840,
+              "height": 2160
+            },
+            {
+              "label": "Portrait 4K",
+              "value": "portrait_4k",
+              "width": 2160,
+              "height": 3840
+            }
+          ],
+          "default": {
+            "width": 1024,
+            "height": 768
+          },
+          "description": "Output image dimensions. Choose one of the supported sizes."
+        },
+        "properties.quality": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "default": "high",
+          "title": "Quality",
+          "description": "Choose the image quality level."
+        }
+      }
+    },
+    "image:fal-openai-gpt-image-2-5-sunburst-text-to-image": {
+      "set": {
+        "properties.image_size": {
+          "type": "object",
+          "title": "Image Size",
+          "x-ui-control": "image-size",
+          "x-ui-image-size-options": [
+            {
+              "label": "Default",
+              "value": "default",
+              "width": 1024,
+              "height": 768
+            },
+            {
+              "label": "Square HD",
+              "value": "square_hd",
+              "width": 1024,
+              "height": 1024
+            },
+            {
+              "label": "Landscape 4:3",
+              "value": "landscape_4_3",
+              "width": 1024,
+              "height": 768
+            },
+            {
+              "label": "Portrait 3:4",
+              "value": "portrait_3_4",
+              "width": 768,
+              "height": 1024
+            },
+            {
+              "label": "Portrait 2:3",
+              "value": "portrait_2_3",
+              "width": 1024,
+              "height": 1536
+            },
+            {
+              "label": "Landscape 3:2",
+              "value": "landscape_3_2",
+              "width": 1536,
+              "height": 1024
+            },
+            {
+              "label": "Landscape 1080p",
+              "value": "landscape_1080p",
+              "width": 1920,
+              "height": 1080
+            },
+            {
+              "label": "Portrait 1080p",
+              "value": "portrait_1080p",
+              "width": 1080,
+              "height": 1920
+            },
+            {
+              "label": "Landscape 2K",
+              "value": "landscape_2k",
+              "width": 2560,
+              "height": 1440
+            },
+            {
+              "label": "Portrait 2K",
+              "value": "portrait_2k",
+              "width": 1440,
+              "height": 2560
+            },
+            {
+              "label": "Landscape 4K",
+              "value": "landscape_4k",
+              "width": 3840,
+              "height": 2160
+            },
+            {
+              "label": "Portrait 4K",
+              "value": "portrait_4k",
+              "width": 2160,
+              "height": 3840
+            }
+          ],
+          "default": {
+            "width": 1024,
+            "height": 768
+          },
+          "description": "Output image dimensions. Choose one of the supported sizes."
+        },
+        "properties.quality": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "default": "high",
+          "title": "Quality",
+          "description": "Choose the image quality level."
+        }
+      }
+    },
+    "image:fal-openai-gpt-image-2-5-sunburst-edit": {
+      "set": {
+        "properties.image_size": {
+          "type": "object",
+          "title": "Image Size",
+          "x-ui-control": "image-size",
+          "x-ui-image-size-options": [
+            {
+              "label": "Default",
+              "value": "default",
+              "width": 1024,
+              "height": 768
+            },
+            {
+              "label": "Square HD",
+              "value": "square_hd",
+              "width": 1024,
+              "height": 1024
+            },
+            {
+              "label": "Landscape 4:3",
+              "value": "landscape_4_3",
+              "width": 1024,
+              "height": 768
+            },
+            {
+              "label": "Portrait 3:4",
+              "value": "portrait_3_4",
+              "width": 768,
+              "height": 1024
+            },
+            {
+              "label": "Portrait 2:3",
+              "value": "portrait_2_3",
+              "width": 1024,
+              "height": 1536
+            },
+            {
+              "label": "Landscape 3:2",
+              "value": "landscape_3_2",
+              "width": 1536,
+              "height": 1024
+            },
+            {
+              "label": "Landscape 1080p",
+              "value": "landscape_1080p",
+              "width": 1920,
+              "height": 1080
+            },
+            {
+              "label": "Portrait 1080p",
+              "value": "portrait_1080p",
+              "width": 1080,
+              "height": 1920
+            },
+            {
+              "label": "Landscape 2K",
+              "value": "landscape_2k",
+              "width": 2560,
+              "height": 1440
+            },
+            {
+              "label": "Portrait 2K",
+              "value": "portrait_2k",
+              "width": 1440,
+              "height": 2560
+            },
+            {
+              "label": "Landscape 4K",
+              "value": "landscape_4k",
+              "width": 3840,
+              "height": 2160
+            },
+            {
+              "label": "Portrait 4K",
+              "value": "portrait_4k",
+              "width": 2160,
+              "height": 3840
+            }
+          ],
+          "default": {
+            "width": 1024,
+            "height": 768
+          },
+          "description": "Output image dimensions. Choose one of the supported sizes."
+        },
+        "properties.quality": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "default": "high",
+          "title": "Quality",
+          "description": "Choose the image quality level."
+        }
+      }
+    },
+    "image:fal-ideogram-v4-tiling": {
+      "set": {
+        "properties.image_size": {
+          "type": "object",
+          "title": "Image Size",
+          "x-ui-control": "image-size",
+          "x-ui-image-size-options": [
+            {
+              "label": "Default",
+              "value": "default",
+              "width": 1024,
+              "height": 1024
+            },
+            {
+              "label": "Square HD",
+              "value": "square_hd",
+              "width": 1024,
+              "height": 1024
+            },
+            {
+              "label": "Landscape 4:3",
+              "value": "landscape_4_3",
+              "width": 1024,
+              "height": 768
+            },
+            {
+              "label": "Portrait 3:4",
+              "value": "portrait_3_4",
+              "width": 768,
+              "height": 1024
+            },
+            {
+              "label": "Portrait 2:3",
+              "value": "portrait_2_3",
+              "width": 1024,
+              "height": 1536
+            },
+            {
+              "label": "Landscape 3:2",
+              "value": "landscape_3_2",
+              "width": 1536,
+              "height": 1024
+            },
+            {
+              "label": "Landscape 1080p",
+              "value": "landscape_1080p",
+              "width": 1920,
+              "height": 1080
+            },
+            {
+              "label": "Portrait 1080p",
+              "value": "portrait_1080p",
+              "width": 1080,
+              "height": 1920
+            },
+            {
+              "label": "Landscape 2K",
+              "value": "landscape_2k",
+              "width": 2560,
+              "height": 1440
+            },
+            {
+              "label": "Portrait 2K",
+              "value": "portrait_2k",
+              "width": 1440,
+              "height": 2560
+            },
+            {
+              "label": "Landscape 4K",
+              "value": "landscape_4k",
+              "width": 3840,
+              "height": 2160
+            },
+            {
+              "label": "Portrait 4K",
+              "value": "portrait_4k",
+              "width": 2160,
+              "height": 3840
+            }
+          ],
+          "default": {
+            "width": 1024,
+            "height": 1024
+          },
+          "description": "Output tile dimensions."
+        }
+      }
     }
   }
 }

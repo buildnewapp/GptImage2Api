@@ -445,6 +445,76 @@ test("parses endpoint, method, model keys, and example payload from an image doc
   assert.equal(detail.examplePayload.input?.resolution, "4K");
 });
 
+test("keeps indented code fences inside OpenAPI descriptions and resolves request references", () => {
+  const detail = parseApiDocMarkdown({
+    category: "chat",
+    title: "Grok 4.6",
+    docUrl: "https://docs.kie.ai/market/grok/grok-4-6.md",
+  }, [
+    "```yaml",
+    "openapi: 3.0.1",
+    "paths:",
+    "  /grok/v1/responses:",
+    "    post:",
+    "      description: |",
+    "        Example:",
+    "        ```json",
+    "        {\"model\":\"grok-4-6\"}",
+    "        ```",
+    "      requestBody:",
+    "        content:",
+    "          application/json:",
+    "            schema:",
+    "              $ref: '#/components/schemas/Request%20body'",
+    "components:",
+    "  schemas:",
+    "    Request body:",
+    "      type: object",
+    "      properties:",
+    "        model:",
+    "          type: string",
+    "          examples: [grok-4-6]",
+    "        input:",
+    "          $ref: '#/components/schemas/Input~1text'",
+    "    Input/text:",
+    "      type: string",
+    "```",
+  ].join("\n"));
+
+  assert.equal(detail.endpoint, "/grok/v1/responses");
+  assert.deepEqual(detail.modelKeys, ["grok-4-6"]);
+  assert.equal(detail.requestSchema?.properties?.input?.type, "string");
+});
+
+test("extracts native Gemini model names without treating service prefixes as models", () => {
+  const markdown = [
+    "```yaml",
+    "openapi: 3.0.1",
+    "paths:",
+    "  /gemini/v1/models/gemini-3-8-flash:streamGenerateContent:",
+    "    post:",
+    "      requestBody:",
+    "        content:",
+    "          application/json:",
+    "            schema:",
+    "              type: object",
+    "              properties:",
+    "                contents:",
+    "                  type: array",
+    "```",
+  ].join("\n");
+  const entry = {
+    category: "chat" as const,
+    title: "Gemini 3.8 Flash",
+    docUrl: "https://docs.kie.ai/market/gemini/gemini-3-8-flash.md",
+  };
+  assert.deepEqual(parseApiDocMarkdown(entry, markdown).modelKeys, ["gemini-3-8-flash"]);
+  assert.deepEqual(parseApiDocMarkdown(entry, markdown.replace(
+    "/gemini/v1/models/gemini-3-8-flash:streamGenerateContent",
+    "/api/v1/suno/recovery",
+  )).modelKeys, []);
+});
+
 test("parses fal model openapi with resolved request schema and queue endpoints without pricing rows", () => {
   const detail = parseFalOpenApiModel(
     {

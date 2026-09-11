@@ -1,5 +1,6 @@
 # 自动创建项目
 ./scripts/create-site.sh tikdek-web /Users/syx/WebstormProjects/tikdek/tikdek-web
+./scripts/create-site.sh gptimage25-web /Users/syx/WebstormProjects/aimodels/gptimage25-web
 
 # 手动创建项目
 ### create repo

@@ -1,8 +1,8 @@
 {
   "Home": {
-    "title": "Gpt Image 2 Api",
-    "tagLine": "Gpt Image 2 Api – Fast & Reliable GPT Image 2 API for Developers",
-    "description": "GptImage2Api provides powerful GPT Image 2 API access for developers, startups, and businesses to generate high-quality AI images with simple REST endpoints. Build image generation apps, automate creative workflows, and integrate GPT Image 2 API into your products instantly.",
+    "title": "GPT Image 2.5",
+    "tagLine": "GPT Image 2.5 – Fast & Reliable GPT Image 2.5 API for Developers",
+    "description": "GPT Image 2.5 provides powerful GPT Image 2.5 API access for developers, startups, and businesses to generate high-quality AI images with simple REST endpoints. Build image generation apps, automate creative workflows, and integrate GPT Image 2.5 API into your products instantly.",
     "createVideo": "Generate",
     "freeCreditsCtaLine1": "Get 50 Credits",
     "freeCreditsCtaLine2": "for Free",
@@ -19,9 +19,9 @@
       "cta": "View Campaign"
     },
     "discount": {
-      "title": "Gpt image 2 Special Offer",
-      "badge": "Save 200%",
-      "description": "Limited time: 1 credit/image, from $0.05/image",
+      "title": "GPT Image 2.5",
+      "badge": "Special: $0.01/image",
+      "description": "Limited-time image generation offer",
       "href": "/pricing?billing=yearly",
       "cta": "Claim Offer"
     },
@@ -243,8 +243,8 @@
     "description": "About the site"
   },
   "Pricing": {
-    "title": "GptImage2Api Pricing",
-    "description": "Pricing plans for GptImage2Api"
+    "title": "GPT Image 2.5 Pricing",
+    "description": "Pricing plans for GPT Image 2.5"
   },
   "DashboardGenerate": {
     "title": "Generate",
@@ -495,7 +495,7 @@
     ]
   },
   "Footer": {
-    "Copyright": "Copyright © {year} {name}. Powered by GPT Image 2. Independent product. Not affiliated with Google/OpenAI/AI model providers.",
+    "Copyright": "Copyright © {year} {name}. Powered by GPT Image 2.5. Independent product. Not affiliated with Google/OpenAI/AI model providers.",
     "About": "About",
     "Contact": "Contact",
     "PrivacyPolicy": "Privacy Policy",

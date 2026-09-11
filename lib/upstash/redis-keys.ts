@@ -1,7 +1,7 @@
-import { siteConfig } from '@/config/site';
 import { PostType } from '@/lib/db/schema';
 
-export const LOWER_CASE_SITE_NAME = siteConfig.name.trim().toLowerCase().replace(/\s+/g, '-');
+// Keep existing task, view-count, and rate-limit keys stable across display-brand changes.
+export const LOWER_CASE_SITE_NAME = 'gptimage2api';
 
 /**
  * Redis key generator - centralized key management for consistency

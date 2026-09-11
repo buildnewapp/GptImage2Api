@@ -12,14 +12,14 @@ const HUGGINGFACE_URL = process.env.NEXT_PUBLIC_HUGGINGFACE_SPACE_URL
 const EMAIL_URL = 'support@gptimage2api.net'
 
 export const siteConfig: SiteConfig = {
-  name: "GptImage2Api",
-  tagLine: "GptImage2Api – Fast & Reliable GPT Image 2 API for Developers",
+  name: "GPT Image 2.5",
+  tagLine: "GPT Image 2.5 – Fast & Reliable Image API for Developers",
   description:
-    "GptImage2Api provides powerful GPT Image 2 API access for developers, startups, and businesses to generate high-quality AI images with simple REST endpoints. Build image generation apps, automate creative workflows, and integrate GPT Image 2 API into your products instantly.",
+    "GPT Image 2.5 provides powerful image API access for developers, startups, and businesses to generate high-quality AI images with simple REST endpoints. Build image generation apps, automate creative workflows, and integrate GPT Image 2.5 API into your products instantly.",
   url: BASE_URL,
   authors: [
     {
-      name: "gptimage2api",
+      name: "GPT Image 2.5",
       url: BASE_URL,
     }
   ],

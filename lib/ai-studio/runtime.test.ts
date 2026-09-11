@@ -319,6 +319,40 @@ test("returns null when seedance 2 has video input without input duration", () =
   assert.equal(row, null);
 });
 
+test("requires duration metadata for every input video before calculating the total", () => {
+  const config = {
+    billing_adapter: "kie_seedance_2",
+    price_key: "{$input.resolution}",
+    price_map: { "720P": 16 },
+    price_final: "{$price*($input.duration+$billing.input_video_duration)}",
+  };
+  const videoDurationsByUrl: Record<string, number> = {
+    "https://example.com/first.mp4": 3,
+  };
+  const payload = {
+    input: {
+      resolution: "720P",
+      duration: 5,
+      reference_video_urls: [
+        "https://example.com/first.mp4",
+        "https://example.com/second.mp4",
+      ],
+    },
+    __local_reference_metadata: { videoDurationsByUrl },
+  };
+  const model = {
+    modelId: "video:wan-3-0-video",
+    title: "Wan 3.0 Video",
+    provider: "Wan",
+    category: "video",
+  };
+
+  assert.equal(resolveDynamicPricing(config, payload, model), null);
+
+  videoDurationsByUrl["https://example.com/second.mp4"] = 4;
+  assert.equal(resolveDynamicPricing(config, payload, model)?.creditPrice, "192");
+});
+
 test("rounds official decimal credit prices into billable whole credits", () => {
   assert.equal(toBillableCredits("35"), 35);
   assert.equal(toBillableCredits("87.5"), 88);

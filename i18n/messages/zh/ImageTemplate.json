@@ -1,15 +1,15 @@
 {
   "hero": {
-    "badge": "Gpt Image 2 Api",
+    "badge": "GPT Image 2.5",
     "ctaLabel": "生成图像",
     "creditCost": "25",
     "description": "面向生产场景的高质量图像生成与编辑，适用于海报、电商主图、社媒素材和设计样机。",
     "durationLabel": "4秒",
     "highlight": "文字可读、细节稳定、风格一致。",
-    "modelLabel": "Gpt Image 2 Api",
+    "modelLabel": "GPT Image 2.5",
     "placeholder": "描述主体、构图、镜头、光线和氛围。例如：一张咖啡包装发布海报，主标题清晰可读，棚拍光线，材质真实。",
     "resolutionLabel": "1024x1024",
-    "title": "用 GptImage2Api 快速生成可商用图像",
+    "title": "用 GPT Image 2.5 快速生成可商用图像",
     "videos": [],
     "images": ["https://file.gptimage2api.net/media/1776756799880_c8u8w7_HGUKjjaasAAvVRa-300x240.jpg","https://file.gptimage2api.net/media/1776668128332_d2wtbo_HGQDh30bMAARz9E-300x300.jpg","https://file.gptimage2api.net/media/1776695123224_6cabrf_HGCZTbKawAAaS5X-300x450.jpg","https://file.gptimage2api.net/media/1776756799069_v5dm3d_HGaEzbEasAAe7sy-300x200.jpg","https://file.gptimage2api.net/media/1776756854427_qzcik2_HGYy_KObcAA66sM-300x200.jpg","https://file.gptimage2api.net/media/1776756858185_6z7569_HGV6FtKbwAAK6L0-300x169.jpg","https://file.gptimage2api.net/media/1776756838105_09bui0_HGWtW5LaEAE1ao5-300x450.jpg","https://file.gptimage2api.net/media/1776756778810_dclrin_HGYS0HYakAAO1Kt-300x200.jpg","https://file.gptimage2api.net/media/1776756845933_k4n9y9_HGXxMxeawAE11LJ-300x200.jpg","https://file.gptimage2api.net/media/1776756852880_v094nl_HGXcdOPbUAA06XY-300x300.jpg","https://file.gptimage2api.net/media/1776756809391_6lhkiq_HGXR9V_bIAARJPu-300x240.jpg","https://file.gptimage2api.net/media/1776756782732_rwl7km_HGXJbgbaAAQQd4O-300x533.jpg","https://file.gptimage2api.net/media/1776756762098_oz5z4c_HGXGwsMagAEYuqa-300x225.jpg","https://file.gptimage2api.net/media/1776756781085_e23ett_HGXBV05XwAA2yU4-300x450.jpg","https://file.gptimage2api.net/media/1776756843035_0y4dr0_HGV2dbja8AA3IvB-300x400.jpg","https://file.gptimage2api.net/media/1776756855692_stwo0a_HGT1-4Bb0AA312i-300x424.jpg","https://file.gptimage2api.net/media/1776756789445_z4tzjp_HGTxSpFaMAAuxns-300x300.jpg","https://file.gptimage2api.net/media/1776668159375_sd2tyn_HGTivWjXkAAt6tk-300x375.jpg","https://file.gptimage2api.net/media/1776661915237_r1emn3_HGRFgTdaEAAt63O-300x450.jpg","https://file.gptimage2api.net/media/1776756775486_4fd52x_HGRomaeboAA-DR6-300x450.jpg","https://file.gptimage2api.net/media/1776662628547_pc62qe_HGRnQTja8AASNom-300x533.jpg","https://file.gptimage2api.net/media/1776668115222_j6vl73_HGQ9NH3bQAAVUT8-300x450.jpg","https://file.gptimage2api.net/media/1776661994608_2lvoxe_HGQ9NKVaMAA-xFS-300x450.jpg","https://file.gptimage2api.net/media/1776658762495_8ewb2m_HGQr7nCa8AAiaSP-300x398.jpg","https://file.gptimage2api.net/media/1776662581155_jmf49d_HGPvP8vacAADS5B-300x300.jpg","https://file.gptimage2api.net/media/1776658759466_0vvd9m_HGPgEzEbUAA6-9s-300x398.jpg","https://file.gptimage2api.net/media/1776662627550_b8twjr_HGNFz2LbkAA1mcT-300x300.jpg","https://file.gptimage2api.net/media/1776699416625_76138j_HGLw5u2aMAIkzeF-300x450.jpg","https://file.gptimage2api.net/media/1776699450623_5ct1le_HGK8gRMX0AATb8O-300x240.jpg","https://file.gptimage2api.net/media/1776699445902_sfhrjh_HGHBOIrb0AAkXJR-300x450.jpg","https://file.gptimage2api.net/media/1776697099289_x4jdgx_HGGQsN5aMAAAjT0-300x532.jpg","https://file.gptimage2api.net/media/1776695089047_tujkw0_HGFn2-NbkAA-tXK-300x450.jpg","https://file.gptimage2api.net/media/1776695086349_pfmtbk_HGFn2-IbsAAWHPw-300x417.jpg","https://file.gptimage2api.net/media/1776697064224_fs22qb_HGE_FK_WwAAOsAo-300x169.jpg","https://file.gptimage2api.net/media/1776695100409_im47dt_HGCY5CSbMAAdw_G-300x533.jpg","https://file.gptimage2api.net/media/1776695097319_qo1ro9_HGCTzyHaQAAyN76-300x533.jpg","https://file.gptimage2api.net/media/1776695112490_phpst3_HGAuWVwaIAECnjY-300x450.jpg","https://file.gptimage2api.net/media/1776695094646_as3wii_HF_Qx-fWAAA--l6-300x450.jpg","https://file.gptimage2api.net/media/1776701503291_06vsnv_HF-1mIabEAMQ5Ej-300x300.jpg","https://file.gptimage2api.net/media/1776701488942_vgrwp4_HF9SpBnbsAAeF4g-300x300.jpg","https://file.gptimage2api.net/media/1776701513937_vtw05u_HF8YsTeaMAAqgex-300x450.jpg"]
   },
@@ -135,9 +135,9 @@
   },
   "benefit": {
     "name": "benefit",
-    "title": "团队为什么选择 GptImage2Api",
+    "title": "团队为什么选择 GPT Image 2.5",
     "label": "优势",
-    "description": "GptImage2Api 帮助团队生成和编辑可用于生产的图片，并提供更清晰的文字、更稳定的风格控制和适合 API 接入的输出设置。",
+    "description": "GPT Image 2.5 帮助团队生成和编辑可用于生产的图片，并提供更清晰的文字、更稳定的风格控制和适合 API 接入的输出设置。",
     "items": [
       {
         "title": "提示词生成图片",
@@ -183,7 +183,7 @@
         "variant": "secondary"
       }
     ],
-    "description": "把 GPT Image 2 图片生成和编辑能力接入你的产品。创建 API Key，发送图片任务，追踪进度，并在现有仪表盘中管理积分消耗。",
+    "description": "把 GPT Image 2.5 图片生成和编辑能力接入你的产品。创建 API Key，发送图片任务，追踪进度，并在现有仪表盘中管理积分消耗。",
     "items": [
       {
         "description": "在仪表盘创建密钥，并在每次请求中通过 Authorization: Bearer 传入。",
@@ -191,7 +191,7 @@
         "title": "API Key 认证"
       },
       {
-        "description": "通过 /api/ai-studio/execute 提交图片任务，传入 modelId、可见性和 GPT Image 2 payload 字段。",
+        "description": "通过 /api/ai-studio/execute 提交图片任务，传入 modelId、可见性和 GPT Image 2.5 payload 字段。",
         "icon": "code",
         "title": "图片生成接口"
       },
@@ -212,19 +212,21 @@
       "  -H \"Authorization: Bearer YOUR_API_KEY\" \\",
       "  -H \"Content-Type: application/json\" \\",
       "  -d '{",
-      "    \"modelId\": \"image:fal-gpt-image-2\",",
+      "    \"modelId\": \"image:gpt-image-2-5-flare-text-to-image\",",
       "    \"isPublic\": false,",
       "    \"payload\": {",
-      "      \"model\": \"gpt-image-2\",",
-      "      \"prompt\": \"A clean coffee packaging poster with readable headline text\",",
-      "      \"size\": \"1:1\",",
-      "      \"resolution\": \"1k\"",
+      "      \"model\": \"gpt-image-2-5-flare-text-to-image\",",
+      "      \"input\": {",
+      "        \"prompt\": \"A clean coffee packaging poster with readable headline text\",",
+      "        \"aspect_ratio\": \"1:1\",",
+      "        \"resolution\": \"1K\"",
+      "      }",
       "    }",
       "  }'"
     ],
     "requestLabel": "API 请求",
     "requestTitle": "创建图片生成任务",
-    "title": "把 GPT Image 2 生成能力接入你的应用"
+    "title": "把 GPT Image 2.5 生成能力接入你的应用"
   },
   "showcase": {
     "kicker": "图像示例",
@@ -397,7 +399,7 @@
     "description": "开始生成和编辑图像前，你可能关心的重点。",
     "items": [
       {
-        "question": "Gpt Image 2 Api 可以做什么？",
+        "question": "GPT Image 2.5 可以做什么？",
         "answer": "支持文生图和图像编辑，你可以按提示词生成新图，也可以基于原图做定向修改。"
       },
       {

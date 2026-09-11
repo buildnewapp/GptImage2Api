@@ -33,7 +33,7 @@ export default function Hero({ hero }: HeroProps) {
             {hero.badge}
           </div>
           <h1 className="text-3xl font-bold tracking-tight text-white text-balance sm:text-3xl lg:text-3xl">
-            {hero.title}
+            {hero.title}{" "}
             <span className="text-primary font-extrabold text-red-400">{hero.highlight}</span>
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-base text-white/60 sm:text-lg">

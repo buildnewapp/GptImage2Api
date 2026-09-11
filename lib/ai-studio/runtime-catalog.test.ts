@@ -131,6 +131,19 @@ test("builds upstream catalog without embedding pricing rows", async () => {
     );
     assert.match(String(warnings[0]?.[0] ?? ""), /Skipped 1 AI Studio catalog docs/);
     assert.match(String(warnings[1]?.[0] ?? ""), /Google - Broken HTML/);
+
+    const retained = createDetail({
+      id: "image:google-broken-html",
+      docUrl: "https://docs.kie.ai/market/google/broken-html.md",
+    });
+    const withPrevious = await buildAiStudioUpstreamCatalog({
+      version: 1,
+      generatedAt: "2026-08-09T00:00:00.000Z",
+      items: [retained, createDetail({ id: "video:no-longer-in-index" })],
+    });
+    assert.equal(withPrevious.items.length, 2);
+    assert.deepEqual(withPrevious.items.find((item) => item.id === retained.id), retained);
+    assert.equal(withPrevious.items.some((item) => item.id === "video:no-longer-in-index"), false);
   } finally {
     globalThis.fetch = originalFetch;
     console.log = originalLog;

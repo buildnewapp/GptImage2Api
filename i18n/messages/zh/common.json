@@ -1,8 +1,8 @@
 {
   "Home": {
-    "title": "Gpt Image 2 Api",
-    "tagLine": "Gpt Image 2 Api – 面向开发者的快速可靠 GPT Image 2 API",
-    "description": "GptImage2Api 为开发者、初创团队和企业提供强大的 GPT Image 2 API 访问能力，通过简洁的 REST 接口生成高质量 AI 图像。你可以快速构建图像生成应用、自动化创意工作流，并将 GPT Image 2 API 立即集成到你的产品中。",
+    "title": "GPT Image 2.5",
+    "tagLine": "GPT Image 2.5 – 面向开发者的快速可靠 GPT Image 2.5 API",
+    "description": "GPT Image 2.5 为开发者、初创团队和企业提供强大的 GPT Image 2.5 API 访问能力，通过简洁的 REST 接口生成高质量 AI 图像。你可以快速构建图像生成应用、自动化创意工作流，并将 GPT Image 2.5 API 立即集成到你的产品中。",
     "createVideo": "生成",
     "freeCreditsCtaLine1": "领取 50 积分",
     "freeCreditsCtaLine2": "免费",
@@ -19,9 +19,9 @@
       "cta": "查看活动"
     },
     "discount": {
-      "title": "Gpt image 2 特价",
-      "badge": "立省 200%",
-      "description": "限时 1 积分/张，最低0.05$/张",
+      "title": "GPT Image 2.5",
+      "badge": "特价 $0.01/张",
+      "description": "限时图片生成优惠",
       "href": "/pricing?billing=yearly",
       "cta": "领取优惠"
     },
@@ -243,8 +243,8 @@
     "description": "关于我们"
   },
   "Pricing": {
-    "title": "GptImage2Api 定价",
-    "description": "查看 GptImage2Api 的价格方案"
+    "title": "GPT Image 2.5 定价",
+    "description": "查看 GPT Image 2.5 的价格方案"
   },
   "DashboardGenerate": {
     "title": "生成",
@@ -495,7 +495,7 @@
     ]
   },
   "Footer": {
-    "Copyright": "版权所有 © {year} {name}。Powered by GPT Image 2。独立产品。与 Google、OpenAI 及各类 AI 模型提供商无关联。",
+    "Copyright": "版权所有 © {year} {name}。Powered by GPT Image 2.5。独立产品。与 Google、OpenAI 及各类 AI 模型提供商无关联。",
     "About": "关于",
     "Contact": "联系我们",
     "PrivacyPolicy": "隐私政策",

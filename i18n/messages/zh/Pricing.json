@@ -1,10 +1,10 @@
 {
   "badge": {
     "label": "定价",
-    "text": "GptImage2Api 价格方案"
+    "text": "GPT Image 2.5 价格方案"
   },
-  "title": "GptImage2Api 价格",
-  "description": "查看 GptImage2Api 的订阅套餐、积分包和支付方式。",
+  "title": "GPT Image 2.5 价格",
+  "description": "查看 GPT Image 2.5 的订阅套餐、积分包和支付方式。",
   "annual": "年付",
   "monthly": "月付",
   "onetime": "一次性",

@@ -179,7 +179,10 @@ function buildKieSeedance2Billing(payload: Record<string, any>) {
       .filter((value): value is number => value !== null)
       .map((value) => Math.ceil(value));
 
-    if (durations.length > 0) {
+    if (
+      durations.length > 0 &&
+      durations.length === collectBillingReferenceUrls(payload).length
+    ) {
       return {
         has_video_input: hasVideoInput,
         input_video_duration: durations.reduce((sum, value) => sum + value, 0),

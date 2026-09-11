@@ -7,6 +7,7 @@ import {
   subsectionTitleClass,
 } from "@/components/home/video/constants";
 import type { VideoTemplatePricing } from "@/components/home/video/types";
+import { siteConfig } from "@/config/site";
 import { Link as I18nLink } from "@/i18n/routing";
 
 interface PricingProps {
@@ -117,7 +118,7 @@ export default function Pricing({ section, taskHub }: PricingProps) {
                   <tr className="border-b">
                     <th className="p-6 text-left font-semibold">Feature</th>
                     <th className="p-6 text-center font-semibold text-primary">
-                      GptImage2Api
+                      {siteConfig.name}
                     </th>
                     <th className="p-6 text-center font-semibold text-muted-foreground">
                       Other Platforms

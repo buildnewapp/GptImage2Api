@@ -28,9 +28,9 @@ async function readExistingCatalog(filePath: string) {
 async function main() {
   const { upstreamCatalogPath, apimartCatalogPath, falCatalogPath, falModelsPath } =
     getAiStudioCatalogPaths();
-  const upstream = await buildAiStudioUpstreamCatalog();
-  const falModels = await loadAiStudioFalModelsFile(falModelsPath);
   const existingUpstream = await readExistingCatalog(upstreamCatalogPath);
+  const upstream = await buildAiStudioUpstreamCatalog(existingUpstream);
+  const falModels = await loadAiStudioFalModelsFile(falModelsPath);
 
   if (existingUpstream && process.env.AI_STUDIO_ALLOW_CATALOG_SHRINK !== "1") {
     assertAiStudioCatalogCanReplaceExisting(
