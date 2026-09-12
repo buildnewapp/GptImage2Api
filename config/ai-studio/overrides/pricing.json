@@ -2916,6 +2916,82 @@
       },
       "price_final": "{$price}*{$($image_size || $input.image_size || '1024x1024').split('x')[0]}*{$($image_size || $input.image_size || '1024x1024').split('x')[1]}/1000000*({$num_images ?? $input.num_images ?? 1})",
       "notes": "Output megapixels are width × height / 1,000,000. Uses the published rendering-speed rates; the public price text does not specify a separate prompt-expansion fee."
+    },
+    "video:fal-minimax-h3-max-text-to-video": {
+      "price_txt": "Standard (non-promotional) output video rates: 480P $0.05/second, 768P $0.08/second, 1080P $0.16/second.",
+      "price_key": "{$resolution ?? $input.resolution ?? '768P'}",
+      "price_map": {
+        "480P": 10,
+        "768P": 16,
+        "1080P": 32
+      },
+      "price_final": "{$price}*{$duration ?? $input.duration ?? 5}",
+      "docUrl": "https://fal.ai/models/minimax/h3-max/text-to-video/api",
+      "notes": "Checked 2026-09-11. Standard rates converted at 1 USD = 200 credits; the 75% launch discount is excluded."
+    },
+    "video:fal-minimax-h3-max-image-to-video": {
+      "price_txt": "Standard (non-promotional) output video rates: 480P $0.05/second, 768P $0.08/second, 1080P $0.16/second.",
+      "price_key": "{$resolution ?? $input.resolution ?? '768P'}",
+      "price_map": {
+        "480P": 10,
+        "768P": 16,
+        "1080P": 32
+      },
+      "price_final": "{$price}*{$duration ?? $input.duration ?? 5}",
+      "docUrl": "https://fal.ai/models/minimax/h3-max/image-to-video/api",
+      "notes": "Checked 2026-09-11. Standard rates converted at 1 USD = 200 credits; the 75% launch discount is excluded."
+    },
+    "video:fal-minimax-h3-max-reference-to-video": {
+      "price_txt": "Standard (non-promotional) output video rates: 480P $0.05/second, 768P $0.08/second, 1080P $0.16/second. Reference image, video and audio tokens share a 4,096-token allowance per request; each additional 1,000 tokens costs $0.02. Image tokens = width * height / 1024. Reference video tokens per second: 480P 2,886; 768P 7,459.2 (37,296 tokens per 5 seconds). Reference audio uses approximately 80 tokens per second.",
+      "price_key": "{$resolution ?? $input.resolution ?? '768P'}",
+      "price_map": {
+        "480P": 10,
+        "768P": 16,
+        "1080P": 32
+      },
+      "price_final": "{$price}*{$duration ?? $input.duration ?? 5}",
+      "docUrl": "https://fal.ai/models/minimax/h3-max/reference-to-video/api",
+      "notes": "Checked 2026-09-11. Standard rates converted at 1 USD = 200 credits; the 75% launch discount is excluded. The current formula charges generated video only. Reference input tokens share a 4,096-token allowance, then cost $0.02 (4 credits) per 1,000 tokens; this surcharge is recorded in price_txt but is not included in the current quote or deduction."
+    },
+    "video:fal-bytedance-seedance-2-5-text-to-video": {
+      "price_txt": "Official standard token rates: 480p/720p $0.0214 per 1,000 tokens; 1080p approximately $0.0234 per 1,000 tokens. Published approximate video rates: 480p $0.2205/s (44.1 credits/s), 720p $0.4730/s (94.6 credits/s), 1080p $1.164/s (232.8 credits/s).",
+      "price_key": "{$resolution ?? $input.resolution ?? '720p'}",
+      "price_map": {
+        "480p": 44.1,
+        "720p": 94.6,
+        "1080p": 232.8
+      },
+      "price_final": "{$price}*{$duration ?? $input.duration}",
+      "docUrl": "https://fal.ai/models/bytedance/seedance-2.5/text-to-video/api",
+      "notes": "Checked 2026-09-12. Converted at 1 USD = 200 credits without promotional discounts. Quotes use the published approximate per-second rates; actual fal billing is based on video tokens and can vary with output dimensions. Tokens = height * width * (input video duration + output video duration) * 24 / 1024. Audio generation does not change the price. An explicit output duration is required for quoting; auto or omitted duration cannot be quoted before generation."
+    },
+    "video:fal-bytedance-seedance-2-5-image-to-video": {
+      "price_txt": "Official standard token rates: 480p/720p $0.0214 per 1,000 tokens; 1080p approximately $0.0234 per 1,000 tokens. Published approximate video rates: 480p $0.2205/s (44.1 credits/s), 720p $0.4730/s (94.6 credits/s), 1080p $1.164/s (232.8 credits/s).",
+      "price_key": "{$resolution ?? $input.resolution ?? '720p'}",
+      "price_map": {
+        "480p": 44.1,
+        "720p": 94.6,
+        "1080p": 232.8
+      },
+      "price_final": "{$price}*{$duration ?? $input.duration}",
+      "docUrl": "https://fal.ai/models/bytedance/seedance-2.5/image-to-video/api",
+      "notes": "Checked 2026-09-12. Converted at 1 USD = 200 credits without promotional discounts. Quotes use the published approximate per-second rates; actual fal billing is based on video tokens and can vary with output dimensions. Tokens = height * width * (input video duration + output video duration) * 24 / 1024. Audio generation does not change the price. An explicit output duration is required for quoting; auto or omitted duration cannot be quoted before generation. Input images are not billed."
+    },
+    "video:fal-bytedance-seedance-2-5-reference-to-video": {
+      "price_txt": "Official standard token rates: 480p/720p $0.0214 per 1,000 tokens; 1080p approximately $0.0234 per 1,000 tokens. Published approximate video rates: 480p $0.2205/s (44.1 credits/s), 720p $0.4730/s (94.6 credits/s), 1080p $1.164/s (232.8 credits/s). With video input, multiply the rate by 0.6: 480p 26.46 credits/s, 720p 56.76 credits/s, 1080p 139.68 credits/s. Bill both input and output video duration. Image and audio references are not billed.",
+      "billing_adapter": "kie_seedance_2",
+      "price_key": "{$resolution ?? $input.resolution ?? '720p'}|{$billing.has_video_input ? 'with_video':'no_video'}",
+      "price_map": {
+        "480p|no_video": 44.1,
+        "480p|with_video": 26.46,
+        "720p|no_video": 94.6,
+        "720p|with_video": 56.76,
+        "1080p|no_video": 232.8,
+        "1080p|with_video": 139.68
+      },
+      "price_final": "{$($task ?? $input.task) === 'editing' ? 0 : $price * (($duration ?? $input.duration) + $billing.input_video_duration)}",
+      "docUrl": "https://fal.ai/models/bytedance/seedance-2.5/reference-to-video/api",
+      "notes": "Checked 2026-09-12. Converted at 1 USD = 200 credits without promotional discounts. Quotes use the published approximate per-second rates; actual fal billing is based on video tokens and can vary with output dimensions. Tokens = height * width * (input video duration + output video duration) * 24 / 1024. Audio generation does not change the price. An explicit output duration is required for quoting; auto or omitted duration cannot be quoted before generation. The 0.6 video-input multiplier is the standard conditional billing rule, not a temporary promotion. Reuses the existing Seedance input-duration adapter: video input requires known duration, and each reference duration is rounded up to whole seconds. Editing forces duration to auto upstream, so editing cannot be quoted even if a duration is supplied."
     }
   }
 }
