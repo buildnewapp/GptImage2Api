@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-10T14:38:35.671Z",
+  "generatedAt": "2026-09-11T14:06:28.718Z",
   "items": [
     {
       "id": "video:fal-bytedance-seedance-2-0-text-to-video",
@@ -17998,6 +17998,462 @@
         "image_url": "https://storage.googleapis.com/falserverless/example_inputs/hailuo23/fast_pro_i2v_in.jpg",
         "prompt_optimizer": true,
         "prompt": "Subject-tracking orbit: camera glides parallel to astronaut, Earth rotates beneath, sun crest reveals lens flare, astronaut tethers and spins slowly, 8K 60 fps slow-motion, ends with spacecraft blackout on sun disk"
+      }
+    },
+    {
+      "id": "video:fal-minimax-h3-max-text-to-video",
+      "vendor": "fal",
+      "category": "video",
+      "title": "MiniMax H3 Max Text to Video",
+      "docUrl": "https://fal.ai/models/minimax/h3-max/text-to-video/api",
+      "provider": "minimax",
+      "alias": null,
+      "endpoint": "/minimax/h3-max/text-to-video",
+      "method": "POST",
+      "statusEndpoint": "/minimax/h3-max/requests/{request_id}/status",
+      "modelKeys": [
+        "minimax/h3-max/text-to-video"
+      ],
+      "requestSchema": {
+        "properties": {
+          "seed": {
+            "description": "Random seed. A random seed is selected when omitted.",
+            "title": "Seed",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "duration": {
+            "minimum": 5,
+            "maximum": 15,
+            "title": "Duration",
+            "type": "integer",
+            "default": 5,
+            "description": "The duration of the video in seconds."
+          },
+          "enable_safety_checker": {
+            "description": "If set to true, the safety checker will be enabled.",
+            "title": "Enable Safety Checker",
+            "type": "boolean",
+            "default": true
+          },
+          "resolution": {
+            "description": "The native generation resolution, or 1080P latent refinement from a native 768P source.",
+            "title": "Resolution",
+            "type": "string",
+            "default": "768P",
+            "enum": [
+              "480P",
+              "768P",
+              "1080P"
+            ]
+          },
+          "prompt": {
+            "description": "Text prompt for video generation",
+            "maxLength": 50000,
+            "type": "string",
+            "minLength": 1,
+            "title": "Prompt",
+            "examples": [
+              "A white kitten chases a butterfly across a sunlit garden. Gentle camera tracking, natural movement, soft afternoon light filtering through the leaves."
+            ]
+          },
+          "prompt_expansion_mode": {
+            "description": "How much effort to spend rewriting the prompt before generation. 'balanced' returns in about a second. 'quality' spends up to ~30s on a richer prompt.",
+            "title": "Prompt Expansion Mode",
+            "type": "string",
+            "default": "balanced",
+            "examples": [
+              "balanced",
+              "quality"
+            ]
+          },
+          "sync_mode": {
+            "description": "Return the generated video as base64 instead of a CDN URL.",
+            "title": "Sync Mode",
+            "type": "boolean",
+            "default": false
+          },
+          "aspect_ratio": {
+            "description": "The aspect ratio of the generated video.",
+            "title": "Aspect Ratio",
+            "type": "string",
+            "default": "16:9",
+            "enum": [
+              "21:9",
+              "16:9",
+              "4:3",
+              "1:1",
+              "3:4",
+              "9:16"
+            ]
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "duration",
+          "resolution",
+          "seed",
+          "enable_safety_checker",
+          "sync_mode",
+          "prompt_expansion_mode",
+          "aspect_ratio"
+        ],
+        "type": "object",
+        "title": "TurboTextToVideoHailuo03Input",
+        "required": [
+          "prompt",
+          "prompt_expansion_mode"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "duration",
+          "resolution",
+          "seed",
+          "enable_safety_checker",
+          "sync_mode",
+          "prompt_expansion_mode",
+          "aspect_ratio"
+        ]
+      },
+      "examplePayload": {
+        "seed": 0,
+        "duration": 5,
+        "enable_safety_checker": true,
+        "resolution": "768P",
+        "prompt": "A white kitten chases a butterfly across a sunlit garden. Gentle camera tracking, natural movement, soft afternoon light filtering through the leaves.",
+        "prompt_expansion_mode": "balanced",
+        "sync_mode": false,
+        "aspect_ratio": "16:9"
+      }
+    },
+    {
+      "id": "video:fal-minimax-h3-max-image-to-video",
+      "vendor": "fal",
+      "category": "video",
+      "title": "MiniMax H3 Max Image to Video",
+      "docUrl": "https://fal.ai/models/minimax/h3-max/image-to-video/api",
+      "provider": "minimax",
+      "alias": null,
+      "endpoint": "/minimax/h3-max/image-to-video",
+      "method": "POST",
+      "statusEndpoint": "/minimax/h3-max/requests/{request_id}/status",
+      "modelKeys": [
+        "minimax/h3-max/image-to-video"
+      ],
+      "requestSchema": {
+        "properties": {
+          "seed": {
+            "description": "Random seed. A random seed is selected when omitted.",
+            "title": "Seed",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "duration": {
+            "minimum": 5,
+            "maximum": 15,
+            "title": "Duration",
+            "type": "integer",
+            "default": 5,
+            "description": "The duration of the video in seconds."
+          },
+          "enable_safety_checker": {
+            "description": "If set to true, the safety checker will be enabled.",
+            "title": "Enable Safety Checker",
+            "type": "boolean",
+            "default": true
+          },
+          "image_url": {
+            "description": "Optional URL of the image to use as the first frame. When provided, the output canvas follows this image. If only end_image_url is provided, the canvas follows that last frame instead. If both images are omitted, the request is handled as text-to-video (16:9 by default).",
+            "title": "Image URL",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "examples": [
+              "https://storage.googleapis.com/falserverless/example_inputs/hailuo23/pro_i2v_in.jpg"
+            ]
+          },
+          "resolution": {
+            "description": "The native generation resolution, or 1080P latent refinement from a native 768P source.",
+            "title": "Resolution",
+            "type": "string",
+            "default": "768P",
+            "enum": [
+              "480P",
+              "768P",
+              "1080P"
+            ]
+          },
+          "prompt": {
+            "description": "Text prompt for video generation",
+            "maxLength": 50000,
+            "type": "string",
+            "minLength": 1,
+            "title": "Prompt",
+            "examples": [
+              "The camera slowly pulls back from the scene, revealing the full landscape as clouds drift overhead and light shifts across the terrain."
+            ]
+          },
+          "prompt_expansion_mode": {
+            "description": "How much effort to spend rewriting the prompt before generation. 'balanced' returns in about a second. 'quality' spends up to ~30s on a richer prompt.",
+            "title": "Prompt Expansion Mode",
+            "type": "string",
+            "default": "balanced",
+            "examples": [
+              "balanced",
+              "quality"
+            ]
+          },
+          "sync_mode": {
+            "description": "Return the generated video as base64 instead of a CDN URL.",
+            "title": "Sync Mode",
+            "type": "boolean",
+            "default": false
+          },
+          "end_image_url": {
+            "description": "Optional URL of the image to use as the last frame. It may be provided alone for end-only keyframe generation; in that case the output canvas follows this image.",
+            "title": "End Image URL",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "duration",
+          "resolution",
+          "seed",
+          "enable_safety_checker",
+          "sync_mode",
+          "prompt_expansion_mode",
+          "image_url",
+          "end_image_url"
+        ],
+        "type": "object",
+        "title": "TurboImageToVideoHailuo03Input",
+        "required": [
+          "prompt",
+          "prompt_expansion_mode"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "duration",
+          "resolution",
+          "seed",
+          "enable_safety_checker",
+          "sync_mode",
+          "prompt_expansion_mode",
+          "image_url",
+          "end_image_url"
+        ]
+      },
+      "examplePayload": {
+        "seed": 0,
+        "duration": 5,
+        "enable_safety_checker": true,
+        "image_url": "https://storage.googleapis.com/falserverless/example_inputs/hailuo23/pro_i2v_in.jpg",
+        "resolution": "768P",
+        "prompt": "The camera slowly pulls back from the scene, revealing the full landscape as clouds drift overhead and light shifts across the terrain.",
+        "prompt_expansion_mode": "balanced",
+        "sync_mode": false,
+        "end_image_url": ""
+      }
+    },
+    {
+      "id": "video:fal-minimax-h3-max-reference-to-video",
+      "vendor": "fal",
+      "category": "video",
+      "title": "MiniMax H3 Max Reference to Video",
+      "docUrl": "https://fal.ai/models/minimax/h3-max/reference-to-video/api",
+      "provider": "minimax",
+      "alias": null,
+      "endpoint": "/minimax/h3-max/reference-to-video",
+      "method": "POST",
+      "statusEndpoint": "/minimax/h3-max/requests/{request_id}/status",
+      "modelKeys": [
+        "minimax/h3-max/reference-to-video"
+      ],
+      "requestSchema": {
+        "properties": {
+          "seed": {
+            "description": "Random seed. A random seed is selected when omitted.",
+            "title": "Seed",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "duration": {
+            "minimum": 5,
+            "maximum": 15,
+            "title": "Duration",
+            "type": "integer",
+            "default": 5,
+            "description": "The duration of the video in seconds."
+          },
+          "enable_safety_checker": {
+            "description": "If set to true, the safety checker will be enabled.",
+            "title": "Enable Safety Checker",
+            "type": "boolean",
+            "default": true
+          },
+          "reference_audio_urls": {
+            "description": "URLs of reference audio clips (2-15 seconds each, combined duration at most 15 seconds), referenced in the prompt as Audio 1, Audio 2, and so on. Audio cannot be the only reference input; provide at least one reference image or video with it. Reference images, videos, and audio clips must add up to at most 12 files.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Reference Audio URLs",
+            "type": "array",
+            "maxItems": 3
+          },
+          "resolution": {
+            "description": "The native generation resolution, or 1080P latent refinement from a native 768P source.",
+            "title": "Resolution",
+            "type": "string",
+            "default": "768P",
+            "enum": [
+              "480P",
+              "768P",
+              "1080P"
+            ]
+          },
+          "reference_video_urls": {
+            "description": "URLs of motion/reference video clips (2-15 seconds each, combined duration at most 15 seconds), referenced in the prompt as Video 1, Video 2, and so on. Reference images, videos, and audio clips must add up to at most 12 files.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Reference Video URLs",
+            "type": "array",
+            "maxItems": 3
+          },
+          "prompt": {
+            "description": "Text prompt for video generation. Refer to reference assets by their modality and order in the reference lists: Image 1, Image 2, Video 1, Audio 1, and so on.",
+            "maxLength": 50000,
+            "type": "string",
+            "minLength": 1,
+            "title": "Prompt",
+            "examples": [
+              "Image 1 is the female protagonist. Image 2 is her small dog. Keep the woman and dog consistent with their respective reference images while they walk together through a sunlit garden."
+            ]
+          },
+          "prompt_expansion_mode": {
+            "description": "How much effort to spend rewriting the prompt before generation. 'balanced' returns in about a second. 'quality' spends up to ~30s on a richer prompt.",
+            "title": "Prompt Expansion Mode",
+            "type": "string",
+            "default": "balanced",
+            "examples": [
+              "balanced",
+              "quality"
+            ]
+          },
+          "reference_image_urls": {
+            "description": "URLs of subject/style reference images, referenced in the prompt as Image 1, Image 2, and so on. Reference images, videos, and audio clips must add up to at most 12 files.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Reference Image URLs",
+            "type": "array",
+            "maxItems": 9,
+            "examples": [
+              [
+                "https://storage.googleapis.com/falserverless/example_inputs/hailuo23/pro_i2v_in.jpg"
+              ]
+            ]
+          },
+          "aspect_ratio": {
+            "description": "The aspect ratio of the generated video.",
+            "title": "Aspect Ratio",
+            "type": "string",
+            "default": "adaptive",
+            "enum": [
+              "adaptive",
+              "21:9",
+              "16:9",
+              "4:3",
+              "1:1",
+              "3:4",
+              "9:16"
+            ]
+          },
+          "sync_mode": {
+            "description": "Return the generated video as base64 instead of a CDN URL.",
+            "title": "Sync Mode",
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "x-fal-order-properties": [
+          "prompt",
+          "duration",
+          "resolution",
+          "seed",
+          "enable_safety_checker",
+          "sync_mode",
+          "prompt_expansion_mode",
+          "aspect_ratio",
+          "reference_image_urls",
+          "reference_video_urls",
+          "reference_audio_urls"
+        ],
+        "type": "object",
+        "title": "TurboReferenceToVideoHailuo03Input",
+        "required": [
+          "prompt",
+          "prompt_expansion_mode"
+        ],
+        "x-apidog-orders": [
+          "prompt",
+          "duration",
+          "resolution",
+          "seed",
+          "enable_safety_checker",
+          "sync_mode",
+          "prompt_expansion_mode",
+          "aspect_ratio",
+          "reference_image_urls",
+          "reference_video_urls",
+          "reference_audio_urls"
+        ]
+      },
+      "examplePayload": {
+        "seed": 0,
+        "duration": 5,
+        "enable_safety_checker": true,
+        "reference_audio_urls": [],
+        "resolution": "768P",
+        "reference_video_urls": [],
+        "prompt": "Image 1 is the female protagonist. Image 2 is her small dog. Keep the woman and dog consistent with their respective reference images while they walk together through a sunlit garden.",
+        "prompt_expansion_mode": "balanced",
+        "reference_image_urls": [
+          "https://storage.googleapis.com/falserverless/example_inputs/hailuo23/pro_i2v_in.jpg"
+        ],
+        "aspect_ratio": "adaptive",
+        "sync_mode": false
       }
     }
   ]

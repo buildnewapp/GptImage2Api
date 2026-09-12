@@ -2916,6 +2916,42 @@
       },
       "price_final": "{$price}*{$($image_size || $input.image_size || '1024x1024').split('x')[0]}*{$($image_size || $input.image_size || '1024x1024').split('x')[1]}/1000000*({$num_images ?? $input.num_images ?? 1})",
       "notes": "Output megapixels are width × height / 1,000,000. Uses the published rendering-speed rates; the public price text does not specify a separate prompt-expansion fee."
+    },
+    "video:fal-minimax-h3-max-text-to-video": {
+      "price_txt": "Standard (non-promotional) output video rates: 480P $0.05/second, 768P $0.08/second, 1080P $0.16/second.",
+      "price_key": "{$resolution ?? $input.resolution ?? '768P'}",
+      "price_map": {
+        "480P": 10,
+        "768P": 16,
+        "1080P": 32
+      },
+      "price_final": "{$price}*{$duration ?? $input.duration ?? 5}",
+      "docUrl": "https://fal.ai/models/minimax/h3-max/text-to-video/api",
+      "notes": "Checked 2026-09-11. Standard rates converted at 1 USD = 200 credits; the 75% launch discount is excluded."
+    },
+    "video:fal-minimax-h3-max-image-to-video": {
+      "price_txt": "Standard (non-promotional) output video rates: 480P $0.05/second, 768P $0.08/second, 1080P $0.16/second.",
+      "price_key": "{$resolution ?? $input.resolution ?? '768P'}",
+      "price_map": {
+        "480P": 10,
+        "768P": 16,
+        "1080P": 32
+      },
+      "price_final": "{$price}*{$duration ?? $input.duration ?? 5}",
+      "docUrl": "https://fal.ai/models/minimax/h3-max/image-to-video/api",
+      "notes": "Checked 2026-09-11. Standard rates converted at 1 USD = 200 credits; the 75% launch discount is excluded."
+    },
+    "video:fal-minimax-h3-max-reference-to-video": {
+      "price_txt": "Standard (non-promotional) output video rates: 480P $0.05/second, 768P $0.08/second, 1080P $0.16/second. Reference image, video and audio tokens share a 4,096-token allowance per request; each additional 1,000 tokens costs $0.02. Image tokens = width * height / 1024. Reference video tokens per second: 480P 2,886; 768P 7,459.2 (37,296 tokens per 5 seconds). Reference audio uses approximately 80 tokens per second.",
+      "price_key": "{$resolution ?? $input.resolution ?? '768P'}",
+      "price_map": {
+        "480P": 10,
+        "768P": 16,
+        "1080P": 32
+      },
+      "price_final": "{$price}*{$duration ?? $input.duration ?? 5}",
+      "docUrl": "https://fal.ai/models/minimax/h3-max/reference-to-video/api",
+      "notes": "Checked 2026-09-11. Standard rates converted at 1 USD = 200 credits; the 75% launch discount is excluded. The current formula charges generated video only. Reference input tokens share a 4,096-token allowance, then cost $0.02 (4 credits) per 1,000 tokens; this surcharge is recorded in price_txt but is not included in the current quote or deduction."
     }
   }
 }
