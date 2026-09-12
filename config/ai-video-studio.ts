@@ -101,6 +101,30 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
     selectable: true,
     versions: [
       {
+        key: "fal-seedance-2.5-text-to-video",
+        label: "Text to Video",
+        familyKey: "seedance-2.5",
+        modelId: "video:fal-bytedance-seedance-2-5-text-to-video",
+        isSpecial: true,
+        isHot: true,
+      },
+      {
+        key: "fal-seedance-2.5-image-to-video",
+        label: "Image to Video",
+        familyKey: "seedance-2.5",
+        modelId: "video:fal-bytedance-seedance-2-5-image-to-video",
+        isSpecial: true,
+        isHot: true,
+      },
+      {
+        key: "fal-seedance-2.5-reference-to-video",
+        label: "Reference to Video",
+        familyKey: "seedance-2.5",
+        modelId: "video:fal-bytedance-seedance-2-5-reference-to-video",
+        isSpecial: true,
+        isHot: true,
+      },
+      {
         key: "seedance-2-5",
         label: "Seedance 2.5",
         familyKey: "seedance-2.5",
@@ -124,6 +148,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         label: "H3 Max Text to Video",
         familyKey: "minimax-h3",
         modelId: "video:fal-minimax-h3-max-text-to-video",
+        isSpecial: true,
         isHot: true,
       },
       {
@@ -131,6 +156,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         label: "H3 Max Image to Video",
         familyKey: "minimax-h3",
         modelId: "video:fal-minimax-h3-max-image-to-video",
+        isSpecial: true,
         isHot: true,
       },
       {
@@ -138,6 +164,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         label: "H3 Max Reference to Video",
         familyKey: "minimax-h3",
         modelId: "video:fal-minimax-h3-max-reference-to-video",
+        isSpecial: true,
         isHot: true,
       },
       {
@@ -180,27 +207,31 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "grok-imagine",
         modelId: "video:grok-imagine-video-1-5-preview",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-grok-imagine-1.5-image-to-video",
         label: "Grok Imagine 1.5 Image to Video",
         familyKey: "grok-imagine",
         modelId: "video:fal-xai-grok-imagine-video-v1-5-image-to-video",
-        isHot: true
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "grok-imagine-text-to-video",
         label: "Grok Imagine Text to Video",
         familyKey: "grok-imagine",
         modelId: "video:grok-imagine-text-to-video",
-        isSpecial: true
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "grok-imagine-image-to-video",
         label: "Grok Imagine Image to Video",
         familyKey: "grok-imagine",
         modelId: "video:grok-imagine-image-to-video",
-        isSpecial: true
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "grok-imagine-video-upscale",
@@ -258,24 +289,31 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "gemini-omni",
         modelId: "video:gemini-omni-1-1-flash",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-gemini-omni-flash-1.1-text-to-video",
         label: "Gemini Omni Flash 1.1 Text to Video",
         familyKey: "gemini-omni",
         modelId: "video:fal-google-gemini-omni-flash-v1-1-text-to-video",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-gemini-omni-flash-1.1-image-to-video",
         label: "Gemini Omni Flash 1.1 Image to Video",
         familyKey: "gemini-omni",
         modelId: "video:fal-google-gemini-omni-flash-v1-1-image-to-video",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-gemini-omni-flash-1.1-reference-to-video",
         label: "Gemini Omni Flash 1.1 Reference to Video",
         familyKey: "gemini-omni",
         modelId: "video:fal-google-gemini-omni-flash-v1-1-reference-to-video",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-gemini-omni-flash-1.1-edit",
@@ -328,6 +366,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "seedance-2.0",
         modelId: "video:bytedance-seedance-2",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "seedance-2.0-fast",
@@ -335,6 +374,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "seedance-2.0",
         modelId: "video:bytedance-seedance-2-0-fast",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "seedance-2.0-mini",
@@ -342,6 +382,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "seedance-2.0",
         modelId: "video:bytedance-seedance-2-0-mini",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-seedance-2.0-text-to-video",
@@ -490,6 +531,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "veo-3.1",
         modelId: "video:veo-3.1-lite",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "veo-3.1-fast",
@@ -497,6 +539,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "veo-3.1",
         modelId: "video:veo-3.1-fast",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "veo-3.1-quality",
@@ -660,6 +703,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "kling",
         modelId: "video:kling-3-0-omni-text-to-video",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "kling-3.0-omni-image-to-video",
@@ -667,6 +711,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "kling",
         modelId: "video:kling-3-0-omni-image-to-video",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "kling-3.0-omni-reference-to-video",
@@ -674,6 +719,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "kling",
         modelId: "video:kling-3-0-omni-reference-to-video",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "kling-3.0-omni-transformation",
@@ -910,6 +956,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "wan",
         modelId: "video:wan-3-0-video",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "wan-3.0-video-prime",
@@ -917,42 +964,55 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "wan",
         modelId: "video:wan-3-0-video-prime",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-wan-3.0-text-to-video",
         label: "Wan 3.0 Text to Video",
         familyKey: "wan",
         modelId: "video:fal-alibaba-wan-3-0-text-to-video",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-wan-3.0-image-to-video",
         label: "Wan 3.0 Image to Video",
         familyKey: "wan",
         modelId: "video:fal-alibaba-wan-3-0-image-to-video",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-wan-3.0-reference-to-video",
         label: "Wan 3.0 Reference to Video",
         familyKey: "wan",
         modelId: "video:fal-alibaba-wan-3-0-reference-to-video",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-wan-3.0-prime-text-to-video",
         label: "Wan 3.0 Prime Text to Video",
         familyKey: "wan",
         modelId: "video:fal-alibaba-wan-3-0-prime-text-to-video",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-wan-3.0-prime-image-to-video",
         label: "Wan 3.0 Prime Image to Video",
         familyKey: "wan",
         modelId: "video:fal-alibaba-wan-3-0-prime-image-to-video",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-wan-3.0-prime-reference-to-video",
         label: "Wan 3.0 Prime Reference to Video",
         familyKey: "wan",
         modelId: "video:fal-alibaba-wan-3-0-prime-reference-to-video",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "wan-2.7-text-to-video",
@@ -1086,6 +1146,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "happyhorse",
         modelId: "video:happyhorse-1-1-text-to-video",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "happyhorse-1.1-image-to-video",
@@ -1093,6 +1154,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "happyhorse",
         modelId: "video:happyhorse-1-1-image-to-video",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "happyhorse-1.1-reference-to-video",
@@ -1100,6 +1162,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "happyhorse",
         modelId: "video:happyhorse-1-1-reference-to-video",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-happy-horse-1.1-text-to-video",
@@ -1400,25 +1463,31 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "nano-banana",
         modelId: "image:google-nano-banana-2-lite",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-gemini-3.1-flash-image-preview",
         label: "Gemini 3.1 Flash Image Preview",
         familyKey: "nano-banana",
         modelId: "image:fal-fal-ai-gemini-3-1-flash-image-preview",
-        isHot: true
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-gemini-3.1-flash-image-preview-edit",
         label: "Gemini 3.1 Flash Image Preview Edit",
         familyKey: "nano-banana",
         modelId: "image:fal-fal-ai-gemini-3-1-flash-image-preview-edit",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-nano-banana-2-lite",
         label: "Nano Banana 2 Lite",
         familyKey: "nano-banana",
         modelId: "image:fal-google-nano-banana-2-lite",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "nano-banana-pro",
@@ -1467,6 +1536,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "gpt-image-2",
         modelId: "image:gpt-image-2-5-flare-text-to-image",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "gpt-image-2.5-flare-image-to-image",
@@ -1474,6 +1544,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "gpt-image-2",
         modelId: "image:gpt-image-2-5-flare-image-to-image",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "gpt-image-2.5-sunburst-text-to-image",
@@ -1481,6 +1552,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "gpt-image-2",
         modelId: "image:gpt-image-2-5-sunburst-text-to-image",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "gpt-image-2.5-sunburst-image-to-image",
@@ -1488,38 +1560,46 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "gpt-image-2",
         modelId: "image:gpt-image-2-5-sunburst-image-to-image",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-gpt-image-2.5-flare-text-to-image",
         label: "GPT Image 2.5 Flare Text to Image",
         familyKey: "gpt-image-2",
         modelId: "image:fal-openai-gpt-image-2-5-flare-text-to-image",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-gpt-image-2.5-flare-edit",
         label: "GPT Image 2.5 Flare Edit",
         familyKey: "gpt-image-2",
         modelId: "image:fal-openai-gpt-image-2-5-flare-edit",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-gpt-image-2.5-sunburst-text-to-image",
         label: "GPT Image 2.5 Sunburst Text to Image",
         familyKey: "gpt-image-2",
         modelId: "image:fal-openai-gpt-image-2-5-sunburst-text-to-image",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-gpt-image-2.5-sunburst-edit",
         label: "GPT Image 2.5 Sunburst Edit",
         familyKey: "gpt-image-2",
         modelId: "image:fal-openai-gpt-image-2-5-sunburst-edit",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "gpt-image-2-text-to-image",
         label: "GPT Image 2 Text to Image",
         familyKey: "gpt-image-2",
         modelId: "image:gpt-image-2-text-to-image",
-        isSpecial: true,
-        isHot: true
+        isSpecial: true
       },
       {
         key: "gpt-image-2-image-to-image",
@@ -1533,15 +1613,13 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         label: "Gpt image 2 Special offer",
         familyKey: "gpt-image-2",
         modelId: "image:ama-gpt-image-2",
-        isSpecial: true,
-        isHot: true
+        isSpecial: true
       },
       {
         key: "fal-openai-gpt-image-2",
         label: "Gpt image 2",
         familyKey: "gpt-image-2",
-        modelId: "image:fal-openai-gpt-image-2",
-        isHot: true
+        modelId: "image:fal-openai-gpt-image-2"
       },
       {
         key: "fal-openai-gpt-image-2-edit",
@@ -1577,6 +1655,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "seedream-image",
         modelId: "image:seedream5-0-lite-text-to-image",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "seedream-5-lite-image-to-image",
@@ -1584,6 +1663,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "seedream-image",
         modelId: "image:seedream5-0-lite-image-to-image",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "seedream-5-pro-text-to-image",
@@ -1591,6 +1671,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "seedream-image",
         modelId: "image:seedream5-0-pro-text-to-image",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "seedream-5-pro-image-to-image",
@@ -1598,6 +1679,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "seedream-image",
         modelId: "image:seedream5-0-pro-image-to-image",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "seedream-5-pro-layer-decomposition",
@@ -1748,6 +1830,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "grok-imagine-image",
         modelId: "image:grok-imagine-image-2-0-text-to-image",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "grok-imagine-2.0-image-edit",
@@ -1755,6 +1838,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "grok-imagine-image",
         modelId: "image:grok-imagine-image-2-0-image-edit",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "grok-imagine-2.0-segment-edit",
@@ -1762,25 +1846,29 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "grok-imagine-image",
         modelId: "image:grok-imagine-image-2-0-segment-edit",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "grok-imagine-2.0-segment-map",
         label: "Grok Image 2.0 Segment Map",
         familyKey: "grok-imagine-image",
-        modelId: "image:grok-imagine-image-2-0-segment-map",
-        isSpecial: true,
+        modelId: "image:grok-imagine-image-2-0-segment-map"
       },
       {
         key: "fal-grok-imagine-2.0-text-to-image",
         label: "Grok Image 2.0 Text to Image",
         familyKey: "grok-imagine-image",
         modelId: "image:fal-xai-grok-imagine-image-v2-0-text-to-image",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-grok-imagine-2.0-image-edit",
         label: "Grok Image 2.0 Image Edit",
         familyKey: "grok-imagine-image",
         modelId: "image:fal-xai-grok-imagine-image-v2-0-edit",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "grok-imagine-text-to-image",
@@ -1834,7 +1922,9 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         key: "wan-2.7-image",
         label: "Wan 2.7 Image",
         familyKey: "wan-image",
-        modelId: "image:wan-2-7-image"
+        modelId: "image:wan-2-7-image",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "wan-2.7-image-pro",
@@ -1842,12 +1932,15 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         familyKey: "wan-image",
         modelId: "image:wan-2-7-image-pro",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-wan-2.7-text-to-image",
         label: "Wan 2.7 Text to Image",
         familyKey: "wan-image",
         modelId: "image:fal-fal-ai-wan-v2-7-text-to-image",
+        isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-wan-2.7-edit",
@@ -1862,6 +1955,7 @@ export const AI_VIDEO_STUDIO_FAMILIES: AiVideoStudioFamily[] = ([
         modelId: "image:fal-fal-ai-wan-v2-7-pro-text-to-image",
         levelLimit: "pro",
         isSpecial: true,
+        isHot: true,
       },
       {
         key: "fal-wan-2.7-pro-edit",

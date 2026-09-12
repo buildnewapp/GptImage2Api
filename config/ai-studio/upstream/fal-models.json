@@ -1,6 +1,9 @@
 {
   "version": 1,
   "models": [
+    "bytedance/seedance-2.5/text-to-video",
+    "bytedance/seedance-2.5/image-to-video",
+    "bytedance/seedance-2.5/reference-to-video",
     "bytedance/seedance-2.0/text-to-video",
     "bytedance/seedance-2.0/fast/text-to-video",
     "bytedance/seedance-2.0/image-to-video",
@@ -241,6 +244,9 @@
     "bytedance/seedream/v5/pro/text-to-image": "Tentative pricing is **$0.0675** per image for images of total area less than or equal to **1536x1536** pixels. For images with area in between **1536x1536** and **2048x2048** pixels, the price is **$0.135** per image.",
     "minimax/h3-max/text-to-video": "Standard (non-promotional) output video rates: 480P $0.05/second, 768P $0.08/second, 1080P $0.16/second.",
     "minimax/h3-max/image-to-video": "Standard (non-promotional) output video rates: 480P $0.05/second, 768P $0.08/second, 1080P $0.16/second.",
-    "minimax/h3-max/reference-to-video": "Standard (non-promotional) output video rates: 480P $0.05/second, 768P $0.08/second, 1080P $0.16/second. Reference image, video and audio tokens share a 4,096-token allowance per request; each additional 1,000 tokens costs $0.02. Image tokens = width * height / 1024. Reference video tokens per second: 480P 2,886; 768P 7,459.2 (37,296 tokens per 5 seconds). Reference audio uses approximately 80 tokens per second."
+    "minimax/h3-max/reference-to-video": "Standard (non-promotional) output video rates: 480P $0.05/second, 768P $0.08/second, 1080P $0.16/second. Reference image, video and audio tokens share a 4,096-token allowance per request; each additional 1,000 tokens costs $0.02. Image tokens = width * height / 1024. Reference video tokens per second: 480P 2,886; 768P 7,459.2 (37,296 tokens per 5 seconds). Reference audio uses approximately 80 tokens per second.",
+    "bytedance/seedance-2.5/text-to-video": "For 480p, your request will cost roughly **$0.2205** per second of generated video, for 720p, you will be charged roughly **$0.4730** per second of generated video, and for 1080p, roughly **$1.164** per second of generated video. Your request will cost **$0.0214** per 1000 tokens for 480p and 720p video and roughly **$0.0234** per 1000 tokens for 1080p. The number of tokens is roughly given by (height of output video * width of output video * (input video duration + output video duration) * 24) / 1024.",
+    "bytedance/seedance-2.5/image-to-video": "For 480p, your request will cost roughly **$0.2205** per second of generated video, for 720p, you will be charged roughly **$0.4730** per second of generated video, and for 1080p, roughly **$1.164** per second of generated video. Your request will cost **$0.0214** per 1000 tokens for 480p and 720p video and roughly **$0.0234** per 1000 tokens for 1080p. The number of tokens is roughly given by (height of output video * width of output video * (input video duration + output video duration) * 24) / 1024.",
+    "bytedance/seedance-2.5/reference-to-video": "For 480p, your request will cost roughly **$0.2205** per second of generated video, for 720p, you will be charged roughly **$0.4730** per second of generated video, and for 1080p, roughly **$1.164** per second of generated video. Your request will cost **$0.0214** per 1000 tokens for 480p and 720p video and roughly **$0.0234** per 1000 tokens for 1080p video. The number of tokens is roughly given by (height of output video * width of output video * (input video duration + output video duration) * 24) / 1024. If video inputs are provided the price is multiplied by 0.6. With video inputs and 720p resolution, the price is roughly **$0.2838** per second of generated video. With video references, you will be charged for both input and output videos."
   }
 }

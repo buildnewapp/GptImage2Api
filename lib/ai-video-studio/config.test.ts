@@ -208,13 +208,18 @@ test("derives featured families from isHot in configured order", () => {
   assert.deepEqual(featuredKeys, [
     "seedance-2.5",
     "minimax-h3",
+    "veo-3.1",
+    "kling",
     "grok-imagine",
     "gemini-omni",
     "seedance-2.0",
+    "wan",
+    "happyhorse",
     "nano-banana",
     "gpt-image-2",
     "seedream-image",
     "grok-imagine-image",
+    "wan-image",
   ]);
 });
 
@@ -642,6 +647,30 @@ test("exposes Seedance 2.5 as a selectable family", () => {
     tags: [{ text: "HOT", type: "hot" }],
     selectable: true,
     versions: [
+      {
+        key: "fal-seedance-2.5-text-to-video",
+        label: "Text to Video",
+        familyKey: "seedance-2.5",
+        modelId: "video:fal-bytedance-seedance-2-5-text-to-video",
+        isSpecial: true,
+        isHot: true,
+      },
+      {
+        key: "fal-seedance-2.5-image-to-video",
+        label: "Image to Video",
+        familyKey: "seedance-2.5",
+        modelId: "video:fal-bytedance-seedance-2-5-image-to-video",
+        isSpecial: true,
+        isHot: true,
+      },
+      {
+        key: "fal-seedance-2.5-reference-to-video",
+        label: "Reference to Video",
+        familyKey: "seedance-2.5",
+        modelId: "video:fal-bytedance-seedance-2-5-reference-to-video",
+        isSpecial: true,
+        isHot: true,
+      },
       {
         key: "seedance-2-5",
         label: "Seedance 2.5",
