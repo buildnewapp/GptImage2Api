@@ -105,12 +105,13 @@ export async function getOrCreateStripeCustomer(
 }
 
 export async function createStripeCheckoutSession(params: {
+  checkoutOrderId: string;
   userId: string;
   priceId: string;
   couponCode?: string;
   referral?: string;
 }): Promise<{ sessionId: string; url?: string }> {
-  const { userId, priceId, couponCode, referral } = params;
+  const { userId, priceId, couponCode, referral, checkoutOrderId } = params;
 
   const customerId = await getOrCreateStripeCustomer(userId);
 
@@ -144,6 +145,7 @@ export async function createStripeCheckoutSession(params: {
     ),
     cancel_url: getURL(process.env.NEXT_PUBLIC_PRICING_PATH!),
     metadata: {
+      checkoutOrderId,
       userId,
       planId: plan.id,
       planName: plan.cardTitle,
@@ -162,6 +164,7 @@ export async function createStripeCheckoutSession(params: {
     sessionParams.subscription_data = {
       trial_period_days: plan.trialPeriodDays ?? undefined,
       metadata: {
+        checkoutOrderId,
         userId,
         planId: plan.id,
         planName: plan.cardTitle,
@@ -171,6 +174,7 @@ export async function createStripeCheckoutSession(params: {
   } else {
     sessionParams.payment_intent_data = {
       metadata: {
+        checkoutOrderId,
         userId,
         planId: plan.id,
         planName: plan.cardTitle,

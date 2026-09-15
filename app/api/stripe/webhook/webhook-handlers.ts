@@ -207,6 +207,7 @@ export async function handleInvoicePaid(invoice: Stripe.Invoice) {
       stripeCustomerId: customerId,
       billingReason: invoice.billing_reason,
       ...(invoice.metadata || {}),
+      checkoutOrderId: subscription.metadata?.checkoutOrderId,
     },
   };
   const { order, existed } = await createOrderWithIdempotency('stripe', orderData, invoiceId);

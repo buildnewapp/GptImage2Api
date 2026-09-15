@@ -20,11 +20,11 @@ import {
 import { signPaymentHandoffToken } from '@/lib/payments/handoff';
 import { getPaymentPayUrl, getPaymentRequestHost, isMainPaymentSite } from '@/lib/payments/main-site';
 import { isRecurringPaymentType } from '@/lib/payments/provider-utils';
+import { createPendingCheckoutOrder, markCheckoutOrderFailed } from '@/lib/payments/checkout-orders';
 import { assertRecurringPurchaseIsHigherTier } from '@/lib/payments/subscription-purchase';
 import { createNowpaymentsInvoiceOrder } from '@/lib/nowpayments/service';
 import { createSubotizCheckoutSession } from '@/lib/subotiz/client';
 import { getURL } from '@/lib/url';
-import { randomUUID } from 'node:crypto';
 
 type RequestData = {
   applyCoupon?: boolean;
@@ -117,6 +117,7 @@ export async function POST(req: Request) {
     return apiResponse.success({ url: getPaymentPayUrl(token) });
   }
 
+  let checkoutOrderId: string | undefined;
   try {
     const plan = getCheckoutPlan(requestData);
 
@@ -130,7 +131,12 @@ export async function POST(req: Request) {
         return apiResponse.badRequest('Missing stripePriceId');
       }
       const validStripePriceId = stripePriceId!;
+      if (isRecurringPaymentType(plan.paymentType)) {
+        await assertRecurringPurchaseIsHigherTier(user.id, plan.id);
+      }
+      checkoutOrderId = await createPendingCheckoutOrder({ provider, plan, user });
       const result = await createStripeCheckoutSession({
+        checkoutOrderId,
         userId: user.id,
         priceId: validStripePriceId,
         couponCode: getCheckoutCoupon(requestData, plan.stripeCouponId),
@@ -155,6 +161,7 @@ export async function POST(req: Request) {
         await assertRecurringPurchaseIsHigherTier(user.id, plan.id);
       }
 
+      checkoutOrderId = await createPendingCheckoutOrder({ provider, plan, user });
       const sessionParams = {
         product_id: validCreemProductId,
         units: 1,
@@ -165,6 +172,7 @@ export async function POST(req: Request) {
         },
         success_url: getURL('payment/success?provider=creem'),
         metadata: {
+          checkoutOrderId,
           userId: user.id,
           userEmail: user.email,
           planId: plan.id,
@@ -200,8 +208,10 @@ export async function POST(req: Request) {
         await assertRecurringPurchaseIsHigherTier(user.id, plan.id);
       }
 
-      const orderId = randomUUID();
+      checkoutOrderId = await createPendingCheckoutOrder({ provider, plan, user });
+      const orderId = checkoutOrderId;
       const metadata = {
+        checkoutOrderId,
         planId: plan.id,
         planName: plan.cardTitle,
         priceId: subotizPriceId!,
@@ -288,10 +298,6 @@ export async function POST(req: Request) {
 
       const localeHeader = req.headers.get('accept-language') ?? 'en-US';
       const locale = localeHeader.split(',')[0] || 'en-US';
-      const customId = encodePayPalCustomId({
-        planId: plan.id,
-        userId: user.id,
-      });
       const client = new PayPalClient();
       const cancelUrl = getURL(process.env.NEXT_PUBLIC_PRICING_PATH ?? 'pricing');
       const returnUrl = getURL('api/paypal/callback');
@@ -303,6 +309,7 @@ export async function POST(req: Request) {
           return apiResponse.badRequest('Missing PayPal plan ID');
         }
 
+        checkoutOrderId = await createPendingCheckoutOrder({ provider, plan, user });
         const subscription = await client.createSubscription({
           application_context: {
             brand_name: process.env.NEXT_PUBLIC_PROJECT_NAME || siteConfig.name,
@@ -312,7 +319,7 @@ export async function POST(req: Request) {
             user_action: 'SUBSCRIBE_NOW',
             cancel_url: cancelUrl,
           },
-          custom_id: customId,
+          custom_id: encodePayPalCustomId({ planId: plan.id, userId: user.id, checkoutOrderId }),
           plan_id: paypalPlanId,
         });
 
@@ -336,6 +343,7 @@ export async function POST(req: Request) {
         return apiResponse.badRequest('Invalid PayPal plan price');
       }
 
+      checkoutOrderId = await createPendingCheckoutOrder({ provider, plan, user });
       const order = await client.createOrder({
         application_context: {
           brand_name: process.env.NEXT_PUBLIC_PROJECT_NAME || siteConfig.name,
@@ -352,7 +360,7 @@ export async function POST(req: Request) {
               currency_code: plan.currency.toUpperCase(),
               value: amount.toFixed(2),
             },
-            custom_id: customId,
+            custom_id: encodePayPalCustomId({ planId: plan.id, userId: user.id, checkoutOrderId }),
             description: plan.cardTitle,
             invoice_id: plan.id,
           },
@@ -388,6 +396,13 @@ export async function POST(req: Request) {
 
     return apiResponse.badRequest(`Unsupported payment provider: ${provider}`);
   } catch (error) {
+    if (checkoutOrderId) {
+      try {
+        await markCheckoutOrderFailed(checkoutOrderId, error);
+      } catch (updateError) {
+        console.error('Failed to update checkout order:', updateError);
+      }
+    }
     console.error(`Error creating ${provider} checkout session:`, error);
     const errorMessage = getErrorMessage(error);
     return apiResponse.serverError(errorMessage);

@@ -180,6 +180,7 @@ async function createInitialPayPalSubscriptionOrder(subscription: PayPalSubscrip
     currency,
     metadata: {
       paypalOrderStage: "initial",
+      checkoutOrderId: decodePayPalCustomId(subscription.custom_id)?.checkoutOrderId,
       paypalPaymentId: null,
       paypalPaymentStatus: lastPayment?.status ?? null,
       paypalPeriodStart: new Date(periodStart).toISOString(),
@@ -373,6 +374,7 @@ export async function syncPayPalOrderData(
     currency,
     metadata: {
       paypalCaptureId: getPayPalCaptureId(order),
+      checkoutOrderId: customId.checkoutOrderId,
       paypalOrderId: order.id,
       paypalStatus: order.status,
       planId: customId.planId,
@@ -503,6 +505,7 @@ export async function handlePayPalSubscriptionPaymentCompleted(resource: any) {
     metadata: {
       paypalOrderStage:
         action === "create_initial" ? "initial" : "renewal",
+      checkoutOrderId: customId?.checkoutOrderId,
       paypalPaymentId: resource.id,
       paypalPaymentStatus: paymentStatus,
       paypalPeriodStart: paymentTime.toISOString(),

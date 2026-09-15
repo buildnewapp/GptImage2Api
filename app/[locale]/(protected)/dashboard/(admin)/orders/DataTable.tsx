@@ -52,6 +52,8 @@ interface DataTableProps<TData, TValue> {
 
 const ORDER_TYPES = ALL_ORDER_TYPES;
 const ORDER_STATUSES = [
+  "pending",
+  "failed",
   "succeeded",
   "refunded",
   "partially_refunded",

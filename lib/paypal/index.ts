@@ -6,6 +6,10 @@ import type {
 } from "@/lib/paypal/types";
 
 export function encodePayPalCustomId(payload: PayPalCustomIdPayload): string {
+  if (payload.checkoutOrderId) {
+    // Three UUIDs fit within PayPal's 127-character custom_id limit as an array.
+    return JSON.stringify([payload.planId, payload.userId, payload.checkoutOrderId]);
+  }
   return JSON.stringify(payload);
 }
 
@@ -17,14 +21,20 @@ export function decodePayPalCustomId(
   }
 
   try {
-    const parsed = JSON.parse(value) as Partial<PayPalCustomIdPayload>;
-    if (!parsed.userId || !parsed.planId) {
+    const valueParsed = JSON.parse(value);
+    const parsed: Partial<PayPalCustomIdPayload> | null = Array.isArray(valueParsed)
+      ? { planId: valueParsed[0], userId: valueParsed[1], checkoutOrderId: valueParsed[2] }
+      : valueParsed;
+    if (!parsed || typeof parsed.userId !== 'string' || !parsed.userId ||
+        typeof parsed.planId !== 'string' || !parsed.planId ||
+        (parsed.checkoutOrderId !== undefined && typeof parsed.checkoutOrderId !== 'string')) {
       return null;
     }
 
     return {
       planId: parsed.planId,
       userId: parsed.userId,
+      ...(parsed.checkoutOrderId && { checkoutOrderId: parsed.checkoutOrderId }),
     };
   } catch {
     return null;
