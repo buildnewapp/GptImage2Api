@@ -22,6 +22,7 @@ import { getPricingPlanById } from '@/lib/pricing';
 import { getDb } from '@/lib/db';
 import {
   creditLogs as creditLogsSchema,
+  orders as ordersSchema,
   PaymentProvider,
   subscriptionCreditBuckets as subscriptionCreditBucketsSchema,
   usage as usageSchema,
@@ -34,7 +35,28 @@ import {
 import type {
   Order,
 } from '@/lib/payments/types';
-import { and, asc, eq, gt, lte, sql } from 'drizzle-orm';
+import { and, asc, eq, gt, inArray, lte, sql } from 'drizzle-orm';
+
+type CreditTransaction = Parameters<Parameters<ReturnType<typeof getDb>['transaction']>[0]>[0];
+
+async function shouldGrantOrderCredits(tx: CreditTransaction, userId: string, orderId: string) {
+  // Serialize callbacks for the same order. The grant log is committed with the balance.
+  const [order] = await tx.select().from(ordersSchema)
+    .where(eq(ordersSchema.id, orderId)).for('update');
+  if (!order || order.userId !== userId) {
+    throw new Error(`Credit grant order ${orderId} does not belong to user ${userId}`);
+  }
+  if (order.status === 'refunded' || order.status === 'partially_refunded') {
+    return false;
+  }
+  const [grant] = await tx.select({ id: creditLogsSchema.id }).from(creditLogsSchema)
+    .where(and(
+      eq(creditLogsSchema.relatedOrderId, orderId),
+      gt(creditLogsSchema.amount, 0),
+      inArray(creditLogsSchema.type, ['one_time_purchase', 'subscription_grant']),
+    )).limit(1);
+  return !grant;
+}
 
 // ============================================================================
 // One-Time Credit Operations
@@ -84,7 +106,10 @@ export async function upgradeOneTimeCredits(userId: string, planId: string, orde
     while (attempts < maxAttempts) {
       attempts++;
       try {
-        await db.transaction(async (tx) => {
+        const granted = await db.transaction(async (tx) => {
+          if (!(await shouldGrantOrderCredits(tx, userId, orderId))) {
+            return false;
+          }
           const updatedUsage = await tx
             .insert(usageSchema)
             .values({
@@ -116,9 +141,12 @@ export async function upgradeOneTimeCredits(userId: string, planId: string, orde
             notes: 'One-time credit purchase',
             relatedOrderId: orderId,
           });
+          return true;
         });
-        console.log(`Successfully granted one-time credits for user ${userId} on attempt ${attempts}.`);
-        return; // Success, exit the function
+        if (granted) {
+          console.log(`Successfully granted one-time credits for user ${userId} on attempt ${attempts}.`);
+        }
+        return granted;
       } catch (error) {
         lastError = error;
         console.warn(`Attempt ${attempts} failed for grant one-time credits and log for user ${userId}. Retrying in ${attempts}s...`, (lastError as Error).message);
@@ -362,7 +390,10 @@ export async function upgradeSubscriptionCredits(
     while (attempts < maxAttempts) {
       attempts++;
       try {
-        await db.transaction(async (tx) => {
+        return await db.transaction(async (tx) => {
+          if (!(await shouldGrantOrderCredits(tx, userId, orderId))) {
+            return false;
+          }
           const usageRows = await tx
             .select()
             .from(usageSchema)
@@ -463,9 +494,8 @@ export async function upgradeSubscriptionCredits(
             notes: 'Subscription credits granted',
             relatedOrderId: orderId,
           });
+          return true;
         });
-        lastError = null;
-        break;
       } catch (error) {
         lastError = error;
         if (attempts < maxAttempts) {

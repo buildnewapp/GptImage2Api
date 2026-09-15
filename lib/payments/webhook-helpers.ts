@@ -98,7 +98,24 @@ export async function createOrderWithIdempotency(
   const [insertedOrder] = await db
     .insert(ordersSchema)
     .values(orderData)
+    .onConflictDoNothing({
+      target: [ordersSchema.provider, ordersSchema.providerOrderId],
+    })
     .returning({ id: ordersSchema.id });
+
+  if (!insertedOrder) {
+    // Another delivery may have inserted the same order after our initial read.
+    const [concurrentOrder] = await db.select({ id: ordersSchema.id })
+      .from(ordersSchema)
+      .where(and(
+        eq(ordersSchema.provider, provider),
+        eq(ordersSchema.providerOrderId, idempotencyKey),
+      )).limit(1);
+    if (!concurrentOrder) {
+      throw new Error(`Could not create or find ${provider} order ${idempotencyKey}`);
+    }
+    return { order: concurrentOrder, existed: true };
+  }
 
   return {
     order: insertedOrder || null,

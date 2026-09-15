@@ -31,17 +31,30 @@ export function shouldCreateInitialPayPalSubscriptionOrder({
 export function getPayPalSubscriptionPaymentEventAction({
   existingInitialOrder,
   paymentEventId,
+  paymentEventTime,
 }: {
   existingInitialOrder: {
     paymentId: string | null;
+    periodEnd: Date | null;
   } | null;
   paymentEventId: string;
+  paymentEventTime?: string;
 }): "attach_to_initial" | "noop" | "create_renewal" | "create_initial" {
   if (!existingInitialOrder) {
     return "create_initial";
   }
 
   if (!existingInitialOrder.paymentId) {
+    const paymentTime = Date.parse(paymentEventTime ?? "");
+    const initialPeriodEnd = existingInitialOrder.periodEnd?.getTime() ?? NaN;
+    if (!Number.isFinite(paymentTime) || !Number.isFinite(initialPeriodEnd)) {
+      throw new Error("Unable to determine the initial PayPal payment period.");
+    }
+
+    // A missing first-payment webhook must not swallow a later renewal.
+    if (paymentTime >= initialPeriodEnd) {
+      return "create_renewal";
+    }
     return "attach_to_initial";
   }
 

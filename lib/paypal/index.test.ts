@@ -37,8 +37,10 @@ test("extracts approval url from paypal links", () => {
 
 test("maps paypal order status to local order status", () => {
   assert.equal(mapPayPalOrderStatus("COMPLETED"), "succeeded");
+  assert.equal(mapPayPalOrderStatus("completed"), "succeeded");
   assert.equal(mapPayPalOrderStatus("APPROVED"), "pending");
   assert.equal(mapPayPalOrderStatus("VOIDED"), "failed");
+  assert.equal(mapPayPalOrderStatus("failed"), "failed");
   assert.equal(mapPayPalOrderStatus("UNKNOWN"), "pending");
 });
 

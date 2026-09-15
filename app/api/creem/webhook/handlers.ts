@@ -8,8 +8,8 @@ import {
   CreemSubscriptionExpiredEvent,
   CreemSubscriptionPaidEvent,
   CreemSubscriptionUpdateEvent,
-  CreemTransaction
 } from '@/lib/creem/types';
+import { retrieveCreemTransaction } from '@/lib/creem/client';
 import { getDb } from '@/lib/db';
 import {
   orders as ordersSchema,
@@ -39,8 +39,6 @@ import { eq, InferInsertModel } from 'drizzle-orm';
 export async function handleCreemPaymentSucceeded(
   payload: CreemCheckoutCompletedEvent
 ) {
-  const db = getDb();
-
   const payment = payload.object;
 
   const metadata = payment.metadata ?? {};
@@ -50,17 +48,12 @@ export async function handleCreemPaymentSucceeded(
   const planId = metadata.planId
   const productId = metadata.productId || payment.product?.id
 
-  if (!userId || !planId) {
-    console.error(
-      `[Creem webhook] Missing critical metadata on payment.succeeded ${payment.id}`,
-      metadata
-    );
+  if (order.type !== 'onetime' || payment.status !== 'completed') {
     return;
   }
 
-  if (order.type !== 'onetime') {
-    // subscription payments are handled via invoice.paid
-    return;
+  if (!userId || !planId) {
+    throw new Error(`[Creem webhook] Missing userId or planId on checkout ${payment.id}`);
   }
 
   const orderData: InferInsertModel<typeof ordersSchema> = {
@@ -93,23 +86,21 @@ export async function handleCreemPaymentSucceeded(
     order.id
   );
 
-  if (existed) {
-    return;
-  }
-
   if (!insertedOrder) {
     throw new Error('Failed to insert Creem payment order');
   }
 
   try {
     // --- [custom] Upgrade the user's benefits---
-    await upgradeOneTimeCredits(userId, planId, insertedOrder.id);
+    const granted = await upgradeOneTimeCredits(userId, planId, insertedOrder.id);
     await grantConfiguredFirstOrderReward({
       inviteeUserId: userId,
       sourceOrderId: insertedOrder.id,
       orderAmountUsd: Number(orderData.amountTotal ?? 0),
     });
-    await sendPaymentSuccessWeComNotification(insertedOrder.id);
+    if (granted || (granted === undefined && !existed)) {
+      await sendPaymentSuccessWeComNotification(insertedOrder.id);
+    }
     // --- End: [custom] Upgrade the user's benefits ---
   } catch (error) {
     console.error(
@@ -123,15 +114,29 @@ export async function handleCreemPaymentSucceeded(
 export async function handleCreemInvoicePaid(
   payload: CreemSubscriptionPaidEvent
 ) {
-  const db = getDb();
-
   const subscription = payload.object;
   const metadata = subscription.metadata ?? {};
 
   const subscriptionId = subscription.id;
   const customerId = subscription.customer.id;
   const productId = subscription.product.id;
-  const lastTransaction = subscription.last_transaction as CreemTransaction;
+  const transactionId = subscription.last_transaction_id ?? subscription.last_transaction?.id;
+  if (!transactionId) {
+    throw new Error(`Missing transaction ID for Creem subscription ${subscriptionId}`);
+  }
+  const lastTransaction = subscription.last_transaction?.id === transactionId
+    ? subscription.last_transaction
+    : await retrieveCreemTransaction(transactionId);
+  if (lastTransaction.id !== transactionId ||
+      (lastTransaction.subscription && lastTransaction.subscription !== subscriptionId) ||
+      (lastTransaction.customer && lastTransaction.customer !== customerId)) {
+    throw new Error(`Creem transaction ${transactionId} does not match subscription ${subscriptionId}`);
+  }
+  if (lastTransaction.status !== 'paid' || !lastTransaction.order ||
+      !Number.isFinite(lastTransaction.period_start) || lastTransaction.period_start <= 0 ||
+      !Number.isFinite(lastTransaction.period_end) || lastTransaction.period_end <= lastTransaction.period_start) {
+    throw new Error(`Creem transaction ${transactionId} is not a valid paid subscription transaction`);
+  }
   const orderId = lastTransaction.order;
 
   let userId = metadata.userId
@@ -168,6 +173,7 @@ export async function handleCreemInvoicePaid(
     currency: lastTransaction.currency,
     metadata: {
       creemOrderId: orderId,
+      creemTransactionId: transactionId,
       creemSubscriptionId: subscriptionId,
       creemCustomerId: customerId,
       productId: productId,
@@ -181,10 +187,6 @@ export async function handleCreemInvoicePaid(
     orderId
   );
 
-  if (existed) {
-    return;
-  }
-
   if (!insertedOrder) {
     console.warn(
       `[Creem webhook] Skipping credit grant for subscription ${subscriptionId}`
@@ -197,7 +199,7 @@ export async function handleCreemInvoicePaid(
 
   try {
     // [custom] Upgrade the user's benefits
-    await upgradeSubscriptionCredits(
+    const granted = await upgradeSubscriptionCredits(
       userId,
       planId,
       insertedOrder.id,
@@ -213,7 +215,9 @@ export async function handleCreemInvoicePaid(
       sourceOrderId: insertedOrder.id,
       orderAmountUsd: Number(orderData.amountTotal ?? 0),
     });
-    await sendPaymentSuccessWeComNotification(insertedOrder.id);
+    if (granted || (granted === undefined && !existed)) {
+      await sendPaymentSuccessWeComNotification(insertedOrder.id);
+    }
     // --- End: [custom] Upgrade the user's benefits ---
   } catch (error) {
     console.error(

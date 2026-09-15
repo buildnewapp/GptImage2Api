@@ -38,7 +38,7 @@ export function getPayPalApprovalUrl(
 }
 
 export function mapPayPalOrderStatus(status: string | null | undefined): string {
-  switch (status) {
+  switch (status?.toUpperCase()) {
     case "COMPLETED":
       return "succeeded";
     case "VOIDED":
