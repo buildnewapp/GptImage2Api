@@ -32,8 +32,9 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { siteConfig } from "@/config/site";
 import type { PartnerSnippet } from "@/lib/partners/partner-snippets";
-import { Pencil, Plus, RefreshCw, Save, Trash2 } from "lucide-react";
+import { Pencil, Plus, RefreshCw, Save, Search, Trash2 } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
@@ -172,11 +173,12 @@ export default function ConfigAdminClient({
                 disabled={isSavePending}
                 className="min-w-0 rounded-lg border"
               >
-                <Table className="min-w-[760px]">
+                <Table className="min-w-[880px]">
                   <TableHeader>
                     <TableRow className="bg-muted/50">
                       <TableHead className="w-16 pl-4">序号</TableHead>
                       <TableHead>key</TableHead>
+                      <TableHead className="w-32 text-center">Google 搜索</TableHead>
                       <TableHead className="min-w-52 text-center">预览</TableHead>
                       <TableHead className="w-28">sort</TableHead>
                       <TableHead className="w-20 text-center">启用</TableHead>
@@ -190,7 +192,7 @@ export default function ConfigAdminClient({
                     {items.length === 0 ? (
                       <TableRow>
                         <TableCell
-                          colSpan={9}
+                          colSpan={10}
                           className="h-32 text-center text-muted-foreground"
                         >
                           暂无友链配置。
@@ -209,6 +211,44 @@ export default function ConfigAdminClient({
                             >
                               {item.key}
                             </span>
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              aria-label={`在 Google 搜索 ${item.key} 中的 ${siteConfig.name}`}
+                              onClick={() => {
+                                const template = document.createElement("template");
+                                template.innerHTML = item.html;
+                                const href = template.content
+                                  .querySelector("a[href]")
+                                  ?.getAttribute("href")
+                                  ?.trim();
+
+                                try {
+                                  const url = new URL(
+                                    href?.startsWith("//") ? `https:${href}` : (href ?? ""),
+                                  );
+                                  if (url.protocol !== "http:" && url.protocol !== "https:") {
+                                    toast.error("友链 HTML 中没有有效的网站链接");
+                                    return;
+                                  }
+                                  const domain = url.hostname.replace(/^www\./, "");
+                                  const query = `site:${domain} intitle:"${siteConfig.name}"`;
+                                  window.open(
+                                    `https://www.google.com/search?q=${encodeURIComponent(query)}`,
+                                    "_blank",
+                                    "noopener,noreferrer",
+                                  );
+                                } catch {
+                                  toast.error("友链 HTML 中没有有效的网站链接");
+                                }
+                              }}
+                            >
+                              <Search className="mr-2 h-4 w-4" />
+                              搜索
+                            </Button>
                           </TableCell>
                           <TableCell className="text-center">
                             <div

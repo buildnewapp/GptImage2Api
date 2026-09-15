@@ -76,6 +76,7 @@ git merge --no-ff --no-commit upstream/main
 git fetch upstream
 git merge --no-ff --no-commit upstream/main
 如果有冲突帮我解决掉，以目录代码为主， upstream为辅助
+然后提交 git + push
 
 # 应用更新：
 ## Sdance AI
