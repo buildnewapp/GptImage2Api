@@ -30,6 +30,16 @@
   "Login": {
     "title": "欢迎回来",
     "description": "你可以通过以下方式登录",
+    "Registration": {
+      "title": "注册或设置密码",
+      "description": "验证邮箱后创建账号。若账号已存在，将用此处填写的密码设置或更新原账号密码。",
+      "emailLabel": "邮箱",
+      "passwordHint": "8–128 位密码",
+      "submit": "验证并登录",
+      "open": "注册 / 忘记密码？",
+      "backToLogin": "返回密码登录",
+      "passwordSaved": "密码已保存，请使用新密码登录。"
+    },
     "Toast": {
       "rateLimitTitle": "请求过于频繁",
       "rateLimitDescription": "请稍等片刻后重试。",

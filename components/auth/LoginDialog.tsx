@@ -20,7 +20,7 @@ export default function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[400px]">
+      <DialogContent className="sm:max-w-[400px] max-h-[90dvh] overflow-y-auto">
         <DialogHeader className="sm:text-center">
           <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>{t("description")}</DialogDescription>

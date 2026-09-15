@@ -30,6 +30,16 @@
   "Login": {
     "title": "Welcome back",
     "description": "Sign in with the following methods",
+    "Registration": {
+      "title": "Register or set a password",
+      "description": "Verify your email to create an account. If you already have an account, the password entered here will replace its current password.",
+      "emailLabel": "Email",
+      "passwordHint": "8–128 characters",
+      "submit": "Verify and Sign In",
+      "open": "Register / Forgot password?",
+      "backToLogin": "Back to password sign-in",
+      "passwordSaved": "Your password has been saved. Please sign in with it."
+    },
     "Toast": {
       "rateLimitTitle": "Too many requests",
       "rateLimitDescription": "Please wait a moment before trying again.",

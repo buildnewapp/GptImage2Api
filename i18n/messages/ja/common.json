@@ -30,6 +30,16 @@
   "Login": {
     "title": "おかえりなさい",
     "description": "以下の方法でログインしていただけます",
+    "Registration": {
+      "title": "登録・パスワード設定",
+      "description": "メール認証後にアカウントを作成します。既存のアカウントは、ここに入力したパスワードに更新されます。",
+      "emailLabel": "メールアドレス",
+      "passwordHint": "8～128文字",
+      "submit": "認証してログイン",
+      "open": "登録 / パスワードをお忘れですか？",
+      "backToLogin": "パスワードでログインに戻る",
+      "passwordSaved": "パスワードを保存しました。新しいパスワードでログインしてください。"
+    },
     "Toast": {
       "rateLimitTitle": "リクエストが多すぎます",
       "rateLimitDescription": "しばらくしてから再度お試しください。",

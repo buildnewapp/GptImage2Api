@@ -91,7 +91,7 @@ const getTypeMessage = (type: OTPCodeEmailProps["type"]) => {
     case "email-verification":
       return "Use this code to verify your email address";
     case "forget-password":
-      return "Use this code to reset your password";
+      return "Use this code to verify your email and set or reset your password.";
     case "change-email":
       return "Use this code to change your email address.";
     default:
