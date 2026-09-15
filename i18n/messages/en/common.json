@@ -165,6 +165,11 @@
         "icon": "Mail"
       },
       {
+        "name": "Email records",
+        "href": "/dashboard/email-logs",
+        "icon": "MailSearch"
+      },
+      {
         "name": "API Keys",
         "href": "/dashboard/apikeys-admin",
         "icon": "Key"

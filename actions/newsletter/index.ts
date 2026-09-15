@@ -1,5 +1,6 @@
 'use server';
-import { removeUserFromContacts, sendEmail } from '@/actions/resend';
+import { removeUserFromContacts } from '@/actions/resend';
+import { sendEmail } from '@/lib/email/send';
 import { siteConfig } from '@/config/site';
 import { NewsletterWelcomeEmail } from '@/emails/newsletter-welcome';
 import { DEFAULT_LOCALE } from '@/i18n/routing';
@@ -40,11 +41,13 @@ export async function subscribeToNewsletter(email: string, locale = DEFAULT_LOCA
     await sendEmail({
       email: normalizedEmail,
       subject,
+      templateKey: "newsletter-welcome",
       react: NewsletterWelcomeEmail,
       reactProps: {
         email: normalizedEmail,
         unsubscribeLink: unsubscribeLink
       },
+      hasUnsubscribeLink: true,
       isAddContacts: true
     })
 

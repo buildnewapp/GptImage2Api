@@ -25,6 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Link } from "@/i18n/routing";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
@@ -143,6 +144,7 @@ export function SystemEmailsForm() {
       <div className="space-y-2">
         <h1 className="text-2xl font-semibold">{t("title")}</h1>
         <p className="text-muted-foreground max-w-3xl">{t("description")}</p>
+        <Button variant="outline" asChild><Link href="/dashboard/email-logs">{t("actions.viewLogs")}</Link></Button>
       </div>
 
       <Card>

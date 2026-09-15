@@ -1,4 +1,4 @@
-import { sendEmail } from "@/actions/resend";
+import { sendEmail } from "@/lib/email/send";
 import { grantConfiguredSignupBonusCredits } from "@/lib/credits/signup-bonus";
 import { siteConfig } from "@/config/site";
 import MagicLinkEmail from "@/emails/magic-link-email";
@@ -187,6 +187,7 @@ function createAuthConfig(
                 await sendEmail({
                   email: createdUser.email,
                   subject: `Welcome to ${siteConfig.name}!`,
+                  templateKey: "user-welcome",
                   react: UserWelcomeEmail,
                   reactProps: {
                     name: createdUser.name,
@@ -194,6 +195,7 @@ function createAuthConfig(
                     unsubscribeLink,
                   },
                   isAddContacts: true,
+                  hasUnsubscribeLink: true,
                 });
                 console.log(`Welcome email sent to ${createdUser.email}`);
               } catch (error) {
@@ -242,6 +244,7 @@ function createAuthConfig(
           await sendEmail({
             email,
             subject: `Sign in to ${siteConfig.name}`,
+            templateKey: "magic-link-email",
             react: MagicLinkEmail,
             reactProps: { url },
           });
@@ -255,6 +258,7 @@ function createAuthConfig(
           await sendEmail({
             email,
             subject: `Your ${siteConfig.name} verification code: ${otp}`,
+            templateKey: "otp-code-email",
             react: OTPCodeEmail,
             reactProps: { otp, type },
           });

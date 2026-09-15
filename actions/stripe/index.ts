@@ -5,7 +5,7 @@ import {
   getPricingPlanByProviderId,
   isActivePricingPlan,
 } from '@/lib/pricing';
-import { sendEmail } from '@/actions/resend';
+import { sendEmail } from '@/lib/email/send';
 import { siteConfig } from '@/config/site';
 import { CreditUpgradeFailedEmail } from '@/emails/credit-upgrade-failed';
 import { FraudRefundUserEmail } from '@/emails/fraud-refund-user';
@@ -411,13 +411,15 @@ export async function sendCreditUpgradeFailedEmail({
     await sendEmail({
       email: adminEmail,
       subject,
-      react: CreditUpgradeFailedEmail({
+      templateKey: "credit-upgrade-failed",
+      react: CreditUpgradeFailedEmail,
+      reactProps: {
         userId,
         orderId,
         planId: planId,
         errorMessage,
         errorStack,
-      }),
+      },
     });
     console.log(`Sent credit upgrade failure email to ${adminEmail} for order ${orderId}`);
   } catch (emailError) {
@@ -440,15 +442,6 @@ export async function sendInvoicePaymentFailedEmail({
   invoiceId: string
 }): Promise<void> {
   const db = getDb();
-
-  if (!process.env.RESEND_API_KEY) {
-    console.error('Resend API Key is not configured. Skipping email send.');
-    return;
-  }
-  if (!process.env.ADMIN_EMAIL) {
-    console.error('FROM_EMAIL environment variable is not set. Cannot send email.');
-    return;
-  }
 
   if (!stripe) {
     console.error('Stripe is not initialized. Please check your environment variables.');
@@ -524,6 +517,7 @@ export async function sendInvoicePaymentFailedEmail({
         await sendEmail({
           email: userEmail,
           subject,
+          templateKey: "invoice-payment-failed",
           react: InvoicePaymentFailedEmail,
           reactProps: emailProps
         })
@@ -564,11 +558,6 @@ export async function sendFraudWarningAdminEmail({
     return;
   }
 
-  if (!process.env.RESEND_API_KEY) {
-    console.error('Resend API Key is not configured. Skipping email send.');
-    return;
-  }
-
   try {
     const dashboardUrl = `https://dashboard.stripe.com/payments/${chargeId}`;
     const subject = `🚨 Fraud Warning Alert - Charge ${chargeId}`;
@@ -588,6 +577,7 @@ export async function sendFraudWarningAdminEmail({
     await sendEmail({
       email: adminEmail,
       subject,
+      templateKey: "fraud-warning-admin",
       react: FraudWarningAdminEmail,
       reactProps: emailProps,
     });
@@ -609,11 +599,6 @@ export async function sendFraudRefundUserEmail({
   refundAmount: number;
 }): Promise<void> {
   const db = getDb();
-
-  if (!process.env.RESEND_API_KEY) {
-    console.error('Resend API Key is not configured. Skipping email send.');
-    return;
-  }
 
   if (!stripe) {
     console.error('Stripe is not initialized. Please check your environment variables.');
@@ -684,6 +669,7 @@ export async function sendFraudRefundUserEmail({
     await sendEmail({
       email: customerEmail,
       subject,
+      templateKey: "fraud-refund-user",
       react: FraudRefundUserEmail,
       reactProps: emailProps,
     });
