@@ -153,3 +153,4 @@ reports
 next-env.d.ts
 public/cdn
 /git-merge-logs/
+/git-merge.md
