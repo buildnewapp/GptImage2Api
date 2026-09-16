@@ -782,6 +782,18 @@
     }
   },
   "AIVideoStudio": {
+    "payment": {
+      "title": "Unlock fast-track generation",
+      "dailyLimit": "Free users get one fast-track generation per day. You have used today’s free generation. Purchase any paid plan to unlock fast-track access and keep creating.",
+      "creditLimit": "Free users get one fast-track generation per day, using up to 100 credits. This request needs {credits} credits. Purchase any paid plan to remove this limit and unlock fast-track access.",
+      "insufficientCredits": "This request needs {credits} credits, but your balance is too low. Choose a plan to add credits and keep creating.",
+      "membershipRequired": "This model requires {level} membership or higher. Choose an eligible plan to keep creating.",
+      "loading": "Loading plans…",
+      "loadFailed": "Available plans could not be loaded. Please visit the pricing page.",
+      "viewPricing": "View plans",
+      "countdownLabel": "Estimated queue time",
+      "queueTitle": "In queue"
+    },
     "form": {
       "imageToVideo": "Image to Video",
       "textToVideo": "Text to Video",

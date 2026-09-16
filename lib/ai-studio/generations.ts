@@ -2,6 +2,7 @@ import { getDb } from "@/lib/db";
 import {
   aiStudioGenerations,
   creditLogs,
+  orders,
   subscriptionCreditBuckets,
   usage,
 } from "@/lib/db/schema";
@@ -23,7 +24,13 @@ import {
   desc,
   eq,
   gt,
+  gte,
+  inArray,
+  isNotNull,
   isNull,
+  lt,
+  ne,
+  or,
   sql,
 } from "drizzle-orm";
 
@@ -93,6 +100,67 @@ export async function reserveAiStudioGeneration(input: ReserveInput) {
   }
 
   const generation = await getDb().transaction(async (tx) => {
+    // Serialize reservations even when the user's usage row does not exist yet.
+    await tx.execute(
+      sql`select pg_advisory_xact_lock(73122, hashtext(${input.userId}))`,
+    );
+    const reservedAt = new Date(Date.now());
+
+    const [paidOrder] = await tx
+      .select({ id: orders.id })
+      .from(orders)
+      .where(
+        and(
+          eq(orders.userId, input.userId),
+          gt(orders.amountTotal, "0"),
+          ne(orders.orderType, "refund"),
+          or(
+            isNotNull(orders.paidAt),
+            inArray(orders.status, ["succeeded", "active", "refunded", "partially_refunded"]),
+          ),
+        ),
+      )
+      .limit(1);
+
+    if (!paidOrder) {
+      if (reservedCredits > 100) {
+        throw Object.assign(
+          new Error("Unpaid accounts can use at most 100 credits per generation."),
+          {
+            status: 403,
+            code: "AI_STUDIO_FREE_CREDIT_LIMIT",
+            requiredCredits: reservedCredits,
+          },
+        );
+      }
+
+      // UTC calendar day. Failed jobs release the slot; pending jobs occupy it.
+      const dayMs = 24 * 60 * 60 * 1000;
+      const dayStart = new Date(Math.floor(reservedAt.getTime() / dayMs) * dayMs);
+      const [dailyGeneration] = await tx
+        .select({ id: aiStudioGenerations.id })
+        .from(aiStudioGenerations)
+        .where(
+          and(
+            eq(aiStudioGenerations.userId, input.userId),
+            gte(aiStudioGenerations.createdAt, dayStart),
+            lt(aiStudioGenerations.createdAt, new Date(dayStart.getTime() + dayMs)),
+            ne(aiStudioGenerations.status, "failed"),
+          ),
+        )
+        .limit(1);
+
+      if (dailyGeneration) {
+        throw Object.assign(
+          new Error("Unpaid accounts can generate once per day. Purchase a plan to continue today."),
+          {
+            status: 403,
+            code: "AI_STUDIO_DAILY_LIMIT",
+          },
+        );
+      }
+    }
+
     let nextOneTime = 0;
     let nextSubscription = 0;
     let reservedFromSubscription = 0;
@@ -144,7 +212,11 @@ export async function reserveAiStudioGeneration(input: ReserveInput) {
       if (totalCredits < reservedCredits) {
         throw Object.assign(
           new Error(`Insufficient credits. This request requires ${reservedCredits} credits.`),
-          { status: 402 },
+          {
+            status: 402,
+            code: "AI_STUDIO_INSUFFICIENT_CREDITS",
+            requiredCredits: reservedCredits,
+          },
         );
       }
 
@@ -227,6 +299,7 @@ export async function reserveAiStudioGeneration(input: ReserveInput) {
       .values({
         id: generationId,
         userId: input.userId,
+        createdAt: reservedAt,
         catalogModelId: input.modelId,
         isPublic: input.isPublic,
         category: input.detail.category,

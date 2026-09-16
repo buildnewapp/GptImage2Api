@@ -321,7 +321,7 @@ async function assertChatCreditsAvailable(userId: string) {
   if (totalCredits <= 0) {
     throw Object.assign(
       new Error("Insufficient credits. Chat requires available credits greater than 0."),
-      { status: 402 },
+      { status: 402, code: "AI_STUDIO_INSUFFICIENT_CREDITS", requiredCredits: 1 },
     );
   }
 }
@@ -371,7 +371,9 @@ async function settleChatBillingCredits(input: {
     const totalCredits =
       oneTimeBalance + subBalance;
     if (totalCredits < chargedCredits) {
-      throw Object.assign(new Error("Insufficient credits."), { status: 402 });
+      throw Object.assign(new Error("Insufficient credits."), {
+        status: 402, code: "AI_STUDIO_INSUFFICIENT_CREDITS", requiredCredits: chargedCredits,
+      });
     }
 
     const chargedFromSubscription = Math.min(
@@ -693,6 +695,10 @@ export async function POST(request: Request) {
     return apiResponse.error(
       error?.message || "Failed to execute chat request",
       status,
+      error?.code === "AI_STUDIO_INSUFFICIENT_CREDITS" ? {
+        code: error.code,
+        requiredCredits: error.requiredCredits,
+      } : undefined,
     );
   }
 }

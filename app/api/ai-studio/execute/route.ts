@@ -23,6 +23,7 @@ import {
   loadAiStudioPolicyConfig,
 } from "@/lib/ai-studio/policy";
 import { apiResponse } from "@/lib/api-response";
+import { isAiStudioPaymentError } from "@/lib/ai-studio/payment-error";
 import { getRequestUser } from "@/lib/auth/request-user";
 import { getDb } from "@/lib/db";
 import { orders as ordersSchema } from "@/lib/db/schema";
@@ -97,6 +98,7 @@ export async function POST(request: Request) {
         return apiResponse.error(
           `This model requires ${requiredLevelLabel} membership.`,
           403,
+          { code: "AI_STUDIO_MEMBERSHIP_REQUIRED", requiredLevel: requiredLevelLabel },
         );
       }
     }
@@ -167,6 +169,11 @@ export async function POST(request: Request) {
     return apiResponse.error(
       error?.message || "Failed to execute AI Studio request",
       status,
+      isAiStudioPaymentError(error) ? {
+        code: error.code,
+        requiredCredits: error.requiredCredits,
+        requiredLevel: error.requiredLevel,
+      } : undefined,
     );
   }
 }

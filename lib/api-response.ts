@@ -13,17 +13,32 @@ const createResponse = <T>(data: ApiResponse<T>, status: number) => {
 
 export const apiResponse = {
   success: <T>(data: T, status = 200) => {
-    return createResponse<T>({
-      success: true,
-      data,
-    }, status);
+    return createResponse<T>(
+      {
+        success: true,
+        data,
+      },
+      status,
+    );
   },
 
-  error: (message: string, status = 400) => {
-    return createResponse({
-      success: false,
-      error: message,
-    }, status);
+  error: (
+    message: string,
+    status = 400,
+    details?: {
+      code?: string;
+      requiredCredits?: number;
+      requiredLevel?: string;
+    },
+  ) => {
+    return createResponse(
+      {
+        success: false,
+        error: message,
+        ...details,
+      },
+      status,
+    );
   },
 
   serverError: (message = "Internal Server Error") => {
@@ -49,4 +64,4 @@ export const apiResponse = {
   conflict: (message = "Conflict") => {
     return apiResponse.error(message, 409);
   },
-}; 
+};

@@ -1,5 +1,7 @@
 "use client";
 
+import dynamic from "next/dynamic";
+import { isAiStudioPaymentError, type AiStudioPaymentError } from "@/lib/ai-studio/payment-error";
 import AIVideoMiniStudioTaskHistory from "@/components/ai/AIVideoMiniStudioTaskHistory";
 import {
   Select,
@@ -689,11 +691,13 @@ interface AIVideoMiniStudioProps {
 }
 
 const LoginDialog = lazy(() => import("@/components/auth/LoginDialog"));
+const AiStudioPaymentDialog = dynamic(() => import("@/components/ai-studio/AiStudioPaymentDialog"));
 
 export default function AIVideoMiniStudio({
   initialModelId = null,
 }: AIVideoMiniStudioProps) {
   const t = useTranslations("AIVideoStudio");
+  const [paymentError, setPaymentError] = useState<AiStudioPaymentError | null>(null);
   const router = useRouter();
   const defaultSelection = useMemo(
     () => getDefaultSelection(initialModelId),
@@ -1203,7 +1207,7 @@ export default function AIVideoMiniStudio({
     }
 
     if (submitState.reason === "insufficient-credits") {
-      toast.error(t("form.insufficientCredits"));
+      setPaymentError({ code: "AI_STUDIO_INSUFFICIENT_CREDITS", requiredCredits: estimatedCredits });
       return;
     }
 
@@ -1242,6 +1246,12 @@ export default function AIVideoMiniStudio({
       });
       const json = (await response.json()) as ExecuteResponse;
       if (!response.ok || !json.success) {
+        if (isAiStudioPaymentError(json)) {
+          setPaymentError(json);
+          setGenerationTasks((current) => current.filter((task) => task.localId !== localTask.localId));
+          setActiveTaskLocalId(null);
+          return;
+        }
         throw new Error(json.error || "Execution failed");
       }
 
@@ -1546,6 +1556,12 @@ export default function AIVideoMiniStudio({
         }}
       />
 
+      {paymentError && (
+        <AiStudioPaymentDialog
+          error={paymentError}
+          onClose={() => setPaymentError(null)}
+        />
+      )}
       {isLoginDialogOpen ? (
         <Suspense fallback={null}>
           <LoginDialog open={isLoginDialogOpen} onOpenChange={setIsLoginDialogOpen} />
