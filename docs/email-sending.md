@@ -2,7 +2,7 @@
 
 ## 配置
 
-使用 `EMAIL_PROVIDER=resend` 或 `EMAIL_PROVIDER=cloudflare` 选择一个通道。未设置时默认 Resend，兼容已有部署；不会在发送失败时切换通道或自动重发。
+`EMAIL_PROVIDER` 未设置或为空时关闭邮件发送：不调用邮件通道，也不创建 `email_logs` 记录。使用 `EMAIL_PROVIDER=resend` 或 `EMAIL_PROVIDER=cloudflare` 显式启用一个通道；不会在发送失败时切换通道或自动重发。
 
 ```env
 EMAIL_PROVIDER=resend
@@ -22,6 +22,8 @@ EMAIL_FROM_NAME=Example
 ```
 
 `EMAIL_FROM` / `EMAIL_FROM_NAME` 为空时，分别回退到 `ADMIN_EMAIL` / `ADMIN_NAME`。`ADMIN_EMAIL` 同时仍是管理员告警的收件邮箱。邮箱登录开关沿用 `NEXT_PUBLIC_EMAIL_LOGIN`；这是前端配置，部署时需重新构建镜像使其生效。
+
+只有空的 `EMAIL_PROVIDER` 会静默跳过。显式选择通道后缺少对应密钥属于配置错误，发送尝试会写入失败记录并向调用方报错，便于发现生产配置问题。
 
 Cloudflare 通过 REST API 发送，可用于 Docker 部署。需要将发件域名接入 Cloudflare Email Service，并给 API Token 授予 `Email Sending: Edit`。邮件类型应符合所选通道的使用范围。
 

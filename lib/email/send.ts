@@ -5,6 +5,7 @@ import { getDb } from "@/lib/db";
 import { emailLogs } from "@/lib/db/schema";
 import {
   deliverEmail,
+  getConfiguredEmailProvider,
   getEmailProviderConfig,
   type EmailDeliveryResult,
   type EmailPayload,
@@ -29,11 +30,19 @@ interface SendEmailProps<Props extends object> {
   attachments?: EmailPayload["attachments"];
 }
 
+export type SendEmailResult =
+  | { status: "disabled"; logId: null; providerMessageId: null }
+  | { status: "sent"; logId: string; providerMessageId: string | null };
+
 export async function sendEmail<Props extends object>(
   input: SendEmailProps<Props>,
-): Promise<{ logId: string; providerMessageId: string | null }> {
+): Promise<SendEmailResult> {
+  const provider = getConfiguredEmailProvider();
+  if (!provider) {
+    return { status: "disabled", logId: null, providerMessageId: null };
+  }
+
   const db = getDb();
-  const provider = process.env.EMAIL_PROVIDER?.trim() || "resend";
   const fromEmail =
     input.fromEmail?.trim() ||
     process.env.EMAIL_FROM?.trim() ||
@@ -77,6 +86,7 @@ export async function sendEmail<Props extends object>(
       .limit(1);
     if (existing?.status === "sent")
       return {
+        status: "sent",
         logId: existing.id,
         providerMessageId: existing.providerMessageId,
       };
@@ -161,5 +171,9 @@ export async function sendEmail<Props extends object>(
       console.error(`Failed to sync Resend contact for email record ${log.id}`);
     }
   }
-  return { logId: log.id, providerMessageId: result.providerMessageId };
+  return {
+    status: "sent",
+    logId: log.id,
+    providerMessageId: result.providerMessageId,
+  };
 }

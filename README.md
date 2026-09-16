@@ -33,6 +33,7 @@ git merge --no-ff --no-commit upstream/main
 ## step2-2
 /Users/syx/WebstormProjects/Submify/Submify2-web
 /Users/syx/WebstormProjects/autogeo/autogeo-v2
+/Users/syx/WebstormProjects/aimodels/gptimage25-web
 /Users/syx/WebstormProjects/GptImage2Api/GptImage4
 /Users/syx/WebstormProjects/GptImage2Api/GptImage5
 /Users/syx/WebstormProjects/GptImage2Api/GptImage6

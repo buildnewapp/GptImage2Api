@@ -1,5 +1,7 @@
 {
   "title": "Overview",
+  "adminQuickLinks": "Management shortcuts",
+  "adminQuickLinksDescription": "Open commonly used system and content management tools.",
   "users": "Users",
   "oneTimePayments": "One-Time Payments",
   "monthlySubscriptions": "Monthly Subscriptions",

@@ -12,10 +12,20 @@ export interface EmailProviderConfig {
   accountId?: string;
 }
 
+export function getConfiguredEmailProvider(
+  env: Record<string, string | undefined> = process.env,
+): EmailProvider | null {
+  const provider = env.EMAIL_PROVIDER?.trim();
+  if (!provider) return null;
+  if (provider === "resend" || provider === "cloudflare") return provider;
+  throw new Error("EMAIL_PROVIDER must be resend or cloudflare.");
+}
+
 export function getEmailProviderConfig(
   env: Record<string, string | undefined> = process.env,
 ): EmailProviderConfig {
-  const provider = env.EMAIL_PROVIDER?.trim() || "resend";
+  const provider = getConfiguredEmailProvider(env);
+  if (!provider) throw new Error("EMAIL_PROVIDER is not configured.");
   if (provider === "resend") {
     const apiKey = env.RESEND_API_KEY?.trim();
     if (!apiKey) throw new Error("RESEND_API_KEY is not configured.");

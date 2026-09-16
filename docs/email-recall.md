@@ -74,7 +74,7 @@ pnpm emails:generate-pdf
 新增迁移 `0049_founder_recall.sql`：用户增加关怀计时、暂停字段，订单增加结账开始和支付确认时间。既有已验证用户回填原注册时间，防止更新个人资料时被当作新用户。不需要 seed。
 
 1. 先检查目标数据库的待执行迁移，再执行 `pnpm db:migrate`，部署新代码。
-2. 设置 `RECALL_ENABLED=true`、既有 `CRON_PWD`，按需填写优惠与创始人配置。
+2. 显式配置 `EMAIL_PROVIDER` 及对应密钥，再设置 `RECALL_ENABLED=true`、既有 `CRON_PWD`，按需填写优惠与创始人配置。`EMAIL_PROVIDER` 为空时所有邮件调用都会静默跳过且不写邮件记录。
 3. 调用一次实际接口建立启用时间，然后每 5 分钟调用一次。由现有服务器/外部定时工具调度，不使用 Cloudflare Worker 定时器。
 
 ```sh

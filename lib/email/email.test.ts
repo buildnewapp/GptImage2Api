@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   deliverEmail,
+  getConfiguredEmailProvider,
   getEmailProviderConfig,
   type EmailPayload,
 } from "./providers";
@@ -25,9 +26,18 @@ const resend = { provider: "resend" as const, apiKey: "test-resend" };
 const response = (body: unknown, status = 200) =>
   (async () => new Response(JSON.stringify(body), { status })) as typeof fetch;
 
-test("provider configuration selects only the explicit provider and retains Resend defaults", () => {
+test("provider configuration is disabled by default and selects only an explicit provider", () => {
+  assert.equal(getConfiguredEmailProvider({}), null);
+  assert.equal(getConfiguredEmailProvider({ EMAIL_PROVIDER: "   " }), null);
+  assert.throws(
+    () => getEmailProviderConfig({ RESEND_API_KEY: "existing" }),
+    /EMAIL_PROVIDER is not configured/,
+  );
   assert.equal(
-    getEmailProviderConfig({ RESEND_API_KEY: "existing" }).provider,
+    getEmailProviderConfig({
+      EMAIL_PROVIDER: "resend",
+      RESEND_API_KEY: "existing",
+    }).provider,
     "resend",
   );
   assert.equal(

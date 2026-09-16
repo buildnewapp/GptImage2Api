@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/sidebar";
 import { referralConfig } from "@/config/referral";
 import { Link as I18nLink, usePathname } from "@/i18n/routing";
+import { OVERVIEW_ADMIN_MENU_HREFS } from "@/lib/admin/navigation";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 
@@ -46,6 +47,9 @@ export function DashboardSidebar({
 
   const userMenus: Menu[] = t.raw("UserMenus");
   const adminMenus: Menu[] = t.raw("AdminMenus");
+  const visibleAdminMenus = adminMenus.filter(
+    (menu) => !OVERVIEW_ADMIN_MENU_HREFS.some((href) => href === menu.href),
+  );
   const filteredUserMenus = showMemberSubscription
     ? userMenus
     : userMenus.filter((menu) => menu.href !== "/dashboard/subscription");
@@ -113,7 +117,7 @@ export function DashboardSidebar({
               <SidebarGroupLabel>Admin Menus</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {adminMenus.map((menu) => (
+                  {visibleAdminMenus.map((menu) => (
                     <SidebarMenuItem key={menu.href}>
                       <SidebarMenuButton asChild isActive={isActive(menu.href)}>
                         <I18nLink

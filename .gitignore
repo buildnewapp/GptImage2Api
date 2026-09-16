@@ -152,3 +152,4 @@ docs/prompts
 reports
 next-env.d.ts
 public/cdn
+/git-merge-logs/
