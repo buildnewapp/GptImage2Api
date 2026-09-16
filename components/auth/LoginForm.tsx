@@ -33,9 +33,7 @@ export default function LoginForm({
   const passwordInputRef = useRef<HTMLInputElement>(null);
   const turnstileRef = useRef<TurnstileInstance>(null);
   const showGithub = !!process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
-  const showEmail =
-    process.env.NEXT_PUBLIC_EMAIL_LOGIN === "true" ||
-    process.env.NODE_ENV === "development";
+  const showEmail = process.env.NEXT_PUBLIC_EMAIL_LOGIN === "true";
   const captchaEnabled = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
   const [mode, setMode] = useState<"login" | "register">("login");

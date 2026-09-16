@@ -36,6 +36,7 @@ import { cache } from "react";
 import { and, eq, isNull } from "drizzle-orm";
 
 const SIGNUP_BONUS_FINGERPRINT_COOKIE_NAME = "signup_bonus_fingerprint";
+const USER_WELCOME_EMAIL_ENABLED = false;
 
 function hashSignupBonusIdentifier(
   kind: "ip" | "fingerprint",
@@ -69,6 +70,8 @@ async function sendWelcomeEmail(createdUser: {
   email: string;
   name?: string | null;
 }) {
+  if (!USER_WELCOME_EMAIL_ENABLED) return;
+
   if (createdUser.email) {
     try {
       const unsubscribeToken = Buffer.from(createdUser.email).toString(
@@ -256,9 +259,7 @@ function createAuthConfig(
           ]
         : []),
       emailPassword({
-        enabled:
-          process.env.NEXT_PUBLIC_EMAIL_LOGIN === "true" ||
-          process.env.NODE_ENV === "development",
+        enabled: process.env.NEXT_PUBLIC_EMAIL_LOGIN === "true",
         onPasswordReset: async ({ user }) => {
           if (!user.emailVerified) await sendWelcomeEmail(user);
         },
