@@ -37,7 +37,7 @@ RECALL_PURCHASE_BONUS_PERCENT=20
 RECALL_PURCHASE_BONUS_VALID_HOURS=72
 
 # 留空默认项目根目录的 org_guide.md，也支持相对/绝对路径
-pdf_md_path=
+PDF_MD_PATH=
 ```
 
 两个奖励节点不依赖支付渠道优惠码。用户成功收到奖励邮件，并在配置的有效期内完成首次实付后，系统按套餐本次基础积分向下取整计算奖励；例如基础积分 1000、比例 20%，额外发放 200。Stripe、Creem、PayPal、Subotiz 和 NOWPayments 都复用统一积分发放入口。复购、续费、零金额订单不奖励，Webhook 重放不重复发放；订阅奖励进入首个周期积分桶并随该周期到期，全额退款会回收订单剩余积分（包含奖励）。发件人和 Reply-To 都使用创始人邮箱。
@@ -49,7 +49,7 @@ pdf_md_path=
 ## PDF：提前生成，随子项目部署
 
 ```env
-pdf_md_path=/Users/syx/WebstormProjects/seo-submit/tikdek.com/org_guide.md
+PDF_MD_PATH=/Users/syx/WebstormProjects/seo-submit/tikdek.com/org_guide.md
 ```
 
 在子项目根目录执行：

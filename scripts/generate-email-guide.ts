@@ -13,7 +13,7 @@ async function main() {
   loadEnvConfig(root, true);
   const source = resolve(
     root,
-    process.env.pdf_md_path?.trim() || "org_guide.md",
+    process.env.PDF_MD_PATH?.trim() || "org_guide.md",
   );
   let markdown: string;
   try {
