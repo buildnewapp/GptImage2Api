@@ -28,7 +28,8 @@
     "ai-studio:sync": "tsx scripts/ai-studio/sync-catalog.ts",
     "ai-studio:build": "tsx scripts/ai-studio/build-runtime-catalog.ts",
     "ai-studio:validate": "tsx scripts/ai-studio/validate-runtime-catalog.ts",
-    "blog:build-data": "tsx scripts/build-blog-data.ts"
+    "blog:build-data": "tsx scripts/build-blog-data.ts",
+    "emails:generate-pdf": "tsx scripts/generate-email-guide.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.45",
@@ -181,12 +182,15 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.16",
     "@types/node": "^20",
+    "@types/pdfkit": "^0.17.6",
     "@types/pg": "^8.15.5",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "drizzle-kit": "^0.31.4",
     "eslint": "^9",
     "eslint-config-next": "16.0.7",
+    "marked": "^18.0.13",
+    "pdfkit": "^0.20.2",
     "postcss": "^8.4.38",
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.16",

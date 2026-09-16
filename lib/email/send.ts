@@ -7,6 +7,7 @@ import {
   deliverEmail,
   getEmailProviderConfig,
   type EmailDeliveryResult,
+  type EmailPayload,
 } from "@/lib/email/providers";
 import { redactEmailLog } from "@/lib/email/redact";
 import { eq } from "drizzle-orm";
@@ -24,6 +25,8 @@ interface SendEmailProps<Props extends object> {
   hasUnsubscribeLink?: boolean;
   jobId?: string;
   idempotencyKey?: string;
+  replyTo?: string;
+  attachments?: EmailPayload["attachments"];
 }
 
 export async function sendEmail<Props extends object>(
@@ -89,7 +92,7 @@ export async function sendEmail<Props extends object>(
       throw new Error(
         "Recipient or sender email is not configured. Set EMAIL_FROM or ADMIN_EMAIL.",
       );
-    if (/[\r\n]/.test(fromEmail + fromName + input.email))
+    if (/[\r\n]/.test(fromEmail + fromName + input.email + (input.replyTo ?? "")))
       throw new Error("Invalid email address or sender name.");
     const element = createElement(input.react, input.reactProps);
     const html = await render(element);
@@ -110,6 +113,8 @@ export async function sendEmail<Props extends object>(
       text,
       headers,
       idempotencyKey: input.idempotencyKey,
+      replyTo: input.replyTo,
+      attachments: input.attachments,
     });
   } catch (error) {
     result = {

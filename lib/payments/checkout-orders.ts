@@ -53,3 +53,11 @@ export async function markCheckoutOrderFailed(id: string, error: unknown) {
     eq(orders.status, 'pending'),
   ));
 }
+
+export async function markCheckoutOrderStarted(id: string, sessionId: string, url: string | undefined) {
+  if (!url) throw new Error('Checkout URL is missing');
+  await getDb().update(orders).set({
+    checkoutStartedAt: sql`coalesce(${orders.checkoutStartedAt}, now())`,
+    metadata: sql`coalesce(${orders.metadata}, '{}'::jsonb) || ${JSON.stringify({ checkoutSessionId: sessionId })}::jsonb`,
+  }).where(eq(orders.id, id));
+}

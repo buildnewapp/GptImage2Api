@@ -228,6 +228,8 @@ export async function getUsers({
         id: userSchema.id,
         email: userSchema.email,
         emailVerified: userSchema.emailVerified,
+        recallRegisteredAt: userSchema.recallRegisteredAt,
+        recallPaused: userSchema.recallPaused,
         name: userSchema.name,
         image: userSchema.image,
         role: userSchema.role,
@@ -305,6 +307,8 @@ export async function getUserDetails({
         id: userSchema.id,
         email: userSchema.email,
         emailVerified: userSchema.emailVerified,
+        recallRegisteredAt: userSchema.recallRegisteredAt,
+        recallPaused: userSchema.recallPaused,
         name: userSchema.name,
         image: userSchema.image,
         role: userSchema.role,
@@ -400,6 +404,8 @@ export async function getUserDetails({
           orderType: ordersSchema.orderType,
           status: ordersSchema.status,
           stripePaymentIntentId: ordersSchema.stripePaymentIntentId,
+          checkoutStartedAt: ordersSchema.checkoutStartedAt,
+          paidAt: ordersSchema.paidAt,
           stripeInvoiceId: ordersSchema.stripeInvoiceId,
           stripeChargeId: ordersSchema.stripeChargeId,
           subscriptionId: ordersSchema.subscriptionId,
@@ -1303,4 +1309,29 @@ export async function grantManualUserBenefitsBatch(
     succeededUserIds,
     failures,
   });
+}
+
+export async function setUserRecallPaused(input: {
+  userId: string;
+  paused: boolean;
+}): Promise<ActionResult<{ paused: boolean }>> {
+  if (!(await isAdmin())) {
+    return actionResponse.forbidden("Admin privileges required.");
+  }
+  const parsed = z.object({
+    userId: z.string().uuid(),
+    paused: z.boolean(),
+  }).safeParse(input);
+  if (!parsed.success) return actionResponse.badRequest("Invalid recall setting.");
+  try {
+    const [updated] = await getDb()
+      .update(userSchema)
+      .set({ recallPaused: parsed.data.paused })
+      .where(eq(userSchema.id, parsed.data.userId))
+      .returning({ paused: userSchema.recallPaused });
+    if (!updated) return actionResponse.notFound("User not found.");
+    return actionResponse.success(updated);
+  } catch (error) {
+    return actionResponse.error(getErrorMessage(error));
+  }
 }

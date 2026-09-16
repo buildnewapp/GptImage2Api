@@ -33,6 +33,7 @@ import {
 import { cookies, headers } from "next/headers";
 import { createHmac } from "node:crypto";
 import { cache } from "react";
+import { and, eq, isNull } from "drizzle-orm";
 
 const SIGNUP_BONUS_FINGERPRINT_COOKIE_NAME = "signup_bonus_fingerprint";
 
@@ -205,7 +206,17 @@ function createAuthConfig(
               }
             }
             if (createdUser.emailVerified) {
+              await databaseInstance.update(user).set({ recallRegisteredAt: new Date() })
+                .where(and(eq(user.id, createdUser.id), isNull(user.recallRegisteredAt), eq(user.isAnonymous, false)));
               await sendWelcomeEmail(createdUser);
+            }
+          },
+        },
+        update: {
+          after: async (updatedUser) => {
+            if (updatedUser.emailVerified) {
+              await databaseInstance.update(user).set({ recallRegisteredAt: new Date() })
+                .where(and(eq(user.id, updatedUser.id), isNull(user.recallRegisteredAt), eq(user.isAnonymous, false)));
             }
           },
         },

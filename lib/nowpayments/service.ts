@@ -216,6 +216,7 @@ export async function createNowpaymentsInvoiceOrder({
           response: invoice,
           sessionId,
         }),
+        checkoutStartedAt: new Date(),
       })
       .where(eq(ordersSchema.id, insertedOrder.id));
 
@@ -389,6 +390,9 @@ async function setNowpaymentsOrderStatus(params: {
 
   if (params.status) {
     updateData.status = params.status;
+    if (params.status === "succeeded" && !order.paidAt) {
+      updateData.paidAt = new Date();
+    }
   }
 
   const [updated] = await db

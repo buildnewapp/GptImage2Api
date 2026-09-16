@@ -23,7 +23,7 @@ EMAIL_FROM_NAME=Example
 
 `EMAIL_FROM` / `EMAIL_FROM_NAME` 为空时，分别回退到 `ADMIN_EMAIL` / `ADMIN_NAME`。`ADMIN_EMAIL` 同时仍是管理员告警的收件邮箱。邮箱登录开关沿用 `NEXT_PUBLIC_EMAIL_LOGIN`；这是前端配置，部署时需重新构建镜像使其生效。
 
-Cloudflare 通过 REST API 发送，可用于 Docker 部署。需要将发件域名接入 Cloudflare Email Service，并给 API Token 授予 `Email Sending: Edit`。Cloudflare 当前仅支持事务邮件；管理员系统通知应使用服务通知内容，营销召回不在本次功能范围内。
+Cloudflare 通过 REST API 发送，可用于 Docker 部署。需要将发件域名接入 Cloudflare Email Service，并给 API Token 授予 `Email Sending: Edit`。邮件类型应符合所选通道的使用范围。
 
 - [Cloudflare 发信配置](https://developers.cloudflare.com/email-service/get-started/send-emails/)
 - [Cloudflare REST API](https://developers.cloudflare.com/email-service/api/send-emails/rest-api/)
@@ -66,4 +66,8 @@ pnpm exec tsx --test lib/email/email.test.ts lib/admin/system-emails.test.ts
 pnpm exec tsc --noEmit --incremental false
 ```
 
-实际通道连通性需使用已验证的发件域名和对应凭据，在测试环境发送一封测试邮件，再检查后台记录及收件箱。本次不包含定时召回、重发按钮或营销任务调度。
+实际通道连通性需使用已验证的发件域名和对应凭据，在测试环境发送一封测试邮件，再检查后台记录及收件箱。
+
+## 创始人关怀邮件
+
+五个自动关怀节点、子项目品牌配置、可选 PDF 附件和定时接口见 [创始人关怀与召回邮件](./email-recall.md)。`sendEmail()` 同时支持 `replyTo` 及 base64 `attachments`，沿用本页的发送记录和幂等机制。

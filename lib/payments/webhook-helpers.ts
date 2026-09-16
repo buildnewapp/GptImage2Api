@@ -75,6 +75,12 @@ export async function createOrderWithIdempotency(
 ): Promise<CreateOrderResult> {
   const db = getDb()
 
+  // Keep the first confirmed payment time separate from checkout creation/update time.
+  // Replayed deliveries return the existing row without moving this timestamp.
+  if (orderData.status === 'succeeded' && orderData.orderType !== 'refund' && Number(orderData.amountTotal) > 0) {
+    orderData = { ...orderData, paidAt: orderData.paidAt ?? new Date() };
+  }
+
   const checkoutOrderId = (orderData.metadata as { checkoutOrderId?: string } | null)
     ?.checkoutOrderId;
   if (checkoutOrderId && orderData.status === 'succeeded') {

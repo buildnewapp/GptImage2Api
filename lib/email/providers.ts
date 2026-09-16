@@ -45,6 +45,8 @@ export interface EmailPayload {
   text: string;
   headers?: Record<string, string>;
   idempotencyKey?: string;
+  replyTo?: string;
+  attachments?: Array<{ filename: string; content: string; contentType: string }>;
 }
 
 /** One request only: an ambiguous response must never cause an automatic resend. */
@@ -72,6 +74,16 @@ export async function deliverEmail(
     html: email.html,
     text: email.text,
     ...(email.headers && { headers: email.headers }),
+    ...(email.replyTo && { reply_to: email.replyTo }),
+    ...(email.attachments?.length && {
+      attachments: email.attachments.map((attachment) => ({
+        filename: attachment.filename,
+        content: attachment.content,
+        ...(isResend
+          ? { content_type: attachment.contentType }
+          : { type: attachment.contentType, disposition: "attachment" }),
+      })),
+    }),
   };
   try {
     const response = await request(endpoint, {

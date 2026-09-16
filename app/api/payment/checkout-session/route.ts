@@ -20,7 +20,7 @@ import {
 import { signPaymentHandoffToken } from '@/lib/payments/handoff';
 import { getPaymentPayUrl, getPaymentRequestHost, isMainPaymentSite } from '@/lib/payments/main-site';
 import { isRecurringPaymentType } from '@/lib/payments/provider-utils';
-import { createPendingCheckoutOrder, markCheckoutOrderFailed } from '@/lib/payments/checkout-orders';
+import { createPendingCheckoutOrder, markCheckoutOrderFailed, markCheckoutOrderStarted } from '@/lib/payments/checkout-orders';
 import { assertRecurringPurchaseIsHigherTier } from '@/lib/payments/subscription-purchase';
 import { createNowpaymentsInvoiceOrder } from '@/lib/nowpayments/service';
 import { createSubotizCheckoutSession } from '@/lib/subotiz/client';
@@ -142,6 +142,7 @@ export async function POST(req: Request) {
         couponCode: getCheckoutCoupon(requestData, plan.stripeCouponId),
         referral: requestData.referral,
       });
+      await markCheckoutOrderStarted(checkoutOrderId, result.sessionId, result.url);
       return apiResponse.success(result);
     }
 
@@ -187,6 +188,7 @@ export async function POST(req: Request) {
         throw new Error('Creem session creation failed (missing session ID)');
       }
 
+      await markCheckoutOrderStarted(checkoutOrderId, sessionPayload.id, sessionPayload.checkout_url);
       return apiResponse.success({
         sessionId: sessionPayload.id,
         url: sessionPayload.checkout_url,
@@ -242,6 +244,7 @@ export async function POST(req: Request) {
           : {}),
       });
 
+      await markCheckoutOrderStarted(checkoutOrderId, checkout.session_id, checkout.session_url);
       return apiResponse.success({
         sessionId: checkout.session_id,
         url: checkout.session_url,
@@ -328,6 +331,7 @@ export async function POST(req: Request) {
           throw new Error('PayPal subscription approval URL not found');
         }
 
+        await markCheckoutOrderStarted(checkoutOrderId, subscription.id, approvalUrl);
         return apiResponse.success({
           sessionId: subscription.id,
           url: approvalUrl,
@@ -372,6 +376,7 @@ export async function POST(req: Request) {
         throw new Error('PayPal order approval URL not found');
       }
 
+      await markCheckoutOrderStarted(checkoutOrderId, order.id, approvalUrl);
       return apiResponse.success({
         sessionId: order.id,
         url: approvalUrl,

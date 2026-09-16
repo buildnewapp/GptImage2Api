@@ -230,3 +230,20 @@ test("magic links and unsubscribe tokens are redacted, ordinary business variabl
   assert.equal(welcome.variables.name, "User");
   assert.doesNotMatch(JSON.stringify(welcome.variables), /unsubscribe-secret/);
 });
+
+test('attachments and reply addresses use each provider wire format', async () => {
+  for (const config of [resend, cloudflare]) {
+    const result = await deliverEmail(config, {
+      ...email, replyTo: 'jame@example.com',
+      attachments: [{ filename: 'guide.pdf', content: 'JVBERi0=', contentType: 'application/pdf' }],
+    }, (async (_url, options) => {
+      const body = JSON.parse(options?.body as string);
+      assert.equal(body.reply_to, 'jame@example.com');
+      assert.deepEqual(body.attachments, [{ filename: 'guide.pdf', content: 'JVBERi0=',
+        ...(config.provider === 'resend' ? { content_type: 'application/pdf' } : { type: 'application/pdf', disposition: 'attachment' }),
+      }]);
+      return new Response(JSON.stringify(config.provider === 'resend' ? { id: 'test' } : { success: true, result: { queued: [email.to] } }));
+    }) as typeof fetch);
+    assert.equal(result.status, 'sent');
+  }
+});

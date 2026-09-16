@@ -60,6 +60,8 @@ export const user = pgTable("user", {
   id: uuid("id").primaryKey().defaultRandom(),
   email: text("email").unique().notNull(),
   emailVerified: boolean("email_verified").default(false).notNull(), // better-auth
+  recallRegisteredAt: timestamp("recall_registered_at", { withTimezone: true }),
+  recallPaused: boolean("recall_paused").default(false).notNull(),
   name: text("name"), // better-auth
   image: text("image"), // better-auth
   role: userRoleEnum("role").default("user").notNull(),
@@ -308,6 +310,8 @@ export const orders = pgTable(
     orderType: text("order_type").notNull(),
     status: text("status").notNull(),
     stripePaymentIntentId: text("stripe_payment_intent_id"),
+    checkoutStartedAt: timestamp("checkout_started_at", { withTimezone: true }),
+    paidAt: timestamp("paid_at", { withTimezone: true }),
     stripeInvoiceId: text("stripe_invoice_id"),
     stripeChargeId: text("stripe_charge_id"),
     subscriptionId: text("subscription_id"),
