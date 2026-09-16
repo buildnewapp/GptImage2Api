@@ -43,6 +43,12 @@ function formatLogType(type: string) {
           Referral Signup Bonus
         </Badge>
       );
+    case "recall_purchase_bonus":
+      return (
+        <Badge variant="default" className="bg-green-500 hover:bg-green-600">
+          Recall Purchase Bonus
+        </Badge>
+      );
     default:
       return <Badge variant="outline">{type}</Badge>;
   }

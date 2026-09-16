@@ -1,10 +1,10 @@
-import { sendEmail } from "@/actions/resend";
+import { sendEmail } from "@/lib/email/send";
 import { grantConfiguredSignupBonusCredits } from "@/lib/credits/signup-bonus";
 import { siteConfig } from "@/config/site";
-import MagicLinkEmail from "@/emails/magic-link-email";
 import OTPCodeEmail from "@/emails/otp-code-email";
 import { UserWelcomeEmail } from "@/emails/user-welcome";
 import { assertAllowedSignupEmail } from "@/lib/auth/email-domain";
+import { emailPassword, isSocialSignup } from "@/lib/auth/email-password";
 import {
   parseSignupBonusFingerprint,
   resolveSignupBonusClientIp,
@@ -27,16 +27,16 @@ import {
   admin,
   anonymous,
   captcha,
-  emailOTP,
   lastLoginMethod,
-  magicLink,
   oneTap,
 } from "better-auth/plugins";
 import { cookies, headers } from "next/headers";
 import { createHmac } from "node:crypto";
 import { cache } from "react";
+import { and, eq, isNull } from "drizzle-orm";
 
 const SIGNUP_BONUS_FINGERPRINT_COOKIE_NAME = "signup_bonus_fingerprint";
+const USER_WELCOME_EMAIL_ENABLED = false;
 
 function hashSignupBonusIdentifier(
   kind: "ip" | "fingerprint",
@@ -64,6 +64,38 @@ function hashSignupBonusIdentifier(
   return createHmac("sha256", secret)
     .update(`${kind}:${normalizedValue}`)
     .digest("hex");
+}
+
+async function sendWelcomeEmail(createdUser: {
+  email: string;
+  name?: string | null;
+}) {
+  if (!USER_WELCOME_EMAIL_ENABLED) return;
+
+  if (createdUser.email) {
+    try {
+      const unsubscribeToken = Buffer.from(createdUser.email).toString(
+        "base64",
+      );
+      const unsubscribeLink = `${process.env.NEXT_PUBLIC_SITE_URL}/unsubscribe/newsletter?token=${unsubscribeToken}`;
+      await sendEmail({
+        email: createdUser.email,
+        subject: `Welcome to ${siteConfig.name}!`,
+        templateKey: "user-welcome",
+        react: UserWelcomeEmail,
+        reactProps: {
+          name: createdUser.name ?? undefined,
+          email: createdUser.email,
+          unsubscribeLink,
+        },
+        isAddContacts: true,
+        hasUnsubscribeLink: true,
+      });
+      console.log(`Welcome email sent to ${createdUser.email}`);
+    } catch (error) {
+      console.error("Failed to send welcome email:", error);
+    }
+  }
 }
 
 /**
@@ -95,9 +127,10 @@ function createAuthConfig(
       max: 100,
       customRules: {
         "/get-session": false,
-        "/sign-in/magic-link": { window: 60, max: 3 },
-        "/email-otp/send-verification-otp": { window: 60, max: 3 },
-        "/sign-in/email-otp": { window: 60, max: 5 },
+        "/sign-in/email": { window: 60, max: 5 },
+        "/sign-up/email": { window: 60, max: 3 },
+        "/email-otp/request-password-reset": { window: 60, max: 3 },
+        "/email-otp/reset-password": { window: 60, max: 5 },
       },
       ...(redis && {
         customStorage: {
@@ -126,9 +159,6 @@ function createAuthConfig(
     account: {
       accountLinking: { enabled: true, trustedProviders: ["google", "github"] },
     },
-    emailAndPassword: {
-      enabled: process.env.NODE_ENV === "development",
-    },
     database: drizzleAdapter(databaseInstance, {
       provider: "pg",
       schema: { user, session, account, verification },
@@ -140,7 +170,7 @@ function createAuthConfig(
           before: async (newUser) => {
             assertAllowedSignupEmail(newUser.email);
           },
-          after: async (createdUser) => {
+          after: async (createdUser, ctx) => {
             const cookieStore = await cookies();
             const isTrackingEnabledValue = await isTrackingEnabled();
             if (isTrackingEnabledValue) {
@@ -157,48 +187,39 @@ function createAuthConfig(
                 console.error("Failed to save user source data:", error);
               }
             }
-            try {
-              const headerStore = await headers();
-              const clientIp = resolveSignupBonusClientIp(headerStore);
-              const fingerprint = parseSignupBonusFingerprint(
-                cookieStore.get(
-                  SIGNUP_BONUS_FINGERPRINT_COOKIE_NAME,
-                )?.value,
-              );
-
-              await grantConfiguredSignupBonusCredits(createdUser.id, {
-                email: createdUser.email,
-                countryCode: headerStore.get("cf-ipcountry"),
-                ipHash: hashSignupBonusIdentifier("ip", clientIp),
-                deviceHash: hashSignupBonusIdentifier(
-                  "fingerprint",
-                  fingerprint,
-                ),
-              });
-            } catch (error) {
-              console.error("Failed to grant signup bonus credits:", error);
-            }
-            if (createdUser.email) {
+            if (isSocialSignup(ctx?.path)) {
               try {
-                const unsubscribeToken = Buffer.from(
-                  createdUser.email,
-                ).toString("base64");
-                const unsubscribeLink = `${process.env.NEXT_PUBLIC_SITE_URL}/unsubscribe/newsletter?token=${unsubscribeToken}`;
-                await sendEmail({
+                const headerStore = await headers();
+                const clientIp = resolveSignupBonusClientIp(headerStore);
+                const fingerprint = parseSignupBonusFingerprint(
+                  cookieStore.get(SIGNUP_BONUS_FINGERPRINT_COOKIE_NAME)?.value,
+                );
+
+                await grantConfiguredSignupBonusCredits(createdUser.id, {
                   email: createdUser.email,
-                  subject: `Welcome to ${siteConfig.name}!`,
-                  react: UserWelcomeEmail,
-                  reactProps: {
-                    name: createdUser.name,
-                    email: createdUser.email,
-                    unsubscribeLink,
-                  },
-                  isAddContacts: true,
+                  countryCode: headerStore.get("cf-ipcountry"),
+                  ipHash: hashSignupBonusIdentifier("ip", clientIp),
+                  deviceHash: hashSignupBonusIdentifier(
+                    "fingerprint",
+                    fingerprint,
+                  ),
                 });
-                console.log(`Welcome email sent to ${createdUser.email}`);
               } catch (error) {
-                console.error("Failed to send welcome email:", error);
+                console.error("Failed to grant signup bonus credits:", error);
               }
+            }
+            if (createdUser.emailVerified) {
+              await databaseInstance.update(user).set({ recallRegisteredAt: new Date() })
+                .where(and(eq(user.id, createdUser.id), isNull(user.recallRegisteredAt), eq(user.isAnonymous, false)));
+              await sendWelcomeEmail(createdUser);
+            }
+          },
+        },
+        update: {
+          after: async (updatedUser) => {
+            if (updatedUser.emailVerified) {
+              await databaseInstance.update(user).set({ recallRegisteredAt: new Date() })
+                .where(and(eq(user.id, updatedUser.id), isNull(user.recallRegisteredAt), eq(user.isAnonymous, false)));
             }
           },
         },
@@ -237,24 +258,16 @@ function createAuthConfig(
             }),
           ]
         : []),
-      magicLink({
-        sendMagicLink: async ({ email, url }) => {
-          await sendEmail({
-            email,
-            subject: `Sign in to ${siteConfig.name}`,
-            react: MagicLinkEmail,
-            reactProps: { url },
-          });
+      emailPassword({
+        enabled: process.env.NEXT_PUBLIC_EMAIL_LOGIN === "true",
+        onPasswordReset: async ({ user }) => {
+          if (!user.emailVerified) await sendWelcomeEmail(user);
         },
-        expiresIn: 60 * 5,
-      }),
-      emailOTP({
-        otpLength: 6,
-        expiresIn: 60 * 10,
         sendVerificationOTP: async ({ email, otp, type }) => {
           await sendEmail({
             email,
             subject: `Your ${siteConfig.name} verification code: ${otp}`,
+            templateKey: "otp-code-email",
             react: OTPCodeEmail,
             reactProps: { otp, type },
           });

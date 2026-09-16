@@ -4,6 +4,7 @@ import {
   REDDIT_SHARE_TASK_KEYS,
   buildDailyClaimKey,
   buildOnceClaimKey,
+  getDailyCheckinCycle,
   manualReviewTasks,
   taskRewardsConfig,
   type ManualReviewTaskKey,
@@ -28,6 +29,10 @@ export interface TaskRewardItemData {
   targetUrl?: string;
   canSubmit?: boolean;
   reviewNote?: string;
+  checkinCycle?: {
+    day: number;
+    rewards: number[];
+  };
   progress?: {
     current: number;
     required: number;
@@ -41,14 +46,6 @@ export interface TaskRewardsDashboardData {
 
 function getTodayClaimKey(now: Date): string {
   return buildDailyClaimKey("daily_checkin", now.toISOString().slice(0, 10));
-}
-
-function getLastThreeCalendarDates(now: Date): string[] {
-  return [0, 1, 2].map((offset) => {
-    const date = new Date(now);
-    date.setUTCDate(date.getUTCDate() - offset);
-    return date.toISOString().slice(0, 10);
-  });
 }
 
 export function buildLatestManualApplicationLookup(
@@ -86,7 +83,7 @@ export function buildLatestManualApplicationLookup(
 export function buildTaskRewardItems({
   now,
   claimLookup,
-  claimedStreakDates,
+  previousDailyCheckinStreak,
   hasPublicGeneration,
   hasPurchase,
   inviteCount,
@@ -95,7 +92,7 @@ export function buildTaskRewardItems({
 }: {
   now: Date;
   claimLookup: Set<string>;
-  claimedStreakDates: Set<string>;
+  previousDailyCheckinStreak: number;
   hasPublicGeneration: boolean;
   hasPurchase: boolean;
   inviteCount: number;
@@ -104,38 +101,18 @@ export function buildTaskRewardItems({
 }): TaskRewardItemData[] {
   const tasks: TaskRewardItemData[] = [];
   const dailyClaimKey = getTodayClaimKey(now);
-  const streakClaimKey = buildOnceClaimKey("checkin_3_days");
   const firstPublicGenerationClaimKey = buildOnceClaimKey(
     "first_public_generation",
   );
   const firstPurchaseClaimKey = buildOnceClaimKey("first_purchase");
-  const streakDates = getLastThreeCalendarDates(now);
-  const streakProgress = streakDates.filter((date) =>
-    claimedStreakDates.has(date),
-  ).length;
-  const hasClaimedStreakReward = claimLookup.has(streakClaimKey);
 
   if (taskRewardsConfig.dailyCheckin.enabled) {
+    const cycle = getDailyCheckinCycle(previousDailyCheckinStreak);
     tasks.push({
       taskKey: "daily_checkin",
-      creditAmount: taskRewardsConfig.dailyCheckin.credits,
+      creditAmount: cycle.creditAmount,
       status: claimLookup.has(dailyClaimKey) ? "claimed" : "claimable",
-    });
-  }
-
-  if (taskRewardsConfig.checkin3Days.enabled) {
-    tasks.push({
-      taskKey: "checkin_3_days",
-      creditAmount: taskRewardsConfig.checkin3Days.credits,
-      status: hasClaimedStreakReward
-        ? "claimed"
-        : streakProgress >= 3
-          ? "claimable"
-          : "incomplete",
-      progress: {
-        current: hasClaimedStreakReward ? 3 : streakProgress,
-        required: 3,
-      },
+      checkinCycle: { day: cycle.day, rewards: cycle.rewards },
     });
   }
 

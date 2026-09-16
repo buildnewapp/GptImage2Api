@@ -3,7 +3,7 @@ import * as React from "react";
 
 interface OTPCodeEmailProps {
   otp: string;
-  type: "sign-in" | "email-verification" | "forget-password";
+  type: "sign-in" | "email-verification" | "forget-password" | "change-email";
 }
 
 const styles = {
@@ -91,7 +91,9 @@ const getTypeMessage = (type: OTPCodeEmailProps["type"]) => {
     case "email-verification":
       return "Use this code to verify your email address";
     case "forget-password":
-      return "Use this code to reset your password";
+      return "Use this code to verify your email and set or reset your password.";
+    case "change-email":
+      return "Use this code to change your email address.";
     default:
       return "Your verification code is";
   }

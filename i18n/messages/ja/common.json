@@ -30,6 +30,16 @@
   "Login": {
     "title": "おかえりなさい",
     "description": "以下の方法でログインしていただけます",
+    "Registration": {
+      "title": "登録・パスワード設定",
+      "description": "メール認証後にアカウントを作成します。既存のアカウントは、ここに入力したパスワードに更新されます。",
+      "emailLabel": "メールアドレス",
+      "passwordHint": "8～128文字",
+      "submit": "認証してログイン",
+      "open": "登録 / パスワードをお忘れですか？",
+      "backToLogin": "パスワードでログインに戻る",
+      "passwordSaved": "パスワードを保存しました。新しいパスワードでログインしてください。"
+    },
     "Toast": {
       "rateLimitTitle": "リクエストが多すぎます",
       "rateLimitDescription": "しばらくしてから再度お試しください。",
@@ -163,6 +173,11 @@
         "name": "システムメール",
         "href": "/dashboard/system-emails",
         "icon": "Mail"
+      },
+      {
+        "name": "メール送信履歴",
+        "href": "/dashboard/email-logs",
+        "icon": "MailSearch"
       },
       {
         "name": "APIキー管理",
@@ -661,6 +676,18 @@
     }
   },
   "AIVideoStudio": {
+    "payment": {
+      "title": "高速生成を利用して制作を続ける",
+      "dailyLimit": "無料ユーザーは1日1回、高速生成を利用できます。本日の回数は使用済みです。有料プランを購入すると、高速生成を引き続き利用できます。",
+      "creditLimit": "無料ユーザーは1日1回、最大100クレジットの高速生成を利用できます。今回は{credits}クレジットが必要です。有料プランを購入すると、この制限が解除され、高速生成を引き続き利用できます。",
+      "insufficientCredits": "今回は{credits}クレジットが必要ですが、残高が不足しています。プランを選んでクレジットを追加し、制作を続けてください。",
+      "membershipRequired": "このモデルには{level}以上のメンバーシップが必要です。対応するプランを選んで制作を続けてください。",
+      "loading": "プランを読み込み中…",
+      "loadFailed": "購入可能なプランを読み込めませんでした。料金ページをご確認ください。",
+      "viewPricing": "プランを見る",
+      "countdownLabel": "待ち時間の目安",
+      "queueTitle": "順番待ち"
+    },
     "form": {
       "imageToVideo": "画像から動画",
       "textToVideo": "テキストから動画",

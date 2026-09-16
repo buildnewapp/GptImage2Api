@@ -93,6 +93,7 @@ export interface PayPalWebhookVerificationPayload {
 }
 
 export interface PayPalCustomIdPayload {
+  checkoutOrderId?: string;
   planId: string;
   userId: string;
 }

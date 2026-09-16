@@ -40,7 +40,6 @@ import ManualTaskSubmissionDialog from "./ManualTaskSubmissionDialog";
 function getTaskIcon(taskKey: TaskRewardItemData["taskKey"]) {
   switch (taskKey) {
     case "daily_checkin":
-    case "checkin_3_days":
       return <CheckCircle2 className="h-4.5 w-4.5" />;
     case "first_public_generation":
       return <Video className="h-4.5 w-4.5" />;
@@ -252,6 +251,7 @@ export default function TasksClient({
                 ? task.taskKey
                 : null;
               const progress = task.progress;
+              const checkinCycle = task.checkinCycle;
               const description =
                 task.taskKey === "invite_signup"
                   ? t("tasks.invite_signup.description", {
@@ -431,6 +431,81 @@ export default function TasksClient({
                       )}
                     </div>
                   </CardContent>
+                  {checkinCycle ? (
+                    <CardContent className="space-y-3 px-3.5 pb-3.5 pt-0">
+                      <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                        <span className="font-semibold text-slate-700 dark:text-slate-200">
+                          {t("checkinCycle.total", {
+                            days: checkinCycle.rewards.length,
+                            credits: checkinCycle.rewards.reduce(
+                              (sum, credits) => sum + credits,
+                              0,
+                            ),
+                          })}
+                        </span>
+                        <span className="font-medium text-emerald-700 dark:text-emerald-300">
+                          {t("checkinCycle.currentDay", {
+                            day: checkinCycle.day,
+                          })}
+                        </span>
+                      </div>
+                      <ol
+                        aria-label={t("checkinCycle.label")}
+                        className="grid grid-cols-4 gap-2 sm:grid-cols-7"
+                      >
+                        {checkinCycle.rewards.map((credits, index) => {
+                          const day = index + 1;
+                          const isToday = day === checkinCycle.day;
+                          const isClaimed =
+                            day < checkinCycle.day || (isToday && completed);
+                          return (
+                            <li
+                              key={day}
+                              aria-current={isToday ? "step" : undefined}
+                              className={`flex min-w-0 flex-col items-center gap-1 rounded-xl border px-1 py-3 text-center ${
+                                isToday
+                                  ? "border-emerald-600 bg-emerald-50 ring-1 ring-emerald-600 dark:border-emerald-400 dark:bg-emerald-950/50 dark:ring-emerald-400"
+                                  : isClaimed
+                                    ? "border-emerald-200 bg-emerald-50/60 dark:border-emerald-900 dark:bg-emerald-950/20"
+                                    : "border-slate-200 bg-white/80 dark:border-slate-700 dark:bg-slate-900/60"
+                              }`}
+                            >
+                              <span className="text-[11px] font-medium text-slate-600 dark:text-slate-300">
+                                {t("checkinCycle.day", { day })}
+                              </span>
+                              <span
+                                className={`text-lg font-bold tabular-nums ${isToday || isClaimed ? "text-emerald-700 dark:text-emerald-300" : "text-slate-800 dark:text-slate-100"}`}
+                              >
+                                +{credits}
+                              </span>
+                              <span className="flex min-h-4 items-center gap-1 text-[10px] font-medium text-slate-600 dark:text-slate-300">
+                                {isClaimed ? (
+                                  <CheckCircle2
+                                    aria-hidden="true"
+                                    className="h-3 w-3 shrink-0 text-emerald-600 dark:text-emerald-400"
+                                  />
+                                ) : null}
+                                {isToday
+                                  ? t(
+                                      completed
+                                        ? "checkinCycle.todayClaimed"
+                                        : "checkinCycle.today",
+                                    )
+                                  : t(
+                                      isClaimed
+                                        ? "actions.claimed"
+                                        : "checkinCycle.upcoming",
+                                    )}
+                              </span>
+                            </li>
+                          );
+                        })}
+                      </ol>
+                      <p className="text-[11px] leading-5 text-slate-500 dark:text-slate-400">
+                        {t("checkinCycle.resetTime")}
+                      </p>
+                    </CardContent>
+                  ) : null}
                 </Card>
               );
             })}

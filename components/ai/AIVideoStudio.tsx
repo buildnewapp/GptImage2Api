@@ -1,5 +1,7 @@
 "use client";
 
+import dynamic from "next/dynamic";
+import { isAiStudioPaymentError, type AiStudioPaymentError } from "@/lib/ai-studio/payment-error";
 import AIVideoStudioFields from "@/components/ai/AIVideoStudioFields";
 import { resolveReferenceFieldKind } from "@/components/ai/fields/ReferenceField";
 import AIVideoStudioMediaPreview, {
@@ -631,6 +633,8 @@ interface AIVideoStudioProps {
   initialModelId?: string | null;
 }
 
+const AiStudioPaymentDialog = dynamic(() => import("@/components/ai-studio/AiStudioPaymentDialog"));
+
 export default function AIVideoStudio({
   initialModelId = null,
 }: AIVideoStudioProps = {}) {
@@ -665,6 +669,7 @@ export default function AIVideoStudio({
   const [apiPayloadText, setApiPayloadText] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [paymentError, setPaymentError] = useState<AiStudioPaymentError | null>(null);
   const [deletingTaskLocalId, setDeletingTaskLocalId] = useState<string | null>(
     null,
   );
@@ -1079,9 +1084,6 @@ export default function AIVideoStudio({
     !!inputPayload &&
     (submitMode === "form" || !apiPayloadState.error) &&
     estimatedCredits > 0 &&
-    (!session?.user ||
-      availableCredits === null ||
-      availableCredits >= estimatedCredits) &&
     (submitMode === "api" || hasRequiredFieldValues);
 
   const visibleGenerationTasks = useMemo(
@@ -1349,12 +1351,12 @@ export default function AIVideoStudio({
       const requiredLevel =
         getAiVideoStudioLevelLabel(selectedVersionLevelLimit) ??
         selectedVersionLevelLimit.toUpperCase();
-      toast.error(t("form.membershipRequired", { level: requiredLevel }));
+      setPaymentError({ code: "AI_STUDIO_MEMBERSHIP_REQUIRED", requiredLevel });
       return;
     }
 
     if (availableCredits !== null && availableCredits < estimatedCredits) {
-      toast.error(t("form.insufficientCredits"));
+      setPaymentError({ code: "AI_STUDIO_INSUFFICIENT_CREDITS", requiredCredits: estimatedCredits });
       return;
     }
 
@@ -1420,6 +1422,12 @@ export default function AIVideoStudio({
       });
       const json = (await response.json()) as ExecuteResponse;
       if (!response.ok || !json.success) {
+        if (isAiStudioPaymentError(json)) {
+          setPaymentError(json);
+          setGenerationTasks((current) => current.filter((task) => task.localId !== localTaskId));
+          setActiveTaskLocalId(null);
+          return;
+        }
         throw new Error(json.error || "Execution failed");
       }
 
@@ -2345,6 +2353,12 @@ export default function AIVideoStudio({
         </div>
       </div>
 
+      {paymentError && (
+        <AiStudioPaymentDialog
+          error={paymentError}
+          onClose={() => setPaymentError(null)}
+        />
+      )}
       <AIVideoStudioMediaPreview
         preview={selectedPreview}
         onClose={() => setSelectedPreview(null)}

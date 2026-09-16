@@ -32,7 +32,8 @@
     "preview": "预览收件人",
     "send": "发送第一批",
     "continueSend": "继续发送",
-    "completed": "已完成"
+    "completed": "已完成",
+    "viewLogs": "邮件记录"
   },
   "preview": {
     "title": "预览",

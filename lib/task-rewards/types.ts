@@ -48,11 +48,7 @@ export interface TaskRewardClaimRecord {
 
 export interface TaskRewardStore {
   hasClaim(userId: string, claimKey: string): Promise<boolean>;
-  countDailyCheckins(userId: string): Promise<number>;
-  getClaimedDailyCheckinDates(
-    userId: string,
-    calendarDates: string[],
-  ): Promise<Set<string>>;
+  getDailyCheckinStreak(userId: string, calendarDate: string): Promise<number>;
   hasSuccessfulPublicGeneration(userId: string): Promise<boolean>;
   hasSuccessfulPurchase(userId: string): Promise<boolean>;
   countReferralInvites(userId: string): Promise<number>;

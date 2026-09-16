@@ -2,7 +2,6 @@ import { siteConfig } from "@/config/site";
 
 export type AutomaticClaimableTaskKey =
   | "daily_checkin"
-  | "checkin_3_days"
   | "first_public_generation"
   | "first_purchase";
 
@@ -37,10 +36,7 @@ export interface TaskRewardsConfig {
   dailyCheckin: {
     enabled: boolean;
     credits: number;
-  };
-  checkin3Days: {
-    enabled: boolean;
-    credits: number;
+    cycleDays: number;
   };
   firstPublicGeneration: {
     enabled: boolean;
@@ -71,10 +67,7 @@ export const taskRewardsConfig = {
   dailyCheckin: {
     enabled: true,
     credits: 10,
-  },
-  checkin3Days: {
-    enabled: true,
-    credits: 20,
+    cycleDays: 7,
   },
   firstPublicGeneration: {
     enabled: true,
@@ -93,6 +86,22 @@ export const taskRewardsConfig = {
     credits: 20,
   },
 } satisfies TaskRewardsConfig;
+
+export function getDailyCheckinCycle(
+  previousStreak: number,
+  config: TaskRewardsConfig = taskRewardsConfig,
+) {
+  const { credits, cycleDays } = config.dailyCheckin;
+  const day = (previousStreak % cycleDays) + 1;
+  return {
+    day,
+    creditAmount: day * credits,
+    rewards: Array.from(
+      { length: cycleDays },
+      (_, index) => (index + 1) * credits,
+    ),
+  };
+}
 
 const encodedSiteUrl = encodeURIComponent(siteConfig.url);
 

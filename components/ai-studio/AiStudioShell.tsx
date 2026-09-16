@@ -1,5 +1,7 @@
 "use client";
 
+import dynamic from "next/dynamic";
+import { isAiStudioPaymentError, type AiStudioPaymentError } from "@/lib/ai-studio/payment-error";
 import type {
   AiStudioCategory,
 } from "@/lib/ai-studio/catalog";
@@ -422,12 +424,15 @@ function extractChatDelta(raw: unknown) {
   return "";
 }
 
+const AiStudioPaymentDialog = dynamic(() => import("@/components/ai-studio/AiStudioPaymentDialog"));
+
 export default function AiStudioShell({
   initialCategory = "video",
 }: {
   initialCategory?: AiStudioCategory;
 }) {
   const pathname = usePathname();
+  const [paymentError, setPaymentError] = useState<AiStudioPaymentError | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const hasHydratedFromUrlRef = useRef(false);
@@ -774,6 +779,10 @@ export default function AiStudioShell({
       });
       const json = (await response.json()) as ExecuteResponse;
       if (!response.ok || !json.success) {
+        if (isAiStudioPaymentError(json)) {
+          setPaymentError(json);
+          return;
+        }
         throw new Error(json.error || "Execution failed");
       }
       if ((json.data.reservedCredits ?? 0) > 0) {
@@ -860,12 +869,16 @@ export default function AiStudioShell({
 
       if (!response.ok) {
         const failedText = await response.text();
+        let failedJson: unknown;
         try {
-          const failedJson = JSON.parse(failedText);
-          throw new Error(failedJson?.error || "Chat failed");
-        } catch {
-          throw new Error(failedText || "Chat failed");
+          failedJson = JSON.parse(failedText);
+        } catch { /* Non-JSON upstream errors are displayed below. */ }
+        if (isAiStudioPaymentError(failedJson)) {
+          setPaymentError(failedJson);
         }
+        throw new Error(
+          (failedJson as { error?: string } | null)?.error || failedText || "Chat failed",
+        );
       }
 
       const contentType = response.headers.get("content-type") || "";
@@ -1707,6 +1720,12 @@ export default function AiStudioShell({
           </div>
         </section>
       </div>
+      {paymentError && (
+        <AiStudioPaymentDialog
+          error={paymentError}
+          onClose={() => setPaymentError(null)}
+        />
+      )}
     </div>
   );
 }

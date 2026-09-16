@@ -337,6 +337,20 @@
       "when": 1788516823288,
       "tag": "0047_futuristic_mordo",
       "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "7",
+      "when": 1789462918373,
+      "tag": "0048_email_logs",
+      "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "7",
+      "when": 1789478850475,
+      "tag": "0049_founder_recall",
+      "breakpoints": true
     }
   ]
 }

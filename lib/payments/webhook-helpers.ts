@@ -75,6 +75,49 @@ export async function createOrderWithIdempotency(
 ): Promise<CreateOrderResult> {
   const db = getDb()
 
+  // Keep the first confirmed payment time separate from checkout creation/update time.
+  // Replayed deliveries return the existing row without moving this timestamp.
+  if (orderData.status === 'succeeded' && orderData.orderType !== 'refund' && Number(orderData.amountTotal) > 0) {
+    orderData = { ...orderData, paidAt: orderData.paidAt ?? new Date() };
+  }
+
+  const checkoutOrderId = (orderData.metadata as { checkoutOrderId?: string } | null)
+    ?.checkoutOrderId;
+  if (checkoutOrderId && orderData.status === 'succeeded') {
+    const result = await db.transaction(async (tx) => {
+      // Lock the checkout so concurrent deliveries can complete it only once.
+      const [checkoutOrder] = await tx.select().from(ordersSchema).where(and(
+        eq(ordersSchema.id, checkoutOrderId),
+        eq(ordersSchema.provider, provider),
+        eq(ordersSchema.userId, orderData.userId),
+      )).limit(1).for('update');
+
+      if (!checkoutOrder) return null;
+      if (checkoutOrder.providerOrderId === idempotencyKey) {
+        return { order: { id: checkoutOrder.id }, existed: true };
+      }
+      // Renewals retain the original checkout metadata but need their own order.
+      if (checkoutOrder.providerOrderId !== `checkout:${checkoutOrderId}` ||
+          !['pending', 'failed'].includes(checkoutOrder.status) ||
+          checkoutOrder.planId !== orderData.planId) {
+        return null;
+      }
+
+      const [completedOrder] = await tx.update(ordersSchema).set({
+        ...orderData,
+        id: undefined,
+        createdAt: undefined,
+        metadata: {
+          ...(checkoutOrder.metadata as Record<string, unknown> | null),
+          ...(orderData.metadata as Record<string, unknown> | null),
+        },
+      }).where(eq(ordersSchema.id, checkoutOrder.id)).returning({ id: ordersSchema.id });
+      // This is the first payment, even though the checkout row already existed.
+      return { order: completedOrder, existed: false };
+    });
+    if (result) return result;
+  }
+
   // Idempotency check
   const existingOrder = await db
     .select({ id: ordersSchema.id })
@@ -98,7 +141,24 @@ export async function createOrderWithIdempotency(
   const [insertedOrder] = await db
     .insert(ordersSchema)
     .values(orderData)
+    .onConflictDoNothing({
+      target: [ordersSchema.provider, ordersSchema.providerOrderId],
+    })
     .returning({ id: ordersSchema.id });
+
+  if (!insertedOrder) {
+    // Another delivery may have inserted the same order after our initial read.
+    const [concurrentOrder] = await db.select({ id: ordersSchema.id })
+      .from(ordersSchema)
+      .where(and(
+        eq(ordersSchema.provider, provider),
+        eq(ordersSchema.providerOrderId, idempotencyKey),
+      )).limit(1);
+    if (!concurrentOrder) {
+      throw new Error(`Could not create or find ${provider} order ${idempotencyKey}`);
+    }
+    return { order: concurrentOrder, existed: true };
+  }
 
   return {
     order: insertedOrder || null,

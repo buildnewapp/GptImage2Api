@@ -30,6 +30,16 @@
   "Login": {
     "title": "欢迎回来",
     "description": "你可以通过以下方式登录",
+    "Registration": {
+      "title": "注册或设置密码",
+      "description": "验证邮箱后创建账号。若账号已存在，将用此处填写的密码设置或更新原账号密码。",
+      "emailLabel": "邮箱",
+      "passwordHint": "8–128 位密码",
+      "submit": "验证并登录",
+      "open": "注册 / 忘记密码？",
+      "backToLogin": "返回密码登录",
+      "passwordSaved": "密码已保存，请使用新密码登录。"
+    },
     "Toast": {
       "rateLimitTitle": "请求过于频繁",
       "rateLimitDescription": "请稍等片刻后重试。",
@@ -163,6 +173,11 @@
         "name": "系统邮件",
         "href": "/dashboard/system-emails",
         "icon": "Mail"
+      },
+      {
+        "name": "邮件记录",
+        "href": "/dashboard/email-logs",
+        "icon": "MailSearch"
       },
       {
         "name": "API Key 管理",
@@ -653,6 +668,18 @@
     }
   },
   "AIVideoStudio": {
+    "payment": {
+      "title": "开通快速通道，继续创作",
+      "dailyLimit": "免费用户每天享有 1 次快速生成，今日次数已用完。开通任意付费套餐即可使用快速通道，继续创作。",
+      "creditLimit": "免费用户每天享有 1 次快速生成，单次最多使用 100 积分。本次生成需要 {credits} 积分，开通任意付费套餐即可解除此限制并使用快速通道。",
+      "insufficientCredits": "本次生成需要 {credits} 积分，您的积分余额不足。请选择套餐补充积分，继续创作。",
+      "membershipRequired": "此模型需要 {level} 或更高等级的会员。请选择符合要求的套餐，继续创作。",
+      "loading": "正在加载套餐…",
+      "loadFailed": "暂时无法加载可购买的套餐，请前往定价页查看。",
+      "viewPricing": "查看套餐",
+      "countdownLabel": "预计排队时间",
+      "queueTitle": "排队中"
+    },
     "form": {
       "imageToVideo": "图生视频",
       "textToVideo": "文生视频",

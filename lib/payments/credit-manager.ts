@@ -22,10 +22,16 @@ import { getPricingPlanById } from '@/lib/pricing';
 import { getDb } from '@/lib/db';
 import {
   creditLogs as creditLogsSchema,
+  emailLogs as emailLogsSchema,
+  orders as ordersSchema,
   PaymentProvider,
   subscriptionCreditBuckets as subscriptionCreditBucketsSchema,
   usage as usageSchema,
 } from '@/lib/db/schema';
+import {
+  calculateRecallPurchaseBonusCredits,
+  resolveRecallPurchaseBonusOffer,
+} from '@/lib/email/recall/rules';
 import { isYearlyInterval } from '@/lib/payments/provider-utils';
 import {
   buildYearlyAllocationEntry,
@@ -34,7 +40,95 @@ import {
 import type {
   Order,
 } from '@/lib/payments/types';
-import { and, asc, eq, gt, lte, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, gt, inArray, isNotNull, lte, sql } from 'drizzle-orm';
+
+type CreditTransaction = Parameters<Parameters<ReturnType<typeof getDb>['transaction']>[0]>[0];
+
+const PAID_ORDER_STATUSES = ['succeeded', 'active', 'refunded', 'partially_refunded'];
+const PURCHASE_ORDER_TYPES = [
+  'one_time_purchase',
+  'subscription_initial',
+  'subscription_renewal',
+  'recurring',
+];
+
+async function getGrantableOrder(tx: CreditTransaction, userId: string, orderId: string) {
+  // Serialize callbacks for the same order. The grant log is committed with the balance.
+  const [order] = await tx.select().from(ordersSchema)
+    .where(eq(ordersSchema.id, orderId)).for('update');
+  if (!order || order.userId !== userId) {
+    throw new Error(`Credit grant order ${orderId} does not belong to user ${userId}`);
+  }
+  if (order.status === 'refunded' || order.status === 'partially_refunded') {
+    return null;
+  }
+  const [grant] = await tx.select({ id: creditLogsSchema.id }).from(creditLogsSchema)
+    .where(and(
+      eq(creditLogsSchema.relatedOrderId, orderId),
+      gt(creditLogsSchema.amount, 0),
+      inArray(creditLogsSchema.type, ['one_time_purchase', 'subscription_grant']),
+    )).limit(1);
+  return grant ? null : order;
+}
+
+async function getRecallPurchaseBonus(
+  tx: CreditTransaction,
+  userId: string,
+  order: { id: string; paidAt: Date | null; createdAt: Date },
+  baseCredits: number,
+) {
+  const [firstPaidOrder] = await tx
+    .select({ id: ordersSchema.id })
+    .from(ordersSchema)
+    .where(
+      and(
+        eq(ordersSchema.userId, userId),
+        inArray(ordersSchema.status, PAID_ORDER_STATUSES),
+        inArray(ordersSchema.orderType, PURCHASE_ORDER_TYPES),
+        sql`coalesce(${ordersSchema.amountTotal}, '0')::numeric > 0`,
+      ),
+    )
+    .orderBy(
+      sql`coalesce(${ordersSchema.paidAt}, ${ordersSchema.createdAt})`,
+      asc(ordersSchema.id),
+    )
+    .limit(1);
+  if (firstPaidOrder?.id !== order.id) return null;
+
+  const offers = await tx
+    .select({
+      id: emailLogsSchema.id,
+      variables: emailLogsSchema.variables,
+      sentAt: emailLogsSchema.sentAt,
+    })
+    .from(emailLogsSchema)
+    .where(
+      and(
+        inArray(emailLogsSchema.idempotencyKey, [
+          `recall:${userId}:checkout-bonus`,
+          `recall:${userId}:signup-bonus`,
+        ]),
+        eq(emailLogsSchema.status, 'sent'),
+        isNotNull(emailLogsSchema.sentAt),
+      ),
+    )
+    .orderBy(desc(emailLogsSchema.sentAt));
+  const paidAt = order.paidAt ?? order.createdAt;
+  for (const offer of offers) {
+    const terms = resolveRecallPurchaseBonusOffer({
+      variables: offer.variables,
+      sentAt: offer.sentAt,
+      paidAt,
+    });
+    if (!terms) continue;
+    const credits = calculateRecallPurchaseBonusCredits(
+      baseCredits,
+      terms.percent,
+    );
+    if (credits > 0) return { ...terms, credits, emailLogId: offer.id };
+  }
+  return null;
+}
 
 // ============================================================================
 // One-Time Credit Operations
@@ -84,17 +178,27 @@ export async function upgradeOneTimeCredits(userId: string, planId: string, orde
     while (attempts < maxAttempts) {
       attempts++;
       try {
-        await db.transaction(async (tx) => {
+        const granted = await db.transaction(async (tx) => {
+          const order = await getGrantableOrder(tx, userId, orderId);
+          if (!order) return false;
+          const recallBonus = await getRecallPurchaseBonus(
+            tx,
+            userId,
+            order,
+            creditsToGrant,
+          );
+          const bonusCredits = recallBonus?.credits ?? 0;
+          const totalCreditsToGrant = creditsToGrant + bonusCredits;
           const updatedUsage = await tx
             .insert(usageSchema)
             .values({
               userId: userId,
-              oneTimeCreditsBalance: creditsToGrant,
+              oneTimeCreditsBalance: totalCreditsToGrant,
             })
             .onConflictDoUpdate({
               target: usageSchema.userId,
               set: {
-                oneTimeCreditsBalance: sql`${usageSchema.oneTimeCreditsBalance} + ${creditsToGrant}`,
+                oneTimeCreditsBalance: sql`${usageSchema.oneTimeCreditsBalance} + ${totalCreditsToGrant}`,
               },
             })
             .returning({
@@ -110,15 +214,29 @@ export async function upgradeOneTimeCredits(userId: string, planId: string, orde
           await tx.insert(creditLogsSchema).values({
             userId: userId,
             amount: creditsToGrant,
-            oneTimeCreditsSnapshot: balances.oneTimeCreditsSnapshot,
+            oneTimeCreditsSnapshot: balances.oneTimeCreditsSnapshot - bonusCredits,
             subscriptionCreditsSnapshot: balances.subscriptionCreditsSnapshot,
             type: 'one_time_purchase',
             notes: 'One-time credit purchase',
             relatedOrderId: orderId,
           });
+          if (recallBonus) {
+            await tx.insert(creditLogsSchema).values({
+              userId,
+              amount: recallBonus.credits,
+              oneTimeCreditsSnapshot: balances.oneTimeCreditsSnapshot,
+              subscriptionCreditsSnapshot: balances.subscriptionCreditsSnapshot,
+              type: 'recall_purchase_bonus',
+              notes: `${recallBonus.percent}% recall first-purchase bonus; emailLogId=${recallBonus.emailLogId}`,
+              relatedOrderId: orderId,
+            });
+          }
+          return true;
         });
-        console.log(`Successfully granted one-time credits for user ${userId} on attempt ${attempts}.`);
-        return; // Success, exit the function
+        if (granted) {
+          console.log(`Successfully granted one-time credits for user ${userId} on attempt ${attempts}.`);
+        }
+        return granted;
       } catch (error) {
         lastError = error;
         console.warn(`Attempt ${attempts} failed for grant one-time credits and log for user ${userId}. Retrying in ${attempts}s...`, (lastError as Error).message);
@@ -166,58 +284,57 @@ export async function revokeOneTimeCredits(refundAmountCents: number, originalOr
    * 特典は、料金プランの `benefitsJsonb` フィールド（ダッシュボードの /dashboard/prices でアクセス可能）で定義することをお勧めします。このコードは、定義された特典に基づいて、ユーザーの特典を取消します。
    * 以下のコードは、`oneTimeCredits` を使用した例です。他の特典を取消する必要がある場合は、お客様のビジネスロジックに従って、以下のコードを修正してください。
    */
-  const planId = originalOrder.planId as string;
   const userId = originalOrder.userId as string;
 
   const isFullRefund = refundAmountCents === Math.round(parseFloat(originalOrder.amountTotal!) * 100);
 
   if (isFullRefund) {
-    const planData = getPricingPlanById(planId);
+    try {
+      await db.transaction(async (tx) => {
+        const usageResults = await tx.select().from(usageSchema).where(eq(usageSchema.userId, userId)).for('update');
+        const usage = usageResults[0];
 
-    if (!planData) {
-      console.error(`Error fetching plan benefits for planId ${planId} during refund ${refundOrderId}:`);
-    } else {
-      let oneTimeToRevoke = 0;
-      const benefits = planData.benefitsJsonb as any;
+        if (!usage) { return; }
 
-      if (benefits?.oneTimeCredits > 0) {
-        oneTimeToRevoke = benefits.oneTimeCredits;
-      }
+        const grantRows = await tx
+          .select({ amount: creditLogsSchema.amount })
+          .from(creditLogsSchema)
+          .where(
+            and(
+              eq(creditLogsSchema.relatedOrderId, originalOrder.id),
+              gt(creditLogsSchema.amount, 0),
+              inArray(creditLogsSchema.type, [
+                'one_time_purchase',
+                'recall_purchase_bonus',
+              ]),
+            ),
+          );
+        const oneTimeToRevoke = grantRows.reduce(
+          (sum, grant) => sum + grant.amount,
+          0,
+        );
+        const newOneTimeBalance = Math.max(0, usage.oneTimeCreditsBalance - oneTimeToRevoke);
+        const amountRevoked = usage.oneTimeCreditsBalance - newOneTimeBalance;
 
-      if (oneTimeToRevoke > 0) {
-        try {
-          await db.transaction(async (tx) => {
-            const usageResults = await tx.select().from(usageSchema).where(eq(usageSchema.userId, userId)).for('update');
-            const usage = usageResults[0];
+        if (amountRevoked > 0) {
+          await tx.update(usageSchema)
+            .set({ oneTimeCreditsBalance: newOneTimeBalance })
+            .where(eq(usageSchema.userId, userId));
 
-            if (!usage) { return; }
-
-            const newOneTimeBalance = Math.max(0, usage.oneTimeCreditsBalance - oneTimeToRevoke);
-            const amountRevoked = usage.oneTimeCreditsBalance - newOneTimeBalance;
-
-            if (amountRevoked > 0) {
-              await tx.update(usageSchema)
-                .set({ oneTimeCreditsBalance: newOneTimeBalance })
-                .where(eq(usageSchema.userId, userId));
-
-              await tx.insert(creditLogsSchema).values({
-                userId,
-                amount: -amountRevoked,
-                oneTimeCreditsSnapshot: newOneTimeBalance,
-                subscriptionCreditsSnapshot: usage.subscriptionCreditsBalance,
-                type: 'refund_revoke',
-                notes: `Full refund for order ${originalOrder.id}.`,
-                relatedOrderId: originalOrder.id,
-              });
-            }
+          await tx.insert(creditLogsSchema).values({
+            userId,
+            amount: -amountRevoked,
+            oneTimeCreditsSnapshot: newOneTimeBalance,
+            subscriptionCreditsSnapshot: usage.subscriptionCreditsBalance,
+            type: 'refund_revoke',
+            notes: `Full refund for order ${originalOrder.id}.`,
+            relatedOrderId: originalOrder.id,
           });
-          console.log(`Successfully revoked credits for user ${userId} related to refund ${refundOrderId}.`);
-        } catch (revokeError) {
-          console.error(`Error calling revoke credits and log for user ${userId}, refund ${refundOrderId}:`, revokeError);
         }
-      } else {
-        console.log(`No credits defined to revoke for plan ${planId}, order type ${originalOrder.orderType} on refund ${refundOrderId}.`);
-      }
+      });
+      console.log(`Successfully revoked credits for user ${userId} related to refund ${refundOrderId}.`);
+    } catch (revokeError) {
+      console.error(`Error calling revoke credits and log for user ${userId}, refund ${refundOrderId}:`, revokeError);
     }
   } else {
     console.log(`Refund ${refundOrderId} is not a full refund. Skipping credit revocation. Refunded: ${refundAmountCents}, Original Total: ${parseFloat(originalOrder.amountTotal!) * 100}`);
@@ -362,7 +479,17 @@ export async function upgradeSubscriptionCredits(
     while (attempts < maxAttempts) {
       attempts++;
       try {
-        await db.transaction(async (tx) => {
+        return await db.transaction(async (tx) => {
+          const order = await getGrantableOrder(tx, userId, orderId);
+          if (!order) return false;
+          const recallBonus = await getRecallPurchaseBonus(
+            tx,
+            userId,
+            order,
+            creditsToGrant,
+          );
+          const bonusCredits = recallBonus?.credits ?? 0;
+          const totalCreditsToGrant = creditsToGrant + bonusCredits;
           const usageRows = await tx
             .select()
             .from(usageSchema)
@@ -390,8 +517,8 @@ export async function upgradeSubscriptionCredits(
               periodStart,
               periodEnd: bucketPeriodEnd,
               expiresAt: bucketPeriodEnd,
-              creditsTotal: creditsToGrant,
-              creditsRemaining: creditsToGrant,
+              creditsTotal: totalCreditsToGrant,
+              creditsRemaining: totalCreditsToGrant,
               relatedOrderId: orderId,
             })
             .onConflictDoUpdate({
@@ -403,8 +530,8 @@ export async function upgradeSubscriptionCredits(
               set: {
                 periodEnd: bucketPeriodEnd,
                 expiresAt: bucketPeriodEnd,
-                creditsTotal: creditsToGrant,
-                creditsRemaining: creditsToGrant,
+                creditsTotal: totalCreditsToGrant,
+                creditsRemaining: totalCreditsToGrant,
                 relatedOrderId: orderId,
               },
             });
@@ -458,14 +585,24 @@ export async function upgradeSubscriptionCredits(
             userId,
             amount: creditsToGrant,
             oneTimeCreditsSnapshot: balances.oneTimeCreditsSnapshot,
-            subscriptionCreditsSnapshot: balances.subscriptionCreditsSnapshot,
+            subscriptionCreditsSnapshot: balances.subscriptionCreditsSnapshot - bonusCredits,
             type: 'subscription_grant',
             notes: 'Subscription credits granted',
             relatedOrderId: orderId,
           });
+          if (recallBonus) {
+            await tx.insert(creditLogsSchema).values({
+              userId,
+              amount: recallBonus.credits,
+              oneTimeCreditsSnapshot: balances.oneTimeCreditsSnapshot,
+              subscriptionCreditsSnapshot: balances.subscriptionCreditsSnapshot,
+              type: 'recall_purchase_bonus',
+              notes: `${recallBonus.percent}% recall first-purchase bonus; emailLogId=${recallBonus.emailLogId}`,
+              relatedOrderId: orderId,
+            });
+          }
+          return true;
         });
-        lastError = null;
-        break;
       } catch (error) {
         lastError = error;
         if (attempts < maxAttempts) {

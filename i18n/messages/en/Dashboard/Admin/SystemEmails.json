@@ -32,7 +32,8 @@
     "preview": "Preview recipients",
     "send": "Send first batch",
     "continueSend": "Continue sending",
-    "completed": "Completed"
+    "completed": "Completed",
+    "viewLogs": "Email records"
   },
   "preview": {
     "title": "Preview",

@@ -4,6 +4,7 @@ import {
   getUserDetails,
   grantManualUserBenefits,
   updateUserRole,
+  setUserRecallPaused,
 } from "@/actions/users/admin";
 import type {
   AdminManualBenefitPlan,
@@ -498,6 +499,7 @@ function UserDetailsContent({
   const locale = useLocale();
   const router = useRouter();
   const [isRolePending, startRoleTransition] = useTransition();
+  const [isRecallPending, startRecallTransition] = useTransition();
   const links = buildAdminUserQuickActionLinks({ locale, userId: user.id });
   const totalCredits = user.totalCredits ?? 0;
   const subscriptionCredits = user.subscriptionCreditsBalance ?? 0;
@@ -568,6 +570,35 @@ function UserDetailsContent({
             <InfoRow label="封禁原因" value={user.banReason || "-"} />
           ) : null}
           <InfoRow label="注册时间" value={formatDate(user.createdAt)} />
+          <InfoRow
+            label="自动关怀邮件"
+            value={
+              <div className="flex items-center gap-2">
+                <span>{user.recallPaused ? "已暂停" : "未暂停"}</span>
+                <Button
+                  size="xs"
+                  variant="outline"
+                  disabled={isRecallPending}
+                  onClick={() => {
+                    startRecallTransition(async () => {
+                      const result = await setUserRecallPaused({
+                        userId: user.id,
+                        paused: !user.recallPaused,
+                      });
+                      if (result.success) {
+                        toast.success(result.data?.paused ? "已暂停自动关怀邮件" : "已恢复自动关怀邮件");
+                        onRefresh();
+                      } else {
+                        toast.error("更新失败", { description: result.error });
+                      }
+                    });
+                  }}
+                >
+                  {user.recallPaused ? "恢复" : "暂停"}
+                </Button>
+              </div>
+            }
+          />
           <InfoRow label="更新时间" value={formatDate(user.updatedAt)} />
           <InfoRow label="来源" value={user.utmSource || user.affCode || "-"} />
           <InfoRow

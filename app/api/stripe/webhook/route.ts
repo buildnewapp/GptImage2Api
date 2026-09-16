@@ -7,6 +7,7 @@ import { handleCheckoutSessionCompleted, handleEarlyFraudWarningCreated, handleI
 
 const relevantEvents = new Set([
   'checkout.session.completed',
+  'checkout.session.async_payment_succeeded',
   'customer.subscription.created',
   'customer.subscription.updated',
   'customer.subscription.deleted',
@@ -59,6 +60,7 @@ async function processWebhookEvent(event: Stripe.Event) {
 
   switch (event.type) {
     case 'checkout.session.completed':
+    case 'checkout.session.async_payment_succeeded':
       if (event.data.object.mode === 'payment') {
         await handleCheckoutSessionCompleted(event.data.object as Stripe.Checkout.Session);
       }

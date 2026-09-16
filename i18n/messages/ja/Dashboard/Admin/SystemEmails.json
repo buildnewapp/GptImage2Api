@@ -32,7 +32,8 @@
     "preview": "受信者をプレビュー",
     "send": "最初のバッチを送信",
     "continueSend": "送信を続行",
-    "completed": "完了"
+    "completed": "完了",
+    "viewLogs": "メール送信履歴"
   },
   "preview": {
     "title": "プレビュー",

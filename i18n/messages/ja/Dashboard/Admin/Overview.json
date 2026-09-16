@@ -1,5 +1,7 @@
 {
   "title": "概要",
+  "adminQuickLinks": "管理ショートカット",
+  "adminQuickLinksDescription": "よく使うシステム・コンテンツ管理画面を開きます。",
   "users": "ユーザー",
   "oneTimePayments": "一括払い",
   "monthlySubscriptions": "月間サブスクリプション",

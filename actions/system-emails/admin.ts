@@ -24,7 +24,7 @@ import {
   splitAdminSystemEmailBodyIntoParagraphs,
   type AdminSystemEmailJob,
 } from "@/lib/admin/system-emails";
-import resend from "@/lib/resend";
+import { sendEmail } from "@/lib/email/send";
 import { AdminSystemBroadcastEmail } from "@/emails/admin-system-broadcast";
 import {
   and,
@@ -379,18 +379,6 @@ export async function sendOrResumeAdminSystemEmail(
     return actionResponse.unauthorized();
   }
 
-  if (!resend) {
-    return actionResponse.error("Resend env is not set");
-  }
-
-  const senderEmail = process.env.ADMIN_EMAIL;
-  if (!senderEmail) {
-    return actionResponse.error("Sender email is not configured.");
-  }
-
-  const senderName = process.env.ADMIN_NAME ?? "Admin";
-  const from = `${senderName} <${senderEmail}>`;
-
   try {
     const parsed = sendSchema.parse(input);
     const batchSize = parsed.batchSize ?? DEFAULT_BATCH_SIZE;
@@ -465,41 +453,22 @@ export async function sendOrResumeAdminSystemEmail(
         });
       } else {
         try {
-          const result = await resend.emails.send(
-            {
-              from,
-              to: recipient.email,
-              subject: currentJob.subject,
-              react: AdminSystemBroadcastEmail({
-                subject: currentJob.subject,
-                paragraphs,
-              }),
-            },
-            {
-              idempotencyKey: buildAdminSystemEmailIdempotencyKey(
-                currentJob.jobId,
-                recipient.id,
-              ),
-            },
-          );
-
-          if (result.error) {
-            nextJob = advanceAdminSystemEmailJobProgress(currentJob, {
-              processedCount: 1,
-              successCount: 0,
-              failureCount: 1,
-              now,
-              lastError: result.error.message,
-            });
-          } else {
-            nextJob = advanceAdminSystemEmailJobProgress(currentJob, {
-              processedCount: 1,
-              successCount: 1,
-              failureCount: 0,
-              now,
-              lastError: null,
-            });
-          }
+          await sendEmail({
+            email: recipient.email,
+            subject: currentJob.subject,
+            templateKey: "admin-system-broadcast",
+            react: AdminSystemBroadcastEmail,
+            reactProps: { subject: currentJob.subject, paragraphs },
+            jobId: currentJob.jobId,
+            idempotencyKey: buildAdminSystemEmailIdempotencyKey(currentJob.jobId, recipient.id),
+          });
+          nextJob = advanceAdminSystemEmailJobProgress(currentJob, {
+            processedCount: 1,
+            successCount: 1,
+            failureCount: 0,
+            now,
+            lastError: null,
+          });
         } catch (error) {
           nextJob = advanceAdminSystemEmailJobProgress(currentJob, {
             processedCount: 1,

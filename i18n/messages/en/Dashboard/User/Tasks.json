@@ -45,11 +45,7 @@
   "tasks": {
     "daily_checkin": {
       "title": "Daily Check-In",
-      "description": "Come back once a day and claim your daily credit bonus."
-    },
-    "checkin_3_days": {
-      "title": "Check In 3 Days in a Row",
-      "description": "Complete your daily check-in for three consecutive days to unlock an extra bonus."
+      "description": "All signed-in users can check in. Rewards increase each consecutive day and repeat every 7 days. Missing a day resets you to Day 1."
     },
     "first_public_generation": {
       "title": "First Public Creation",
@@ -168,5 +164,15 @@
     "alreadyClaimed": "This reward has already been claimed.",
     "notCompleted": "Task requirements are not completed yet.",
     "claimFailed": "Failed to claim task reward."
+  },
+  "checkinCycle": {
+    "label": "7-day check-in rewards",
+    "total": "{credits} credits over {days} consecutive days",
+    "currentDay": "Today: Day {day}",
+    "day": "Day {day}",
+    "today": "Claim today",
+    "todayClaimed": "Claimed today",
+    "upcoming": "Upcoming",
+    "resetTime": "Resets daily at 00:00 UTC. Claim manually once per day."
   }
 }

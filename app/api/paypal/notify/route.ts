@@ -89,6 +89,16 @@ async function processWebhookEvent(payload: PayPalWebhookEvent) {
       }
       return;
     }
+    case "PAYMENT.SALE.COMPLETED":
+      // Sale events can also belong to payments without a subscription.
+      if (
+        !payload.resource?.billing_agreement_id &&
+        !payload.resource?.subscription_id
+      ) {
+        return;
+      }
+      await handlePayPalSubscriptionPaymentCompleted(payload.resource);
+      return;
     case "BILLING.SUBSCRIPTION.PAYMENT.COMPLETED":
       await handlePayPalSubscriptionPaymentCompleted(payload.resource);
       return;

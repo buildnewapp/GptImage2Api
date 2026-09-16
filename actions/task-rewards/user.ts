@@ -24,7 +24,7 @@ import {
 import {
   countReferralInvitesForUser,
   createDrizzleTaskRewardStore,
-  getClaimedDailyCheckinDatesForUser,
+  getDailyCheckinStreakForUser,
   getTaskClaimLookup,
   hasReferralFirstPurchaseForUser,
   hasSuccessfulPublicGenerationForUser,
@@ -52,18 +52,12 @@ export async function getTaskRewardsDashboardData(
 
   try {
     const dailyClaimKey = getTodayClaimKey(now);
-    const streakDates = [0, 1, 2].map((offset) => {
-      const date = new Date(now);
-      date.setUTCDate(date.getUTCDate() - offset);
-      return date.toISOString().slice(0, 10);
-    });
     const enabledManualTaskKeys = MANUAL_REVIEW_TASK_KEYS.filter(
       (taskKey) => manualReviewTasks[taskKey].enabled,
     );
     const claimKeys = Array.from(
       new Set([
         dailyClaimKey,
-        buildOnceClaimKey("checkin_3_days"),
         buildOnceClaimKey("first_public_generation"),
         buildOnceClaimKey("first_purchase"),
         ...enabledManualTaskKeys.map(buildOnceClaimKey),
@@ -75,7 +69,7 @@ export async function getTaskRewardsDashboardData(
 
     const [
       claimLookup,
-      claimedStreakDates,
+      previousDailyCheckinStreak,
       hasPublicGeneration,
       hasPurchase,
       inviteCount,
@@ -83,7 +77,7 @@ export async function getTaskRewardsDashboardData(
       latestManualApplications,
     ] = await Promise.all([
       getTaskClaimLookup(db, user.id, claimKeys),
-      getClaimedDailyCheckinDatesForUser(db, user.id, streakDates),
+      getDailyCheckinStreakForUser(db, user.id, now.toISOString().slice(0, 10)),
       hasSuccessfulPublicGenerationForUser(db, user.id),
       hasSuccessfulPurchaseForUser(db, user.id),
       countReferralInvitesForUser(db, user.id),
@@ -93,7 +87,7 @@ export async function getTaskRewardsDashboardData(
     const tasks = buildTaskRewardItems({
       now,
       claimLookup,
-      claimedStreakDates,
+      previousDailyCheckinStreak,
       hasPublicGeneration,
       hasPurchase,
       inviteCount,

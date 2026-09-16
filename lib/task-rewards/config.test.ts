@@ -22,7 +22,6 @@ test("builds a once-only claim key", () => {
 test("exposes the configured task switches for automatic and invite tasks", () => {
   assert.equal(typeof taskRewardsConfig.enabled, "boolean");
   assert.equal(typeof taskRewardsConfig.dailyCheckin.enabled, "boolean");
-  assert.equal(typeof taskRewardsConfig.checkin3Days.enabled, "boolean");
   assert.equal(
     typeof taskRewardsConfig.firstPublicGeneration.enabled,
     "boolean",

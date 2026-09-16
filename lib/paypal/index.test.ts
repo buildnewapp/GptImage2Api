@@ -23,6 +23,19 @@ test("encodes and decodes paypal custom id payload", () => {
 
 test("returns null for invalid paypal custom id payload", () => {
   assert.equal(decodePayPalCustomId("not-json"), null);
+  assert.equal(decodePayPalCustomId("null"), null);
+  assert.equal(decodePayPalCustomId('[123,"user",true]'), null);
+});
+
+test("round-trips checkout UUIDs within PayPal's custom id limit", () => {
+  const payload = {
+    planId: "11111111-1111-4111-8111-111111111111",
+    userId: "22222222-2222-4222-8222-222222222222",
+    checkoutOrderId: "33333333-3333-4333-8333-333333333333",
+  };
+  const encoded = encodePayPalCustomId(payload);
+  assert.ok(encoded.length <= 127);
+  assert.deepEqual(decodePayPalCustomId(encoded), payload);
 });
 
 test("extracts approval url from paypal links", () => {
@@ -37,8 +50,10 @@ test("extracts approval url from paypal links", () => {
 
 test("maps paypal order status to local order status", () => {
   assert.equal(mapPayPalOrderStatus("COMPLETED"), "succeeded");
+  assert.equal(mapPayPalOrderStatus("completed"), "succeeded");
   assert.equal(mapPayPalOrderStatus("APPROVED"), "pending");
   assert.equal(mapPayPalOrderStatus("VOIDED"), "failed");
+  assert.equal(mapPayPalOrderStatus("failed"), "failed");
   assert.equal(mapPayPalOrderStatus("UNKNOWN"), "pending");
 });
 

@@ -1,5 +1,7 @@
 {
   "title": "概览",
+  "adminQuickLinks": "管理入口",
+  "adminQuickLinksDescription": "快速进入常用的系统与内容管理页面。",
   "users": "用户",
   "oneTimePayments": "一次性付款",
   "monthlySubscriptions": "月度订阅",

@@ -45,11 +45,7 @@
   "tasks": {
     "daily_checkin": {
       "title": "每日签到",
-      "description": "每天回来一次，领取当日签到积分。"
-    },
-    "checkin_3_days": {
-      "title": "连续签到 3 天",
-      "description": "连续 3 天完成每日签到后，可领取额外奖励。"
+      "description": "所有登录用户均可签到，连续签到奖励逐日递增；每 7 天一个循环，断签后从第 1 天重新开始。"
     },
     "first_public_generation": {
       "title": "首次生成公开作品",
@@ -168,5 +164,15 @@
     "alreadyClaimed": "该奖励已经领取过了。",
     "notCompleted": "任务条件还未完成。",
     "claimFailed": "领取任务奖励失败。"
+  },
+  "checkinCycle": {
+    "label": "7 天签到奖励",
+    "total": "连续 {days} 天，共领 {credits} 积分",
+    "currentDay": "今日为第 {day} 天",
+    "day": "第 {day} 天",
+    "today": "今日可领",
+    "todayClaimed": "今日已领",
+    "upcoming": "待签到",
+    "resetTime": "每天 UTC 00:00（北京时间 08:00）更新，需手动领取，每天限领一次。"
   }
 }

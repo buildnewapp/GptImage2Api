@@ -9,11 +9,11 @@ import { authClient } from "@/lib/auth/auth-client";
 import { ensureSignupBonusFingerprint } from "@/lib/auth/signup-bonus-fingerprint";
 import { normalizeEmail } from "@/lib/email";
 import { initializeTracking } from "@/lib/tracking/client";
-import { Turnstile } from "@marsidev/react-turnstile";
-import { Github, Link as LinkIcon, Loader2, Lock } from "lucide-react";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
+import { Github, Loader2, Lock } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { toast } from "sonner";
 
 interface LoginFormProps {
@@ -21,306 +21,213 @@ interface LoginFormProps {
   callbackUrl?: string;
 }
 
-type LoginMode = "otp" | "magic-link" | "password";
-
 export default function LoginForm({
   className = "",
   callbackUrl,
 }: LoginFormProps) {
   const t = useTranslations("Login");
   const locale = useLocale();
-
+  const searchParams = useSearchParams();
+  const formId = useId();
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const passwordInputRef = useRef<HTMLInputElement>(null);
+  const turnstileRef = useRef<TurnstileInstance>(null);
   const showGithub = !!process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
-  const showEmailLogin = process.env.NEXT_PUBLIC_EMAIL_LOGIN === "true";
-  const showDevPasswordLogin = process.env.NODE_ENV === "development";
-  const showEmail = showEmailLogin || showDevPasswordLogin;
+  const showEmail = process.env.NEXT_PUBLIC_EMAIL_LOGIN === "true";
+  const captchaEnabled = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
+  const [mode, setMode] = useState<"login" | "register">("login");
   const [lastMethod, setLastMethod] = useState<string | null>(null);
-
-  const [mode, setMode] = useState<LoginMode>(
-    showEmailLogin ? "otp" : "password"
-  );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [isGithubLoading, setIsGithubLoading] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string>("");
-  const [showTurnstile, setShowTurnstile] = useState(false);
-
-  // OTP specific state
   const [otpCode, setOtpCode] = useState("");
-  const [isOtpLoading, setIsOtpLoading] = useState(false);
   const [isCodeSent, setIsCodeSent] = useState(false);
   const [countdown, setCountdown] = useState(0);
-
-  const searchParams = useSearchParams();
-  const next = searchParams.get("next");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSendingCode, setIsSendingCode] = useState(false);
+  const [socialProvider, setSocialProvider] = useState<
+    "google" | "github" | null
+  >(null);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [showTurnstile, setShowTurnstile] = useState(false);
+  const busy = isLoading || isSendingCode || socialProvider !== null;
 
   useEffect(() => {
     setLastMethod(authClient.getLastUsedLoginMethod());
     void ensureSignupBonusFingerprint();
-  }, []);
-
-  // Initialize user tracking on component mount
-  useEffect(() => {
     initializeTracking();
   }, []);
 
   useEffect(() => {
-    if (countdown > 0) {
-      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-      return () => clearTimeout(timer);
-    }
+    if (countdown <= 0) return;
+    const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    return () => clearTimeout(timer);
   }, [countdown]);
 
   const getCallbackUrl = () => {
-    if (callbackUrl) {
-      return callbackUrl;
-    }
-
-    return new URL(
-      next || locale === DEFAULT_LOCALE ? "" : `/${locale}`,
-      window.location.origin
-    ).toString();
+    const fallback = locale === DEFAULT_LOCALE ? "/" : `/${locale}`;
+    const url = new URL(
+      callbackUrl || searchParams.get("next") || fallback,
+      window.location.origin,
+    );
+    return url.origin === window.location.origin
+      ? url.toString()
+      : new URL(fallback, window.location.origin).toString();
   };
 
-  const handleEmailLogin = async (e?: React.FormEvent) => {
-    e?.preventDefault();
-    setIsLoading(true);
+  const resetCaptcha = () => {
+    setCaptchaToken("");
+    turnstileRef.current?.reset();
+  };
+
+  const handleSendCode = async () => {
+    if (
+      !emailInputRef.current?.reportValidity() ||
+      !passwordInputRef.current?.reportValidity()
+    )
+      return;
+    setIsSendingCode(true);
+    setOtpCode("");
 
     try {
-      await ensureSignupBonusFingerprint();
-      const { error } = await authClient.signIn.magicLink({
+      // The server sends a password-setting OTP for both new and existing
+      // emails. An unverified signup never receives a login session.
+      const { error } = await authClient.signUp.email({
         email: normalizeEmail(email),
-        name: "my-name",
-        callbackURL: getCallbackUrl(),
-        errorCallbackURL: "/redirect-error",
+        password,
+        name: normalizeEmail(email).split("@")[0],
         fetchOptions: {
-          headers: {
-            "x-captcha-response": captchaToken || "",
-          },
+          headers: { "x-captcha-response": captchaToken },
         },
       });
-
       if (error) {
-        // Handle rate limit error
-        if (error.status === 429) {
-          toast.error(t("Toast.rateLimitTitle"), {
-            description: t("Toast.rateLimitDescription"),
-          });
-          return;
-        }
-        toast.error(t("Toast.Email.errorTitle"), {
-          description: error.message || t("Toast.Email.errorDescription"),
-        });
-        return;
-      }
-
-      toast.success(t("Toast.Email.successTitle"), {
-        description: t("Toast.Email.successDescription"),
-      });
-    } catch (error) {
-      toast.error(t("Toast.Email.errorTitle"), {
-        description: t("Toast.Email.errorDescription"),
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSendOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsOtpLoading(true);
-
-    try {
-      await ensureSignupBonusFingerprint();
-      const { error } = await authClient.emailOtp.sendVerificationOtp({
-        email: normalizeEmail(email),
-        type: "sign-in",
-        fetchOptions:
-          captchaToken && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
-            ? {
-              headers: {
-                "x-captcha-response": captchaToken,
-              },
-            }
-            : undefined,
-      });
-
-      if (error) {
-        // Handle rate limit error
-        if (error.status === 429) {
-          toast.error(t("Toast.rateLimitTitle"), {
-            description: t("Toast.rateLimitDescription"),
-          });
-          return;
-        }
         toast.error(t("Toast.OTP.errorTitle"), {
-          description: error.message || t("Toast.OTP.sendErrorDescription"),
+          description:
+            error.status === 429
+              ? t("Toast.rateLimitDescription")
+              : error.message || t("Toast.OTP.sendErrorDescription"),
         });
         return;
       }
-
+      setIsCodeSent(true);
+      setCountdown(60);
       toast.success(t("Toast.OTP.sendSuccessTitle"), {
         description: t("Toast.OTP.sendSuccessDescription"),
       });
-      setIsCodeSent(true);
-      setCountdown(60);
-    } catch (error) {
-      toast.error(t("Toast.OTP.errorTitle"), {
-        description: t("Toast.OTP.sendErrorDescription"),
-      });
+    } catch {
+      toast.error(t("Toast.OTP.sendErrorDescription"));
     } finally {
-      setIsOtpLoading(false);
+      resetCaptcha();
+      setIsSendingCode(false);
     }
   };
 
-  const handleVerifyOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (otpCode.length !== 6) return;
-
-    setIsOtpLoading(true);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsLoading(true);
+    let passwordSaved = false;
 
     try {
-      await ensureSignupBonusFingerprint();
-      const { error } = await authClient.signIn.emailOtp({
-        email: normalizeEmail(email),
-        otp: otpCode,
-        fetchOptions:
-          captchaToken && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
-            ? {
-              headers: {
-                "x-captcha-response": captchaToken,
-              },
-            }
-            : undefined,
-      });
-
-      if (error) {
-        // Handle rate limit error
-        if (error.status === 429) {
-          toast.error(t("Toast.rateLimitTitle"), {
-            description: t("Toast.rateLimitDescription"),
+      if (mode === "register") {
+        const { error } = await authClient.emailOtp.resetPassword({
+          email: normalizeEmail(email),
+          password,
+          otp: otpCode,
+        });
+        if (error) {
+          toast.error(t("Toast.OTP.errorTitle"), {
+            description:
+              error.status === 429
+                ? t("Toast.rateLimitDescription")
+                : error.message || t("Toast.OTP.verifyErrorDescription"),
           });
           return;
         }
-        toast.error(t("Toast.OTP.errorTitle"), {
-          description: error.message || t("Toast.OTP.verifyErrorDescription"),
-        });
-        return;
+        passwordSaved = true;
+        setIsCodeSent(false);
+        setOtpCode("");
+        setMode("login");
       }
 
-      toast.success(t("Toast.OTP.verifySuccessTitle"), {
-        description: t("Toast.OTP.verifySuccessDescription"),
-      });
-
-      window.location.assign(getCallbackUrl());
-    } catch (error) {
-      toast.error(t("Toast.OTP.errorTitle"), {
-        description: t("Toast.OTP.verifyErrorDescription"),
-      });
-    } finally {
-      setIsOtpLoading(false);
-    }
-  };
-
-  const handlePasswordLogin = async (e?: React.FormEvent) => {
-    e?.preventDefault();
-    setIsLoading(true);
-
-    try {
-      await ensureSignupBonusFingerprint();
+      // Establish the session only after the verified password is saved, so
+      // the client-auth bridge cannot issue a ticket before registration ends.
       const { error } = await authClient.signIn.email({
         email: normalizeEmail(email),
         password,
         callbackURL: getCallbackUrl(),
+        fetchOptions: {
+          headers: { "x-captcha-response": captchaToken },
+        },
       });
-
       if (error) {
+        if (
+          !passwordSaved &&
+          [
+            "INVALID_EMAIL_OR_PASSWORD",
+            "INVALID_CREDENTIALS",
+            "PASSWORD_SETUP_REQUIRED",
+            "EMAIL_NOT_VERIFIED",
+            "REGISTRATION_REQUIRED",
+          ].includes(error.code ?? "")
+        ) {
+          setMode("register");
+          return;
+        }
         toast.error(t("Toast.Password.errorTitle"), {
-          description: error.message || t("Toast.Password.errorDescription"),
+          description: passwordSaved
+            ? t("Registration.passwordSaved")
+            : error.status === 429
+              ? t("Toast.rateLimitDescription")
+              : error.message || t("Toast.Password.errorDescription"),
         });
         return;
       }
-
-      toast.success(t("Toast.Password.successTitle"), {
-        description: t("Toast.Password.successDescription"),
-      });
-
       window.location.assign(getCallbackUrl());
-    } catch (error) {
-      toast.error(t("Toast.Password.errorTitle"), {
-        description: t("Toast.Password.errorDescription"),
-      });
+    } catch {
+      toast.error(
+        passwordSaved
+          ? t("Registration.passwordSaved")
+          : t("Toast.Password.errorDescription"),
+      );
     } finally {
+      resetCaptcha();
       setIsLoading(false);
     }
   };
 
-  const signInSocial = async (provider: string) => {
-    await ensureSignupBonusFingerprint();
-    const callback = new URL(
-      next || locale === DEFAULT_LOCALE ? "" : `/${locale}`,
-      window.location.origin
-    );
-
-    await authClient.signIn.social(
-      {
-        provider: provider,
-        callbackURL: callback.toString(),
-        errorCallbackURL: `/redirect-error`,
-      },
-      {
-        onRequest: () => {
-          if (provider === "google") {
-            setIsGoogleLoading(true);
-          } else if (provider === "github") {
-            setIsGithubLoading(true);
-          }
-        },
-        onResponse: (ctx) => {
-          console.log("onResponse", ctx.response);
-        },
-        onSuccess: (ctx) => {
-          console.log("onSuccess", ctx.data);
-          // setIsGoogleLoading(false);
-          // setIsGithubLoading(false);
-        },
-        onError: (ctx) => {
-          console.error("social login error", ctx.error.message);
-          setIsGoogleLoading(false);
-          setIsGithubLoading(false);
-          toast.error(`${provider} login failed`, {
-            description: ctx.error.message,
-          });
-        },
-      }
-    );
-  };
-
-  const toggleMode = () => {
-    setMode(mode === "otp" ? "magic-link" : "otp");
-    setOtpCode("");
-    setIsCodeSent(false);
-  };
-
-  const switchMode = (nextMode: LoginMode) => {
-    setMode(nextMode);
-    setOtpCode("");
-    setIsCodeSent(false);
+  const signInSocial = async (provider: "google" | "github") => {
+    setSocialProvider(provider);
+    try {
+      await ensureSignupBonusFingerprint();
+      const { error } = await authClient.signIn.social({
+        provider,
+        callbackURL: getCallbackUrl(),
+        errorCallbackURL: "/redirect-error",
+      });
+      if (error) throw error;
+    } catch {
+      toast.error(
+        t(
+          provider === "google"
+            ? "Toast.Google.errorDescription"
+            : "Toast.Github.errorDescription",
+        ),
+      );
+    } finally {
+      setSocialProvider(null);
+    }
   };
 
   return (
     <div className={`grid gap-6 ${className}`}>
-      <div className="grid gap-4">
+      <div className="grid gap-2">
         <Button
           variant="outline"
           onClick={() => signInSocial("google")}
-          disabled={isGoogleLoading || isGithubLoading}
-          className="relative"
+          disabled={busy}
+          className="relative h-auto min-h-9 flex-wrap gap-x-2 gap-y-1 px-3 py-2 whitespace-normal"
         >
-          {isGoogleLoading ? (
+          {socialProvider === "google" ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             <GoogleIcon className="h-4 w-4" />
@@ -329,7 +236,7 @@ export default function LoginForm({
           {lastMethod === "google" && (
             <Badge
               variant="secondary"
-              className="absolute right-2 text-[10px] px-1.5 py-0.5 pointer-events-none"
+              className="shrink-0 text-[10px] px-1.5 py-0.5 pointer-events-none"
             >
               Last used
             </Badge>
@@ -339,10 +246,10 @@ export default function LoginForm({
           <Button
             variant="outline"
             onClick={() => signInSocial("github")}
-            disabled={isGoogleLoading || isGithubLoading}
-            className="relative"
+            disabled={busy}
+            className="relative h-auto min-h-9 flex-wrap gap-x-2 gap-y-1 px-3 py-2 whitespace-normal"
           >
-            {isGithubLoading ? (
+            {socialProvider === "github" ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               <Github className="h-4 w-4" />
@@ -351,7 +258,7 @@ export default function LoginForm({
             {lastMethod === "github" && (
               <Badge
                 variant="secondary"
-                className="absolute right-2 text-[10px] px-1.5 py-0.5 pointer-events-none"
+                className="shrink-0 text-[10px] px-1.5 py-0.5 pointer-events-none"
               >
                 Last used
               </Badge>
@@ -361,163 +268,174 @@ export default function LoginForm({
       </div>
 
       {showEmail && (
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
-              {t("signInMethods.or")}
-            </span>
-          </div>
-        </div>
-      )}
-
-      {showEmail && (
-        <div className="grid gap-2">
-          <div className="grid">
-            <div className="text-sm font-medium">Email</div>
-            <Input
-              type="email"
-              placeholder="name@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={isLoading || isOtpLoading}
-              onMouseEnter={() => setShowTurnstile(true)}
-            />
-          </div>
-
-          {mode === "otp" && (
-            <div className="grid">
-              <div className="text-sm font-medium">
-                {t("signInMethods.otpMethod")}
-              </div>
-              <div className="flex gap-2">
-                <Input
-                  type="text"
-                  maxLength={6}
-                  placeholder="123456"
-                  value={otpCode}
-                  onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
-                  disabled={isLoading || isOtpLoading}
-                  className="flex-1"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="min-w-[120px]"
-                  onClick={handleSendOTP}
-                  disabled={
-                    !email ||
-                    isOtpLoading ||
-                    countdown > 0 ||
-                    (!!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY &&
-                      !captchaToken)
-                  }
-                >
-                  {isOtpLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : countdown > 0 ? (
-                    `${countdown}s`
-                  ) : (
-                    t("signInMethods.sendOTP")
-                  )}
-                </Button>
-              </div>
+        <>
+          <div className="relative h-auto min-h-9 flex-wrap gap-x-2 gap-y-1 px-3 py-2 whitespace-normal">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
             </div>
-          )}
-
-          {mode === "password" && (
-            <div className="grid">
-              <div className="text-sm font-medium">
-                {t("signInMethods.passwordMethod")}
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                {t("signInMethods.or")}
+              </span>
+            </div>
+          </div>
+          <form
+            onSubmit={handleSubmit}
+            onFocus={() => setShowTurnstile(true)}
+            className="grid gap-3"
+          >
+            {mode === "register" && (
+              <div className="space-y-1" role="status">
+                <h2 className="text-sm font-semibold">
+                  {t("Registration.title")}
+                </h2>
+                <p className="text-xs text-muted-foreground">
+                  {t("Registration.description")}
+                </p>
               </div>
+            )}
+            <div className="grid gap-1">
+              <label
+                htmlFor={`${formId}-email`}
+                className="text-sm font-medium"
+              >
+                {t("Registration.emailLabel")}
+              </label>
               <Input
-                type="password"
-                placeholder="********"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={isLoading || isOtpLoading}
+                ref={emailInputRef}
+                id={`${formId}-email`}
+                type="email"
+                autoComplete="email"
+                placeholder="name@example.com"
+                required
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setOtpCode("");
+                  setIsCodeSent(false);
+                  setCountdown(0);
+                }}
+                disabled={busy}
               />
             </div>
-          )}
-
-          {mode !== "password" && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && showTurnstile && (
-            <Turnstile
-              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-              onSuccess={(token: string) => {
-                setCaptchaToken(token);
-              }}
-              onError={() => setCaptchaToken("")}
-              onExpire={() => setCaptchaToken("")}
-              options={{
-                size: "flexible",
-              }}
-            />
-          )}
-
-          <Button
-            onClick={
-              mode === "otp"
-                ? handleVerifyOTP
-                : mode === "password"
-                  ? handlePasswordLogin
-                  : handleEmailLogin
-            }
-            disabled={
-              !email ||
-              isLoading ||
-              isOtpLoading ||
-              (mode === "otp" && otpCode.length !== 6) ||
-              (mode === "password" && !password) ||
-              (mode !== "password" &&
-                !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY &&
-                !captchaToken)
-            }
-            className="w-full bg-primary/90 hover:bg-primary"
-          >
-            {isLoading || isOtpLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : mode === "otp" ? (
-              t("Button.signIn")
-            ) : mode === "password" ? (
-              <>
+            <div className="grid gap-1">
+              <label
+                htmlFor={`${formId}-password`}
+                className="text-sm font-medium"
+              >
+                {t("signInMethods.passwordMethod")}
+              </label>
+              <Input
+                ref={passwordInputRef}
+                id={`${formId}-password`}
+                type="password"
+                autoComplete={
+                  mode === "register" ? "new-password" : "current-password"
+                }
+                placeholder={
+                  mode === "register"
+                    ? t("Registration.passwordHint")
+                    : "********"
+                }
+                required
+                minLength={mode === "register" ? 8 : undefined}
+                maxLength={128}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={busy}
+              />
+            </div>
+            {mode === "register" && (
+              <div className="grid gap-1">
+                <label
+                  htmlFor={`${formId}-otp`}
+                  className="text-sm font-medium"
+                >
+                  {t("signInMethods.otpMethod")}
+                </label>
+                <div className="flex gap-2">
+                  <Input
+                    id={`${formId}-otp`}
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    pattern="[0-9]{6}"
+                    maxLength={6}
+                    placeholder="123456"
+                    required
+                    value={otpCode}
+                    onChange={(e) =>
+                      setOtpCode(e.target.value.replace(/\D/g, ""))
+                    }
+                    disabled={busy}
+                    className="min-w-0 flex-1"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleSendCode}
+                    disabled={
+                      !email ||
+                      password.length < 8 ||
+                      busy ||
+                      countdown > 0 ||
+                      (captchaEnabled && !captchaToken)
+                    }
+                  >
+                    {isSendingCode ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : countdown > 0 ? (
+                      `${countdown}s`
+                    ) : (
+                      t("signInMethods.sendOTP")
+                    )}
+                  </Button>
+                </div>
+              </div>
+            )}
+            {captchaEnabled && showTurnstile && (
+              <Turnstile
+                ref={turnstileRef}
+                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                onSuccess={setCaptchaToken}
+                onError={() => setCaptchaToken("")}
+                onExpire={() => setCaptchaToken("")}
+                options={{ size: "flexible" }}
+              />
+            )}
+            <Button
+              type="submit"
+              disabled={
+                !email ||
+                !password ||
+                busy ||
+                (captchaEnabled && !captchaToken) ||
+                (mode === "register" &&
+                  (!isCodeSent || otpCode.length !== 6 || password.length < 8))
+              }
+              className="w-full bg-primary/90 hover:bg-primary"
+            >
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
                 <Lock className="h-4 w-4" />
-                {t("Button.signIn")}
-              </>
-            ) : (
-              <>
-                <LinkIcon className="h-4 w-4" />
-                {t("signInMethods.magicLinkMethod")}
-              </>
-            )}
-          </Button>
-
-          <div className="flex flex-wrap justify-center gap-1">
-            {showEmailLogin && mode !== "password" && (
-              <Button
-                variant="link"
-                className="text-xs font-normal text-muted-foreground hover:text-primary"
-                onClick={toggleMode}
-              >
-                {mode === "otp"
-                  ? `Or ${t("signInMethods.magicLinkMethod")}`
-                  : `Or ${t("signInMethods.otpMethod")}`}
-              </Button>
-            )}
-            {showDevPasswordLogin && showEmailLogin && (
-              <Button
-                variant="link"
-                className="text-xs font-normal text-muted-foreground hover:text-primary"
-                onClick={() => switchMode(mode === "password" ? "otp" : "password")}
-              >
-                {mode === "password"
-                  ? `Or ${t("signInMethods.otpMethod")}`
-                  : `Or ${t("signInMethods.passwordMethod")}`}
-              </Button>
-            )}
-          </div>
-        </div>
+              )}
+              {mode === "register"
+                ? t("Registration.submit")
+                : t("Button.signIn")}
+            </Button>
+            <Button
+              type="button"
+              variant="link"
+              disabled={busy}
+              className="text-xs font-normal text-muted-foreground hover:text-primary"
+              onClick={() => setMode(mode === "login" ? "register" : "login")}
+            >
+              {mode === "login"
+                ? t("Registration.open")
+                : t("Registration.backToLogin")}
+            </Button>
+          </form>
+        </>
       )}
     </div>
   );

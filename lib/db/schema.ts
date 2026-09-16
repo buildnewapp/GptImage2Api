@@ -19,10 +19,49 @@ import { sql } from "drizzle-orm";
 
 export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
 
+export const emailSendStatusEnum = pgEnum("email_send_status", [
+  "sending",
+  "sent",
+  "failed",
+  "unknown",
+]);
+
+export const emailLogs = pgTable(
+  "email_logs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    toEmail: text("to_email").notNull(),
+    fromEmail: text("from_email"),
+    fromName: text("from_name"),
+    subject: text("subject").notNull(),
+    templateKey: text("template_key").notNull(),
+    variables: jsonb("variables").$type<Record<string, unknown>>().notNull(),
+    provider: text("provider").notNull(),
+    status: emailSendStatusEnum("status").default("sending").notNull(),
+    providerMessageId: text("provider_message_id"),
+    deliveryStatus: text("delivery_status"),
+    errorMessage: text("error_message"),
+    jobId: uuid("job_id"),
+    idempotencyKey: text("idempotency_key").unique(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    sentAt: timestamp("sent_at", { withTimezone: true }),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => ({
+    createdAtIdx: index("idx_email_logs_created_at").on(table.createdAt),
+    recipientIdx: index("idx_email_logs_recipient_created_at").on(table.toEmail, table.createdAt),
+    statusIdx: index("idx_email_logs_status_created_at").on(table.status, table.createdAt),
+    templateIdx: index("idx_email_logs_template_created_at").on(table.templateKey, table.createdAt),
+    jobIdx: index("idx_email_logs_job_id").on(table.jobId),
+  }),
+);
+
 export const user = pgTable("user", {
   id: uuid("id").primaryKey().defaultRandom(),
   email: text("email").unique().notNull(),
   emailVerified: boolean("email_verified").default(false).notNull(), // better-auth
+  recallRegisteredAt: timestamp("recall_registered_at", { withTimezone: true }),
+  recallPaused: boolean("recall_paused").default(false).notNull(),
   name: text("name"), // better-auth
   image: text("image"), // better-auth
   role: userRoleEnum("role").default("user").notNull(),
@@ -271,6 +310,8 @@ export const orders = pgTable(
     orderType: text("order_type").notNull(),
     status: text("status").notNull(),
     stripePaymentIntentId: text("stripe_payment_intent_id"),
+    checkoutStartedAt: timestamp("checkout_started_at", { withTimezone: true }),
+    paidAt: timestamp("paid_at", { withTimezone: true }),
     stripeInvoiceId: text("stripe_invoice_id"),
     stripeChargeId: text("stripe_charge_id"),
     subscriptionId: text("subscription_id"),

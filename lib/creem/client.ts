@@ -7,6 +7,7 @@ import {
   CreemFullSubscription,
   CreemProduct,
   CreemProductCreateParams,
+  CreemTransaction,
 } from './types';
 
 const CREEM_API_BASE_URL =
@@ -192,6 +193,13 @@ export async function retrieveCreemSubscription(
       `Failed to retrieve Creem subscription ${subscriptionId}: ${message}`
     );
   }
+}
+
+export async function retrieveCreemTransaction(transactionId: string): Promise<CreemTransaction> {
+  return creemRequest<CreemTransaction>(
+    `/transactions?${new URLSearchParams({ transaction_id: transactionId })}`,
+    { method: 'GET' },
+  );
 }
 
 export async function createCreemCustomerPortalLink(

@@ -556,6 +556,13 @@ export async function prepareAiStudioExecution(
   }
 
   const body = mapPublicModelAliasToProviderModel(detail, payload);
+  if (
+    !body.model &&
+    detail.requestSchema?.properties?.model &&
+    detail.modelKeys.length === 1
+  ) {
+    body.model = detail.modelKeys[0];
+  }
   const callbackUrl = getAiStudioCallbackUrl();
   const preparedBody = applyAiStudioSystemFields(detail, body, callbackUrl);
   const providerBody = stripLocalReferenceMetadata(preparedBody);

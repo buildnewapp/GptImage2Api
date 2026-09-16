@@ -45,11 +45,7 @@
   "tasks": {
     "daily_checkin": {
       "title": "デイリーチェックイン",
-      "description": "毎日 1 回戻ってきて、その日のボーナスクレジットを受け取ります。"
-    },
-    "checkin_3_days": {
-      "title": "3日連続チェックイン",
-      "description": "3日連続でデイリーチェックインを完了すると、追加報酬を受け取れます。"
+      "description": "ログイン済みのすべてのユーザーが参加できます。連続チェックインで報酬が毎日増え、7日ごとに繰り返します。1日でも途切れると1日目に戻ります。"
     },
     "first_public_generation": {
       "title": "初めての公開作品",
@@ -168,5 +164,15 @@
     "alreadyClaimed": "この報酬はすでに受け取り済みです。",
     "notCompleted": "タスク条件がまだ満たされていません。",
     "claimFailed": "タスク報酬の受け取りに失敗しました。"
+  },
+  "checkinCycle": {
+    "label": "7日間のチェックイン報酬",
+    "total": "{days}日連続で合計{credits}クレジット",
+    "currentDay": "今日は{day}日目",
+    "day": "{day}日目",
+    "today": "本日受取可",
+    "todayClaimed": "本日受取済み",
+    "upcoming": "未達成",
+    "resetTime": "毎日UTC 00:00（日本時間09:00）に更新されます。1日1回、手動で受け取ってください。"
   }
 }

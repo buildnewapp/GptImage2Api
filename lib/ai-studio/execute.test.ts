@@ -1113,6 +1113,39 @@ test("deduplicates concurrent task status queries for the same task", async () =
   await rm(tempDir, { recursive: true, force: true });
 });
 
+test("prepareAiStudioExecution fills the Wan model when the catalog example is empty", async () => {
+  const originalRuntimeCatalogPath = process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
+  delete process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
+
+  try {
+    for (const model of ["wan/2-7-image", "wan/2-7-image-pro"]) {
+      const payload = {
+        input: {
+          prompt: "A car at night",
+          resolution: "2K",
+          seed: 0,
+        },
+      };
+      const prepared = await prepareAiStudioExecution(
+        `image:${model.replaceAll("/", "-")}`,
+        payload,
+      );
+
+      assert.deepEqual(prepared.detail.examplePayload, {});
+      assert.equal(prepared.body.model, model);
+      assert.equal(prepared.pricingPayload.model, model);
+      assert.deepEqual(prepared.body.input, payload.input);
+      assert.equal("model" in payload, false);
+    }
+  } finally {
+    if (originalRuntimeCatalogPath === undefined) {
+      delete process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
+    } else {
+      process.env.AI_STUDIO_RUNTIME_CATALOG_PATH = originalRuntimeCatalogPath;
+    }
+  }
+});
+
 test("prepareAiStudioExecution applies dynamic official pricing for seedance 2.0", async () => {
   const originalRuntimeCatalogPath = process.env.AI_STUDIO_RUNTIME_CATALOG_PATH;
   const tempDir = await mkdtemp(path.join(os.tmpdir(), "ai-studio-seedance-pricing-"));
