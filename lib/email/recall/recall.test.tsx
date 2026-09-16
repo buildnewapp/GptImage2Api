@@ -10,9 +10,12 @@ import {
   type FounderRecallEmailProps,
 } from "@/emails/founder-recall";
 import {
+  calculateRecallPurchaseBonusCredits,
   getRecallStep,
   getFounderIdentity,
   getRecallIdempotencyKey,
+  getRecallPurchaseBonusConfig,
+  resolveRecallPurchaseBonusOffer,
   type RecallState,
 } from "./rules";
 import { readRecallAttachment } from "./attachment";
@@ -35,7 +38,7 @@ const state: RecallState = {
 test("signup steps honor exact boundaries and skip stale steps after downtime", () => {
   assert.equal(getRecallStep(state, after(1.99), origin), null);
   assert.equal(getRecallStep(state, after(2), origin), "signup-help");
-  assert.equal(getRecallStep(state, after(24), origin), "signup-coupon");
+  assert.equal(getRecallStep(state, after(24), origin), "signup-bonus");
   assert.equal(getRecallStep(state, after(72), origin), null);
   assert.equal(getRecallStep(state, after(24), after(1)), null);
 });
@@ -44,7 +47,7 @@ test("checkout supersedes signup and repeated orders do not change the step iden
   const checkout = { ...state, checkoutAt: after(1), hasPendingCheckout: true };
   assert.equal(getRecallStep(checkout, after(1.99), origin), null);
   assert.equal(getRecallStep(checkout, after(2), origin), "checkout-help");
-  assert.equal(getRecallStep(checkout, after(7), origin), "checkout-coupon");
+  assert.equal(getRecallStep(checkout, after(7), origin), "checkout-bonus");
   assert.equal(getRecallStep(checkout, after(49), origin), null);
   assert.equal(
     getRecallStep(
@@ -118,6 +121,40 @@ test("founder defaults derive from the site hostname and allow explicit override
   );
 });
 
+test("purchase bonus defaults, validation, credit calculation and expiry are deterministic", () => {
+  assert.deepEqual(getRecallPurchaseBonusConfig({}), {
+    percent: 20,
+    validHours: 72,
+  });
+  assert.deepEqual(
+    getRecallPurchaseBonusConfig({
+      RECALL_PURCHASE_BONUS_PERCENT: "25",
+      RECALL_PURCHASE_BONUS_VALID_HOURS: "48",
+    }),
+    { percent: 25, validHours: 48 },
+  );
+  assert.throws(() =>
+    getRecallPurchaseBonusConfig({ RECALL_PURCHASE_BONUS_PERCENT: "0" }),
+  );
+  assert.equal(calculateRecallPurchaseBonusCredits(999, 20), 199);
+  assert.deepEqual(
+    resolveRecallPurchaseBonusOffer({
+      variables: { bonusPercent: 20, bonusValidHours: 72 },
+      sentAt: origin,
+      paidAt: after(72),
+    }),
+    { percent: 20, validHours: 72 },
+  );
+  assert.equal(
+    resolveRecallPurchaseBonusOffer({
+      variables: { bonusPercent: 20, bonusValidHours: 72 },
+      sentAt: origin,
+      paidAt: after(72.01),
+    }),
+    null,
+  );
+});
+
 test("missing or invalid PDF is optional; a real PDF becomes a base64 attachment", async () => {
   const root = await mkdtemp(join(tmpdir(), "recall-attachment-"));
   try {
@@ -137,7 +174,7 @@ test("missing or invalid PDF is optional; a real PDF becomes a base64 attachment
   }
 });
 
-test("all five emails render with product-neutral text, coupon details and conditional attachment copy", async () => {
+test("all five emails render with product-neutral bonus terms and conditional attachment copy", async () => {
   const base: FounderRecallEmailProps = {
     step: "signup-help",
     name: "<customer>",
@@ -148,22 +185,28 @@ test("all five emails render with product-neutral text, coupon details and condi
     siteUrl: "https://example.com",
     pricingUrl: "https://example.com/pricing",
     hasAttachment: false,
-    couponCode: "FIRST10",
-    couponDescription: "10% off your first purchase.",
+    bonusPercent: 20,
+    bonusValidHours: 72,
   };
   for (const step of [
     "checkout-help",
-    "checkout-coupon",
+    "checkout-bonus",
     "paid-help",
     "signup-help",
-    "signup-coupon",
+    "signup-bonus",
   ] as const) {
     const html = await render(<FounderRecallEmail {...base} step={step} />);
     assert.match(html, /JsonTranslate/);
     assert.match(html, /&lt;customer&gt;/);
     assert.doesNotMatch(html, /attached|Sdance|video/i);
-    if (step.endsWith("-coupon")) assert.match(html, /FIRST10/);
-    assert.match(getRecallSubject(step, base.productName), /JsonTranslate/);
+    if (step.endsWith("-bonus")) {
+      assert.match(html, /20.*% bonus credits/);
+      assert.match(html, /No coupon code is needed/);
+    }
+    assert.match(
+      getRecallSubject(step, base.productName, base.bonusPercent),
+      /JsonTranslate/,
+    );
   }
   assert.match(
     await render(<FounderRecallEmail {...base} hasAttachment />),

@@ -1,5 +1,8 @@
 import * as React from "react";
-import type { RecallStep } from "@/lib/email/recall/rules";
+import {
+  DEFAULT_RECALL_PURCHASE_BONUS_PERCENT,
+  type RecallStep,
+} from "@/lib/email/recall/rules";
 
 export interface FounderRecallEmailProps {
   step: RecallStep;
@@ -11,30 +14,33 @@ export interface FounderRecallEmailProps {
   siteUrl: string;
   pricingUrl: string;
   planName?: string;
-  couponCode?: string;
-  couponDescription?: string;
-  couponUrl?: string;
+  bonusPercent: number;
+  bonusValidHours: number;
   hasAttachment: boolean;
 }
 
-export function getRecallSubject(step: RecallStep, productName: string) {
+export function getRecallSubject(
+  step: RecallStep,
+  productName: string,
+  bonusPercent = DEFAULT_RECALL_PURCHASE_BONUS_PERCENT,
+) {
   switch (step) {
     case "checkout-help":
       return `Any trouble checking out with ${productName}?`;
-    case "checkout-coupon":
-      return `A little help getting started with ${productName}`;
+    case "checkout-bonus":
+      return `${bonusPercent}% bonus credits for getting started with ${productName}`;
     case "paid-help":
       return `Thank you for supporting ${productName}`;
     case "signup-help":
       return `What would you like to do with ${productName}?`;
-    case "signup-coupon":
-      return `A first-purchase offer for ${productName}`;
+    case "signup-bonus":
+      return `${bonusPercent}% bonus credits on your first ${productName} purchase`;
   }
 }
 
 export function FounderRecallEmail(props: Readonly<FounderRecallEmailProps>) {
   const { step, productName, founderName } = props;
-  const coupon = step === "signup-coupon" || step === "checkout-coupon";
+  const bonus = step === "signup-bonus" || step === "checkout-bonus";
   return (
     <html lang="en">
       <body style={{ margin: 0, background: "#fff", color: "#292524" }}>
@@ -100,23 +106,21 @@ export function FounderRecallEmail(props: Readonly<FounderRecallEmailProps>) {
               </p>
             </>
           )}
-          {coupon && (
+          {bonus && (
             <>
               <p>
-                {step === "checkout-coupon"
-                  ? "If you're still considering your purchase, I've put together an offer that might help."
-                  : "If you're still deciding whether to make your first purchase, here's an offer to help you get started."}
+                {step === "checkout-bonus"
+                  ? "If you're still considering your purchase, I've added a bonus that works with every available payment method."
+                  : "If you're still deciding whether to make your first purchase, here's a bonus to help you get started."}
               </p>
               <p>
-                {props.couponDescription}
-                <br />
-                Code: <strong>{props.couponCode}</strong>
+                Complete your first purchase within {props.bonusValidHours} hours
+                and we'll automatically add <strong>{props.bonusPercent}% bonus credits</strong>{" "}
+                based on the credits included in your plan. No coupon code is needed.
               </p>
               <p>{props.productDescription}</p>
               <p>
-                <a href={props.couponUrl || props.pricingUrl}>
-                  View the offer and plans
-                </a>
+                <a href={props.pricingUrl}>View plans and get bonus credits</a>
               </p>
               <p>
                 Is price, the product, or getting started holding you back? I'd

@@ -12,10 +12,12 @@ import {
   user,
 } from "@/lib/db/schema";
 import { FounderRecallEmail, getRecallSubject } from "@/emails/founder-recall";
+import { getConfiguredEmailProvider } from "@/lib/email/providers";
 import { sendEmail } from "@/lib/email/send";
 import { readRecallAttachment } from "./attachment";
 import {
   getFounderIdentity,
+  getRecallPurchaseBonusConfig,
   getRecallIdempotencyKey,
   getRecallStep,
   type RecallState,
@@ -118,8 +120,9 @@ export async function runRecallEmails({ dryRun = false } = {}) {
     skipped: 0,
     candidates: [] as Array<{ userId: string; step: string }>,
   };
-  if (!result.enabled) return result;
+  if (!result.enabled || !getConfiguredEmailProvider()) return result;
   const founder = getFounderIdentity(siteConfig.url);
+  const defaultBonus = getRecallPurchaseBonusConfig();
   const db = getDb();
   const now = new Date();
   const whereSettings = and(
@@ -233,28 +236,24 @@ export async function runRecallEmails({ dryRun = false } = {}) {
           )
         )
           continue;
-        const previousCoupon = history.find(
+        const previousBonus = history.find(
           (log) =>
-            log.templateKey.endsWith("-coupon") && log.status !== "failed",
+            log.templateKey.endsWith("-bonus") && log.status !== "failed",
         )?.variables;
-        const couponCode =
-          typeof previousCoupon?.couponCode === "string"
-            ? previousCoupon.couponCode
-            : process.env.RECALL_COUPON_CODE?.trim();
-        const couponDescription =
-          typeof previousCoupon?.couponDescription === "string"
-            ? previousCoupon.couponDescription
-            : process.env.RECALL_COUPON_DESCRIPTION?.trim();
-        const couponUrl =
-          typeof previousCoupon?.couponUrl === "string"
-            ? previousCoupon.couponUrl
-            : process.env.RECALL_COUPON_URL?.trim() || pricingUrl;
-        if (step.endsWith("-coupon") && (!couponCode || !couponDescription)) {
-          result.skipped++;
-          continue;
-        }
-        if (step.endsWith("-coupon") && !/^https?:\/\//i.test(couponUrl))
-          throw new Error("RECALL_COUPON_URL must be an HTTP(S) URL");
+        const previousPercent = Number(previousBonus?.bonusPercent);
+        const previousValidHours = Number(previousBonus?.bonusValidHours);
+        const bonusPercent =
+          Number.isInteger(previousPercent) &&
+          previousPercent > 0 &&
+          previousPercent <= 100
+            ? previousPercent
+            : defaultBonus.percent;
+        const bonusValidHours =
+          Number.isInteger(previousValidHours) &&
+          previousValidHours > 0 &&
+          previousValidHours <= 24 * 30
+            ? previousValidHours
+            : defaultBonus.validHours;
         result.candidates.push({ userId: row.id, step });
         if (dryRun) continue;
         // Re-read after rendering inputs/history lookup so purchases and manual pauses win.
@@ -267,12 +266,12 @@ export async function runRecallEmails({ dryRun = false } = {}) {
           continue;
         }
         try {
-          await sendEmail({
+          const sendResult = await sendEmail({
             email: fresh.recipient.email,
             fromName: `${founder.name} | ${siteConfig.name}`,
             fromEmail: founder.email,
             replyTo: founder.email,
-            subject: getRecallSubject(step, siteConfig.name),
+            subject: getRecallSubject(step, siteConfig.name, bonusPercent),
             templateKey: `recall-${step}`,
             idempotencyKey,
             react: FounderRecallEmail,
@@ -287,13 +286,13 @@ export async function runRecallEmails({ dryRun = false } = {}) {
               siteUrl: siteConfig.url,
               pricingUrl,
               planName: fresh.planName,
-              couponCode,
-              couponDescription,
-              couponUrl,
+              bonusPercent,
+              bonusValidHours,
               hasAttachment: Boolean(attachments?.length),
             },
           });
-          result.sent++;
+          if (sendResult.status === "sent") result.sent++;
+          else result.skipped++;
         } catch (error) {
           result.failed++;
           console.error(

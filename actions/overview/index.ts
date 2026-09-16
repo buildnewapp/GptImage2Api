@@ -591,6 +591,7 @@ export const getUserCreditReport = async (
         'task_reward',
         'welcome_bonus',
         'referral_signup_bonus',
+        'recall_purchase_bonus',
         'manual_one_time_grant',
         'manual_subscription_grant',
       ]),

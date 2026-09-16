@@ -47,6 +47,12 @@ const formatLogType = (type: string, t: (key: string) => string) => {
           {t("type_referral_signup_bonus")}
         </Badge>
       );
+    case "recall_purchase_bonus":
+      return (
+        <Badge variant="default" className="bg-green-500 hover:bg-green-600">
+          {t("type_recall_purchase_bonus")}
+        </Badge>
+      );
     default:
       return <Badge variant="outline">{type}</Badge>;
   }
