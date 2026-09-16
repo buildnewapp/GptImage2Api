@@ -1,4 +1,4 @@
-import { loadEnvConfig } from "@next/env";
+import { config as loadDotenvFile } from "dotenv";
 import { readFile, mkdir, rename, rm } from "node:fs/promises";
 import { createWriteStream } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -10,7 +10,16 @@ import { getFounderIdentity } from "../lib/email/recall/rules";
 
 async function main() {
   const root = process.cwd();
-  loadEnvConfig(root, true);
+  const productionEnv = resolve(root, ".env");
+  const envResult = loadDotenvFile({
+    path: productionEnv,
+    quiet: true,
+  });
+  if (envResult.error) {
+    throw new Error(
+      `Unable to load production environment file (${productionEnv}): ${envResult.error.message}`,
+    );
+  }
   const source = resolve(
     root,
     process.env.PDF_MD_PATH?.trim() || "org_guide.md",

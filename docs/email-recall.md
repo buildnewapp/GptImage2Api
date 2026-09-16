@@ -28,7 +28,7 @@
 ```env
 RECALL_ENABLED=true
 
-# 留空默认 Jame、jame@站点域名（去除 www.）
+# 留空优先回退 ADMIN_NAME、ADMIN_EMAIL；仍为空时使用 Jame、jame@站点域名
 RECALL_FOUNDER_NAME=
 RECALL_FOUNDER_EMAIL=
 
@@ -58,7 +58,7 @@ PDF_MD_PATH=/Users/syx/WebstormProjects/seo-submit/tikdek.com/org_guide.md
 pnpm emails:generate-pdf
 ```
 
-输出为 `public/emails/product-guide.pdf`。正文来自 Markdown，封面补充当前产品名称、英文介绍，结尾附创始人联系方式。双语资料存在 `## English` 等独立英文标题时，只取该段；其他资料请使用英文正文。支持标题、段落、列表、链接和表格文字；不下载外部图片。
+脚本明确读取项目根目录的正式环境文件 `.env`，不会读取 `.env.local`；命令行临时传入的同名环境变量仍可覆盖 `.env`。输出为 `public/emails/product-guide.pdf`。正文来自 Markdown，封面补充当前产品名称、英文介绍，结尾附创始人联系方式。双语资料存在 `## English` 等独立英文标题时，只取该段；其他资料请使用英文正文。支持标题、段落、列表、链接和表格文字；不下载外部图片。
 
 - Markdown 不存在：正常跳过，不生成文件，也不删除已有 PDF。
 - 生成错误：退出并报错，保留上一次成功的 PDF。

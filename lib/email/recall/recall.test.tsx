@@ -107,7 +107,16 @@ test("founder defaults derive from the site hostname and allow explicit override
     { name: "Jame", email: "jame@example.co.uk" },
   );
   assert.deepEqual(
+    getFounderIdentity("http://localhost:3000", {
+      ADMIN_NAME: " Admin ",
+      ADMIN_EMAIL: "admin@example.com",
+    }),
+    { name: "Admin", email: "admin@example.com" },
+  );
+  assert.deepEqual(
     getFounderIdentity("https://product.example.com", {
+      ADMIN_NAME: "Admin",
+      ADMIN_EMAIL: "admin@example.com",
       RECALL_FOUNDER_NAME: " Jane ",
       RECALL_FOUNDER_EMAIL: "jane@example.com",
     }),

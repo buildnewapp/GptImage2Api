@@ -132,17 +132,24 @@ export function getFounderIdentity(
   siteUrl: string,
   env: Record<string, string | undefined> = process.env,
 ) {
-  const url = new URL(siteUrl);
-  if (!["http:", "https:"].includes(url.protocol))
-    throw new Error("Invalid site URL");
-  const domain = url.hostname.replace(/^www\./i, "");
-  const name = env.RECALL_FOUNDER_NAME?.trim() || "Jame";
-  const email = env.RECALL_FOUNDER_EMAIL?.trim() || `jame@${domain}`;
+  const name =
+    env.RECALL_FOUNDER_NAME?.trim() || env.ADMIN_NAME?.trim() || "Jame";
+  let email =
+    env.RECALL_FOUNDER_EMAIL?.trim() || env.ADMIN_EMAIL?.trim() || "";
+  if (!email) {
+    const url = new URL(siteUrl);
+    if (!["http:", "https:"].includes(url.protocol))
+      throw new Error("Invalid site URL");
+    const domain = url.hostname.replace(/^www\./i, "");
+    email = `jame@${domain}`;
+  }
   if (
     /[\r\n]/.test(name + email) ||
     !/^[^\s<>@]+@[^\s<>@]+\.[^\s<>@]+$/.test(email)
   ) {
-    throw new Error("Configure a valid site domain or RECALL_FOUNDER_EMAIL");
+    throw new Error(
+      "Configure RECALL_FOUNDER_EMAIL, ADMIN_EMAIL, or a valid site domain",
+    );
   }
   return { name, email };
 }
