@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "@/i18n/routing";
+import { OVERVIEW_ADMIN_MENU_HREFS } from "@/lib/admin/navigation";
 import { authClient } from "@/lib/auth/auth-client";
 import { user as userSchema } from "@/lib/db/schema";
 import { ExternalLink, LogOutIcon } from "lucide-react";
@@ -40,6 +41,9 @@ export function UserInfo({
 
   const userMenus: Menu[] = t.raw("UserMenus");
   const adminMenus: Menu[] = t.raw("AdminMenus");
+  const visibleAdminMenus = adminMenus.filter(
+    (menu) => !OVERVIEW_ADMIN_MENU_HREFS.some((href) => href === menu.href),
+  );
 
   if (!user) {
     return null;
@@ -106,7 +110,7 @@ export function UserInfo({
           <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground">
             Admin Menu
           </DropdownMenuLabel>
-          {adminMenus.map((menu) => (
+          {visibleAdminMenus.map((menu) => (
             <DropdownMenuItem
               key={menu.name}
               onClick={() => router.push(menu.href)}
