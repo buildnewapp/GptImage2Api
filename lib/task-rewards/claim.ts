@@ -9,7 +9,6 @@ import type {
 
 const automaticClaimableTaskKeys = new Set<AutomaticClaimableTaskKey>([
   "daily_checkin",
-  "checkin_3_days",
   "first_public_generation",
   "first_purchase",
 ]);
@@ -57,9 +56,6 @@ export async function claimTaskReward({
       userId,
       calendarDate: toCalendarDate(now),
       now,
-      countDailyCheckins: () => store.countDailyCheckins(userId),
-      getClaimedDailyCheckinDates: (calendarDates) =>
-        store.getClaimedDailyCheckinDates(userId, calendarDates),
       hasSuccessfulPublicGeneration: () =>
         store.hasSuccessfulPublicGeneration(userId),
       hasSuccessfulPurchase: () => store.hasSuccessfulPurchase(userId),
@@ -78,7 +74,14 @@ export async function claimTaskReward({
     };
   }
 
-  const creditAmount = definition.creditAmount(config);
+  const previousDailyCheckinStreak =
+    taskKey === "daily_checkin"
+      ? await store.getDailyCheckinStreak(userId, toCalendarDate(now))
+      : 0;
+  const creditAmount = definition.creditAmount(
+    config,
+    previousDailyCheckinStreak,
+  );
   const created = await store.createClaim({
     userId,
     taskKey,

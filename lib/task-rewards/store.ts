@@ -39,25 +39,22 @@ export class MemoryTaskRewardStore implements TaskRewardStore {
     return this.claimKeys.get(userId)?.has(claimKey) ?? false;
   }
 
-  async countDailyCheckins(userId: string): Promise<number> {
-    return new Set([
-      ...this.claimedDailyCheckinDates,
-      ...(this.claimedDailyCheckinDatesByUser.get(userId) ?? []),
-    ]).size;
-  }
-
-  async getClaimedDailyCheckinDates(
+  async getDailyCheckinStreak(
     userId: string,
-    calendarDates: string[],
-  ): Promise<Set<string>> {
+    calendarDate: string,
+  ): Promise<number> {
     const claimedDates = new Set([
       ...this.claimedDailyCheckinDates,
       ...(this.claimedDailyCheckinDatesByUser.get(userId) ?? []),
     ]);
-
-    return new Set(
-      calendarDates.filter((calendarDate) => claimedDates.has(calendarDate)),
-    );
+    const date = new Date(`${calendarDate}T00:00:00.000Z`);
+    let streak = 0;
+    date.setUTCDate(date.getUTCDate() - 1);
+    while (claimedDates.has(date.toISOString().slice(0, 10))) {
+      streak += 1;
+      date.setUTCDate(date.getUTCDate() - 1);
+    }
+    return streak;
   }
 
   async hasSuccessfulPublicGeneration(): Promise<boolean> {

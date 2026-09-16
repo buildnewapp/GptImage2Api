@@ -13,18 +13,20 @@ const dashboardNow = new Date("2026-03-07T08:00:00.000Z");
 
 function buildDashboardItems({
   claimLookup = new Set<string>(),
+  previousDailyCheckinStreak = 0,
   latestManualApplications = new Map<
     ManualReviewTaskKey,
     RewardApplicationRecord
   >(),
 }: {
   claimLookup?: Set<string>;
+  previousDailyCheckinStreak?: number;
   latestManualApplications?: Map<ManualReviewTaskKey, RewardApplicationRecord>;
 } = {}) {
   return buildTaskRewardItems({
     now: dashboardNow,
     claimLookup,
-    claimedStreakDates: new Set<string>(),
+    previousDailyCheckinStreak,
     hasPublicGeneration: false,
     hasPurchase: false,
     inviteCount: 0,
@@ -86,32 +88,11 @@ async function withEnabledRedditTasks<T>(
   }
 }
 
-test("three-day check-in shows full progress after the streak reward has already been claimed", () => {
-  const tasks = buildTaskRewardItems({
-    now: new Date("2026-03-07T08:00:00.000Z"),
-    claimLookup: new Set(["checkin_3_days:once"]),
-    claimedStreakDates: new Set(["2026-03-07"]),
-    hasPublicGeneration: false,
-    hasPurchase: false,
-    inviteCount: 0,
-    hasInviteFirstPurchase: false,
-  });
-
-  const task = tasks.find((item) => item.taskKey === "checkin_3_days");
-
-  assert.ok(task);
-  assert.equal(task.status, "claimed");
-  assert.deepEqual(task.progress, {
-    current: 3,
-    required: 3,
-  });
-});
-
 test("first purchase task links to the pricing section", () => {
   const tasks = buildTaskRewardItems({
     now: new Date("2026-03-07T08:00:00.000Z"),
     claimLookup: new Set<string>(),
-    claimedStreakDates: new Set<string>(),
+    previousDailyCheckinStreak: 0,
     hasPublicGeneration: false,
     hasPurchase: false,
     inviteCount: 0,
@@ -128,7 +109,7 @@ test("invite signup stays a referral progress card instead of a claimable credit
   const tasks = buildTaskRewardItems({
     now: new Date("2026-03-07T08:00:00.000Z"),
     claimLookup: new Set<string>(),
-    claimedStreakDates: new Set<string>(),
+    previousDailyCheckinStreak: 0,
     hasPublicGeneration: false,
     hasPurchase: false,
     inviteCount: 1,
@@ -151,7 +132,7 @@ test("first public generation task links to the AI Studio videos page", () => {
   const tasks = buildTaskRewardItems({
     now: new Date("2026-03-07T08:00:00.000Z"),
     claimLookup: new Set<string>(),
-    claimedStreakDates: new Set<string>(),
+    previousDailyCheckinStreak: 0,
     hasPublicGeneration: false,
     hasPurchase: false,
     inviteCount: 0,
@@ -168,7 +149,7 @@ test("disabled manual-review tasks are hidden", () => {
   const tasks = buildTaskRewardItems({
     now: new Date("2026-03-07T08:00:00.000Z"),
     claimLookup: new Set<string>(),
-    claimedStreakDates: new Set<string>(),
+    previousDailyCheckinStreak: 0,
     hasPublicGeneration: false,
     hasPurchase: false,
     inviteCount: 0,
@@ -379,4 +360,29 @@ test("latest manual application lookup breaks submission ties deterministically"
   const lookup = buildLatestManualApplicationLookup(candidates);
 
   assert.equal(lookup.get("github_star")?.id, "application-c");
+});
+
+test("daily check-in displays today's cycle reward before and after claiming", () => {
+  for (const [previousDailyCheckinStreak, day, creditAmount] of [
+    [0, 1, 10],
+    [2, 3, 30],
+    [6, 7, 70],
+    [7, 1, 10],
+    [13, 7, 70],
+    [14, 1, 10],
+  ]) {
+    for (const claimed of [false, true]) {
+      const tasks = buildDashboardItems({
+        previousDailyCheckinStreak,
+        claimLookup: new Set(claimed ? ["daily_checkin:2026-03-07"] : []),
+      });
+      const daily = tasks.find((task) => task.taskKey === "daily_checkin");
+      assert.equal(daily?.creditAmount, creditAmount);
+      assert.equal(daily?.status, claimed ? "claimed" : "claimable");
+      assert.deepEqual(daily?.checkinCycle, {
+        day,
+        rewards: [10, 20, 30, 40, 50, 60, 70],
+      });
+    }
+  }
 });

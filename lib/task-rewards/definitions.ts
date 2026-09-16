@@ -1,6 +1,7 @@
 import {
   buildDailyClaimKey,
   buildOnceClaimKey,
+  getDailyCheckinCycle,
   taskRewardsConfig,
   type TaskRewardsConfig,
 } from "@/config/task-rewards";
@@ -21,8 +22,6 @@ export interface TaskDefinitionContext {
   userId: string;
   calendarDate: string;
   now: Date;
-  countDailyCheckins(): Promise<number>;
-  getClaimedDailyCheckinDates(calendarDates: string[]): Promise<Set<string>>;
   hasSuccessfulPublicGeneration(): Promise<boolean>;
   hasSuccessfulPurchase(): Promise<boolean>;
   countReferralInvites(): Promise<number>;
@@ -31,7 +30,10 @@ export interface TaskDefinitionContext {
 
 export interface TaskDefinition {
   isEnabled(config: TaskRewardsConfig): boolean;
-  creditAmount(config: TaskRewardsConfig): number;
+  creditAmount(
+    config: TaskRewardsConfig,
+    previousDailyCheckinStreak: number,
+  ): number;
   claimKey(calendarDate: string): string;
   evaluate(
     context: TaskDefinitionContext,
@@ -47,62 +49,15 @@ export const taskDefinitions: Record<
     isEnabled(config) {
       return config.enabled && config.dailyCheckin.enabled;
     },
-    creditAmount(config) {
-      return config.dailyCheckin.credits;
+    creditAmount(config, previousDailyCheckinStreak) {
+      return getDailyCheckinCycle(previousDailyCheckinStreak, config)
+        .creditAmount;
     },
     claimKey(calendarDate) {
       return buildDailyClaimKey("daily_checkin", calendarDate);
     },
-    async evaluate(context) {
-      const dailyCheckinCount = await context.countDailyCheckins();
-      if (dailyCheckinCount >= 3 && !(await context.hasSuccessfulPurchase())) {
-        return {
-          completed: false,
-          reason: "requirements",
-          progress: {
-            current: 0,
-            required: 1,
-          },
-        };
-      }
-
+    async evaluate() {
       return { completed: true };
-    },
-  },
-  checkin_3_days: {
-    isEnabled(config) {
-      return config.enabled && config.checkin3Days.enabled;
-    },
-    creditAmount(config) {
-      return config.checkin3Days.credits;
-    },
-    claimKey() {
-      return buildOnceClaimKey("checkin_3_days");
-    },
-    async evaluate(context) {
-      const requiredDates = [0, 1, 2].map((offset) => {
-        const date = new Date(context.now);
-        date.setUTCDate(date.getUTCDate() - offset);
-        return date.toISOString().slice(0, 10);
-      });
-      const claimedDates =
-        await context.getClaimedDailyCheckinDates(requiredDates);
-      const current = requiredDates.filter((date) =>
-        claimedDates.has(date),
-      ).length;
-
-      if (current === requiredDates.length) {
-        return { completed: true };
-      }
-
-      return {
-        completed: false,
-        reason: "requirements",
-        progress: {
-          current,
-          required: requiredDates.length,
-        },
-      };
     },
   },
   first_public_generation: {

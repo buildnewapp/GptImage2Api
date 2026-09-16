@@ -9,7 +9,7 @@ import {
   usage as usageSchema,
 } from "@/lib/db/schema";
 import type { TaskRewardStore } from "@/lib/task-rewards/types";
-import { and, count, eq, inArray, isNull, sql } from "drizzle-orm";
+import { and, count, eq, inArray, isNull, lt, sql } from "drizzle-orm";
 
 type DbClient = ReturnType<typeof getDb>;
 type DbTransactionCallback = Parameters<DbClient["transaction"]>[0];
@@ -36,12 +36,8 @@ export function createDrizzleTaskRewardStore(
       return existing.length > 0;
     },
 
-    async countDailyCheckins(userId) {
-      return countDailyCheckinsForUser(tx, userId);
-    },
-
-    async getClaimedDailyCheckinDates(userId, calendarDates) {
-      return getClaimedDailyCheckinDatesForUser(tx, userId, calendarDates);
+    async getDailyCheckinStreak(userId, calendarDate) {
+      return getDailyCheckinStreakForUser(tx, userId, calendarDate);
     },
 
     async hasSuccessfulPublicGeneration(userId) {
@@ -134,44 +130,37 @@ export async function hasSuccessfulPublicVideoForUser(
   return rows.length > 0;
 }
 
-export async function getClaimedDailyCheckinDatesForUser(
+// Count consecutive UTC check-ins ending yesterday, excluding today's claim.
+export async function getDailyCheckinStreakForUser(
   db: DbTransaction | DbClient,
   userId: string,
-  calendarDates: string[],
-): Promise<Set<string>> {
-  if (calendarDates.length === 0) {
-    return new Set();
-  }
-
-  const claimKeys = calendarDates.map(
-    (calendarDate) => `daily_checkin:${calendarDate}`,
-  );
-  const rows = await db
-    .select({ claimKey: taskRewardClaimsSchema.claimKey })
+  calendarDate: string,
+): Promise<number> {
+  const previousCheckins = db
+    .select({
+      calendarDate:
+        sql<string>`split_part(${taskRewardClaimsSchema.claimKey}, ':', 2)::date`.as(
+          "calendar_date",
+        ),
+      position:
+        sql<number>`row_number() over (order by ${taskRewardClaimsSchema.claimKey} desc)`.as(
+          "position",
+        ),
+    })
     .from(taskRewardClaimsSchema)
     .where(
       and(
         eq(taskRewardClaimsSchema.userId, userId),
         eq(taskRewardClaimsSchema.taskKey, "daily_checkin"),
-        inArray(taskRewardClaimsSchema.claimKey, claimKeys),
+        lt(taskRewardClaimsSchema.claimKey, `daily_checkin:${calendarDate}`),
       ),
-    );
-
-  return new Set(rows.map((row) => row.claimKey.split(":")[1] ?? ""));
-}
-
-export async function countDailyCheckinsForUser(
-  db: DbTransaction | DbClient,
-  userId: string,
-): Promise<number> {
+    )
+    .as("previous_checkins");
   const result = await db
     .select({ value: count() })
-    .from(taskRewardClaimsSchema)
+    .from(previousCheckins)
     .where(
-      and(
-        eq(taskRewardClaimsSchema.userId, userId),
-        eq(taskRewardClaimsSchema.taskKey, "daily_checkin"),
-      ),
+      sql`${previousCheckins.calendarDate} = ${calendarDate}::date - ${previousCheckins.position}::integer`,
     );
 
   return result[0]?.value ?? 0;
