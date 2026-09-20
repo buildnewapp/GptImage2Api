@@ -23,7 +23,7 @@ import {
   loadAiStudioPolicyConfig,
 } from "@/lib/ai-studio/policy";
 import { apiResponse } from "@/lib/api-response";
-import { isAiStudioPaymentError } from "@/lib/ai-studio/payment-error";
+import { getAiStudioPaymentError } from "@/lib/ai-studio/payment-error";
 import { getRequestUser } from "@/lib/auth/request-user";
 import { getDb } from "@/lib/db";
 import { orders as ordersSchema } from "@/lib/db/schema";
@@ -165,15 +165,23 @@ export async function POST(request: Request) {
       selectedPricing: prepared.selectedPricing,
     });
   } catch (error: any) {
-    const status = typeof error?.status === "number" ? error.status : 500;
+    const paymentError = getAiStudioPaymentError(error);
+    const status =
+      paymentError?.code === "AI_STUDIO_PROVIDER_DAILY_LIMIT"
+        ? 503
+        : typeof error?.status === "number"
+          ? error.status
+          : 500;
     return apiResponse.error(
       error?.message || "Failed to execute AI Studio request",
       status,
-      isAiStudioPaymentError(error) ? {
-        code: error.code,
-        requiredCredits: error.requiredCredits,
-        requiredLevel: error.requiredLevel,
-      } : undefined,
+      paymentError
+        ? {
+            code: paymentError.code,
+            requiredCredits: paymentError.requiredCredits,
+            requiredLevel: paymentError.requiredLevel,
+          }
+        : undefined,
     );
   }
 }

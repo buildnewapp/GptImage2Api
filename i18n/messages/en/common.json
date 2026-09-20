@@ -679,7 +679,7 @@
     "payment": {
       "title": "Unlock fast-track generation",
       "dailyLimit": "Free users get one fast-track generation per day. You have used today’s free generation. Purchase any paid plan to unlock fast-track access and keep creating.",
-      "creditLimit": "Free users get one fast-track generation per day, using up to 100 credits. This request needs {credits} credits. Purchase any paid plan to remove this limit and unlock fast-track access.",
+      "providerDailyLimit": "Many users are generating right now, so your request needs to wait in line. Upgrade to the Max plan for priority generation.",
       "insufficientCredits": "This request needs {credits} credits, but your balance is too low. Choose a plan to add credits and keep creating.",
       "membershipRequired": "This model requires {level} membership or higher. Choose an eligible plan to keep creating.",
       "loading": "Loading plans…",

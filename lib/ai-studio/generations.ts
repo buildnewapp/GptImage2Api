@@ -37,6 +37,7 @@ import {
 export type AiStudioGenerationRecord = typeof aiStudioGenerations.$inferSelect;
 
 const PROGRESS_UPDATE_MIN_INTERVAL_MS = 20_000;
+const FREE_GENERATION_QUEUE_THRESHOLD = 50;
 
 type ReserveInput = {
   userId: string;
@@ -123,42 +124,44 @@ export async function reserveAiStudioGeneration(input: ReserveInput) {
       .limit(1);
 
     if (!paidOrder) {
-      if (reservedCredits > 100) {
-        throw Object.assign(
-          new Error("Unpaid accounts can use at most 100 credits per generation."),
-          {
-            status: 403,
-            code: "AI_STUDIO_FREE_CREDIT_LIMIT",
-            requiredCredits: reservedCredits,
-          },
-        );
-      }
-
-      // UTC calendar day. Failed jobs release the slot; pending jobs occupy it.
-      const dayMs = 24 * 60 * 60 * 1000;
-      const dayStart = new Date(Math.floor(reservedAt.getTime() / dayMs) * dayMs);
-      const [dailyGeneration] = await tx
-        .select({ id: aiStudioGenerations.id })
+      const [historicalUsage] = await tx
+        .select({
+          consumedCredits: sql<number>`coalesce(sum(${aiStudioGenerations.creditsCaptured}), 0)::int`,
+        })
         .from(aiStudioGenerations)
-        .where(
-          and(
-            eq(aiStudioGenerations.userId, input.userId),
-            gte(aiStudioGenerations.createdAt, dayStart),
-            lt(aiStudioGenerations.createdAt, new Date(dayStart.getTime() + dayMs)),
-            ne(aiStudioGenerations.status, "failed"),
-          ),
-        )
-        .limit(1);
+        .where(eq(aiStudioGenerations.userId, input.userId));
+      const shouldUseQueue =
+        Number(historicalUsage?.consumedCredits ?? 0) >
+        FREE_GENERATION_QUEUE_THRESHOLD;
 
-      if (dailyGeneration) {
-        throw Object.assign(
-          new Error("Unpaid accounts can generate once per day. Purchase a plan to continue today."),
-          {
-            status: 403,
-            code: "AI_STUDIO_DAILY_LIMIT",
-          },
-        );
+      if (!shouldUseQueue) {
+        // UTC calendar day. Failed jobs release the slot; pending jobs occupy it.
+        const dayMs = 24 * 60 * 60 * 1000;
+        const dayStart = new Date(Math.floor(reservedAt.getTime() / dayMs) * dayMs);
+        const [dailyGeneration] = await tx
+          .select({ id: aiStudioGenerations.id })
+          .from(aiStudioGenerations)
+          .where(
+            and(
+              eq(aiStudioGenerations.userId, input.userId),
+              gte(aiStudioGenerations.createdAt, dayStart),
+              lt(aiStudioGenerations.createdAt, new Date(dayStart.getTime() + dayMs)),
+              ne(aiStudioGenerations.status, "failed"),
+            ),
+          )
+          .limit(1);
+
+        if (dailyGeneration) {
+          throw Object.assign(
+            new Error("Unpaid accounts can generate once per day. Purchase a plan to continue today."),
+            {
+              status: 403,
+              code: "AI_STUDIO_DAILY_LIMIT",
+            },
+          );
+        }
       }
+      // Users above the threshold skip the fast-track daily slot and submit directly to the provider queue.
     }
 
     let nextOneTime = 0;
