@@ -30,7 +30,9 @@ export default function AiStudioPaymentDialog({
   const pricingT = useTranslations("PricingPlans");
   const [plans, setPlans] = useState<PublicPricingPlan[]>([]);
   const [loading, setLoading] = useState(true);
-  const showQueueCountdown = error.code === "AI_STUDIO_DAILY_LIMIT";
+  const showQueueCountdown =
+    error.code === "AI_STUDIO_DAILY_LIMIT" ||
+    error.code === "AI_STUDIO_PROVIDER_DAILY_LIMIT";
   const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null);
   const countdown =
     remainingSeconds === null
@@ -92,7 +94,7 @@ export default function AiStudioPaymentDialog({
   );
   const reasonKey = {
     AI_STUDIO_DAILY_LIMIT: "dailyLimit",
-    AI_STUDIO_FREE_CREDIT_LIMIT: "creditLimit",
+    AI_STUDIO_PROVIDER_DAILY_LIMIT: "providerDailyLimit",
     AI_STUDIO_INSUFFICIENT_CREDITS: "insufficientCredits",
     AI_STUDIO_MEMBERSHIP_REQUIRED: "membershipRequired",
   } as const;
