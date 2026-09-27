@@ -32,6 +32,7 @@ export default function AiStudioPaymentDialog({
   const [loading, setLoading] = useState(true);
   const showQueueCountdown =
     error.code === "AI_STUDIO_DAILY_LIMIT" ||
+    error.code === "AI_STUDIO_FREE_QUEUE" ||
     error.code === "AI_STUDIO_PROVIDER_DAILY_LIMIT";
   const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null);
   const countdown =
@@ -94,6 +95,7 @@ export default function AiStudioPaymentDialog({
   );
   const reasonKey = {
     AI_STUDIO_DAILY_LIMIT: "dailyLimit",
+    AI_STUDIO_FREE_QUEUE: "freeQueue",
     AI_STUDIO_PROVIDER_DAILY_LIMIT: "providerDailyLimit",
     AI_STUDIO_INSUFFICIENT_CREDITS: "insufficientCredits",
     AI_STUDIO_MEMBERSHIP_REQUIRED: "membershipRequired",

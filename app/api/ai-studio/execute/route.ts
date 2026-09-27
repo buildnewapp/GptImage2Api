@@ -13,6 +13,7 @@ import {
   markAiStudioGenerationSubmitted,
   reserveAiStudioGeneration,
   settleAiStudioGenerationFailure,
+  shouldQueueFreeAiStudioGeneration,
 } from "@/lib/ai-studio/generations";
 import {
   getPublicAiStudioModelId,
@@ -107,6 +108,15 @@ export async function POST(request: Request) {
     const policy = await loadAiStudioPolicyConfig();
     if (!canAccessAiStudioModel(prepared.detail, { role: user.role, config: policy })) {
       return apiResponse.error("This model is unavailable for your account.", 403);
+    }
+
+    if (await shouldQueueFreeAiStudioGeneration({
+      userId: user.id,
+      selectedPricing: prepared.selectedPricing,
+    })) {
+      return apiResponse.error("Free generation is queued.", 429, {
+        code: "AI_STUDIO_FREE_QUEUE",
+      });
     }
 
     await assertGenerationPromptAllowed({
