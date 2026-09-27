@@ -1355,11 +1355,6 @@ export default function AIVideoStudio({
       return;
     }
 
-    if (availableCredits !== null && availableCredits < estimatedCredits) {
-      setPaymentError({ code: "AI_STUDIO_INSUFFICIENT_CREDITS", requiredCredits: estimatedCredits });
-      return;
-    }
-
     if (estimatedCredits <= 0) {
       toast.error(t("form.modelUnavailable"));
       return;
@@ -1461,7 +1456,6 @@ export default function AIVideoStudio({
       setIsSubmitting(false);
     }
   }, [
-    availableCredits,
     estimatedCredits,
     formValues,
     inputPayload,
