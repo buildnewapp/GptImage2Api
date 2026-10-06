@@ -161,8 +161,10 @@
   },
   "toast": {
     "claimed": "已领取 {credits} 积分。",
+    "checkinClaimed": "签到成功，已获得 {credits} 积分。签到积分有效期 30 天，请尽快使用。",
     "alreadyClaimed": "该奖励已经领取过了。",
     "notCompleted": "任务条件还未完成。",
+    "subscriptionRequired": "连续签到 7 天或累计签到 10 次后，需要订阅有效套餐才能继续领取签到积分。",
     "claimFailed": "领取任务奖励失败。"
   },
   "checkinCycle": {

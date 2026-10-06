@@ -155,6 +155,13 @@ export async function claimTaskRewardAction(
       );
     }
 
+    if (result.status === "subscription_required") {
+      return actionResponse.error(
+        "An active subscription is required to continue daily check-ins.",
+        "subscription_required",
+      );
+    }
+
     return actionResponse.forbidden(
       "This task is currently disabled.",
       "disabled",

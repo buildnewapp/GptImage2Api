@@ -124,6 +124,8 @@ export default function TasksClient({
           ? "alreadyClaimed"
           : result.customCode === "not_completed"
             ? "notCompleted"
+            : result.customCode === "subscription_required"
+              ? "subscriptionRequired"
             : "claimFailed";
       toast.error(t(`toast.${errorKey}`));
       refresh();
@@ -131,9 +133,14 @@ export default function TasksClient({
     }
 
     toast.success(
-      t("toast.claimed", {
-        credits: result.data?.creditAmount ?? 0,
-      }),
+      t(
+        taskKey === "daily_checkin"
+          ? "toast.checkinClaimed"
+          : "toast.claimed",
+        {
+          credits: result.data?.creditAmount ?? 0,
+        },
+      ),
     );
     refresh();
   };

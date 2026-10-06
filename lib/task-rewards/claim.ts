@@ -78,6 +78,18 @@ export async function claimTaskReward({
     taskKey === "daily_checkin"
       ? await store.getDailyCheckinStreak(userId, toCalendarDate(now))
       : 0;
+  if (taskKey === "daily_checkin") {
+    const totalDailyCheckins = await store.getDailyCheckinCount(userId);
+    const requiresSubscription =
+      previousDailyCheckinStreak >= 7 || totalDailyCheckins >= 10;
+
+    if (requiresSubscription && !(await store.hasValidSubscription(userId, now))) {
+      return {
+        status: "subscription_required",
+        claimKey,
+      };
+    }
+  }
   const creditAmount = definition.creditAmount(
     config,
     previousDailyCheckinStreak,

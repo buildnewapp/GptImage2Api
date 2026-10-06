@@ -38,8 +38,8 @@ test("daily check-in can only be claimed once per calendar date", async () => {
   assert.equal(second.status, "already_claimed");
 });
 
-test("free users receive increasing rewards over repeated seven-day cycles", async () => {
-  const store = createMemoryTaskRewardStore({ hasSuccessfulPurchase: false });
+test("subscribed users receive increasing rewards over repeated seven-day cycles", async () => {
+  const store = createMemoryTaskRewardStore({ hasValidSubscription: true });
   const expected = [10, 20, 30, 40, 50, 60, 70, 10, 20, 30, 40, 50, 60, 70, 10];
 
   for (const [index, creditAmount] of expected.entries()) {
@@ -66,6 +66,61 @@ test("free users receive increasing rewards over repeated seven-day cycles", asy
       .reduce((total, claim) => total + claim.creditAmount, 0),
     280,
   );
+});
+
+test("free users must subscribe before the eighth consecutive check-in", async () => {
+  const store = createMemoryTaskRewardStore({
+    claimedDailyCheckinDates: [
+      "2026-03-01",
+      "2026-03-02",
+      "2026-03-03",
+      "2026-03-04",
+      "2026-03-05",
+      "2026-03-06",
+      "2026-03-07",
+    ],
+    hasValidSubscription: false,
+  });
+
+  const result = await claimTaskReward({
+    store,
+    userId: "user-1",
+    taskKey: "daily_checkin",
+    now: new Date("2026-03-08T08:00:00.000Z"),
+    config: enabledConfig,
+  });
+
+  assert.equal(result.status, "subscription_required");
+  assert.equal(store.claims.length, 0);
+});
+
+test("free users must subscribe before the eleventh total check-in", async () => {
+  const store = createMemoryTaskRewardStore({
+    claimedDailyCheckinDates: [
+      "2026-03-01",
+      "2026-03-03",
+      "2026-03-05",
+      "2026-03-07",
+      "2026-03-09",
+      "2026-03-11",
+      "2026-03-13",
+      "2026-03-15",
+      "2026-03-17",
+      "2026-03-19",
+    ],
+    hasValidSubscription: false,
+  });
+
+  const result = await claimTaskReward({
+    store,
+    userId: "user-1",
+    taskKey: "daily_checkin",
+    now: new Date("2026-03-21T08:00:00.000Z"),
+    config: enabledConfig,
+  });
+
+  assert.equal(result.status, "subscription_required");
+  assert.equal(store.claims.length, 0);
 });
 
 test("missing a day resets the reward even after many free check-ins", async () => {
