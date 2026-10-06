@@ -13,18 +13,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
-import { useState } from "react";
 import useSWR from "swr";
+import { useOverviewPeriod } from "./OverviewPeriod";
 
 const fetcher = async (
   period: IUserCreditReportPeriod,
@@ -47,7 +40,7 @@ export const UserCreditReport = () => {
   const t = useTranslations("Overview");
   const params = useParams<{ locale?: string }>();
   const locale = params.locale ?? "en";
-  const [period, setPeriod] = useState<IUserCreditReportPeriod>("7d");
+  const period = useOverviewPeriod();
 
   const { data, error, isLoading } = useSWR(
     ["user-credit-report", period],
@@ -77,28 +70,11 @@ export const UserCreditReport = () => {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+      <CardHeader>
         <div>
           <CardTitle>{t("userCreditReport")}</CardTitle>
           <CardDescription>{t("userCreditReportDescription")}</CardDescription>
         </div>
-        <Select
-          value={period}
-          onValueChange={(value) =>
-            setPeriod(value as IUserCreditReportPeriod)
-          }
-        >
-          <SelectTrigger className="w-fit">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">{t("allTime")}</SelectItem>
-            <SelectItem value="1d">{t("last1Day")}</SelectItem>
-            <SelectItem value="7d">{t("last7Days")}</SelectItem>
-            <SelectItem value="30d">{t("last30Days")}</SelectItem>
-            <SelectItem value="90d">{t("last90Days")}</SelectItem>
-          </SelectContent>
-        </Select>
       </CardHeader>
       <CardContent>
         {isLoading ? (

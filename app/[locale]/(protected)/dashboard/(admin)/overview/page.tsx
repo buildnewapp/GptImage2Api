@@ -9,6 +9,11 @@ import { GenerationBreakdownCharts } from "./GenerationBreakdownCharts";
 import { GenerationStatsChart } from "./GenerationStatsChart";
 import { GrowthChart } from "./GrowthChart";
 import { OverviewStats } from "./OverviewStats";
+import {
+  OverviewPeriodFilter,
+  OverviewPeriodProvider,
+} from "./OverviewPeriod";
+import { UserConsumptionRanking } from "./UserConsumptionRanking";
 import { UserCreditReport } from "./UserCreditReport";
 
 type AdminMenu = {
@@ -26,55 +31,64 @@ const OverviewPage = async () => {
   ).filter((menu): menu is AdminMenu => Boolean(menu));
 
   return (
-    <div className="container mx-auto p-4 md:p-6 space-y-4">
-      <section aria-labelledby="admin-quick-links-title" className="space-y-2">
-        <div>
-          <h2 id="admin-quick-links-title" className="font-semibold">
-            {t("adminQuickLinks")}
-          </h2>
-          <p className="text-xs text-muted-foreground">
-            {t("adminQuickLinksDescription")}
-          </p>
+    <OverviewPeriodProvider>
+      <div className="container mx-auto space-y-4 p-4 md:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h1 className="text-2xl font-semibold">{t("title")}</h1>
+          <OverviewPeriodFilter />
         </div>
 
-        <div className="flex flex-row flex-nowrap gap-2 overflow-x-auto pb-1">
-          {quickLinks.map((menu) => (
-            <Card
-              key={menu.href}
-              className="min-w-40 flex-1 basis-0 overflow-hidden py-0 transition-colors hover:bg-muted/50"
-            >
-              <Link
-                href={menu.href}
-                className="group flex min-h-16 cursor-pointer items-center gap-2 rounded-xl p-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        <section aria-labelledby="admin-quick-links-title" className="space-y-2">
+          <div>
+            <h2 id="admin-quick-links-title" className="font-semibold">
+              {t("adminQuickLinks")}
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              {t("adminQuickLinksDescription")}
+            </p>
+          </div>
+
+          <div className="flex flex-row flex-nowrap gap-2 overflow-x-auto pb-1">
+            {quickLinks.map((menu) => (
+              <Card
+                key={menu.href}
+                className="min-w-40 flex-1 basis-0 overflow-hidden py-0 transition-colors hover:bg-muted/50"
               >
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
-                  <DynamicIcon name={menu.icon} className="size-4" />
-                </span>
-                <span className="min-w-0 flex-1 text-sm font-medium">
-                  {menu.name}
-                </span>
-                <ArrowRight
-                  aria-hidden="true"
-                  className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground"
-                />
-              </Link>
-            </Card>
-          ))}
-        </div>
-      </section>
+                <Link
+                  href={menu.href}
+                  className="group flex min-h-16 cursor-pointer items-center gap-2 rounded-xl p-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                    <DynamicIcon name={menu.icon} className="size-4" />
+                  </span>
+                  <span className="min-w-0 flex-1 text-sm font-medium">
+                    {menu.name}
+                  </span>
+                  <ArrowRight
+                    aria-hidden="true"
+                    className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground"
+                  />
+                </Link>
+              </Card>
+            ))}
+          </div>
+        </section>
 
-      <OverviewStats />
+        <OverviewStats />
 
-      <GrowthChart />
+        <GrowthChart />
 
-      <GenerationStatsChart />
+        <GenerationStatsChart />
 
-      <GenerationBreakdownCharts />
+        <GenerationBreakdownCharts />
 
-      <UserCreditReport />
+        <UserConsumptionRanking />
 
-      <DatabaseConfigPreview />
-    </div>
+        <UserCreditReport />
+
+        <DatabaseConfigPreview />
+      </div>
+    </OverviewPeriodProvider>
   );
 };
 

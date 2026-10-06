@@ -11,17 +11,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
 import {
   Area,
   AreaChart,
@@ -33,6 +25,7 @@ import {
   YAxis,
 } from "recharts";
 import useSWR from "swr";
+import { useOverviewPeriod } from "./OverviewPeriod";
 
 type Period = "1d" | "7d" | "30d" | "90d";
 
@@ -52,7 +45,7 @@ const fetcher = async (period: Period): Promise<IDailyGenerationStats[]> => {
 
 export const GenerationStatsChart = () => {
   const t = useTranslations("Overview");
-  const [period, setPeriod] = useState<Period>("7d");
+  const period = useOverviewPeriod();
 
   const { data, error, isLoading } = useSWR(
     ["daily-generation-stats", period],
@@ -116,17 +109,6 @@ export const GenerationStatsChart = () => {
             </span>
           </CardDescription>
         </div>
-        <Select value={period} onValueChange={(v) => setPeriod(v as Period)}>
-          <SelectTrigger className="w-fit">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="1d">{t("last1Day")}</SelectItem>
-            <SelectItem value="7d">{t("last7Days")}</SelectItem>
-            <SelectItem value="30d">{t("last30Days")}</SelectItem>
-            <SelectItem value="90d">{t("last90Days")}</SelectItem>
-          </SelectContent>
-        </Select>
       </CardHeader>
       <CardContent>
         {isLoading ? (

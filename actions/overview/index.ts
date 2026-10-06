@@ -75,6 +75,7 @@ export interface IGenerationBreakdownStats {
 }
 
 export type IUserCreditReportPeriod = 'all' | '1d' | '7d' | '30d' | '90d';
+export type IUserConsumptionRankingPeriod = Exclude<IUserCreditReportPeriod, 'all'>;
 
 export interface IUserCreditReportRow {
   userId: string;
@@ -94,6 +95,31 @@ export interface IUserCreditReportRow {
   netCredits: number;
   freeToPurchasedRatio: number | null;
   riskLevel: 'high' | 'medium' | 'low';
+}
+
+export interface IUserConsumptionRankingRow {
+  userId: string;
+  email: string | null;
+  name: string | null;
+  consumedCredits: number;
+  generationCount: number;
+}
+
+function getOverviewPeriodStartDate(
+  period: IUserConsumptionRankingPeriod,
+): Date {
+  const now = new Date();
+
+  switch (period) {
+    case '1d':
+      return new Date(new Date().setDate(now.getDate() - 1));
+    case '7d':
+      return new Date(new Date().setDate(now.getDate() - 7));
+    case '30d':
+      return new Date(new Date().setMonth(now.getMonth() - 1));
+    case '90d':
+      return new Date(new Date().setMonth(now.getMonth() - 3));
+  }
 }
 
 function getUserCreditReportStartDate(
@@ -784,6 +810,112 @@ export const getUserCreditReport = async (
     });
 
     return actionResponse.success(rows.slice(0, 50));
+  } catch (error) {
+    return actionResponse.error(getErrorMessage(error));
+  }
+};
+
+export const getUserConsumptionRanking = async (
+  period: IUserConsumptionRankingPeriod,
+): Promise<ActionResult<IUserConsumptionRankingRow[]>> => {
+  if (!(await isAdmin())) {
+    return actionResponse.forbidden('Admin privileges required.');
+  }
+
+  const db = getDb();
+
+  try {
+    const startDate = getOverviewPeriodStartDate(period);
+    const creditUsageConditions: SQL[] = [
+      inArray(creditLogsSchema.type, [
+        'ai_studio_chat_usage',
+        'feature_usage',
+        'video_generation',
+      ]),
+      gte(creditLogsSchema.createdAt, startDate),
+    ];
+
+    const [generationRows, creditUsageRows] = await Promise.all([
+      db
+        .select({
+          userId: aiStudioGenerationsSchema.userId,
+          consumedCredits:
+            sql<number>`coalesce(sum(${aiStudioGenerationsSchema.creditsCaptured}), 0)::int`,
+          generationCount: count(aiStudioGenerationsSchema.id),
+        })
+        .from(aiStudioGenerationsSchema)
+        .where(gte(aiStudioGenerationsSchema.createdAt, startDate))
+        .groupBy(aiStudioGenerationsSchema.userId),
+      db
+        .select({
+          userId: creditLogsSchema.userId,
+          consumedCredits:
+            sql<number>`coalesce(sum(abs(${creditLogsSchema.amount})), 0)::int`,
+        })
+        .from(creditLogsSchema)
+        .where(and(...creditUsageConditions))
+        .groupBy(creditLogsSchema.userId),
+    ]);
+
+    const statsMap = new Map<string, IUserConsumptionRankingRow>();
+
+    generationRows.forEach((row) => {
+      statsMap.set(row.userId, {
+        userId: row.userId,
+        email: null,
+        name: null,
+        consumedCredits: row.consumedCredits,
+        generationCount: row.generationCount,
+      });
+    });
+
+    creditUsageRows.forEach((row) => {
+      const current = statsMap.get(row.userId);
+      if (current) {
+        current.consumedCredits += row.consumedCredits;
+        return;
+      }
+
+      statsMap.set(row.userId, {
+        userId: row.userId,
+        email: null,
+        name: null,
+        consumedCredits: row.consumedCredits,
+        generationCount: 0,
+      });
+    });
+
+    const userIds = Array.from(statsMap.keys());
+    if (userIds.length === 0) {
+      return actionResponse.success([]);
+    }
+
+    const userRows = await db
+      .select({
+        id: userSchema.id,
+        email: userSchema.email,
+        name: userSchema.name,
+      })
+      .from(userSchema)
+      .where(inArray(userSchema.id, userIds));
+
+    const rows = userRows.reduce<IUserConsumptionRankingRow[]>(
+      (rows, user) => {
+        const stats = statsMap.get(user.id);
+        if (stats) {
+          rows.push({
+            ...stats,
+            email: user.email,
+            name: user.name,
+          });
+        }
+        return rows;
+      },
+      [],
+    )
+      .sort((a, b) => b.consumedCredits - a.consumedCredits);
+
+    return actionResponse.success(rows.slice(0, 10));
   } catch (error) {
     return actionResponse.error(getErrorMessage(error));
   }
