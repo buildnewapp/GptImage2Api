@@ -45,7 +45,7 @@
   "tasks": {
     "daily_checkin": {
       "title": "Daily Check-In",
-      "description": "All signed-in users can check in. Rewards increase each consecutive day and repeat every 7 days. Missing a day resets you to Day 1."
+      "description": "All signed-in users can check in. During the first uninterrupted 7-day streak, rewards increase from 10 to 70 credits. After the bonus ends—or if a day is missed—check-ins grant 10 credits."
     },
     "first_public_generation": {
       "title": "First Public Creation",
@@ -168,7 +168,7 @@
     "claimFailed": "Failed to claim task reward."
   },
   "checkinCycle": {
-    "label": "7-day check-in rewards",
+    "label": "First-week check-in bonus",
     "total": "{credits} credits over {days} consecutive days",
     "currentDay": "Today: Day {day}",
     "day": "Day {day}",

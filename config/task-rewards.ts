@@ -90,16 +90,23 @@ export const taskRewardsConfig = {
 export function getDailyCheckinCycle(
   previousStreak: number,
   config: TaskRewardsConfig = taskRewardsConfig,
+  totalCheckins: number = previousStreak,
 ) {
   const { credits, cycleDays } = config.dailyCheckin;
-  const day = (previousStreak % cycleDays) + 1;
+  // The escalating reward is a one-time bonus for the user's first
+  // uninterrupted check-in streak. A missed day permanently ends the bonus,
+  // so users cannot repeatedly reset the streak to farm the first-week reward.
+  const isFirstStreakBonusActive =
+    totalCheckins === previousStreak && totalCheckins < cycleDays;
+  const day = isFirstStreakBonusActive ? previousStreak + 1 : cycleDays + 1;
   return {
     day,
-    creditAmount: day * credits,
+    creditAmount: isFirstStreakBonusActive ? day * credits : credits,
     rewards: Array.from(
       { length: cycleDays },
       (_, index) => (index + 1) * credits,
     ),
+    isFirstStreakBonusActive,
   };
 }
 

@@ -24,6 +24,7 @@ import {
 import {
   countReferralInvitesForUser,
   createDrizzleTaskRewardStore,
+  getDailyCheckinCount,
   getDailyCheckinStreakForUser,
   getTaskClaimLookup,
   hasReferralFirstPurchaseForUser,
@@ -70,6 +71,7 @@ export async function getTaskRewardsDashboardData(
     const [
       claimLookup,
       previousDailyCheckinStreak,
+      dailyCheckinCount,
       hasPublicGeneration,
       hasPurchase,
       inviteCount,
@@ -78,6 +80,7 @@ export async function getTaskRewardsDashboardData(
     ] = await Promise.all([
       getTaskClaimLookup(db, user.id, claimKeys),
       getDailyCheckinStreakForUser(db, user.id, now.toISOString().slice(0, 10)),
+      getDailyCheckinCount(db, user.id),
       hasSuccessfulPublicGenerationForUser(db, user.id),
       hasSuccessfulPurchaseForUser(db, user.id),
       countReferralInvitesForUser(db, user.id),
@@ -88,6 +91,7 @@ export async function getTaskRewardsDashboardData(
       now,
       claimLookup,
       previousDailyCheckinStreak,
+      dailyCheckinCount,
       hasPublicGeneration,
       hasPurchase,
       inviteCount,

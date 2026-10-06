@@ -84,6 +84,7 @@ export function buildTaskRewardItems({
   now,
   claimLookup,
   previousDailyCheckinStreak,
+  dailyCheckinCount = previousDailyCheckinStreak,
   hasPublicGeneration,
   hasPurchase,
   inviteCount,
@@ -93,6 +94,7 @@ export function buildTaskRewardItems({
   now: Date;
   claimLookup: Set<string>;
   previousDailyCheckinStreak: number;
+  dailyCheckinCount?: number;
   hasPublicGeneration: boolean;
   hasPurchase: boolean;
   inviteCount: number;
@@ -107,12 +109,18 @@ export function buildTaskRewardItems({
   const firstPurchaseClaimKey = buildOnceClaimKey("first_purchase");
 
   if (taskRewardsConfig.dailyCheckin.enabled) {
-    const cycle = getDailyCheckinCycle(previousDailyCheckinStreak);
+    const cycle = getDailyCheckinCycle(
+      previousDailyCheckinStreak,
+      taskRewardsConfig,
+      dailyCheckinCount,
+    );
     tasks.push({
       taskKey: "daily_checkin",
       creditAmount: cycle.creditAmount,
       status: claimLookup.has(dailyClaimKey) ? "claimed" : "claimable",
-      checkinCycle: { day: cycle.day, rewards: cycle.rewards },
+      ...(cycle.isFirstStreakBonusActive
+        ? { checkinCycle: { day: cycle.day, rewards: cycle.rewards } }
+        : {}),
     });
   }
 

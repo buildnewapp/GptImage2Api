@@ -46,6 +46,9 @@ export const UserConsumptionRanking = () => {
   const buildGenerationsHref = (userId: string) =>
     `/${locale}/dashboard/ai-studio-admin?userId=${encodeURIComponent(userId)}`;
 
+  const buildUserDetailsHref = (userId: string) =>
+    `/${locale}/dashboard/users?userId=${encodeURIComponent(userId)}`;
+
   return (
     <Card>
       <CardHeader>
@@ -91,7 +94,7 @@ export const UserConsumptionRanking = () => {
                   </span>
                   <div className="min-w-0">
                     <a
-                      href={buildGenerationsHref(row.userId)}
+                      href={buildUserDetailsHref(row.userId)}
                       className="block truncate text-sm font-medium text-primary underline-offset-4 hover:underline"
                       title={row.email ?? row.name ?? row.userId}
                     >

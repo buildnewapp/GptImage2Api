@@ -14,6 +14,7 @@ const dashboardNow = new Date("2026-03-07T08:00:00.000Z");
 function buildDashboardItems({
   claimLookup = new Set<string>(),
   previousDailyCheckinStreak = 0,
+  dailyCheckinCount = previousDailyCheckinStreak,
   latestManualApplications = new Map<
     ManualReviewTaskKey,
     RewardApplicationRecord
@@ -21,12 +22,14 @@ function buildDashboardItems({
 }: {
   claimLookup?: Set<string>;
   previousDailyCheckinStreak?: number;
+  dailyCheckinCount?: number;
   latestManualApplications?: Map<ManualReviewTaskKey, RewardApplicationRecord>;
 } = {}) {
   return buildTaskRewardItems({
     now: dashboardNow,
     claimLookup,
     previousDailyCheckinStreak,
+    dailyCheckinCount,
     hasPublicGeneration: false,
     hasPurchase: false,
     inviteCount: 0,
@@ -362,14 +365,11 @@ test("latest manual application lookup breaks submission ties deterministically"
   assert.equal(lookup.get("github_star")?.id, "application-c");
 });
 
-test("daily check-in displays today's cycle reward before and after claiming", () => {
+test("daily check-in displays the first-streak bonus while it is active", () => {
   for (const [previousDailyCheckinStreak, day, creditAmount] of [
     [0, 1, 10],
     [2, 3, 30],
     [6, 7, 70],
-    [7, 1, 10],
-    [13, 7, 70],
-    [14, 1, 10],
   ]) {
     for (const claimed of [false, true]) {
       const tasks = buildDashboardItems({
@@ -384,5 +384,22 @@ test("daily check-in displays today's cycle reward before and after claiming", (
         rewards: [10, 20, 30, 40, 50, 60, 70],
       });
     }
+  }
+});
+
+test("daily check-in uses fixed rewards after the first streak or any gap", () => {
+  for (const [previousDailyCheckinStreak, dailyCheckinCount] of [
+    [7, 7],
+    [0, 3],
+    [2, 5],
+  ]) {
+    const tasks = buildDashboardItems({
+      previousDailyCheckinStreak,
+      dailyCheckinCount,
+    });
+    const daily = tasks.find((task) => task.taskKey === "daily_checkin");
+
+    assert.equal(daily?.creditAmount, 10);
+    assert.equal(daily?.checkinCycle, undefined);
   }
 });

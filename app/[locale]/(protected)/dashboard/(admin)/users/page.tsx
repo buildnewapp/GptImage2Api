@@ -1,4 +1,8 @@
-import { getAdminManualBenefitPlans, getUsers } from "@/actions/users/admin";
+import {
+  getAdminManualBenefitPlans,
+  getUserDetails,
+  getUsers,
+} from "@/actions/users/admin";
 import { constructMetadata } from "@/lib/metadata";
 import { Loader2 } from "lucide-react";
 import { Metadata } from "next";
@@ -34,11 +38,17 @@ export async function generateMetadata({
 
 const PAGE_SIZE = 20;
 
-async function UsersTable() {
-  const [initialData, manualBenefitPlans] = await Promise.all([
-    getUsers({ pageIndex: 0, pageSize: PAGE_SIZE }),
-    getAdminManualBenefitPlans(),
-  ]);
+async function UsersTable({ selectedUserId }: { selectedUserId?: string }) {
+  const [initialData, manualBenefitPlans, selectedUserDetails] =
+    await Promise.all([
+      getUsers({ pageIndex: 0, pageSize: PAGE_SIZE }),
+      getAdminManualBenefitPlans(),
+      selectedUserId ? getUserDetails({ userId: selectedUserId }) : undefined,
+    ]);
+
+  const selectedUser = selectedUserDetails?.success
+    ? selectedUserDetails.data?.user
+    : undefined;
 
   return (
     <DataTable
@@ -52,12 +62,21 @@ async function UsersTable() {
       manualBenefitPlans={
         manualBenefitPlans.success ? manualBenefitPlans.data || [] : []
       }
+      selectedUser={selectedUser}
     />
   );
 }
 
-export default function AdminUsersPage() {
+export default async function AdminUsersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ userId?: string | string[] }>;
+}) {
   const t = useTranslations("Users");
+  const params = await searchParams;
+  const selectedUserId = Array.isArray(params.userId)
+    ? params.userId[0]
+    : params.userId;
 
   return (
     <div className="space-y-4">
@@ -68,7 +87,7 @@ export default function AdminUsersPage() {
           </div>
         }
       >
-        <UsersTable />
+        <UsersTable selectedUserId={selectedUserId} />
       </Suspense>
     </div>
   );

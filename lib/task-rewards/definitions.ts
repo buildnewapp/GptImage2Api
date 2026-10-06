@@ -33,6 +33,7 @@ export interface TaskDefinition {
   creditAmount(
     config: TaskRewardsConfig,
     previousDailyCheckinStreak: number,
+    totalDailyCheckins?: number,
   ): number;
   claimKey(calendarDate: string): string;
   evaluate(
@@ -49,8 +50,16 @@ export const taskDefinitions: Record<
     isEnabled(config) {
       return config.enabled && config.dailyCheckin.enabled;
     },
-    creditAmount(config, previousDailyCheckinStreak) {
-      return getDailyCheckinCycle(previousDailyCheckinStreak, config)
+    creditAmount(
+      config,
+      previousDailyCheckinStreak,
+      totalDailyCheckins = previousDailyCheckinStreak,
+    ) {
+      return getDailyCheckinCycle(
+        previousDailyCheckinStreak,
+        config,
+        totalDailyCheckins,
+      )
         .creditAmount;
     },
     claimKey(calendarDate) {

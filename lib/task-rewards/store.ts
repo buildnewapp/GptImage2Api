@@ -68,11 +68,17 @@ export class MemoryTaskRewardStore implements TaskRewardStore {
       ...this.claimedDailyCheckinDates,
       ...(this.claimedDailyCheckinDatesByUser.get(userId) ?? []),
     ]);
-    const seededCount = this.initialDailyCheckinCount ?? claimedDates.size;
-    const claimedAfterInitialization = this.claims.filter(
-      (claim) => claim.userId === userId && claim.taskKey === "daily_checkin",
-    ).length;
-    return seededCount + claimedAfterInitialization;
+    if (this.initialDailyCheckinCount !== null) {
+      return (
+        this.initialDailyCheckinCount +
+        this.claims.filter(
+          (claim) =>
+            claim.userId === userId && claim.taskKey === "daily_checkin",
+        ).length
+      );
+    }
+
+    return claimedDates.size;
   }
 
   async hasValidSubscription(_userId: string, _now: Date): Promise<boolean> {
