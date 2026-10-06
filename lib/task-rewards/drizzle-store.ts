@@ -130,17 +130,7 @@ export function createDrizzleTaskRewardStore(
     },
 
     async getDailyCheckinCount(userId) {
-      const result = await tx
-        .select({ value: count() })
-        .from(taskRewardClaimsSchema)
-        .where(
-          and(
-            eq(taskRewardClaimsSchema.userId, userId),
-            eq(taskRewardClaimsSchema.taskKey, "daily_checkin"),
-          ),
-        );
-
-      return result[0]?.value ?? 0;
+      return getDailyCheckinCount(tx, userId);
     },
 
     async hasValidSubscription(userId, now) {
@@ -291,6 +281,23 @@ export async function getDailyCheckinStreakForUser(
     .from(previousCheckins)
     .where(
       sql`${previousCheckins.calendarDate} = ${calendarDate}::date - ${previousCheckins.position}::integer`,
+    );
+
+  return result[0]?.value ?? 0;
+}
+
+export async function getDailyCheckinCount(
+  db: DbTransaction | DbClient,
+  userId: string,
+): Promise<number> {
+  const result = await db
+    .select({ value: count() })
+    .from(taskRewardClaimsSchema)
+    .where(
+      and(
+        eq(taskRewardClaimsSchema.userId, userId),
+        eq(taskRewardClaimsSchema.taskKey, "daily_checkin"),
+      ),
     );
 
   return result[0]?.value ?? 0;

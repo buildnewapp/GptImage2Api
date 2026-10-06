@@ -15,6 +15,7 @@ import {
   getUsers,
   type AdminManualBenefitPlan,
   type GetUsersResult,
+  type UserWithSource,
 } from "@/actions/users/admin";
 import { AdminPagination } from "@/components/shared/AdminPagination";
 import { Input } from "@/components/ui/input";
@@ -31,6 +32,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
 import { BatchManualBenefitDialog } from "./BatchManualBenefitDialog";
+import { UserDetailsDrawer } from "./UserDetailsDrawer";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -39,6 +41,7 @@ interface DataTableProps<TData, TValue> {
   pageSize: number;
   totalCount: number;
   manualBenefitPlans: AdminManualBenefitPlan[];
+  selectedUser?: UserWithSource;
 }
 
 export function DataTable<TData, TValue>({
@@ -48,6 +51,7 @@ export function DataTable<TData, TValue>({
   pageSize,
   totalCount: initialTotalCount,
   manualBenefitPlans,
+  selectedUser,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -137,6 +141,13 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
+      {selectedUser ? (
+        <UserDetailsDrawer
+          user={selectedUser}
+          initialOpen
+          showTrigger={false}
+        />
+      ) : null}
       <div className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
         <Input
           placeholder="Search by Email, Name..."

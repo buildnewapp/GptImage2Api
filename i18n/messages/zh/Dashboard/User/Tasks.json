@@ -45,7 +45,7 @@
   "tasks": {
     "daily_checkin": {
       "title": "每日签到",
-      "description": "所有登录用户均可签到，连续签到奖励逐日递增；每 7 天一个循环，断签后从第 1 天重新开始。"
+      "description": "所有登录用户均可签到。首次连续 7 天签到奖励从 10 递增至 70 分；首周完成或中途断签后，之后每天固定 10 分。"
     },
     "first_public_generation": {
       "title": "首次生成公开作品",
@@ -168,7 +168,7 @@
     "claimFailed": "领取任务奖励失败。"
   },
   "checkinCycle": {
-    "label": "7 天签到奖励",
+    "label": "首周签到奖励",
     "total": "连续 {days} 天，共领 {credits} 积分",
     "currentDay": "今日为第 {day} 天",
     "day": "第 {day} 天",

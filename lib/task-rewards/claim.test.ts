@@ -38,9 +38,9 @@ test("daily check-in can only be claimed once per calendar date", async () => {
   assert.equal(second.status, "already_claimed");
 });
 
-test("subscribed users receive increasing rewards over repeated seven-day cycles", async () => {
+test("subscribed users receive the first-streak bonus once, then fixed rewards", async () => {
   const store = createMemoryTaskRewardStore({ hasValidSubscription: true });
-  const expected = [10, 20, 30, 40, 50, 60, 70, 10, 20, 30, 40, 50, 60, 70, 10];
+  const expected = [10, 20, 30, 40, 50, 60, 70, 10, 10, 10, 10, 10, 10, 10, 10];
 
   for (const [index, creditAmount] of expected.entries()) {
     const now = new Date("2026-03-01T08:00:00.000Z");
@@ -123,7 +123,7 @@ test("free users must subscribe before the eleventh total check-in", async () =>
   assert.equal(store.claims.length, 0);
 });
 
-test("missing a day resets the reward even after many free check-ins", async () => {
+test("missing a day ends the first-streak bonus", async () => {
   const store = createMemoryTaskRewardStore({
     claimedDailyCheckinDates: [
       "2026-03-01",
@@ -136,7 +136,7 @@ test("missing a day resets the reward even after many free check-ins", async () 
   });
   for (const [date, credits] of [
     ["2026-03-07", 10],
-    ["2026-03-08", 20],
+    ["2026-03-08", 10],
   ] as const) {
     const result = await claimTaskReward({
       store,
@@ -150,7 +150,24 @@ test("missing a day resets the reward even after many free check-ins", async () 
   }
 });
 
-test("existing consecutive claims carry forward for both free and paid users", async () => {
+test("a first uninterrupted streak carries the bonus forward", async () => {
+  const store = createMemoryTaskRewardStore({
+    claimedDailyCheckinDates: ["2026-03-01", "2026-03-02", "2026-03-03"],
+    hasSuccessfulPurchase: false,
+  });
+  const result = await claimTaskReward({
+    store,
+    userId: "user-1",
+    taskKey: "daily_checkin",
+    now: new Date("2026-03-04T08:00:00.000Z"),
+    config: enabledConfig,
+  });
+
+  assert.equal(result.status, "claimed");
+  assert.equal(result.creditAmount, 40);
+});
+
+test("a later consecutive streak after an earlier gap only receives fixed rewards", async () => {
   for (const hasSuccessfulPurchase of [false, true]) {
     const store = createMemoryTaskRewardStore({
       claimedDailyCheckinDates: [
@@ -169,7 +186,7 @@ test("existing consecutive claims carry forward for both free and paid users", a
       config: enabledConfig,
     });
     assert.equal(result.status, "claimed");
-    assert.equal(result.creditAmount, 40);
+    assert.equal(result.creditAmount, 10);
   }
 });
 

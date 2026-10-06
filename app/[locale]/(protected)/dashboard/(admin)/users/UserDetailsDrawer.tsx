@@ -586,7 +586,11 @@ function UserDetailsContent({
                         paused: !user.recallPaused,
                       });
                       if (result.success) {
-                        toast.success(result.data?.paused ? "已暂停自动关怀邮件" : "已恢复自动关怀邮件");
+                        toast.success(
+                          result.data?.paused
+                            ? "已暂停自动关怀邮件"
+                            : "已恢复自动关怀邮件",
+                        );
                         onRefresh();
                       } else {
                         toast.error("更新失败", { description: result.error });
@@ -831,8 +835,16 @@ function UserDetailsContent({
   );
 }
 
-export function UserDetailsDrawer({ user }: { user: UserWithSource }) {
-  const [open, setOpen] = useState(false);
+export function UserDetailsDrawer({
+  user,
+  initialOpen = false,
+  showTrigger = true,
+}: {
+  user: UserWithSource;
+  initialOpen?: boolean;
+  showTrigger?: boolean;
+}) {
+  const [open, setOpen] = useState(initialOpen);
   const [details, setDetails] = useState<AdminUserDetails | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -874,50 +886,52 @@ export function UserDetailsDrawer({ user }: { user: UserWithSource }) {
 
   return (
     <Drawer direction="right" open={open} onOpenChange={setOpen}>
-      <div className="flex min-w-[240px] items-center gap-3">
-        <button
-          type="button"
-          className="rounded-sm outline-none hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring"
-          onClick={() => setOpen(true)}
-        >
-          <Avatar className="h-9 w-9">
-            <AvatarImage src={user.image || undefined} alt={displayName} />
-            <AvatarFallback>{displayName[0].toUpperCase()}</AvatarFallback>
-          </Avatar>
-        </button>
-        <div className="flex min-w-0 flex-col">
+      {showTrigger ? (
+        <div className="flex min-w-[240px] items-center gap-3">
           <button
             type="button"
-            className="flex min-w-0 items-center gap-1.5 rounded-sm text-left outline-none hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring"
+            className="rounded-sm outline-none hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring"
             onClick={() => setOpen(true)}
           >
-            <span className="truncate font-medium">{user.name || ""}</span>
-            {user.role === "admin" && (
-              <span className="text-xs font-medium capitalize text-primary">
-                ({user.role})
-              </span>
-            )}
+            <Avatar className="h-9 w-9">
+              <AvatarImage src={user.image || undefined} alt={displayName} />
+              <AvatarFallback>{displayName[0].toUpperCase()}</AvatarFallback>
+            </Avatar>
           </button>
-          <div className="flex min-w-0 items-center gap-1.5">
-            <span
-              role="button"
-              tabIndex={0}
-              title={user.email}
-              className="max-w-[220px] cursor-pointer truncate text-sm text-muted-foreground hover:underline"
-              onClick={() => copyText(user.email, "Email")}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  event.preventDefault();
-                  copyText(user.email, "Email");
-                }
-              }}
+          <div className="flex min-w-0 flex-col">
+            <button
+              type="button"
+              className="flex min-w-0 items-center gap-1.5 rounded-sm text-left outline-none hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring"
+              onClick={() => setOpen(true)}
             >
-              {user.email}
-            </span>
-            <Copy className="h-3.5 w-3.5" />
+              <span className="truncate font-medium">{user.name || ""}</span>
+              {user.role === "admin" && (
+                <span className="text-xs font-medium capitalize text-primary">
+                  ({user.role})
+                </span>
+              )}
+            </button>
+            <div className="flex min-w-0 items-center gap-1.5">
+              <span
+                role="button"
+                tabIndex={0}
+                title={user.email}
+                className="max-w-[220px] cursor-pointer truncate text-sm text-muted-foreground hover:underline"
+                onClick={() => copyText(user.email, "Email")}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    copyText(user.email, "Email");
+                  }
+                }}
+              >
+                {user.email}
+              </span>
+              <Copy className="h-3.5 w-3.5" />
+            </div>
           </div>
         </div>
-      </div>
+      ) : null}
 
       <DrawerContent className="overflow-hidden p-0 data-[vaul-drawer-direction=right]:h-full data-[vaul-drawer-direction=right]:w-[92vw] data-[vaul-drawer-direction=right]:sm:max-w-2xl">
         <DrawerHeader className="border-b pr-14">

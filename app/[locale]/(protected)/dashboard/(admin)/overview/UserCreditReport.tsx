@@ -52,8 +52,8 @@ export const UserCreditReport = () => {
 
   const rows = data ?? [];
 
-  const buildCreditsHref = (userId: string) =>
-    `/${locale}/dashboard/credits?userId=${encodeURIComponent(userId)}`;
+  const buildUserDetailsHref = (userId: string) =>
+    `/${locale}/dashboard/users?userId=${encodeURIComponent(userId)}`;
 
   const buildGenerationsHref = (userId: string) =>
     `/${locale}/dashboard/ai-studio-admin?userId=${encodeURIComponent(userId)}`;
@@ -110,7 +110,7 @@ export const UserCreditReport = () => {
                 >
                   <div className="min-w-0">
                     <a
-                      href={buildCreditsHref(row.userId)}
+                      href={buildUserDetailsHref(row.userId)}
                       className="block truncate font-medium text-primary hover:underline underline-offset-4"
                       title={row.email ?? row.userId}
                     >
