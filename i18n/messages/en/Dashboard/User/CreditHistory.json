@@ -18,6 +18,7 @@
   "type_referral_signup_bonus": "Referral Signup Bonus",
   "type_recall_purchase_bonus": "Recall Purchase Bonus",
   "type_feature_usage": "Feature Usage",
+  "type_task_reward_expiry": "Check-In Credits Expired",
   "type_refund_revoke": "Refund Revoke",
   "type_subscription_ended_revoke": "Subscription Ended Revoke"
 }

@@ -18,6 +18,7 @@
   "type_referral_signup_bonus": "邀请注册奖励",
   "type_recall_purchase_bonus": "召回购买奖励",
   "type_feature_usage": "功能使用",
+  "type_task_reward_expiry": "签到积分过期",
   "type_refund_revoke": "退款回收",
   "type_subscription_ended_revoke": "订阅积分过期"
 }

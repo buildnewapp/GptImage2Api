@@ -161,8 +161,10 @@
   },
   "toast": {
     "claimed": "Claimed {credits} credits.",
+    "checkinClaimed": "Check-in successful. You received {credits} credits. Check-in credits expire in 30 days, so please use them soon.",
     "alreadyClaimed": "This reward has already been claimed.",
     "notCompleted": "Task requirements are not completed yet.",
+    "subscriptionRequired": "An active subscription is required after 7 consecutive check-ins or 10 total check-ins. Subscribe to continue earning check-in credits.",
     "claimFailed": "Failed to claim task reward."
   },
   "checkinCycle": {

@@ -5,6 +5,8 @@ import type {
 
 export interface MemoryTaskRewardStoreOptions {
   claimedDailyCheckinDates?: string[];
+  dailyCheckinCount?: number;
+  hasValidSubscription?: boolean;
   hasSuccessfulPublicGeneration?: boolean;
   hasSuccessfulPurchase?: boolean;
   referralInviteCount?: number;
@@ -14,6 +16,8 @@ export interface MemoryTaskRewardStoreOptions {
 export class MemoryTaskRewardStore implements TaskRewardStore {
   private readonly claimKeys = new Map<string, Set<string>>();
   private readonly claimedDailyCheckinDates: Set<string>;
+  private readonly initialDailyCheckinCount: number | null;
+  private readonly validSubscription: boolean;
   private readonly claimedDailyCheckinDatesByUser = new Map<
     string,
     Set<string>
@@ -28,6 +32,8 @@ export class MemoryTaskRewardStore implements TaskRewardStore {
     this.claimedDailyCheckinDates = new Set(
       options.claimedDailyCheckinDates ?? [],
     );
+    this.initialDailyCheckinCount = options.dailyCheckinCount ?? null;
+    this.validSubscription = options.hasValidSubscription ?? false;
     this.successfulPublicGeneration =
       options.hasSuccessfulPublicGeneration ?? true;
     this.successfulPurchase = options.hasSuccessfulPurchase ?? true;
@@ -55,6 +61,22 @@ export class MemoryTaskRewardStore implements TaskRewardStore {
       date.setUTCDate(date.getUTCDate() - 1);
     }
     return streak;
+  }
+
+  async getDailyCheckinCount(userId: string): Promise<number> {
+    const claimedDates = new Set([
+      ...this.claimedDailyCheckinDates,
+      ...(this.claimedDailyCheckinDatesByUser.get(userId) ?? []),
+    ]);
+    const seededCount = this.initialDailyCheckinCount ?? claimedDates.size;
+    const claimedAfterInitialization = this.claims.filter(
+      (claim) => claim.userId === userId && claim.taskKey === "daily_checkin",
+    ).length;
+    return seededCount + claimedAfterInitialization;
+  }
+
+  async hasValidSubscription(_userId: string, _now: Date): Promise<boolean> {
+    return this.validSubscription;
   }
 
   async hasSuccessfulPublicGeneration(): Promise<boolean> {

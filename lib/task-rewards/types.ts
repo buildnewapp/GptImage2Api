@@ -32,6 +32,12 @@ export type TaskRewardClaimResult =
       progress: TaskRewardProgress;
     }
   | {
+      status: "subscription_required";
+      claimKey: string;
+      creditAmount?: undefined;
+      progress?: undefined;
+    }
+  | {
       status: "disabled";
       claimKey?: undefined;
       creditAmount?: undefined;
@@ -49,6 +55,8 @@ export interface TaskRewardClaimRecord {
 export interface TaskRewardStore {
   hasClaim(userId: string, claimKey: string): Promise<boolean>;
   getDailyCheckinStreak(userId: string, calendarDate: string): Promise<number>;
+  getDailyCheckinCount(userId: string): Promise<number>;
+  hasValidSubscription(userId: string, now: Date): Promise<boolean>;
   hasSuccessfulPublicGeneration(userId: string): Promise<boolean>;
   hasSuccessfulPurchase(userId: string): Promise<boolean>;
   countReferralInvites(userId: string): Promise<number>;

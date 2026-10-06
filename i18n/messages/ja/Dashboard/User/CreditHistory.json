@@ -18,6 +18,7 @@
   "type_referral_signup_bonus": "招待登録特典",
   "type_recall_purchase_bonus": "再購入ボーナス",
   "type_feature_usage": "機能使用",
+  "type_task_reward_expiry": "チェックインクレジット期限切れ",
   "type_refund_revoke": "返金取消",
   "type_subscription_ended_revoke": "サブスクリプションクレジット期限切れ"
 }
