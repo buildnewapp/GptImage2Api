@@ -6,7 +6,7 @@ import {
 import { constructMetadata } from "@/lib/metadata";
 import { Loader2 } from "lucide-react";
 import { Metadata } from "next";
-import { Locale, useTranslations } from "next-intl";
+import { Locale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { columns } from "./Columns";
@@ -72,7 +72,6 @@ export default async function AdminUsersPage({
 }: {
   searchParams: Promise<{ userId?: string | string[] }>;
 }) {
-  const t = useTranslations("Users");
   const params = await searchParams;
   const selectedUserId = Array.isArray(params.userId)
     ? params.userId[0]
