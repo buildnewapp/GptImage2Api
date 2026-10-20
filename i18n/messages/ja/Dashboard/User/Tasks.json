@@ -57,7 +57,7 @@
     },
     "invite_signup": {
       "title": "友達 1 人を招待して登録",
-      "description": "友達が 1 人登録するごとに {signupCredit} クレジットを獲得でき、さらに初回購入後に {firstOrderReward} の還元も受け取れます。"
+      "description": "招待リンクから登録した友達が初回購入を完了すると、招待ルールに基づき {firstOrderReward} のキャッシュ報酬を獲得できます。"
     },
     "invite_first_purchase": {
       "title": "招待した友達が初回購入を完了",

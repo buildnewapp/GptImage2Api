@@ -5,7 +5,7 @@
   },
   "inviteCard": {
     "title": "招待コード",
-    "description": "招待コードを設定し、招待リンクを共有します。新規ユーザーの登録で {signupCredit} クレジット、支払いで {firstOrderReward} のキャッシュ報酬を獲得できます。",
+    "description": "招待コードを設定してリンクを共有すると、招待した友達の初回購入後に {firstOrderReward} のキャッシュ報酬を獲得できます。",
     "codeLabel": "自分のコード",
     "linkLabel": "自分の招待リンク",
     "noCode": "まだ招待コードがありません",

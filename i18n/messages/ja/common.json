@@ -4,8 +4,7 @@
     "tagLine": "GPT Image 2.5 – 開発者向けの高速で信頼性の高い GPT Image 2.5 API",
     "description": "GPT Image 2.5 は、開発者・スタートアップ・企業向けに、シンプルな REST エンドポイントで高品質な AI 画像を生成できる強力な GPT Image 2.5 API を提供します。画像生成アプリの構築、クリエイティブワークフローの自動化、そして GPT Image 2.5 API の製品への即時統合を実現できます。",
     "createVideo": "生成",
-    "freeCreditsCtaLine1": "50クレジットを獲得",
-    "freeCreditsCtaLine2": "無料",
+    "freeCreditsCta": "無料クレジット",
     "earnCredits": "無料クレジットを獲得",
     "earnCreditsShort": "獲得",
     "mobileMenuLabel": "メニューを開く"

@@ -16,7 +16,7 @@ export const referralConfig = {
   // 是否启用邀请奖励与邀请页面展示，不影响邀请 cookie 捕获和邀请关系绑定
   enabled: true,
   // 每成功邀请 1 个新用户注册，邀请人立即获得的积分
-  signupInviteCredit: 10,
+  signupInviteCredit: 0,
   // 每个邀请人每天最多多少个新注册用户可以获得注册邀请积分
   signupInviteDailyRewardLimit: 3,
   // 免费积分地区策略：limited 减半，blocked 为 0，其他国家默认全额

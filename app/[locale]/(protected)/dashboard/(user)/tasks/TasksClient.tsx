@@ -262,7 +262,6 @@ export default function TasksClient({
               const description =
                 task.taskKey === "invite_signup"
                   ? t("tasks.invite_signup.description", {
-                      signupCredit: referralConfig.signupInviteCredit,
                       firstOrderReward,
                     })
                   : task.taskKey === "invite_first_purchase"

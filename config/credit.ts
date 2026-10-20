@@ -1,6 +1,6 @@
 export const creditConfig = {
   // Set to a positive number to grant one-time credits to newly registered users.
-  signupBonusCredits: 10,
+  signupBonusCredits: 0,
   signupBonusPolicy: {
     blockedEmailKeywords: ["valwagten"],
     maxPerIp24Hours: 10,

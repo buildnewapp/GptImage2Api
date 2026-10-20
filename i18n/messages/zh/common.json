@@ -4,8 +4,7 @@
     "tagLine": "GPT Image 2.5 – 面向开发者的快速可靠 GPT Image 2.5 API",
     "description": "GPT Image 2.5 为开发者、初创团队和企业提供强大的 GPT Image 2.5 API 访问能力，通过简洁的 REST 接口生成高质量 AI 图像。你可以快速构建图像生成应用、自动化创意工作流，并将 GPT Image 2.5 API 立即集成到你的产品中。",
     "createVideo": "生成",
-    "freeCreditsCtaLine1": "领取 50 积分",
-    "freeCreditsCtaLine2": "免费",
+    "freeCreditsCta": "免费积分",
     "earnCredits": "赚取免费积分",
     "earnCreditsShort": "赚积分",
     "mobileMenuLabel": "打开菜单"

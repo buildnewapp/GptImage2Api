@@ -65,7 +65,7 @@ export interface ManualReviewTaskDefinition {
 export const taskRewardsConfig = {
   enabled: true,
   dailyCheckin: {
-    enabled: true,
+    enabled: false,
     credits: 10,
     cycleDays: 7,
   },
@@ -78,7 +78,7 @@ export const taskRewardsConfig = {
     credits: 20,
   },
   inviteSignup: {
-    enabled: true,
+    enabled: false,
     credits: 20,
   },
   inviteFirstPurchase: {

@@ -356,10 +356,7 @@ export default function VideoMobileMenu({
                   className="flex-1 inline-flex h-11 w-full gap-4 items-center justify-center rounded-full bg-[linear-gradient(135deg,hsl(var(--secondary))_0%,hsl(var(--primary))_100%)] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_22px_38px_-22px_rgba(15,23,42,0.82)] ring-offset-background transition-all duration-300 ease-out hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <span aria-hidden="true" className="animate-gift-wiggle text-base leading-none">🎁</span>
-                <span className="flex flex-col items-center">
-                  <span>{tHome("freeCreditsCtaLine1")}</span>
-                  <span>{tHome("freeCreditsCtaLine2")}</span>
-                </span>
+                <span>{tHome("freeCreditsCta")}</span>
               </I18nLink>)}
             </div>
 

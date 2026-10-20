@@ -57,7 +57,7 @@
     },
     "invite_signup": {
       "title": "Invite 1 Friend to Sign Up",
-      "description": "Earn {signupCredit} credits for each friend who signs up, plus {firstOrderReward} back after their first paid order."
+      "description": "When a friend signs up through your invite link and completes their first paid order, you can earn a {firstOrderReward} cash reward."
     },
     "invite_first_purchase": {
       "title": "Friend Completes First Purchase",

@@ -211,10 +211,7 @@ export default function HeaderShell({
                 className={freeCreditsButtonClassName}
               >
                 <span aria-hidden="true" className="animate-gift-wiggle text-base leading-none">🎁</span>
-                <span className="flex flex-col items-center gap-0.5">
-                  <span>{t("freeCreditsCtaLine1")}</span>
-                  <span>{t("freeCreditsCtaLine2")}</span>
-                </span>
+                <span>{t("freeCreditsCta")}</span>
               </I18nLink>
             ) : null}
             <UserAvatar
