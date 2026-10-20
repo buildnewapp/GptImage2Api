@@ -120,7 +120,6 @@ export default function ReferralsClient({ data }: { data: ReferralDashboardData 
           <CardTitle>{t("inviteCard.title")}</CardTitle>
           <CardDescription>
             {t("inviteCard.description", {
-              signupCredit: referralConfig.signupInviteCredit,
               firstOrderReward,
             })}
           </CardDescription>

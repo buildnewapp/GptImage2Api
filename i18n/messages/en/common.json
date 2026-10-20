@@ -4,8 +4,7 @@
     "tagLine": "Seedance 2.0 Online Experience & API Service",
     "description": "Experience Seedance 2.0 on SdanceAI. Create high-quality AI videos with native audio sync. We provide stable API access for developers to integrate AI video.",
     "createVideo": "Generate",
-    "freeCreditsCtaLine1": "Get 50 Credits",
-    "freeCreditsCtaLine2": "for Free",
+    "freeCreditsCta": "Free Credits",
     "earnCredits": "Earn free credits",
     "earnCreditsShort": "Earn",
     "mobileMenuLabel": "Open menu"
@@ -19,11 +18,11 @@
       "cta": "View Campaign"
     },
     "discount": {
-      "title": "Gemini Omni Flash Launch",
-      "badge": "40% OFF",
-      "description": "Limited-time annual plan offer",
-      "href": "/pricing?billing=yearly",
-      "cta": "Claim Offer"
+      "title": "Uncensored Seedance 2.5 is here",
+      "badge": "NOW LIVE",
+      "description": "",
+      "href": "/generator",
+      "cta": ""
     },
     "closeLabel": "Close promotion banner"
   },

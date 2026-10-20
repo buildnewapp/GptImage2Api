@@ -4,8 +4,7 @@
     "tagLine": "Seedance 2.0 在线体验 与 API 服务",
     "description": "SdanceAI 提供 Seedance 2.0 在线创作工具与 API。支持原生音画同步、1080p 电影级生成及多模态参考。助力开发者快速集成下一代 AI 视频能力。",
     "createVideo": "生成",
-    "freeCreditsCtaLine1": "领取 50 积分",
-    "freeCreditsCtaLine2": "免费",
+    "freeCreditsCta": "免费积分",
     "earnCredits": "赚取免费积分",
     "earnCreditsShort": "赚积分",
     "mobileMenuLabel": "打开菜单"
@@ -19,11 +18,11 @@
       "cta": "查看活动"
     },
     "discount": {
-      "title": "Gemini Omni Flash 上线",
-      "badge": "立省 40%",
-      "description": "年度套餐限时优惠",
-      "href": "/pricing?billing=yearly",
-      "cta": "领取优惠"
+      "title": "无审查的 Seedance 2.5 上线了",
+      "badge": "现已上线",
+      "description": "",
+      "href": "/generator",
+      "cta": ""
     },
     "closeLabel": "关闭促销横幅"
   },

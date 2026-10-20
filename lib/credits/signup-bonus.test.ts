@@ -67,8 +67,8 @@ class FakeSignupBonusStore implements SignupBonusStore {
   }
 }
 
-test("configures new users to receive 10 signup credits", () => {
-  assert.equal(creditConfig.signupBonusCredits, 10);
+test("disables signup bonus credits for new users", () => {
+  assert.equal(creditConfig.signupBonusCredits, 0);
 });
 
 test("grants half signup bonus credits for limited countries", async () => {

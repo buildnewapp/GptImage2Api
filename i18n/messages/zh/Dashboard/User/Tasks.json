@@ -57,7 +57,7 @@
     },
     "invite_signup": {
       "title": "邀请 1 位好友注册",
-      "description": "每邀请 1 位好友注册，可得 {signupCredit} 积分；好友首购后，你还可获得 {firstOrderReward} 返现奖励。"
+      "description": "好友通过邀请链接注册并完成首笔付费后，你可按邀请规则获得 {firstOrderReward} 返现奖励。"
     },
     "invite_first_purchase": {
       "title": "好友完成首次付费",

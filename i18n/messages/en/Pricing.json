@@ -14,13 +14,10 @@
     "buttonLabel": "Open Task Center",
     "items": [
       {
-        "title": "Sign up for credits"
+        "title": "Credits for your first public creation"
       },
       {
-        "title": "Daily check-in credits"
-      },
-      {
-        "title": "Invite for credits"
+        "title": "Credits for your first purchase"
       }
     ]
   },

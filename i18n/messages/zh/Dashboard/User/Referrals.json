@@ -5,7 +5,7 @@
   },
   "inviteCard": {
     "title": "邀请码",
-    "description": "设置你的邀请码并分享邀请链接，邀请新用户注册获得 {signupCredit} 积分，付费获取 {firstOrderReward} 返现。",
+    "description": "设置邀请码并分享邀请链接，好友首次付费后可获得 {firstOrderReward} 返现。",
     "codeLabel": "我的邀请码",
     "linkLabel": "我的邀请链接",
     "noCode": "暂未生成邀请码",
